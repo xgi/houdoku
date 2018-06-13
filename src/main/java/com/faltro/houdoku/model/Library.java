@@ -50,7 +50,7 @@ public class Library {
      */
     public void calculateCategoryOccurrences() {
         // create a flat ArrayList of non-unique categories present in series'
-        ArrayList<Category> found_categories = new ArrayList();
+        ArrayList<Category> found_categories = new ArrayList<>();
         for (Series series : serieses) {
             for (String stringCategory : series.getStringCategories()) {
                 Category found_category = rootCategory.recursiveFindSubcategory(stringCategory);
