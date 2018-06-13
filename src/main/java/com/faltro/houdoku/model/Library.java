@@ -45,13 +45,10 @@ public class Library {
         Serializer.serializeLibrary(this);
     }
 
+    /**
+     * Recursively update the occurrences field for all categories.
+     */
     public void calculateCategoryOccurrences() {
-        // The maximum height of the tree is strictly set to 3, including the
-        // required "All Series" root.
-        // The occurrences for a category is incremented even if it is not
-        // explicitly present in a series' categories, but one of its
-        // subcategories is.
-
         // create a flat ArrayList of non-unique categories present in series'
         ArrayList<Category> found_categories = new ArrayList();
         for (Series series : serieses) {
@@ -65,6 +62,8 @@ public class Library {
         }
 
         rootCategory.setOccurrences(serieses.size());
+        // The maximum height of the tree is strictly set to 3, including the
+        // required "All Series" root
         for (Category c1 : rootCategory.getSubcategories()) {
             c1.setOccurrences((int) found_categories.stream().filter(category ->
                     category.getName().toLowerCase().equals(c1.getName().toLowerCase())
