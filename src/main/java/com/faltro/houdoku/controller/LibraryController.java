@@ -114,7 +114,7 @@ public class LibraryController extends Controller {
         ContextMenu categoryContextMenu = new ContextMenu();
         categoryContextMenu.getItems().addAll(
                 new MenuItem("Add Category"),
-                new MenuItem("Rename Category")
+                new MenuItem("Edit Category")
         );
 
         // Create factories for table cells for each column.
@@ -338,6 +338,7 @@ public class LibraryController extends Controller {
             } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                 Category category = treeView.getSelectionModel().getSelectedItem().getValue();
                 contextMenu.getItems().get(0).setOnAction(e -> promptAddCategory(category));
+                contextMenu.getItems().get(1).setOnAction(e -> promptEditCategory(category));
                 contextMenu.show(treeView, mouseEvent.getScreenX(), mouseEvent.getScreenY());
             }
         };
@@ -392,13 +393,14 @@ public class LibraryController extends Controller {
             alert_container.getChildren().addAll(invalid_label, name_label, name_field,
                     color_container);
 
-            // add validation to "OK" button to prevent alert from closing with invalid data
+            // add validation to "OK" button to prevent alert from closing with
+            // invalid data
             final Button btn_ok = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
             btn_ok.addEventFilter(ActionEvent.ACTION, event -> {
                 String name = name_field.getText();
                 if (!Category.nameIsValid(name) || library.getRootCategory()
                         .recursiveFindSubcategory(name) != null) {
-                    // the input is invalid -- tell the user and consume the event
+                    // input is invalid -- tell the user and consume the event
                     invalid_label.setVisible(true);
                     event.consume();
                 }
@@ -428,6 +430,76 @@ public class LibraryController extends Controller {
     }
 
     /**
+     * Prompts the user to edit the given category.
+     * <p>
+     * The dialog prompt allows the user to alter both the color and text of the
+     * category. The dialog is identical to that from promptAddCategory, but we
+     * will keep them separate in case we want them to have somewhat different
+     * functionality in the future.
+     *
+     * @param category
+     */
+    private void promptEditCategory(Category category) {
+        Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK,
+                ButtonType.CANCEL);
+
+        // create ui elements of alert container
+        Label invalid_label = new Label("The category name is not valid.");
+        invalid_label.setTextFill(Color.CRIMSON);
+        invalid_label.setVisible(false);
+        invalid_label.managedProperty().bind(invalid_label.visibleProperty());
+        Label name_label = new Label("Enter the name of the category:");
+        name_label.setWrapText(true);
+        TextField name_field = new TextField();
+        name_field.setText(category.getName());
+        Label color_label = new Label("Category color:");
+        ColorPicker color_picker = new ColorPicker();
+        color_picker.setValue(category.getColor());
+        HBox color_container = new HBox();
+        color_container.setSpacing(15.0);
+        color_container.setAlignment(Pos.CENTER);
+        color_container.getChildren().addAll(color_label, color_picker);
+
+        // add content to alert container
+        VBox alert_container = new VBox();
+        alert_container.setSpacing(10.0);
+        alert_container.getChildren().addAll(invalid_label, name_label, name_field,
+                color_container);
+
+        // add validation to "OK" button to prevent alert from closing with
+        // invalid data
+        final Button btn_ok = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
+        btn_ok.addEventFilter(ActionEvent.ACTION, event -> {
+            String name = name_field.getText();
+            if (!Category.nameIsValid(name) || library.getRootCategory()
+                    .recursiveFindSubcategory(name) != null) {
+                // nameIsValid will be false if the name is unchanged, since
+                // creating a category with an existing name is not allowed.
+                // In this case, we simply want to ignore that scenario.
+                if (!name.toLowerCase().equals(category.getName().toLowerCase())) {
+                    // input is invalid -- tell the user and consume the event
+                    invalid_label.setVisible(true);
+                    event.consume();
+                }
+            }
+        });
+
+        alert.getDialogPane().setContent(alert_container);
+        alert.setTitle(stage.getTitle());
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.OK) {
+            // we have already validated the new name
+            category.setName(name_field.getText());
+            category.setColor(color_picker.getValue());
+
+            // update/refresh the tree
+            updateContent();
+
+        }
+    }
+
+    /**
      * Prompts the user to edit the categories of the given series.
      *
      * @param series
@@ -437,11 +509,7 @@ public class LibraryController extends Controller {
                 ButtonType.CANCEL);
 
         // create ui elements of alert container
-//        Label invalid_label = new Label("The category name is not valid.");
-//        invalid_label.setTextFill(Color.CRIMSON);
-//        invalid_label.setVisible(false);
-//        invalid_label.managedProperty().bind(invalid_label.visibleProperty());
-        Label categories_label = new Label("Enter the categories for this series:");
+        Label categories_label = new Label("Choose the categories for this series:");
         categories_label.setWrapText(true);
 
         ArrayList<CheckBox> categories_boxes = new ArrayList<>();
