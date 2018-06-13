@@ -27,6 +27,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import java.util.ArrayList;
+
 public class LibraryController extends Controller {
     public static final int ID = 0;
     private static final float DEFAULT_CONTENT_DIVIDER_POS = 0.3f;
@@ -103,7 +105,8 @@ public class LibraryController extends Controller {
         // onAction events are set by newCellClickHandler()
         ContextMenu cellContextMenu = new ContextMenu();
         cellContextMenu.getItems().addAll(
-                new MenuItem("View Series")
+                new MenuItem("View Series"),
+                new MenuItem("Edit Categories")
         );
 
         // create a right-click context menu for categories
@@ -319,6 +322,7 @@ public class LibraryController extends Controller {
                 if (mouseEvent.getClickCount() == 1) {
                     Series series = tableView.getSelectionModel().getSelectedItem();
                     contextMenu.getItems().get(0).setOnAction(e -> goToSeries(series));
+                    contextMenu.getItems().get(1).setOnAction(e -> promptEditCategories(series));
                     contextMenu.show(tableView, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 }
             }
@@ -363,7 +367,7 @@ public class LibraryController extends Controller {
     private void promptAddCategory(Category category) {
         // disallow adding categories greater than a certain depth
         if (treeView.getTreeItemLevel(getTreeItemByCategory(category)) < 2) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.OK,
+            Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK,
                     ButtonType.CANCEL);
 
             // create ui elements of alert container
@@ -420,6 +424,68 @@ public class LibraryController extends Controller {
                     "This category is already at the maximum depth.", ButtonType.OK);
             alert.setTitle(stage.getTitle());
             alert.showAndWait();
+        }
+    }
+
+    /**
+     * Prompts the user to edit the categories of the given series.
+     *
+     * @param series
+     */
+    private void promptEditCategories(Series series) {
+        Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK,
+                ButtonType.CANCEL);
+
+        // create ui elements of alert container
+//        Label invalid_label = new Label("The category name is not valid.");
+//        invalid_label.setTextFill(Color.CRIMSON);
+//        invalid_label.setVisible(false);
+//        invalid_label.managedProperty().bind(invalid_label.visibleProperty());
+        Label categories_label = new Label("Enter the categories for this series:");
+        categories_label.setWrapText(true);
+
+        ArrayList<CheckBox> categories_boxes = new ArrayList<>();
+        for (Category category1 : library.getRootCategory().getSubcategories()) {
+            CheckBox checkbox1 = new CheckBox(category1.getName());
+            checkbox1.setSelected(series.getStringCategories().stream().anyMatch(
+                    name -> name.toLowerCase().equals(category1.getName().toLowerCase())
+            ));
+            categories_boxes.add(checkbox1);
+            for (Category category2 : category1.getSubcategories()) {
+                CheckBox checkbox2 = new CheckBox(category2.getName());
+                checkbox2.setSelected(series.getStringCategories().stream().anyMatch(
+                        name -> name.toLowerCase().equals(category2.getName().toLowerCase())
+                ));
+                categories_boxes.add(checkbox2);
+            }
+        }
+
+        // add content to alert container
+        VBox alert_container = new VBox();
+        alert_container.setSpacing(10);
+        ScrollPane categories_scrollpane = new ScrollPane();
+        categories_scrollpane.setMaxHeight(300);
+        VBox categories_container = new VBox();
+        categories_container.setSpacing(10);
+        categories_container.getChildren().addAll(categories_label);
+        categories_container.getChildren().addAll(categories_boxes);
+        categories_scrollpane.setContent(categories_container);
+        alert_container.getChildren().addAll(categories_label, categories_scrollpane);
+
+        alert.getDialogPane().setContent(alert_container);
+        alert.setTitle(stage.getTitle());
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.OK) {
+            // recreate the series' stringCategories to match selected checkboxes
+            ArrayList<String> newStringCategories = new ArrayList<>();
+            for (CheckBox checkbox : categories_boxes) {
+                if (checkbox.isSelected()) {
+                    newStringCategories.add(checkbox.getText());
+                }
+            }
+            series.setStringCategories(newStringCategories);
+            updateContent();
         }
     }
 

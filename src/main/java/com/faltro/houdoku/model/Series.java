@@ -128,6 +128,10 @@ public class Series {
         return stringCategories;
     }
 
+    public void setStringCategories(ArrayList<String> stringCategories) {
+        this.stringCategories = stringCategories;
+    }
+
     public String getSource() {
         return source;
     }
