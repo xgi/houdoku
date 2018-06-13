@@ -38,10 +38,9 @@ public class ContentLoader {
             chapter.images[page] = image;
             if (image != null && chapter.getCurrentPageNum() == page) {
                 readerController.imageView.setImage(image);
+                readerController.imageProgressIndicator.setVisible(false);
+                readerController.refreshPage();
             }
-
-            readerController.imageProgressIndicator.setVisible(false);
-            readerController.refreshPage();
 
             // preload any additional images
             if (!preloading) {
