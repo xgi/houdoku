@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      xmlns="http://javafx.com/javafx"
+      fx:id="container"
+      stylesheets="/style/default.css"
+      alignment="TOP_CENTER">
+    <MenuBar fx:id="menuBar">
+        <Menu text="File">
+            <MenuItem text="New"/>
+            <MenuItem text="Open" onAction="#goToAddSeries"/>
+            <MenuItem text="Save"/>
+            <MenuItem text="Save As"/>
+            <SeparatorMenuItem/>
+            <MenuItem id="exitButton" text="Exit" onAction="#exit"/>
+        </Menu>
+        <Menu text="Edit">
+            <MenuItem text="Copy"/>
+            <MenuItem text="Cut"/>
+            <MenuItem text="Paste"/>
+        </Menu>
+        <Menu text="View">
+            <CheckMenuItem fx:id="compactItem" text="Compact" onAction="#toggleCompact"/>
+            <Menu text="Zoom">
+                <fx:define>
+                    <ToggleGroup fx:id="zoomTypeGroup"/>
+                </fx:define>
+                <RadioMenuItem text="Fit Height" toggleGroup="$zoomTypeGroup" selected="true"/>
+                <RadioMenuItem text="Fit Width" toggleGroup="$zoomTypeGroup"/>
+                <RadioMenuItem text="Actual Size" toggleGroup="$zoomTypeGroup"/>
+            </Menu>
+        </Menu>
+        <Menu text="Help">
+            <MenuItem text="Search" disable="true"/>
+            <MenuItem text="Online Manual" visible="false"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="About"/>
+        </Menu>
+    </MenuBar>
+
+    <SplitPane fx:id="contentContainer">
+        <TreeTableView fx:id="treeView">
+            <placeholder>
+                <Label styleClass="placeholderLabel" text="No series found."/>
+            </placeholder>
+            <columns>
+                <TreeTableColumn fx:id="categoriesColumn" resizable="false" text="Categories"/>
+            </columns>
+        </TreeTableView>
+        <TableView fx:id="tableView">
+            <placeholder>
+                <Label styleClass="placeholderLabel" text="No series found."/>
+            </placeholder>
+            <columns>
+                <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
+                <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
+                <TableColumn fx:id="numChaptersColumn" resizable="false" text="Chapters"/>
+            </columns>
+        </TableView>
+    </SplitPane>
+
+    <HBox fx:id="filterBar" alignment="CENTER">
+        <Label text="Filter series: "/>
+        <TextField fx:id="filterTextField"/>
+    </HBox>
+</VBox>

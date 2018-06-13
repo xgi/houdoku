@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      xmlns="http://javafx.com/javafx"
+      fx:id="container"
+      stylesheets="/style/default.css"
+      alignment="TOP_CENTER"
+      minHeight="400" minWidth="400"
+      prefHeight="800" prefWidth="600">
+    <MenuBar fx:id="menuBar" minHeight="30">
+        <Menu text="File">
+            <MenuItem text="New" onAction="#nextPage"/>
+            <MenuItem text="Open"/>
+            <MenuItem text="Save"/>
+            <MenuItem text="Save As"/>
+            <SeparatorMenuItem/>
+            <MenuItem id="exitButton" text="Exit" onAction="#exit"/>
+        </Menu>
+        <Menu text="Edit">
+            <MenuItem text="Copy"/>
+            <MenuItem text="Cut"/>
+            <MenuItem text="Paste"/>
+        </Menu>
+        <Menu text="View">
+            <CheckMenuItem fx:id="nightModeItem" text="Night Mode" selected="false"
+                           onAction="#toggleNightMode"/>
+            <CheckMenuItem fx:id="showNavBarItem" text="Show Navigation Bar" selected="true"
+                           onAction="#toggleNavBar"/>
+            <Menu text="Zoom">
+                <fx:define>
+                    <ToggleGroup fx:id="zoomTypeGroup"/>
+                </fx:define>
+                <RadioMenuItem fx:id="fitHeightRadio" text="Fit Height" toggleGroup="$zoomTypeGroup"
+                               selected="true"
+                               onAction="#updateImageViewFit"/>
+                <RadioMenuItem fx:id="fitWidthRadio" text="Fit Width" toggleGroup="$zoomTypeGroup"
+                               onAction="#updateImageViewFit"/>
+                <RadioMenuItem fx:id="actualSizeRadio" text="Actual Size"
+                               toggleGroup="$zoomTypeGroup"
+                               onAction="#updateImageViewFit"/>
+            </Menu>
+        </Menu>
+        <Menu text="Help">
+            <MenuItem text="Search" disable="true"/>
+            <MenuItem text="Online Manual" visible="false"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="About"/>
+        </Menu>
+    </MenuBar>
+
+    <StackPane fx:id="navContainer">
+        <HBox fx:id="navBar" id="navBar" spacing="5" alignment="CENTER">
+            <padding>
+                <Insets top="5" bottom="5"/>
+            </padding>
+            <Button fx:id="firstPageButton" text="⇤" minHeight="40" minWidth="40"
+                    onAction="#firstPage"/>
+            <Button fx:id="prevPageButton" text="←" minHeight="40" minWidth="40"
+                    onAction="#previousPage"/>
+            <TextField fx:id="pageNumField" text="0" maxWidth="40" alignment="CENTER"
+                       onAction="#specificPage"/>
+            <Button fx:id="nextPageButton" text="→" minHeight="40" minWidth="40"
+                    onAction="#nextPage"/>
+            <Button fx:id="lastPageButton" text="⇥" minHeight="40" minWidth="40"
+                    onAction="#lastPage"/>
+        </HBox>
+        <Button fx:id="toSeriesButton" text="◂ Back to series" onAction="#goToSeries"/>
+    </StackPane>
+
+    <StackPane>
+        <ScrollPane fx:id="imageScrollPane" styleClass="edge-to-edge">
+            <ImageView fx:id="imageView" preserveRatio="true"/>
+        </ScrollPane>
+        <ProgressIndicator fx:id="imageProgressIndicator" visible="false"/>
+    </StackPane>
+</VBox>

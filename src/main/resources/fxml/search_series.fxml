@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      xmlns="http://javafx.com/javafx"
+      fx:id="searchSeriesContainer"
+      stylesheets="/style/default.css"
+      alignment="TOP_CENTER">
+    <MenuBar fx:id="menuBar">
+        <Menu text="File">
+            <MenuItem text="New"/>
+            <MenuItem text="Open"/>
+            <MenuItem text="Save"/>
+            <MenuItem text="Save As"/>
+            <SeparatorMenuItem/>
+            <MenuItem id="exitButton" text="Exit" onAction="#exit"/>
+        </Menu>
+        <Menu text="Edit">
+            <MenuItem text="Copy"/>
+            <MenuItem text="Cut"/>
+            <MenuItem text="Paste"/>
+        </Menu>
+        <Menu text="View">
+            <CheckMenuItem fx:id="compactItem" text="Compact"/>
+            <Menu text="Zoom">
+                <fx:define>
+                    <ToggleGroup fx:id="zoomTypeGroup"/>
+                </fx:define>
+                <RadioMenuItem text="Fit Height" toggleGroup="$zoomTypeGroup" selected="true"/>
+                <RadioMenuItem text="Fit Width" toggleGroup="$zoomTypeGroup"/>
+                <RadioMenuItem text="Actual Size" toggleGroup="$zoomTypeGroup"/>
+            </Menu>
+        </Menu>
+        <Menu text="Help">
+            <MenuItem text="Search" disable="true"/>
+            <MenuItem text="Online Manual" visible="false"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="About"/>
+        </Menu>
+    </MenuBar>
+
+    <HBox fx:id="searchSeriesHeader" alignment="CENTER">
+        <padding>
+            <Insets top="10" bottom="10"/>
+        </padding>
+        <Label text="Content source: "/>
+        <ComboBox fx:id="contentSourcesBox" styleClass="searchSeriesElement"/>
+    </HBox>
+
+    <HBox fx:id="searchBar" alignment="CENTER" spacing="5">
+        <padding>
+            <Insets bottom="10" left="15" right="15"/>
+        </padding>
+        <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" promptText="Search for a series..."
+                   styleClass="searchSeriesElement" onAction="#search"/>
+        <Button text="Search" onAction="#search"/>
+    </HBox>
+
+    <TableView fx:id="tableView">
+        <placeholder>
+            <Label styleClass="placeholderLabel" text="No series found."/>
+        </placeholder>
+        <columns>
+            <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
+            <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
+        </columns>
+    </TableView>
+</VBox>

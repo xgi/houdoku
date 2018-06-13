@@ -1,0 +1,104 @@
+.root {
+    -fx-font-size: 1em;
+}
+
+.h1 {
+    -fx-font-size: 2em;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 15;
+}
+
+.scroll-bar, .scroll-bar:pressed, .scroll-bar:focused {
+    -fx-font-size: 15;
+}
+
+#navContainer {
+    -fx-min-height: 50;
+    -fx-pref-height: 50;
+}
+
+#navBar {
+    -fx-background-color: #ddd;
+}
+
+#imageProgressIndicator {
+    -fx-max-width: 80;
+}
+
+#container {
+    -fx-min-width: 800px;
+    -fx-min-height: 800px;
+    /*-fx-pref-width: 800px;*/
+    /*-fx-pref-height: 800px;*/
+}
+
+#searchSeriesContainer {
+    -fx-min-width: 500px;
+    -fx-min-height: 600px;
+}
+
+#searchSeriesElement {
+    -fx-min-height: 60px;
+}
+
+#menuBar {
+    -fx-min-height: 30px;
+}
+
+/*#tableView {*/
+/*-fx-min-height: 400px;*/
+/*-fx-pref-height: 800px;*/
+/*}*/
+
+.placeholderLabel {
+    -fx-font-size: 18px;
+}
+
+#filterBar {
+    -fx-font-size: 18px;
+    -fx-min-height: 50px;
+}
+
+.tableCell {
+    -fx-alignment: center-left;
+    /*-fx-text-alignment: center;*/
+}
+
+.tableText {
+    -fx-font-size: 18px;
+}
+
+.categoryText {
+    -fx-font-weight: bold;
+}
+
+#metadataContainer, #descriptionContainer {
+    -fx-font-size: 1.4em;
+}
+
+.metadataLabel {
+    -fx-font-weight: bold;
+}
+
+.inverted {
+    -fx-fill: #ABB2BF;
+    -fx-background-color: #282C34;
+}
+
+.metadataTextFlow {
+    -fx-max-width: 600px;
+}
+
+#textAreaDescription {
+    -fx-min-height: 80px;
+}
+
+#searchSeriesHeader {
+    -fx-font-size: 1.1em;
+}
+
+#searchBar {
+    -fx-font-size: 1.3em;
+}
