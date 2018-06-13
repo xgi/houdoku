@@ -80,6 +80,10 @@ public class Library {
         serieses.add(series);
     }
 
+    public void removeSeries(Series series) {
+        serieses.remove(series);
+    }
+
     public ArrayList<Series> getSerieses() {
         return serieses;
     }

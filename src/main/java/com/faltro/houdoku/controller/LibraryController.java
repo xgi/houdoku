@@ -106,7 +106,8 @@ public class LibraryController extends Controller {
         ContextMenu cellContextMenu = new ContextMenu();
         cellContextMenu.getItems().addAll(
                 new MenuItem("View Series"),
-                new MenuItem("Edit Categories")
+                new MenuItem("Edit Categories"),
+                new MenuItem("Remove Series")
         );
 
         // create a right-click context menu for categories
@@ -323,6 +324,7 @@ public class LibraryController extends Controller {
                     Series series = tableView.getSelectionModel().getSelectedItem();
                     contextMenu.getItems().get(0).setOnAction(e -> goToSeries(series));
                     contextMenu.getItems().get(1).setOnAction(e -> promptEditCategories(series));
+                    contextMenu.getItems().get(2).setOnAction(e -> promptRemoveSeries(series));
                     contextMenu.show(tableView, mouseEvent.getScreenX(), mouseEvent.getScreenY());
                 }
             }
@@ -553,6 +555,32 @@ public class LibraryController extends Controller {
                 }
             }
             series.setStringCategories(newStringCategories);
+            updateContent();
+        }
+    }
+
+    /**
+     * Prompts the user to remove the given series.
+     *
+     * @param series
+     */
+    private void promptRemoveSeries(Series series) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES,
+                ButtonType.CANCEL);
+
+        Label label = new Label("Are you sure you want to remove this series from your " +
+                "library?\n\n\"" + series.getTitle() + "\"");
+        label.setWrapText(true);
+
+        VBox alert_container = new VBox();
+        alert_container.getChildren().add(label);
+
+        alert.getDialogPane().setContent(alert_container);
+        alert.setTitle(stage.getTitle());
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            library.removeSeries(series);
             updateContent();
         }
     }
