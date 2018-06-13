@@ -66,14 +66,13 @@ public class Library {
 
         rootCategory.setOccurrences(serieses.size());
         for (Category c1 : rootCategory.getSubcategories()) {
-            c1.setOccurrences((int) found_categories.stream().filter(
-                    category -> category.getName().toLowerCase().equals(c1.getName().toLowerCase())).count()
-            );
+            c1.setOccurrences((int) found_categories.stream().filter(category ->
+                    category.getName().toLowerCase().equals(c1.getName().toLowerCase())
+            ).count());
             for (Category c2 : c1.getSubcategories()) {
-                c2.setOccurrences((int) found_categories.stream().filter(
-                        category -> category.getName().toLowerCase().equals(c2.getName().toLowerCase())).count()
-                );
-                c1.deltaOccurrences(c2.getOccurrences());
+                c2.setOccurrences((int) found_categories.stream().filter(category ->
+                        category.getName().toLowerCase().equals(c2.getName().toLowerCase())
+                ).count());
             }
         }
     }
