@@ -16,15 +16,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //ContentSource mangadex = new MangaDex();
-        //Series series = mangadex.series("/manga/2334");
-        //Chapter chapter = mangadex.chapter(series, "/chapter/20900");
-        //mangadex.image("/chapter/321880", 3);
-        //mangadex.image("/chapter/290267", 2);
-        //mangadex.chapters(series);
-        //mangadex.chapter(series, "/chapter/99997");
-
-
         SceneManager sceneManager = new SceneManager(primaryStage);
 
         LibraryController libraryController = new LibraryController(sceneManager);
@@ -38,8 +29,6 @@ public class Main extends Application {
         sceneManager.initScene(SearchSeriesController.ID, addSeriesController, getClass().getResource("/fxml/search_series.fxml"));
 
         sceneManager.changeToScene(LibraryController.ID);
-        sceneManager.getStage().getScene().getWindow().sizeToScene();
-
 
         primaryStage.setTitle("Houdoku");
         primaryStage.show();
