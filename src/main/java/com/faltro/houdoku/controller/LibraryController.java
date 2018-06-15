@@ -274,9 +274,12 @@ public class LibraryController extends Controller {
 
     private void setCombinedPredicate(FilteredList<Series> filteredData) {
         filteredData.setPredicate(series -> {
-            // check that the series title contains the text filter
-            String lowerCaseFilter = filterTextField.getText().toLowerCase();
-            boolean titleMatches = series.getTitle().toLowerCase().contains(lowerCaseFilter);
+            // check that the series title, author, or artist contains the
+            // text filter
+            String filter = filterTextField.getText().toLowerCase();
+            boolean titleMatches = series.getTitle().toLowerCase().contains(filter);
+            boolean creatorMatches = series.author.toLowerCase().contains(filter) ||
+                    series.artist.toLowerCase().contains(filter);
 
             // check that the series has the selected category
             TreeItem<Category> selectedTreeCell = treeView.getSelectionModel().getSelectedItem();
@@ -286,7 +289,7 @@ public class LibraryController extends Controller {
                             category.recursiveFindSubcategory(stringCategory) != null
             ) || category.equals(library.getRootCategory());
 
-            return titleMatches && categoryMatches;
+            return (titleMatches || creatorMatches) && categoryMatches;
         });
     }
 
