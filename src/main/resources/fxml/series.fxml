@@ -43,7 +43,7 @@
         </Menu>
     </MenuBar>
 
-    <StackPane>
+    <StackPane fx:id="topContainer">
         <HBox fx:id="infoContainer" styleClass="inverted" spacing="15" alignment="CENTER">
             <padding>
                 <Insets fx:id="infoContainerInsets" top="30" bottom="15" left="15" right="15"/>
@@ -127,8 +127,8 @@
         <TextArea fx:id="textAreaDescription" wrapText="true" editable="false" prefRowCount="3"/>
     </HBox>
 
-    <VBox fx:id="contentContainer">
-        <HBox fx:id="filterBar" spacing="5" alignment="CENTER">
+    <VBox fx:id="contentContainer" VBox.vgrow="ALWAYS">
+        <HBox fx:id="filterBar" spacing="5" alignment="CENTER" VBox.vgrow="NEVER">
             <padding>
                 <Insets top="15" bottom="15" left="15" right="15"/>
             </padding>
@@ -136,7 +136,7 @@
             <Text text="Filter chapters: "/>
             <TextField fx:id="filterTextField"/>
         </HBox>
-        <TableView fx:id="tableView">
+        <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
             <placeholder>
                 <Label styleClass="placeholderLabel" text="No chapters found."/>
             </placeholder>

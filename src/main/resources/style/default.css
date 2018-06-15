@@ -27,13 +27,6 @@
     -fx-max-width: 80;
 }
 
-#container {
-    -fx-min-width: 800px;
-    -fx-min-height: 800px;
-    /*-fx-pref-width: 800px;*/
-    /*-fx-pref-height: 800px;*/
-}
-
 #searchSeriesContainer {
     -fx-min-width: 500px;
     -fx-min-height: 600px;
@@ -47,11 +40,6 @@
     -fx-min-height: 30px;
 }
 
-/*#tableView {*/
-/*-fx-min-height: 400px;*/
-/*-fx-pref-height: 800px;*/
-/*}*/
-
 .placeholderLabel {
     -fx-font-size: 18px;
 }
@@ -63,7 +51,6 @@
 
 .tableCell {
     -fx-alignment: center-left;
-    /*-fx-text-alignment: center;*/
 }
 
 .tableText {

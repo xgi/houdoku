@@ -6,7 +6,6 @@ import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.OutputHelpers;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -19,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -48,6 +48,8 @@ public class SeriesController extends Controller {
     private VBox container;
     @FXML
     private MenuBar menuBar;
+    @FXML
+    private StackPane topContainer;
     @FXML
     private HBox infoContainer;
     @FXML
@@ -80,12 +82,8 @@ public class SeriesController extends Controller {
     private Text textStatus;
     @FXML
     private Text textNumChapters;
-    //    @FXML
-//    private Text textDescription;
     @FXML
     private Text textSource;
-    //    @FXML
-//    private TextFlow descriptionContent;
     @FXML
     private TextArea textAreaDescription;
     @FXML
@@ -124,17 +122,7 @@ public class SeriesController extends Controller {
         super.initialize();
 
         stage.widthProperty().addListener((o, oldValue, newValue) -> {
-            // set the cover image width a percentage of the stage, but
-            // enforce a maximum height
-            coverImageView.setFitWidth(stage.getWidth() * COVER_WIDTH);
-            if (coverImageView.getBoundsInParent().getHeight() > COVER_MAX_HEIGHT) {
-                // we would like to simply use setFitHeight, but some later
-                // binds require fitWidth to be appropriately set, which is
-                // not done automatically
-                Image image = coverImageView.getImage();
-                double aspectRatio = image.getWidth() / image.getHeight();
-                coverImageView.setFitWidth(aspectRatio * COVER_MAX_HEIGHT);
-            }
+            updateCoverSize();
         });
 
         infoContainer.prefWidthProperty().bind(
@@ -149,9 +137,6 @@ public class SeriesController extends Controller {
                         .add(textAreaDescription.layoutXProperty())
                         .add(textAreaDescription.prefWidthProperty())
                         .subtract(toggleInfoButton.widthProperty())
-        );
-        tableView.minHeightProperty().bind(
-                new SimpleDoubleProperty(0)
         );
 
         // create an array of the columns for easier bulk operations
@@ -235,6 +220,7 @@ public class SeriesController extends Controller {
     @Override
     public void onMadeActive() {
         refreshContent();
+        updateCoverSize();
 
         // series.reloadFromSource will call this.refreshContent after the
         // series has been reloaded
@@ -242,6 +228,22 @@ public class SeriesController extends Controller {
                 series.getContentSourceId()
         );
         series.reloadFromSource(sceneManager.getContentLoader(), contentSource, this);
+    }
+
+    /**
+     * Set the cover image width a percentage of the stage while enforcing a
+     * maximum height.
+     */
+    public void updateCoverSize() {
+        coverImageView.setFitWidth(stage.getWidth() * COVER_WIDTH);
+        if (coverImageView.getBoundsInParent().getHeight() > COVER_MAX_HEIGHT) {
+            // we would like to simply use setFitHeight, but some later
+            // binds require fitWidth to be appropriately set, which is
+            // not done automatically
+            Image image = coverImageView.getImage();
+            double aspectRatio = image.getWidth() / image.getHeight();
+            coverImageView.setFitWidth(aspectRatio * COVER_MAX_HEIGHT);
+        }
     }
 
     /**
@@ -315,34 +317,14 @@ public class SeriesController extends Controller {
     @FXML
     public void toggleInfo() {
         // hide/show top containers
-        infoContainer.setVisible(!infoContainer.isVisible());
+        topContainer.setVisible(!topContainer.isVisible());
         descriptionContainer.setVisible(!descriptionContainer.isVisible());
-        toLibraryButton.setVisible(!toLibraryButton.isVisible());
 
-        // move content up/down and resize appropriately
-        if (infoContainer.isVisible()) {
-            contentContainer.translateYProperty().bind(
-                    new SimpleDoubleProperty(0)
-            );
-            tableView.minHeightProperty().bind(
-                    new SimpleDoubleProperty(0)
-            );
-        } else {
-            contentContainer.translateYProperty().bind(
-                    contentContainer.layoutYProperty()
-                            .multiply(-1)
-                            .add(menuBar.heightProperty())
-            );
-            tableView.minHeightProperty().bind(
-                    stage.heightProperty()
-                            .subtract(filterBar.heightProperty())
-                            .subtract(menuBar.heightProperty())
-                            .subtract(menuBar.heightProperty()) // hack to fix spacing issue
-            );
-        }
+        topContainer.setManaged(topContainer.isVisible());
+        descriptionContainer.setManaged(descriptionContainer.isVisible());
 
         // set toggle button to the appropriate symbol
-        toggleInfoButton.setText(infoContainer.isVisible() ? "▲" : "▼");
+        toggleInfoButton.setText(topContainer.isVisible() ? "▲" : "▼");
     }
 
     /**

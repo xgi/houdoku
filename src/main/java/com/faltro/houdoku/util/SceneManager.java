@@ -5,6 +5,7 @@ import com.faltro.houdoku.util.loader.ContentLoader;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ public class SceneManager {
     public static final int VSCROLLBAR_WIDTH = 20;
 
     private Stage stage;
+    private HashMap<Integer, Parent> roots;
     private HashMap<Integer, Scene> scenes;
     private HashMap<Scene, Controller> controllers;
     private PluginManager pluginManager;
@@ -23,6 +25,7 @@ public class SceneManager {
 
     public SceneManager(Stage stage) {
         this.stage = stage;
+        this.roots = new HashMap<>();
         this.scenes = new HashMap<>();
         this.controllers = new HashMap<>();
         this.pluginManager = new PluginManager();
@@ -36,16 +39,25 @@ public class SceneManager {
         Parent root = loader.load();
         //Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
         Scene scene = new Scene(root);
+        roots.put(id, root);
         scenes.put(id, scene);
         controllers.put(scene, controller);
     }
 
     public void changeToScene(int id) {
-        double previous_height = stage.getHeight();
         Scene scene = scenes.get(id);
-        stage.setScene(scene);
-        stage.setHeight(previous_height);
-        controllers.get(scene).onMadeActive();
+        if (stage.getScene() != null) {
+            Scene previous_scene = stage.getScene();
+            stage.setScene(scene);
+            VBox prev_container = controllers.get(previous_scene).getContainer();
+            stage.setWidth(prev_container.getPrefWidth());
+            stage.setHeight(prev_container.getPrefHeight());
+            controllers.get(scene).onMadeActive();
+        } else {
+            stage.setScene(scene);
+            scene.getWindow().sizeToScene();
+            controllers.get(scene).onMadeActive();
+        }
     }
 
     public void createSceneNewWindow(int id) {
