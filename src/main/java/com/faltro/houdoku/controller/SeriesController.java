@@ -344,7 +344,7 @@ public class SeriesController extends Controller {
                     ReaderController readerController =
                             (ReaderController) sceneManager.getController(ReaderController.ID);
                     readerController.setChapter(chapter);
-                    sceneManager.changeToScene(ReaderController.ID);
+                    sceneManager.changeToRoot(ReaderController.ID);
                 }
             }
         };
@@ -357,6 +357,6 @@ public class SeriesController extends Controller {
      */
     @FXML
     public void goToLibrary() {
-        sceneManager.changeToScene(LibraryController.ID);
+        sceneManager.changeToRoot(LibraryController.ID);
     }
 }

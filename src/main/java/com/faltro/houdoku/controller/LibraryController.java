@@ -583,7 +583,7 @@ public class LibraryController extends Controller {
     @FXML
     public void goToAddSeries() {
         sceneManager.createSceneNewWindow(SearchSeriesController.ID);
-//        sceneManager.changeToScene(SearchSeriesController.ID);
+//        sceneManager.changeToRoot(SearchSeriesController.ID);
     }
 
     @FXML
@@ -591,7 +591,7 @@ public class LibraryController extends Controller {
         SeriesController seriesController =
                 (SeriesController) sceneManager.getController(SeriesController.ID);
         seriesController.setSeries(series);
-        sceneManager.changeToScene(SeriesController.ID);
+        sceneManager.changeToRoot(SeriesController.ID);
     }
 
     public TreeItem<Category> getTreeItemByCategory(Category category) {

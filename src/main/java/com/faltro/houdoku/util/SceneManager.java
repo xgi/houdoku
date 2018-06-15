@@ -5,7 +5,6 @@ import com.faltro.houdoku.util.loader.ContentLoader;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,15 +17,13 @@ public class SceneManager {
 
     private Stage stage;
     private HashMap<Integer, Parent> roots;
-    private HashMap<Integer, Scene> scenes;
-    private HashMap<Scene, Controller> controllers;
+    private HashMap<Integer, Controller> controllers;
     private PluginManager pluginManager;
     private ContentLoader contentLoader;
 
     public SceneManager(Stage stage) {
         this.stage = stage;
         this.roots = new HashMap<>();
-        this.scenes = new HashMap<>();
         this.controllers = new HashMap<>();
         this.pluginManager = new PluginManager();
         this.contentLoader = new ContentLoader();
@@ -37,42 +34,37 @@ public class SceneManager {
         loader.setLocation(source);
         loader.setController(controller);
         Parent root = loader.load();
-        //Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-        Scene scene = new Scene(root);
         roots.put(id, root);
-        scenes.put(id, scene);
-        controllers.put(scene, controller);
+        controllers.put(id, controller);
     }
 
-    public void changeToScene(int id) {
-        Scene scene = scenes.get(id);
+    public void changeToRoot(int id) {
         if (stage.getScene() != null) {
-            Scene previous_scene = stage.getScene();
-            stage.setScene(scene);
-            VBox prev_container = controllers.get(previous_scene).getContainer();
-            stage.setWidth(prev_container.getPrefWidth());
-            stage.setHeight(prev_container.getPrefHeight());
-            controllers.get(scene).onMadeActive();
+            Scene scene = stage.getScene();
+            scene.setRoot(roots.get(id));
+            controllers.get(id).onMadeActive();
         } else {
+            Scene scene = new Scene(roots.get(id));
             stage.setScene(scene);
             scene.getWindow().sizeToScene();
-            controllers.get(scene).onMadeActive();
+            controllers.get(id).onMadeActive();
         }
     }
 
     public void createSceneNewWindow(int id) {
         Stage temp_stage = new Stage();
         temp_stage.setTitle(stage.getTitle());
-        Scene scene = scenes.get(id);
+        Scene scene = new Scene(roots.get(id));
         temp_stage.setScene(scene);
         temp_stage.sizeToScene();
         temp_stage.show();
-        controllers.get(scene).setStage(temp_stage);
-        controllers.get(scene).onMadeActive();
+        Controller controller = controllers.get(id);
+        controller.setStage(temp_stage);
+        controller.onMadeActive();
     }
 
     public Controller getController(int id) {
-        return controllers.get(scenes.get(id));
+        return controllers.get(id);
     }
 
     public Stage getStage() {

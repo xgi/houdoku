@@ -41,7 +41,7 @@ public class Main extends Application {
         primaryStage.setHeight(screen_height * DEFAULT_HEIGHT >= MIN_DEFAULT_HEIGHT ?
                 (int) (screen_height * DEFAULT_HEIGHT) : MIN_DEFAULT_HEIGHT);
 
-        sceneManager.changeToScene(LibraryController.ID);
+        sceneManager.changeToRoot(LibraryController.ID);
 
         primaryStage.setTitle("Houdoku");
         primaryStage.show();

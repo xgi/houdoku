@@ -259,7 +259,7 @@ public class ReaderController extends Controller {
         chapter.specificPage(1);
         loadCurrentPage();
         chapter.clearImages();
-        sceneManager.changeToScene(SeriesController.ID);
+        sceneManager.changeToRoot(SeriesController.ID);
     }
 
 //    private double getVScrollBarWidth() {
