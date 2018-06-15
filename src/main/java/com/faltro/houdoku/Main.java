@@ -21,29 +21,33 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        SceneManager sceneManager = new SceneManager(primaryStage);
+    public void start(Stage primary_stage) throws Exception {
+        SceneManager scene_manager = new SceneManager(primary_stage);
 
-        LibraryController libraryController = new LibraryController(sceneManager);
-        SeriesController seriesController = new SeriesController(sceneManager);
-        ReaderController readerController = new ReaderController(sceneManager);
-        SearchSeriesController addSeriesController = new SearchSeriesController(sceneManager);
+        LibraryController library_controller = new LibraryController(scene_manager);
+        SeriesController series_controller = new SeriesController(scene_manager);
+        ReaderController reader_controller = new ReaderController(scene_manager);
+        SearchSeriesController add_series_controller = new SearchSeriesController(scene_manager);
 
-        sceneManager.initScene(LibraryController.ID, libraryController, getClass().getResource("/fxml/library.fxml"));
-        sceneManager.initScene(SeriesController.ID, seriesController, getClass().getResource("/fxml/series.fxml"));
-        sceneManager.initScene(ReaderController.ID, readerController, getClass().getResource("/fxml/reader.fxml"));
-        sceneManager.initScene(SearchSeriesController.ID, addSeriesController, getClass().getResource("/fxml/search_series.fxml"));
+        scene_manager.initScene(LibraryController.ID, library_controller,
+                getClass().getResource("/fxml/library.fxml"));
+        scene_manager.initScene(SeriesController.ID, series_controller,
+                getClass().getResource("/fxml/series.fxml"));
+        scene_manager.initScene(ReaderController.ID, reader_controller,
+                getClass().getResource("/fxml/reader.fxml"));
+        scene_manager.initScene(SearchSeriesController.ID, add_series_controller,
+                getClass().getResource("/fxml/search_series.fxml"));
 
         double screen_width = Screen.getPrimary().getBounds().getWidth();
         double screen_height = Screen.getPrimary().getBounds().getHeight();
-        primaryStage.setWidth(screen_width * DEFAULT_WIDTH >= MIN_DEFAULT_WIDTH ?
+        primary_stage.setWidth(screen_width * DEFAULT_WIDTH >= MIN_DEFAULT_WIDTH ?
                 (int) (screen_width * DEFAULT_WIDTH) : MIN_DEFAULT_WIDTH);
-        primaryStage.setHeight(screen_height * DEFAULT_HEIGHT >= MIN_DEFAULT_HEIGHT ?
+        primary_stage.setHeight(screen_height * DEFAULT_HEIGHT >= MIN_DEFAULT_HEIGHT ?
                 (int) (screen_height * DEFAULT_HEIGHT) : MIN_DEFAULT_HEIGHT);
 
-        sceneManager.changeToRoot(LibraryController.ID);
+        scene_manager.changeToRoot(LibraryController.ID);
 
-        primaryStage.setTitle("Houdoku");
-        primaryStage.show();
+        primary_stage.setTitle("Houdoku");
+        primary_stage.show();
     }
 }
