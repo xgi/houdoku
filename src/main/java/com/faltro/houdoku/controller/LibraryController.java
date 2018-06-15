@@ -74,11 +74,6 @@ public class LibraryController extends Controller {
     public void initialize() {
         super.initialize();
 
-        contentContainer.prefHeightProperty().bind(
-                stage.heightProperty()
-                        .subtract(filterBar.heightProperty())
-                        .subtract(menuBar.heightProperty())
-        );
         contentContainer.setDividerPosition(0, DEFAULT_CONTENT_DIVIDER_POS);
 
         // bind column widths to a percentage of the table width

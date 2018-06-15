@@ -41,7 +41,7 @@
         </Menu>
     </MenuBar>
 
-    <SplitPane fx:id="contentContainer">
+    <SplitPane fx:id="contentContainer" VBox.vgrow="ALWAYS">
         <TreeTableView fx:id="treeView">
             <placeholder>
                 <Label styleClass="placeholderLabel" text="No series found."/>
