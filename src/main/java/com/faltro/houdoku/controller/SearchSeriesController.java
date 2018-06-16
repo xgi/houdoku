@@ -94,9 +94,7 @@ public class SearchSeriesController extends Controller {
                 (Image) p.getValue().get("cover")
         ));
         titleColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                p.getValue().get("title") + "\n★" + p.getValue().get("rating") + "\n" +
-                        p.getValue().get("views") + " views, " + p.getValue().get("follows") +
-                        " follows"
+                (String) p.getValue().get("details")
         ));
     }
 
