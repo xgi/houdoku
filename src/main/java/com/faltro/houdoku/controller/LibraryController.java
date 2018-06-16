@@ -58,11 +58,15 @@ public class LibraryController extends Controller {
     @FXML
     private TableColumn<Series, String> numChaptersColumn;
     @FXML
+    private HBox actionBar;
+    @FXML
     private HBox filterBar;
     @FXML
     private TextField filterTextField;
     @FXML
     private CheckMenuItem compactItem;
+    @FXML
+    private CheckMenuItem showActionBarItem;
 
     public LibraryController(SceneManager sceneManager) {
         super(sceneManager);
@@ -645,6 +649,12 @@ public class LibraryController extends Controller {
             }
         }
         return result;
+    }
+
+    @FXML
+    private void toggleActionBar() {
+        actionBar.setVisible(showActionBarItem.isSelected());
+        actionBar.setManaged(actionBar.isVisible());
     }
 
     public Library getLibrary() {

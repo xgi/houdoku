@@ -189,7 +189,6 @@ public class ReaderController extends Controller {
 
     @FXML
     private void toggleNavBar() {
-        //navBar.setVisible(showNavBarItem.isSelected());
         navContainer.setVisible(showNavBarItem.isSelected());
         if (showNavBarItem.isSelected()) {
             navContainer.setMinHeight(navContainer.getPrefHeight());

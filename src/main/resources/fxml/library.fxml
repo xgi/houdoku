@@ -25,14 +25,8 @@
         </Menu>
         <Menu text="View">
             <CheckMenuItem fx:id="compactItem" text="Compact" onAction="#toggleCompact"/>
-            <Menu text="Zoom">
-                <fx:define>
-                    <ToggleGroup fx:id="zoomTypeGroup"/>
-                </fx:define>
-                <RadioMenuItem text="Fit Height" toggleGroup="$zoomTypeGroup" selected="true"/>
-                <RadioMenuItem text="Fit Width" toggleGroup="$zoomTypeGroup"/>
-                <RadioMenuItem text="Actual Size" toggleGroup="$zoomTypeGroup"/>
-            </Menu>
+            <CheckMenuItem fx:id="showActionBarItem" text="Show Action Bar" selected="true"
+                           onAction="#toggleActionBar"/>
         </Menu>
         <Menu text="Help">
             <MenuItem text="Search" disable="true"/>
@@ -42,7 +36,7 @@
         </Menu>
     </MenuBar>
 
-    <HBox fx:id="actionContainer" alignment="CENTER_LEFT" spacing="10" prefHeight="50">
+    <HBox fx:id="actionBar" alignment="CENTER_LEFT" spacing="10" prefHeight="50">
         <Button text="Add Series" prefHeight="${actionContainer.prefHeight}"
                 onAction="#goToAddSeries">
             <graphic>
