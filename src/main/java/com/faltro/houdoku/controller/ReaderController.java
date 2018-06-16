@@ -13,6 +13,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 public class ReaderController extends Controller {
     public static final int ID = 2;
@@ -20,6 +21,8 @@ public class ReaderController extends Controller {
     public ImageView imageView;
     @FXML
     public ProgressIndicator imageProgressIndicator;
+    @FXML
+    public Text errorText;
     @FXML
     private VBox container;
     @FXML

@@ -1,5 +1,7 @@
 package com.faltro.houdoku.plugins;
 
+import com.faltro.houdoku.exception.ContentUnavailableException;
+import com.faltro.houdoku.exception.LicensedContentException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ParseHelpers;
@@ -121,14 +123,21 @@ public class MangaHere extends GenericContentSource {
     }
 
     @Override
-    public Image image(Chapter chapter, int page) throws IOException {
+    public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException {
         Document document = getURL(PROTOCOL + "://" + DOMAIN + chapter.getSource() +
                 (page == 1 ? "" : Integer.toString(page) + ".html"));
 
+        Elements errors = document.select("div[class=mangaread_error]");
+        if (errors.size() > 0) {
+            if (errors.first().text().contains("has been licensed")) {
+                throw new LicensedContentException("This content has been licensed and is not " +
+                        "available on " + NAME + ".");
+            }
+        }
+
         // we may not have determined the number of pages yet, so do that here
         if (chapter.images.length == 1) {
-            Elements page_options = document.select("select").get(1)
-                    .select("option");
+            Elements page_options = document.selectFirst("select[class=wid60]").select("option");
             int num_pages = page_options.size() - 1;
 
             chapter.images = new Image[num_pages];

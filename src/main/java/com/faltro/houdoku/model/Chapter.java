@@ -1,12 +1,10 @@
 package com.faltro.houdoku.model;
 
 import com.faltro.houdoku.controller.ReaderController;
-import com.faltro.houdoku.plugins.MangaDex;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.loader.ContentLoader;
 import javafx.scene.image.Image;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
@@ -108,16 +106,6 @@ public class Chapter {
     public void deltaPage(int delta) {
         this.currentPageNum += delta;
         this.sanitizePageNumber();
-    }
-
-    public void loadPage(int pageNum) {
-        ContentSource mangadex = new MangaDex();
-        try {
-            Image image = mangadex.image(this, pageNum + 1);
-            images[pageNum] = image;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void loadCurrentImage(ContentLoader contentLoader, ContentSource contentSource,

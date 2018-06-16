@@ -3,9 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -78,5 +77,8 @@
             <ImageView fx:id="imageView" preserveRatio="true"/>
         </ScrollPane>
         <ProgressIndicator fx:id="imageProgressIndicator" visible="false"/>
+        <HBox alignment="CENTER" visible="false" managed="false">
+            <Text fx:id="errorText" textAlignment="CENTER" text="An error occurred."/>
+        </HBox>
     </StackPane>
 </VBox>

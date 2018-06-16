@@ -1,5 +1,6 @@
 package com.faltro.houdoku.util;
 
+import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import javafx.scene.image.Image;
@@ -28,7 +29,7 @@ public interface ContentSource {
 
     Chapter chapter(Series series, Document seriesDocument, String source);
 
-    Image image(Chapter chapter, int page) throws IOException;
+    Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException;
 
     String toString();
 }

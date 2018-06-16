@@ -93,3 +93,7 @@
 #searchBar {
     -fx-font-size: 1.3em;
 }
+
+#errorText {
+    -fx-font-size: 1.5em;
+}

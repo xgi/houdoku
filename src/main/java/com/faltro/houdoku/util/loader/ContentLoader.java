@@ -4,6 +4,7 @@ import com.faltro.houdoku.controller.LibraryController;
 import com.faltro.houdoku.controller.ReaderController;
 import com.faltro.houdoku.controller.SearchSeriesController;
 import com.faltro.houdoku.controller.SeriesController;
+import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
@@ -33,12 +34,20 @@ public class ContentLoader {
                 image = contentSource.image(chapter, page + 1);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (ContentUnavailableException e) {
+                readerController.imageProgressIndicator.setVisible(false);
+                readerController.errorText.getParent().setVisible(true);
+                readerController.errorText.getParent().setManaged(true);
+                readerController.errorText.setText(e.getMessage() +
+                        "\n(" + e.getClass().getSimpleName() + ")");
             }
 
             chapter.images[page] = image;
             if (image != null && chapter.getCurrentPageNum() == page) {
                 readerController.imageView.setImage(image);
                 readerController.imageProgressIndicator.setVisible(false);
+                readerController.errorText.getParent().setVisible(false);
+                readerController.errorText.getParent().setManaged(false);
                 readerController.refreshPage();
             }
 
