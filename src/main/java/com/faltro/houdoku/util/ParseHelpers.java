@@ -21,6 +21,24 @@ public class ParseHelpers {
         return parent.selectFirst("th:contains(" + header + ")").parent().selectFirst("td");
     }
 
+    /**
+     * Isolates the first word in the given string.
+     * <p>
+     * This function is built to handle two cases: the input string solely
+     * contains a single word, and the input string contains a sequence of
+     * words, separated by spaces.
+     *
+     * @param string
+     * @return
+     */
+    public static String firstWord(String string) {
+        String result = string;
+        if (string.contains(" ")) {
+            result = string.substring(0, string.indexOf(" "));
+        }
+        return result;
+    }
+
     public static int parseInt(String text) {
         text = text.split("\\s+")[0];
         int result = 0;

@@ -20,11 +20,10 @@ public class MangaDex extends GenericContentSource {
     public static final String NAME = "MangaDex";
     public static final String DOMAIN = "mangadex.org";
     public static final String PROTOCOL = "https";
-    public static final String SEARCH_PREFIX = "/?page=search";
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document doc = getURL(PROTOCOL + "://" + DOMAIN + SEARCH_PREFIX + "&title=" + query);
+        Document doc = getURL(PROTOCOL + "://" + DOMAIN + "/?page=search" + "&title=" + query);
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements links = doc.select("a[class=manga_title]");
@@ -186,42 +185,6 @@ public class MangaDex extends GenericContentSource {
         Series series = new Series(title, source, cover, ID, metadata);
         series.setChapters(chapters(series));
         return series;
-    }
-
-    @Override
-    public Chapter chapter(Series series, String source) throws IOException {
-        Document seriesDocument = getURL(PROTOCOL + "://" + DOMAIN + series.getSource());
-        return chapter(series, seriesDocument, source);
-    }
-
-    @Override
-    public Chapter chapter(Series series, Document seriesDocument, String source) {
-        Element chapterRow = seriesDocument.selectFirst("a[href=" + source + "]").parent().parent();
-        Elements cells = chapterRow.select("td");
-
-        String title = cells.get(1).selectFirst("a").attr("title");
-        double chapterNum = ParseHelpers.parseDouble(cells.get(1).selectFirst("a")
-                .attr("data-chapter-num"));
-        int volumeNum = ParseHelpers.parseInt(cells.get(1).selectFirst("a")
-                .attr("data-volume-num"));
-        String language = cells.get(3).selectFirst("img").attr("title");
-        String group = cells.get(4).selectFirst("a").text();
-        int views = ParseHelpers.parseInt(cells.get(6).text());
-        String dateString = cells.get(7).attr("title");
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
-                "yyyy-MM-dd HH:mm:ss z", Locale.ENGLISH
-        );
-        LocalDateTime localDateTime = LocalDateTime.parse(dateString, dateTimeFormatter);
-
-        HashMap<String, Object> metadata = new HashMap<>();
-        metadata.put("chapterNum", chapterNum);
-        metadata.put("volumeNum", volumeNum);
-        metadata.put("language", language);
-        metadata.put("group", group);
-        metadata.put("views", views);
-        metadata.put("localDateTime", localDateTime);
-
-        return new Chapter(series, title, source, metadata);
     }
 
     @Override

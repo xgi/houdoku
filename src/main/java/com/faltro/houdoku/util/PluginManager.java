@@ -1,6 +1,7 @@
 package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.plugins.MangaDex;
+import com.faltro.houdoku.plugins.MangaHere;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +12,8 @@ public class PluginManager {
     public PluginManager() {
         contentSources = new ArrayList<>();
         contentSources.addAll(Arrays.asList(
-                new MangaDex()
+                new MangaDex(),
+                new MangaHere()
                 // add other sources here
         ));
     }
