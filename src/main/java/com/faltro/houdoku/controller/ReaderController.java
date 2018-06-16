@@ -129,6 +129,10 @@ public class ReaderController extends Controller {
 
     @Override
     public void onMadeActive() {
+        imageProgressIndicator.setVisible(false);
+        errorText.getParent().setVisible(false);
+        errorText.getParent().setManaged(false);
+
         loadCurrentPage();
     }
 
