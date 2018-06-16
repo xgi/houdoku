@@ -583,14 +583,44 @@ public class LibraryController extends Controller {
         }
     }
 
+    /**
+     * Prompts the user to remove the selected series.
+     * <p>
+     * If no series is selected, this function does nothing.
+     */
     @FXML
-    public void goToAddSeries() {
-        sceneManager.createSceneNewWindow(SearchSeriesController.ID);
-//        sceneManager.changeToRoot(SearchSeriesController.ID);
+    public void promptRemoveSelectedSeries() {
+        Series series = tableView.getSelectionModel().getSelectedItem();
+        if (series != null) {
+            promptRemoveSeries(series);
+        }
+
     }
 
     @FXML
-    public void goToSeries(Series series) {
+    public void goToAddSeries() {
+        sceneManager.createSceneNewWindow(SearchSeriesController.ID);
+    }
+
+    /**
+     * Changes to the series page with the selected series.
+     * <p>
+     * If no series is selected, this function does nothing.
+     */
+    @FXML
+    private void goToSelectedSeries() {
+        Series series = tableView.getSelectionModel().getSelectedItem();
+        if (series != null) {
+            goToSeries(series);
+        }
+    }
+
+    /**
+     * Changes to the series page for the given series.
+     *
+     * @param series
+     */
+    private void goToSeries(Series series) {
         SeriesController seriesController =
                 (SeriesController) sceneManager.getController(SeriesController.ID);
         seriesController.setSeries(series);

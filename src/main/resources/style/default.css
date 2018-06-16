@@ -23,6 +23,10 @@
     -fx-background-color: #ddd;
 }
 
+#actionContainer {
+    -fx-font-size: 1.2em;
+}
+
 #imageProgressIndicator {
     -fx-max-width: 80;
 }

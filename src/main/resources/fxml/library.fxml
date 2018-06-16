@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns:fx="http://javafx.com/fxml"
@@ -40,6 +41,33 @@
             <MenuItem text="About"/>
         </Menu>
     </MenuBar>
+
+    <HBox fx:id="actionContainer" alignment="CENTER_LEFT" spacing="10" prefHeight="50">
+        <Button text="Add Series" prefHeight="${actionContainer.prefHeight}"
+                onAction="#goToAddSeries">
+            <graphic>
+                <ImageView>
+                    <Image url="/img/icon_add.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button text="Remove Series" prefHeight="${actionContainer.prefHeight}"
+                onAction="#promptRemoveSelectedSeries">
+            <graphic>
+                <ImageView>
+                    <Image url="/img/icon_remove.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Button text="View Series" prefHeight="${actionContainer.prefHeight}"
+                onAction="#goToSelectedSeries">
+            <graphic>
+                <ImageView>
+                    <Image url="/img/icon_view.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+    </HBox>
 
     <SplitPane fx:id="contentContainer" VBox.vgrow="ALWAYS">
         <TreeTableView fx:id="treeView">
