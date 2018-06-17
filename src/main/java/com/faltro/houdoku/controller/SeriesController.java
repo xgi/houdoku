@@ -12,6 +12,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -265,6 +266,23 @@ public class SeriesController extends Controller {
         textNumChapters.setText(Integer.toString(series.getNumHighestChapter()) + " (" +
                 Integer.toString(series.getNumChapters()) + " releases)");
         textAreaDescription.setText(series.description);
+
+        // hide metadata field rows if the field is unset
+        textAltNames.getParent().getParent().setVisible(series.altNames.length > 0);
+        textAuthor.getParent().getParent().setVisible(!series.author.equals(""));
+        textArtist.getParent().getParent().setVisible(!series.artist.equals(""));
+        textRating.getParent().getParent().setVisible(series.rating != 0);
+        textViews.getParent().getParent().setVisible(series.views != 0);
+        textFollows.getParent().getParent().setVisible(series.follows != 0);
+        textGenres.getParent().getParent().setVisible(series.genres.length > 0);
+        textStatus.getParent().getParent().setVisible(!series.status.equals(""));
+
+        for (Text text : Arrays.asList(
+                textAltNames, textAuthor, textArtist, textRating,
+                textViews, textFollows, textGenres, textStatus)) {
+            Parent row = text.getParent().getParent();
+            row.setManaged(row.isVisible());
+        }
 
         // add filtered and sorted chapter list to table
         filteredData = new FilteredList<>(
