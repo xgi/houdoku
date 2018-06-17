@@ -8,6 +8,8 @@
     <artifactId>houdoku</artifactId>
     <version>1.0</version>
     <build>
+        <outputDirectory>out/production/houdoku</outputDirectory>
+        <testOutputDirectory>out/test/houdoku</testOutputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
