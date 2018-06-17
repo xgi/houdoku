@@ -25,6 +25,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -171,20 +172,37 @@ public class SeriesController extends Controller {
         );
 
         // create column cell value factories with appropriate field
-        titleColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                p.getValue().getTitle()));
-        volumeColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                Integer.toString(p.getValue().volumeNum)));
-        chapterColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                OutputHelpers.doubleToString(p.getValue().chapterNum)));
-        languageColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                p.getValue().language));
-        groupColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                p.getValue().group));
-        viewsColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                Integer.toString(p.getValue().views)));
-        dateColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                p.getValue().localDateTime.format(OutputHelpers.dateTimeFormatter)));
+        titleColumn.setCellValueFactory(p -> {
+            String title = p.getValue().getTitle();
+            return new SimpleStringProperty(title);
+        });
+        volumeColumn.setCellValueFactory(p -> {
+            int volumeNum = p.getValue().volumeNum;
+            return new SimpleStringProperty(volumeNum == 0 ? "?" :
+                    Integer.toString(volumeNum));
+        });
+        chapterColumn.setCellValueFactory(p -> {
+            double chapterNum = p.getValue().chapterNum;
+            return new SimpleStringProperty(OutputHelpers.doubleToString(chapterNum));
+        });
+        languageColumn.setCellValueFactory(p -> {
+            String language = p.getValue().language;
+            return new SimpleStringProperty(language == null ? "?" : language);
+        });
+        groupColumn.setCellValueFactory(p -> {
+            String group = p.getValue().group;
+            return new SimpleStringProperty(group == null ? "?" : group);
+        });
+        viewsColumn.setCellValueFactory(p -> {
+            int views = p.getValue().views;
+            return new SimpleStringProperty(views == 0 ? "?" :
+                    Integer.toString(views));
+        });
+        dateColumn.setCellValueFactory(p -> {
+            LocalDateTime localDateTime = p.getValue().localDateTime;
+            return new SimpleStringProperty(
+                    localDateTime.format(OutputHelpers.dateTimeFormatter));
+        });
 
         // create blank FilteredList with predicate based on filterTextField
         this.filteredData = new FilteredList<>(FXCollections.emptyObservableList());
