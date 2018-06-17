@@ -105,7 +105,7 @@ public class MangaHere extends GenericContentSource {
         String author = detailRows.get(4).selectFirst("a").text();
         String artist = detailRows.get(5).selectFirst("a").text();
         String status = ParseHelpers.firstWord(detailRows.get(6).ownText());
-        String description = detailRows.get(8).selectFirst("p#show").text();
+        String description = detailRows.get(8).selectFirst("p#show").ownText();
 
         HashMap<String, Object> metadata = new HashMap<>();
         metadata.put("author", author);
