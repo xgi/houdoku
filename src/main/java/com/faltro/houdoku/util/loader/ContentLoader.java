@@ -12,6 +12,7 @@ import com.faltro.houdoku.util.ContentSource;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -149,7 +150,8 @@ public class ContentLoader {
             }
 
             if (items != null) {
-                // temporarily set the image property of all series to a blank placeholder
+                // temporarily set the image property of all series to a
+                // blank placeholder
                 Image blank_cover_image = new Image(getClass().getResource("/img/blank_cover.png")
                         .toString());
                 for (HashMap<String, Object> item : items) {
@@ -162,14 +164,23 @@ public class ContentLoader {
                 searchSeriesController.tableView.setItems(itemsObservableList);
 
                 for (HashMap<String, Object> item : items) {
-                    // load the proper cover image of each series from coverSrc field which was
-                    // already retrieved for each result
+                    Image cover = null;
                     try {
-                        Image image = contentSource.imageFromURL((String) item.get("coverSrc"));
-                        item.replace("cover", image);
-                        searchSeriesController.tableView.refresh();
+                        if (item.containsKey("coverSrc")) {
+                            // load cover using direct image source
+                            cover = contentSource.imageFromURL((String) item.get("coverSrc"));
+                        } else {
+                            // load cover by passing series url and finding the
+                            // image url on that page, then loading the image
+                            // load cover using direct image source
+                            cover = contentSource.cover((String) item.get("source"));
+                        }
                     } catch (IOException e) {
                         e.printStackTrace(); // TODO: change to "image load error" placeholder
+                    }
+                    if (cover != null) {
+                        item.replace("cover", cover);
+                        searchSeriesController.tableView.refresh();
                     }
                 }
             }
@@ -179,6 +190,25 @@ public class ContentLoader {
 
         String thread_name = "search_" + query;
         startThreadSafely(thread_name, runnableSearch);
+    }
+
+    public void loadCover(ContentSource contentSource, String source,
+                          ImageView imageView) {
+        Runnable runnableLoadCover = () -> {
+            Image cover = null;
+            try {
+                cover = contentSource.cover(source);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (cover != null) {
+                imageView.setImage(cover);
+            }
+        };
+
+        String thread_name = "loadCover_" + source;
+        startThreadSafely(thread_name, runnableLoadCover);
     }
 
     private void startThreadSafely(String name, Runnable runnable) {

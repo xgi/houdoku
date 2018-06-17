@@ -41,7 +41,6 @@ public class MangaHere extends GenericContentSource {
             HashMap<String, Object> content = new HashMap<>();
             content.put("contentSourceId", ID);
             content.put("source", source);
-            content.put("coverSrc", "");
             content.put("title", title);
             content.put("details", details);
 
@@ -120,6 +119,13 @@ public class MangaHere extends GenericContentSource {
         Series series = new Series(title, source, cover, ID, metadata);
         series.setChapters(chapters(series, seriesDocument));
         return series;
+    }
+
+    @Override
+    public Image cover(String source) throws IOException {
+        Document seriesDocument = getURL(PROTOCOL + "://" + DOMAIN + source);
+        String url = seriesDocument.selectFirst("img[class=img]").attr("src");
+        return imageFromURL(url);
     }
 
     @Override

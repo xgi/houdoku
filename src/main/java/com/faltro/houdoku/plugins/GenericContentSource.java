@@ -55,12 +55,7 @@ public class GenericContentSource implements ContentSource {
     }
 
     @Override
-    public Chapter chapter(Series series, String source) throws IOException {
-        return null;
-    }
-
-    @Override
-    public Chapter chapter(Series series, Document seriesDocument, String source) {
+    public Image cover(String source) throws IOException {
         return null;
     }
 

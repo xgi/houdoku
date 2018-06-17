@@ -25,9 +25,7 @@ public interface ContentSource {
 
     Series series(String source) throws IOException;
 
-    Chapter chapter(Series series, String source) throws IOException;
-
-    Chapter chapter(Series series, Document seriesDocument, String source);
+    Image cover(String source) throws IOException;
 
     Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException;
 
