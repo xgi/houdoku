@@ -35,8 +35,10 @@
                 <fx:define>
                     <ToggleGroup fx:id="zoomTypeGroup"/>
                 </fx:define>
-                <RadioMenuItem fx:id="fitHeightRadio" text="Fit Height" toggleGroup="$zoomTypeGroup"
+                <RadioMenuItem fx:id="fitAutoRadio" text="Auto Fit" toggleGroup="$zoomTypeGroup"
                                selected="true"
+                               onAction="#updateImageViewFit"/>
+                <RadioMenuItem fx:id="fitHeightRadio" text="Fit Height" toggleGroup="$zoomTypeGroup"
                                onAction="#updateImageViewFit"/>
                 <RadioMenuItem fx:id="fitWidthRadio" text="Fit Width" toggleGroup="$zoomTypeGroup"
                                onAction="#updateImageViewFit"/>

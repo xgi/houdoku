@@ -3,6 +3,8 @@ package com.faltro.houdoku.controller;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.SceneManager;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -49,6 +51,8 @@ public class ReaderController extends Controller {
     private CheckMenuItem showNavBarItem;
     @FXML
     private CheckMenuItem nightModeItem;
+    @FXML
+    private RadioMenuItem fitAutoRadio;
     @FXML
     private RadioMenuItem fitHeightRadio;
     @FXML
@@ -229,7 +233,30 @@ public class ReaderController extends Controller {
 
     @FXML
     private void updateImageViewFit() {
-        if (fitHeightRadio.isSelected()) {
+        if (fitAutoRadio.isSelected()) {
+            imageView.fitWidthProperty().unbind();
+            imageView.fitHeightProperty().unbind();
+            ChangeListener listener = (o, oldValue, newValue) -> {
+                imageView.fitHeightProperty().bind(
+                        stage.heightProperty()
+                                .subtract(menuBar.heightProperty())
+                                .subtract(navContainer.minHeightProperty())
+                                .subtract(SceneManager.VSCROLLBAR_WIDTH)
+                );
+                if (imageView.getBoundsInParent().getWidth() > stage.getWidth()) {
+                    imageView.fitHeightProperty().unbind();
+                    imageView.fitWidthProperty().bind(
+                            stage.widthProperty()
+                    );
+                }
+            };
+            stage.heightProperty().addListener(listener);
+            imageView.imageProperty().addListener(listener);
+            // hack to force listener operation to run
+            // we wouldn't be able to do this if the listener function depended
+            // on the given arguments
+            listener.changed(new SimpleDoubleProperty(0), 0, 0);
+        } else if (fitHeightRadio.isSelected()) {
             imageView.fitWidthProperty().unbind();
             imageView.setFitWidth(-1);
             imageView.fitHeightProperty().bind(
@@ -247,7 +274,7 @@ public class ReaderController extends Controller {
                     imageScrollPane.widthProperty()
                             .subtract(SceneManager.VSCROLLBAR_WIDTH)
             );
-        } else {
+        } else if (actualSizeRadio.isSelected()) {
             imageView.fitHeightProperty().unbind();
             imageView.fitWidthProperty().unbind();
             imageView.setFitHeight(-1);
