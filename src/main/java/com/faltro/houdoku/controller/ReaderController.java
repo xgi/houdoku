@@ -115,14 +115,17 @@ public class ReaderController extends Controller {
 
         // create the keyEventHandler for controlling reader with key commands
         keyEventHandler = event -> {
-            if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.PAGE_DOWN) {
-                nextPage();
-            } else if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.PAGE_UP) {
-                previousPage();
-            } else if (event.getCode() == KeyCode.HOME) {
-                firstPage();
-            } else if (event.getCode() == KeyCode.END) {
-                lastPage();
+            // only perform actions if the user is not in the page number textfield
+            if (!pageNumField.isFocused()) {
+                if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.PAGE_DOWN) {
+                    nextPage();
+                } else if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.PAGE_UP) {
+                    previousPage();
+                } else if (event.getCode() == KeyCode.HOME) {
+                    firstPage();
+                } else if (event.getCode() == KeyCode.END) {
+                    lastPage();
+                }
             }
             event.consume();
         };
@@ -135,6 +138,7 @@ public class ReaderController extends Controller {
     public void onMadeActive() {
         sceneManager.getStage().getScene().addEventHandler(KeyEvent.ANY, keyEventHandler);
 
+        imageView.requestFocus();
         loadCurrentPage();
     }
 
