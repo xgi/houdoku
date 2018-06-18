@@ -17,7 +17,7 @@ public class SceneManager {
 
     private Stage stage;
     private HashMap<Integer, Parent> roots;
-    private HashMap<Integer, Controller> controllers;
+    private HashMap<Parent, Controller> controllers;
     private PluginManager pluginManager;
     private ContentLoader contentLoader;
 
@@ -35,36 +35,49 @@ public class SceneManager {
         loader.setController(controller);
         Parent root = loader.load();
         roots.put(id, root);
-        controllers.put(id, controller);
+        controllers.put(root, controller);
     }
 
     public void changeToRoot(int id) {
         if (stage.getScene() != null) {
             Scene scene = stage.getScene();
-            scene.setRoot(roots.get(id));
-            controllers.get(id).onMadeActive();
+            controllers.get(scene.getRoot()).onMadeInactive();
+            Parent newRoot = roots.get(id);
+            scene.setRoot(newRoot);
+            controllers.get(newRoot).onMadeActive();
         } else {
-            Scene scene = new Scene(roots.get(id));
+            Parent root = roots.get(id);
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             scene.getWindow().sizeToScene();
-            controllers.get(id).onMadeActive();
+            controllers.get(root).onMadeActive();
         }
     }
 
     public void createSceneNewWindow(int id) {
         Stage temp_stage = new Stage();
         temp_stage.setTitle(stage.getTitle());
-        Scene scene = new Scene(roots.get(id));
+        Parent root = roots.get(id);
+        Scene scene = new Scene(root);
         temp_stage.setScene(scene);
         temp_stage.sizeToScene();
         temp_stage.show();
-        Controller controller = controllers.get(id);
+        Controller controller = controllers.get(root);
         controller.setStage(temp_stage);
         controller.onMadeActive();
     }
 
+    public Parent getRoot(int id) {
+        return roots.get(id);
+    }
+
+    public Controller getController(Parent root) {
+        return controllers.get(root);
+    }
+
     public Controller getController(int id) {
-        return controllers.get(id);
+        Parent root = getRoot(id);
+        return controllers.get(root);
     }
 
     public Stage getStage() {

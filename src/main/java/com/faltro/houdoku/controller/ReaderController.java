@@ -3,8 +3,8 @@ package com.faltro.houdoku.controller;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.SceneManager;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
@@ -57,6 +57,7 @@ public class ReaderController extends Controller {
     private RadioMenuItem actualSizeRadio;
 
     private Chapter chapter;
+    private EventHandler<KeyEvent> keyEventHandler;
 
     public ReaderController(SceneManager sceneManager) {
         super(sceneManager);
@@ -64,21 +65,6 @@ public class ReaderController extends Controller {
 
     public void setChapter(Chapter chapter) {
         this.chapter = chapter;
-    }
-
-    public void registerEventHandler(Scene scene) {
-        scene.addEventHandler(KeyEvent.ANY, event -> {
-            if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.PAGE_DOWN) {
-                nextPage();
-            } else if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.PAGE_UP) {
-                previousPage();
-            } else if (event.getCode() == KeyCode.HOME) {
-                firstPage();
-            } else if (event.getCode() == KeyCode.END) {
-                lastPage();
-            }
-            event.consume();
-        });
     }
 
     @Override
@@ -123,17 +109,37 @@ public class ReaderController extends Controller {
         // set default page number display
         pageNumField.setText("1");
 
+        // create the keyEventHandler for controlling reader with key commands
+        keyEventHandler = event -> {
+            if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.PAGE_DOWN) {
+                nextPage();
+            } else if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.PAGE_UP) {
+                previousPage();
+            } else if (event.getCode() == KeyCode.HOME) {
+                firstPage();
+            } else if (event.getCode() == KeyCode.END) {
+                lastPage();
+            }
+            event.consume();
+        };
+
         // properly size the ImageView based on default fit setting
         updateImageViewFit();
     }
 
     @Override
     public void onMadeActive() {
+        sceneManager.getStage().getScene().addEventHandler(KeyEvent.ANY, keyEventHandler);
+
+        loadCurrentPage();
+    }
+
+    @Override
+    public void onMadeInactive() {
+        sceneManager.getStage().getScene().removeEventHandler(KeyEvent.ANY, keyEventHandler);
         imageProgressIndicator.setVisible(false);
         errorText.getParent().setVisible(false);
         errorText.getParent().setManaged(false);
-
-        loadCurrentPage();
     }
 
     private void loadCurrentPage() {
@@ -267,19 +273,4 @@ public class ReaderController extends Controller {
         chapter.clearImages();
         sceneManager.changeToRoot(SeriesController.ID);
     }
-
-//    private double getVScrollBarWidth() {
-//        double result = 0.0;
-//        for (Node node : imageScrollPane.getChildrenUnmodifiable()) {
-//            if (node instanceof ScrollBar) {
-//                ScrollBar scrollBar = (ScrollBar) node;
-//                if (scrollBar.getOrientation() == Orientation.VERTICAL) {
-//                    if (scrollBar.isVisible()) {
-//                        result = scrollBar.getWidth();
-//                    }
-//                }
-//            }
-//        }
-//        return result;
-//    }
 }

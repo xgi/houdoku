@@ -20,10 +20,18 @@ abstract public class Controller {
     }
 
     /**
-     * Function that will be called by the scene manager when the scene is
+     * Function that will be called by the scene manager when this controller
      * made active.
      */
-    public abstract void onMadeActive();
+    public void onMadeActive() {
+    }
+
+    /**
+     * Function that will be called by the scene manager when this controller
+     * made inactive.
+     */
+    public void onMadeInactive() {
+    }
 
     @FXML
     public void initialize() {
