@@ -98,8 +98,8 @@ public class MangaDex extends GenericContentSource {
      * @return an ArrayList of Chapter's using data from the provided document
      */
     @Override
-    public ArrayList<Chapter> chapters(Series series, Document seriesDocument) {
-        Element tbody = seriesDocument.select("tbody").get(1);
+    public ArrayList<Chapter> chapters(Series series, Document document) {
+        Element tbody = document.select("tbody").get(1);
 
         ArrayList<Chapter> chapters = new ArrayList<>();
         for (Element row : tbody.select("tr")) {
