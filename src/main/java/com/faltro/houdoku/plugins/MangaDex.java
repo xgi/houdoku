@@ -1,6 +1,5 @@
 package com.faltro.houdoku.plugins;
 
-import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ParseHelpers;
@@ -94,7 +93,7 @@ public class MangaDex extends GenericContentSource {
      * This method is NOT guaranteed to return all chapters of a given
      * series -- use chapters(Series series) for that.
      *
-     * @param seriesDocument
+     * @param document
      * @return an ArrayList of Chapter's using data from the provided document
      */
     @Override
@@ -188,7 +187,7 @@ public class MangaDex extends GenericContentSource {
     }
 
     @Override
-    public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException {
+    public Image image(Chapter chapter, int page) throws IOException {
         Document document = parse(get(PROTOCOL + "://" + DOMAIN + chapter.getSource() + "/" +
                 Integer.toString(page)));
 
