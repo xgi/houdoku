@@ -4,6 +4,8 @@ import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import javafx.scene.image.Image;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
@@ -13,7 +15,11 @@ import java.util.HashMap;
 public interface ContentSource {
     int ID = -1;
 
-    Document getURL(String url) throws IOException;
+    Response get(String url) throws IOException;
+
+    Response post(String url, RequestBody body) throws IOException;
+
+    Document parse(Response response) throws IOException;
 
     Image imageFromURL(String url) throws IOException;
 

@@ -26,10 +26,10 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document doc = getURL(PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query);
+        Document document = parse(get(PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
-        Elements rows = doc.select("div[class=result_search]").select("dl");
+        Elements rows = document.select("div[class=result_search]").select("dl");
         for (Element row : rows) {
             Element link = row.selectFirst("a[class*=manga_info]");
             String source = link.attr("href").substring(2 + DOMAIN.length());
@@ -84,7 +84,7 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public Series series(String source) throws IOException {
-        Document seriesDocument = getURL(PROTOCOL + "://" + DOMAIN + source);
+        Document seriesDocument = parse(get(PROTOCOL + "://" + DOMAIN + source));
 
         String titleExtended = seriesDocument.selectFirst("h2").text();
         String title = titleExtended.substring(0, titleExtended.length() - 6);
@@ -123,15 +123,15 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public Image cover(String source) throws IOException {
-        Document seriesDocument = getURL(PROTOCOL + "://" + DOMAIN + source);
+        Document seriesDocument = parse(get(PROTOCOL + "://" + DOMAIN + source));
         String url = seriesDocument.selectFirst("img[class=img]").attr("src");
         return imageFromURL(url);
     }
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException {
-        Document document = getURL(PROTOCOL + "://" + DOMAIN + chapter.getSource() +
-                (page == 1 ? "" : Integer.toString(page) + ".html"));
+        Document document = parse(get(PROTOCOL + "://" + DOMAIN + chapter.getSource() +
+                (page == 1 ? "" : Integer.toString(page) + ".html")));
 
         Elements errors = document.select("div[class=mangaread_error]");
         if (errors.size() > 0) {

@@ -5,13 +5,14 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentSource;
 import javafx.scene.image.Image;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,17 +22,33 @@ public class GenericContentSource implements ContentSource {
     public static final String DOMAIN = "example.com";
 
     @Override
-    public Document getURL(String url) throws IOException {
-        return Jsoup.connect(url).get();
+    public Response get(String url) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        return client.newCall(request).execute();
+    }
+
+    @Override
+    public Response post(String url, RequestBody body) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        return client.newCall(request).execute();
+    }
+
+    @Override
+    public Document parse(Response response) throws IOException {
+        return Jsoup.parse(response.body().string());
     }
 
     @Override
     public Image imageFromURL(String url) throws IOException {
-        URLConnection connection = new URL(url).openConnection();
-        connection.setRequestProperty("User-Agent", "Houdoku");
-        try (InputStream inputStream = connection.getInputStream()) {
-            return new Image(inputStream);
-        }
+        Response response = get(url);
+        return new Image(response.body().byteStream());
     }
 
     @Override
