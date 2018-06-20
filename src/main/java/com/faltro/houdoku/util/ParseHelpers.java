@@ -5,6 +5,9 @@ import org.jsoup.select.Elements;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ParseHelpers {
     public static String[] htmlListToStringArray(Element list, String... itemTag) {
@@ -55,5 +58,31 @@ public class ParseHelpers {
     public static double parseDouble(String text) {
         text = text.split("\\s+")[0];
         return text.length() > 0 ? Double.parseDouble(text) : 0;
+    }
+
+    /**
+     * Parses a dateString using the given dateTimeFormatter, but first checks
+     * whether the dateString is a relative date, and calculates the appropriate
+     * LocalDateTime for either case.
+     *
+     * @param dateString
+     * @param dateTimeFormatter
+     * @return
+     */
+    public static LocalDateTime potentiallyRelativeDate(String dateString, DateTimeFormatter
+            dateTimeFormatter) {
+        LocalDateTime localDateTime;
+        switch (dateString) {
+            case "Today":
+                localDateTime = LocalDate.now().atStartOfDay();
+                break;
+            case "Yesterday":
+                localDateTime = LocalDate.now().minusDays(1).atStartOfDay();
+                break;
+            default:
+                localDateTime = LocalDate.parse(dateString, dateTimeFormatter).atStartOfDay();
+                break;
+        }
+        return localDateTime;
     }
 }

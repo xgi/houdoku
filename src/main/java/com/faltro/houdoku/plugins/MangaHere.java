@@ -11,7 +11,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -63,14 +62,12 @@ public class MangaHere extends GenericContentSource {
             double chapterNum = ParseHelpers.parseDouble(
                     chapterNumExtended.substring(chapterNumExtended.lastIndexOf(" ") + 1)
             );
-
             String dateString = row.selectFirst("span[class=right]").text();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
                     "MMM d, yyyy", Locale.ENGLISH
             );
-            LocalDateTime localDateTime = dateString.equals("Today")
-                    ? LocalDate.now().atStartOfDay()
-                    : LocalDate.parse(dateString, dateTimeFormatter).atStartOfDay();
+            LocalDateTime localDateTime = ParseHelpers.potentiallyRelativeDate(
+                    dateString, dateTimeFormatter);
 
             HashMap<String, Object> metadata = new HashMap<>();
             metadata.put("chapterNum", chapterNum);
