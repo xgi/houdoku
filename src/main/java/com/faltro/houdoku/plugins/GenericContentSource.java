@@ -1,6 +1,7 @@
 package com.faltro.houdoku.plugins;
 
 import com.faltro.houdoku.exception.ContentUnavailableException;
+import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentSource;
@@ -33,33 +34,37 @@ public class GenericContentSource implements ContentSource {
     }
 
     @Override
-    public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        return null;
+    public ArrayList<HashMap<String, Object>> search(String query) throws IOException,
+            NotImplementedException {
+        throw new NotImplementedException();
     }
 
     @Override
-    public ArrayList<Chapter> chapters(Series series) throws IOException {
-        return null;
+    public ArrayList<Chapter> chapters(Series series) throws IOException,
+            NotImplementedException {
+        throw new NotImplementedException();
     }
 
     @Override
-    public ArrayList<Chapter> chapters(Series series, Document seriesDocument) {
-        return null;
+    public ArrayList<Chapter> chapters(Series series, Document seriesDocument) throws
+            NotImplementedException {
+        throw new NotImplementedException();
     }
 
     @Override
-    public Series series(String source) throws IOException {
-        return null;
+    public Series series(String source) throws IOException, NotImplementedException {
+        throw new NotImplementedException();
     }
 
     @Override
-    public Image cover(String source) throws IOException {
-        return null;
+    public Image cover(String source) throws IOException, NotImplementedException {
+        throw new NotImplementedException();
     }
 
     @Override
-    public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException {
-        return null;
+    public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException,
+            NotImplementedException {
+        throw new NotImplementedException();
     }
 
     @Override

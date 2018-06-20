@@ -1,6 +1,7 @@
 package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.exception.ContentUnavailableException;
+import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import javafx.scene.image.Image;
@@ -54,9 +55,11 @@ public interface ContentSource {
      * @param query: the text to search for
      * @return an ArrayList of HashMap's where keys are the field names listed
      * above as Strings and values of the matching type
-     * @throws IOException: an IOException occurred when searching
+     * @throws IOException:             an IOException occurred when searching
+     * @throws NotImplementedException: the operation has not yet been
+     *                                  implemented for this content source
      */
-    ArrayList<HashMap<String, Object>> search(String query) throws IOException;
+    ArrayList<HashMap<String, Object>> search(String query) throws IOException, NotImplementedException;
 
     /**
      * Parse all of the chapters of the given series.
@@ -68,8 +71,12 @@ public interface ContentSource {
      *
      * @param series: the series that the chapters are from
      * @return an ArrayList of Chapter's using data from the provided document
+     * @throws IOException:             an IOException occurred when loading the
+     *                                  series page
+     * @throws NotImplementedException: the operation has not yet been
+     *                                  implemented for this content source
      */
-    ArrayList<Chapter> chapters(Series series) throws IOException;
+    ArrayList<Chapter> chapters(Series series) throws IOException, NotImplementedException;
 
     /**
      * Parse all of the chapters on the given Document.
@@ -80,8 +87,10 @@ public interface ContentSource {
      * @param series:   the series that the chapters are from
      * @param document: the document to find chapters on
      * @return an ArrayList of Chapter's using data from the provided document
+     * @throws NotImplementedException: the operation has not yet been
+     *                                  implemented for this content source
      */
-    ArrayList<Chapter> chapters(Series series, Document document);
+    ArrayList<Chapter> chapters(Series series, Document document) throws NotImplementedException;
 
     /**
      * Parses the given source as a Series.
@@ -93,9 +102,11 @@ public interface ContentSource {
      *
      * @param source: the source of the series page
      * @return a Series using the data on the series page
-     * @throws IOException
+     * @throws IOException:             an IOException occurred when loading the series page
+     * @throws NotImplementedException: the operation has not yet been
+     *                                  implemented for this content source
      */
-    Series series(String source) throws IOException;
+    Series series(String source) throws IOException, NotImplementedException;
 
     /**
      * Retrieves a series' cover image from the given URL.
@@ -109,9 +120,12 @@ public interface ContentSource {
      *
      * @param source: the source of the page which contains the cover image
      * @return the cover Image for the series at the given source page
-     * @throws IOException: an IOException occurred when loading the image
+     * @throws IOException:             an IOException occurred when loading the
+     *                                  image
+     * @throws NotImplementedException: the operation has not yet been
+     *                                  implemented for this content source
      */
-    Image cover(String source) throws IOException;
+    Image cover(String source) throws IOException, NotImplementedException;
 
     /**
      * Retrieves an Image of a chapter page.
@@ -140,8 +154,11 @@ public interface ContentSource {
      * @throws ContentUnavailableException: the retrieval of the image was
      *                                      blocked by the ContentSource's
      *                                      website itself
+     * @throws NotImplementedException:     the operation has not yet been
+     *                                      implemented for this content source
      */
-    Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException;
+    Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException,
+            NotImplementedException;
 
     /**
      * Represents this ContentSource as a string.
