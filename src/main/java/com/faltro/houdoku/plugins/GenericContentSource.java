@@ -20,6 +20,7 @@ public class GenericContentSource implements ContentSource {
     public static final int ID = -1;
     public static final String NAME = "GenericContentSource";
     public static final String DOMAIN = "example.com";
+    public static final String PROTOCOL = "https";
 
     @Override
     public Response get(String url) throws IOException {

@@ -15,6 +15,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * This class contains implementation details for processing data from a
+ * specific "content source" - a website which contains series data and images.
+ * <p>
+ * For method and field documentation, please see the ContentSource class.
+ * Additionally, the implementation of some common methods is done in the
+ * GenericContentSource class.
+ */
 public class MangaSee extends GenericContentSource {
     public static final int ID = 2;
     public static final String NAME = "MangaSee";

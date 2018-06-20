@@ -15,6 +15,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+/**
+ * This class contains implementation details for processing data from a
+ * specific "content source" - a website which contains series data and images.
+ * <p>
+ * For method and field documentation, please see the ContentSource class.
+ * Additionally, the implementation of some common methods is done in the
+ * GenericContentSource class.
+ */
 public class MangaDex extends GenericContentSource {
     public static final int ID = 0;
     public static final String NAME = "MangaDex";
@@ -87,15 +95,6 @@ public class MangaDex extends GenericContentSource {
         return chapters;
     }
 
-    /**
-     * Parse all of the chapters on the given Document.
-     * <p>
-     * This method is NOT guaranteed to return all chapters of a given
-     * series -- use chapters(Series series) for that.
-     *
-     * @param document
-     * @return an ArrayList of Chapter's using data from the provided document
-     */
     @Override
     public ArrayList<Chapter> chapters(Series series, Document document) {
         Element tbody = document.select("tbody").get(1);
