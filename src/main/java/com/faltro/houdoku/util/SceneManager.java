@@ -1,7 +1,6 @@
 package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.controller.Controller;
-import com.faltro.houdoku.util.loader.ContentLoader;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

@@ -1,4 +1,4 @@
-package com.faltro.houdoku.util.loader;
+package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.controller.LibraryController;
 import com.faltro.houdoku.controller.ReaderController;
@@ -8,7 +8,6 @@ import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
-import com.faltro.houdoku.util.ContentSource;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;

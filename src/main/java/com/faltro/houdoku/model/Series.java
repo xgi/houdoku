@@ -1,8 +1,8 @@
 package com.faltro.houdoku.model;
 
 import com.faltro.houdoku.controller.SeriesController;
+import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
-import com.faltro.houdoku.util.loader.ContentLoader;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
