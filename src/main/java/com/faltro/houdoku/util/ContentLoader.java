@@ -5,6 +5,7 @@ import com.faltro.houdoku.controller.ReaderController;
 import com.faltro.houdoku.controller.SearchSeriesController;
 import com.faltro.houdoku.controller.SeriesController;
 import com.faltro.houdoku.exception.ContentUnavailableException;
+import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
@@ -32,7 +33,7 @@ public class ContentLoader {
             Image image = null;
             try {
                 image = contentSource.image(chapter, page + 1);
-            } catch (IOException e) {
+            } catch (IOException | NotImplementedException e) {
                 e.printStackTrace();
             } catch (ContentUnavailableException e) {
                 readerController.imageProgressIndicator.setVisible(false);
@@ -69,7 +70,7 @@ public class ContentLoader {
             Series series = null;
             try {
                 series = contentSource.series(source);
-            } catch (IOException e) {
+            } catch (IOException | NotImplementedException e) {
                 e.printStackTrace();
             }
 
@@ -104,7 +105,7 @@ public class ContentLoader {
             Series new_series = null;
             try {
                 new_series = contentSource.series(series.getSource());
-            } catch (IOException e) {
+            } catch (IOException | NotImplementedException e) {
                 e.printStackTrace();
             }
 
@@ -144,7 +145,7 @@ public class ContentLoader {
             ArrayList<HashMap<String, Object>> items = null;
             try {
                 items = contentSource.search(query);
-            } catch (IOException e) {
+            } catch (IOException | NotImplementedException e) {
                 e.printStackTrace();
             }
 
@@ -174,7 +175,7 @@ public class ContentLoader {
                             // load cover using direct image source
                             cover = contentSource.cover((String) item.get("source"));
                         }
-                    } catch (IOException e) {
+                    } catch (IOException | NotImplementedException e) {
                         e.printStackTrace(); // TODO: change to "image load error" placeholder
                     }
                     if (cover != null) {
@@ -197,7 +198,7 @@ public class ContentLoader {
             Image cover = null;
             try {
                 cover = contentSource.cover(source);
-            } catch (IOException e) {
+            } catch (IOException | NotImplementedException e) {
                 e.printStackTrace();
             }
 
