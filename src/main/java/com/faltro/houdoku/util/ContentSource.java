@@ -59,7 +59,8 @@ public interface ContentSource {
      * @throws NotImplementedException: the operation has not yet been
      *                                  implemented for this content source
      */
-    ArrayList<HashMap<String, Object>> search(String query) throws IOException, NotImplementedException;
+    ArrayList<HashMap<String, Object>> search(String query) throws IOException,
+            NotImplementedException;
 
     /**
      * Parse all of the chapters of the given series.
