@@ -276,6 +276,10 @@ public class LibraryController extends Controller {
         filterTextField.setText("");
     }
 
+    @Override
+    public void onMadeInactive() {
+    }
+
     private void setCombinedPredicate(FilteredList<Series> filteredData) {
         filteredData.setPredicate(series -> {
             // check that the series title, author, or artist contains the

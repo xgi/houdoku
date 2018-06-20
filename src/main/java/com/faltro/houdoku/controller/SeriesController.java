@@ -249,6 +249,10 @@ public class SeriesController extends Controller {
         series.reloadFromSource(sceneManager.getContentLoader(), contentSource, this);
     }
 
+    @Override
+    public void onMadeInactive() {
+    }
+
     /**
      * Set the cover image width a percentage of the stage while enforcing a
      * maximum height.

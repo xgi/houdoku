@@ -120,6 +120,10 @@ public class SearchSeriesController extends Controller {
         contentSourcesBox.getSelectionModel().select(0);
     }
 
+    @Override
+    public void onMadeInactive() {
+    }
+
     @FXML
     public void search() {
         ContentSource contentSource = contentSourcesBox.getSelectionModel()
