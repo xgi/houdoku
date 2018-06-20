@@ -4,8 +4,6 @@ import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import javafx.scene.image.Image;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
@@ -29,34 +27,6 @@ public interface ContentSource {
      * The protocol for the ContentSource, which is likely either http or https.
      */
     String PROTOCOL = "https";
-
-    /**
-     * Executes an HTTP GET request on the given URL.
-     *
-     * @param url: the URL to request
-     * @return the Response of the request
-     * @throws IOException: an IOException occurred when making the request
-     */
-    Response get(String url) throws IOException;
-
-    /**
-     * Executes an HTTP POST request on the given URL.
-     *
-     * @param url:  the URL to request
-     * @param body: the body content of the POST request
-     * @return the Response of the request
-     * @throws IOException: an IOException occurred when making the request
-     */
-    Response post(String url, RequestBody body) throws IOException;
-
-    /**
-     * Parse the given okhttp3.Response as a Jsoup.Document.
-     *
-     * @param response: the Response to parse
-     * @return a Document from the text of the given response
-     * @throws IOException: an IOException occurred when handling the Response
-     */
-    Document parse(Response response) throws IOException;
 
     /**
      * Retrieves an Image from the given URL.

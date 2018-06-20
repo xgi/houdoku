@@ -5,17 +5,21 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentSource;
 import javafx.scene.image.Image;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.faltro.houdoku.net.Requests.GET;
+
+/**
+ * This class contains implementations for some methods from ContentSource that
+ * are expected to be common between most content source plugins.
+ * <p>
+ * For method and field documentation, please see the ContentSource class.
+ */
 public class GenericContentSource implements ContentSource {
     public static final int ID = -1;
     public static final String NAME = "GenericContentSource";
@@ -23,32 +27,8 @@ public class GenericContentSource implements ContentSource {
     public static final String PROTOCOL = "https";
 
     @Override
-    public Response get(String url) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        return client.newCall(request).execute();
-    }
-
-    @Override
-    public Response post(String url, RequestBody body) throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        return client.newCall(request).execute();
-    }
-
-    @Override
-    public Document parse(Response response) throws IOException {
-        return Jsoup.parse(response.body().string());
-    }
-
-    @Override
     public Image imageFromURL(String url) throws IOException {
-        Response response = get(url);
+        Response response = GET(url);
         return new Image(response.body().byteStream());
     }
 

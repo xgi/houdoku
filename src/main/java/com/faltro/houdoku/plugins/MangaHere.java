@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import static com.faltro.houdoku.net.Requests.GET;
+import static com.faltro.houdoku.net.Requests.parse;
+
 /**
  * This class contains implementation details for processing data from a
  * specific "content source" - a website which contains series data and images.
@@ -33,7 +36,7 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(get(PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
+        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements rows = document.select("div[class=result_search]").select("dl");
@@ -89,7 +92,7 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public Series series(String source) throws IOException {
-        Document seriesDocument = parse(get(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
 
         String titleExtended = seriesDocument.selectFirst("h2").text();
         String title = titleExtended.substring(0, titleExtended.length() - 6);
@@ -128,14 +131,14 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public Image cover(String source) throws IOException {
-        Document seriesDocument = parse(get(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
         String url = seriesDocument.selectFirst("img[class=img]").attr("src");
         return imageFromURL(url);
     }
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException {
-        Document document = parse(get(PROTOCOL + "://" + DOMAIN + chapter.getSource() +
+        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + chapter.getSource() +
                 (page == 1 ? "" : Integer.toString(page) + ".html")));
 
         Elements errors = document.select("div[class=mangaread_error]");

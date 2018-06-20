@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import static com.faltro.houdoku.net.Requests.GET;
+import static com.faltro.houdoku.net.Requests.parse;
+
 /**
  * This class contains implementation details for processing data from a
  * specific "content source" - a website which contains series data and images.
@@ -31,7 +34,7 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(get(PROTOCOL + "://" + DOMAIN + "/?page=search&title=" + query));
+        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + "/?page=search&title=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements links = document.select("a[class=manga_title]");
@@ -63,7 +66,7 @@ public class MangaDex extends GenericContentSource {
     @Override
     public ArrayList<Chapter> chapters(Series series) throws IOException {
         ArrayList<Document> documents = new ArrayList<>();
-        documents.add(parse(get(PROTOCOL + "://" + DOMAIN + series.getSource())));
+        documents.add(parse(GET(PROTOCOL + "://" + DOMAIN + series.getSource())));
 
         // Determine if there is a pager. If there is, we will need to make
         // multiple requests to get all chapters.
@@ -81,7 +84,7 @@ public class MangaDex extends GenericContentSource {
                 String url_fragment = url_base + Integer.toString(i);
                 if (documents.get(documents.size() - 1)
                         .selectFirst("a[href*=" + url_fragment + "]") != null) {
-                    documents.add(parse(get(PROTOCOL + "://" + DOMAIN + url_fragment)));
+                    documents.add(parse(GET(PROTOCOL + "://" + DOMAIN + url_fragment)));
                 } else {
                     running = false;
                 }
@@ -133,7 +136,7 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public Series series(String source) throws IOException {
-        Document seriesDocument = parse(get(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
 
         Element titlePanel = seriesDocument.selectFirst("h3");
         String title = titlePanel.text();
@@ -187,7 +190,7 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException {
-        Document document = parse(get(PROTOCOL + "://" + DOMAIN + chapter.getSource() + "/" +
+        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + chapter.getSource() + "/" +
                 Integer.toString(page)));
 
         // we may not have determined the number of pages yet, so do that here

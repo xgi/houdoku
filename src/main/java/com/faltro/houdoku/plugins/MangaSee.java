@@ -15,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.faltro.houdoku.net.Requests.*;
+
 /**
  * This class contains implementation details for processing data from a
  * specific "content source" - a website which contains series data and images.
@@ -34,7 +36,7 @@ public class MangaSee extends GenericContentSource {
         FormBody.Builder body = new FormBody.Builder();
         body.add("keyword", query);
         Document document = parse(
-                post(PROTOCOL + "://" + DOMAIN + "/search/request.php", body.build())
+                POST(PROTOCOL + "://" + DOMAIN + "/search/request.php", body.build())
         );
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
@@ -93,7 +95,7 @@ public class MangaSee extends GenericContentSource {
 
     @Override
     public Series series(String source) throws IOException {
-        Document seriesDocument = parse(get(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
 
 
         Element container = seriesDocument.selectFirst("div[class*=mainWell]");
@@ -134,7 +136,7 @@ public class MangaSee extends GenericContentSource {
     public Image image(Chapter chapter, int page) throws IOException {
         String chapterFirstUrl = PROTOCOL + "://" + DOMAIN + chapter.getSource();
         String baseUrl = chapterFirstUrl.substring(0, chapterFirstUrl.lastIndexOf("-"));
-        Document document = parse(get(baseUrl + "-" + Integer.toString(page) + ".html"));
+        Document document = parse(GET(baseUrl + "-" + Integer.toString(page) + ".html"));
 
         // we may not have determined the number of pages yet, so do that here
         if (chapter.images.length == 1) {

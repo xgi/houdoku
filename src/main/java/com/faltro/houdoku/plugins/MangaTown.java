@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import static com.faltro.houdoku.net.Requests.GET;
+import static com.faltro.houdoku.net.Requests.parse;
+
 /**
  * This class contains implementation details for processing data from a
  * specific "content source" - a website which contains series data and images.
@@ -31,7 +34,7 @@ public class MangaTown extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(get(PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
+        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements results = document.selectFirst("ul[class=manga_pic_list]").select("li");
@@ -110,7 +113,7 @@ public class MangaTown extends GenericContentSource {
 
     @Override
     public Series series(String source) throws IOException {
-        Document seriesDocument = parse(get(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
 
         String title = seriesDocument.selectFirst("h1[class=title-top]").text();
         Element container = seriesDocument.selectFirst("div[class=detail_content]");
@@ -146,7 +149,7 @@ public class MangaTown extends GenericContentSource {
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException {
-        Document document = parse(get(PROTOCOL + "://" + DOMAIN + chapter.getSource() +
+        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + chapter.getSource() +
                 (page == 1 ? "" : Integer.toString(page) + ".html")));
 
         // we may not have determined the number of pages yet, so do that here
