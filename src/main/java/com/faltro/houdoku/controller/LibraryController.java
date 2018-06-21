@@ -417,7 +417,7 @@ public class LibraryController extends Controller {
      * Prompts the user to add a category as a child of the given category.
      *
      * @param category the category which will be the parent of the new
-     *                  category, if one is successfully created
+     *                 category, if one is successfully created
      */
     private void promptAddCategory(Category category) {
         // disallow adding categories greater than a certain depth

@@ -55,8 +55,8 @@ public class Series {
      * rating (double), ratings (int)
      * genres (String[])
      *
-     * @param metadata: a HashMap where keys are the field names listed above
-     *                  as Strings and values of the matching type
+     * @param metadata a HashMap where keys are the field names listed above
+     *                 as Strings and values of the matching type
      */
     public void setMetadata(HashMap<String, Object> metadata) {
         for (String key : metadata.keySet()) {
@@ -155,7 +155,7 @@ public class Series {
      * sorted list. If this series does not have any chapters,
      * numHighestChapter is simply set to 0.
      *
-     * @param chapters: an ArrayList of Chapter's
+     * @param chapters an ArrayList of Chapter's
      */
     public void setChapters(ArrayList<Chapter> chapters) {
         this.chapters = chapters;

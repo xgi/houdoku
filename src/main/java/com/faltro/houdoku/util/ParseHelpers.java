@@ -13,8 +13,8 @@ public class ParseHelpers {
     /**
      * Creates an array of strings using the sub-elements of the given element.
      *
-     * @param list:    the container (parent) element, such as a ul
-     * @param itemTag: (optional) the tag of the child elements, such as li
+     * @param list    the container (parent) element, such as a ul
+     * @param itemTag (optional) the tag of the child elements, such as li
      * @return an array of the text properties of the matching elements
      */
     public static String[] htmlListToStringArray(Element list, String... itemTag) {
@@ -30,9 +30,9 @@ public class ParseHelpers {
     /**
      * Retrieves the td element corresponding to the th with the given header.
      *
-     * @param parent: the parent element, which is probably a tbody
-     * @param header: the header text used to find a matching th; the first
-     *                header which contains this text will be used
+     * @param parent the parent element, which is probably a tbody
+     * @param header the header text used to find a matching th; the first
+     *               header which contains this text will be used
      * @return the td element corresponding to the th with the given header
      */
     public static Element tdWithHeader(Element parent, String header) {
@@ -46,7 +46,7 @@ public class ParseHelpers {
      * contains a single word, and the input string contains a sequence of
      * words, separated by spaces.
      *
-     * @param string: the source string
+     * @param string the source string
      * @return the first word in the given string
      */
     public static String firstWord(String string) {
@@ -65,7 +65,7 @@ public class ParseHelpers {
      * <p>
      * If the given text is blank, this method will return 0.
      *
-     * @param text: a string which can reasonably be represented as an integer
+     * @param text a string which can reasonably be represented as an integer
      * @return the int which is represented by the given text
      */
     public static int parseInt(String text) {
@@ -86,7 +86,7 @@ public class ParseHelpers {
      * <p>
      * If the given text is blank, this method will return 0.
      *
-     * @param text: a string which can reasonably be represented as a double
+     * @param text a string which can reasonably be represented as a double
      * @return the double which is represented by the given text
      */
     public static double parseDouble(String text) {
@@ -99,9 +99,9 @@ public class ParseHelpers {
      * whether the dateString is a relative date, and calculates the appropriate
      * LocalDateTime for either case.
      *
-     * @param dateString:        the source date text
-     * @param dateTimeFormatter: the DateTimeFormatter for processing the
-     *                           dateString
+     * @param dateString        the source date text
+     * @param dateTimeFormatter the DateTimeFormatter for processing the
+     *                          dateString
      * @return a LocalDateTime corresponding to the given dateString
      */
     public static LocalDateTime potentiallyRelativeDate(String dateString, DateTimeFormatter

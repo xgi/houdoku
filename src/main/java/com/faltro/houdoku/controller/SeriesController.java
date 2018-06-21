@@ -322,7 +322,7 @@ public class SeriesController extends Controller {
      * object using the "tableText" style class. The cell is given a click
      * handler from newCellClickHandler().
      *
-     * @param widthProperty: the widthProperty of this cell's column
+     * @param widthProperty the widthProperty of this cell's column
      * @return a Callback of a standard cell factory for a table cell
      */
     private Callback<TableColumn<Chapter, String>, TableCell<Chapter, String>> newStringCellFactory(

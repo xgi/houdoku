@@ -71,7 +71,7 @@ abstract public class Controller {
     /**
      * Set the stage that the controller's view resides on.
      *
-     * @param stage: the new stage
+     * @param stage the new stage
      */
     public void setStage(Stage stage) {
         this.stage = stage;

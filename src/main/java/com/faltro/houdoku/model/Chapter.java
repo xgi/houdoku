@@ -56,8 +56,8 @@ public class Chapter {
      * language (String), group (String)
      * views (int), localDateTime (LocalDateTime)
      *
-     * @param metadata: a HashMap where keys are the field names listed above
-     *                  as Strings and values of the matching type
+     * @param metadata a HashMap where keys are the field names listed above
+     *                 as Strings and values of the matching type
      */
     private void setMetadata(HashMap<String, Object> metadata) {
         for (String key : metadata.keySet()) {
@@ -89,7 +89,7 @@ public class Chapter {
      * <p>
      * This method by itself does not load the image on the new page.
      *
-     * @param pageNum: the page to change to, where 1 is the first page
+     * @param pageNum the page to change to, where 1 is the first page
      */
     public void specificPage(int pageNum) {
         this.currentPageNum = pageNum - 1;
@@ -101,7 +101,7 @@ public class Chapter {
      * <p>
      * This method by itself does not load the image on the new page.
      *
-     * @param delta: the (positive or negative) number of pages to change by
+     * @param delta the (positive or negative) number of pages to change by
      */
     public void deltaPage(int delta) {
         this.currentPageNum += delta;
@@ -123,7 +123,7 @@ public class Chapter {
      * @param contentLoader
      * @param contentSource
      * @param readerController
-     * @param page:            the 0-indexed first page to reload
+     * @param page             the 0-indexed first page to reload
      */
     public void preloadImages(ContentLoader contentLoader, ContentSource contentSource,
                               ReaderController readerController, int page) {

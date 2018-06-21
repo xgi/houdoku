@@ -41,7 +41,7 @@ public class PluginManager {
     /**
      * Gets the ContentSource instance whose class has the given ID.
      *
-     * @param id - the ContentSource ID (the static ID field of the
+     * @param id the ContentSource ID (the static ID field of the
      *           implementing plugin class)
      * @return the ContentSource instance whose class has the given ID.
      */
