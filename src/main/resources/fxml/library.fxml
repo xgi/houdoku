@@ -12,7 +12,7 @@
     <MenuBar fx:id="menuBar">
         <Menu text="File">
             <MenuItem text="New"/>
-            <MenuItem text="Open" onAction="#goToAddSeries"/>
+            <MenuItem text="Open" onAction="#goToSearchSeries"/>
             <MenuItem text="Save"/>
             <MenuItem text="Save As"/>
             <SeparatorMenuItem/>
@@ -38,7 +38,7 @@
 
     <HBox fx:id="actionBar" alignment="CENTER_LEFT" spacing="10" prefHeight="50">
         <Button text="Add Series" prefHeight="${actionContainer.prefHeight}"
-                onAction="#goToAddSeries">
+                onAction="#goToSearchSeries">
             <graphic>
                 <ImageView>
                     <Image url="/img/icon_add.png"/>

@@ -13,9 +13,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,12 +29,14 @@ import java.util.ArrayList;
 
 public class LibraryController extends Controller {
     public static final int ID = 0;
+    /**
+     * The initial position of the divider between the tree and table.
+     */
     private static final float DEFAULT_CONTENT_DIVIDER_POS = 0.3f;
     private static final double COL_COVER_WIDTH = 0.1;
     private static final double COL_TITLE_WIDTH = 0.7;
     private static final double COL_NUMCHAPTERS_WIDTH = 0.2;
 
-    private ScrollBar scrollBar;
     private Library library;
 
     @FXML
@@ -73,6 +73,14 @@ public class LibraryController extends Controller {
         this.library = new Library();
     }
 
+    /**
+     * Initialize the components of the controller's view.
+     * <p>
+     * This method binds the size of components as appropriate using this class'
+     * static variables. It creates and sets the cell factory and cell value
+     * factory for the columns in the series table. It also creates the items
+     * in the category tree using the root category from the library.
+     */
     @Override
     @FXML
     public void initialize() {
@@ -227,6 +235,25 @@ public class LibraryController extends Controller {
     }
 
     /**
+     * Function that will be called by the scene manager when this controller
+     * is made active.
+     */
+    public void onMadeActive() {
+        // hack to force the table's FilteredList to update, since series
+        // info may have changed since returning to this scene
+        filterTextField.setText(".");
+        filterTextField.setText("");
+    }
+
+    /**
+     * Function that will be called by the scene manager when this controller
+     * is made inactive.
+     */
+    @Override
+    public void onMadeInactive() {
+    }
+
+    /**
      * Populates the tableView and treeView with series from the library.
      * <p>
      * This function should be run whenever there is a possibility that a series
@@ -269,17 +296,17 @@ public class LibraryController extends Controller {
         treeView.refresh();
     }
 
-    public void onMadeActive() {
-        // hack to force the table's FilteredList to update, since series
-        // info may have changed since returning to this scene
-        filterTextField.setText(".");
-        filterTextField.setText("");
-    }
-
-    @Override
-    public void onMadeInactive() {
-    }
-
+    /**
+     * Set the predicate of the series table's FilteredList.
+     * <p>
+     * This method filters the given list based on the contents of the
+     * filterTextField and on the selected category.
+     * <p>
+     * This method needs to be called whenever actions which could change the
+     * predicate are performed - i.e., clicking a category.
+     *
+     * @param filteredData the FilteredList of series to set the predicate of
+     */
     private void setCombinedPredicate(FilteredList<Series> filteredData) {
         filteredData.setPredicate(series -> {
             // check that the series title, author, or artist contains the
@@ -301,21 +328,16 @@ public class LibraryController extends Controller {
         });
     }
 
-    @FXML
-    public void toggleCompact() {
-        coverColumn.setVisible(!compactItem.isSelected());
-        if (compactItem.isSelected()) {
-            titleColumn.prefWidthProperty().bind(
-                    tableView.widthProperty()
-                            .multiply(COL_TITLE_WIDTH + COL_COVER_WIDTH));
-        } else {
-            titleColumn.prefWidthProperty().bind(
-                    tableView.widthProperty()
-                            .multiply(COL_TITLE_WIDTH));
-        }
-
-    }
-
+    /**
+     * Creates a MouseEvent handler for a cell in the series table.
+     * <p>
+     * This handler handles double clicking to go to a series' page, as well as
+     * handling the actions of the given context menu if a series is right
+     * clicked.
+     *
+     * @param contextMenu the context menu shown when right clicking
+     * @return a complete MouseEvent EventHandler for a cell in the series table
+     */
     private EventHandler<MouseEvent> newCellClickHandler(ContextMenu contextMenu) {
         return mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
@@ -337,6 +359,17 @@ public class LibraryController extends Controller {
         };
     }
 
+    /**
+     * Creates a MouseEvent handler for a category in the categories tree.
+     * <p>
+     * The handler does not trigger a filter of the series table's data when
+     * a category is clicked. That is done by adding a listener to the tree's
+     * selection property. Instead, this handler primarily handles the actions
+     * of the given context menu when a category is right clicked.
+     *
+     * @param contextMenu the context menu shown when right clicking
+     * @return a complete MouseEvent EventHandler for a category in the tree
+     */
     private EventHandler<MouseEvent> newCategoryClickHandler(ContextMenu contextMenu) {
         return mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
@@ -352,15 +385,27 @@ public class LibraryController extends Controller {
         };
     }
 
-    private double getVScrollBarWidth() {
-        double result = 0.0;
-        for (Node node : tableView.lookupAll(".scroll-bar")) {
-            if (node instanceof ScrollBar) {
-                ScrollBar scrollBar = (ScrollBar) node;
-                if (scrollBar.getOrientation() == Orientation.VERTICAL) {
-                    if (scrollBar.isVisible()) {
-                        //this.scrollBar = scrollBar;
-                        result = scrollBar.getWidth();
+    /**
+     * Retrieves the TreeItem of the tree corresponding to the given category.
+     * <p>
+     * If the category is not in the tree, this method will return null.
+     *
+     * @param category the category to search for in the tree
+     * @return the TreeItem corresponding to the given category, or null
+     */
+    private TreeItem<Category> getTreeItemByCategory(Category category) {
+        TreeItem<Category> result = null;
+        if (treeView.getRoot().getValue().equals(category)) {
+            result = treeView.getRoot();
+        } else {
+            for (TreeItem<Category> t1 : treeView.getRoot().getChildren()) {
+                if (t1.getValue().equals(category)) {
+                    result = t1;
+                } else {
+                    for (TreeItem<Category> t2 : t1.getChildren()) {
+                        if (t2.getValue().equals(category)) {
+                            result = t2;
+                        }
                     }
                 }
             }
@@ -371,7 +416,8 @@ public class LibraryController extends Controller {
     /**
      * Prompts the user to add a category as a child of the given category.
      *
-     * @param category
+     * @param category the category which will be the parent of the new
+     *                  category, if one is successfully created
      */
     private void promptAddCategory(Category category) {
         // disallow adding categories greater than a certain depth
@@ -445,7 +491,7 @@ public class LibraryController extends Controller {
      * will keep them separate in case we want them to have somewhat different
      * functionality in the future.
      *
-     * @param category
+     * @param category the category to edit
      */
     private void promptEditCategory(Category category) {
         Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK,
@@ -510,7 +556,7 @@ public class LibraryController extends Controller {
     /**
      * Prompts the user to edit the categories of the given series.
      *
-     * @param series
+     * @param series the series to edit
      */
     private void promptEditCategories(Series series) {
         Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK,
@@ -568,7 +614,7 @@ public class LibraryController extends Controller {
     /**
      * Prompts the user to remove the given series.
      *
-     * @param series
+     * @param series the series to be removed
      */
     private void promptRemoveSeries(Series series) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES,
@@ -592,6 +638,18 @@ public class LibraryController extends Controller {
     }
 
     /**
+     * Changes to the series page for the given series.
+     *
+     * @param series the series to be viewed
+     */
+    private void goToSeries(Series series) {
+        SeriesController seriesController =
+                (SeriesController) sceneManager.getController(SeriesController.ID);
+        seriesController.setSeries(series);
+        sceneManager.changeToRoot(SeriesController.ID);
+    }
+
+    /**
      * Prompts the user to remove the selected series.
      * <p>
      * If no series is selected, this function does nothing.
@@ -605,8 +663,31 @@ public class LibraryController extends Controller {
 
     }
 
+    /**
+     * Toggle whether the compact view is enabled.
+     * <p>
+     * Enabling the compact view removes the cover column of the series table,
+     * making the height of each row much smaller.
+     */
     @FXML
-    public void goToAddSeries() {
+    public void toggleCompact() {
+        coverColumn.setVisible(!compactItem.isSelected());
+        if (compactItem.isSelected()) {
+            titleColumn.prefWidthProperty().bind(
+                    tableView.widthProperty()
+                            .multiply(COL_TITLE_WIDTH + COL_COVER_WIDTH));
+        } else {
+            titleColumn.prefWidthProperty().bind(
+                    tableView.widthProperty()
+                            .multiply(COL_TITLE_WIDTH));
+        }
+    }
+
+    /**
+     * Creates a new window with the SearchSeries view.
+     */
+    @FXML
+    public void goToSearchSeries() {
         sceneManager.createSceneNewWindow(SearchSeriesController.ID);
     }
 
@@ -624,37 +705,11 @@ public class LibraryController extends Controller {
     }
 
     /**
-     * Changes to the series page for the given series.
-     *
-     * @param series
+     * Toggles whether the action bar is visible.
+     * <p>
+     * The action bar is the bar above the tree and table with buttons for
+     * common actions, i.e. "Add Series", "Remove Series".
      */
-    private void goToSeries(Series series) {
-        SeriesController seriesController =
-                (SeriesController) sceneManager.getController(SeriesController.ID);
-        seriesController.setSeries(series);
-        sceneManager.changeToRoot(SeriesController.ID);
-    }
-
-    public TreeItem<Category> getTreeItemByCategory(Category category) {
-        TreeItem<Category> result = null;
-        if (treeView.getRoot().getValue().equals(category)) {
-            result = treeView.getRoot();
-        } else {
-            for (TreeItem<Category> t1 : treeView.getRoot().getChildren()) {
-                if (t1.getValue().equals(category)) {
-                    result = t1;
-                } else {
-                    for (TreeItem<Category> t2 : t1.getChildren()) {
-                        if (t2.getValue().equals(category)) {
-                            result = t2;
-                        }
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
     @FXML
     private void toggleActionBar() {
         actionBar.setVisible(showActionBarItem.isSelected());

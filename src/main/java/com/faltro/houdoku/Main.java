@@ -36,7 +36,7 @@ public class Main extends Application {
         scene_manager.initScene(ReaderController.ID, reader_controller,
                 getClass().getResource("/fxml/reader.fxml"));
         scene_manager.initScene(SearchSeriesController.ID, add_series_controller,
-                getClass().getResource("/fxml/search_series.fxml"));
+                getClass().getResource("/fxml/searchseries.fxml"));
 
         double screen_width = Screen.getPrimary().getBounds().getWidth();
         double screen_height = Screen.getPrimary().getBounds().getHeight();
