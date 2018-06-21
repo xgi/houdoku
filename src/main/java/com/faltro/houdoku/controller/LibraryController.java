@@ -27,6 +27,13 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
 
+/**
+ * The controller for the library page, the default view for the client.
+ * <p>
+ * The FXML file for this view is at resources/fxml/library.fxml
+ *
+ * @see Controller
+ */
 public class LibraryController extends Controller {
     public static final int ID = 0;
     /**

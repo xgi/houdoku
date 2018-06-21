@@ -29,6 +29,13 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The controller for the series page.
+ * <p>
+ * The FXML file for this view is at resources/fxml/series.fxml
+ *
+ * @see Controller
+ */
 public class SeriesController extends Controller {
     public static final int ID = 1;
     private static final double COVER_WIDTH = 0.3;
@@ -118,6 +125,15 @@ public class SeriesController extends Controller {
         super(sceneManager);
     }
 
+    /**
+     * Initialize the components of the controller's view.
+     * <p>
+     * This method binds the size of components as appropriate using this class'
+     * static variables. It creates and sets the cell factory and cell value
+     * factory for the columns in the chapters table.
+     *
+     * @see Controller#initialize()
+     */
     @Override
     @FXML
     public void initialize() {
@@ -236,6 +252,9 @@ public class SeriesController extends Controller {
         );
     }
 
+    /**
+     * @see Controller#onMadeActive()
+     */
     @Override
     public void onMadeActive() {
         refreshContent();
@@ -249,6 +268,9 @@ public class SeriesController extends Controller {
         series.reloadFromSource(sceneManager.getContentLoader(), contentSource, this);
     }
 
+    /**
+     * @see Controller#onMadeInactive() ()
+     */
     @Override
     public void onMadeInactive() {
     }
@@ -257,7 +279,7 @@ public class SeriesController extends Controller {
      * Set the cover image width a percentage of the stage while enforcing a
      * maximum height.
      */
-    public void updateCoverSize() {
+    private void updateCoverSize() {
         coverImageView.setFitWidth(stage.getWidth() * COVER_WIDTH);
         if (coverImageView.getBoundsInParent().getHeight() > COVER_MAX_HEIGHT) {
             // we would like to simply use setFitHeight, but some later
@@ -316,6 +338,29 @@ public class SeriesController extends Controller {
     }
 
     /**
+     * Creates a standard MouseEvent "click handler" for a table cell.
+     * <p>
+     * The event checks for a double left click. When it happens, it
+     * identifies the chapter of the selected row and changes the scene
+     * to the reader with the specified chapter.
+     *
+     * @return a standard MouseEvent EventHandler for a table cell
+     */
+    private EventHandler<MouseEvent> newCellClickHandler() {
+        return mouseEvent -> {
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                if (mouseEvent.getClickCount() == 2) {
+                    Chapter chapter = tableView.getSelectionModel().getSelectedItem();
+                    ReaderController readerController =
+                            (ReaderController) sceneManager.getController(ReaderController.ID);
+                    readerController.setChapter(chapter);
+                    sceneManager.changeToRoot(ReaderController.ID);
+                }
+            }
+        };
+    }
+
+    /**
      * Creates a Callback of a standard cell factory for a table cell.
      * <p>
      * The cell factory represents the String content as a JavaFX Text
@@ -341,10 +386,6 @@ public class SeriesController extends Controller {
         };
     }
 
-    public void setSeries(Series series) {
-        this.series = series;
-    }
-
     /**
      * Toggles whether or not the info container is displayed.
      * <p>
@@ -368,35 +409,19 @@ public class SeriesController extends Controller {
     }
 
     /**
-     * Creates a standard MouseEvent "click handler" for a table cell.
-     * <p>
-     * The event checks for a double left click. When it happens, it
-     * identifies the chapter of the selected row and changes the scene
-     * to the reader with the specified chapter.
-     *
-     * @return a standard EventHandler<MouseEvent> for a table cell
-     */
-    private EventHandler<MouseEvent> newCellClickHandler() {
-        return mouseEvent -> {
-            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                if (mouseEvent.getClickCount() == 2) {
-                    Chapter chapter = tableView.getSelectionModel().getSelectedItem();
-                    ReaderController readerController =
-                            (ReaderController) sceneManager.getController(ReaderController.ID);
-                    readerController.setChapter(chapter);
-                    sceneManager.changeToRoot(ReaderController.ID);
-                }
-            }
-        };
-    }
-
-    /**
      * Change to the library scene.
      * <p>
      * Called exclusively by toLibraryButton
+     *
+     * @see LibraryController
+     * @see #toLibraryButton
      */
     @FXML
     public void goToLibrary() {
         sceneManager.changeToRoot(LibraryController.ID);
+    }
+
+    public void setSeries(Series series) {
+        this.series = series;
     }
 }

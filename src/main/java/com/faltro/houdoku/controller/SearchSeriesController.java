@@ -20,6 +20,15 @@ import javafx.scene.text.TextAlignment;
 
 import java.util.HashMap;
 
+/**
+ * The controller for the search series page, where users search for and add
+ * series' to their library from content sources.
+ * <p>
+ * The FXML file for this view is at resources/fxml/searchseries.fxml
+ *
+ * @see Controller
+ * @see ContentSource
+ */
 public class SearchSeriesController extends Controller {
     public static final int ID = 3;
     private static final double COL_COVER_WIDTH = 0.15;
@@ -47,6 +56,15 @@ public class SearchSeriesController extends Controller {
         super(sceneManager);
     }
 
+    /**
+     * Initialize the components of the controller's view.
+     * <p>
+     * This method binds the size of components as appropriate using this class'
+     * static variables. It creates and sets the cell factory and cell value
+     * factory for the columns in the results table.
+     *
+     * @see Controller#initialize()
+     */
     @FXML
     public void initialize() {
         coverColumn.prefWidthProperty().bind(
@@ -98,6 +116,14 @@ public class SearchSeriesController extends Controller {
         ));
     }
 
+    /**
+     * This method updates the size of the page and updates the list of
+     * available content sources from the plugin manager.
+     *
+     * @see Controller#onMadeActive()
+     * @see com.faltro.houdoku.util.PluginManager
+     * @see ContentSource
+     */
     @Override
     public void onMadeActive() {
         // Bind the height of the table to the available space on the stage.
@@ -115,23 +141,29 @@ public class SearchSeriesController extends Controller {
         tableView.setItems(FXCollections.emptyObservableList());
 
         // check available content sources
-        ObservableList<ContentSource> contentSources = FXCollections.observableArrayList(sceneManager.getPluginManager().getContentSources());
+        ObservableList<ContentSource> contentSources = FXCollections.observableArrayList(
+                sceneManager.getPluginManager().getContentSources());
         contentSourcesBox.setItems(contentSources);
         contentSourcesBox.getSelectionModel().select(0);
     }
 
+    /**
+     * @see Controller#onMadeActive()
+     */
     @Override
     public void onMadeInactive() {
     }
 
-    @FXML
-    public void search() {
-        ContentSource contentSource = contentSourcesBox.getSelectionModel()
-                .getSelectedItem();
-        String query = searchTextField.getText();
-        sceneManager.getContentLoader().search(contentSource, query, this);
-    }
-
+    /**
+     * Creates a MouseEvent handler for a cell in the results table.
+     * <p>
+     * This handler handles double clicking to prompt for adding a series, as
+     * well as handling the actions of the given context menu if a series is
+     * right clicked.
+     *
+     * @param contextMenu the context menu shown when right clicking
+     * @return a complete MouseEvent EventHandler for a cell in the table
+     */
     private EventHandler<MouseEvent> newCellClickHandler(ContextMenu contextMenu) {
         return mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
@@ -160,6 +192,21 @@ public class SearchSeriesController extends Controller {
         };
     }
 
+    /**
+     * Adds a series to the library from an item HashMap.
+     * <p>
+     * Since the data retrieved from content source search pages can vary, this
+     * method does not rely heavily on the contents of the given HashMap. The
+     * only fields used from the given item are "contentSourceId" and "source",
+     * the URL for the series.
+     * <p>
+     * This method simply loads the series manually using the content loader,
+     * and then hides this stage since we don't need it anymore.
+     *
+     * @param item a HashMap containing the fields described above
+     * @see com.faltro.houdoku.util.ContentLoader#loadSeries(ContentSource, String,
+     * LibraryController)
+     */
     private void addSeriesFromItem(HashMap<String, Object> item) {
         // load full series details and add to library
         ContentSource contentSource = sceneManager.getPluginManager().getSource
@@ -170,5 +217,22 @@ public class SearchSeriesController extends Controller {
         sceneManager.getContentLoader().loadSeries(contentSource, source,
                 libraryController);
         stage.hide();
+    }
+
+    /**
+     * Searches from the selected content source using the searchTextField.
+     * <p>
+     * The table of results is updated by the ContentLoader after loading.
+     *
+     * @see com.faltro.houdoku.util.ContentLoader
+     * @see ContentSource
+     * @see #searchTextField
+     */
+    @FXML
+    public void search() {
+        ContentSource contentSource = contentSourcesBox.getSelectionModel()
+                .getSelectedItem();
+        String query = searchTextField.getText();
+        sceneManager.getContentLoader().search(contentSource, query, this);
     }
 }

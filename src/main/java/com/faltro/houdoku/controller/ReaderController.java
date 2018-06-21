@@ -17,6 +17,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+/**
+ * The controller for the reader page.
+ * <p>
+ * The FXML file for this view is at resources/fxml/reader.fxml
+ *
+ * @see Controller
+ */
 public class ReaderController extends Controller {
     public static final int ID = 2;
     @FXML
@@ -71,6 +78,15 @@ public class ReaderController extends Controller {
         this.chapter = chapter;
     }
 
+    /**
+     * Initialize the components of the controller's view.
+     * <p>
+     * This method binds the size and position of components as appropriate,
+     * relative to the stage. It also initializes keyEventHandler which is
+     * enabled when the page is made active.
+     *
+     * @see Controller#initialize()
+     */
     @Override
     @FXML
     public void initialize() {
@@ -134,6 +150,12 @@ public class ReaderController extends Controller {
         updateImageViewFit();
     }
 
+    /**
+     * This method enables the keyEventHandler and begins loading the first page
+     * of the set chapter.
+     *
+     * @see Controller#onMadeActive()
+     */
     @Override
     public void onMadeActive() {
         sceneManager.getStage().getScene().addEventHandler(KeyEvent.ANY, keyEventHandler);
@@ -142,6 +164,11 @@ public class ReaderController extends Controller {
         loadCurrentPage();
     }
 
+    /**
+     * This method disables the keyEventHandler and resets components.
+     *
+     * @see Controller#onMadeInactive()
+     */
     @Override
     public void onMadeInactive() {
         sceneManager.getStage().getScene().removeEventHandler(KeyEvent.ANY, keyEventHandler);
@@ -150,6 +177,15 @@ public class ReaderController extends Controller {
         errorText.getParent().setManaged(false);
     }
 
+    /**
+     * Begin loading the image for the current page.
+     * <p>
+     * Updating this view's components (primarily the loading spinner and the
+     * image view itself) is done by the ContentLoader.
+     *
+     * @see com.faltro.houdoku.util.ContentLoader#loadPage(ContentSource, Chapter, int,
+     * ReaderController, boolean)
+     */
     private void loadCurrentPage() {
         // by default set the load indicated to invisible, which may be
         // reverted if we start downloading the image later
@@ -166,6 +202,9 @@ public class ReaderController extends Controller {
         chapter.loadCurrentImage(sceneManager.getContentLoader(), contentSource, this);
     }
 
+    /**
+     * Update components using fields from the set chapter.
+     */
     public void refreshPage() {
         int pageNum = chapter.getCurrentPageNum();
 
@@ -178,36 +217,76 @@ public class ReaderController extends Controller {
         centerImageView();
     }
 
+    /**
+     * Center the imageView on the stage.
+     */
+    private void centerImageView() {
+        imageView.setTranslateX(
+                (imageScrollPane.getWidth() - imageView.getBoundsInParent().getWidth()) / 2
+        );
+        if (imageView.getTranslateX() < 0 || fitWidthRadio.isSelected()) {
+            imageView.setTranslateX(0);
+        }
+    }
+
+    /**
+     * Go to, and load, the page represented by the contents of pageNumField.
+     *
+     * @see #pageNumField
+     */
     @FXML
     private void specificPage() {
         chapter.specificPage(Integer.parseInt(pageNumField.getText()));
         loadCurrentPage();
     }
 
+    /**
+     * Go to, and load, the first page.
+     */
     @FXML
     public void firstPage() {
         chapter.specificPage(0);
         loadCurrentPage();
     }
 
+    /**
+     * Go to, and load, the next page.
+     */
     @FXML
     public void nextPage() {
         chapter.deltaPage(1);
         loadCurrentPage();
     }
 
+    /**
+     * Go to, and load, the previous page.
+     */
     @FXML
     public void previousPage() {
         chapter.deltaPage(-1);
         loadCurrentPage();
     }
 
+    /**
+     * Go to, and load, the last page.
+     */
     @FXML
     public void lastPage() {
         chapter.specificPage(chapter.getTotalPages());
         loadCurrentPage();
     }
 
+    /**
+     * Toggle whether the navigation bar is visible.
+     * <p>
+     * The navigation bar is the top bar which contains the page number display
+     * and forward/back buttons. Users who hide the bar can still navigate
+     * the display using the key shortcuts defined in keyEventHandler.
+     *
+     * @see #showNavBarItem
+     * @see #navBar
+     * @see #keyEventHandler
+     */
     @FXML
     private void toggleNavBar() {
         navContainer.setVisible(showNavBarItem.isSelected());
@@ -223,6 +302,15 @@ public class ReaderController extends Controller {
         updateImageViewFit();
     }
 
+    /**
+     * Toggle whether night mode is enabled.
+     * <p>
+     * When night mode is enabled, this method currently only applies a color
+     * filter to the image view. In the future, we may want to also alter the
+     * style of the client as a whole.
+     *
+     * @see #nightModeItem
+     */
     @FXML
     private void toggleNightMode() {
         if (nightModeItem.isSelected()) {
@@ -235,6 +323,15 @@ public class ReaderController extends Controller {
         }
     }
 
+    /**
+     * Update the imageView fit properties corresponding to the selected style.
+     *
+     * @see #imageView
+     * @see #fitAutoRadio
+     * @see #fitHeightRadio
+     * @see #fitWidthRadio
+     * @see #actualSizeRadio
+     */
     @FXML
     private void updateImageViewFit() {
         if (fitAutoRadio.isSelected()) {
@@ -288,15 +385,17 @@ public class ReaderController extends Controller {
         centerImageView();
     }
 
-    public void centerImageView() {
-        imageView.setTranslateX(
-                (imageScrollPane.getWidth() - imageView.getBoundsInParent().getWidth()) / 2
-        );
-        if (imageView.getTranslateX() < 0 || fitWidthRadio.isSelected()) {
-            imageView.setTranslateX(0);
-        }
-    }
-
+    /**
+     * Go to the series page.
+     *
+     * This method does not explicitly ensure that the series page contains the
+     * information for the expected series (that is, the series which contains
+     * the current chapter). It is expected that the components of the series
+     * page are not cleared when the reader is opened, and also that the series
+     * page has been loaded prior to opening the reader.
+     *
+     * @see SeriesController
+     */
     @FXML
     public void goToSeries() {
         chapter.specificPage(1);
