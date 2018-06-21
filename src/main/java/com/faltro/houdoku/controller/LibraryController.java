@@ -80,6 +80,8 @@ public class LibraryController extends Controller {
      * static variables. It creates and sets the cell factory and cell value
      * factory for the columns in the series table. It also creates the items
      * in the category tree using the root category from the library.
+     *
+     * @see Controller#initialize()
      */
     @Override
     @FXML
@@ -235,8 +237,7 @@ public class LibraryController extends Controller {
     }
 
     /**
-     * Function that will be called by the scene manager when this controller
-     * is made active.
+     * @see Controller#onMadeActive()
      */
     public void onMadeActive() {
         // hack to force the table's FilteredList to update, since series
@@ -246,8 +247,7 @@ public class LibraryController extends Controller {
     }
 
     /**
-     * Function that will be called by the scene manager when this controller
-     * is made inactive.
+     * @see Controller#onMadeInactive()
      */
     @Override
     public void onMadeInactive() {

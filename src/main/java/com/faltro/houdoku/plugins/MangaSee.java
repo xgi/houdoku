@@ -24,6 +24,9 @@ import static com.faltro.houdoku.net.Requests.*;
  * For method and field documentation, please see the ContentSource class.
  * Additionally, the implementation of some common methods is done in the
  * GenericContentSource class.
+ *
+ * @see GenericContentSource
+ * @see com.faltro.houdoku.util.ContentSource
  */
 public class MangaSee extends GenericContentSource {
     public static final int ID = 2;

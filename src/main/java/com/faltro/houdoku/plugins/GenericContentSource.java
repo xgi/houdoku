@@ -20,6 +20,8 @@ import static com.faltro.houdoku.net.Requests.GET;
  * are expected to be common between most content source plugins.
  * <p>
  * For method and field documentation, please see the ContentSource class.
+ *
+ * @see ContentSource
  */
 public class GenericContentSource implements ContentSource {
     public static final int ID = -1;

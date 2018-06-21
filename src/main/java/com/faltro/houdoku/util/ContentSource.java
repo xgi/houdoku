@@ -125,6 +125,7 @@ public interface ContentSource {
      *                                 image
      * @throws NotImplementedException the operation has not yet been
      *                                 implemented for this content source
+     * @see #imageFromURL(String)
      */
     Image cover(String source) throws IOException, NotImplementedException;
 
@@ -157,6 +158,7 @@ public interface ContentSource {
      *                                     website itself
      * @throws NotImplementedException     the operation has not yet been
      *                                     implemented for this content source
+     * @see #imageFromURL(String)
      */
     Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException,
             NotImplementedException;
