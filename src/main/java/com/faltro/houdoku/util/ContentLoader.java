@@ -43,22 +43,26 @@ public class ContentLoader {
                         "\n(" + e.getClass().getSimpleName() + ")");
             }
 
-            chapter.images[page] = image;
-            if (image != null && chapter.getCurrentPageNum() == page) {
-                readerController.imageView.setImage(image);
-                readerController.imageProgressIndicator.setVisible(false);
-                readerController.errorText.getParent().setVisible(false);
-                readerController.errorText.getParent().setManaged(false);
-                readerController.refreshPage();
-            }
+            // ensure that our chapter is still the active one in the reader
+            if (chapter == readerController.getChapter()) {
+                chapter.images[page] = image;
+                if (image != null && chapter.getCurrentPageNum() == page) {
+                    readerController.imageView.setImage(image);
+                    readerController.imageProgressIndicator.setVisible(false);
+                    readerController.errorText.getParent().setVisible(false);
+                    readerController.errorText.getParent().setManaged(false);
+                    readerController.refreshPage();
+                }
 
-            // preload any additional images
-            if (!preloading) {
-                chapter.preloadImages(this, contentSource, readerController, page + 1);
+                // preload any additional images
+                if (!preloading) {
+                    chapter.preloadImages(this, contentSource, readerController, page + 1);
+                }
             }
         };
 
-        String thread_name = "loadPage_" + Integer.toString(page);
+        String thread_name = "loadPage_" + contentSource.NAME + "_" + chapter.getSource() +
+                Integer.toString(page);
         startThreadSafely(thread_name, runnableLoadPage);
     }
 
@@ -83,7 +87,7 @@ public class ContentLoader {
             libraryController.reloadProgressIndicator.setVisible(false);
         };
 
-        String thread_name = "loadSeries_" + source;
+        String thread_name = "loadSeries_" + contentSource.NAME + "_" + source;
         startThreadSafely(thread_name, runnableLoadSeries);
     }
 
@@ -133,7 +137,7 @@ public class ContentLoader {
             seriesController.reloadProgressIndicator.setVisible(false);
         };
 
-        String thread_name = "reloadSeries_" + series.getSource();
+        String thread_name = "reloadSeries_" + contentSource.NAME + "_" + series.getSource();
         startThreadSafely(thread_name, runnableReloadSeries);
     }
 
@@ -188,7 +192,7 @@ public class ContentLoader {
 //            seriesController.reloadProgressIndicator.setVisible(false);
         };
 
-        String thread_name = "search_" + query;
+        String thread_name = "search_" + contentSource.NAME + "_" + query;
         startThreadSafely(thread_name, runnableSearch);
     }
 

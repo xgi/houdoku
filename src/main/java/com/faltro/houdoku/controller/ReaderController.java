@@ -9,7 +9,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -435,5 +434,9 @@ public class ReaderController extends Controller {
         int chapter_index = chapters.indexOf(chapter);
         nextChapterButton.setDisable(chapter_index == 0);
         prevChapterButton.setDisable(chapter_index == chapters.size() - 1);
+    }
+
+    public Chapter getChapter() {
+        return chapter;
     }
 }
