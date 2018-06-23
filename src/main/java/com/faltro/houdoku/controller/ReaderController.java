@@ -43,6 +43,8 @@ public class ReaderController extends Controller {
     @FXML
     private TextField pageNumField;
     @FXML
+    private TextField totalPagesField;
+    @FXML
     private Button firstPageButton;
     @FXML
     private Button prevPageButton;
@@ -114,9 +116,6 @@ public class ReaderController extends Controller {
         // fit the imageScrollPane width to the width of the stage
         imageScrollPane.minWidthProperty().bind(stage.widthProperty());
         imageScrollPane.minHeightProperty().bind(stage.heightProperty());
-
-        // set default page number display
-        pageNumField.setText("1");
 
         // create the keyEventHandler for controlling reader with key commands
         keyEventHandler = event -> {
@@ -195,13 +194,15 @@ public class ReaderController extends Controller {
      * Update components using fields from the set chapter.
      */
     public void refreshPage() {
-        int pageNum = chapter.getCurrentPageNum();
-
+        int page_num = chapter.getCurrentPageNum();
         // enable/disable appropriate navigation buttons
-        prevPageButton.setDisable(pageNum < 1);
+        prevPageButton.setDisable(page_num < 1);
         firstPageButton.setDisable(prevPageButton.isDisable());
-        nextPageButton.setDisable(pageNum + 1 >= chapter.getTotalPages());
+        nextPageButton.setDisable(page_num + 1 >= chapter.getTotalPages());
         lastPageButton.setDisable(nextPageButton.isDisable());
+
+        // update the number of total pages
+        totalPagesField.setText(Integer.toString(chapter.getTotalPages()));
 
         centerImageView();
     }
@@ -276,6 +277,10 @@ public class ReaderController extends Controller {
         ArrayList<Chapter> chapters = chapter.getSeries().getChapters();
         // chapters list is sorted descending
         setChapter(chapters.get(chapters.indexOf(chapter) + 1));
+
+        // reset the number of total pages
+        totalPagesField.setText("??");
+
         firstPage();
     }
 
@@ -290,6 +295,10 @@ public class ReaderController extends Controller {
         ArrayList<Chapter> chapters = chapter.getSeries().getChapters();
         // chapters list is sorted descending
         setChapter(chapters.get(chapters.indexOf(chapter) - 1));
+
+        // reset the number of total pages
+        totalPagesField.setText("??");
+
         firstPage();
     }
 

@@ -67,8 +67,11 @@
                     onAction="#firstPage"/>
             <Button fx:id="prevPageButton" text="←" minHeight="40" minWidth="40"
                     onAction="#previousPage"/>
-            <TextField fx:id="pageNumField" text="0" maxWidth="40" alignment="CENTER"
+            <TextField fx:id="pageNumField" text="1" maxWidth="40" alignment="CENTER"
                        onAction="#specificPage"/>
+            <Text text="/"/>
+            <TextField fx:id="totalPagesField" text="??" maxWidth="40" alignment="CENTER"
+                       disable="true"/>
             <Button fx:id="nextPageButton" text="→" minHeight="40" minWidth="40"
                     onAction="#nextPage"/>
             <Button fx:id="lastPageButton" text="⇥" minHeight="40" minWidth="40"
