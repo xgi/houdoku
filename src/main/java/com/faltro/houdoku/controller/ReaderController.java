@@ -9,13 +9,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+
+import java.util.ArrayList;
 
 /**
  * The controller for the reader page.
@@ -37,13 +38,9 @@ public class ReaderController extends Controller {
     @FXML
     private MenuBar menuBar;
     @FXML
-    private Button toSeriesButton;
-    @FXML
     private ScrollPane imageScrollPane;
     @FXML
-    private StackPane navContainer;
-    @FXML
-    private HBox navBar;
+    private HBox navContainer;
     @FXML
     private TextField pageNumField;
     @FXML
@@ -54,6 +51,10 @@ public class ReaderController extends Controller {
     private Button nextPageButton;
     @FXML
     private Button lastPageButton;
+    @FXML
+    private Button prevChapterButton;
+    @FXML
+    private Button nextChapterButton;
     @FXML
     private CheckMenuItem showNavBarItem;
     @FXML
@@ -72,10 +73,6 @@ public class ReaderController extends Controller {
 
     public ReaderController(SceneManager sceneManager) {
         super(sceneManager);
-    }
-
-    public void setChapter(Chapter chapter) {
-        this.chapter = chapter;
     }
 
     /**
@@ -118,13 +115,6 @@ public class ReaderController extends Controller {
         // fit the imageScrollPane width to the width of the stage
         imageScrollPane.minWidthProperty().bind(stage.widthProperty());
         imageScrollPane.minHeightProperty().bind(stage.heightProperty());
-
-        // align series button to the left side
-        toSeriesButton.translateXProperty().bind(
-                toSeriesButton.layoutXProperty()
-                        .multiply(-1)
-                        .add(15)
-        );
 
         // set default page number display
         pageNumField.setText("1");
@@ -277,6 +267,34 @@ public class ReaderController extends Controller {
     }
 
     /**
+     * Go to the previous chapter and load the first page.
+     *
+     * This function does not validate whether a previous chapter is actually
+     * available - that should be enforced by disabling the prev chapter button.
+     */
+    @FXML
+    public void previousChapter() {
+        ArrayList<Chapter> chapters = chapter.getSeries().getChapters();
+        // chapters list is sorted descending
+        setChapter(chapters.get(chapters.indexOf(chapter) + 1));
+        firstPage();
+    }
+
+    /**
+     * Go to the next chapter and load the first page.
+     *
+     * This function does not validate whether a next chapter is actually
+     * available - that should be enforced by disabling the next chapter button.
+     */
+    @FXML
+    public void nextChapter() {
+        ArrayList<Chapter> chapters = chapter.getSeries().getChapters();
+        // chapters list is sorted descending
+        setChapter(chapters.get(chapters.indexOf(chapter) - 1));
+        firstPage();
+    }
+
+    /**
      * Toggle whether the navigation bar is visible.
      * <p>
      * The navigation bar is the top bar which contains the page number display
@@ -284,7 +302,7 @@ public class ReaderController extends Controller {
      * the display using the key shortcuts defined in keyEventHandler.
      *
      * @see #showNavBarItem
-     * @see #navBar
+     * @see #navContainer
      * @see #keyEventHandler
      */
     @FXML
@@ -387,7 +405,7 @@ public class ReaderController extends Controller {
 
     /**
      * Go to the series page.
-     *
+     * <p>
      * This method does not explicitly ensure that the series page contains the
      * information for the expected series (that is, the series which contains
      * the current chapter). It is expected that the components of the series
@@ -402,5 +420,20 @@ public class ReaderController extends Controller {
         loadCurrentPage();
         chapter.clearImages();
         sceneManager.changeToRoot(SeriesController.ID);
+    }
+
+    public void setChapter(Chapter chapter) {
+        // clear images from the previous chapter
+        if (this.chapter != null) {
+            this.chapter.clearImages();
+        }
+
+        this.chapter = chapter;
+
+        // enable/disable next and previous chapter buttons
+        ArrayList<Chapter> chapters = chapter.getSeries().getChapters();
+        int chapter_index = chapters.indexOf(chapter);
+        nextChapterButton.setDisable(chapter_index == 0);
+        prevChapterButton.setDisable(chapter_index == chapters.size() - 1);
     }
 }

@@ -17,9 +17,6 @@
 #navContainer {
     -fx-min-height: 50;
     -fx-pref-height: 50;
-}
-
-#navBar {
     -fx-background-color: #ddd;
 }
 

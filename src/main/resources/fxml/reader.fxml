@@ -55,11 +55,14 @@
         </Menu>
     </MenuBar>
 
-    <StackPane fx:id="navContainer">
-        <HBox fx:id="navBar" id="navBar" spacing="5" alignment="CENTER">
-            <padding>
-                <Insets top="5" bottom="5"/>
-            </padding>
+    <HBox fx:id="navContainer" maxWidth="Infinity">
+        <padding>
+            <Insets left="15" right="15"/>
+        </padding>
+        <HBox fx:id="navLeftContainer" alignment="CENTER_LEFT">
+            <Button text="◂ Back to series" onAction="#goToSeries"/>
+        </HBox>
+        <HBox fx:id="navCenterContainer" spacing="5" alignment="CENTER" HBox.hgrow="ALWAYS">
             <Button fx:id="firstPageButton" text="⇤" minHeight="40" minWidth="40"
                     onAction="#firstPage"/>
             <Button fx:id="prevPageButton" text="←" minHeight="40" minWidth="40"
@@ -71,8 +74,11 @@
             <Button fx:id="lastPageButton" text="⇥" minHeight="40" minWidth="40"
                     onAction="#lastPage"/>
         </HBox>
-        <Button fx:id="toSeriesButton" text="◂ Back to series" onAction="#goToSeries"/>
-    </StackPane>
+        <HBox fx:id="navRightContainer" spacing="5" alignment="CENTER_RIGHT">
+            <Button fx:id="prevChapterButton" text="Previous chapter" onAction="#previousChapter"/>
+            <Button fx:id="nextChapterButton" text="Next chapter" onAction="#nextChapter"/>
+        </HBox>
+    </HBox>
 
     <StackPane>
         <ScrollPane fx:id="imageScrollPane" styleClass="edge-to-edge">
