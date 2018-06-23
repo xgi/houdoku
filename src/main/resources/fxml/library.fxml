@@ -4,6 +4,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -63,26 +64,32 @@
         </Button>
     </HBox>
 
-    <SplitPane fx:id="contentContainer" VBox.vgrow="ALWAYS">
-        <TreeTableView fx:id="treeView">
-            <placeholder>
-                <Label styleClass="placeholderLabel" text="No series found."/>
-            </placeholder>
-            <columns>
-                <TreeTableColumn fx:id="categoriesColumn" resizable="false" text="Categories"/>
-            </columns>
-        </TreeTableView>
-        <TableView fx:id="tableView">
-            <placeholder>
-                <Label styleClass="placeholderLabel" text="No series found."/>
-            </placeholder>
-            <columns>
-                <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
-                <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
-                <TableColumn fx:id="numChaptersColumn" resizable="false" text="Chapters"/>
-            </columns>
-        </TableView>
-    </SplitPane>
+    <StackPane VBox.vgrow="ALWAYS">
+        <SplitPane fx:id="contentContainer" VBox.vgrow="ALWAYS">
+            <TreeTableView fx:id="treeView">
+                <placeholder>
+                    <Label styleClass="placeholderLabel" text="No series found."/>
+                </placeholder>
+                <columns>
+                    <TreeTableColumn fx:id="categoriesColumn" resizable="false" text="Categories"/>
+                </columns>
+            </TreeTableView>
+            <TableView fx:id="tableView">
+                <placeholder>
+                    <Label styleClass="placeholderLabel" text="No series found."/>
+                </placeholder>
+                <columns>
+                    <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
+                    <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
+                    <TableColumn fx:id="numChaptersColumn" resizable="false" text="Chapters"/>
+                </columns>
+            </TableView>
+        </SplitPane>
+        <HBox alignment="CENTER" mouseTransparent="true">
+            <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"
+                               mouseTransparent="true"/>
+        </HBox>
+    </StackPane>
 
     <HBox fx:id="filterBar" alignment="CENTER">
         <Label text="Filter series: "/>

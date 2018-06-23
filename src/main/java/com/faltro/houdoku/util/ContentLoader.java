@@ -65,7 +65,7 @@ public class ContentLoader {
     public void loadSeries(ContentSource contentSource, String source,
                            LibraryController libraryController) {
         Runnable runnableLoadSeries = () -> {
-//            seriesController.reloadProgressIndicator.setVisible(true);
+            libraryController.reloadProgressIndicator.setVisible(true);
 
             Series series = null;
             try {
@@ -80,7 +80,7 @@ public class ContentLoader {
                 libraryController.updateContent();
             }
 
-//            seriesController.reloadProgressIndicator.setVisible(false);
+            libraryController.reloadProgressIndicator.setVisible(false);
         };
 
         String thread_name = "loadSeries_" + source;

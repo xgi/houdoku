@@ -57,6 +57,8 @@ public class LibraryController extends Controller {
     @FXML
     private TableView<Series> tableView;
     @FXML
+    public ProgressIndicator reloadProgressIndicator;
+    @FXML
     private TreeTableColumn<Category, Text> categoriesColumn;
     @FXML
     private TableColumn<Series, Image> coverColumn;
