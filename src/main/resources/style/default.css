@@ -28,11 +28,6 @@
     -fx-max-width: 80;
 }
 
-#searchSeriesContainer {
-    -fx-min-width: 500px;
-    -fx-min-height: 600px;
-}
-
 #searchSeriesElement {
     -fx-min-height: 60px;
 }

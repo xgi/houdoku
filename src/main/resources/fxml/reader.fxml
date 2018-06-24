@@ -9,9 +9,7 @@
       xmlns="http://javafx.com/javafx"
       fx:id="container"
       stylesheets="/style/default.css"
-      alignment="TOP_CENTER"
-      minHeight="400" minWidth="400"
-      prefHeight="800" prefWidth="600">
+      alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar" minHeight="30">
         <Menu text="File">
             <MenuItem text="New" onAction="#nextPage"/>

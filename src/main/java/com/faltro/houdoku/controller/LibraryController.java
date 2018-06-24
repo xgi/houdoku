@@ -697,7 +697,7 @@ public class LibraryController extends Controller {
      */
     @FXML
     public void goToSearchSeries() {
-        sceneManager.createSceneNewWindow(SearchSeriesController.ID);
+        sceneManager.changeToPopupStage(SearchSeriesController.ID);
     }
 
     /**
