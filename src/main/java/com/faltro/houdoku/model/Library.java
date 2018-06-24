@@ -1,48 +1,19 @@
 package com.faltro.houdoku.model;
 
-import com.faltro.houdoku.plugins.MangaDex;
-import com.faltro.houdoku.util.Serializer;
-import javafx.scene.paint.Color;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Library {
     private ArrayList<Series> serieses;
     private Category rootCategory;
 
     public Library() {
-        this.rootCategory = new Category("All Series");
-        Category category1 = new Category("Action");
-        Category category2 = new Category("Psychological");
-        Category category3 = new Category("Fantasy", Color.RED);
-        Category category4 = new Category("Mystery");
-        Category category5 = new Category("Thriller", Color.GREEN);
-        Category category6 = new Category("Romance");
-
-        category1.addSubcategory(category2);
-        category1.addSubcategory(category5);
-        this.rootCategory.addSubcategory(category1);
-        this.rootCategory.addSubcategory(category3);
-        this.rootCategory.addSubcategory(category4);
-        this.rootCategory.addSubcategory(category6);
-
         this.serieses = new ArrayList<>();
-        MangaDex mangaDex = new MangaDex();
-        try {
-            serieses.addAll(Arrays.asList(
-                    mangaDex.series("/manga/2334"),
-                    mangaDex.series("/manga/17274")
-//                    mangaDex.series("/manga/7420"),
-//                    mangaDex.series("/manga/21827"),
-//                    mangaDex.series("/manga/429")
-            ));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.rootCategory = new Category("All Series");
+    }
 
-        Serializer.serializeLibrary(this);
+    public Library(ArrayList<Series> serieses, Category rootCategory) {
+        this.serieses = serieses;
+        this.rootCategory = rootCategory;
     }
 
     /**

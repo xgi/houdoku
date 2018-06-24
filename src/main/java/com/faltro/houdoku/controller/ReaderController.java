@@ -12,7 +12,8 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -268,7 +269,7 @@ public class ReaderController extends Controller {
 
     /**
      * Go to the previous chapter and load the first page.
-     *
+     * <p>
      * This function does not validate whether a previous chapter is actually
      * available - that should be enforced by disabling the prev chapter button.
      */
@@ -286,7 +287,7 @@ public class ReaderController extends Controller {
 
     /**
      * Go to the next chapter and load the first page.
-     *
+     * <p>
      * This function does not validate whether a next chapter is actually
      * available - that should be enforced by disabling the next chapter button.
      */
@@ -430,6 +431,10 @@ public class ReaderController extends Controller {
         sceneManager.changeToRoot(SeriesController.ID);
     }
 
+    public Chapter getChapter() {
+        return chapter;
+    }
+
     public void setChapter(Chapter chapter) {
         // clear images from the previous chapter
         if (this.chapter != null) {
@@ -443,9 +448,5 @@ public class ReaderController extends Controller {
         int chapter_index = chapters.indexOf(chapter);
         nextChapterButton.setDisable(chapter_index == 0);
         prevChapterButton.setDisable(chapter_index == chapters.size() - 1);
-    }
-
-    public Chapter getChapter() {
-        return chapter;
     }
 }

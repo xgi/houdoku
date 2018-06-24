@@ -25,9 +25,10 @@ public class Series {
     private String source;
     private transient Image cover;
     private int contentSourceId;
+    private int numChapters;
     private int numHighestChapter;
     private ArrayList<String> stringCategories;
-    private transient ArrayList<Chapter> chapters;
+    private ArrayList<Chapter> chapters;
 
     public Series(String title, String source, Image cover, int contentSourceId) {
         this.title = title;
@@ -109,11 +110,11 @@ public class Series {
     }
 
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     public Image getCover() {
-        return this.cover;
+        return cover;
     }
 
     public int getNumHighestChapter() {
@@ -121,7 +122,7 @@ public class Series {
     }
 
     public int getNumChapters() {
-        return chapters.size();
+        return numChapters;
     }
 
     public ArrayList<String> getStringCategories() {
@@ -166,6 +167,7 @@ public class Series {
             return o1.chapterNum > o2.chapterNum ? -1 : 1;
         });
         numHighestChapter = chapters.size() > 0 ? (int) chapters.get(0).chapterNum : 0;
+        numChapters = chapters.size();
     }
 
     public int getContentSourceId() {

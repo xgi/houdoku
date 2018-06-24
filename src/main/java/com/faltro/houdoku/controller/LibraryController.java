@@ -43,9 +43,9 @@ public class LibraryController extends Controller {
     private static final double COL_COVER_WIDTH = 0.1;
     private static final double COL_TITLE_WIDTH = 0.7;
     private static final double COL_NUMCHAPTERS_WIDTH = 0.2;
-
+    @FXML
+    public ProgressIndicator reloadProgressIndicator;
     private Library library;
-
     @FXML
     private VBox container;
     @FXML
@@ -56,8 +56,6 @@ public class LibraryController extends Controller {
     private TreeTableView<Category> treeView;
     @FXML
     private TableView<Series> tableView;
-    @FXML
-    public ProgressIndicator reloadProgressIndicator;
     @FXML
     private TreeTableColumn<Category, Text> categoriesColumn;
     @FXML

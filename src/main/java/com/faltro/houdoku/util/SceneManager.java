@@ -55,7 +55,7 @@ public class SceneManager {
     /**
      * Change the given stage's scene's root to the given root.
      *
-     * @param stg the stage to change the root of
+     * @param stg  the stage to change the root of
      * @param root the new root
      */
     private void changeStageRoot(Stage stg, Parent root) {
