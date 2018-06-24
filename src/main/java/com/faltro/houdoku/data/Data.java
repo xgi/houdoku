@@ -2,31 +2,28 @@ package com.faltro.houdoku.data;
 
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.util.Serializer;
+import net.harawata.appdirs.AppDirs;
+import net.harawata.appdirs.AppDirsFactory;
 
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.Preferences;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Data {
     /**
-     * A string for use as a default value when retrieving Preferences values.
+     * AppDirs instance for determining cross-platform application directories.
      */
-    private static String NONEXISTENT_DATA = "NONEXISTENT DATA";
+    private static AppDirs appDirs = AppDirsFactory.getInstance();
     /**
-     * The maximum length of a string as a Preferences value.
+     * The base directory for storing application-specific user data.
      */
-    private static int MAX_VALUE_LEN = 8192;
+    private static String USER_DATA_DIR = appDirs.getUserDataDir("houdoku", null, "xgi");
     /**
-     * The field name for the library in the Preferences object.
-     * <p>
-     * In practice, this is only the prefix of the saved field name.
-     *
-     * @see #saveLongValue(Preferences, String, String)
+     * The name of the file for storing library data.
      */
-    private static String FIELD_LIBRARY = "library";
-    /**
-     * The Preferences object for the user-specific directory.
-     */
-    private static Preferences prefsUser = Preferences.userRoot();
+    private static Path PATH_LIBRARY = Paths.get(USER_DATA_DIR + File.separator + "library.json");
 
     /**
      * Saves the given Library to the filesystem.
@@ -37,14 +34,11 @@ public class Data {
      */
     public static void saveLibrary(Library library) {
         String serialized = Serializer.serializeLibrary(library);
-
-        // delete potentially overlapping fields before saving
-        // We may want to load the data into a temp object before doing this to
-        // prevent data loss if the application exits before the new data can
-        // be saved.
-        deleteFields(prefsUser, FIELD_LIBRARY);
-
-        saveLongValue(prefsUser, FIELD_LIBRARY, serialized);
+        try {
+            write(serialized, PATH_LIBRARY);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -55,78 +49,46 @@ public class Data {
      * @return the saved library, or null if it is not available
      */
     public static Library loadLibrary() {
-        String serialized = loadLongValue(prefsUser, FIELD_LIBRARY);
-        System.out.println(serialized);
-        Library result = null;
-        if (!serialized.equals(NONEXISTENT_DATA)) {
-            result = Serializer.deserializeLibrary(serialized);
-        }
-        return result;
-    }
-
-    /**
-     * Saves a potentially long-length value in the given Preferences object.
-     * <p>
-     * The given field will not actually be present in the saved preferences,
-     * instead the value will be saved under multiple fields labeled field_0,
-     * field_1, field_2, etc. Therefore, any value saved using this method
-     * must be retrieved using loadLongValue which explicitly handles this
-     * format.
-     *
-     * @param preferences the Preferences object to store the value in
-     * @param field       the field prefix to store the value
-     * @param value       the value to store, which may be very long
-     * @see #loadLongValue(Preferences, String)
-     */
-    private static void saveLongValue(Preferences preferences, String field, String value) {
-        int num_parts = (int) Math.ceil(value.length() / MAX_VALUE_LEN);
-        for (int i = 0; i <= num_parts; i++) {
-            String subExtended = value.substring(i * MAX_VALUE_LEN);
-            String sub = subExtended.substring(0, subExtended.length() > MAX_VALUE_LEN ?
-                    MAX_VALUE_LEN : subExtended.length());
-            preferences.put(field + "_" + Integer.toString(i), sub);
-        }
-    }
-
-    /**
-     * Loads a potentially long-length value from the given Preferences object.
-     * <p>
-     * Requires the field to have been saved in the format described in the
-     * documentation for {@link #saveLongValue(Preferences, String, String)}.
-     *
-     * @param preferences the Preferences object the value is stored in
-     * @param field       the field prefix where the value is stored
-     * @return the full value saved with the field prefix, or
-     * {@link #NONEXISTENT_DATA} if the field is not found
-     * @see #saveLongValue(Preferences, String, String)
-     */
-    private static String loadLongValue(Preferences preferences, String field) {
-        StringBuilder result = new StringBuilder();
-        String partial = "";
-        for (int i = 0; !partial.equals(NONEXISTENT_DATA); i++) {
-            partial = preferences.get(field + "_" + Integer.toString(i), NONEXISTENT_DATA);
-            if (!partial.equals(NONEXISTENT_DATA)) {
-                result.append(partial);
+        String data = null;
+        if (Files.exists(PATH_LIBRARY)) {
+            try {
+                data = read(PATH_LIBRARY);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        return result.toString().equals("") ? NONEXISTENT_DATA : result.toString();
+        return data == null ? null : Serializer.deserializeLibrary(data);
     }
 
     /**
-     * Deletes fields from the given Preferences object with the given prefix.
+     * Writes the given string as binary data to the given file.
      *
-     * @param preferences the Preferences object to delete fields from
-     * @param prefix      the prefix of fields to delete
+     * @param data the data to write
+     * @param path the path of the file to write the data
+     * @throws IOException an IOException occurred when writing to the file
+     * @see #read(Path)
      */
-    private static void deleteFields(Preferences preferences, String prefix) {
-        try {
-            for (String key : preferences.keys()) {
-                if (key.startsWith(prefix)) {
-                    preferences.remove(key);
-                }
-            }
-        } catch (BackingStoreException e) {
-            e.printStackTrace();
+    private static void write(String data, Path path) throws IOException {
+        byte[] bytes = data.getBytes();
+        // ensure path to file exists
+        Files.createDirectories(path.getParent());
+        // ensure file exists
+        if (!Files.exists(path)) {
+            Files.createFile(path);
         }
+        Files.write(path, bytes);
+    }
+
+    /**
+     * Reads the binary data of the given file to a String.
+     *
+     * @param path the path of the file to read the data
+     * @return a string representation of the
+     * @throws IOException an IOException occurred when writing to the file
+     * @see #write(String, Path)
+     */
+    private static String read(Path path) throws IOException {
+        byte[] bytes = Files.readAllBytes(path);
+        return new String(bytes);
     }
 }

@@ -1,5 +1,6 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.model.Category;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
@@ -77,7 +78,9 @@ public class LibraryController extends Controller {
 
     public LibraryController(SceneManager sceneManager) {
         super(sceneManager);
-        this.library = new Library();
+
+        Library loaded_library = Data.loadLibrary();
+        this.library = loaded_library == null ? new Library() : loaded_library;
     }
 
     /**
