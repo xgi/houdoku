@@ -40,7 +40,7 @@ public class Data {
     private static Path PATH_COVERS = Paths.get(USER_DATA_DIR + File.separator + "covers");
 
     /**
-     * Saves the given Library to the filesystem.
+     * Save the given Library to the filesystem.
      *
      * @param library the library to save
      * @see #loadLibrary()
@@ -57,11 +57,8 @@ public class Data {
         // save cover images
         for (Series series : library.getSerieses()) {
             if (series.getCover() != null) {
-                String name = OutputHelpers.sanitizeFilename(series.getTitle()) + ".jpg";
-                Path path = Paths.get(PATH_COVERS.toString() + File.separator + name);
                 try {
-                    System.out.println("saving " + path.toString());
-                    saveImage(series.getCover(), path);
+                    saveImage(series.getCover(), findCoverPath(series));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -70,7 +67,7 @@ public class Data {
     }
 
     /**
-     * Loads a saved Library from the filesystem.
+     * Load a saved Library from the filesystem.
      *
      * @return the saved library, or null if it is not available
      * @see #saveLibrary(Library)
@@ -84,9 +81,7 @@ public class Data {
 
                 // load cover images
                 for (Series series : library.getSerieses()) {
-                    String name = OutputHelpers.sanitizeFilename(series.getTitle()) + ".jpg";
-                    Path path = Paths.get(PATH_COVERS.toString() + File.separator + name);
-                    series.setCover(loadImage(path));
+                    series.setCover(loadImage(findCoverPath(series)));
                 }
 
                 return library;
@@ -98,7 +93,7 @@ public class Data {
     }
 
     /**
-     * Compresses and writes the given data to a file.
+     * Compress and write the given data to a file.
      *
      * @param bytes the data to write
      * @param path  the path of the file to write the data
@@ -116,7 +111,7 @@ public class Data {
     }
 
     /**
-     * Reads and decompresses the data of the given file.
+     * Read and decompress the data of the given file.
      *
      * @param path the path of the file to read the data
      * @return the decompressed content of the file
@@ -161,5 +156,30 @@ public class Data {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Delete a series' cover from the filesystem, if it has been saved.
+     */
+    public static void deleteCover(Series series) {
+        Path path = findCoverPath(series);
+        if (Files.exists(path)) {
+            try {
+                Files.delete(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Retrieve the path for where a series' cover image should be saved.
+     *
+     * @param series the series whose cover to find the path for
+     * @return the path to where the series' cover image should be saved
+     */
+    private static Path findCoverPath(Series series) {
+        String name = OutputHelpers.sanitizeFilename(series.getTitle()) + ".jpg";
+        return Paths.get(PATH_COVERS.toString() + File.separator + name);
     }
 }

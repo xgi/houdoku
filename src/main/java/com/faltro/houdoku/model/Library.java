@@ -1,5 +1,7 @@
 package com.faltro.houdoku.model;
 
+import com.faltro.houdoku.data.Data;
+
 import java.util.ArrayList;
 
 public class Library {
@@ -53,6 +55,7 @@ public class Library {
 
     public void removeSeries(Series series) {
         serieses.remove(series);
+        Data.deleteCover(series);
     }
 
     public ArrayList<Series> getSerieses() {
