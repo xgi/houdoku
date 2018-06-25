@@ -695,11 +695,11 @@ public class LibraryController extends Controller {
     }
 
     /**
-     * Creates a new window with the SearchSeries view.
+     * Change to the search series page.
      */
     @FXML
     public void goToSearchSeries() {
-        sceneManager.changeToPopupStage(SearchSeriesController.ID);
+        sceneManager.changeToRoot(SearchSeriesController.ID);
     }
 
     /**

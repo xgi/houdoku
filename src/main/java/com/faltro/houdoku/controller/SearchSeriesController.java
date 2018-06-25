@@ -216,7 +216,7 @@ public class SearchSeriesController extends Controller {
                 .getController(LibraryController.ID);
         sceneManager.getContentLoader().loadSeries(contentSource, source,
                 libraryController);
-        stage.hide();
+        goToLibrary();
     }
 
     /**
@@ -234,5 +234,13 @@ public class SearchSeriesController extends Controller {
                 .getSelectedItem();
         String query = searchTextField.getText();
         sceneManager.getContentLoader().search(contentSource, query, this);
+    }
+
+    /**
+     * Change to the library page.
+     */
+    @FXML
+    public void goToLibrary() {
+        sceneManager.changeToRoot(LibraryController.ID);
     }
 }
