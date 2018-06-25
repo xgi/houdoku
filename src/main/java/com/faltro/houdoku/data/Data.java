@@ -12,6 +12,10 @@ import java.nio.file.Paths;
 
 public class Data {
     /**
+     * The name of the encoding to use for all saved text.
+     */
+    private static String CHAR_ENCODING = "UTF-8";
+    /**
      * AppDirs instance for determining cross-platform application directories.
      */
     private static AppDirs appDirs = AppDirsFactory.getInstance();
@@ -30,11 +34,12 @@ public class Data {
      *
      * @param library the library to save
      * @see #loadLibrary()
+     * @see Serializer#serializeLibrary(Library)
      */
     public static void saveLibrary(Library library) {
         String serialized = Serializer.serializeLibrary(library);
         try {
-            write(serialized, PATH_LIBRARY);
+            write(serialized.getBytes(CHAR_ENCODING), PATH_LIBRARY);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,12 +50,13 @@ public class Data {
      *
      * @return the saved library, or null if it is not available
      * @see #saveLibrary(Library)
+     * @see Serializer#deserializeLibrary(String)
      */
     public static Library loadLibrary() {
         String data = null;
         if (Files.exists(PATH_LIBRARY)) {
             try {
-                data = read(PATH_LIBRARY);
+                data = new String(read(PATH_LIBRARY), CHAR_ENCODING);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -59,38 +65,32 @@ public class Data {
     }
 
     /**
-     * Writes the given string as binary data to the given file.
-     * <p>
-     * The data is compressed before being written.
+     * Compresses and writes the given data to a file.
      *
-     * @param text the text to write
-     * @param path the path of the file to write the data
+     * @param bytes the data to write
+     * @param path  the path of the file to write the data
      * @throws IOException an IOException occurred when writing to the file
-     * @see Compressor#compress(String)
-     * @see #read(Path)
+     * @see Compressor#compress(byte[])
      */
-    private static void write(String text, Path path) throws IOException {
+    private static void write(byte[] bytes, Path path) throws IOException {
         // ensure path to file exists
         Files.createDirectories(path.getParent());
         // ensure file exists
         if (!Files.exists(path)) {
             Files.createFile(path);
         }
-        Files.write(path, Compressor.compress(text));
+        Files.write(path, Compressor.compress(bytes));
     }
 
     /**
-     * Reads the binary data of the given file to a String.
-     * <p>
-     * The data is decompressed before being returned.
+     * Reads and decompresses the data of the given file.
      *
      * @param path the path of the file to read the data
-     * @return a string representation of the
+     * @return the decompressed content of the file
      * @throws IOException an IOException occurred when reading from the file
      * @see Compressor#decompress(byte[])
-     * @see #write(String, Path)
      */
-    private static String read(Path path) throws IOException {
+    private static byte[] read(Path path) throws IOException {
         byte[] bytes = Files.readAllBytes(path);
         return Compressor.decompress(bytes);
     }

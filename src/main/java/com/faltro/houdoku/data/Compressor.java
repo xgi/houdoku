@@ -6,16 +6,16 @@ import java.util.zip.GZIPOutputStream;
 
 class Compressor {
     /**
-     * Compress the given string using gzip.
+     * Compress an array of bytes.
      *
-     * @param text the text to compress
-     * @return the given string compressed and encoded as bytes using UTF-8
+     * @param bytes the bytes to compress
+     * @return the given bytes compressed
      */
-    static byte[] compress(String text) {
+    static byte[] compress(byte[] bytes) {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         try {
             GZIPOutputStream gzip = new GZIPOutputStream(result);
-            gzip.write(text.getBytes("UTF-8"));
+            gzip.write(bytes);
             gzip.flush();
             gzip.close();
         } catch (IOException e) {
@@ -27,27 +27,27 @@ class Compressor {
     }
 
     /**
-     * Decompresses a compressed array of bytes to a string.
+     * Decompress a compressed array of bytes.
      *
      * @param bytes an array of bytes encoded using UTF-8
-     * @return the given bytes decompressed, as a string
+     * @return the given bytes decompressed
      */
-    static String decompress(byte[] bytes) {
-        // based on https://stackoverflow.com/a/34305182
-        StringBuilder result = new StringBuilder();
+    static byte[] decompress(byte[] bytes) {
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
         try {
             GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(bytes));
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(gzip, "UTF-8"));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                result.append(line);
+            // retrieve bytes in chunks of 2048
+            byte[] buffer = new byte[2048];
+            int len;
+            while ((len = gzip.read(buffer)) > 0) {
+                result.write(buffer, 0, len);
             }
+            gzip.close();
         } catch (IOException e) {
             // realistically, this should probably never happen, since we are
             // simply using data from a local variable
             e.printStackTrace();
         }
-        return result.toString();
+        return result.toByteArray();
     }
 }
