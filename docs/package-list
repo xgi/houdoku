@@ -1,5 +1,6 @@
 com.faltro.houdoku
 com.faltro.houdoku.controller
+com.faltro.houdoku.data
 com.faltro.houdoku.exception
 com.faltro.houdoku.model
 com.faltro.houdoku.net
