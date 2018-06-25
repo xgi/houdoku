@@ -120,7 +120,7 @@ public class ReaderController extends Controller {
 
         // create the keyEventHandler for controlling reader with key commands
         keyEventHandler = event -> {
-            // only perform actions if the user is not in the page number textfield
+            // only perform actions if the user is not in the page num textfield
             if (!pageNumField.isFocused()) {
                 if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.PAGE_DOWN) {
                     nextPage();
@@ -172,8 +172,8 @@ public class ReaderController extends Controller {
      * Updating this view's components (primarily the loading spinner and the
      * image view itself) is done by the ContentLoader.
      *
-     * @see com.faltro.houdoku.util.ContentLoader#loadPage(ContentSource, Chapter, int,
-     * ReaderController, boolean)
+     * @see com.faltro.houdoku.util.ContentLoader#loadPage(ContentSource,
+     * Chapter, int, ReaderController, boolean)
      */
     private void loadCurrentPage() {
         // by default set the load indicated to invisible, which may be
