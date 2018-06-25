@@ -1,6 +1,7 @@
 package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.model.Chapter;
+import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -275,9 +276,7 @@ public class ReaderController extends Controller {
      */
     @FXML
     public void previousChapter() {
-        ArrayList<Chapter> chapters = chapter.getSeries().getChapters();
-        // chapters list is sorted descending
-        setChapter(chapters.get(chapters.indexOf(chapter) + 1));
+        setChapter(chapter.getSeries().smartPreviousChapter(chapter));
 
         // reset the number of total pages
         totalPagesField.setText("??");
@@ -287,15 +286,10 @@ public class ReaderController extends Controller {
 
     /**
      * Go to the next chapter and load the first page.
-     * <p>
-     * This function does not validate whether a next chapter is actually
-     * available - that should be enforced by disabling the next chapter button.
      */
     @FXML
     public void nextChapter() {
-        ArrayList<Chapter> chapters = chapter.getSeries().getChapters();
-        // chapters list is sorted descending
-        setChapter(chapters.get(chapters.indexOf(chapter) - 1));
+        setChapter(chapter.getSeries().smartNextChapter(chapter));
 
         // reset the number of total pages
         totalPagesField.setText("??");
@@ -444,9 +438,8 @@ public class ReaderController extends Controller {
         this.chapter = chapter;
 
         // enable/disable next and previous chapter buttons
-        ArrayList<Chapter> chapters = chapter.getSeries().getChapters();
-        int chapter_index = chapters.indexOf(chapter);
-        nextChapterButton.setDisable(chapter_index == 0);
-        prevChapterButton.setDisable(chapter_index == chapters.size() - 1);
+        Series series = chapter.getSeries();
+        nextChapterButton.setDisable(series.smartNextChapter(chapter) == null);
+        prevChapterButton.setDisable(series.smartPreviousChapter(chapter) == null);
     }
 }

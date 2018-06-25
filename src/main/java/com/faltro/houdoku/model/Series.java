@@ -8,6 +8,10 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.function.BinaryOperator;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Series {
     public String language;
@@ -107,6 +111,40 @@ public class Series {
     public void reloadFromSource(ContentLoader contentLoader, ContentSource contentSource,
                                  SeriesController seriesController) {
         contentLoader.reloadSeries(contentSource, this, seriesController);
+    }
+
+    /**
+     * Smartly determine the next chapter after the given one.
+     *
+     * @param chapter the Chapter to find the next of
+     * @return the ideal next chapter, or null
+     */
+    public Chapter smartNextChapter(Chapter chapter) {
+        assert chapters.contains(chapter);
+
+        ArrayList<Chapter> possible = chapters.stream().filter(
+                c -> c.language.equals(chapter.language)
+        ).collect(Collectors.toCollection(ArrayList::new));
+
+        int chapter_index = possible.indexOf(chapter);
+        return chapter_index == 0 ? null : possible.get(chapter_index - 1);
+    }
+
+    /**
+     * Smartly determine the previous chapter before the given one.
+     *
+     * @param chapter the Chapter to find the previous of
+     * @return the ideal previous chapter, or null
+     */
+    public Chapter smartPreviousChapter(Chapter chapter) {
+        assert chapters.contains(chapter);
+
+        ArrayList<Chapter> possible = chapters.stream().filter(
+                c -> c.language.equals(chapter.language)
+        ).collect(Collectors.toCollection(ArrayList::new));
+
+        int chapter_index = possible.indexOf(chapter);
+        return chapter_index == possible.size() - 1 ? null : possible.get(chapter_index + 1);
     }
 
     public String getTitle() {
