@@ -27,10 +27,9 @@ public class Data {
 
     /**
      * Saves the given Library to the filesystem.
-     * <p>
-     * The library is saved to a user-specific directory.
      *
      * @param library the library to save
+     * @see #loadLibrary()
      */
     public static void saveLibrary(Library library) {
         String serialized = Serializer.serializeLibrary(library);
@@ -43,10 +42,9 @@ public class Data {
 
     /**
      * Loads a saved Library from the filesystem.
-     * <p>
-     * The library is retrieved from a user-specific directory.
      *
      * @return the saved library, or null if it is not available
+     * @see #saveLibrary(Library)
      */
     public static Library loadLibrary() {
         String data = null;
@@ -68,6 +66,7 @@ public class Data {
      * @param text the text to write
      * @param path the path of the file to write the data
      * @throws IOException an IOException occurred when writing to the file
+     * @see Compressor#compress(String)
      * @see #read(Path)
      */
     private static void write(String text, Path path) throws IOException {
@@ -87,7 +86,8 @@ public class Data {
      *
      * @param path the path of the file to read the data
      * @return a string representation of the
-     * @throws IOException an IOException occurred when writing to the file
+     * @throws IOException an IOException occurred when reading from the file
+     * @see Compressor#decompress(byte[])
      * @see #write(String, Path)
      */
     private static String read(Path path) throws IOException {
