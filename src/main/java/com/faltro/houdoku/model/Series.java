@@ -141,6 +141,10 @@ public class Series {
         return chapters;
     }
 
+    public int getContentSourceId() {
+        return contentSourceId;
+    }
+
     /**
      * Sets the chapters field using a provided ArrayList.
      * <p>
@@ -170,7 +174,7 @@ public class Series {
         numChapters = chapters.size();
     }
 
-    public int getContentSourceId() {
-        return contentSourceId;
+    public void setCover(Image image) {
+        cover = image;
     }
 }

@@ -1,9 +1,15 @@
 package com.faltro.houdoku.data;
 
 import com.faltro.houdoku.model.Library;
+import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.util.OutputHelpers;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,10 +30,14 @@ public class Data {
      */
     private static String USER_DATA_DIR = appDirs.getUserDataDir("houdoku", null, "xgi");
     /**
-     * The name of the file for storing library data.
+     * The Path for storing library data.
      */
     private static Path PATH_LIBRARY = Paths.get(
             USER_DATA_DIR + File.separator + "library.json.gzip");
+    /**
+     * The Path for storing series cover images.
+     */
+    private static Path PATH_COVERS = Paths.get(USER_DATA_DIR + File.separator + "covers");
 
     /**
      * Saves the given Library to the filesystem.
@@ -43,6 +53,19 @@ public class Data {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // save cover images
+        for (Series series : library.getSerieses()) {
+            if (series.getCover() != null) {
+                String name = OutputHelpers.sanitizeFilename(series.getTitle()) + ".jpg";
+                Path path = Paths.get(PATH_COVERS.toString() + File.separator + name);
+                try {
+                    saveImage(series.getCover(), path);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -53,15 +76,24 @@ public class Data {
      * @see Serializer#deserializeLibrary(String)
      */
     public static Library loadLibrary() {
-        String data = null;
         if (Files.exists(PATH_LIBRARY)) {
             try {
-                data = new String(read(PATH_LIBRARY), CHAR_ENCODING);
+                String data = new String(read(PATH_LIBRARY), CHAR_ENCODING);
+                Library library = Serializer.deserializeLibrary(data);
+
+                // load cover images
+                for (Series series : library.getSerieses()) {
+                    String name = OutputHelpers.sanitizeFilename(series.getTitle()) + ".jpg";
+                    Path path = Paths.get(PATH_COVERS.toString() + File.separator + name);
+                    series.setCover(loadImage(path));
+                }
+
+                return library;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return data == null ? null : Serializer.deserializeLibrary(data);
+        return null;
     }
 
     /**
@@ -93,5 +125,39 @@ public class Data {
     private static byte[] read(Path path) throws IOException {
         byte[] bytes = Files.readAllBytes(path);
         return Compressor.decompress(bytes);
+    }
+
+    /**
+     * Save a JavaFX Image to the filesystem.
+     *
+     * @param image the Image to save
+     * @param path  the Path to save the image
+     * @throws IOException an IOException occurred when writing to the file
+     */
+    private static void saveImage(Image image, Path path) throws IOException {
+        // ensure path to file exists
+        Files.createDirectories(path.getParent());
+        // ensure file exists
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
+        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
+        ImageIO.write(bufferedImage, "jpg", path.toFile());
+    }
+
+    /**
+     * Load a JavaFX Image from the filesystem.
+     *
+     * @param path the Path to load the image
+     * @return the Image at the given path, or null if it doesn't exist
+     * @throws IOException an IOException occurred when loading the file
+     */
+    private static Image loadImage(Path path) throws IOException {
+        if (Files.exists(path)) {
+            BufferedImage bufferedImage = ImageIO.read(path.toFile());
+            return SwingFXUtils.toFXImage(bufferedImage, null);
+        } else {
+            return null;
+        }
     }
 }

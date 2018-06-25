@@ -34,4 +34,16 @@ public class OutputHelpers {
         }
         return result;
     }
+
+    /**
+     * Sanitize a filename of potentially illegal characters.
+     *
+     * @param filename the filename to sanitize
+     * @return the filename with illegal characters replaced with underscores
+     */
+    public static String sanitizeFilename(String filename) {
+        // based on https://stackoverflow.com/a/17745189
+        // this could have issues with non-latin characters
+        return filename.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+    }
 }
