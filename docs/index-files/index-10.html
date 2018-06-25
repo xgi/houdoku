@@ -86,6 +86,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/controller/LibraryController.html#library">library</a></span> - Variable in class com.faltro.houdoku.controller.<a href="../com/faltro/houdoku/controller/LibraryController.html" title="class in com.faltro.houdoku.controller">LibraryController</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/controller/SeriesController.html#library">library</a></span> - Variable in class com.faltro.houdoku.controller.<a href="../com/faltro/houdoku/controller/SeriesController.html" title="class in com.faltro.houdoku.controller">SeriesController</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model"><span class="typeNameLink">Library</span></a> - Class in <a href="../com/faltro/houdoku/model/package-summary.html">com.faltro.houdoku.model</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/model/Library.html#Library--">Library()</a></span> - Constructor for class com.faltro.houdoku.model.<a href="../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model">Library</a></dt>
@@ -102,22 +104,32 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/exception/LicensedContentException.html#LicensedContentException-java.lang.String-">LicensedContentException(String)</a></span> - Constructor for exception com.faltro.houdoku.exception.<a href="../com/faltro/houdoku/exception/LicensedContentException.html" title="class in com.faltro.houdoku.exception">LicensedContentException</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadCover-com.faltro.houdoku.util.ContentSource-java.lang.String-javafx.scene.image.ImageView-">loadCover(ContentSource, String, ImageView)</a></span> - Method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/model/Chapter.html#loadCurrentImage-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.util.ContentSource-com.faltro.houdoku.controller.ReaderController-">loadCurrentImage(ContentLoader, ContentSource, ReaderController)</a></span> - Method in class com.faltro.houdoku.model.<a href="../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a></dt>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadCover-com.faltro.houdoku.util.ContentSource-java.lang.String-javafx.scene.image.ImageView-">loadCover(ContentSource, String, ImageView)</a></span> - Static method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
+<dd>
+<div class="block">Start a thread for loading a series' cover image.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/model/Chapter.html#loadCurrentImage-com.faltro.houdoku.util.ContentSource-com.faltro.houdoku.controller.ReaderController-">loadCurrentImage(ContentSource, ReaderController)</a></span> - Method in class com.faltro.houdoku.model.<a href="../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/controller/ReaderController.html#loadCurrentPage--">loadCurrentPage()</a></span> - Method in class com.faltro.houdoku.controller.<a href="../com/faltro/houdoku/controller/ReaderController.html" title="class in com.faltro.houdoku.controller">ReaderController</a></dt>
 <dd>
 <div class="block">Begin loading the image for the current page.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/data/Data.html#loadImage-java.nio.file.Path-">loadImage(Path)</a></span> - Static method in class com.faltro.houdoku.data.<a href="../com/faltro/houdoku/data/Data.html" title="class in com.faltro.houdoku.data">Data</a></dt>
+<dd>
+<div class="block">Load a JavaFX Image from the filesystem.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/data/Data.html#loadLibrary--">loadLibrary()</a></span> - Static method in class com.faltro.houdoku.data.<a href="../com/faltro/houdoku/data/Data.html" title="class in com.faltro.houdoku.data">Data</a></dt>
 <dd>
 <div class="block">Loads a saved Library from the filesystem.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadPage-com.faltro.houdoku.util.ContentSource-com.faltro.houdoku.model.Chapter-int-com.faltro.houdoku.controller.ReaderController-boolean-">loadPage(ContentSource, Chapter, int, ReaderController, boolean)</a></span> - Method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadSeries-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.LibraryController-">loadSeries(ContentSource, String, LibraryController)</a></span> - Method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadPage-com.faltro.houdoku.util.ContentSource-com.faltro.houdoku.model.Chapter-int-com.faltro.houdoku.controller.ReaderController-boolean-">loadPage(ContentSource, Chapter, int, ReaderController, boolean)</a></span> - Static method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
+<dd>
+<div class="block">Start a thread for loading a chapter page.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadSeries-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.LibraryController-">loadSeries(ContentSource, String, LibraryController)</a></span> - Static method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
+<dd>
+<div class="block">Start a thread for loading a series.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/model/Chapter.html#localDateTime">localDateTime</a></span> - Variable in class com.faltro.houdoku.model.<a href="../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a></dt>
 <dd>&nbsp;</dd>
 </dl>

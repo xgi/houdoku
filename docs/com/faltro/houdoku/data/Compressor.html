@@ -146,14 +146,14 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>(package private) static byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Compressor.html#compress-java.lang.String-">compress</a></span>(java.lang.String&nbsp;text)</code>
-<div class="block">Compress the given string using gzip.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Compressor.html#compress-byte:A-">compress</a></span>(byte[]&nbsp;bytes)</code>
+<div class="block">Compress an array of bytes.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>(package private) static java.lang.String</code></td>
+<td class="colFirst"><code>(package private) static byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Compressor.html#decompress-byte:A-">decompress</a></span>(byte[]&nbsp;bytes)</code>
-<div class="block">Decompresses a compressed array of bytes to a string.</div>
+<div class="block">Decompress a compressed array of bytes.</div>
 </td>
 </tr>
 </table>
@@ -195,19 +195,19 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="compress-java.lang.String-">
+<a name="compress-byte:A-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>compress</h4>
-<pre>static&nbsp;byte[]&nbsp;compress(java.lang.String&nbsp;text)</pre>
-<div class="block">Compress the given string using gzip.</div>
+<pre>static&nbsp;byte[]&nbsp;compress(byte[]&nbsp;bytes)</pre>
+<div class="block">Compress an array of bytes.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>text</code> - the text to compress</dd>
+<dd><code>bytes</code> - the bytes to compress</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the given string compressed and encoded as bytes using UTF-8</dd>
+<dd>the given bytes compressed</dd>
 </dl>
 </li>
 </ul>
@@ -217,13 +217,13 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>decompress</h4>
-<pre>static&nbsp;java.lang.String&nbsp;decompress(byte[]&nbsp;bytes)</pre>
-<div class="block">Decompresses a compressed array of bytes to a string.</div>
+<pre>static&nbsp;byte[]&nbsp;decompress(byte[]&nbsp;bytes)</pre>
+<div class="block">Decompress a compressed array of bytes.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>bytes</code> - an array of bytes encoded using UTF-8</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the given bytes decompressed, as a string</dd>
+<dd>the given bytes decompressed</dd>
 </dl>
 </li>
 </ul>

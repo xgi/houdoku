@@ -20,8 +20,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ContentLoader {
+    /**
+     * Start a thread for loading a chapter page.
+     *
+     * @param contentSource    the ContentSource to load from
+     * @param chapter          the Chapter the page is from
+     * @param page             the 0-indexed page number
+     * @param readerController the ReaderController to update before/after
+     *                         the page is loaded
+     * @param preloading       whether the page is being preloaded or not (loaded
+     *                         before the user actually gets to the page)
+     */
     public static void loadPage(ContentSource contentSource, Chapter chapter, int page,
-                         ReaderController readerController, boolean preloading) {
+                                ReaderController readerController, boolean preloading) {
         Runnable runnableLoadPage = () -> {
             if (!preloading) {
                 readerController.imageView.setImage(null);
@@ -64,8 +75,17 @@ public class ContentLoader {
         startThreadSafely(thread_name, runnableLoadPage);
     }
 
+    /**
+     * Start a thread for loading a series.
+     *
+     * @param contentSource     the ContentSource to load from
+     * @param source            the source for the series, relative to the
+     *                          ContentSource domain
+     * @param libraryController the LibraryController to update before/after
+     *                          the series is loaded
+     */
     public static void loadSeries(ContentSource contentSource, String source,
-                           LibraryController libraryController) {
+                                  LibraryController libraryController) {
         Runnable runnableLoadSeries = () -> {
             libraryController.reloadProgressIndicator.setVisible(true);
 
@@ -91,17 +111,15 @@ public class ContentLoader {
     }
 
     /**
-     * Creates a thread which reloads series information.
-     * <p>
-     * This method is notably distinctive from loadSeries, which is intended
-     * to be used when initially creating a Series object.
+     * Start a thread for reloading an existing series.
      *
-     * @param contentSource
-     * @param series
-     * @param seriesController
+     * @param contentSource    the ContentSource to load from
+     * @param series           the series to reload
+     * @param seriesController the SeriesController to update before/after the
+     *                         series is reloaded
      */
     public static void reloadSeries(ContentSource contentSource, Series series,
-                             SeriesController seriesController) {
+                                    SeriesController seriesController) {
         Runnable runnableReloadSeries = () -> {
             seriesController.reloadProgressIndicator.setVisible(true);
 
@@ -142,11 +160,17 @@ public class ContentLoader {
         startThreadSafely(thread_name, runnableReloadSeries);
     }
 
+    /**
+     * Start a thread for searching for series'.
+     *
+     * @param contentSource          the ContentSource to load from
+     * @param query                  the text to search for
+     * @param searchSeriesController the SearchSeriesController to update
+     *                               before/after the results are loaded
+     */
     public static void search(ContentSource contentSource, String query,
-                       SearchSeriesController searchSeriesController) {
+                              SearchSeriesController searchSeriesController) {
         Runnable runnableSearch = () -> {
-//            searchSeriesController.reloadProgressIndicator.setVisible(true);
-
             ArrayList<HashMap<String, Object>> items = null;
             try {
                 items = contentSource.search(query);
@@ -177,7 +201,6 @@ public class ContentLoader {
                         } else {
                             // load cover by passing series url and finding the
                             // image url on that page, then loading the image
-                            // load cover using direct image source
                             cover = contentSource.cover((String) item.get("source"));
                         }
                     } catch (IOException | NotImplementedException e) {
@@ -189,16 +212,22 @@ public class ContentLoader {
                     }
                 }
             }
-
-//            seriesController.reloadProgressIndicator.setVisible(false);
         };
 
         String thread_name = "search_" + contentSource.NAME + "_" + query;
         startThreadSafely(thread_name, runnableSearch);
     }
 
+    /**
+     * Start a thread for loading a series' cover image.
+     *
+     * @param contentSource the ContentSource to load from
+     * @param source        the absolute source for the image
+     * @param imageView     the ImageView to update before/after the cover is
+     *                      loaded
+     */
     public static void loadCover(ContentSource contentSource, String source,
-                          ImageView imageView) {
+                                 ImageView imageView) {
         Runnable runnableLoadCover = () -> {
             Image cover = null;
             try {
@@ -216,6 +245,13 @@ public class ContentLoader {
         startThreadSafely(thread_name, runnableLoadCover);
     }
 
+    /**
+     * Start a Runnable in a new Thread while ensuring that the name does not
+     * overlap with pre-existing threads.
+     *
+     * @param name     the name of the Thread to create
+     * @param runnable the Runnable to run in the Thread
+     */
     private static void startThreadSafely(String name, Runnable runnable) {
         boolean threadExists = Thread.getAllStackTraces().keySet().stream().anyMatch(
                 thread -> thread.getName().equals(name)
