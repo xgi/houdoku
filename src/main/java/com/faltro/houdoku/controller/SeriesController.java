@@ -1,6 +1,7 @@
 package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.model.Chapter;
+import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.OutputHelpers;
@@ -119,6 +120,7 @@ public class SeriesController extends Controller {
     private TextField filterTextField;
 
     private Series series;
+    private Library library;
     private FilteredList<Chapter> filteredData;
 
     public SeriesController(SceneManager sceneManager) {
@@ -422,7 +424,15 @@ public class SeriesController extends Controller {
         sceneManager.changeToRoot(LibraryController.ID);
     }
 
+    public Library getLibrary() {
+        return library;
+    }
+
     public void setSeries(Series series) {
         this.series = series;
+    }
+
+    public void setLibrary(Library library) {
+        this.library = library;
     }
 }

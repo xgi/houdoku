@@ -656,6 +656,7 @@ public class LibraryController extends Controller {
         SeriesController seriesController =
                 (SeriesController) sceneManager.getController(SeriesController.ID);
         seriesController.setSeries(series);
+        seriesController.setLibrary(library);
         sceneManager.changeToRoot(SeriesController.ID);
     }
 
@@ -722,8 +723,6 @@ public class LibraryController extends Controller {
      */
     @FXML
     private void toggleActionBar() {
-        Data.saveLibrary(library);
-
         actionBar.setVisible(showActionBarItem.isSelected());
         actionBar.setManaged(actionBar.isVisible());
     }

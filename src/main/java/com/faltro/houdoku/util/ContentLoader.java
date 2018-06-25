@@ -4,6 +4,7 @@ import com.faltro.houdoku.controller.LibraryController;
 import com.faltro.houdoku.controller.ReaderController;
 import com.faltro.houdoku.controller.SearchSeriesController;
 import com.faltro.houdoku.controller.SeriesController;
+import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
@@ -81,6 +82,7 @@ public class ContentLoader {
             if (series != null) {
                 Library library = libraryController.getLibrary();
                 library.addSeries(series);
+                Data.saveLibrary(library);
                 libraryController.updateContent();
             }
 
@@ -132,6 +134,7 @@ public class ContentLoader {
                 series.ratings = new_series.ratings;
                 series.genres = new_series.genres;
 
+                Data.saveLibrary(seriesController.getLibrary());
                 seriesController.refreshContent();
             }
 

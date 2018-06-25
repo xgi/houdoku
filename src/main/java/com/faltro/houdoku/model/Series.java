@@ -117,6 +117,10 @@ public class Series {
         return cover;
     }
 
+    public void setCover(Image image) {
+        cover = image;
+    }
+
     public int getNumHighestChapter() {
         return numHighestChapter;
     }
@@ -139,10 +143,6 @@ public class Series {
 
     public ArrayList<Chapter> getChapters() {
         return chapters;
-    }
-
-    public int getContentSourceId() {
-        return contentSourceId;
     }
 
     /**
@@ -174,7 +174,7 @@ public class Series {
         numChapters = chapters.size();
     }
 
-    public void setCover(Image image) {
-        cover = image;
+    public int getContentSourceId() {
+        return contentSourceId;
     }
 }
