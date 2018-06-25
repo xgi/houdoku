@@ -1,0 +1,12 @@
+This is a list of content sources supported by the Houdoku client.
+
+Neither Houdoku nor its contributors are affiliated with or endorsed by the
+websites listed below. If you represent one of the websites listed below and
+would like support for your website to be removed from Houdoku, please create
+an Issue on GitHub or message/email the project maintainer.
+
+ID - NAME      - DOMAIN            - COMMENTS
+0  - MangaDex  - mangadex.org      -
+1  - MangaHere - www.mangahere.cc  -
+2  - MangaSee  - mangaseeonline.us -
+3  - MangaTown - www.mangatown.com -
