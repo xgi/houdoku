@@ -1,4 +1,4 @@
-package com.faltro.houdoku.util;
+package com.faltro.houdoku.data;
 
 import com.faltro.houdoku.model.Category;
 import com.faltro.houdoku.model.Library;

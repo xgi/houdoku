@@ -1,7 +1,6 @@
 package com.faltro.houdoku.data;
 
 import com.faltro.houdoku.model.Library;
-import com.faltro.houdoku.util.Serializer;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 
@@ -23,7 +22,8 @@ public class Data {
     /**
      * The name of the file for storing library data.
      */
-    private static Path PATH_LIBRARY = Paths.get(USER_DATA_DIR + File.separator + "library.json");
+    private static Path PATH_LIBRARY = Paths.get(
+            USER_DATA_DIR + File.separator + "library.json.gzip");
 
     /**
      * Saves the given Library to the filesystem.
@@ -62,25 +62,28 @@ public class Data {
 
     /**
      * Writes the given string as binary data to the given file.
+     * <p>
+     * The data is compressed before being written.
      *
-     * @param data the data to write
+     * @param text the text to write
      * @param path the path of the file to write the data
      * @throws IOException an IOException occurred when writing to the file
      * @see #read(Path)
      */
-    private static void write(String data, Path path) throws IOException {
-        byte[] bytes = data.getBytes();
+    private static void write(String text, Path path) throws IOException {
         // ensure path to file exists
         Files.createDirectories(path.getParent());
         // ensure file exists
         if (!Files.exists(path)) {
             Files.createFile(path);
         }
-        Files.write(path, bytes);
+        Files.write(path, Compressor.compress(text));
     }
 
     /**
      * Reads the binary data of the given file to a String.
+     * <p>
+     * The data is decompressed before being returned.
      *
      * @param path the path of the file to read the data
      * @return a string representation of the
@@ -89,6 +92,6 @@ public class Data {
      */
     private static String read(Path path) throws IOException {
         byte[] bytes = Files.readAllBytes(path);
-        return new String(bytes);
+        return Compressor.decompress(bytes);
     }
 }
