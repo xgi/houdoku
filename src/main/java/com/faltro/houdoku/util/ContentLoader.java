@@ -119,6 +119,7 @@ public class ContentLoader {
                 // this better? Especially since theses fields are hardcoded
                 // here in a rather obtuse location.
                 series.setChapters(new_series.getChapters());
+                series.setCover(new_series.getCover());
                 series.language = new_series.language;
                 series.author = new_series.author;
                 series.artist = new_series.artist;

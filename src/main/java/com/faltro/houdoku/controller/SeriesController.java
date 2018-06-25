@@ -297,6 +297,7 @@ public class SeriesController extends Controller {
     public void refreshContent() {
         // set metadata/info fields using series info
         coverImageView.setImage(series.getCover());
+        updateCoverSize();
         textTitle.setText(series.getTitle());
         textAltNames.setText(String.join(", ", series.altNames));
         textAuthor.setText(series.author);
