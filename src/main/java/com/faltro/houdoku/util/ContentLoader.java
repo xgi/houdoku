@@ -20,10 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ContentLoader {
-    public ContentLoader() {
-    }
-
-    public void loadPage(ContentSource contentSource, Chapter chapter, int page,
+    public static void loadPage(ContentSource contentSource, Chapter chapter, int page,
                          ReaderController readerController, boolean preloading) {
         Runnable runnableLoadPage = () -> {
             if (!preloading) {
@@ -57,7 +54,7 @@ public class ContentLoader {
 
                 // preload any additional images
                 if (!preloading) {
-                    chapter.preloadImages(this, contentSource, readerController, page + 1);
+                    chapter.preloadImages(contentSource, readerController, page + 1);
                 }
             }
         };
@@ -67,7 +64,7 @@ public class ContentLoader {
         startThreadSafely(thread_name, runnableLoadPage);
     }
 
-    public void loadSeries(ContentSource contentSource, String source,
+    public static void loadSeries(ContentSource contentSource, String source,
                            LibraryController libraryController) {
         Runnable runnableLoadSeries = () -> {
             libraryController.reloadProgressIndicator.setVisible(true);
@@ -103,7 +100,7 @@ public class ContentLoader {
      * @param series
      * @param seriesController
      */
-    public void reloadSeries(ContentSource contentSource, Series series,
+    public static void reloadSeries(ContentSource contentSource, Series series,
                              SeriesController seriesController) {
         Runnable runnableReloadSeries = () -> {
             seriesController.reloadProgressIndicator.setVisible(true);
@@ -145,7 +142,7 @@ public class ContentLoader {
         startThreadSafely(thread_name, runnableReloadSeries);
     }
 
-    public void search(ContentSource contentSource, String query,
+    public static void search(ContentSource contentSource, String query,
                        SearchSeriesController searchSeriesController) {
         Runnable runnableSearch = () -> {
 //            searchSeriesController.reloadProgressIndicator.setVisible(true);
@@ -160,8 +157,8 @@ public class ContentLoader {
             if (items != null) {
                 // temporarily set the image property of all series to a
                 // blank placeholder
-                Image blank_cover_image = new Image(getClass().getResource("/img/blank_cover.png")
-                        .toString());
+                Image blank_cover_image = new Image(
+                        ContentLoader.class.getResource("/img/blank_cover.png").toString());
                 for (HashMap<String, Object> item : items) {
                     item.put("cover", blank_cover_image);
                 }
@@ -200,7 +197,7 @@ public class ContentLoader {
         startThreadSafely(thread_name, runnableSearch);
     }
 
-    public void loadCover(ContentSource contentSource, String source,
+    public static void loadCover(ContentSource contentSource, String source,
                           ImageView imageView) {
         Runnable runnableLoadCover = () -> {
             Image cover = null;
@@ -219,7 +216,7 @@ public class ContentLoader {
         startThreadSafely(thread_name, runnableLoadCover);
     }
 
-    private void startThreadSafely(String name, Runnable runnable) {
+    private static void startThreadSafely(String name, Runnable runnable) {
         boolean threadExists = Thread.getAllStackTraces().keySet().stream().anyMatch(
                 thread -> thread.getName().equals(name)
         );

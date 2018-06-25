@@ -108,30 +108,28 @@ public class Chapter {
         this.sanitizePageNumber();
     }
 
-    public void loadCurrentImage(ContentLoader contentLoader, ContentSource contentSource,
-                                 ReaderController readerController) {
+    public void loadCurrentImage(ContentSource contentSource, ReaderController readerController) {
         if (images[currentPageNum] == null) {
-            contentLoader.loadPage(contentSource, this, currentPageNum, readerController, false);
+            ContentLoader.loadPage(contentSource, this, currentPageNum, readerController, false);
         } else {
             readerController.imageView.setImage(images[currentPageNum]);
             readerController.refreshPage();
-            preloadImages(contentLoader, contentSource, readerController, currentPageNum + 1);
+            preloadImages(contentSource, readerController, currentPageNum + 1);
         }
     }
 
     /**
-     * @param contentLoader
      * @param contentSource
      * @param readerController
      * @param page             the 0-indexed first page to reload
      */
-    public void preloadImages(ContentLoader contentLoader, ContentSource contentSource,
-                              ReaderController readerController, int page) {
+    public void preloadImages(ContentSource contentSource, ReaderController readerController,
+                              int page) {
         for (int i = 0; i < 3; i++) {
             if (page + i < images.length) {
                 // check if the image is already loaded
                 if (images[page + i] == null) {
-                    contentLoader.loadPage(contentSource, this, page + i, readerController, true);
+                    ContentLoader.loadPage(contentSource, this, page + i, readerController, true);
                 }
             }
         }

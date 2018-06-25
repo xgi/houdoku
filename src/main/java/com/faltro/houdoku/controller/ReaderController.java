@@ -188,7 +188,7 @@ public class ReaderController extends Controller {
         ContentSource contentSource = sceneManager.getPluginManager().getSource(
                 chapter.getSeries().getContentSourceId()
         );
-        chapter.loadCurrentImage(sceneManager.getContentLoader(), contentSource, this);
+        chapter.loadCurrentImage(contentSource, this);
     }
 
     /**
