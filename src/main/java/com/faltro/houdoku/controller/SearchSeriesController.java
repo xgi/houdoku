@@ -1,5 +1,6 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.beans.property.SimpleObjectProperty;
@@ -214,8 +215,7 @@ public class SearchSeriesController extends Controller {
         String source = (String) item.get("source");
         LibraryController libraryController = (LibraryController) sceneManager
                 .getController(LibraryController.ID);
-        sceneManager.getContentLoader().loadSeries(contentSource, source,
-                libraryController);
+        ContentLoader.loadSeries(contentSource, source, libraryController);
         goToLibrary();
     }
 
@@ -233,7 +233,7 @@ public class SearchSeriesController extends Controller {
         ContentSource contentSource = contentSourcesBox.getSelectionModel()
                 .getSelectedItem();
         String query = searchTextField.getText();
-        sceneManager.getContentLoader().search(contentSource, query, this);
+        ContentLoader.search(contentSource, query, this);
     }
 
     /**

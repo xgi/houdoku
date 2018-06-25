@@ -108,9 +108,8 @@ public class Series {
         stringCategories.add(category.getName());
     }
 
-    public void reloadFromSource(ContentLoader contentLoader, ContentSource contentSource,
-                                 SeriesController seriesController) {
-        contentLoader.reloadSeries(contentSource, this, seriesController);
+    public void reloadFromSource(ContentSource contentSource, SeriesController seriesController) {
+        ContentLoader.reloadSeries(contentSource, this, seriesController);
     }
 
     /**
