@@ -722,6 +722,8 @@ public class LibraryController extends Controller {
      */
     @FXML
     private void toggleActionBar() {
+        Data.saveLibrary(library);
+
         actionBar.setVisible(showActionBarItem.isSelected());
         actionBar.setManaged(actionBar.isVisible());
     }
