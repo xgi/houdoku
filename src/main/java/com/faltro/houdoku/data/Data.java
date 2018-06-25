@@ -60,6 +60,7 @@ public class Data {
                 String name = OutputHelpers.sanitizeFilename(series.getTitle()) + ".jpg";
                 Path path = Paths.get(PATH_COVERS.toString() + File.separator + name);
                 try {
+                    System.out.println("saving " + path.toString());
                     saveImage(series.getCover(), path);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -137,12 +138,13 @@ public class Data {
     private static void saveImage(Image image, Path path) throws IOException {
         // ensure path to file exists
         Files.createDirectories(path.getParent());
-        // ensure file exists
-        if (!Files.exists(path)) {
-            Files.createFile(path);
-        }
+
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-        ImageIO.write(bufferedImage, "jpg", path.toFile());
+        // convert to BufferedImage.TYPE_INT_RGB
+        BufferedImage convertedImg = new BufferedImage(bufferedImage.getWidth(), bufferedImage
+                .getHeight(), BufferedImage.TYPE_INT_RGB);
+        convertedImg.getGraphics().drawImage(bufferedImage, 0, 0, null);
+        ImageIO.write(convertedImg, "jpg", path.toFile());
     }
 
     /**
