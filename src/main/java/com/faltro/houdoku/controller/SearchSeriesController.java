@@ -1,24 +1,34 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.SceneManager;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -34,8 +44,18 @@ public class SearchSeriesController extends Controller {
     public static final int ID = 3;
     private static final double COL_COVER_WIDTH = 0.15;
     private static final double COL_TITLE_WIDTH = 0.85;
+    private static final double FLOW_RESULTS_ROWS = 5;
+    public ObservableList<HashMap<String, Object>> results;
     @FXML
-    public TableView<HashMap<String, Object>> tableView;
+    private FlowPane flowPane;
+    @FXML
+    private TableView<HashMap<String, Object>> tableView;
+    @FXML
+    private ScrollPane coversContainer;
+    @FXML
+    private RadioButton layoutTableButton;
+    @FXML
+    private RadioButton layoutCoversButton;
     @FXML
     private VBox searchSeriesContainer;
     @FXML
@@ -55,6 +75,7 @@ public class SearchSeriesController extends Controller {
 
     public SearchSeriesController(SceneManager sceneManager) {
         super(sceneManager);
+        this.results = FXCollections.observableArrayList(new ArrayList<>());
     }
 
     /**
@@ -109,9 +130,10 @@ public class SearchSeriesController extends Controller {
             return cell;
         });
 
-        coverColumn.setCellValueFactory(p -> new SimpleObjectProperty<>(
-                (Image) p.getValue().get("cover")
-        ));
+        coverColumn.setCellValueFactory(p -> {
+            ImageView imageView = (ImageView) p.getValue().get("cover");
+            return imageView.imageProperty();
+        });
         titleColumn.setCellValueFactory(p -> new SimpleStringProperty(
                 (String) p.getValue().get("details")
         ));
@@ -127,16 +149,6 @@ public class SearchSeriesController extends Controller {
      */
     @Override
     public void onMadeActive() {
-        // Bind the height of the table to the available space on the stage.
-        // Since the stage is manually changed when the window for this scene
-        // is created, we could not put this in initialize() because 'stage'
-        // would then refer to the primaryStage
-        tableView.prefHeightProperty().bind(
-                stage.heightProperty()
-                        .subtract(menuBar.heightProperty())
-                        .subtract(searchSeriesHeader.heightProperty())
-        );
-
         // clear current content
         searchTextField.setText("");
         tableView.setItems(FXCollections.emptyObservableList());
@@ -156,6 +168,97 @@ public class SearchSeriesController extends Controller {
     }
 
     /**
+     * Updates the content of the results layouts.
+     */
+    public void updateContent() {
+        // we update the content of both the TableView and GridPane since the
+        // user can switch between the layouts at any time, and performance
+        // isn't really an issue
+
+        // update tableView
+        tableView.setItems(results);
+        tableView.refresh();
+
+        // update gridPane when FX app thread is available
+        Platform.runLater(() -> {
+            LibraryController libraryController =
+                    (LibraryController) sceneManager.getController(LibraryController.ID);
+
+            DropShadow drop_shadow = new DropShadow(5, Color.BLACK);
+            ColorAdjust default_adjust = new ColorAdjust();
+            ColorAdjust hover_adjust = new ColorAdjust();
+            default_adjust.setBrightness(-0.2);
+            hover_adjust.setBrightness(-0.5);
+            default_adjust.setInput(drop_shadow);
+            hover_adjust.setInput(drop_shadow);
+
+            flowPane.getChildren().clear();
+            for (HashMap<String, Object> result : results) {
+                Series series = libraryController.getLibrary().find((String) result.get("title"));
+
+                StackPane result_pane = new StackPane();
+                result_pane.prefWidthProperty().bind(
+                        flowPane.widthProperty()
+                                .divide(FLOW_RESULTS_ROWS)
+                                .subtract(flowPane.getHgap())
+                );
+                result_pane.setAlignment(Pos.BOTTOM_LEFT);
+
+                // create the label for showing the series title
+                Label label = new Label();
+                label.setText((String) result.get("title"));
+                label.getStyleClass().add("coverLabel");
+                label.setWrapText(true);
+
+                // create the button shown when the cover is hovered to add the
+                // series to the library, or to go to the series if it is
+                // already in the library
+                Button action_button = new Button();
+                action_button.setVisible(false);
+                action_button.setManaged(false);
+                StackPane.setAlignment(action_button, Pos.CENTER);
+                if (series != null) {
+                    action_button.setText("Go to series");
+                    action_button.setOnAction(event -> libraryController.goToSeries(series));
+                } else {
+                    action_button.setText("Add series");
+                    action_button.setOnAction(event -> promptAddSeries(result));
+                }
+
+                // We create a new ImageView for the cell instead of using the
+                // result's cover ImageView since we may not want to mess with
+                // the sizing of the result's cover -- particularly if we want
+                // to have additional result layouts.
+                ImageView image_view = new ImageView();
+                image_view.setPreserveRatio(true);
+                ImageView coverImageView = (ImageView) result.get("cover");
+                image_view.imageProperty().bind(coverImageView.imageProperty());
+                image_view.fitWidthProperty().bind(
+                        result_pane.prefWidthProperty()
+                );
+                image_view.setEffect(default_adjust);
+                image_view.getStyleClass().add("coverImage");
+
+                // create the mouse event handlers for the result pane
+                result_pane.setOnMouseEntered(t -> {
+                    image_view.setEffect(hover_adjust);
+                    action_button.setVisible(true);
+                    action_button.setManaged(true);
+                });
+                result_pane.setOnMouseExited(t -> {
+                    image_view.setEffect(default_adjust);
+                    action_button.setVisible(false);
+                    action_button.setManaged(false);
+                });
+
+                result_pane.getChildren().addAll(image_view, label, action_button);
+                flowPane.getChildren().add(result_pane);
+            }
+        });
+
+    }
+
+    /**
      * Creates a MouseEvent handler for a cell in the results table.
      * <p>
      * This handler handles double clicking to prompt for adding a series, as
@@ -171,17 +274,7 @@ public class SearchSeriesController extends Controller {
                 if (mouseEvent.getClickCount() == 2) {
                     HashMap<String, Object> item = tableView.getSelectionModel().getSelectedItem();
                     // show confirmation prompt/alert before adding series to library
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES,
-                            ButtonType.NO, ButtonType.CANCEL);
-                    Label label = new Label("Add \"" + item.get("title") + "\" to your library?");
-                    label.setWrapText(true);
-                    alert.getDialogPane().setContent(label);
-                    alert.setTitle(stage.getTitle());
-                    alert.showAndWait();
-
-                    if (alert.getResult() == ButtonType.YES) {
-                        addSeriesFromItem(item);
-                    }
+                    promptAddSeries(item);
                 } else if (mouseEvent.getClickCount() == 1) {
                     contextMenu.hide();
                 }
@@ -191,6 +284,28 @@ public class SearchSeriesController extends Controller {
                 contextMenu.show(tableView, mouseEvent.getScreenX(), mouseEvent.getScreenY());
             }
         };
+    }
+
+    /**
+     * Prompt the user to add a series to the library from an item HashMap.
+     * <p>
+     * See {@link #addSeriesFromItem(HashMap)} for details what the HashMap
+     * should contain.
+     *
+     * @param item a HashMap representing a series result
+     */
+    private void promptAddSeries(HashMap<String, Object> item) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES,
+                ButtonType.NO, ButtonType.CANCEL);
+        Label label = new Label("Add \"" + item.get("title") + "\" to your library?");
+        label.setWrapText(true);
+        alert.getDialogPane().setContent(label);
+        alert.setTitle(stage.getTitle());
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            addSeriesFromItem(item);
+        }
     }
 
     /**
@@ -234,6 +349,18 @@ public class SearchSeriesController extends Controller {
                 .getSelectedItem();
         String query = searchTextField.getText();
         ContentLoader.search(contentSource, query, this);
+    }
+
+    /**
+     * Update the visible layout based on the selected option.
+     */
+    @FXML
+    private void updateLayout() {
+        tableView.setVisible(layoutTableButton.isSelected());
+        coversContainer.setVisible(layoutCoversButton.isSelected());
+
+        tableView.setManaged(tableView.isVisible());
+        coversContainer.setManaged(coversContainer.isVisible());
     }
 
     /**

@@ -2,8 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -48,25 +48,48 @@
             <Insets top="10" bottom="10"/>
         </padding>
         <Label text="Content source: "/>
-        <ComboBox fx:id="contentSourcesBox" styleClass="searchSeriesElement"/>
+
     </HBox>
 
     <HBox fx:id="searchBar" alignment="CENTER" spacing="5">
         <padding>
-            <Insets bottom="10" left="15" right="15"/>
+            <Insets top="10" bottom="10" left="15" right="15"/>
         </padding>
+        <ComboBox fx:id="contentSourcesBox" styleClass="searchSeriesElement"/>
         <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" promptText="Search for a series..."
                    styleClass="searchSeriesElement" onAction="#search"/>
         <Button text="Search" onAction="#search"/>
     </HBox>
 
-    <TableView fx:id="tableView">
-        <placeholder>
-            <Label styleClass="placeholderLabel" text="No series found."/>
-        </placeholder>
-        <columns>
-            <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
-            <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
-        </columns>
-    </TableView>
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <padding>
+            <Insets bottom="5" top="5" right="15"/>
+        </padding>
+        <Text text="Layout: "/>
+        <fx:define>
+            <ToggleGroup fx:id="selectLayoutGroup"/>
+        </fx:define>
+        <RadioButton fx:id="layoutTableButton" text="Table" toggleGroup="$selectLayoutGroup"
+                     onAction="#updateLayout"/>
+        <RadioButton fx:id="layoutCoversButton" text="Covers" toggleGroup="$selectLayoutGroup"
+                     selected="true" onAction="#updateLayout"/>
+    </HBox>
+
+    <StackPane VBox.vgrow="ALWAYS">
+        <TableView fx:id="tableView" visible="false" managed="false">
+            <placeholder>
+                <Label styleClass="placeholderLabel" text="No series found."/>
+            </placeholder>
+            <columns>
+                <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
+                <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
+            </columns>
+        </TableView>
+
+        <ScrollPane fx:id="coversContainer" fitToWidth="true">
+            <StackPane alignment="TOP_CENTER">
+                <FlowPane fx:id="flowPane" hgap="10" vgap="10"/>
+            </StackPane>
+        </ScrollPane>
+    </StackPane>
 </VBox>

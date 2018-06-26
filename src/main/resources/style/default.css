@@ -14,6 +14,10 @@
     -fx-font-size: 15;
 }
 
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
 #navContainer {
     -fx-min-height: 50;
     -fx-pref-height: 50;
@@ -88,4 +92,16 @@
 
 #errorText {
     -fx-font-size: 1.5em;
+}
+
+.coverImage {
+    -fx-border-width: 1px;
+    -fx-border-color: black;
+}
+
+.coverLabel {
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(one-pass-box, black, 9, 0, 2, 1);
+    -fx-font-weight: bold;
+    -fx-font-size: 1.2em;
 }

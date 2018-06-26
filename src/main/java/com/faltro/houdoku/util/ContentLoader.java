@@ -14,6 +14,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -184,13 +187,15 @@ public class ContentLoader {
                 Image blank_cover_image = new Image(
                         ContentLoader.class.getResource("/img/blank_cover.png").toString());
                 for (HashMap<String, Object> item : items) {
-                    item.put("cover", blank_cover_image);
+                    ImageView imageView = new ImageView();
+                    imageView.setImage(blank_cover_image);
+                    item.put("cover", imageView);
                 }
 
-                ObservableList<HashMap<String, Object>> itemsObservableList = FXCollections
-                        .observableArrayList
-                                (items);
-                searchSeriesController.tableView.setItems(itemsObservableList);
+                searchSeriesController.results.setAll(FXCollections.observableArrayList(items));
+                // update page content now since loading covers will take
+                // some time
+                searchSeriesController.updateContent();
 
                 for (HashMap<String, Object> item : items) {
                     Image cover = null;
@@ -207,8 +212,9 @@ public class ContentLoader {
                         e.printStackTrace(); // TODO: change to "image load error" placeholder
                     }
                     if (cover != null) {
-                        item.replace("cover", cover);
-                        searchSeriesController.tableView.refresh();
+                        ImageView coverView = (ImageView) item.get("cover");
+                        coverView.setImage(cover);
+//                        searchSeriesController.updateContent();
                     }
                 }
             }

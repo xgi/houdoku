@@ -58,6 +58,20 @@ public class Library {
         Data.deleteCover(series);
     }
 
+    /**
+     * Try to find a series in the library matching the given title.
+     * <p>
+     * This check is case-insensitive.
+     *
+     * @param title the title of the series to check
+     * @return the (first) matching series, or null
+     */
+    public Series find(String title) {
+        return serieses.stream().filter(
+                series -> series.getTitle().toLowerCase().equals(title.toLowerCase())
+        ).findFirst().orElse(null);
+    }
+
     public ArrayList<Series> getSerieses() {
         return serieses;
     }

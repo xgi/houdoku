@@ -652,7 +652,7 @@ public class LibraryController extends Controller {
      *
      * @param series the series to be viewed
      */
-    private void goToSeries(Series series) {
+    void goToSeries(Series series) {
         SeriesController seriesController =
                 (SeriesController) sceneManager.getController(SeriesController.ID);
         seriesController.setSeries(series);
