@@ -4,7 +4,9 @@ import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.model.Category;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.SceneManager;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -20,13 +22,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The controller for the library page, the default view for the client.
@@ -66,13 +71,21 @@ public class LibraryController extends Controller {
     @FXML
     private TableColumn<Series, String> numChaptersColumn;
     @FXML
+    private ScrollPane coversContainer;
+    @FXML
+    private RadioButton layoutTableButton;
+    @FXML
+    private RadioButton layoutCoversButton;
+    @FXML
+    private RadioButton layoutCompactButton;
+    @FXML
+    private FlowPane flowPane;
+    @FXML
     private HBox actionBar;
     @FXML
     private HBox filterBar;
     @FXML
     private TextField filterTextField;
-    @FXML
-    private CheckMenuItem compactItem;
     @FXML
     private CheckMenuItem showActionBarItem;
 
@@ -124,17 +137,17 @@ public class LibraryController extends Controller {
         // onAction events are set by newCellClickHandler()
         ContextMenu cellContextMenu = new ContextMenu();
         cellContextMenu.getItems().addAll(
-                new MenuItem("View Series"),
-                new MenuItem("Edit Categories"),
-                new MenuItem("Remove Series")
+                new MenuItem("View series"),
+                new MenuItem("Edit categories"),
+                new MenuItem("Remove series")
         );
 
         // create a right-click context menu for categories
         // onAction events are set by newCategoryClickHandler()
         ContextMenu categoryContextMenu = new ContextMenu();
         categoryContextMenu.getItems().addAll(
-                new MenuItem("Add Category"),
-                new MenuItem("Edit Category")
+                new MenuItem("Add category"),
+                new MenuItem("Edit category")
         );
 
         // Create factories for table cells for each column.
@@ -197,7 +210,7 @@ public class LibraryController extends Controller {
                 // is the same as the artist, we simply show the name once.
                 // If compact mode is enabled, we also opt to only show the
                 // title of the series.
-                compactItem.isSelected() ? p.getValue().getTitle() :
+                layoutCompactButton.isSelected() ? p.getValue().getTitle() :
                         p.getValue().author.equals(p.getValue().artist) ?
                                 p.getValue().getTitle() + "\n" + p.getValue().author :
                                 p.getValue().getTitle() + "\n" + p.getValue().author + "/" +
@@ -243,6 +256,15 @@ public class LibraryController extends Controller {
         treeView.setRoot(rootItem);
         treeView.getSelectionModel().selectFirst();
 
+        filterTextField.textProperty().addListener(
+                (observable, oldValue, newValue) ->
+                        updateContent()
+        );
+        treeView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) ->
+                        updateContent()
+        );
+
         updateContent();
     }
 
@@ -282,28 +304,52 @@ public class LibraryController extends Controller {
         // 3. Wrap the FilteredList in a SortedList.
         // 4. Bind the SortedList comparator to the TableView comparator.
         // 5. Add sorted (and filtered) data to the table.
-        ObservableList<Series> masterData = FXCollections.observableArrayList(
-                library.getSerieses()
-        );
-        FilteredList<Series> filteredData = new FilteredList<>(masterData, p -> true);
+        ObservableList<Series> master_data = FXCollections.observableArrayList(
+                library.getSerieses());
+        FilteredList<Series> filtered_data = new FilteredList<>(master_data, p -> true);
+        setCombinedPredicate(filtered_data);
+        SortedList<Series> sorted_data = new SortedList<>(filtered_data);
+        sorted_data.comparatorProperty().bind(tableView.comparatorProperty());
 
-        filterTextField.textProperty().addListener(
-                (observable, oldValue, newValue) ->
-                        setCombinedPredicate(filteredData)
-        );
-        treeView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) ->
-                        setCombinedPredicate(filteredData)
-        );
-
-        SortedList<Series> sortedData = new SortedList<>(filteredData);
-        sortedData.comparatorProperty().bind(tableView.comparatorProperty());
-
-        tableView.setItems(sortedData);
+        tableView.setItems(sorted_data);
 
         // recalculate category occurrences for display in the treeView
         library.calculateCategoryOccurrences();
         treeView.refresh();
+
+        // update gridPane when FX app thread is available
+        Platform.runLater(() -> {
+            flowPane.getChildren().clear();
+            for (Series series : sorted_data) {
+                ImageView cover = new ImageView();
+                cover.setImage(series.getCover());
+
+                // create the result container
+                StackPane result_pane = LayoutHelpers.createCoverContainer(
+                        flowPane, series.getTitle(), cover);
+
+                // create buttons shown on hover
+                VBox button_container = new VBox();
+                button_container.setAlignment(Pos.CENTER);
+                button_container.setSpacing(3);
+                Button view_button = new Button("View series");
+                Button edit_button = new Button("Edit categories");
+                Button remove_button = new Button("Remove series");
+                StackPane.setAlignment(button_container, Pos.CENTER);
+
+                view_button.setOnAction(event -> goToSeries(series));
+                edit_button.setOnAction(event -> promptEditCategories(series));
+                remove_button.setOnAction(event -> promptRemoveSeries(series));
+
+                button_container.getChildren().addAll(view_button, edit_button, remove_button);
+                result_pane.getChildren().add(button_container);
+
+                // hide all buttons by default
+                LayoutHelpers.setChildButtonVisible(result_pane, false);
+
+                flowPane.getChildren().add(result_pane);
+            }
+        });
     }
 
     /**
@@ -661,6 +707,25 @@ public class LibraryController extends Controller {
     }
 
     /**
+     * Set whether the compact view is enabled.
+     * <p>
+     * Enabling the compact view removes the cover column of the series table,
+     * making the height of each row much smaller.
+     */
+    private void setCompact(boolean compact) {
+        coverColumn.setVisible(!compact);
+        if (compact) {
+            titleColumn.prefWidthProperty().bind(
+                    tableView.widthProperty()
+                            .multiply(COL_TITLE_WIDTH + COL_COVER_WIDTH));
+        } else {
+            titleColumn.prefWidthProperty().bind(
+                    tableView.widthProperty()
+                            .multiply(COL_TITLE_WIDTH));
+        }
+    }
+
+    /**
      * Prompts the user to remove the selected series.
      * <p>
      * If no series is selected, this function does nothing.
@@ -671,27 +736,20 @@ public class LibraryController extends Controller {
         if (series != null) {
             promptRemoveSeries(series);
         }
-
     }
 
     /**
-     * Toggle whether the compact view is enabled.
-     * <p>
-     * Enabling the compact view removes the cover column of the series table,
-     * making the height of each row much smaller.
+     * Update the visible layout based on the selected option.
      */
     @FXML
-    public void toggleCompact() {
-        coverColumn.setVisible(!compactItem.isSelected());
-        if (compactItem.isSelected()) {
-            titleColumn.prefWidthProperty().bind(
-                    tableView.widthProperty()
-                            .multiply(COL_TITLE_WIDTH + COL_COVER_WIDTH));
-        } else {
-            titleColumn.prefWidthProperty().bind(
-                    tableView.widthProperty()
-                            .multiply(COL_TITLE_WIDTH));
-        }
+    private void updateLayout() {
+        tableView.setVisible(layoutTableButton.isSelected() || layoutCompactButton.isSelected());
+        coversContainer.setVisible(layoutCoversButton.isSelected());
+
+        setCompact(layoutCompactButton.isSelected());
+
+        tableView.setManaged(tableView.isVisible());
+        coversContainer.setManaged(coversContainer.isVisible());
     }
 
     /**

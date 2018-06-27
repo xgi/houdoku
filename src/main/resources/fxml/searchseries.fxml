@@ -25,7 +25,6 @@
             <MenuItem text="Paste"/>
         </Menu>
         <Menu text="View">
-            <CheckMenuItem fx:id="compactItem" text="Compact"/>
             <Menu text="Zoom">
                 <fx:define>
                     <ToggleGroup fx:id="zoomTypeGroup"/>
@@ -85,7 +84,6 @@
                 <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
             </columns>
         </TableView>
-
         <ScrollPane fx:id="coversContainer" fitToWidth="true">
             <StackPane alignment="TOP_CENTER">
                 <FlowPane fx:id="flowPane" hgap="10" vgap="10"/>

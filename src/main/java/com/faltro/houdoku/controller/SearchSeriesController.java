@@ -3,6 +3,7 @@ package com.faltro.houdoku.controller;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
+import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -12,10 +13,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.ColorAdjust;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -24,7 +21,6 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -184,38 +180,19 @@ public class SearchSeriesController extends Controller {
             LibraryController libraryController =
                     (LibraryController) sceneManager.getController(LibraryController.ID);
 
-            DropShadow drop_shadow = new DropShadow(5, Color.BLACK);
-            ColorAdjust default_adjust = new ColorAdjust();
-            ColorAdjust hover_adjust = new ColorAdjust();
-            default_adjust.setBrightness(-0.2);
-            hover_adjust.setBrightness(-0.5);
-            default_adjust.setInput(drop_shadow);
-            hover_adjust.setInput(drop_shadow);
-
             flowPane.getChildren().clear();
             for (HashMap<String, Object> result : results) {
-                Series series = libraryController.getLibrary().find((String) result.get("title"));
+                String title = (String) result.get("title");
+                ImageView cover = (ImageView) result.get("cover");
+                Series series = libraryController.getLibrary().find(title);
 
-                StackPane result_pane = new StackPane();
-                result_pane.prefWidthProperty().bind(
-                        flowPane.widthProperty()
-                                .divide(FLOW_RESULTS_ROWS)
-                                .subtract(flowPane.getHgap())
-                );
-                result_pane.setAlignment(Pos.BOTTOM_LEFT);
-
-                // create the label for showing the series title
-                Label label = new Label();
-                label.setText((String) result.get("title"));
-                label.getStyleClass().add("coverLabel");
-                label.setWrapText(true);
+                // create the result container
+                StackPane result_pane = LayoutHelpers.createCoverContainer(flowPane, title, cover);
 
                 // create the button shown when the cover is hovered to add the
                 // series to the library, or to go to the series if it is
                 // already in the library
                 Button action_button = new Button();
-                action_button.setVisible(false);
-                action_button.setManaged(false);
                 StackPane.setAlignment(action_button, Pos.CENTER);
                 if (series != null) {
                     action_button.setText("Go to series");
@@ -224,34 +201,11 @@ public class SearchSeriesController extends Controller {
                     action_button.setText("Add series");
                     action_button.setOnAction(event -> promptAddSeries(result));
                 }
+                result_pane.getChildren().add(action_button);
 
-                // We create a new ImageView for the cell instead of using the
-                // result's cover ImageView since we may not want to mess with
-                // the sizing of the result's cover -- particularly if we want
-                // to have additional result layouts.
-                ImageView image_view = new ImageView();
-                image_view.setPreserveRatio(true);
-                ImageView coverImageView = (ImageView) result.get("cover");
-                image_view.imageProperty().bind(coverImageView.imageProperty());
-                image_view.fitWidthProperty().bind(
-                        result_pane.prefWidthProperty()
-                );
-                image_view.setEffect(default_adjust);
-                image_view.getStyleClass().add("coverImage");
+                // hide all buttons by default
+                LayoutHelpers.setChildButtonVisible(result_pane, false);
 
-                // create the mouse event handlers for the result pane
-                result_pane.setOnMouseEntered(t -> {
-                    image_view.setEffect(hover_adjust);
-                    action_button.setVisible(true);
-                    action_button.setManaged(true);
-                });
-                result_pane.setOnMouseExited(t -> {
-                    image_view.setEffect(default_adjust);
-                    action_button.setVisible(false);
-                    action_button.setManaged(false);
-                });
-
-                result_pane.getChildren().addAll(image_view, label, action_button);
                 flowPane.getChildren().add(result_pane);
             }
         });

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -25,7 +25,6 @@
             <MenuItem text="Paste"/>
         </Menu>
         <Menu text="View">
-            <CheckMenuItem fx:id="compactItem" text="Compact" onAction="#toggleCompact"/>
             <CheckMenuItem fx:id="showActionBarItem" text="Show Action Bar" selected="true"
                            onAction="#toggleActionBar"/>
         </Menu>
@@ -74,16 +73,23 @@
                     <TreeTableColumn fx:id="categoriesColumn" resizable="false" text="Categories"/>
                 </columns>
             </TreeTableView>
-            <TableView fx:id="tableView">
-                <placeholder>
-                    <Label styleClass="placeholderLabel" text="No series found."/>
-                </placeholder>
-                <columns>
-                    <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
-                    <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
-                    <TableColumn fx:id="numChaptersColumn" resizable="false" text="Chapters"/>
-                </columns>
-            </TableView>
+            <StackPane>
+                <TableView fx:id="tableView" visible="false" managed="false">
+                    <placeholder>
+                        <Label styleClass="placeholderLabel" text="No series found."/>
+                    </placeholder>
+                    <columns>
+                        <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
+                        <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
+                        <TableColumn fx:id="numChaptersColumn" resizable="false" text="Chapters"/>
+                    </columns>
+                </TableView>
+                <ScrollPane fx:id="coversContainer" fitToWidth="true">
+                    <StackPane alignment="TOP_CENTER">
+                        <FlowPane fx:id="flowPane" hgap="10" vgap="10"/>
+                    </StackPane>
+                </ScrollPane>
+            </StackPane>
         </SplitPane>
         <HBox alignment="CENTER" mouseTransparent="true">
             <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"
@@ -91,8 +97,26 @@
         </HBox>
     </StackPane>
 
-    <HBox fx:id="filterBar" alignment="CENTER">
-        <Label text="Filter series: "/>
-        <TextField fx:id="filterTextField"/>
+    <HBox>
+        <HBox fx:id="filterBar" alignment="CENTER" HBox.hgrow="ALWAYS">
+            <Label alignment="CENTER" text="Filter series: "/>
+            <TextField fx:id="filterTextField"/>
+        </HBox>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <padding>
+                <Insets bottom="5" top="5" right="15"/>
+            </padding>
+            <Text text="Layout: "/>
+            <fx:define>
+                <ToggleGroup fx:id="selectLayoutGroup"/>
+            </fx:define>
+            <RadioButton fx:id="layoutTableButton" text="Table" toggleGroup="$selectLayoutGroup"
+                         onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutCoversButton" text="Covers" toggleGroup="$selectLayoutGroup"
+                         selected="true" onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutCompactButton" text="Compact" toggleGroup="$selectLayoutGroup"
+                         onAction="#updateLayout"/>
+        </HBox>
     </HBox>
 </VBox>
