@@ -17,9 +17,14 @@ import javafx.scene.image.ImageView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class ContentLoader {
+    private ArrayList<Runnable> runnables;
+
+    public ContentLoader() {
+        this.runnables = new ArrayList<>();
+    }
+
     /**
      * Start a thread for loading a chapter page.
      *
@@ -31,7 +36,7 @@ public class ContentLoader {
      * @param preloading       whether the page is being preloaded or not (loaded
      *                         before the user actually gets to the page)
      */
-    public static void loadPage(ContentSource contentSource, Chapter chapter, int page,
+    public void loadPage(ContentSource contentSource, Chapter chapter, int page,
                                 ReaderController readerController, boolean preloading) {
         Runnable runnableLoadPage = () -> {
             if (!preloading) {
@@ -65,7 +70,7 @@ public class ContentLoader {
 
                 // preload any additional images
                 if (!preloading) {
-                    chapter.preloadImages(contentSource, readerController, page + 1);
+                    chapter.preloadImages(this, contentSource, readerController, page + 1);
                 }
             }
         };
@@ -84,7 +89,7 @@ public class ContentLoader {
      * @param libraryController the LibraryController to update before/after
      *                          the series is loaded
      */
-    public static void loadSeries(ContentSource contentSource, String source,
+    public void loadSeries(ContentSource contentSource, String source,
                                   LibraryController libraryController) {
         Runnable runnableLoadSeries = () -> {
             libraryController.reloadProgressIndicator.setVisible(true);
@@ -118,7 +123,7 @@ public class ContentLoader {
      * @param seriesController the SeriesController to update before/after the
      *                         series is reloaded
      */
-    public static void reloadSeries(ContentSource contentSource, Series series,
+    public void reloadSeries(ContentSource contentSource, Series series,
                                     SeriesController seriesController) {
         Runnable runnableReloadSeries = () -> {
             seriesController.reloadProgressIndicator.setVisible(true);
@@ -168,7 +173,7 @@ public class ContentLoader {
      * @param searchSeriesController the SearchSeriesController to update
      *                               before/after the results are loaded
      */
-    public static void search(ContentSource contentSource, String query,
+    public void search(ContentSource contentSource, String query,
                               SearchSeriesController searchSeriesController) {
         Runnable runnableSearch = () -> {
             ArrayList<HashMap<String, Object>> items = null;
@@ -228,7 +233,7 @@ public class ContentLoader {
      * @param imageView     the ImageView to update before/after the cover is
      *                      loaded
      */
-    public static void loadCover(ContentSource contentSource, String source,
+    public void loadCover(ContentSource contentSource, String source,
                                  ImageView imageView) {
         Runnable runnableLoadCover = () -> {
             Image cover = null;
@@ -254,7 +259,7 @@ public class ContentLoader {
      * @param name     the name of the Thread to create
      * @param runnable the Runnable to run in the Thread
      */
-    private static void startThreadSafely(String name, Runnable runnable) {
+    private void startThreadSafely(String name, Runnable runnable) {
         boolean threadExists = Thread.getAllStackTraces().keySet().stream().anyMatch(
                 thread -> thread.getName().equals(name)
         );

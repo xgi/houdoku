@@ -19,6 +19,7 @@ public class SceneManager {
     private HashMap<Integer, Parent> roots;
     private HashMap<Parent, Controller> controllers;
     private PluginManager pluginManager;
+    private ContentLoader contentLoader;
 
     public SceneManager(Stage stage) {
         this.stage = stage;
@@ -26,6 +27,7 @@ public class SceneManager {
         this.roots = new HashMap<>();
         this.controllers = new HashMap<>();
         this.pluginManager = new PluginManager();
+        this.contentLoader = new ContentLoader();
     }
 
     public void initScene(int id, Controller controller, URL source) throws IOException {
@@ -89,5 +91,9 @@ public class SceneManager {
 
     public PluginManager getPluginManager() {
         return pluginManager;
+    }
+
+    public ContentLoader getContentLoader() {
+        return contentLoader;
     }
 }

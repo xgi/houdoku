@@ -8,10 +8,7 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.function.BinaryOperator;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Series {
     public String language;
@@ -108,8 +105,9 @@ public class Series {
         stringCategories.add(category.getName());
     }
 
-    public void reloadFromSource(ContentSource contentSource, SeriesController seriesController) {
-        ContentLoader.reloadSeries(contentSource, this, seriesController);
+    public void reloadFromSource(ContentLoader contentLoader, ContentSource contentSource,
+                                 SeriesController seriesController) {
+        contentLoader.reloadSeries(contentSource, this, seriesController);
     }
 
     /**

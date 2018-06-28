@@ -267,7 +267,7 @@ public class SeriesController extends Controller {
         ContentSource contentSource = sceneManager.getPluginManager().getSource(
                 series.getContentSourceId()
         );
-        series.reloadFromSource(contentSource, this);
+        series.reloadFromSource(sceneManager.getContentLoader(), contentSource, this);
     }
 
     /**

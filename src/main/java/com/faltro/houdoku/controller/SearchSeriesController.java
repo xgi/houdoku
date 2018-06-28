@@ -162,7 +162,7 @@ public class SearchSeriesController extends Controller {
         ChangeListener listener = (o, oldValue, newValue) -> {
             ContentSource contentSource = contentSourcesBox.getSelectionModel()
                     .getSelectedItem();
-            ContentLoader.search(contentSource, "", this);
+            sceneManager.getContentLoader().search(contentSource, "", this);
         };
         contentSourcesBox.valueProperty().addListener(listener);
         listener.changed(new SimpleDoubleProperty(0), 0, 0);
@@ -297,7 +297,7 @@ public class SearchSeriesController extends Controller {
         String source = (String) item.get("source");
         LibraryController libraryController = (LibraryController) sceneManager
                 .getController(LibraryController.ID);
-        ContentLoader.loadSeries(contentSource, source, libraryController);
+        sceneManager.getContentLoader().loadSeries(contentSource, source, libraryController);
         goToLibrary();
     }
 
@@ -315,7 +315,7 @@ public class SearchSeriesController extends Controller {
         ContentSource contentSource = contentSourcesBox.getSelectionModel()
                 .getSelectedItem();
         String query = searchTextField.getText();
-        ContentLoader.search(contentSource, query, this);
+        sceneManager.getContentLoader().search(contentSource, query, this);
     }
 
     /**
