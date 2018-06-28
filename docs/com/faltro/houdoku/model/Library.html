@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -182,14 +182,20 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Library.html#find-java.lang.String-">find</a></span>(java.lang.String&nbsp;title)</code>
+<div class="block">Try to find a series in the library matching the given title.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/faltro/houdoku/model/Category.html" title="class in com.faltro.houdoku.model">Category</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Library.html#getRootCategory--">getRootCategory</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Library.html#getSerieses--">getSerieses</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Library.html#removeSeries-com.faltro.houdoku.model.Series-">removeSeries</a></span>(<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series)</code>&nbsp;</td>
 </tr>
@@ -294,6 +300,25 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>removeSeries</h4>
 <pre>public&nbsp;void&nbsp;removeSeries(<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series)</pre>
+</li>
+</ul>
+<a name="find-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>find</h4>
+<pre>public&nbsp;<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;find(java.lang.String&nbsp;title)</pre>
+<div class="block">Try to find a series in the library matching the given title.
+ <p>
+ This check is case-insensitive, and also checks the altNames of the
+ series' in the library.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>title</code> - the title of the series to check</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the (first) matching series, or null</dd>
+</dl>
 </li>
 </ul>
 <a name="getSerieses--">

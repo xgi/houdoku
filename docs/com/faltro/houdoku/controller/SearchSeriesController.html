@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -158,12 +158,36 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#coverColumn">coverColumn</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>private javafx.scene.control.ScrollPane</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#coversContainer">coversContainer</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>private static double</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#FLOW_RESULTS_ROWS">FLOW_RESULTS_ROWS</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>private javafx.scene.layout.FlowPane</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#flowPane">flowPane</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#ID">ID</a></span></code>&nbsp;</td>
 </tr>
+<tr class="altColor">
+<td class="colFirst"><code>private javafx.scene.control.RadioButton</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#layoutCoversButton">layoutCoversButton</a></span></code>&nbsp;</td>
+</tr>
 <tr class="rowColor">
+<td class="colFirst"><code>private javafx.scene.control.RadioButton</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#layoutTableButton">layoutTableButton</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.control.MenuBar</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#menuBar">menuBar</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>javafx.collections.ObservableList&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#results">results</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.layout.HBox</code></td>
@@ -182,7 +206,7 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#searchTextField">searchTextField</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>javafx.scene.control.TableView&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
+<td class="colFirst"><code>private javafx.scene.control.TableView&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#tableView">tableView</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -236,34 +260,58 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#goToLibrary--">goToLibrary</a></span>()</code>
+<div class="block">Change to the library page.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#initialize--">initialize</a></span>()</code>
 <div class="block">Initialize the components of the controller's view.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>private javafx.event.EventHandler&lt;javafx.scene.input.MouseEvent&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#newCellClickHandler-javafx.scene.control.ContextMenu-">newCellClickHandler</a></span>(javafx.scene.control.ContextMenu&nbsp;contextMenu)</code>
 <div class="block">Creates a MouseEvent handler for a cell in the results table.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#onMadeActive--">onMadeActive</a></span>()</code>
 <div class="block">This method updates the size of the page and updates the list of
  available content sources from the plugin manager.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#onMadeInactive--">onMadeInactive</a></span>()</code>
 <div class="block">Function that will be called by the scene manager when this controller
  is made inactive.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>private void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#promptAddSeries-java.util.HashMap-">promptAddSeries</a></span>(java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&nbsp;item)</code>
+<div class="block">Prompt the user to add a series to the library from an item HashMap.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#search--">search</a></span>()</code>
 <div class="block">Searches from the selected content source using the searchTextField.</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#updateContent--">updateContent</a></span>()</code>
+<div class="block">Updates the content of the results layouts.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>private void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#updateLayout--">updateLayout</a></span>()</code>
+<div class="block">Update the visible layout based on the selected option.</div>
 </td>
 </tr>
 </table>
@@ -334,13 +382,71 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 </dl>
 </li>
 </ul>
+<a name="FLOW_RESULTS_ROWS">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>FLOW_RESULTS_ROWS</h4>
+<pre>private static final&nbsp;double FLOW_RESULTS_ROWS</pre>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SearchSeriesController.FLOW_RESULTS_ROWS">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="results">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>results</h4>
+<pre>public&nbsp;javafx.collections.ObservableList&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&gt; results</pre>
+</li>
+</ul>
+<a name="flowPane">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>flowPane</h4>
+<pre>private&nbsp;javafx.scene.layout.FlowPane flowPane</pre>
+</li>
+</ul>
 <a name="tableView">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>tableView</h4>
-<pre>public&nbsp;javafx.scene.control.TableView&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&gt; tableView</pre>
+<pre>private&nbsp;javafx.scene.control.TableView&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&gt; tableView</pre>
+</li>
+</ul>
+<a name="coversContainer">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>coversContainer</h4>
+<pre>private&nbsp;javafx.scene.control.ScrollPane coversContainer</pre>
+</li>
+</ul>
+<a name="layoutTableButton">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>layoutTableButton</h4>
+<pre>private&nbsp;javafx.scene.control.RadioButton layoutTableButton</pre>
+</li>
+</ul>
+<a name="layoutCoversButton">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>layoutCoversButton</h4>
+<pre>private&nbsp;javafx.scene.control.RadioButton layoutCoversButton</pre>
 </li>
 </ul>
 <a name="searchSeriesContainer">
@@ -497,6 +603,16 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 </dl>
 </li>
 </ul>
+<a name="updateContent--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>updateContent</h4>
+<pre>public&nbsp;void&nbsp;updateContent()</pre>
+<div class="block">Updates the content of the results layouts.</div>
+</li>
+</ul>
 <a name="newCellClickHandler-javafx.scene.control.ContextMenu-">
 <!--   -->
 </a>
@@ -514,6 +630,23 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <dd><code>contextMenu</code> - the context menu shown when right clicking</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a complete MouseEvent EventHandler for a cell in the table</dd>
+</dl>
+</li>
+</ul>
+<a name="promptAddSeries-java.util.HashMap-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>promptAddSeries</h4>
+<pre>private&nbsp;void&nbsp;promptAddSeries(java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&nbsp;item)</pre>
+<div class="block">Prompt the user to add a series to the library from an item HashMap.
+ <p>
+ See <a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#addSeriesFromItem-java.util.HashMap-"><code>addSeriesFromItem(HashMap)</code></a> for details what the HashMap
+ should contain.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>item</code> - a HashMap representing a series result</dd>
 </dl>
 </li>
 </ul>
@@ -545,7 +678,7 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <a name="search--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>search</h4>
 <pre>public&nbsp;void&nbsp;search()</pre>
@@ -558,6 +691,26 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util"><code>ContentSource</code></a>, 
 <a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#searchTextField"><code>searchTextField</code></a></dd>
 </dl>
+</li>
+</ul>
+<a name="updateLayout--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>updateLayout</h4>
+<pre>private&nbsp;void&nbsp;updateLayout()</pre>
+<div class="block">Update the visible layout based on the selected option.</div>
+</li>
+</ul>
+<a name="goToLibrary--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>goToLibrary</h4>
+<pre>public&nbsp;void&nbsp;goToLibrary()</pre>
+<div class="block">Change to the library page.</div>
 </li>
 </ul>
 </li>

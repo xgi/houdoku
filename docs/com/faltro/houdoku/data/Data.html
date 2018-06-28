@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -190,41 +190,53 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Data.html#deleteCover-com.faltro.houdoku.model.Series-">deleteCover</a></span>(<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series)</code>
+<div class="block">Delete a series' cover from the filesystem, if it has been saved.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>private static java.nio.file.Path</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Data.html#findCoverPath-com.faltro.houdoku.model.Series-">findCoverPath</a></span>(<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series)</code>
+<div class="block">Retrieve the path for where a series' cover image should be saved.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>private static javafx.scene.image.Image</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Data.html#loadImage-java.nio.file.Path-">loadImage</a></span>(java.nio.file.Path&nbsp;path)</code>
 <div class="block">Load a JavaFX Image from the filesystem.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model">Library</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Data.html#loadLibrary--">loadLibrary</a></span>()</code>
-<div class="block">Loads a saved Library from the filesystem.</div>
+<div class="block">Load a saved Library from the filesystem.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>private static byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Data.html#read-java.nio.file.Path-">read</a></span>(java.nio.file.Path&nbsp;path)</code>
-<div class="block">Reads and decompresses the data of the given file.</div>
+<div class="block">Read and decompress the data of the given file.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>private static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Data.html#saveImage-javafx.scene.image.Image-java.nio.file.Path-">saveImage</a></span>(javafx.scene.image.Image&nbsp;image,
          java.nio.file.Path&nbsp;path)</code>
 <div class="block">Save a JavaFX Image to the filesystem.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Data.html#saveLibrary-com.faltro.houdoku.model.Library-">saveLibrary</a></span>(<a href="../../../../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model">Library</a>&nbsp;library)</code>
-<div class="block">Saves the given Library to the filesystem.</div>
+<div class="block">Save the given Library to the filesystem.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>private static void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/data/Data.html#write-byte:A-java.nio.file.Path-">write</a></span>(byte[]&nbsp;bytes,
      java.nio.file.Path&nbsp;path)</code>
-<div class="block">Compresses and writes the given data to a file.</div>
+<div class="block">Compress and write the given data to a file.</div>
 </td>
 </tr>
 </table>
@@ -331,7 +343,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>saveLibrary</h4>
 <pre>public static&nbsp;void&nbsp;saveLibrary(<a href="../../../../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model">Library</a>&nbsp;library)</pre>
-<div class="block">Saves the given Library to the filesystem.</div>
+<div class="block">Save the given Library to the filesystem.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>library</code> - the library to save</dd>
@@ -348,7 +360,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>loadLibrary</h4>
 <pre>public static&nbsp;<a href="../../../../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model">Library</a>&nbsp;loadLibrary()</pre>
-<div class="block">Loads a saved Library from the filesystem.</div>
+<div class="block">Load a saved Library from the filesystem.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the saved library, or null if it is not available</dd>
@@ -367,7 +379,7 @@ extends java.lang.Object</pre>
 <pre>private static&nbsp;void&nbsp;write(byte[]&nbsp;bytes,
                           java.nio.file.Path&nbsp;path)
                    throws java.io.IOException</pre>
-<div class="block">Compresses and writes the given data to a file.</div>
+<div class="block">Compress and write the given data to a file.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>bytes</code> - the data to write</dd>
@@ -387,7 +399,7 @@ extends java.lang.Object</pre>
 <h4>read</h4>
 <pre>private static&nbsp;byte[]&nbsp;read(java.nio.file.Path&nbsp;path)
                     throws java.io.IOException</pre>
-<div class="block">Reads and decompresses the data of the given file.</div>
+<div class="block">Read and decompress the data of the given file.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>path</code> - the path of the file to read the data</dd>
@@ -422,7 +434,7 @@ extends java.lang.Object</pre>
 <a name="loadImage-java.nio.file.Path-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>loadImage</h4>
 <pre>private static&nbsp;javafx.scene.image.Image&nbsp;loadImage(java.nio.file.Path&nbsp;path)
@@ -435,6 +447,32 @@ extends java.lang.Object</pre>
 <dd>the Image at the given path, or null if it doesn't exist</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code> - an IOException occurred when loading the file</dd>
+</dl>
+</li>
+</ul>
+<a name="deleteCover-com.faltro.houdoku.model.Series-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>deleteCover</h4>
+<pre>public static&nbsp;void&nbsp;deleteCover(<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series)</pre>
+<div class="block">Delete a series' cover from the filesystem, if it has been saved.</div>
+</li>
+</ul>
+<a name="findCoverPath-com.faltro.houdoku.model.Series-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>findCoverPath</h4>
+<pre>private static&nbsp;java.nio.file.Path&nbsp;findCoverPath(<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series)</pre>
+<div class="block">Retrieve the path for where a series' cover image should be saved.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>series</code> - the series whose cover to find the path for</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the path to where the series' cover image should be saved</dd>
 </dl>
 </li>
 </ul>
