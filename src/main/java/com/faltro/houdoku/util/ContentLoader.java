@@ -11,16 +11,13 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 public class ContentLoader {
     /**
@@ -73,7 +70,7 @@ public class ContentLoader {
             }
         };
 
-        String thread_name = "loadPage_" + contentSource.NAME + "_" + chapter.getSource() +
+        String thread_name = "loadPage_" + contentSource.toString() + "_" + chapter.getSource() +
                 Integer.toString(page);
         startThreadSafely(thread_name, runnableLoadPage);
     }
@@ -109,7 +106,7 @@ public class ContentLoader {
             libraryController.reloadProgressIndicator.setVisible(false);
         };
 
-        String thread_name = "loadSeries_" + contentSource.NAME + "_" + source;
+        String thread_name = "loadSeries_" + contentSource.toString() + "_" + source;
         startThreadSafely(thread_name, runnableLoadSeries);
     }
 
@@ -159,7 +156,7 @@ public class ContentLoader {
             seriesController.reloadProgressIndicator.setVisible(false);
         };
 
-        String thread_name = "reloadSeries_" + contentSource.NAME + "_" + series.getSource();
+        String thread_name = "reloadSeries_" + contentSource.toString() + "_" + series.getSource();
         startThreadSafely(thread_name, runnableReloadSeries);
     }
 
@@ -214,13 +211,12 @@ public class ContentLoader {
                     if (cover != null) {
                         ImageView coverView = (ImageView) item.get("cover");
                         coverView.setImage(cover);
-//                        searchSeriesController.updateContent();
                     }
                 }
             }
         };
 
-        String thread_name = "search_" + contentSource.NAME + "_" + query;
+        String thread_name = "search_" + contentSource.toString() + "_" + query;
         startThreadSafely(thread_name, runnableSearch);
     }
 

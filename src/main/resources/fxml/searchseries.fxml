@@ -47,14 +47,13 @@
             <Insets top="10" bottom="10"/>
         </padding>
         <Label text="Content source: "/>
-
+        <ComboBox fx:id="contentSourcesBox" styleClass="searchSeriesElement"/>
     </HBox>
 
     <HBox fx:id="searchBar" alignment="CENTER" spacing="5">
         <padding>
             <Insets top="10" bottom="10" left="15" right="15"/>
         </padding>
-        <ComboBox fx:id="contentSourcesBox" styleClass="searchSeriesElement"/>
         <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" promptText="Search for a series..."
                    styleClass="searchSeriesElement" onAction="#search"/>
         <Button text="Search" onAction="#search"/>

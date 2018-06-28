@@ -6,7 +6,9 @@ import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -154,6 +156,16 @@ public class SearchSeriesController extends Controller {
                 sceneManager.getPluginManager().getContentSources());
         contentSourcesBox.setItems(contentSources);
         contentSourcesBox.getSelectionModel().select(0);
+
+        // search with a blank query when changing content sources in order
+        // to populate the window
+        ChangeListener listener = (o, oldValue, newValue) -> {
+            ContentSource contentSource = contentSourcesBox.getSelectionModel()
+                    .getSelectedItem();
+            ContentLoader.search(contentSource, "", this);
+        };
+        contentSourcesBox.valueProperty().addListener(listener);
+        listener.changed(new SimpleDoubleProperty(0), 0, 0);
     }
 
     /**
@@ -161,6 +173,7 @@ public class SearchSeriesController extends Controller {
      */
     @Override
     public void onMadeInactive() {
+        flowPane.getChildren().clear();
     }
 
     /**
