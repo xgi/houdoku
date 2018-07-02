@@ -135,8 +135,12 @@ public class MangaHere extends GenericContentSource {
     @Override
     public Image cover(String source) throws IOException {
         Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
-        String url = seriesDocument.selectFirst("img[class=img]").attr("src");
-        return imageFromURL(url);
+        Image result = null;
+        Element coverElement = seriesDocument.selectFirst("img[class=img]");
+        if (coverElement != null) {
+            result = imageFromURL(coverElement.attr("src"));
+        }
+        return result;
     }
 
     @Override

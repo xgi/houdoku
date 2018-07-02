@@ -28,7 +28,7 @@
     -fx-font-size: 1.2em;
 }
 
-#imageProgressIndicator {
+#imageProgressIndicator, #searchProgressIndicator {
     -fx-max-width: 80;
 }
 

@@ -70,6 +70,8 @@ public class SearchSeriesController extends Controller {
     private TableColumn<HashMap<String, Object>, Image> coverColumn;
     @FXML
     private TableColumn<HashMap<String, Object>, String> titleColumn;
+    @FXML
+    public ProgressIndicator searchProgressIndicator;
 
     public SearchSeriesController(SceneManager sceneManager) {
         super(sceneManager);
@@ -135,6 +137,13 @@ public class SearchSeriesController extends Controller {
         titleColumn.setCellValueFactory(p -> new SimpleStringProperty(
                 (String) p.getValue().get("details")
         ));
+
+        // search with a blank query when changing content sources in order
+        // to populate the window
+        ChangeListener listener = (o, oldValue, newValue) -> {
+            search();
+        };
+        contentSourcesBox.valueProperty().addListener(listener);
     }
 
     /**
@@ -147,32 +156,22 @@ public class SearchSeriesController extends Controller {
      */
     @Override
     public void onMadeActive() {
-        // clear current content
-        searchTextField.setText("");
-        tableView.setItems(FXCollections.emptyObservableList());
-
         // check available content sources
         ObservableList<ContentSource> contentSources = FXCollections.observableArrayList(
                 sceneManager.getPluginManager().getContentSources());
         contentSourcesBox.setItems(contentSources);
         contentSourcesBox.getSelectionModel().select(0);
-
-        // search with a blank query when changing content sources in order
-        // to populate the window
-        ChangeListener listener = (o, oldValue, newValue) -> {
-            ContentSource contentSource = contentSourcesBox.getSelectionModel()
-                    .getSelectedItem();
-            sceneManager.getContentLoader().search(contentSource, "", this);
-        };
-        contentSourcesBox.valueProperty().addListener(listener);
-        listener.changed(new SimpleDoubleProperty(0), 0, 0);
     }
 
     /**
-     * @see Controller#onMadeActive()
+     * @see Controller#onMadeInactive()
      */
     @Override
     public void onMadeInactive() {
+        // clear current content
+        searchTextField.setText("");
+        tableView.setItems(FXCollections.emptyObservableList());
+        tableView.refresh();
         flowPane.getChildren().clear();
     }
 
@@ -312,8 +311,12 @@ public class SearchSeriesController extends Controller {
      */
     @FXML
     public void search() {
-        ContentSource contentSource = contentSourcesBox.getSelectionModel()
-                .getSelectedItem();
+        // clear current results
+        tableView.setItems(FXCollections.emptyObservableList());
+        tableView.refresh();
+        flowPane.getChildren().clear();
+
+        ContentSource contentSource = contentSourcesBox.getSelectionModel().getSelectedItem();
         String query = searchTextField.getText();
         sceneManager.getContentLoader().search(contentSource, query, this);
     }

@@ -35,12 +35,16 @@ public class SearchRunnable extends LoaderRunnable {
 
     @Override
     public void run() {
+        searchSeriesController.searchProgressIndicator.setVisible(true);
+
         ArrayList<HashMap<String, Object>> items = null;
         try {
             items = contentSource.search(query);
         } catch (IOException | NotImplementedException e) {
             e.printStackTrace();
         }
+
+        searchSeriesController.searchProgressIndicator.setVisible(false);
 
         if (items != null) {
             // truncate items to at most 20 results
@@ -57,8 +61,7 @@ public class SearchRunnable extends LoaderRunnable {
             }
 
             searchSeriesController.results.setAll(FXCollections.observableArrayList(items));
-            // update page content now since loading covers will take
-            // some time
+            // update page content now since loading covers will take some time
             searchSeriesController.updateContent();
 
             for (HashMap<String, Object> item : items) {
