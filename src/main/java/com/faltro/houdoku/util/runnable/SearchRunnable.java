@@ -43,6 +43,9 @@ public class SearchRunnable extends LoaderRunnable {
         }
 
         if (items != null) {
+            // truncate items to at most 20 results
+            items = new ArrayList<>(items.subList(0, items.size() < 20 ? items.size() : 20));
+
             // temporarily set the image property of all series to a
             // blank placeholder
             Image blank_cover_image = new Image(
@@ -60,7 +63,6 @@ public class SearchRunnable extends LoaderRunnable {
 
             for (HashMap<String, Object> item : items) {
                 if (running) {
-                    System.out.println(Thread.currentThread().getName());
                     Image cover = null;
                     try {
                         if (item.containsKey("coverSrc")) {
