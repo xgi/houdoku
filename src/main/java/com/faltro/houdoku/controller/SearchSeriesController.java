@@ -73,6 +73,8 @@ public class SearchSeriesController extends Controller {
     @FXML
     public ProgressIndicator searchProgressIndicator;
 
+    private ContextMenu resultContextMenu;
+
     public SearchSeriesController(SceneManager sceneManager) {
         super(sceneManager);
         this.results = FXCollections.observableArrayList(new ArrayList<>());
@@ -101,9 +103,9 @@ public class SearchSeriesController extends Controller {
 
         // create a right-click context menu for results
         // onAction events are set by newCellClickHandler()
-        ContextMenu contextMenu = new ContextMenu();
+        resultContextMenu = new ContextMenu();
         MenuItem itemAddSeries = new MenuItem("Add Series");
-        contextMenu.getItems().add(itemAddSeries);
+        resultContextMenu.getItems().add(itemAddSeries);
 
         coverColumn.setCellFactory(tc -> {
             TableCell<HashMap<String, Object>, Image> cell = new TableCell<>();
@@ -113,7 +115,7 @@ public class SearchSeriesController extends Controller {
             imageView.fitWidthProperty().bind(coverColumn.widthProperty());
             imageView.setPreserveRatio(true);
             cell.setGraphic(imageView);
-            cell.setOnMouseClicked(newCellClickHandler(contextMenu));
+            cell.setOnMouseClicked(newCellClickHandler(resultContextMenu));
             return cell;
         });
         titleColumn.setCellFactory(tc -> {
@@ -126,7 +128,7 @@ public class SearchSeriesController extends Controller {
             text.textProperty().bind(cell.itemProperty());
             text.setLineSpacing(7);
             cell.setGraphic(text);
-            cell.setOnMouseClicked(newCellClickHandler(contextMenu));
+            cell.setOnMouseClicked(newCellClickHandler(resultContextMenu));
             return cell;
         });
 
@@ -214,6 +216,7 @@ public class SearchSeriesController extends Controller {
                     action_button.setOnAction(event -> promptAddSeries(result));
                 }
                 result_pane.getChildren().add(action_button);
+                result_pane.setOnMouseClicked(newCoverClickHandler(result));
 
                 // hide all buttons by default
                 LayoutHelpers.setChildButtonVisible(result_pane, false);
@@ -225,7 +228,7 @@ public class SearchSeriesController extends Controller {
     }
 
     /**
-     * Creates a MouseEvent handler for a cell in the results table.
+     * Create a MouseEvent handler for a cell in the results table.
      * <p>
      * This handler handles double clicking to prompt for adding a series, as
      * well as handling the actions of the given context menu if a series is
@@ -248,6 +251,24 @@ public class SearchSeriesController extends Controller {
                 HashMap<String, Object> item = tableView.getSelectionModel().getSelectedItem();
                 contextMenu.getItems().get(0).setOnAction(e -> addSeriesFromItem(item));
                 contextMenu.show(tableView, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+            }
+        };
+    }
+
+    /**
+     * Create a MouseEvent handler for a cover in the results FlowPane.
+     * <p>
+     * This handler handles double clicking to prompt for adding a series.
+     *
+     * @return a complete MouseEvent EventHandler for a cover result
+     */
+    private EventHandler<MouseEvent> newCoverClickHandler(HashMap<String, Object> item) {
+        return mouseEvent -> {
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                if (mouseEvent.getClickCount() == 2) {
+                    // show confirmation prompt/alert before adding series to library
+                    promptAddSeries(item);
+                }
             }
         };
     }

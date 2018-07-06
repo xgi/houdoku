@@ -343,6 +343,7 @@ public class LibraryController extends Controller {
 
                 button_container.getChildren().addAll(view_button, edit_button, remove_button);
                 result_pane.getChildren().add(button_container);
+                result_pane.setOnMouseClicked(newCoverClickHandler(series));
 
                 // hide all buttons by default
                 LayoutHelpers.setChildButtonVisible(result_pane, false);
@@ -410,6 +411,23 @@ public class LibraryController extends Controller {
                     contextMenu.getItems().get(1).setOnAction(e -> promptEditCategories(series));
                     contextMenu.getItems().get(2).setOnAction(e -> promptRemoveSeries(series));
                     contextMenu.show(tableView, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                }
+            }
+        };
+    }
+
+    /**
+     * Create a MouseEvent handler for a cover in the library FlowPane.
+     * <p>
+     * This handler handles double clicking to go to a series' page.
+     *
+     * @return a complete MouseEvent EventHandler for a cover result
+     */
+    private EventHandler<MouseEvent> newCoverClickHandler(Series series) {
+        return mouseEvent -> {
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                if (mouseEvent.getClickCount() == 2) {
+                    goToSeries(series);
                 }
             }
         };
