@@ -29,13 +29,13 @@ public class Main extends Application {
         ReaderController reader_controller = new ReaderController(scene_manager);
         SearchSeriesController add_series_controller = new SearchSeriesController(scene_manager);
 
-        scene_manager.initScene(LibraryController.ID, library_controller,
+        scene_manager.initRoot(LibraryController.ID, library_controller,
                 getClass().getResource("/fxml/library.fxml"));
-        scene_manager.initScene(SeriesController.ID, series_controller,
+        scene_manager.initRoot(SeriesController.ID, series_controller,
                 getClass().getResource("/fxml/series.fxml"));
-        scene_manager.initScene(ReaderController.ID, reader_controller,
+        scene_manager.initRoot(ReaderController.ID, reader_controller,
                 getClass().getResource("/fxml/reader.fxml"));
-        scene_manager.initScene(SearchSeriesController.ID, add_series_controller,
+        scene_manager.initRoot(SearchSeriesController.ID, add_series_controller,
                 getClass().getResource("/fxml/searchseries.fxml"));
 
         double screen_width = Screen.getPrimary().getBounds().getWidth();

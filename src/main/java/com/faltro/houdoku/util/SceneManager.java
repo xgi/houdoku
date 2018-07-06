@@ -10,6 +10,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 
+/**
+ * Manager and container for scene-related class instances. The instance of this
+ * class is the primary resource for controllers to interact with each other and
+ * access instances of non-controller-specific classes.
+ *
+ * @see PluginManager
+ * @see ContentLoader
+ */
 public class SceneManager {
     // changes to this MUST also be changed in default.css
     public static final int VSCROLLBAR_WIDTH = 20;
@@ -21,6 +29,14 @@ public class SceneManager {
     private PluginManager pluginManager;
     private ContentLoader contentLoader;
 
+    /**
+     * Create the SceneManager.
+     * <p>
+     * This constructor creates instances of the non-controller-specific classes
+     * used by ths class.
+     *
+     * @param stage the stage of the main application window
+     */
     public SceneManager(Stage stage) {
         this.stage = stage;
         this.popup_stage = new Stage();
@@ -30,7 +46,20 @@ public class SceneManager {
         this.contentLoader = new ContentLoader();
     }
 
-    public void initScene(int id, Controller controller, URL source) throws IOException {
+    /**
+     * Initialize the root (a Parent node) for a scene.
+     * <p>
+     * The root is usually an individual page, i.e. the library page or the
+     * reader page. Technically, it can be anything with an FXML source and a
+     * controller.
+     *
+     * @param id         the unique id to give this root; probably the controller's
+     *                   unique id
+     * @param controller the controller for the root
+     * @param source     the FXML file for the root
+     * @throws IOException an IOException occurred when loading the FXML file
+     */
+    public void initRoot(int id, Controller controller, URL source) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(source);
         loader.setController(controller);
@@ -39,10 +68,24 @@ public class SceneManager {
         controllers.put(root, controller);
     }
 
+    /**
+     * Change to the root with the given id.
+     * <p>
+     * The root should have already been initialized with
+     * {@link #initRoot(int, Controller, URL)}.
+     *
+     * @param id the id of the root to change to
+     */
     public void changeToRoot(int id) {
         changeStageRoot(stage, roots.get(id));
     }
 
+    /**
+     * Show the popup stage, which is on a separate window, with the root with
+     * the given id.
+     *
+     * @param id the id of the root to show
+     */
     public void changeToPopupStage(int id) {
         Parent root = roots.get(id);
         changeStageRoot(popup_stage, root);

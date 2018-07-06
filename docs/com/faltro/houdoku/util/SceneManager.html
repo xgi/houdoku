@@ -109,6 +109,14 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">SceneManager</span>
 extends java.lang.Object</pre>
+<div class="block">Manager and container for scene-related class instances. The instance of this
+ class is the primary resource for controllers to interact with each other and
+ access instances of non-controller-specific classes.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../com/faltro/houdoku/util/PluginManager.html" title="class in com.faltro.houdoku.util"><code>PluginManager</code></a>, 
+<a href="../../../../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util"><code>ContentLoader</code></a></dd>
+</dl>
 </li>
 </ul>
 </div>
@@ -170,7 +178,9 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/SceneManager.html#SceneManager-javafx.stage.Stage-">SceneManager</a></span>(javafx.stage.Stage&nbsp;stage)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/SceneManager.html#SceneManager-javafx.stage.Stage-">SceneManager</a></span>(javafx.stage.Stage&nbsp;stage)</code>
+<div class="block">Create the SceneManager.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -196,11 +206,16 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/SceneManager.html#changeToPopupStage-int-">changeToPopupStage</a></span>(int&nbsp;id)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/SceneManager.html#changeToPopupStage-int-">changeToPopupStage</a></span>(int&nbsp;id)</code>
+<div class="block">Show the popup stage, which is on a separate window, with the root with
+ the given id.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/SceneManager.html#changeToRoot-int-">changeToRoot</a></span>(int&nbsp;id)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/SceneManager.html#changeToRoot-int-">changeToRoot</a></span>(int&nbsp;id)</code>
+<div class="block">Change to the root with the given id.</div>
+</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></code></td>
@@ -228,9 +243,11 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/SceneManager.html#initScene-int-com.faltro.houdoku.controller.Controller-java.net.URL-">initScene</a></span>(int&nbsp;id,
-         <a href="../../../../com/faltro/houdoku/controller/Controller.html" title="class in com.faltro.houdoku.controller">Controller</a>&nbsp;controller,
-         java.net.URL&nbsp;source)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/SceneManager.html#initRoot-int-com.faltro.houdoku.controller.Controller-java.net.URL-">initRoot</a></span>(int&nbsp;id,
+        <a href="../../../../com/faltro/houdoku/controller/Controller.html" title="class in com.faltro.houdoku.controller">Controller</a>&nbsp;controller,
+        java.net.URL&nbsp;source)</code>
+<div class="block">Initialize the root (a Parent node) for a scene.</div>
+</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -336,6 +353,14 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>SceneManager</h4>
 <pre>public&nbsp;SceneManager(javafx.stage.Stage&nbsp;stage)</pre>
+<div class="block">Create the SceneManager.
+ <p>
+ This constructor creates instances of the non-controller-specific classes
+ used by ths class.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>stage</code> - the stage of the main application window</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -346,19 +371,29 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="initScene-int-com.faltro.houdoku.controller.Controller-java.net.URL-">
+<a name="initRoot-int-com.faltro.houdoku.controller.Controller-java.net.URL-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>initScene</h4>
-<pre>public&nbsp;void&nbsp;initScene(int&nbsp;id,
-                      <a href="../../../../com/faltro/houdoku/controller/Controller.html" title="class in com.faltro.houdoku.controller">Controller</a>&nbsp;controller,
-                      java.net.URL&nbsp;source)
-               throws java.io.IOException</pre>
+<h4>initRoot</h4>
+<pre>public&nbsp;void&nbsp;initRoot(int&nbsp;id,
+                     <a href="../../../../com/faltro/houdoku/controller/Controller.html" title="class in com.faltro.houdoku.controller">Controller</a>&nbsp;controller,
+                     java.net.URL&nbsp;source)
+              throws java.io.IOException</pre>
+<div class="block">Initialize the root (a Parent node) for a scene.
+ <p>
+ The root is usually an individual page, i.e. the library page or the
+ reader page. Technically, it can be anything with an FXML source and a
+ controller.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>id</code> - the unique id to give this root; probably the controller's
+                   unique id</dd>
+<dd><code>controller</code> - the controller for the root</dd>
+<dd><code>source</code> - the FXML file for the root</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.io.IOException</code></dd>
+<dd><code>java.io.IOException</code> - an IOException occurred when loading the FXML file</dd>
 </dl>
 </li>
 </ul>
@@ -369,6 +404,14 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>changeToRoot</h4>
 <pre>public&nbsp;void&nbsp;changeToRoot(int&nbsp;id)</pre>
+<div class="block">Change to the root with the given id.
+ <p>
+ The root should have already been initialized with
+ <a href="../../../../com/faltro/houdoku/util/SceneManager.html#initRoot-int-com.faltro.houdoku.controller.Controller-java.net.URL-"><code>initRoot(int, Controller, URL)</code></a>.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>id</code> - the id of the root to change to</dd>
+</dl>
 </li>
 </ul>
 <a name="changeToPopupStage-int-">
@@ -378,6 +421,12 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>changeToPopupStage</h4>
 <pre>public&nbsp;void&nbsp;changeToPopupStage(int&nbsp;id)</pre>
+<div class="block">Show the popup stage, which is on a separate window, with the root with
+ the given id.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>id</code> - the id of the root to show</dd>
+</dl>
 </li>
 </ul>
 <a name="changeStageRoot-javafx.stage.Stage-javafx.scene.Parent-">

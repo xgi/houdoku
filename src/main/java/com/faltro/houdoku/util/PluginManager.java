@@ -8,9 +8,21 @@ import com.faltro.houdoku.plugins.MangaTown;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Manager and container for client plugins, which currently solely consists
+ * of content sources. Generally, the instance of this class primarily exists
+ * to hold and provide access to instances of the available plugins so that
+ * multiple plugin instances are not necessary.
+ */
 public class PluginManager {
     private ArrayList<ContentSource> contentSources;
 
+    /**
+     * Create the PluginManager.
+     * <p>
+     * This constructor creates instances of the available plugins, which are
+     * manually defined here.
+     */
     public PluginManager() {
         contentSources = new ArrayList<>();
         contentSources.addAll(Arrays.asList(
@@ -25,7 +37,7 @@ public class PluginManager {
     /**
      * Gets the ID of a content source instance.
      *
-     * @param contentSource
+     * @param contentSource the ContentSource to get the id of
      * @return the ID of the contentSource's class.
      */
     private int getSourceId(ContentSource contentSource) {

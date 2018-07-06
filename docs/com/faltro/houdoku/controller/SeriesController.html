@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -353,62 +353,68 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#goToLibrary--">goToLibrary</a></span>()</code>
-<div class="block">Change to the library scene.</div>
+<div class="block">Change to the library page.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>private void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#goToReader-com.faltro.houdoku.model.Chapter-">goToReader</a></span>(<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&nbsp;chapter)</code>
+<div class="block">Change to the reader page.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#initialize--">initialize</a></span>()</code>
 <div class="block">Initialize the components of the controller's view.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>private javafx.event.EventHandler&lt;javafx.scene.input.MouseEvent&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#newCellClickHandler--">newCellClickHandler</a></span>()</code>
 <div class="block">Creates a standard MouseEvent "click handler" for a table cell.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>private javafx.util.Callback&lt;javafx.scene.control.TableColumn&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>,java.lang.String&gt;,javafx.scene.control.TableCell&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>,java.lang.String&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#newStringCellFactory-javafx.beans.property.ReadOnlyDoubleProperty-">newStringCellFactory</a></span>(javafx.beans.property.ReadOnlyDoubleProperty&nbsp;widthProperty)</code>
 <div class="block">Creates a Callback of a standard cell factory for a table cell.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#onMadeActive--">onMadeActive</a></span>()</code>
 <div class="block">Function that will be called by the scene manager when this controller
  is made active.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#onMadeInactive--">onMadeInactive</a></span>()</code>
 <div class="block">Function that will be called by the scene manager when this controller
  is made inactive.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#refreshContent--">refreshContent</a></span>()</code>
 <div class="block">Refreshes the data of content fields using current this.series info.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#setLibrary-com.faltro.houdoku.model.Library-">setLibrary</a></span>(<a href="../../../../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model">Library</a>&nbsp;library)</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#setSeries-com.faltro.houdoku.model.Series-">setSeries</a></span>(<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series)</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#toggleInfo--">toggleInfo</a></span>()</code>
 <div class="block">Toggles whether or not the info container is displayed.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>private void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#updateCoverSize--">updateCoverSize</a></span>()</code>
 <div class="block">Set the cover image width a percentage of the stage while enforcing a
@@ -1005,13 +1011,27 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <li class="blockList">
 <h4>goToLibrary</h4>
 <pre>public&nbsp;void&nbsp;goToLibrary()</pre>
-<div class="block">Change to the library scene.
+<div class="block">Change to the library page.
  <p>
  Called exclusively by toLibraryButton</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/faltro/houdoku/controller/LibraryController.html" title="class in com.faltro.houdoku.controller"><code>LibraryController</code></a>, 
 <a href="../../../../com/faltro/houdoku/controller/SeriesController.html#toLibraryButton"><code>toLibraryButton</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="goToReader-com.faltro.houdoku.model.Chapter-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>goToReader</h4>
+<pre>private&nbsp;void&nbsp;goToReader(<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&nbsp;chapter)</pre>
+<div class="block">Change to the reader page.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>chapter</code> - the chapter for the reader</dd>
 </dl>
 </li>
 </ul>

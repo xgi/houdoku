@@ -17,6 +17,17 @@ public class LayoutHelpers {
     private static ColorAdjust COVER_ADJUST_DEFAULT = new ColorAdjust(0, 0, -0.2, 0);
     private static ColorAdjust COVER_ADJUST_HOVER = new ColorAdjust(0, 0, -0.5, 0);
 
+    /**
+     * Create the container for displaying a series cover, for use in FlowPane
+     * layouts where covers are shown in a somewhat grid-like fashion.
+     *
+     * @param container the parent FlowPane container
+     * @param title the title of the series being represented
+     * @param cover the cover of the series being represented; this ImageView is
+     *              not modified, a copy is made to be used in the new container
+     * @return a StackPane which displays the provided title and cover and can
+     * be added to the FlowPane
+     */
     public static StackPane createCoverContainer(FlowPane container, String title,
                                                  ImageView cover) {
         COVER_ADJUST_DEFAULT.setInput(COVER_DROPSHADOW);

@@ -175,7 +175,10 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>static javafx.scene.layout.StackPane</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/LayoutHelpers.html#createCoverContainer-javafx.scene.layout.FlowPane-java.lang.String-javafx.scene.image.ImageView-">createCoverContainer</a></span>(javafx.scene.layout.FlowPane&nbsp;container,
                     java.lang.String&nbsp;title,
-                    javafx.scene.image.ImageView&nbsp;cover)</code>&nbsp;</td>
+                    javafx.scene.image.ImageView&nbsp;cover)</code>
+<div class="block">Create the container for displaying a series cover, for use in FlowPane
+ layouts where covers are shown in a somewhat grid-like fashion.</div>
+</td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
@@ -267,6 +270,18 @@ extends java.lang.Object</pre>
 <pre>public static&nbsp;javafx.scene.layout.StackPane&nbsp;createCoverContainer(javafx.scene.layout.FlowPane&nbsp;container,
                                                                  java.lang.String&nbsp;title,
                                                                  javafx.scene.image.ImageView&nbsp;cover)</pre>
+<div class="block">Create the container for displaying a series cover, for use in FlowPane
+ layouts where covers are shown in a somewhat grid-like fashion.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>container</code> - the parent FlowPane container</dd>
+<dd><code>title</code> - the title of the series being represented</dd>
+<dd><code>cover</code> - the cover of the series being represented; this ImageView is
+              not modified, a copy is made to be used in the new container</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a StackPane which displays the provided title and cover and can
+ be added to the FlowPane</dd>
+</dl>
 </li>
 </ul>
 <a name="setChildButtonVisible-javafx.scene.Parent-boolean-">

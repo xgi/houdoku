@@ -109,6 +109,10 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public class <span class="typeNameLabel">PluginManager</span>
 extends java.lang.Object</pre>
+<div class="block">Manager and container for client plugins, which currently solely consists
+ of content sources. Generally, the instance of this class primarily exists
+ to hold and provide access to instances of the available plugins so that
+ multiple plugin instances are not necessary.</div>
 </li>
 </ul>
 </div>
@@ -146,7 +150,9 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#PluginManager--">PluginManager</a></span>()</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#PluginManager--">PluginManager</a></span>()</code>
+<div class="block">Create the PluginManager.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -225,6 +231,10 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>PluginManager</h4>
 <pre>public&nbsp;PluginManager()</pre>
+<div class="block">Create the PluginManager.
+ <p>
+ This constructor creates instances of the available plugins, which are
+ manually defined here.</div>
 </li>
 </ul>
 </li>
@@ -245,7 +255,7 @@ extends java.lang.Object</pre>
 <div class="block">Gets the ID of a content source instance.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>contentSource</code> - </dd>
+<dd><code>contentSource</code> - the ContentSource to get the id of</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the ID of the contentSource's class.</dd>
 </dl>

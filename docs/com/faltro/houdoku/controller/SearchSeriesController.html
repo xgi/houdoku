@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -186,12 +186,20 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#menuBar">menuBar</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>private javafx.scene.control.ContextMenu</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#resultContextMenu">resultContextMenu</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>javafx.collections.ObservableList&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#results">results</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>private javafx.scene.layout.HBox</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#searchBar">searchBar</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>javafx.scene.control.ProgressIndicator</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#searchProgressIndicator">searchProgressIndicator</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>private javafx.scene.layout.VBox</code></td>
@@ -273,42 +281,48 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>private javafx.event.EventHandler&lt;javafx.scene.input.MouseEvent&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#newCellClickHandler-javafx.scene.control.ContextMenu-">newCellClickHandler</a></span>(javafx.scene.control.ContextMenu&nbsp;contextMenu)</code>
-<div class="block">Creates a MouseEvent handler for a cell in the results table.</div>
+<div class="block">Create a MouseEvent handler for a cell in the results table.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>private javafx.event.EventHandler&lt;javafx.scene.input.MouseEvent&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#newCoverClickHandler-java.util.HashMap-">newCoverClickHandler</a></span>(java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&nbsp;item)</code>
+<div class="block">Create a MouseEvent handler for a cover in the results FlowPane.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#onMadeActive--">onMadeActive</a></span>()</code>
 <div class="block">This method updates the size of the page and updates the list of
  available content sources from the plugin manager.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#onMadeInactive--">onMadeInactive</a></span>()</code>
 <div class="block">Function that will be called by the scene manager when this controller
  is made inactive.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>private void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#promptAddSeries-java.util.HashMap-">promptAddSeries</a></span>(java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&nbsp;item)</code>
 <div class="block">Prompt the user to add a series to the library from an item HashMap.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#search--">search</a></span>()</code>
 <div class="block">Searches from the selected content source using the searchTextField.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#updateContent--">updateContent</a></span>()</code>
 <div class="block">Updates the content of the results layouts.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>private void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#updateLayout--">updateLayout</a></span>()</code>
 <div class="block">Update the visible layout based on the selected option.</div>
@@ -515,10 +529,28 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <a name="titleColumn">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>titleColumn</h4>
 <pre>private&nbsp;javafx.scene.control.TableColumn&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;,java.lang.String&gt; titleColumn</pre>
+</li>
+</ul>
+<a name="searchProgressIndicator">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchProgressIndicator</h4>
+<pre>public&nbsp;javafx.scene.control.ProgressIndicator searchProgressIndicator</pre>
+</li>
+</ul>
+<a name="resultContextMenu">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>resultContextMenu</h4>
+<pre>private&nbsp;javafx.scene.control.ContextMenu resultContextMenu</pre>
 </li>
 </ul>
 </li>
@@ -599,7 +631,7 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/faltro/houdoku/controller/Controller.html#onMadeInactive--">onMadeInactive</a></code>&nbsp;in class&nbsp;<code><a href="../../../../com/faltro/houdoku/controller/Controller.html" title="class in com.faltro.houdoku.controller">Controller</a></code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../com/faltro/houdoku/controller/Controller.html#onMadeActive--"><code>Controller.onMadeActive()</code></a></dd>
+<dd><a href="../../../../com/faltro/houdoku/controller/Controller.html#onMadeInactive--"><code>Controller.onMadeInactive()</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -620,7 +652,7 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <li class="blockList">
 <h4>newCellClickHandler</h4>
 <pre>private&nbsp;javafx.event.EventHandler&lt;javafx.scene.input.MouseEvent&gt;&nbsp;newCellClickHandler(javafx.scene.control.ContextMenu&nbsp;contextMenu)</pre>
-<div class="block">Creates a MouseEvent handler for a cell in the results table.
+<div class="block">Create a MouseEvent handler for a cell in the results table.
  <p>
  This handler handles double clicking to prompt for adding a series, as
  well as handling the actions of the given context menu if a series is
@@ -630,6 +662,22 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <dd><code>contextMenu</code> - the context menu shown when right clicking</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a complete MouseEvent EventHandler for a cell in the table</dd>
+</dl>
+</li>
+</ul>
+<a name="newCoverClickHandler-java.util.HashMap-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>newCoverClickHandler</h4>
+<pre>private&nbsp;javafx.event.EventHandler&lt;javafx.scene.input.MouseEvent&gt;&nbsp;newCoverClickHandler(java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&nbsp;item)</pre>
+<div class="block">Create a MouseEvent handler for a cover in the results FlowPane.
+ <p>
+ This handler handles double clicking to prompt for adding a series.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a complete MouseEvent EventHandler for a cover result</dd>
 </dl>
 </li>
 </ul>
