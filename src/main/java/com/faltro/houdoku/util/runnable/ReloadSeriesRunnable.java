@@ -42,7 +42,7 @@ public class ReloadSeriesRunnable extends LoaderRunnable {
             e.printStackTrace();
         }
 
-        if (new_series != null) {
+        if (new_series != null && running) {
             // overwrite specific fields of original series object
             // Maybe better to make function in Series class to handle
             // this better? Especially since theses fields are hardcoded

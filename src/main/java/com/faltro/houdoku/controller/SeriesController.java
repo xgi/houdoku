@@ -3,6 +3,7 @@ package com.faltro.houdoku.controller;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.OutputHelpers;
 import com.faltro.houdoku.util.SceneManager;
@@ -354,10 +355,7 @@ public class SeriesController extends Controller {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                 if (mouseEvent.getClickCount() == 2) {
                     Chapter chapter = tableView.getSelectionModel().getSelectedItem();
-                    ReaderController readerController =
-                            (ReaderController) sceneManager.getController(ReaderController.ID);
-                    readerController.setChapter(chapter);
-                    sceneManager.changeToRoot(ReaderController.ID);
+                    goToReader(chapter);
                 }
             }
         };
@@ -412,7 +410,7 @@ public class SeriesController extends Controller {
     }
 
     /**
-     * Change to the library scene.
+     * Change to the library page.
      * <p>
      * Called exclusively by toLibraryButton
      *
@@ -422,6 +420,22 @@ public class SeriesController extends Controller {
     @FXML
     public void goToLibrary() {
         sceneManager.changeToRoot(LibraryController.ID);
+    }
+
+    /**
+     * Change to the reader page.
+     *
+     * @param chapter the chapter for the reader
+     */
+    private void goToReader(Chapter chapter) {
+        // stop any active reload threads since they may interfere with how the
+        // reader handles next/previous chapters
+        sceneManager.getContentLoader().stopThreads(ContentLoader.PREFIX_RELOAD_SERIES);
+
+        ReaderController readerController =
+                (ReaderController) sceneManager.getController(ReaderController.ID);
+        readerController.setChapter(chapter);
+        sceneManager.changeToRoot(ReaderController.ID);
     }
 
     public Library getLibrary() {

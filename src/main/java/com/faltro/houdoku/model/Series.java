@@ -117,14 +117,12 @@ public class Series {
      * @return the ideal next chapter, or null
      */
     public Chapter smartNextChapter(Chapter chapter) {
-        assert chapters.contains(chapter);
-
         ArrayList<Chapter> possible = chapters.stream().filter(
                 c -> c.language.equals(chapter.language)
         ).collect(Collectors.toCollection(ArrayList::new));
 
         int chapter_index = possible.indexOf(chapter);
-        return chapter_index == 0 ? null : possible.get(chapter_index - 1);
+        return (chapter_index == 0 || chapter_index == -1) ? null : possible.get(chapter_index - 1);
     }
 
     /**
@@ -134,8 +132,6 @@ public class Series {
      * @return the ideal previous chapter, or null
      */
     public Chapter smartPreviousChapter(Chapter chapter) {
-        assert chapters.contains(chapter);
-
         ArrayList<Chapter> possible = chapters.stream().filter(
                 c -> c.language.equals(chapter.language)
         ).collect(Collectors.toCollection(ArrayList::new));
