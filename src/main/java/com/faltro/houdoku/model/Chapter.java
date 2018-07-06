@@ -147,6 +147,10 @@ public class Chapter {
         images = new Image[1];
     }
 
+    public void setSeries(Series series) {
+        this.series = series;
+    }
+
     public int getCurrentPageNum() {
         return currentPageNum;
     }

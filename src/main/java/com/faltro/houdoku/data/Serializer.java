@@ -1,9 +1,11 @@
 package com.faltro.houdoku.data;
 
 import com.faltro.houdoku.model.Category;
+import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.google.gson.*;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -45,6 +47,14 @@ public class Serializer {
         ArrayList<Series> serieses = new ArrayList<>();
         for (JsonElement json_series : json_serieses.getAsJsonArray()) {
             Series series = gson.fromJson(json_series, Series.class);
+
+            // manually set basic fields for all of this series' chapters that
+            // are not serialized
+            for (Chapter chapter : series.getChapters()) {
+                chapter.setSeries(series);
+                chapter.images = new Image[1];
+            }
+
             serieses.add(series);
         }
 
