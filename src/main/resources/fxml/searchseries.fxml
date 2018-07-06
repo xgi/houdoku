@@ -42,20 +42,20 @@
         </Menu>
     </MenuBar>
 
-    <HBox fx:id="searchSeriesHeader" alignment="CENTER">
+    <HBox>
         <padding>
-            <Insets top="10" bottom="10"/>
+            <Insets top="10" left="10" bottom="10"/>
         </padding>
-        <Label text="Content source: "/>
-        <ComboBox fx:id="contentSourcesBox" styleClass="searchSeriesElement"/>
+        <Button fx:id="toLibraryButton" text="◂ Back to library" onAction="#goToLibrary"/>
     </HBox>
 
     <HBox fx:id="searchBar" alignment="CENTER" spacing="5">
         <padding>
             <Insets top="10" bottom="10" left="15" right="15"/>
         </padding>
+        <ComboBox fx:id="contentSourcesBox"/>
         <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" promptText="Search for a series..."
-                   styleClass="searchSeriesElement" onAction="#search"/>
+                   onAction="#search"/>
         <Button text="Search" onAction="#search"/>
     </HBox>
 

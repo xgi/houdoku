@@ -32,10 +32,6 @@
     -fx-max-width: 80;
 }
 
-#searchSeriesElement {
-    -fx-min-height: 60px;
-}
-
 #menuBar {
     -fx-min-height: 30px;
 }
@@ -87,7 +83,7 @@
 }
 
 #searchBar {
-    -fx-font-size: 1.3em;
+    -fx-font-size: 1.4em;
 }
 
 #errorText {
