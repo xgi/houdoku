@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class ContentLoader {
-    private static final String PREFIX_LOAD_PAGE = "loadPage_";
-    private static final String PREFIX_LOAD_SERIES = "loadSeries_";
-    private static final String PREFIX_RELOAD_SERIES = "reloadSeries_";
-    private static final String PREFIX_SEARCH = "search_";
+    public static final String PREFIX_LOAD_PAGE = "loadPage_";
+    public static final String PREFIX_LOAD_SERIES = "loadSeries_";
+    public static final String PREFIX_RELOAD_SERIES = "reloadSeries_";
+    public static final String PREFIX_SEARCH = "search_";
     private ArrayList<LoaderRunnable> runnables;
 
     public ContentLoader() {
@@ -110,7 +110,7 @@ public class ContentLoader {
      *
      * @param prefix the prefix of the thread names to stop
      */
-    private void stopThreads(String prefix) {
+    public void stopThreads(String prefix) {
         ArrayList<LoaderRunnable> matching = runnables.stream().filter(
                 runnable -> runnable.getName().startsWith(prefix)
         ).collect(Collectors.toCollection(ArrayList::new));

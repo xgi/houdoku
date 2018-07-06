@@ -60,7 +60,7 @@ public class LoadPageRunnable extends LoaderRunnable {
         }
 
         // ensure that our chapter is still the active one in the reader
-        if (chapter == readerController.getChapter()) {
+        if (chapter == readerController.getChapter() && running) {
             chapter.images[page] = image;
             if (image != null && chapter.getCurrentPageNum() == page) {
                 readerController.imageView.setImage(image);
@@ -71,7 +71,7 @@ public class LoadPageRunnable extends LoaderRunnable {
             }
 
             // preload any additional images
-            if (!preloading) {
+            if (!preloading && running) {
                 chapter.preloadImages(contentLoader, contentSource, readerController, page + 1);
             }
         }

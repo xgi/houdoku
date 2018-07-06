@@ -2,6 +2,7 @@ package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -161,10 +162,16 @@ public class ReaderController extends Controller {
      */
     @Override
     public void onMadeInactive() {
+        // stop active page loads
+        sceneManager.getContentLoader().stopThreads(ContentLoader.PREFIX_LOAD_PAGE);
+
         sceneManager.getStage().getScene().removeEventHandler(KeyEvent.ANY, keyEventHandler);
         imageProgressIndicator.setVisible(false);
         errorText.getParent().setVisible(false);
         errorText.getParent().setManaged(false);
+
+        totalPagesField.setText("??");
+        chapter.clearImages();
     }
 
     /**
@@ -419,9 +426,6 @@ public class ReaderController extends Controller {
      */
     @FXML
     public void goToSeries() {
-        chapter.specificPage(1);
-        loadCurrentPage();
-        chapter.clearImages();
         sceneManager.changeToRoot(SeriesController.ID);
     }
 
