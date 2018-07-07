@@ -69,7 +69,7 @@ public class ParseHelpers {
      * @return the int which is represented by the given text
      */
     public static int parseInt(String text) {
-        text = text.split("\\s+")[0];
+        text = text.split("\\s+|,+|-+")[0];
         int result = 0;
         if (!text.equals("")) {
             try {
@@ -90,7 +90,7 @@ public class ParseHelpers {
      * @return the double which is represented by the given text
      */
     public static double parseDouble(String text) {
-        text = text.split("\\s+")[0];
+        text = text.split("\\s+|,+|-+")[0];
         return text.length() > 0 ? Double.parseDouble(text) : 0;
     }
 
