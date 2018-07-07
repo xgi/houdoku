@@ -1,0 +1,32 @@
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+#navContainer {
+    -fx-background-color: #ddd;
+}
+
+.inverted {
+    -fx-fill: #ABB2BF;
+    -fx-background-color: #282C34;
+}
+
+.coverImage {
+    -fx-border-color: black;
+}
+
+.coverLabel {
+    -fx-text-fill: white;
+}
+
+#searchBackButton {
+    -fx-background-color: transparent;
+}
+
+#searchBackButton:hover {
+    -fx-background-color: dimgray;
+}
+
+#searchBackButton:pressed {
+    -fx-background-color: darkgray;
+}

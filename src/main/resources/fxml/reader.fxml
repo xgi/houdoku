@@ -8,7 +8,7 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
-      stylesheets="/style/default.css"
+      stylesheets="/style/main.css,/style/light.css"
       alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar" minHeight="30">
         <Menu text="File">
@@ -82,7 +82,7 @@
     </HBox>
 
     <StackPane>
-        <ScrollPane fx:id="imageScrollPane" styleClass="edge-to-edge">
+        <ScrollPane fx:id="imageScrollPane" styleClass="edge-to-edge,night">
             <ImageView fx:id="imageView" preserveRatio="true"/>
         </ScrollPane>
         <ProgressIndicator fx:id="imageProgressIndicator" visible="false"/>

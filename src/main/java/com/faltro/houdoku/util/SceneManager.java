@@ -19,7 +19,7 @@ import java.util.HashMap;
  * @see ContentLoader
  */
 public class SceneManager {
-    // changes to this MUST also be changed in default.css
+    // changes to this MUST also be changed in main.css
     public static final int VSCROLLBAR_WIDTH = 20;
 
     private Stage stage;

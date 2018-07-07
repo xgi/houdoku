@@ -15,14 +15,9 @@
     -fx-font-size: 15;
 }
 
-.scroll-pane {
-    -fx-background-color: transparent;
-}
-
 #navContainer {
     -fx-min-height: 50;
     -fx-pref-height: 50;
-    -fx-background-color: #ddd;
 }
 
 #actionContainer {
@@ -66,11 +61,6 @@
     -fx-font-weight: bold;
 }
 
-.inverted {
-    -fx-fill: #ABB2BF;
-    -fx-background-color: #282C34;
-}
-
 .metadataTextFlow {
     -fx-max-width: 600px;
 }
@@ -93,24 +83,10 @@
 
 .coverImage {
     -fx-border-width: 1px;
-    -fx-border-color: black;
 }
 
 .coverLabel {
-    -fx-text-fill: white;
     -fx-effect: dropshadow(one-pass-box, black, 9, 0, 2, 1);
     -fx-font-weight: bold;
     -fx-font-size: 1.2em;
-}
-
-#searchBackButton {
-    -fx-background-color: transparent;
-}
-
-#searchBackButton:hover {
-    -fx-background-color: dimgray;
-}
-
-#searchBackButton:pressed {
-    -fx-background-color: darkgray;
 }
