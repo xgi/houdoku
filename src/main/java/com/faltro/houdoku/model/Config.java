@@ -6,9 +6,5 @@ package com.faltro.houdoku.model;
 public class Config {
     private static final boolean DEFAULT_DARK_MODE_ENABLED = false;
 
-    private boolean dark_mode_enabled = DEFAULT_DARK_MODE_ENABLED;
-
-    public Config() {
-
-    }
+    public boolean dark_mode_enabled = DEFAULT_DARK_MODE_ENABLED;
 }

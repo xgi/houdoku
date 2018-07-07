@@ -1,5 +1,6 @@
 package com.faltro.houdoku.data;
 
+import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.OutputHelpers;
@@ -34,6 +35,11 @@ public class Data {
      */
     private static Path PATH_LIBRARY = Paths.get(
             USER_DATA_DIR + File.separator + "library.json.gzip");
+    /**
+     * The Path for storing config data.
+     */
+    private static Path PATH_CONFIG = Paths.get(
+            USER_DATA_DIR + File.separator + "config.json.gzip");
     /**
      * The Path for storing series cover images.
      */
@@ -74,22 +80,57 @@ public class Data {
      * @see Serializer#deserializeLibrary(String)
      */
     public static Library loadLibrary() {
+        Library result = null;
         if (Files.exists(PATH_LIBRARY)) {
             try {
                 String data = new String(read(PATH_LIBRARY), CHAR_ENCODING);
-                Library library = Serializer.deserializeLibrary(data);
+                result = Serializer.deserializeLibrary(data);
 
                 // load cover images
-                for (Series series : library.getSerieses()) {
+                for (Series series : result.getSerieses()) {
                     series.setCover(loadImage(findCoverPath(series)));
                 }
-
-                return library;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return null;
+        return result;
+    }
+
+    /**
+     * Save the given Config to the filesystem.
+     *
+     * @param config the config to save
+     * @see #loadConfig()
+     * @see Serializer#serializeConfig(Config)
+     */
+    public static void saveConfig(Config config) {
+        String serialized = Serializer.serializeConfig(config);
+        try {
+            write(serialized.getBytes(CHAR_ENCODING), PATH_CONFIG);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Load a saved Config from the filesystem.
+     *
+     * @return the saved config, or null if it is not available
+     * @see #saveConfig(Config)
+     * @see Serializer#deserializeConfig(String)
+     */
+    public static Config loadConfig() {
+        Config result = null;
+        if (Files.exists(PATH_CONFIG)) {
+            try {
+                String data = new String(read(PATH_CONFIG), CHAR_ENCODING);
+                result = Serializer.deserializeConfig(data);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     /**

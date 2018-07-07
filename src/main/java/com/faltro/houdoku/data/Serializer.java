@@ -1,9 +1,6 @@
 package com.faltro.houdoku.data;
 
-import com.faltro.houdoku.model.Category;
-import com.faltro.houdoku.model.Chapter;
-import com.faltro.houdoku.model.Library;
-import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.model.*;
 import com.google.gson.*;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -19,7 +16,7 @@ public class Serializer {
      * @param library the Library to serialize
      * @return a string contains the JSON representation of the library
      */
-    public static String serializeLibrary(Library library) {
+    static String serializeLibrary(Library library) {
         JsonObject json_root = new JsonObject();
 
         JsonArray json_serieses = new JsonArray();
@@ -40,7 +37,7 @@ public class Serializer {
      * @param data a string representing the JSON data to deserialize.
      * @return a Library based on the given data
      */
-    public static Library deserializeLibrary(String data) {
+    static Library deserializeLibrary(String data) {
         JsonObject json_root = new JsonParser().parse(data).getAsJsonObject();
 
         JsonElement json_serieses = json_root.get("library");
@@ -62,6 +59,28 @@ public class Serializer {
         Category root_category = parseCategories(json_categories.getAsJsonObject());
 
         return new Library(serieses, root_category);
+    }
+
+    /**
+     * Serializes a Config object into JSON data.
+     *
+     * @param config the Config to serialize
+     * @return a string contains the JSON representation of the config
+     */
+    static String serializeConfig(Config config) {
+        JsonElement json = gson.toJsonTree(config);
+        return json.toString();
+    }
+
+    /**
+     * Deserializes JSON data into a Config object.
+     *
+     * @param data a string representing the JSON data to deserialize.
+     * @return a Config based on the given data
+     */
+    static Config deserializeConfig(String data) {
+        JsonElement json = new JsonParser().parse(data).getAsJsonObject();
+        return gson.fromJson(json, Config.class);
     }
 
     /**
