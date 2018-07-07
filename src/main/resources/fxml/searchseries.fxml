@@ -4,6 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -42,11 +44,18 @@
         </Menu>
     </MenuBar>
 
-    <HBox>
+    <HBox styleClass="inverted" alignment="CENTER_LEFT" spacing="20">
         <padding>
             <Insets top="10" left="10" bottom="10"/>
         </padding>
-        <Button fx:id="toLibraryButton" text="◂ Back to library" onAction="#goToLibrary"/>
+        <Button fx:id="searchBackButton" onAction="#goToLibrary">
+            <graphic>
+                <ImageView>
+                    <Image url="/img/icon_back.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
+        <Text styleClass="inverted,h1" text="Add series' to your library"/>
     </HBox>
 
     <HBox fx:id="searchBar" alignment="CENTER" spacing="5">

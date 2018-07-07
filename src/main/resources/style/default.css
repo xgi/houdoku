@@ -102,3 +102,15 @@
     -fx-font-weight: bold;
     -fx-font-size: 1.2em;
 }
+
+#searchBackButton {
+    -fx-background-color: transparent;
+}
+
+#searchBackButton:hover {
+    -fx-background-color: dimgray;
+}
+
+#searchBackButton:pressed {
+    -fx-background-color: darkgray;
+}
