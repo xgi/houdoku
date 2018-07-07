@@ -55,7 +55,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Text styleClass="inverted,h1" text="Add series' to your library"/>
+        <Text styleClass="inverted,h1" text="Add series to your library"/>
     </HBox>
 
     <HBox fx:id="searchBar" alignment="CENTER" spacing="5">
