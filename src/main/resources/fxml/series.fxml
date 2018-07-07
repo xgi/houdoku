@@ -107,6 +107,12 @@
                         <Text styleClass="inverted" fx:id="textNumChapters"/>
                     </TextFlow>
                 </HBox>
+                <HBox spacing="5">
+                    <Text styleClass="inverted,metadataLabel" text="Content source:"/>
+                    <TextFlow styleClass="metadataTextFlow">
+                        <Text styleClass="inverted" fx:id="textContentSource"/>
+                    </TextFlow>
+                </HBox>
             </VBox>
         </HBox>
         <HBox alignment="CENTER">

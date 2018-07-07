@@ -3,7 +3,8 @@
 }
 
 .h1 {
-    -fx-font-size: 2em;
+    -fx-font-size: 2.1em;
+    -fx-font-weight: bold;
 }
 
 .scroll-bar:vertical {

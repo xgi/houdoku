@@ -94,7 +94,7 @@ public class SeriesController extends Controller {
     @FXML
     private Text textNumChapters;
     @FXML
-    private Text textSource;
+    private Text textContentSource;
     @FXML
     private TextArea textAreaDescription;
     @FXML
@@ -276,6 +276,7 @@ public class SeriesController extends Controller {
      */
     @Override
     public void onMadeInactive() {
+        filterTextField.setText("");
     }
 
     /**
@@ -313,6 +314,8 @@ public class SeriesController extends Controller {
         textStatus.setText(series.status);
         textNumChapters.setText(Integer.toString(series.getNumHighestChapter()) + " (" +
                 Integer.toString(series.getNumChapters()) + " releases)");
+        textContentSource.setText(sceneManager.getPluginManager().getSource(
+                series.getContentSourceId()).toString());
         textAreaDescription.setText(series.description);
 
         // hide metadata field rows if the field is unset
