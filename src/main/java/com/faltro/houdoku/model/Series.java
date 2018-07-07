@@ -118,7 +118,7 @@ public class Series {
      */
     public Chapter smartNextChapter(Chapter chapter) {
         ArrayList<Chapter> possible = chapters.stream().filter(
-                c -> c.language.equals(chapter.language)
+                c -> c.language == null || c.language.equals(chapter.language)
         ).collect(Collectors.toCollection(ArrayList::new));
 
         int chapter_index = possible.indexOf(chapter);
@@ -133,7 +133,7 @@ public class Series {
      */
     public Chapter smartPreviousChapter(Chapter chapter) {
         ArrayList<Chapter> possible = chapters.stream().filter(
-                c -> c.language.equals(chapter.language)
+                c -> c.language == null || c.language.equals(chapter.language)
         ).collect(Collectors.toCollection(ArrayList::new));
 
         int chapter_index = possible.indexOf(chapter);
