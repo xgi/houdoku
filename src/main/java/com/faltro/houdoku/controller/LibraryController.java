@@ -507,19 +507,11 @@ public class LibraryController extends Controller {
             Label name_label = new Label("Enter the name of the new category:");
             name_label.setWrapText(true);
             TextField name_field = new TextField();
-            Label color_label = new Label("Category color:");
-            ColorPicker color_picker = new ColorPicker();
-            color_picker.setValue(Color.BLACK);
-            HBox color_container = new HBox();
-            color_container.setSpacing(15.0);
-            color_container.setAlignment(Pos.CENTER);
-            color_container.getChildren().addAll(color_label, color_picker);
 
             // add content to alert container
             VBox alert_container = new VBox();
             alert_container.setSpacing(10.0);
-            alert_container.getChildren().addAll(invalid_label, name_label, name_field,
-                    color_container);
+            alert_container.getChildren().addAll(invalid_label, name_label, name_field);
 
             // add validation to "OK" button to prevent alert from closing with
             // invalid data
@@ -540,7 +532,7 @@ public class LibraryController extends Controller {
 
             if (alert.getResult() == ButtonType.OK) {
                 // we have already validated that the category can be created
-                Category new_category = new Category(name_field.getText(), color_picker.getValue());
+                Category new_category = new Category(name_field.getText());
                 category.addSubcategory(new_category);
 
                 // add the new category to the tree
@@ -580,19 +572,11 @@ public class LibraryController extends Controller {
         name_label.setWrapText(true);
         TextField name_field = new TextField();
         name_field.setText(category.getName());
-        Label color_label = new Label("Category color:");
-        ColorPicker color_picker = new ColorPicker();
-        color_picker.setValue(category.getColor());
-        HBox color_container = new HBox();
-        color_container.setSpacing(15.0);
-        color_container.setAlignment(Pos.CENTER);
-        color_container.getChildren().addAll(color_label, color_picker);
 
         // add content to alert container
         VBox alert_container = new VBox();
         alert_container.setSpacing(10.0);
-        alert_container.getChildren().addAll(invalid_label, name_label, name_field,
-                color_container);
+        alert_container.getChildren().addAll(invalid_label, name_label, name_field);
 
         // add validation to "OK" button to prevent alert from closing with
         // invalid data
@@ -619,7 +603,6 @@ public class LibraryController extends Controller {
         if (alert.getResult() == ButtonType.OK) {
             // we have already validated the new name
             category.setName(name_field.getText());
-            category.setColor(color_picker.getValue());
 
             // update/refresh the tree
             updateContent();

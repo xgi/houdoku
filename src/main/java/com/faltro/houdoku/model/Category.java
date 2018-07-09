@@ -7,20 +7,12 @@ import java.util.ArrayList;
 
 public class Category {
     private String name;
-    private Color color;
     private ArrayList<Category> subcategories;
     private transient int occurrences;
 
     public Category(String name) {
         this.name = name;
-        this.color = Color.BLACK;
         this.occurrences = 0;
-        this.subcategories = new ArrayList<>();
-    }
-
-    public Category(String name, Color color) {
-        this(name);
-        this.color = color;
         this.subcategories = new ArrayList<>();
     }
 
@@ -61,14 +53,6 @@ public class Category {
         this.name = name;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
     public ArrayList<Category> getSubcategories() {
         return subcategories;
     }
@@ -87,8 +71,6 @@ public class Category {
 
     public Text asText() {
         Text text = new Text(toString());
-        //text.getStyleClass().add("categoryText");
-        text.setFill(color);
         return text;
     }
 
