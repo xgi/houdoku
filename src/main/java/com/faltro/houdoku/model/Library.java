@@ -72,7 +72,7 @@ public class Library {
         return serieses.stream().filter(series ->
                 series.getTitle().toLowerCase().equals(title.toLowerCase()) ||
                         Arrays.stream(series.altNames).anyMatch(name ->
-                            name.toLowerCase().equals(title.toLowerCase())
+                                name.toLowerCase().equals(title.toLowerCase())
                         )
         ).findFirst().orElse(null);
     }

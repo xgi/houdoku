@@ -1,12 +1,10 @@
 package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.model.Series;
-import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -45,6 +43,8 @@ public class SearchSeriesController extends Controller {
     private static final double FLOW_RESULTS_ROWS = 5;
     public ObservableList<HashMap<String, Object>> results;
     @FXML
+    public ProgressIndicator searchProgressIndicator;
+    @FXML
     private FlowPane flowPane;
     @FXML
     private TableView<HashMap<String, Object>> tableView;
@@ -68,9 +68,6 @@ public class SearchSeriesController extends Controller {
     private TableColumn<HashMap<String, Object>, Image> coverColumn;
     @FXML
     private TableColumn<HashMap<String, Object>, String> titleColumn;
-    @FXML
-    public ProgressIndicator searchProgressIndicator;
-
     private ContextMenu resultContextMenu;
 
     public SearchSeriesController(SceneManager sceneManager) {

@@ -445,11 +445,11 @@ public class SeriesController extends Controller {
         return library;
     }
 
-    public void setSeries(Series series) {
-        this.series = series;
-    }
-
     public void setLibrary(Library library) {
         this.library = library;
+    }
+
+    public void setSeries(Series series) {
+        this.series = series;
     }
 }

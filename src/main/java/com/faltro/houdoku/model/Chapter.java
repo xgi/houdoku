@@ -147,10 +147,6 @@ public class Chapter {
         images = new Image[1];
     }
 
-    public void setSeries(Series series) {
-        this.series = series;
-    }
-
     public int getCurrentPageNum() {
         return currentPageNum;
     }
@@ -161,6 +157,10 @@ public class Chapter {
 
     public Series getSeries() {
         return series;
+    }
+
+    public void setSeries(Series series) {
+        this.series = series;
     }
 
     public String getTitle() {

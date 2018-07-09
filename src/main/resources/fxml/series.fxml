@@ -25,6 +25,7 @@
             <MenuItem text="Paste"/>
         </Menu>
         <Menu text="View">
+            <CheckMenuItem fx:id="nightModeItem" text="Night Mode" onAction="#toggleNightMode"/>
             <CheckMenuItem fx:id="compactItem" text="Compact"/>
             <Menu text="Zoom">
                 <fx:define>

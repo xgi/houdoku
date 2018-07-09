@@ -31,7 +31,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * The controller for the library page, the default view for the client.

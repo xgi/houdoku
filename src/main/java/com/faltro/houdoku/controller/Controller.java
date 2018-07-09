@@ -3,6 +3,7 @@ package com.faltro.houdoku.controller;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -23,12 +24,16 @@ abstract public class Controller {
      * The stage which the controller's view resides on.
      */
     Stage stage;
-
     /**
      * The parent container of the view.
      */
     @FXML
     private VBox container;
+    /**
+     * Toggle for whether night mode is active (optional).
+     */
+    @FXML
+    private CheckMenuItem nightModeItem;
 
     Controller(SceneManager sceneManager) {
         this.sceneManager = sceneManager;
@@ -66,6 +71,18 @@ abstract public class Controller {
     @FXML
     private void exit() {
         Platform.exit();
+    }
+
+    /**
+     * Toggle whether night mode is enabled.
+     */
+    public void toggleNightMode() {
+        boolean night_mode_enabled = sceneManager.toggleTheme();
+        for (Controller controller : sceneManager.getControllers().values()) {
+            if (controller.nightModeItem != null) {
+                controller.nightModeItem.setSelected(night_mode_enabled);
+            }
+        }
     }
 
     /**

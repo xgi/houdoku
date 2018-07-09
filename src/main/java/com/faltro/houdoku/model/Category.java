@@ -1,8 +1,5 @@
 package com.faltro.houdoku.model;
 
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-
 import java.util.ArrayList;
 
 public class Category {

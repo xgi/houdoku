@@ -18,8 +18,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-
 /**
  * The controller for the reader page.
  * <p>
@@ -340,16 +338,12 @@ public class ReaderController extends Controller {
     }
 
     /**
-     * Toggle whether night mode is enabled.
-     * <p>
-     * When night mode is enabled, this method currently only applies a color
-     * filter to the image view. In the future, we may want to also alter the
-     * style of the client as a whole.
-     *
-     * @see #nightModeItem
+     * @see Controller#toggleNightMode()
      */
-    @FXML
-    private void toggleNightMode() {
+    @Override
+    public void toggleNightMode() {
+        super.toggleNightMode();
+
         if (nightModeItem.isSelected()) {
             ColorAdjust nightModeAdjust = new ColorAdjust();
             nightModeAdjust.setHue(0.25);

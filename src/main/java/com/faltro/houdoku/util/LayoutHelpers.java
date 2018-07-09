@@ -22,9 +22,9 @@ public class LayoutHelpers {
      * layouts where covers are shown in a somewhat grid-like fashion.
      *
      * @param container the parent FlowPane container
-     * @param title the title of the series being represented
-     * @param cover the cover of the series being represented; this ImageView is
-     *              not modified, a copy is made to be used in the new container
+     * @param title     the title of the series being represented
+     * @param cover     the cover of the series being represented; this ImageView is
+     *                  not modified, a copy is made to be used in the new container
      * @return a StackPane which displays the provided title and cover and can
      * be added to the FlowPane
      */

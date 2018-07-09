@@ -1,6 +1,7 @@
 package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.controller.Controller;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,9 +20,19 @@ import java.util.HashMap;
  * @see ContentLoader
  */
 public class SceneManager {
-    // changes to this MUST also be changed in main.css
+    /**
+     * The width of all vertical scrollbars. Changes to this must also be
+     * changed in /style/main.css
+     */
     public static final int VSCROLLBAR_WIDTH = 20;
-
+    /**
+     * The stylesheet of colors for the "light" theme.
+     */
+    private static final String STYLESHEET_LIGHT = "/style/light.css";
+    /**
+     * The stylesheet of colors for the "night" theme.
+     */
+    private static final String STYLESHEET_NIGHT = "/style/night.css";
     private Stage stage;
     private Stage popup_stage;
     private HashMap<Integer, Parent> roots;
@@ -115,6 +126,28 @@ public class SceneManager {
         }
     }
 
+    /**
+     * Toggles the color stylesheet for ALL roots between light and night mode.
+     *
+     * @return whether the night theme is enabled
+     */
+    public boolean toggleTheme() {
+        boolean result = false;
+
+        for (Parent root : roots.values()) {
+            ObservableList<String> stylesheets = root.getStylesheets();
+            if (stylesheets.contains(STYLESHEET_LIGHT)) {
+                stylesheets.remove(STYLESHEET_LIGHT);
+                stylesheets.add(STYLESHEET_NIGHT);
+            } else if (stylesheets.contains(STYLESHEET_NIGHT)) {
+                stylesheets.remove(STYLESHEET_NIGHT);
+                stylesheets.add(STYLESHEET_LIGHT);
+            }
+            result = stylesheets.contains(STYLESHEET_NIGHT);
+        }
+        return result;
+    }
+
     public Parent getRoot(int id) {
         return roots.get(id);
     }
@@ -126,6 +159,10 @@ public class SceneManager {
     public Controller getController(int id) {
         Parent root = getRoot(id);
         return controllers.get(root);
+    }
+
+    public HashMap<Parent, Controller> getControllers() {
+        return controllers;
     }
 
     public Stage getStage() {
