@@ -1,32 +1,98 @@
+* {
+    -color-foreground: #565e65;
+    -color-foreground-alt: #444b50;
+    -color-background: #f3f4f5;
+    -color-background-alt: #c2c3c4;
+    -color-accent: darkgray;
+    -color-accent-alt: dimgray;
+}
+
+.bareText {
+    -fx-fill: -color-foreground;
+    -fx-text-fill: -color-foreground;
+}
+
+.h1 {
+    -fx-fill: -color-foreground;
+}
+
 .scroll-pane {
     -fx-background-color: transparent;
 }
 
-#navContainer {
-    -fx-background-color: #ddd;
+#topContainer, #descriptionContainer, #filterBar, #actionBar, #searchBar {
+    -fx-background-color: -color-background;
 }
 
-.inverted {
-    -fx-fill: #ABB2BF;
-    -fx-background-color: #282C34;
+#navContainer, #headerBar {
+    -fx-background-color: -color-background-alt;
 }
 
-.coverImage {
-    -fx-border-color: black;
+#navCenterContainer > * {
+    -fx-fill: -color-foreground;
 }
 
-.coverLabel {
-    -fx-text-fill: white;
+#imageScrollPane, #coversContainer {
+    -fx-background: -color-background;
+}
+
+#treeView .tree-table-row-cell {
+    -fx-background-color: -color-background-alt;
+}
+
+#treeView .tree-table-row-cell:selected {
+    -fx-background-color: -color-foreground-alt;
+}
+
+#treeView .tree-table-row-cell .tree-table-cell > * {
+    -fx-fill: -color-foreground;
+}
+
+#treeView .tree-table-row-cell:selected .tree-table-cell > * {
+    -fx-fill: -color-background-alt;
+}
+
+#tableView .table-row-cell:even {
+    -fx-background-color: -color-background;
+}
+
+#tableView .table-row-cell:even .table-cell > * {
+    -fx-fill: -color-foreground;
+}
+
+#tableView .table-row-cell:odd {
+    -fx-background-color: -color-background-alt;
+}
+
+#tableView .table-row-cell:odd .table-cell > * {
+    -fx-fill: -color-foreground-alt;
+}
+
+#tableView .table-row-cell:selected .table-cell {
+    -fx-background-color: -color-foreground-alt;
+    -fx-border-color: -color-background-alt;
+}
+
+#tableView .table-row-cell:selected .table-cell > * {
+    -fx-fill: -color-background-alt;
+}
+
+#tableView .placeholder {
+    -fx-background-color: -color-background;
+}
+
+.metadataLabel, .metadataTextFlow > * {
+    -fx-fill: -color-foreground;
 }
 
 #searchBackButton {
-    -fx-background-color: transparent;
+    -fx-background-color: -color-accent-alt;
 }
 
 #searchBackButton:hover {
-    -fx-background-color: dimgray;
+    -fx-background-color: -color-foreground-alt;
 }
 
 #searchBackButton:pressed {
-    -fx-background-color: darkgray;
+    -fx-background-color: -color-accent;
 }

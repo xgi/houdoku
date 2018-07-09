@@ -8,7 +8,7 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
-      stylesheets="/style/main.css,/style/night.css"
+      stylesheets="/style/main.css,/style/light.css"
       alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar">
         <Menu text="File">
