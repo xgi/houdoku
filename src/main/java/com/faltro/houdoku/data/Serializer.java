@@ -94,10 +94,7 @@ public class Serializer {
      * @return a category with a complete subcategory tree from the given JSON
      */
     private static Category parseCategories(JsonObject json_categories) {
-        Category category = new Category(
-                json_categories.get("name").getAsString(),
-                parseColor(json_categories.get("color").getAsJsonObject())
-        );
+        Category category = new Category(json_categories.get("name").getAsString());
 
         JsonArray json_subcategories = json_categories.get("subcategories").getAsJsonArray();
         if (json_subcategories.size() > 0) {

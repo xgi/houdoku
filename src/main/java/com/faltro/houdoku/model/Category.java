@@ -69,11 +69,6 @@ public class Category {
         return name + " (" + Integer.toString(occurrences) + ")";
     }
 
-    public Text asText() {
-        Text text = new Text(toString());
-        return text;
-    }
-
     public boolean equals(Category category) {
         return name.toLowerCase().equals(category.name.toLowerCase());
     }

@@ -63,7 +63,7 @@ public class LibraryController extends Controller {
     @FXML
     private TableView<Series> tableView;
     @FXML
-    private TreeTableColumn<Category, Text> categoriesColumn;
+    private TreeTableColumn<Category, String> categoriesColumn;
     @FXML
     private TableColumn<Series, Image> coverColumn;
     @FXML
@@ -223,13 +223,15 @@ public class LibraryController extends Controller {
         // create cell/value factories for the tree which use
         // the category's asText()
         categoriesColumn.setCellFactory(tc -> {
-            TreeTableCell<Category, Text> cell = new TreeTableCell<>();
-            cell.graphicProperty().bind(cell.itemProperty());
+            TreeTableCell<Category, String> cell = new TreeTableCell<>();
+            Text text = new Text();
+            cell.setGraphic(text);
+            text.textProperty().bind(cell.itemProperty());
             cell.setOnMouseClicked(newCategoryClickHandler(categoryContextMenu));
             return cell;
         });
         categoriesColumn.setCellValueFactory(p ->
-                new SimpleObjectProperty<>(p.getValue().getValue().asText())
+                new SimpleStringProperty(p.getValue().getValue().toString())
         );
 
         // Create TreeItem's and set them as children of each other, where
