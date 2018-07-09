@@ -9,7 +9,7 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
-      stylesheets="/style/main.css,/style/light.css"
+      stylesheets="/style/main.css,/style/night.css"
       alignment="TOP_CENTER"
       prefHeight="700" prefWidth="500">
     <MenuBar fx:id="menuBar">
@@ -44,7 +44,7 @@
         </Menu>
     </MenuBar>
 
-    <HBox styleClass="inverted" alignment="CENTER_LEFT" spacing="20">
+    <HBox fx:id="headerBar" alignment="CENTER_LEFT" spacing="20">
         <padding>
             <Insets top="10" left="10" bottom="10"/>
         </padding>
@@ -55,37 +55,39 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Text styleClass="inverted,h1" text="Add series to your library"/>
+        <Text styleClass="h1" text="Add series to your library"/>
     </HBox>
 
-    <HBox fx:id="searchBar" alignment="CENTER" spacing="5">
-        <padding>
-            <Insets top="10" bottom="10" left="15" right="15"/>
-        </padding>
-        <ComboBox fx:id="contentSourcesBox"/>
-        <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" promptText="Search for a series..."
-                   onAction="#search"/>
-        <Button text="Search" onAction="#search"/>
-    </HBox>
+    <VBox fx:id="searchBar">
+        <HBox alignment="CENTER" spacing="5">
+            <padding>
+                <Insets top="10" bottom="10" left="15" right="15"/>
+            </padding>
+            <ComboBox fx:id="contentSourcesBox"/>
+            <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" promptText="Search for a series..."
+                       onAction="#search"/>
+            <Button text="Search" onAction="#search"/>
+        </HBox>
 
-    <HBox alignment="CENTER_RIGHT" spacing="10">
-        <padding>
-            <Insets bottom="5" top="5" right="15"/>
-        </padding>
-        <Text text="Layout: "/>
-        <fx:define>
-            <ToggleGroup fx:id="selectLayoutGroup"/>
-        </fx:define>
-        <RadioButton fx:id="layoutTableButton" text="Table" toggleGroup="$selectLayoutGroup"
-                     onAction="#updateLayout"/>
-        <RadioButton fx:id="layoutCoversButton" text="Covers" toggleGroup="$selectLayoutGroup"
-                     selected="true" onAction="#updateLayout"/>
-    </HBox>
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <padding>
+                <Insets bottom="5" top="5" right="15"/>
+            </padding>
+            <Text text="Layout: " styleClass="bareText"/>
+            <fx:define>
+                <ToggleGroup fx:id="selectLayoutGroup"/>
+            </fx:define>
+            <RadioButton fx:id="layoutTableButton" text="Table" styleClass="bareText"
+                         toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutCoversButton" text="Covers" styleClass="bareText"
+                         toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
+        </HBox>
+    </VBox>
 
-    <StackPane VBox.vgrow="ALWAYS">
+    <StackPane fx:id="resultsContainer" VBox.vgrow="ALWAYS">
         <TableView fx:id="tableView" visible="false" managed="false">
             <placeholder>
-                <Label styleClass="placeholderLabel" text="No series found."/>
+                <Label styleClass="bareText,placeholderLabel" text="No series found."/>
             </placeholder>
             <columns>
                 <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>

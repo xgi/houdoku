@@ -8,7 +8,7 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
-      stylesheets="/style/main.css,/style/light.css"
+      stylesheets="/style/main.css,/style/night.css"
       alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar">
         <Menu text="File">
@@ -44,73 +44,73 @@
     </MenuBar>
 
     <StackPane fx:id="topContainer">
-        <HBox fx:id="infoContainer" styleClass="inverted" spacing="15" alignment="CENTER">
+        <HBox fx:id="infoContainer" spacing="15" alignment="CENTER">
             <padding>
                 <Insets fx:id="infoContainerInsets" top="30" bottom="15" left="15" right="15"/>
             </padding>
             <ImageView fx:id="coverImageView" preserveRatio="true"/>
             <VBox fx:id="metadataContainer" spacing="8" alignment="CENTER">
                 <TextFlow>
-                    <Text fx:id="textTitle" styleClass="inverted,h1"/>
+                    <Text fx:id="textTitle" styleClass="h1"/>
                 </TextFlow>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Alt. names:"/>
+                    <Text styleClass="metadataLabel" text="Alt. names:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textAltNames"/>
+                        <Text fx:id="textAltNames"/>
                     </TextFlow>
                 </HBox>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Author:"/>
+                    <Text styleClass="metadataLabel" text="Author:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textAuthor"/>
+                        <Text fx:id="textAuthor"/>
                     </TextFlow>
                 </HBox>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Artist:"/>
+                    <Text styleClass="metadataLabel" text="Artist:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textArtist"/>
+                        <Text fx:id="textArtist"/>
                     </TextFlow>
                 </HBox>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Rating:"/>
+                    <Text styleClass="metadataLabel" text="Rating:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textRating"/>
+                        <Text fx:id="textRating"/>
                     </TextFlow>
                 </HBox>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Views:"/>
+                    <Text styleClass="metadataLabel" text="Views:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textViews"/>
+                        <Text fx:id="textViews"/>
                     </TextFlow>
                 </HBox>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Follows:"/>
+                    <Text styleClass="metadataLabel" text="Follows:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textFollows"/>
+                        <Text fx:id="textFollows"/>
                     </TextFlow>
                 </HBox>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Genres:"/>
+                    <Text styleClass="metadataLabel" text="Genres:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textGenres"/>
+                        <Text fx:id="textGenres"/>
                     </TextFlow>
                 </HBox>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Status:"/>
+                    <Text styleClass="metadataLabel" text="Status:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textStatus"/>
+                        <Text fx:id="textStatus"/>
                     </TextFlow>
                 </HBox>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Chapters:"/>
+                    <Text styleClass="metadataLabel" text="Chapters:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textNumChapters"/>
+                        <Text fx:id="textNumChapters"/>
                     </TextFlow>
                 </HBox>
                 <HBox spacing="5">
-                    <Text styleClass="inverted,metadataLabel" text="Content source:"/>
+                    <Text styleClass="metadataLabel" text="Content source:"/>
                     <TextFlow styleClass="metadataTextFlow">
-                        <Text styleClass="inverted" fx:id="textContentSource"/>
+                        <Text fx:id="textContentSource"/>
                     </TextFlow>
                 </HBox>
             </VBox>
@@ -126,7 +126,7 @@
         </HBox>
     </StackPane>
 
-    <HBox fx:id="descriptionContainer" styleClass="inverted" spacing="15" alignment="CENTER">
+    <HBox fx:id="descriptionContainer" spacing="15" alignment="CENTER">
         <padding>
             <Insets bottom="15" left="15" right="15"/>
         </padding>
@@ -139,7 +139,7 @@
                 <Insets top="15" bottom="15" left="15" right="15"/>
             </padding>
             <Button fx:id="toggleInfoButton" text="▲" onAction="#toggleInfo"/>
-            <Text text="Filter chapters: "/>
+            <Text text="Filter chapters: " styleClass="bareText"/>
             <TextField fx:id="filterTextField"/>
         </HBox>
         <TableView fx:id="tableView" VBox.vgrow="ALWAYS">

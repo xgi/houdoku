@@ -81,11 +81,8 @@
     -fx-font-size: 1.5em;
 }
 
-.coverImage {
-    -fx-border-width: 1px;
-}
-
 .coverLabel {
+    -fx-text-fill: white;
     -fx-effect: dropshadow(one-pass-box, black, 9, 0, 2, 1);
     -fx-font-weight: bold;
     -fx-font-size: 1.2em;

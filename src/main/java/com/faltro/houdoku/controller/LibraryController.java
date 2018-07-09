@@ -83,8 +83,6 @@ public class LibraryController extends Controller {
     @FXML
     private HBox actionBar;
     @FXML
-    private HBox filterBar;
-    @FXML
     private TextField filterTextField;
     @FXML
     private CheckMenuItem showActionBarItem;

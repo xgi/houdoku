@@ -63,8 +63,6 @@ public class SearchSeriesController extends Controller {
     @FXML
     private HBox searchSeriesHeader;
     @FXML
-    private HBox searchBar;
-    @FXML
     private TextField searchTextField;
     @FXML
     private TableColumn<HashMap<String, Object>, Image> coverColumn;

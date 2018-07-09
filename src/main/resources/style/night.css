@@ -3,6 +3,13 @@
     -color-foreground-alt: #9fa3a7;
     -color-background: #1c2023;
     -color-background-alt: #16191c;
+    -color-accent: darkgray;
+    -color-accent-alt: dimgray;
+}
+
+.bareText {
+    -fx-fill: -color-foreground;
+    -fx-text-fill: -color-foreground;
 }
 
 .h1 {
@@ -13,15 +20,11 @@
     -fx-background-color: transparent;
 }
 
-#topContainer, #descriptionContainer, #filterBar {
+#topContainer, #descriptionContainer, #filterBar, #actionBar, #searchBar {
     -fx-background-color: -color-background;
 }
 
-#filterBar > * {
-    -fx-fill: -color-foreground;
-}
-
-#navContainer {
+#navContainer, #headerBar {
     -fx-background-color: -color-background-alt;
 }
 
@@ -29,11 +32,7 @@
     -fx-fill: -color-foreground;
 }
 
-#imageScrollPane {
-    -fx-background: -color-background;
-}
-
-#coversContainer {
+#imageScrollPane, #coversContainer {
     -fx-background: -color-background;
 }
 
@@ -78,16 +77,12 @@
     -fx-fill: -color-background-alt;
 }
 
+#tableView .placeholder {
+    -fx-background-color: -color-background;
+}
+
 .metadataLabel, .metadataTextFlow > * {
     -fx-fill: -color-foreground;
-}
-
-.coverImage {
-    -fx-border-color: black;
-}
-
-.coverLabel {
-    -fx-text-fill: white;
 }
 
 #searchBackButton {
@@ -95,9 +90,9 @@
 }
 
 #searchBackButton:hover {
-    -fx-background-color: dimgray;
+    -fx-background-color: -color-accent-alt;
 }
 
 #searchBackButton:pressed {
-    -fx-background-color: darkgray;
+    -fx-background-color: -color-accent;
 }

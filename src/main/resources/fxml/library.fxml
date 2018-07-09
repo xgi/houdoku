@@ -8,7 +8,7 @@
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
-      stylesheets="/style/main.css,/style/light.css"
+      stylesheets="/style/main.css,/style/night.css"
       alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar">
         <Menu text="File">
@@ -76,7 +76,7 @@
             <StackPane>
                 <TableView fx:id="tableView" visible="false" managed="false">
                     <placeholder>
-                        <Label styleClass="placeholderLabel" text="No series found."/>
+                        <Label styleClass="bareText,placeholderLabel" text="No series found."/>
                     </placeholder>
                     <columns>
                         <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
@@ -97,9 +97,9 @@
         </HBox>
     </StackPane>
 
-    <HBox>
-        <HBox fx:id="filterBar" alignment="CENTER" HBox.hgrow="ALWAYS">
-            <Label alignment="CENTER" text="Filter series: "/>
+    <HBox fx:id="filterBar">
+        <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+            <Label alignment="CENTER" text="Filter series: " styleClass="bareText"/>
             <TextField fx:id="filterTextField"/>
         </HBox>
 
@@ -107,16 +107,16 @@
             <padding>
                 <Insets bottom="5" top="5" right="15"/>
             </padding>
-            <Text text="Layout: "/>
+            <Text text="Layout: " styleClass="bareText"/>
             <fx:define>
                 <ToggleGroup fx:id="selectLayoutGroup"/>
             </fx:define>
-            <RadioButton fx:id="layoutTableButton" text="Table" toggleGroup="$selectLayoutGroup"
-                         onAction="#updateLayout"/>
-            <RadioButton fx:id="layoutCoversButton" text="Covers" toggleGroup="$selectLayoutGroup"
-                         selected="true" onAction="#updateLayout"/>
-            <RadioButton fx:id="layoutCompactButton" text="Compact" toggleGroup="$selectLayoutGroup"
-                         onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutTableButton" text="Table"  styleClass="bareText"
+                         toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutCoversButton" text="Covers"  styleClass="bareText"
+                         toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutCompactButton" text="Compact"  styleClass="bareText"
+                         toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
         </HBox>
     </HBox>
 </VBox>
