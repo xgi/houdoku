@@ -1,0 +1,103 @@
+* {
+    -color-foreground: #c7ccd1;
+    -color-foreground-alt: #9fa3a7;
+    -color-background: #1c2023;
+    -color-background-alt: #16191c;
+}
+
+.h1 {
+    -fx-fill: -color-foreground;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+#topContainer, #descriptionContainer, #filterBar {
+    -fx-background-color: -color-background;
+}
+
+#filterBar > * {
+    -fx-fill: -color-foreground;
+}
+
+#navContainer {
+    -fx-background-color: -color-background-alt;
+}
+
+#navCenterContainer > * {
+    -fx-fill: -color-foreground;
+}
+
+#imageScrollPane {
+    -fx-background: -color-background;
+}
+
+#coversContainer {
+    -fx-background: -color-background;
+}
+
+#treeView .tree-table-row-cell {
+    -fx-background-color: -color-background-alt;
+}
+
+#treeView .tree-table-row-cell:selected {
+    -fx-background-color: -color-foreground-alt;
+}
+
+#treeView .tree-table-row-cell .tree-table-cell > * {
+    -fx-fill: -color-foreground;
+}
+
+#treeView .tree-table-row-cell:selected .tree-table-cell > * {
+    -fx-fill: -color-background-alt;
+}
+
+#tableView .table-row-cell:even {
+    -fx-background-color: -color-background;
+}
+
+#tableView .table-row-cell:even .table-cell > * {
+    -fx-fill: -color-foreground;
+}
+
+#tableView .table-row-cell:odd {
+    -fx-background-color: -color-background-alt;
+}
+
+#tableView .table-row-cell:odd .table-cell > * {
+    -fx-fill: -color-foreground-alt;
+}
+
+#tableView .table-row-cell:selected .table-cell {
+    -fx-background-color: -color-foreground-alt;
+    -fx-border-color: -color-background-alt;
+}
+
+#tableView .table-row-cell:selected .table-cell > * {
+    -fx-fill: -color-background-alt;
+}
+
+.metadataLabel, .metadataTextFlow > * {
+    -fx-fill: -color-foreground;
+}
+
+.coverImage {
+    -fx-border-color: black;
+}
+
+.coverLabel {
+    -fx-text-fill: white;
+}
+
+#searchBackButton {
+    -fx-background-color: transparent;
+}
+
+#searchBackButton:hover {
+    -fx-background-color: dimgray;
+}
+
+#searchBackButton:pressed {
+    -fx-background-color: darkgray;
+}
