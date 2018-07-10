@@ -2,7 +2,7 @@
     -color-foreground: #565e65;
     -color-foreground-alt: #444b50;
     -color-background: #f3f4f5;
-    -color-background-alt: #c2c3c4;
+    -color-background-alt: #e5e7e9;
     -color-accent: darkgray;
     -color-accent-alt: dimgray;
 }
@@ -40,6 +40,10 @@
     -fx-background: -color-background;
 }
 
+#filterBar {
+    -fx-background-color: -color-background;
+}
+
 #treeView .tree-table-row-cell {
     -fx-background-color: -color-background-alt;
 }
@@ -56,20 +60,16 @@
     -fx-fill: -color-background-alt;
 }
 
+#tableView .table-row-cell .table-cell > * {
+    -fx-fill: -color-foreground;
+}
+
 #tableView .table-row-cell:even {
     -fx-background-color: -color-background;
 }
 
-#tableView .table-row-cell:even .table-cell > * {
-    -fx-fill: -color-foreground;
-}
-
 #tableView .table-row-cell:odd {
     -fx-background-color: -color-background-alt;
-}
-
-#tableView .table-row-cell:odd .table-cell > * {
-    -fx-fill: -color-foreground-alt;
 }
 
 #tableView .table-row-cell:selected .table-cell {

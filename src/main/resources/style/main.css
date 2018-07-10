@@ -41,7 +41,7 @@
     -fx-font-size: 18px;
 }
 
-#layoutBar {
+#layoutBar, #filterBar {
     -fx-font-size: 16px;
     -fx-min-height: 50px;
 }

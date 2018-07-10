@@ -2,7 +2,7 @@
     -color-foreground: #c7ccd1;
     -color-foreground-alt: #9fa3a7;
     -color-background: #1c2023;
-    -color-background-alt: #16191c;
+    -color-background-alt: #111315;
     -color-accent: darkgray;
     -color-accent-alt: dimgray;
 }
@@ -38,6 +38,10 @@
 
 #imageScrollPane, #coversContainer {
     -fx-background: -color-background;
+}
+
+#filterBar {
+    -fx-background-color: -color-background;
 }
 
 #treeView .tree-table-row-cell {
