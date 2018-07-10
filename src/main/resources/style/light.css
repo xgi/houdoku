@@ -20,7 +20,11 @@
     -fx-background-color: transparent;
 }
 
-#topContainer, #descriptionContainer, #filterBar, #actionBar, #searchBar {
+.text-field {
+    -fx-border-color: -color-foreground;
+}
+
+#topContainer, #descriptionContainer, #layoutBar, #actionBar, #searchBar {
     -fx-background-color: -color-background;
 }
 

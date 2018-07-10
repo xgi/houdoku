@@ -15,6 +15,11 @@
     -fx-font-size: 15;
 }
 
+.text-field {
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-insets: 0;
+}
+
 #navContainer {
     -fx-min-height: 50;
     -fx-pref-height: 50;
@@ -36,8 +41,8 @@
     -fx-font-size: 18px;
 }
 
-#filterBar {
-    -fx-font-size: 18px;
+#layoutBar {
+    -fx-font-size: 16px;
     -fx-min-height: 50px;
 }
 

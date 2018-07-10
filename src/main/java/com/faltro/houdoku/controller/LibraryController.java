@@ -44,7 +44,7 @@ public class LibraryController extends Controller {
     /**
      * The initial position of the divider between the tree and table.
      */
-    private static final float DEFAULT_CONTENT_DIVIDER_POS = 0.3f;
+    private static final float DEFAULT_CONTENT_DIVIDER_POS = 0.2f;
     private static final double COL_COVER_WIDTH = 0.1;
     private static final double COL_TITLE_WIDTH = 0.7;
     private static final double COL_NUMCHAPTERS_WIDTH = 0.2;

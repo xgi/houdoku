@@ -38,6 +38,9 @@
     </MenuBar>
 
     <HBox fx:id="actionBar" alignment="CENTER_LEFT" spacing="10" prefHeight="50">
+        <padding>
+            <Insets bottom="5" top="5" left="15" right="15"/>
+        </padding>
         <Button text="Add Series" prefHeight="${actionContainer.prefHeight}"
                 onAction="#goToSearchSeries">
             <graphic>
@@ -62,6 +65,11 @@
                 </ImageView>
             </graphic>
         </Button>
+        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="15">
+            <Separator orientation="VERTICAL"/>
+            <TextField fx:id="filterTextField" prefWidth="240"
+                       promptText="Filter library by title or author"/>
+        </HBox>
     </HBox>
 
     <StackPane VBox.vgrow="ALWAYS">
@@ -98,26 +106,19 @@
         </HBox>
     </StackPane>
 
-    <HBox fx:id="filterBar">
-        <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
-            <Label alignment="CENTER" text="Filter series: " styleClass="bareText"/>
-            <TextField fx:id="filterTextField"/>
-        </HBox>
-
-        <HBox alignment="CENTER_RIGHT" spacing="10">
-            <padding>
-                <Insets bottom="5" top="5" right="15"/>
-            </padding>
-            <Text text="Layout: " styleClass="bareText"/>
-            <fx:define>
-                <ToggleGroup fx:id="selectLayoutGroup"/>
-            </fx:define>
-            <RadioButton fx:id="layoutTableButton" text="Table"  styleClass="bareText"
-                         toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
-            <RadioButton fx:id="layoutCoversButton" text="Covers"  styleClass="bareText"
-                         toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
-            <RadioButton fx:id="layoutCompactButton" text="Compact"  styleClass="bareText"
-                         toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
-        </HBox>
+    <HBox fx:id="layoutBar" alignment="CENTER_RIGHT" spacing="10">
+        <padding>
+            <Insets bottom="5" top="5" right="15"/>
+        </padding>
+        <Text text="Layout: " styleClass="bareText"/>
+        <fx:define>
+            <ToggleGroup fx:id="selectLayoutGroup"/>
+        </fx:define>
+        <RadioButton fx:id="layoutTableButton" text="Table" styleClass="bareText"
+                     toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
+        <RadioButton fx:id="layoutCoversButton" text="Covers" styleClass="bareText"
+                     toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
+        <RadioButton fx:id="layoutCompactButton" text="Compact" styleClass="bareText"
+                     toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
     </HBox>
 </VBox>
