@@ -97,6 +97,9 @@
         </TableView>
         <ScrollPane fx:id="coversContainer" fitToWidth="true">
             <StackPane alignment="TOP_CENTER">
+                <padding>
+                    <Insets bottom="10" top="10" left="10" right="10"/>
+                </padding>
                 <FlowPane fx:id="flowPane" hgap="10" vgap="10"/>
             </StackPane>
         </ScrollPane>
