@@ -86,6 +86,13 @@ abstract public class Controller {
     }
 
     /**
+     * Show the config stage/window.
+     */
+    public void showConfigStage() {
+        sceneManager.showConfigStage();
+    }
+
+    /**
      * Set the stage that the controller's view resides on.
      *
      * @param stage the new stage

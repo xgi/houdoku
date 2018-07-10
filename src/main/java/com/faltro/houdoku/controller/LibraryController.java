@@ -114,7 +114,6 @@ public class LibraryController extends Controller {
         // manually resizing columns (by user) is disabled in the fxml
         categoriesColumn.prefWidthProperty().bind(
                 treeView.widthProperty()
-                        .subtract(3) // to account for border between tables
         );
         coverColumn.prefWidthProperty().bind(
                 tableView.widthProperty()

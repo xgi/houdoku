@@ -1,5 +1,6 @@
 package com.faltro.houdoku.util;
 
+import com.faltro.houdoku.controller.ConfigController;
 import com.faltro.houdoku.controller.Controller;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +35,7 @@ public class SceneManager {
      */
     private static final String STYLESHEET_NIGHT = "/style/night.css";
     private Stage stage;
-    private Stage popup_stage;
+    private Stage stage_config;
     private HashMap<Integer, Parent> roots;
     private HashMap<Parent, Controller> controllers;
     private PluginManager pluginManager;
@@ -50,7 +51,7 @@ public class SceneManager {
      */
     public SceneManager(Stage stage) {
         this.stage = stage;
-        this.popup_stage = new Stage();
+        this.stage_config = new Stage();
         this.roots = new HashMap<>();
         this.controllers = new HashMap<>();
         this.pluginManager = new PluginManager();
@@ -92,18 +93,15 @@ public class SceneManager {
     }
 
     /**
-     * Show the popup stage, which is on a separate window, with the root with
-     * the given id.
-     *
-     * @param id the id of the root to show
+     * Show the config stage, which is on a separate window.
      */
-    public void changeToPopupStage(int id) {
-        Parent root = roots.get(id);
-        changeStageRoot(popup_stage, root);
-        popup_stage.getScene().getWindow().sizeToScene();
-        popup_stage.setTitle(stage.getTitle());
-        getController(root).setStage(popup_stage);
-        popup_stage.show();
+    public void showConfigStage() {
+        Parent root = roots.get(ConfigController.ID);
+        changeStageRoot(stage_config, root);
+        stage_config.getScene().getWindow().sizeToScene();
+        stage_config.setTitle(stage.getTitle());
+        getController(root).setStage(stage_config);
+        stage_config.show();
     }
 
     /**

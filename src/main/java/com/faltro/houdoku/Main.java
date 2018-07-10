@@ -1,9 +1,6 @@
 package com.faltro.houdoku;
 
-import com.faltro.houdoku.controller.LibraryController;
-import com.faltro.houdoku.controller.ReaderController;
-import com.faltro.houdoku.controller.SearchSeriesController;
-import com.faltro.houdoku.controller.SeriesController;
+import com.faltro.houdoku.controller.*;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Application;
 import javafx.stage.Screen;
@@ -27,7 +24,8 @@ public class Main extends Application {
         LibraryController library_controller = new LibraryController(scene_manager);
         SeriesController series_controller = new SeriesController(scene_manager);
         ReaderController reader_controller = new ReaderController(scene_manager);
-        SearchSeriesController add_series_controller = new SearchSeriesController(scene_manager);
+        SearchSeriesController search_series_controller = new SearchSeriesController(scene_manager);
+        ConfigController config_controller = new ConfigController(scene_manager);
 
         scene_manager.initRoot(LibraryController.ID, library_controller,
                 getClass().getResource("/fxml/library.fxml"));
@@ -35,8 +33,10 @@ public class Main extends Application {
                 getClass().getResource("/fxml/series.fxml"));
         scene_manager.initRoot(ReaderController.ID, reader_controller,
                 getClass().getResource("/fxml/reader.fxml"));
-        scene_manager.initRoot(SearchSeriesController.ID, add_series_controller,
+        scene_manager.initRoot(SearchSeriesController.ID, search_series_controller,
                 getClass().getResource("/fxml/searchseries.fxml"));
+        scene_manager.initRoot(ConfigController.ID, config_controller,
+                getClass().getResource("/fxml/config.fxml"));
 
         double screen_width = Screen.getPrimary().getBounds().getWidth();
         double screen_height = Screen.getPrimary().getBounds().getHeight();
