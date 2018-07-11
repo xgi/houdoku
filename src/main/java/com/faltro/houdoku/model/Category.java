@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 public class Category {
     private String name;
+    private transient Category parent;
     private ArrayList<Category> subcategories;
     private transient int occurrences;
 
-    public Category(String name) {
+    public Category(String name, Category parent) {
         this.name = name;
+        this.parent = parent;
         this.occurrences = 0;
         this.subcategories = new ArrayList<>();
     }
@@ -42,12 +44,26 @@ public class Category {
         return result;
     }
 
+    /**
+     * Remove the given category from the subcategories of this.
+     *
+     * @param category the category to remove, which should be a direct
+     *                 subcategory of this
+     */
+    public void removeSubcategory(Category category) {
+        subcategories.remove(category);
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Category getParent() {
+        return parent;
     }
 
     public ArrayList<Category> getSubcategories() {

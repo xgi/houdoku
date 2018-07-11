@@ -56,7 +56,7 @@ public class Serializer {
         }
 
         JsonElement json_categories = json_root.get("categories");
-        Category root_category = parseCategories(json_categories.getAsJsonObject());
+        Category root_category = parseCategories(json_categories.getAsJsonObject(), null);
 
         return new Library(serieses, root_category);
     }
@@ -91,15 +91,17 @@ public class Serializer {
      * is an array of other categories.
      *
      * @param json_categories a JsonObject matching the details described above
+     * @param parent          the parent category of the root of json_categories, or null
      * @return a category with a complete subcategory tree from the given JSON
      */
-    private static Category parseCategories(JsonObject json_categories) {
-        Category category = new Category(json_categories.get("name").getAsString());
+    private static Category parseCategories(JsonObject json_categories, Category parent) {
+        Category category = new Category(json_categories.get("name").getAsString(), parent);
 
         JsonArray json_subcategories = json_categories.get("subcategories").getAsJsonArray();
         if (json_subcategories.size() > 0) {
             for (JsonElement json_subcategory : json_subcategories) {
-                category.addSubcategory(parseCategories(json_subcategory.getAsJsonObject()));
+                category.addSubcategory(
+                        parseCategories(json_subcategory.getAsJsonObject(), category));
             }
         }
 

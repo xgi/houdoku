@@ -11,7 +11,7 @@ public class Library {
 
     public Library() {
         this.serieses = new ArrayList<>();
-        this.rootCategory = new Category("All Series");
+        this.rootCategory = new Category("All Series", null);
     }
 
     public Library(ArrayList<Series> serieses, Category rootCategory) {

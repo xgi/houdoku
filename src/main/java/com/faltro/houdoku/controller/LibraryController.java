@@ -143,7 +143,8 @@ public class LibraryController extends Controller {
         ContextMenu categoryContextMenu = new ContextMenu();
         categoryContextMenu.getItems().addAll(
                 new MenuItem("Add category"),
-                new MenuItem("Edit category")
+                new MenuItem("Edit category"),
+                new MenuItem("Remove category")
         );
 
         // Create factories for table cells for each column.
@@ -230,30 +231,7 @@ public class LibraryController extends Controller {
                 new SimpleStringProperty(p.getValue().getValue().toString())
         );
 
-        // Create TreeItem's and set them as children of each other, where
-        // appropriate. The maximum height of the tree is 3 (including the
-        // required "All Series" root).
-        treeView.setRoot(null);
-
-        Category rootCategory = library.getRootCategory();
-        TreeItem<Category> rootItem = new TreeItem<>(rootCategory);
-        rootItem.setExpanded(true);
-
-        for (Category c1 : rootCategory.getSubcategories()) {
-            TreeItem<Category> t1 = new TreeItem<>(c1);
-            t1.setExpanded(true);
-            for (Category c2 : c1.getSubcategories()) {
-                TreeItem<Category> t2 = new TreeItem<>(c2);
-                t2.setExpanded(true);
-                t1.getChildren().add(t2);
-            }
-            rootItem.getChildren().add(t1);
-        }
-
-        library.calculateCategoryOccurrences();
-        treeView.setRoot(rootItem);
-        treeView.getSelectionModel().selectFirst();
-
+        // add listeners to update tree/table content when fields are changed
         filterTextField.textProperty().addListener(
                 (observable, oldValue, newValue) ->
                         updateContent()
@@ -263,6 +241,7 @@ public class LibraryController extends Controller {
                         updateContent()
         );
 
+        recreateTreeView();
         updateContent();
     }
 
@@ -308,12 +287,7 @@ public class LibraryController extends Controller {
         setCombinedPredicate(filtered_data);
         SortedList<Series> sorted_data = new SortedList<>(filtered_data);
         sorted_data.comparatorProperty().bind(tableView.comparatorProperty());
-
         tableView.setItems(sorted_data);
-
-        // recalculate category occurrences for display in the treeView
-        library.calculateCategoryOccurrences();
-        treeView.refresh();
 
         // update gridPane when FX app thread is available
         Platform.runLater(() -> {
@@ -352,6 +326,34 @@ public class LibraryController extends Controller {
     }
 
     /**
+     * Recreate the content of the categories treeView.
+     */
+    private void recreateTreeView() {
+        // recalculate category occurrences for display in the treeView
+        library.calculateCategoryOccurrences();
+
+        // Create TreeItem's and set them as children of each other, where
+        // appropriate. The maximum height of the tree is 3 (including the
+        // required "All Series" root).
+        treeView.setRoot(null);
+        Category root_category = library.getRootCategory();
+        TreeItem<Category> root_item = new TreeItem<>(root_category);
+        root_item.setExpanded(true);
+        for (Category c1 : root_category.getSubcategories()) {
+            TreeItem<Category> t1 = new TreeItem<>(c1);
+            t1.setExpanded(true);
+            for (Category c2 : c1.getSubcategories()) {
+                TreeItem<Category> t2 = new TreeItem<>(c2);
+                t2.setExpanded(true);
+                t1.getChildren().add(t2);
+            }
+            root_item.getChildren().add(t1);
+        }
+        treeView.setRoot(root_item);
+        treeView.getSelectionModel().selectFirst();
+    }
+
+    /**
      * Set the predicate of the series table's FilteredList.
      * <p>
      * This method filters the given list based on the contents of the
@@ -367,19 +369,22 @@ public class LibraryController extends Controller {
             // check that the series title, author, or artist contains the
             // text filter
             String filter = filterTextField.getText().toLowerCase();
-            boolean titleMatches = series.getTitle().toLowerCase().contains(filter);
-            boolean creatorMatches = series.author.toLowerCase().contains(filter) ||
+            boolean title_matches = series.getTitle().toLowerCase().contains(filter);
+            boolean creator_matches = series.author.toLowerCase().contains(filter) ||
                     series.artist.toLowerCase().contains(filter);
 
             // check that the series has the selected category
-            TreeItem<Category> selectedTreeCell = treeView.getSelectionModel().getSelectedItem();
-            Category category = selectedTreeCell.getValue();
-            boolean categoryMatches = series.getStringCategories().stream().anyMatch(
-                    stringCategory -> stringCategory.equals(category.getName()) ||
-                            category.recursiveFindSubcategory(stringCategory) != null
-            ) || category.equals(library.getRootCategory());
+            boolean category_matches = false;
+            if (treeView.getSelectionModel().getSelectedItem() != null) {
+                TreeItem<Category> selectedTreeCell = treeView.getSelectionModel().getSelectedItem();
+                Category category = selectedTreeCell.getValue();
+                category_matches = series.getStringCategories().stream().anyMatch(
+                        stringCategory -> stringCategory.equals(category.getName()) ||
+                                category.recursiveFindSubcategory(stringCategory) != null
+                ) || category.equals(library.getRootCategory());
+            }
 
-            return (titleMatches || creatorMatches) && categoryMatches;
+            return (title_matches || creator_matches) && category_matches;
         });
     }
 
@@ -452,6 +457,7 @@ public class LibraryController extends Controller {
                 Category category = treeView.getSelectionModel().getSelectedItem().getValue();
                 contextMenu.getItems().get(0).setOnAction(e -> promptAddCategory(category));
                 contextMenu.getItems().get(1).setOnAction(e -> promptEditCategory(category));
+                contextMenu.getItems().get(2).setOnAction(e -> promptRemoveCategory(category));
                 contextMenu.show(treeView, mouseEvent.getScreenX(), mouseEvent.getScreenY());
             }
         };
@@ -530,14 +536,11 @@ public class LibraryController extends Controller {
 
             if (alert.getResult() == ButtonType.OK) {
                 // we have already validated that the category can be created
-                Category new_category = new Category(name_field.getText());
+                Category new_category = new Category(name_field.getText(), category);
                 category.addSubcategory(new_category);
 
                 // add the new category to the tree
-                TreeItem<Category> tree_item = new TreeItem<>(new_category);
-                getTreeItemByCategory(category).getChildren().add(tree_item);
-                updateContent();
-
+                recreateTreeView();
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION,
@@ -550,14 +553,22 @@ public class LibraryController extends Controller {
     /**
      * Prompts the user to edit the given category.
      * <p>
-     * The dialog prompt allows the user to alter both the color and text of the
-     * category. The dialog is identical to that from promptAddCategory, but we
+     * The dialog is identical to that from promptAddCategory, but we
      * will keep them separate in case we want them to have somewhat different
      * functionality in the future.
      *
      * @param category the category to edit
      */
     private void promptEditCategory(Category category) {
+        // disallow this action on the root category
+        if (category.getParent() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    "The selected category cannot be edited.", ButtonType.OK);
+            alert.setTitle(stage.getTitle());
+            alert.showAndWait();
+            return;
+        }
+
         Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK,
                 ButtonType.CANCEL);
 
@@ -603,8 +614,39 @@ public class LibraryController extends Controller {
             category.setName(name_field.getText());
 
             // update/refresh the tree
-            updateContent();
+            recreateTreeView();
+        }
+    }
 
+    /**
+     * Prompts the user to remove the given category.
+     *
+     * @param category the category to remove
+     */
+    private void promptRemoveCategory(Category category) {
+        // disallow this action on the root category
+        if (category.getParent() == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR,
+                    "The selected category cannot be removed.", ButtonType.OK);
+            alert.setTitle(stage.getTitle());
+            alert.showAndWait();
+            return;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES,
+                ButtonType.NO, ButtonType.CANCEL);
+        Label label = new Label("Remove the \"" + category.getName() + "\" category?");
+        label.setWrapText(true);
+        alert.getDialogPane().setContent(label);
+        alert.setTitle(stage.getTitle());
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            Category parent = category.getParent();
+            if (parent != null) {
+                parent.removeSubcategory(category);
+                recreateTreeView();
+            }
         }
     }
 
