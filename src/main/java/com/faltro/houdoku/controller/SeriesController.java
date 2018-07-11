@@ -409,7 +409,7 @@ public class SeriesController extends Controller {
         descriptionContainer.setManaged(descriptionContainer.isVisible());
 
         // set toggle button to the appropriate symbol
-        toggleInfoButton.setText(topContainer.isVisible() ? "▲" : "▼");
+        toggleInfoButton.setText(topContainer.isVisible() ? "Expand table ▲" : "Minimize table ▼");
     }
 
     /**

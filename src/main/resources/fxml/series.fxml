@@ -139,9 +139,10 @@
             <padding>
                 <Insets top="15" bottom="15" left="15" right="15"/>
             </padding>
-            <Button fx:id="toggleInfoButton" text="▲" onAction="#toggleInfo"/>
             <Text text="Filter chapters: " styleClass="bareText"/>
-            <TextField fx:id="filterTextField"/>
+            <TextField fx:id="filterTextField" prefWidth="280"
+                       promptText="Filter title, language, group..."/>
+            <Button fx:id="toggleInfoButton" text="Expand table ▲" onAction="#toggleInfo"/>
         </HBox>
         <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
             <placeholder>

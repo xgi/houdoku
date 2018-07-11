@@ -28,7 +28,15 @@
     -fx-background-color: -color-background;
 }
 
-#navContainer, #headerBar {
+#headerBar {
+    -fx-background-color: -color-foreground;
+}
+
+#headerBar .h1 {
+    -fx-fill: -color-background;
+}
+
+#navContainer {
     -fx-background-color: -color-background-alt;
 }
 
@@ -90,11 +98,11 @@
 }
 
 #searchBackButton {
-    -fx-background-color: -color-accent-alt;
+    -fx-background-color: -color-foreground-alt;
 }
 
 #searchBackButton:hover {
-    -fx-background-color: -color-foreground-alt;
+    -fx-background-color: -color-accent-alt;
 }
 
 #searchBackButton:pressed {

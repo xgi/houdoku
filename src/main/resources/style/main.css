@@ -42,8 +42,13 @@
 }
 
 #layoutBar, #filterBar {
-    -fx-font-size: 16px;
+    -fx-font-size: 1.1em;
     -fx-min-height: 50px;
+}
+
+#filterTextField {
+    -fx-min-width: 300;
+    -fx-font-size: 1.15em;
 }
 
 .tableCell {
