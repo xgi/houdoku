@@ -1,6 +1,7 @@
 package com.faltro.houdoku.model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Category {
     private String name;
@@ -67,6 +68,11 @@ public class Category {
     }
 
     public ArrayList<Category> getSubcategories() {
+        subcategories.sort((a, b) -> {
+            String name_a = a.getName();
+            String name_b = b.getName();
+            return name_a.compareTo(name_b);
+        });
         return subcategories;
     }
 
