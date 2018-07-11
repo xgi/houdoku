@@ -11,7 +11,7 @@ public class LoaderRunnable implements Runnable {
      * A generic Runnable that is run by ContentLoader.
      *
      * @param contentLoader the ContentLoader which created this instance
-     * @param name the name of the thread
+     * @param name          the name of the thread
      */
     LoaderRunnable(ContentLoader contentLoader, String name) {
         this.contentLoader = contentLoader;
@@ -26,7 +26,7 @@ public class LoaderRunnable implements Runnable {
 
     /**
      * Safely stop the runnable.
-     *
+     * <p>
      * The {@link #run()} method must make use of the {@link #running} parameter
      * for this method to be useful. If it doesn't, the runnable might not be
      * meaningful enough to stop, anyway.
