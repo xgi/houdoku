@@ -102,7 +102,7 @@ public class MangaHere extends GenericContentSource {
 
         Element detailContainer = seriesDocument.selectFirst("div[class=manga_detail]");
         String imageSource = detailContainer.selectFirst("img").attr("src");
-        Image cover = imageFromURL(imageSource);
+        Image cover = imageFromURL(imageSource, ParseHelpers.COVER_MAX_WIDTH);
         double rating = ParseHelpers.parseDouble(detailContainer.selectFirst("span#current_rating")
                 .text());
         String ratingsExtended = detailContainer.selectFirst("span[class=ml5]").text();
@@ -138,7 +138,7 @@ public class MangaHere extends GenericContentSource {
         Image result = null;
         Element coverElement = seriesDocument.selectFirst("img[class=img]");
         if (coverElement != null) {
-            result = imageFromURL(coverElement.attr("src"));
+            result = imageFromURL(coverElement.attr("src"), ParseHelpers.COVER_MAX_WIDTH);
         }
         return result;
     }

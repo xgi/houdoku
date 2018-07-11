@@ -146,7 +146,8 @@ public class MangaDex extends GenericContentSource {
         String language = titlePanel.selectFirst("img").attr("title");
 
         String imageSource = seriesDocument.selectFirst("img[title='Manga image']").attr("src");
-        Image cover = imageFromURL(PROTOCOL + "://" + DOMAIN + imageSource);
+        Image cover = imageFromURL(PROTOCOL + "://" + DOMAIN + imageSource,
+                ParseHelpers.COVER_MAX_WIDTH);
 
         Element tbody = seriesDocument.selectFirst("tbody");
         Element rowAltNames = ParseHelpers.tdWithHeader(tbody, "Alt name(s):");

@@ -39,6 +39,18 @@ public interface ContentSource {
     Image imageFromURL(String url) throws IOException;
 
     /**
+     * Retrieves an Image from the given URL with a strict width.
+     * <p>
+     * The aspect ratio of the original image is maintained.
+     *
+     * @param url   the URL for an image file
+     * @param width the width of the retrieved image
+     * @return an Image retrieved from the given url
+     * @throws IOException an IOException occurred when loading the image
+     */
+    Image imageFromURL(String url, int width) throws IOException;
+
+    /**
      * Searches the source using a provided query.
      * <p>
      * This method does NOT load Series objects, since the amount of series

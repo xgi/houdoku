@@ -36,6 +36,12 @@ public class GenericContentSource implements ContentSource {
     }
 
     @Override
+    public Image imageFromURL(String url, int width) throws IOException {
+        Response response = GET(url);
+        return new Image(response.body().byteStream(), width, 0, true, false);
+    }
+
+    @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException,
             NotImplementedException {
         throw new NotImplementedException();

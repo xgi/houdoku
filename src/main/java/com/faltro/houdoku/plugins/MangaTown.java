@@ -121,7 +121,7 @@ public class MangaTown extends GenericContentSource {
         String title = seriesDocument.selectFirst("h1[class=title-top]").text();
         Element container = seriesDocument.selectFirst("div[class=detail_content]");
         String imageSource = container.selectFirst("img").attr("src");
-        Image cover = imageFromURL(imageSource);
+        Image cover = imageFromURL(imageSource, ParseHelpers.COVER_MAX_WIDTH);
 
         Elements rows = container.selectFirst("ul").select("li");
         double rating = ParseHelpers.parseDouble(rows.get(0).selectFirst("span").text());

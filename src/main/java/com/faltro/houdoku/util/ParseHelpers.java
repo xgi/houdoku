@@ -11,6 +11,12 @@ import java.time.format.DateTimeFormatter;
 
 public class ParseHelpers {
     /**
+     * The maximum width of covers retrieved from content sources. Cover images
+     * should be enforced to this limit after being downloaded.
+     */
+    public static final int COVER_MAX_WIDTH = 320;
+
+    /**
      * Creates an array of strings using the sub-elements of the given element.
      *
      * @param list    the container (parent) element, such as a ul

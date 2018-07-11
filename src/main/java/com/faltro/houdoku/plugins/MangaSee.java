@@ -104,7 +104,7 @@ public class MangaSee extends GenericContentSource {
         Element container = seriesDocument.selectFirst("div[class*=mainWell]");
         String title = container.selectFirst("h1[class=SeriesName]").text();
         String imageSource = container.selectFirst("img").attr("src");
-        Image cover = imageFromURL(imageSource);
+        Image cover = imageFromURL(imageSource, ParseHelpers.COVER_MAX_WIDTH);
 
         Element details = container.selectFirst("span[class*=details]");
 
