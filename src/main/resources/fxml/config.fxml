@@ -2,25 +2,21 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.control.TreeTableColumn?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.ListView?>
 <VBox xmlns:fx="http://javafx.com/fxml"
-               xmlns="http://javafx.com/javafx"
-               fx:id="container"
-               stylesheets="/style/main.css,/style/light.css"
-               alignment="TOP_CENTER">
+      xmlns="http://javafx.com/javafx"
+      fx:id="container"
+      stylesheets="/style/main.css,/style/light.css"
+      alignment="TOP_CENTER">
     <padding>
         <Insets bottom="15" top="15" left="15" right="15"/>
     </padding>
     <SplitPane fx:id="configSplitPane" VBox.vgrow="ALWAYS">
-        <TreeTableView fx:id="treeView">
-            <columns>
-                <TreeTableColumn fx:id="topicsColumn" prefWidth="${treeView.width}"
-                                 resizable="false" text="Topics"/>
-            </columns>
-        </TreeTableView>
+        <ListView fx:id="listView" />
         <VBox fx:id="configContentContainer">
             <VBox spacing="15" userData="Night Mode">
                 <HBox styleClass="topicHeaderBar">

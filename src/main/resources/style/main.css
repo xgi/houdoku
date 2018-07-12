@@ -98,11 +98,11 @@
     -fx-font-size: 1.2em;
 }
 
-#configSplitPane #treeView .tree-table-row-cell {
+#listView {
     -fx-font-size: 1.4em;
 }
 
-#configSplitPane #treeView .tree-table-row-cell .tree-table-cell {
+#listView .list-cell .listItem {
     -fx-padding: 10 0 10 6;
 }
 
