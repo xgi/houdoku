@@ -1,7 +1,6 @@
 package com.faltro.houdoku.model;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class Category {
     private String name;

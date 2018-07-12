@@ -21,7 +21,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -55,8 +54,6 @@ public class SearchSeriesController extends Controller {
     private RadioButton layoutTableButton;
     @FXML
     private RadioButton layoutCoversButton;
-    @FXML
-    private VBox searchSeriesContainer;
     @FXML
     private MenuBar menuBar;
     @FXML

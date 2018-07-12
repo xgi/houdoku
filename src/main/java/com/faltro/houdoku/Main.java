@@ -3,16 +3,9 @@ package com.faltro.houdoku;
 import com.faltro.houdoku.controller.*;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Application;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    private static final double DEFAULT_WIDTH = 0.50;
-    private static final double DEFAULT_HEIGHT = 0.70;
-    private static final double MIN_DEFAULT_WIDTH = 1024;
-    private static final double MIN_DEFAULT_HEIGHT = 768;
-
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -38,13 +31,7 @@ public class Main extends Application {
         scene_manager.initRoot(ConfigController.ID, config_controller,
                 getClass().getResource("/fxml/config.fxml"));
 
-        double screen_width = Screen.getPrimary().getBounds().getWidth();
-        double screen_height = Screen.getPrimary().getBounds().getHeight();
-        primary_stage.setWidth(screen_width * DEFAULT_WIDTH >= MIN_DEFAULT_WIDTH ?
-                (int) (screen_width * DEFAULT_WIDTH) : MIN_DEFAULT_WIDTH);
-        primary_stage.setHeight(screen_height * DEFAULT_HEIGHT >= MIN_DEFAULT_HEIGHT ?
-                (int) (screen_height * DEFAULT_HEIGHT) : MIN_DEFAULT_HEIGHT);
-
+        scene_manager.sizeStage(primary_stage);
         scene_manager.changeToRoot(LibraryController.ID);
 
         primary_stage.setTitle("Houdoku");

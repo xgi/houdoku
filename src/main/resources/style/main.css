@@ -97,3 +97,20 @@
     -fx-font-weight: bold;
     -fx-font-size: 1.2em;
 }
+
+#configSplitPane #treeView .tree-table-row-cell {
+    -fx-font-size: 1.4em;
+}
+
+#configSplitPane #treeView .tree-table-row-cell .tree-table-cell {
+    -fx-padding: 10 0 10 6;
+}
+
+#configContentContainer {
+    -fx-font-size: 1.2em;
+}
+
+.topicHeaderBar {
+    -fx-font-weight: bold;
+    -fx-padding: 5 0 5 5;
+}

@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -34,6 +35,31 @@ public class SceneManager {
      * The stylesheet of colors for the "night" theme.
      */
     private static final String STYLESHEET_NIGHT = "/style/night.css";
+    /**
+     * The default width of the window as a fraction of the screen width.
+     */
+    private static final double DEFAULT_WIDTH = 0.50;
+    /**
+     * The default height of the window as a fraction of the screen height.
+     */
+    private static final double DEFAULT_HEIGHT = 0.70;
+    /**
+     * The minimum default width of the window.
+     */
+    private static final double MIN_DEFAULT_WIDTH = 1024;
+    /**
+     * The minimum default height of the window.
+     */
+    private static final double MIN_DEFAULT_HEIGHT = 768;
+    /**
+     * The multiplier of the default width for the config window.
+     */
+    private static final double DEFAULT_CONFIG_WIDTH_MULTIPLIER = 0.70;
+    /**
+     * The multiplier of the default height for the config window.
+     */
+    private static final double DEFAULT_CONFIG_HEIGHT_MULTIPLIER = 0.85;
+
     private Stage stage;
     private Stage stage_config;
     private HashMap<Integer, Parent> roots;
@@ -98,10 +124,10 @@ public class SceneManager {
     public void showConfigStage() {
         Parent root = roots.get(ConfigController.ID);
         changeStageRoot(stage_config, root);
-        stage_config.getScene().getWindow().sizeToScene();
         stage_config.setTitle(stage.getTitle());
         getController(root).setStage(stage_config);
         stage_config.show();
+        sizeStage(stage_config, DEFAULT_CONFIG_WIDTH_MULTIPLIER, DEFAULT_CONFIG_HEIGHT_MULTIPLIER);
     }
 
     /**
@@ -144,6 +170,41 @@ public class SceneManager {
             result = stylesheets.contains(STYLESHEET_NIGHT);
         }
         return result;
+    }
+
+    /**
+     * Set the size of a stage to the exact default variables.
+     *
+     * @param stg the stage to size
+     * @see #DEFAULT_WIDTH
+     * @see #DEFAULT_HEIGHT
+     * @see #MIN_DEFAULT_WIDTH
+     * @see #MIN_DEFAULT_HEIGHT
+     */
+    public void sizeStage(Stage stg) {
+        sizeStage(stg, 1, 1);
+    }
+
+    /**
+     * Set the size of a stage to the default variables times a multiplier.
+     *
+     * @param stg               the stage to size
+     * @param width_multiplier  the width multiplier of the default values
+     * @param height_multiplier the height multiplier of the default values
+     * @see #DEFAULT_WIDTH
+     * @see #DEFAULT_HEIGHT
+     * @see #MIN_DEFAULT_WIDTH
+     * @see #MIN_DEFAULT_HEIGHT
+     */
+    private void sizeStage(Stage stg, double width_multiplier, double height_multiplier) {
+        double screen_width = Screen.getPrimary().getBounds().getWidth();
+        double screen_height = Screen.getPrimary().getBounds().getHeight();
+        double desired_width = screen_width * DEFAULT_WIDTH >= MIN_DEFAULT_WIDTH ?
+                (int) (screen_width * DEFAULT_WIDTH) : MIN_DEFAULT_WIDTH;
+        double desired_height = screen_height * DEFAULT_HEIGHT >= MIN_DEFAULT_HEIGHT ?
+                (int) (screen_height * DEFAULT_HEIGHT) : MIN_DEFAULT_HEIGHT;
+        stg.setWidth(desired_width * width_multiplier);
+        stg.setHeight(desired_height * height_multiplier);
     }
 
     public Parent getRoot(int id) {

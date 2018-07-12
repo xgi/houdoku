@@ -24,6 +24,10 @@
     -fx-border-color: -color-accent;
 }
 
+#container {
+    -fx-background-color: -color-background;
+}
+
 #topContainer, #descriptionContainer, #layoutBar, #actionBar, #searchBar {
     -fx-background-color: -color-background;
 }
@@ -103,4 +107,20 @@
 
 #searchBackButton:pressed {
     -fx-background-color: -color-accent;
+}
+
+#configSplitPane {
+    -fx-border-color: -color-foreground;
+}
+
+#configContentContainer {
+    -fx-background-color: -color-background;
+}
+
+.topicHeaderBar {
+    -fx-background-color: -color-foreground-alt;
+}
+
+.topicHeaderBar > * {
+    -fx-fill: -color-background-alt;
 }

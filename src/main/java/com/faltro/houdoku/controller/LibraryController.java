@@ -112,9 +112,6 @@ public class LibraryController extends Controller {
 
         // bind column widths to a percentage of the table width
         // manually resizing columns (by user) is disabled in the fxml
-        categoriesColumn.prefWidthProperty().bind(
-                treeView.widthProperty()
-        );
         coverColumn.prefWidthProperty().bind(
                 tableView.widthProperty()
                         .multiply(COL_COVER_WIDTH)
@@ -217,8 +214,7 @@ public class LibraryController extends Controller {
                 Integer.toString(p.getValue().getNumHighestChapter())
         ));
 
-        // create cell/value factories for the tree which use
-        // the category's asText()
+        // create cell/value factories for the tree
         categoriesColumn.setCellFactory(tc -> {
             TreeTableCell<Category, String> cell = new TreeTableCell<>();
             Text text = new Text();

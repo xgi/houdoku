@@ -1,9 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.control.TreeTableColumn?>
 <VBox xmlns:fx="http://javafx.com/fxml"
-      xmlns="http://javafx.com/javafx"
-      fx:id="container"
-      stylesheets="/style/main.css,/style/light.css"
-      alignment="TOP_CENTER">
+               xmlns="http://javafx.com/javafx"
+               fx:id="container"
+               stylesheets="/style/main.css,/style/light.css"
+               alignment="TOP_CENTER">
+    <padding>
+        <Insets bottom="15" top="15" left="15" right="15"/>
+    </padding>
+    <SplitPane fx:id="configSplitPane" VBox.vgrow="ALWAYS">
+        <TreeTableView fx:id="treeView">
+            <columns>
+                <TreeTableColumn fx:id="topicsColumn" prefWidth="${treeView.width}"
+                                 resizable="false" text="Topics"/>
+            </columns>
+        </TreeTableView>
+        <VBox fx:id="configContentContainer">
+            <VBox spacing="15" userData="Night Mode">
+                <HBox styleClass="topicHeaderBar">
+                    <Text text="Night Mode"/>
+                </HBox>
+                <Text text="night mode content"/>
+            </VBox>
+            <VBox spacing="15" userData="Plugins" visible="false" managed="false">
+                <HBox styleClass="topicHeaderBar">
+                    <Text text="Plugins"/>
+                </HBox>
+                <Text text="plugins content"/>
+            </VBox>
+        </VBox>
+    </SplitPane>
+    <HBox>
+
+    </HBox>
 </VBox>

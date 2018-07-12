@@ -79,7 +79,8 @@
                     <Label styleClass="placeholderLabel" text="No series found."/>
                 </placeholder>
                 <columns>
-                    <TreeTableColumn fx:id="categoriesColumn" resizable="false" text="Categories"/>
+                    <TreeTableColumn fx:id="categoriesColumn" prefWidth="${treeView.width}"
+                                     resizable="false" text="Categories"/>
                 </columns>
             </TreeTableView>
             <StackPane>
