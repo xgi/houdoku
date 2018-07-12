@@ -35,7 +35,7 @@
             <Insets top="15"/>
         </padding>
         <HBox alignment="CENTER_LEFT">
-            <Hyperlink text="Restore defaults"/>
+            <Hyperlink text="Restore defaults" onAction="#promptRestoreDefaults"/>
         </HBox>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="10">
             <Button text="OK"/>

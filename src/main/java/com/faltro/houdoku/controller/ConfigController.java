@@ -2,14 +2,12 @@ package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.model.Config;
-import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -48,8 +46,6 @@ public class ConfigController extends Controller {
 
         Config loaded_config = Data.loadConfig();
         this.config = loaded_config == null ? new Config() : loaded_config;
-
-        config.restoreDefaults();
     }
 
     /**
@@ -117,5 +113,29 @@ public class ConfigController extends Controller {
     private void hideWindow() {
         onMadeInactive();
         stage.hide();
+    }
+
+    /**
+     * Prompt the user to restore the default config.
+     */
+    @FXML
+    private void promptRestoreDefaults() {
+        Alert alert = new Alert(Alert.AlertType.WARNING, "", ButtonType.YES,
+                ButtonType.CANCEL);
+
+        Label label = new Label("Are you sure you want to restore the default " +
+                "configuration?\nThis will erase your current settings.");
+        label.setWrapText(true);
+
+        VBox alert_container = new VBox();
+        alert_container.getChildren().add(label);
+
+        alert.getDialogPane().setContent(alert_container);
+        alert.setTitle(stage.getTitle());
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.YES) {
+            config.restoreDefaults();
+        }
     }
 }
