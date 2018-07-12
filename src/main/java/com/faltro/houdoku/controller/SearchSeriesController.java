@@ -1,6 +1,7 @@
 package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.SceneManager;
@@ -170,6 +171,10 @@ public class SearchSeriesController extends Controller {
         tableView.setItems(FXCollections.emptyObservableList());
         tableView.refresh();
         flowPane.getChildren().clear();
+
+        // stop potentially running search thread, which may be trying to load
+        // a bunch of covers
+        sceneManager.getContentLoader().stopThreads(ContentLoader.PREFIX_SEARCH);
     }
 
     /**
