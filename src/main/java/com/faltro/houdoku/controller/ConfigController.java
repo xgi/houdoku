@@ -1,15 +1,15 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.data.Data;
+import com.faltro.houdoku.model.Config;
+import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.util.SceneManager;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -41,8 +41,15 @@ public class ConfigController extends Controller {
     @FXML
     private VBox configContentContainer;
 
+    private Config config;
+
     public ConfigController(SceneManager sceneManager) {
         super(sceneManager);
+
+        Config loaded_config = Data.loadConfig();
+        this.config = loaded_config == null ? new Config() : loaded_config;
+
+        config.restoreDefaults();
     }
 
     /**
@@ -101,5 +108,14 @@ public class ConfigController extends Controller {
             node.setVisible(matches_clicked);
             node.setManaged(matches_clicked);
         }
+    }
+
+    /**
+     * Hide the window (without saving anything).
+     */
+    @FXML
+    private void hideWindow() {
+        onMadeInactive();
+        stage.hide();
     }
 }

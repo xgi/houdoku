@@ -114,3 +114,15 @@
     -fx-font-weight: bold;
     -fx-padding: 5 0 5 5;
 }
+
+.topicContainer {
+    -fx-padding: 5;
+}
+
+#configControlBar {
+    -fx-font-size: 1.2em;
+}
+
+#configControlBar .button {
+    -fx-min-width: 8em;
+}

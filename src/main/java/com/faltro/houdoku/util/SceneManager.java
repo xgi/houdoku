@@ -2,6 +2,7 @@ package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.controller.ConfigController;
 import com.faltro.houdoku.controller.Controller;
+import com.faltro.houdoku.model.Config;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

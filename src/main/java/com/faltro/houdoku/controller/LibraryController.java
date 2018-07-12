@@ -50,7 +50,6 @@ public class LibraryController extends Controller {
     private static final double COL_NUMCHAPTERS_WIDTH = 0.2;
     @FXML
     public ProgressIndicator reloadProgressIndicator;
-    private Library library;
     @FXML
     private VBox container;
     @FXML
@@ -85,6 +84,8 @@ public class LibraryController extends Controller {
     private TextField filterTextField;
     @FXML
     private CheckMenuItem showActionBarItem;
+
+    private Library library;
 
     public LibraryController(SceneManager sceneManager) {
         super(sceneManager);

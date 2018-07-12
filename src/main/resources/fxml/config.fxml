@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TreeTableColumn?>
-<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.control.ListView?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -16,15 +13,16 @@
         <Insets bottom="15" top="15" left="15" right="15"/>
     </padding>
     <SplitPane fx:id="configSplitPane" VBox.vgrow="ALWAYS">
-        <ListView fx:id="listView" />
+        <ListView fx:id="listView"/>
         <VBox fx:id="configContentContainer">
-            <VBox spacing="15" userData="Night Mode">
+            <VBox styleClass="topicContainer" spacing="15" userData="Night Mode">
                 <HBox styleClass="topicHeaderBar">
                     <Text text="Night Mode"/>
                 </HBox>
                 <Text text="night mode content"/>
             </VBox>
-            <VBox spacing="15" userData="Plugins" visible="false" managed="false">
+            <VBox styleClass="topicContainer" spacing="15" userData="Plugins" visible="false"
+                  managed="false">
                 <HBox styleClass="topicHeaderBar">
                     <Text text="Plugins"/>
                 </HBox>
@@ -32,7 +30,16 @@
             </VBox>
         </VBox>
     </SplitPane>
-    <HBox>
-
+    <HBox fx:id="configControlBar" maxWidth="Infinity">
+        <padding>
+            <Insets top="15"/>
+        </padding>
+        <HBox alignment="CENTER_LEFT">
+            <Hyperlink text="Restore defaults"/>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="10">
+            <Button text="OK"/>
+            <Button text="Cancel" onAction="#hideWindow"/>
+        </HBox>
     </HBox>
 </VBox>
