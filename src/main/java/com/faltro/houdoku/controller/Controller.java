@@ -17,6 +17,11 @@ abstract public class Controller {
      */
     static int ID = -1;
     /**
+     * Toggle for whether night mode is active (optional).
+     */
+    @FXML
+    public CheckMenuItem nightModeItem;
+    /**
      * The client's unique SceneManager.
      */
     SceneManager sceneManager;
@@ -29,11 +34,6 @@ abstract public class Controller {
      */
     @FXML
     private VBox container;
-    /**
-     * Toggle for whether night mode is active (optional).
-     */
-    @FXML
-    private CheckMenuItem nightModeItem;
 
     Controller(SceneManager sceneManager) {
         this.sceneManager = sceneManager;
@@ -77,12 +77,7 @@ abstract public class Controller {
      * Toggle whether night mode is enabled.
      */
     public void toggleNightMode() {
-        boolean night_mode_enabled = sceneManager.toggleTheme();
-        for (Controller controller : sceneManager.getControllers().values()) {
-            if (controller.nightModeItem != null) {
-                controller.nightModeItem.setSelected(night_mode_enabled);
-            }
-        }
+        sceneManager.toggleTheme();
     }
 
     /**

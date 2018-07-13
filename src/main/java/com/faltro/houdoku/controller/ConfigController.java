@@ -1,7 +1,5 @@
 package com.faltro.houdoku.controller;
 
-import com.faltro.houdoku.data.Data;
-import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,13 +37,8 @@ public class ConfigController extends Controller {
     @FXML
     private VBox configContentContainer;
 
-    private Config config;
-
     public ConfigController(SceneManager sceneManager) {
         super(sceneManager);
-
-        Config loaded_config = Data.loadConfig();
-        this.config = loaded_config == null ? new Config() : loaded_config;
     }
 
     /**
@@ -135,7 +128,7 @@ public class ConfigController extends Controller {
         alert.showAndWait();
 
         if (alert.getResult() == ButtonType.YES) {
-            config.restoreDefaults();
+            sceneManager.getConfig().restoreDefaults();
         }
     }
 }

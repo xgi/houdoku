@@ -2,6 +2,8 @@ package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.controller.ConfigController;
 import com.faltro.houdoku.controller.Controller;
+import com.faltro.houdoku.data.Data;
+import com.faltro.houdoku.model.Config;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -66,6 +68,7 @@ public class SceneManager {
     private HashMap<Parent, Controller> controllers;
     private PluginManager pluginManager;
     private ContentLoader contentLoader;
+    private Config config;
 
     /**
      * Create the SceneManager.
@@ -82,6 +85,9 @@ public class SceneManager {
         this.controllers = new HashMap<>();
         this.pluginManager = new PluginManager();
         this.contentLoader = new ContentLoader();
+
+        Config loaded_config = Data.loadConfig();
+        this.config = loaded_config == null ? new Config() : loaded_config;
     }
 
     /**
@@ -104,6 +110,22 @@ public class SceneManager {
         Parent root = loader.load();
         roots.put(id, root);
         controllers.put(root, controller);
+    }
+
+    /**
+     * Prepare the initialized roots with preliminary operations.
+     * <p>
+     * This method should be executed only once: after all roots have been
+     * initialized, and before changeToRoot/changeStageRoot has been called for
+     * the first time.
+     */
+    public void prepare() {
+        sizeStage(stage);
+
+        if ((boolean) config.getField("night_mode_enabled")) {
+            System.out.println("toggling");
+            toggleTheme();
+        }
     }
 
     /**
@@ -152,24 +174,33 @@ public class SceneManager {
 
     /**
      * Toggles the color stylesheet for ALL roots between light and night mode.
-     *
-     * @return whether the night theme is enabled
      */
-    public boolean toggleTheme() {
-        boolean result = false;
+    public void toggleTheme() {
+        boolean pre_night_mode_enabled = false;
 
         for (Parent root : roots.values()) {
             ObservableList<String> stylesheets = root.getStylesheets();
-            if (stylesheets.contains(STYLESHEET_LIGHT)) {
-                stylesheets.remove(STYLESHEET_LIGHT);
-                stylesheets.add(STYLESHEET_NIGHT);
-            } else if (stylesheets.contains(STYLESHEET_NIGHT)) {
+            pre_night_mode_enabled = stylesheets.contains(STYLESHEET_NIGHT);
+
+            // toggle the color stylesheet for the root
+            if (pre_night_mode_enabled) {
                 stylesheets.remove(STYLESHEET_NIGHT);
                 stylesheets.add(STYLESHEET_LIGHT);
+            } else {
+                stylesheets.remove(STYLESHEET_LIGHT);
+                stylesheets.add(STYLESHEET_NIGHT);
             }
-            result = stylesheets.contains(STYLESHEET_NIGHT);
+
+            // toggle the CheckMenuItem
+            Controller controller = controllers.get(root);
+            if (controller.nightModeItem != null) {
+                controller.nightModeItem.setSelected(!pre_night_mode_enabled);
+            }
         }
-        return result;
+
+        // update field in config and save it
+        config.updateField("night_mode_enabled", !pre_night_mode_enabled);
+        saveConfig();
     }
 
     /**
@@ -207,6 +238,13 @@ public class SceneManager {
         stg.setHeight(desired_height * height_multiplier);
     }
 
+    /**
+     * Save the Config to the filesystem.
+     */
+    public void saveConfig() {
+        Data.saveConfig(config);
+    }
+
     public Parent getRoot(int id) {
         return roots.get(id);
     }
@@ -234,5 +272,9 @@ public class SceneManager {
 
     public ContentLoader getContentLoader() {
         return contentLoader;
+    }
+
+    public Config getConfig() {
+        return config;
     }
 }

@@ -31,7 +31,7 @@ public class Main extends Application {
         scene_manager.initRoot(ConfigController.ID, config_controller,
                 getClass().getResource("/fxml/config.fxml"));
 
-        scene_manager.sizeStage(primary_stage);
+        scene_manager.prepare();
         scene_manager.changeToRoot(LibraryController.ID);
 
         primary_stage.setTitle("Houdoku");

@@ -50,4 +50,18 @@ public class Config {
         }
         return successful;
     }
+
+    /**
+     * Get the value of the field with the given name.
+     *
+     * @param name the name of the field to retrieve
+     * @return the value of the requested field, or null
+     */
+    public Object getField(String name) {
+        Object result = null;
+        if (data.containsKey(name)) {
+            result = data.get(name);
+        }
+        return result;
+    }
 }
