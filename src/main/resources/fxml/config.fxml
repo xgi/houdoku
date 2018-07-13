@@ -79,7 +79,7 @@
         </HBox>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="10">
             <Button text="OK"/>
-            <Button text="Cancel" onAction="#hideWindow"/>
+            <Button text="Cancel" onAction="#cancel"/>
         </HBox>
     </HBox>
 </VBox>

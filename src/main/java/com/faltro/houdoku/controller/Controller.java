@@ -66,6 +66,15 @@ abstract public class Controller {
     }
 
     /**
+     * Reload/"restart" the page. Primarily expected to be run after changes
+     * have been made to the @{@link com.faltro.houdoku.model.Config}.
+     */
+    public void reload() {
+        onMadeInactive();
+        onMadeActive();
+    }
+
+    /**
      * Exit the application.
      */
     @FXML

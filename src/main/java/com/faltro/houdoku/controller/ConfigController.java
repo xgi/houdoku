@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -103,6 +104,11 @@ public class ConfigController extends Controller {
      */
     @Override
     public void onMadeInactive() {
+        stage.hide();
+
+        // reload the active page
+        Parent root = sceneManager.getStage().getScene().getRoot();
+        sceneManager.getController(root).reload();
     }
 
     /**
@@ -119,12 +125,11 @@ public class ConfigController extends Controller {
     }
 
     /**
-     * Hide the window (without saving anything).
+     * Cancel making changes to the config (without saving anything).
      */
     @FXML
-    private void hideWindow() {
+    private void cancel() {
         onMadeInactive();
-        stage.hide();
     }
 
     /**

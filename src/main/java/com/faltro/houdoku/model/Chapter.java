@@ -145,6 +145,7 @@ public class Chapter {
      */
     public void clearImages() {
         images = new Image[1];
+        currentPageNum = 0;
     }
 
     public int getCurrentPageNum() {

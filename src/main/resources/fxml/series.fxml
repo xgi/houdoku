@@ -12,7 +12,7 @@
       alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar">
         <Menu text="File">
-            <MenuItem text="New"/>
+            <MenuItem text="New" onAction="#showConfigStage"/>
             <MenuItem text="Open"/>
             <MenuItem text="Save"/>
             <MenuItem text="Save As"/>
