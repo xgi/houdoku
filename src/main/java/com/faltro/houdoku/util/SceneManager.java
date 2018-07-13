@@ -123,7 +123,6 @@ public class SceneManager {
         sizeStage(stage);
 
         if ((boolean) config.getField("night_mode_enabled")) {
-            System.out.println("toggling");
             toggleTheme();
         }
     }

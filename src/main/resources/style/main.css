@@ -119,6 +119,20 @@
     -fx-padding: 5;
 }
 
+.configTabPane .tab-content-area {
+    -fx-padding: 20;
+}
+
+.configTabWell {
+    -fx-padding: 8 0 8 8;
+    -fx-spacing: 8;
+}
+
+.controlSubBox {
+    -fx-padding: 0 0 0 45;
+    -fx-spacing: 8;
+}
+
 #configControlBar {
     -fx-font-size: 1.2em;
 }

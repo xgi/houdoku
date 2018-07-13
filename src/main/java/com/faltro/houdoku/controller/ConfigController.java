@@ -36,6 +36,14 @@ public class ConfigController extends Controller {
     private ListView<HBox> listView;
     @FXML
     private VBox configContentContainer;
+    @FXML
+    private RadioButton effectColorRadio;
+    @FXML
+    private VBox effectColorBox;
+    @FXML
+    private RadioButton effectBrightnessRadio;
+    @FXML
+    private VBox effectBrightnessBox;
 
     public ConfigController(SceneManager sceneManager) {
         super(sceneManager);
@@ -69,6 +77,17 @@ public class ConfigController extends Controller {
         listView.getSelectionModel().selectedItemProperty().addListener(
                 (observableValue, hBox, t1) -> updateContent()
         );
+
+        // Bind the disable property of radio buttons with sub-boxes with the
+        // matching sub-box. We would have liked to do this in the FXML file,
+        // but there appears to be no way to bind with the inverse of a property
+        // in FXML.
+        for (Node node : effectColorBox.getChildren()) {
+            node.disableProperty().bind(effectColorRadio.selectedProperty().not());
+        }
+        for (Node node : effectBrightnessBox.getChildren()) {
+            node.disableProperty().bind(effectBrightnessRadio.selectedProperty().not());
+        }
     }
 
     /**

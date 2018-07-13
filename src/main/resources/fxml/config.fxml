@@ -15,18 +15,58 @@
     <SplitPane fx:id="configSplitPane" VBox.vgrow="ALWAYS">
         <ListView fx:id="listView"/>
         <VBox fx:id="configContentContainer">
-            <VBox styleClass="topicContainer" spacing="15" userData="Night Mode">
+            <VBox styleClass="topicContainer" spacing="15" VBox.vgrow="ALWAYS"
+                  alignment="CENTER_LEFT" userData="Night Mode">
                 <HBox styleClass="topicHeaderBar">
                     <Text text="Night Mode"/>
                 </HBox>
-                <Text text="night mode content"/>
+                <TabPane styleClass="configTabPane" VBox.vgrow="ALWAYS">
+                    <Tab text="Settings">
+                        <VBox VBox.vgrow="ALWAYS" spacing="15">
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="Settings"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <CheckBox text="Night mode enabled" styleClass="bareTextAlt"/>
+                                    <CheckBox text="Only apply effects on reader page"
+                                              styleClass="bareTextAlt"/>
+                                </VBox>
+                            </VBox>
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="Page effects"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <fx:define>
+                                        <ToggleGroup fx:id="pageEffectsGroup"/>
+                                    </fx:define>
+                                    <RadioButton fx:id="effectColorRadio" styleClass="bareTextAlt"
+                                                 text="Color filter" toggleGroup="$pageEffectsGroup"
+                                                 selected="true"/>
+                                    <VBox fx:id="effectColorBox" styleClass="controlSubBox">
+                                        <CheckBox text="something here" styleClass="bareTextAlt"/>
+                                        <CheckBox text="something here" styleClass="bareTextAlt"/>
+                                    </VBox>
+                                    <RadioButton fx:id="effectBrightnessRadio"
+                                                 styleClass="bareTextAlt" text="Brightness filter"
+                                                 toggleGroup="$pageEffectsGroup"/>
+                                    <VBox fx:id="effectBrightnessBox" styleClass="controlSubBox">
+                                        <CheckBox text="something here" styleClass="bareTextAlt"/>
+                                        <CheckBox text="something here" styleClass="bareTextAlt"/>
+                                    </VBox>
+                                    <RadioButton fx:id="effectNoneRadio" styleClass="bareTextAlt"
+                                                 text="No effect" toggleGroup="$pageEffectsGroup"/>
+                                </VBox>
+                            </VBox>
+                        </VBox>
+                    </Tab>
+                    <Tab text="Page effects">
+                        <CheckBox text="hi" styleClass="bareText"/>
+                    </Tab>
+                </TabPane>
             </VBox>
             <VBox styleClass="topicContainer" spacing="15" userData="Plugins" visible="false"
                   managed="false">
                 <HBox styleClass="topicHeaderBar">
                     <Text text="Plugins"/>
                 </HBox>
-                <Text text="plugins content"/>
             </VBox>
         </VBox>
     </SplitPane>

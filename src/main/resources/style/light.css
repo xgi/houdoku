@@ -12,6 +12,11 @@
     -fx-text-fill: -color-foreground;
 }
 
+.bareTextAlt {
+    -fx-fill: -color-foreground-alt;
+    -fx-text-fill: -color-foreground-alt;
+}
+
 .h1 {
     -fx-fill: -color-foreground;
 }
@@ -118,6 +123,14 @@
 }
 
 #configContentContainer {
+    -fx-background-color: -color-background-alt;
+}
+
+.configTabPane, .configTabWell {
+    -fx-border-color: -color-accent;
+}
+
+.configTabWell {
     -fx-background-color: -color-background;
 }
 
