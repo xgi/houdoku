@@ -10,6 +10,7 @@ public class Config {
      * The HashMap of default configuration values.
      */
     private static final HashMap<String, Object> DEFAULTS = new HashMap<>();
+
     static {
         DEFAULTS.put("night_mode_enabled", false);
         DEFAULTS.put("page_filter_type", "color");

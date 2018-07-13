@@ -4,6 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -26,8 +28,10 @@
                             <VBox>
                                 <Text styleClass="bareTextAlt" text="Settings"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
-                                    <CheckBox text="Night mode enabled" styleClass="bareTextAlt"/>
-                                    <CheckBox text="Only apply effects on reader page"
+                                    <CheckBox fx:id="nightModeCheck" text="Night mode enabled"
+                                              styleClass="bareTextAlt" onAction="#toggleNightMode"/>
+                                    <CheckBox fx:id="nightModeReaderCheck"
+                                              text="Only apply effects on reader page"
                                               styleClass="bareTextAlt"/>
                                 </VBox>
                             </VBox>
@@ -41,24 +45,69 @@
                                                  text="Color filter" toggleGroup="$pageEffectsGroup"
                                                  selected="true"/>
                                     <VBox fx:id="effectColorBox" styleClass="controlSubBox">
-                                        <CheckBox text="something here" styleClass="bareTextAlt"/>
-                                        <CheckBox text="something here" styleClass="bareTextAlt"/>
+                                        <HBox spacing="20">
+                                            <VBox alignment="CENTER_RIGHT" spacing="18">
+                                                <Label text="Hue:" styleClass="bareTextAlt"/>
+                                                <Label text="Saturation:" styleClass="bareTextAlt"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
+                                                  maxWidth="300">
+                                                <Slider fx:id="filterHueSlider"
+                                                        majorTickUnit="0.5" max="1.0" min="-1.0"
+                                                        showTickLabels="true" showTickMarks="true"/>
+                                                <Slider fx:id="filterSaturationSlider"
+                                                        majorTickUnit="0.5" max="1.0"
+                                                        showTickLabels="true" showTickMarks="true"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER" spacing="18">
+                                                <Label fx:id="filterHueSliderLabel"
+                                                       styleClass="bareTextAlt"/>
+                                                <Label fx:id="filterSaturationSliderLabel"
+                                                       styleClass="bareTextAlt"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER">
+                                                <HBox style="-fx-border-color: black">
+                                                    <ImageView fx:id="effectColorPreview" fitWidth="50"
+                                                               fitHeight="20">
+                                                        <Image url="/img/white_pixel.png"/>
+                                                    </ImageView>
+                                                </HBox>
+                                            </VBox>
+                                        </HBox>
                                     </VBox>
                                     <RadioButton fx:id="effectBrightnessRadio"
                                                  styleClass="bareTextAlt" text="Brightness filter"
                                                  toggleGroup="$pageEffectsGroup"/>
                                     <VBox fx:id="effectBrightnessBox" styleClass="controlSubBox">
-                                        <CheckBox text="something here" styleClass="bareTextAlt"/>
-                                        <CheckBox text="something here" styleClass="bareTextAlt"/>
+                                        <HBox spacing="20">
+                                            <VBox alignment="CENTER_RIGHT">
+                                                <Label text="Brightness:" styleClass="bareTextAlt"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
+                                                  maxWidth="300">
+                                                <Slider fx:id="filterBrightnessSlider"
+                                                        majorTickUnit="0.5" max="0" min="-1.0"
+                                                        showTickLabels="true" showTickMarks="true"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER">
+                                                <Label fx:id="filterBrightnessSliderLabel"
+                                                       styleClass="bareTextAlt"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER">
+                                                <HBox style="-fx-border-color: black">
+                                                    <ImageView fx:id="effectBrightnessPreview"
+                                                               fitWidth="50" fitHeight="20">
+                                                        <Image url="/img/white_pixel.png"/>
+                                                    </ImageView>
+                                                </HBox>
+                                            </VBox>
+                                        </HBox>
                                     </VBox>
                                     <RadioButton fx:id="effectNoneRadio" styleClass="bareTextAlt"
                                                  text="No effect" toggleGroup="$pageEffectsGroup"/>
                                 </VBox>
                             </VBox>
                         </VBox>
-                    </Tab>
-                    <Tab text="Page effects">
-                        <CheckBox text="hi" styleClass="bareText"/>
                     </Tab>
                 </TabPane>
             </VBox>

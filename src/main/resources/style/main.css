@@ -124,12 +124,12 @@
 }
 
 .configTabWell {
-    -fx-padding: 8 0 8 8;
+    -fx-padding: 8 8 8 8;
     -fx-spacing: 8;
 }
 
 .controlSubBox {
-    -fx-padding: 0 0 0 45;
+    -fx-padding: 0 0 0 30;
     -fx-spacing: 8;
 }
 

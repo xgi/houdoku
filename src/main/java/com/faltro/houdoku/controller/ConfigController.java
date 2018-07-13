@@ -1,5 +1,6 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,6 +8,8 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -38,6 +41,10 @@ public class ConfigController extends Controller {
     @FXML
     private VBox configContentContainer;
     @FXML
+    private CheckBox nightModeCheck;
+    @FXML
+    private CheckBox nightModeReaderCheck;
+    @FXML
     private RadioButton effectColorRadio;
     @FXML
     private VBox effectColorBox;
@@ -45,6 +52,24 @@ public class ConfigController extends Controller {
     private RadioButton effectBrightnessRadio;
     @FXML
     private VBox effectBrightnessBox;
+    @FXML
+    private RadioButton effectNoneRadio;
+    @FXML
+    private Slider filterHueSlider;
+    @FXML
+    private Label filterHueSliderLabel;
+    @FXML
+    private Slider filterSaturationSlider;
+    @FXML
+    private Label filterSaturationSliderLabel;
+    @FXML
+    private Slider filterBrightnessSlider;
+    @FXML
+    private Label filterBrightnessSliderLabel;
+    @FXML
+    private ImageView effectColorPreview;
+    @FXML
+    private ImageView effectBrightnessPreview;
 
     public ConfigController(SceneManager sceneManager) {
         super(sceneManager);
@@ -83,12 +108,38 @@ public class ConfigController extends Controller {
         // matching sub-box. We would have liked to do this in the FXML file,
         // but there appears to be no way to bind with the inverse of a property
         // in FXML.
-        for (Node node : effectColorBox.getChildren()) {
-            node.disableProperty().bind(effectColorRadio.selectedProperty().not());
-        }
-        for (Node node : effectBrightnessBox.getChildren()) {
-            node.disableProperty().bind(effectBrightnessRadio.selectedProperty().not());
-        }
+        effectColorBox.disableProperty().bind(effectColorRadio.selectedProperty().not());
+        effectBrightnessBox.disableProperty().bind(effectBrightnessRadio.selectedProperty().not());
+
+        // add bindings for page color/brightness filter previews
+        filterHueSlider.valueProperty().addListener(
+                (observableValue, oldValue, newValue) -> {
+                    filterHueSliderLabel.setText(String.format("%.2f", newValue.doubleValue()));
+                    ColorAdjust color_adjust = new ColorAdjust();
+                    color_adjust.setHue(newValue.doubleValue());
+                    color_adjust.setSaturation(filterSaturationSlider.getValue());
+                    effectColorPreview.setEffect(color_adjust);
+                }
+        );
+        filterSaturationSlider.valueProperty().addListener(
+                (observableValue, oldValue, newValue) -> {
+                    filterSaturationSliderLabel.setText(
+                            String.format("%.2f", newValue.doubleValue()));
+                    ColorAdjust color_adjust = new ColorAdjust();
+                    color_adjust.setSaturation(newValue.doubleValue());
+                    color_adjust.setHue(filterHueSlider.getValue());
+                    effectColorPreview.setEffect(color_adjust);
+                }
+        );
+        filterBrightnessSlider.valueProperty().addListener(
+                (observableValue, oldValue, newValue) -> {
+                    filterBrightnessSliderLabel.setText(
+                            String.format("%.2f", newValue.doubleValue()));
+                    ColorAdjust color_adjust = new ColorAdjust();
+                    color_adjust.setBrightness(newValue.doubleValue());
+                    effectBrightnessPreview.setEffect(color_adjust);
+                }
+        );
     }
 
     /**
@@ -97,6 +148,16 @@ public class ConfigController extends Controller {
     @Override
     public void onMadeActive() {
         listView.getSelectionModel().selectFirst();
+
+        // update controls with current values
+        Config config = sceneManager.getConfig();
+        nightModeCheck.setSelected((boolean) config.getField("night_mode_enabled"));
+        effectColorRadio.setSelected("color".equals(config.getField("page_filter_type")));
+        effectBrightnessRadio.setSelected("brightness".equals(config.getField("page_filter_type")));
+        effectNoneRadio.setSelected("none".equals(config.getField("page_filter_type")));
+        filterHueSlider.setValue((double) config.getField("page_filter_color_hue"));
+        filterSaturationSlider.setValue((double) config.getField("page_filter_color_saturation"));
+        filterBrightnessSlider.setValue((double) config.getField("page_filter_brightness"));
     }
 
     /**
