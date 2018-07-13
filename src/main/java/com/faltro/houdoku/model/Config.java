@@ -6,10 +6,16 @@ import java.util.HashMap;
  * Stores user-specific config information for the client.
  */
 public class Config {
+    /**
+     * The HashMap of default configuration values.
+     */
     private static final HashMap<String, Object> DEFAULTS = new HashMap<>();
-
     static {
         DEFAULTS.put("night_mode_enabled", false);
+        DEFAULTS.put("page_filter_type", "color");
+        DEFAULTS.put("page_filter_color_hue", 0.25);
+        DEFAULTS.put("page_filter_color_saturation", 0.33);
+        DEFAULTS.put("page_filter_brightness", 0.50);
     }
 
     private HashMap<String, Object> data;

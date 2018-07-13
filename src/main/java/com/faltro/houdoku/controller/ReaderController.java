@@ -1,6 +1,7 @@
 package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.model.Chapter;
+import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
@@ -157,7 +158,7 @@ public class ReaderController extends Controller {
     @Override
     public void onMadeActive() {
         sceneManager.getStage().getScene().addEventHandler(KeyEvent.ANY, keyEventHandler);
-
+        applyImageFilter();
         imageView.requestFocus();
         loadCurrentPage();
     }
@@ -179,6 +180,15 @@ public class ReaderController extends Controller {
 
         totalPagesField.setText("??");
         chapter.clearImages();
+    }
+
+    /**
+     * @see Controller#toggleNightMode()
+     */
+    @Override
+    public void toggleNightMode() {
+        super.toggleNightMode();
+        applyImageFilter();
     }
 
     /**
@@ -338,20 +348,31 @@ public class ReaderController extends Controller {
     }
 
     /**
-     * @see Controller#toggleNightMode()
+     * Apply an image filter as appropriate from the
+     *
+     * @{@link com.faltro.houdoku.model.Config}.
      */
-    @Override
-    public void toggleNightMode() {
-        super.toggleNightMode();
-
-        if (nightModeItem.isSelected()) {
-            ColorAdjust nightModeAdjust = new ColorAdjust();
-            nightModeAdjust.setHue(0.25);
-            nightModeAdjust.setSaturation(0.33);
-            imageView.setEffect(nightModeAdjust);
-        } else {
-            imageView.setEffect(null);
+    private void applyImageFilter() {
+        Config config = sceneManager.getConfig();
+        ColorAdjust filter_adjust = null;
+        if ((boolean) config.getField("night_mode_enabled")) {
+            String filter_type = (String) config.getField("page_filter_type");
+            switch (filter_type) {
+                case "color": {
+                    filter_adjust = new ColorAdjust();
+                    filter_adjust.setHue((double) config.getField("page_filter_color_hue"));
+                    filter_adjust.setSaturation(
+                            (double) config.getField("page_filter_color_saturation"));
+                    break;
+                }
+                case "brightness": {
+                    filter_adjust = new ColorAdjust();
+                    filter_adjust.setBrightness((double) config.getField("page_filter_brightness"));
+                    break;
+                }
+            }
         }
+        imageView.setEffect(filter_adjust);
     }
 
     /**
