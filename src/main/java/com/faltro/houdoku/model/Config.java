@@ -13,6 +13,7 @@ public class Config {
 
     static {
         DEFAULTS.put("night_mode_enabled", false);
+        DEFAULTS.put("night_mode_reader_only", false);
         DEFAULTS.put("page_filter_type", "color");
         DEFAULTS.put("page_filter_color_hue", 0.25);
         DEFAULTS.put("page_filter_color_saturation", 0.33);

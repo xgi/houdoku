@@ -152,6 +152,7 @@ public class ConfigController extends Controller {
         // update controls with current values
         Config config = sceneManager.getConfig();
         nightModeCheck.setSelected((boolean) config.getField("night_mode_enabled"));
+        nightModeReaderCheck.setSelected((boolean) config.getField("night_mode_reader_only"));
         effectColorRadio.setSelected("color".equals(config.getField("page_filter_type")));
         effectBrightnessRadio.setSelected("brightness".equals(config.getField("page_filter_type")));
         effectNoneRadio.setSelected("none".equals(config.getField("page_filter_type")));
@@ -183,6 +184,25 @@ public class ConfigController extends Controller {
             node.setVisible(matches_clicked);
             node.setManaged(matches_clicked);
         }
+    }
+
+    /**
+     * Apply changes to the config using page controls, then close the window.
+     */
+    @FXML
+    private void confirm() {
+        Config config = sceneManager.getConfig();
+        config.updateField("night_mode_enabled", nightModeCheck.isSelected());
+        config.updateField("night_mode_reader_only", nightModeReaderCheck.isSelected());
+        config.updateField("page_filter_type",
+                effectColorRadio.isSelected() ? "color" :
+                        effectBrightnessRadio.isSelected() ? "brightness" : "none");
+        config.updateField("page_filter_color_hue", filterHueSlider.getValue());
+        config.updateField("page_filter_color_saturation", filterSaturationSlider.getValue());
+        config.updateField("page_filter_brightness", filterBrightnessSlider.getValue());
+        sceneManager.saveConfig();
+
+        onMadeInactive();
     }
 
     /**
