@@ -2,10 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -29,10 +29,11 @@
                                 <Text styleClass="bareTextAlt" text="Settings"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <CheckBox fx:id="nightModeCheck" text="Night mode enabled"
-                                              styleClass="bareTextAlt" onAction="#toggleNightMode"/>
+                                              styleClass="bareTextAlt"/>
                                     <CheckBox fx:id="nightModeReaderCheck"
                                               text="Only apply effects on reader page"
-                                              styleClass="bareTextAlt"/>
+                                              styleClass="bareTextAlt"
+                                              disable="${nightModeCheck.selected}"/>
                                 </VBox>
                             </VBox>
                             <VBox>
@@ -67,7 +68,8 @@
                                             </VBox>
                                             <VBox alignment="CENTER">
                                                 <HBox style="-fx-border-color: black">
-                                                    <ImageView fx:id="effectColorPreview" fitWidth="50"
+                                                    <ImageView fx:id="effectColorPreview"
+                                                               fitWidth="50"
                                                                fitHeight="20">
                                                         <Image url="/img/white_pixel.png"/>
                                                     </ImageView>

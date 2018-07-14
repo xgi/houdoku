@@ -15,7 +15,7 @@ abstract public class Controller {
     /**
      * The unique identifier for the Controller.
      */
-    static int ID = -1;
+    public static int ID = -1;
     /**
      * Toggle for whether night mode is active (optional).
      */

@@ -2,6 +2,7 @@ package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.controller.ConfigController;
 import com.faltro.houdoku.controller.Controller;
+import com.faltro.houdoku.controller.ReaderController;
 import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.model.Config;
 import javafx.collections.ObservableList;
@@ -175,19 +176,24 @@ public class SceneManager {
      * Toggles the color stylesheet for ALL roots between light and night mode.
      */
     public void toggleTheme() {
-        boolean pre_night_mode_enabled = false;
+        boolean pre_night_mode_enabled = (boolean) config.getField("night_mode_enabled");
+        boolean reader_only = (boolean) config.getField("night_mode_reader_only");
 
         for (Parent root : roots.values()) {
             ObservableList<String> stylesheets = root.getStylesheets();
-            pre_night_mode_enabled = stylesheets.contains(STYLESHEET_NIGHT);
 
-            // toggle the color stylesheet for the root
-            if (pre_night_mode_enabled) {
-                stylesheets.remove(STYLESHEET_NIGHT);
-                stylesheets.add(STYLESHEET_LIGHT);
-            } else {
-                stylesheets.remove(STYLESHEET_LIGHT);
-                stylesheets.add(STYLESHEET_NIGHT);
+            // if reader_only is selected, we want to only change the stylesheet for the reader
+            // page, but we still need to update the nightModeItem for every controller
+            if (pre_night_mode_enabled || !reader_only || controllers.get(root).getClass() ==
+                    ReaderController.class) {
+                // toggle the color stylesheet for the root
+                if (pre_night_mode_enabled) {
+                    stylesheets.remove(STYLESHEET_NIGHT);
+                    stylesheets.add(STYLESHEET_LIGHT);
+                } else {
+                    stylesheets.remove(STYLESHEET_LIGHT);
+                    stylesheets.add(STYLESHEET_NIGHT);
+                }
             }
 
             // toggle the CheckMenuItem

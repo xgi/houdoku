@@ -140,6 +140,9 @@ public class ConfigController extends Controller {
                     effectBrightnessPreview.setEffect(color_adjust);
                 }
         );
+
+        // add bindings for miscellaneous properties
+        nightModeReaderCheck.disableProperty().bind(nightModeCheck.selectedProperty().not());
     }
 
     /**
@@ -201,6 +204,10 @@ public class ConfigController extends Controller {
         config.updateField("page_filter_color_saturation", filterSaturationSlider.getValue());
         config.updateField("page_filter_brightness", filterBrightnessSlider.getValue());
         sceneManager.saveConfig();
+
+        // ensure that night_mode_reader_only is properly applied
+        toggleNightMode();
+        toggleNightMode();
 
         onMadeInactive();
     }
