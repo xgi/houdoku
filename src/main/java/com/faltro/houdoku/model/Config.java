@@ -18,6 +18,8 @@ public class Config {
         DEFAULTS.put("page_filter_color_hue", 0.25);
         DEFAULTS.put("page_filter_color_saturation", 0.33);
         DEFAULTS.put("page_filter_brightness", 0.50);
+        DEFAULTS.put("restrict_preload_pages", false);
+        DEFAULTS.put("preload_pages_amount", 6);
     }
 
     private HashMap<String, Object> data;

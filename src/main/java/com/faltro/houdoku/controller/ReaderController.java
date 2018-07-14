@@ -193,27 +193,30 @@ public class ReaderController extends Controller {
 
     /**
      * Begin loading the image for the current page.
-     * <p>
-     * Updating this view's components (primarily the loading spinner and the
-     * image view itself) is done by the ContentLoader.
      *
      * @see com.faltro.houdoku.util.ContentLoader#loadPage(ContentSource,
-     * Chapter, int, ReaderController, boolean)
+     * Chapter, int, ReaderController, boolean, int)
      */
     private void loadCurrentPage() {
-        // by default set the load indicated to invisible, which may be
-        // reverted if we start downloading the image later
-        imageProgressIndicator.setVisible(false);
+        int currentPageNum = chapter.getCurrentPageNum();
 
         // set text field to current page number
-        pageNumField.setText(Integer.toString(chapter.getCurrentPageNum() + 1));
+        pageNumField.setText(Integer.toString(currentPageNum + 1));
 
-        // chapter.loadCurrentImage will call this.refreshPage after the
-        // image is loaded
         ContentSource contentSource = sceneManager.getPluginManager().getSource(
                 chapter.getSeries().getContentSourceId()
         );
-        chapter.loadCurrentImage(sceneManager.getContentLoader(), contentSource, this);
+
+        // determine how many pages to preload, if any
+        Config config = sceneManager.getConfig();
+        boolean restrict_preload_pages = (boolean) config.getField("restrict_preload_pages");
+        int preloading_amount = restrict_preload_pages ?
+                (int) config.getField("preload_pages_amount") : -1;
+
+        // start the thread to load the page, will will subsequently begin
+        // preloading pages if necessary
+        sceneManager.getContentLoader().loadPage(
+                contentSource, chapter, currentPageNum, this, false, preloading_amount);
     }
 
     /**

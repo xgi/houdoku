@@ -28,11 +28,13 @@ public class ContentLoader {
      * @see LoadPageRunnable
      */
     public void loadPage(ContentSource contentSource, Chapter chapter, int page,
-                         ReaderController readerController, boolean preloading) {
+                         ReaderController readerController, boolean preloading,
+                         int preloading_amount) {
         String name = PREFIX_LOAD_PAGE + contentSource.toString() + "_" + chapter.getSource() +
                 Integer.toString(page);
         LoaderRunnable runnable = new LoadPageRunnable(
-                name, this, contentSource, chapter, page, readerController, preloading
+                name, this, contentSource, chapter, page, readerController, preloading,
+                preloading_amount
         );
         startThreadSafely(name, runnable);
     }
