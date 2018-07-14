@@ -31,7 +31,7 @@
                                     <CheckBox fx:id="nightModeCheck" text="Night mode enabled"
                                               styleClass="bareTextAlt"/>
                                     <CheckBox fx:id="nightModeReaderCheck"
-                                              text="Only apply effects on reader page"
+                                              text="Only apply theme on reader page"
                                               styleClass="bareTextAlt"
                                               disable="${nightModeCheck.selected}"/>
                                 </VBox>
@@ -107,6 +107,9 @@
                                     </VBox>
                                     <RadioButton fx:id="effectNoneRadio" styleClass="bareTextAlt"
                                                  text="No effect" toggleGroup="$pageEffectsGroup"/>
+                                    <HBox alignment="CENTER_RIGHT">
+                                        <Hyperlink text="Reset" onAction="#resetPageEffects"/>
+                                    </HBox>
                                 </VBox>
                             </VBox>
                         </VBox>
@@ -125,7 +128,7 @@
         <padding>
             <Insets top="15"/>
         </padding>
-        <HBox alignment="CENTER_LEFT">
+        <HBox alignment="BOTTOM_LEFT">
             <Hyperlink text="Restore defaults" onAction="#promptRestoreDefaults"/>
         </HBox>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="10">

@@ -243,4 +243,19 @@ public class ConfigController extends Controller {
             sceneManager.getConfig().restoreDefaults();
         }
     }
+
+    /**
+     * Reset the page effect sliders/radios to their initial values.
+     */
+    @FXML
+    private void resetPageEffects() {
+        Config config = sceneManager.getConfig();
+        filterHueSlider.setValue((double) config.getField("page_filter_color_hue"));
+        filterSaturationSlider.setValue((double) config.getField("page_filter_color_saturation"));
+        filterBrightnessSlider.setValue((double) config.getField("page_filter_brightness"));
+
+        effectColorRadio.setSelected("color".equals(config.getField("page_filter_type")));
+        effectBrightnessRadio.setSelected("brightness".equals(config.getField("page_filter_type")));
+        effectNoneRadio.setSelected("none".equals(config.getField("page_filter_type")));
+    }
 }

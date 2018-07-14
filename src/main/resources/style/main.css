@@ -20,6 +20,10 @@
     -fx-background-insets: 0;
 }
 
+.hyperlink {
+    -fx-underline: true;
+}
+
 #navContainer {
     -fx-min-height: 50;
     -fx-pref-height: 50;

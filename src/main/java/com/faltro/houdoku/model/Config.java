@@ -72,4 +72,18 @@ public class Config {
         }
         return result;
     }
+
+    /**
+     * Get the default value of the field with the given name.
+     *
+     * @param name the name of the field to retrieve
+     * @return the default value of the requested field, or null
+     */
+    public Object getFieldDefault(String name) {
+        Object result = null;
+        if (DEFAULTS.containsKey(name)) {
+            result = DEFAULTS.get(name);
+        }
+        return result;
+    }
 }
