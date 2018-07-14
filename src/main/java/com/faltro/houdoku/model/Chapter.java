@@ -1,8 +1,5 @@
 package com.faltro.houdoku.model;
 
-import com.faltro.houdoku.controller.ReaderController;
-import com.faltro.houdoku.util.ContentLoader;
-import com.faltro.houdoku.util.ContentSource;
 import javafx.scene.image.Image;
 
 import java.time.LocalDateTime;

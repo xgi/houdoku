@@ -123,7 +123,7 @@ public class SceneManager {
     public void prepare() {
         sizeStage(stage);
 
-        if ((boolean) config.getField("night_mode_enabled")) {
+        if ((boolean) config.getField(Config.FIELD_NIGHT_MODE_ENABLED)) {
             toggleTheme();
         }
     }
@@ -176,8 +176,8 @@ public class SceneManager {
      * Toggles the color stylesheet for ALL roots between light and night mode.
      */
     public void toggleTheme() {
-        boolean pre_night_mode_enabled = (boolean) config.getField("night_mode_enabled");
-        boolean reader_only = (boolean) config.getField("night_mode_reader_only");
+        boolean pre_night_mode_enabled = (boolean) config.getField(Config.FIELD_NIGHT_MODE_ENABLED);
+        boolean reader_only = (boolean) config.getField(Config.FIELD_NIGHT_MODE_READER_ONLY);
 
         for (Parent root : roots.values()) {
             ObservableList<String> stylesheets = root.getStylesheets();
@@ -204,7 +204,7 @@ public class SceneManager {
         }
 
         // update field in config and save it
-        config.updateField("night_mode_enabled", !pre_night_mode_enabled);
+        config.updateField(Config.FIELD_NIGHT_MODE_ENABLED, !pre_night_mode_enabled);
         saveConfig();
     }
 

@@ -154,14 +154,22 @@ public class ConfigController extends Controller {
 
         // update controls with current values
         Config config = sceneManager.getConfig();
-        nightModeCheck.setSelected((boolean) config.getField("night_mode_enabled"));
-        nightModeReaderCheck.setSelected((boolean) config.getField("night_mode_reader_only"));
-        effectColorRadio.setSelected("color".equals(config.getField("page_filter_type")));
-        effectBrightnessRadio.setSelected("brightness".equals(config.getField("page_filter_type")));
-        effectNoneRadio.setSelected("none".equals(config.getField("page_filter_type")));
-        filterHueSlider.setValue((double) config.getField("page_filter_color_hue"));
-        filterSaturationSlider.setValue((double) config.getField("page_filter_color_saturation"));
-        filterBrightnessSlider.setValue((double) config.getField("page_filter_brightness"));
+        nightModeCheck.setSelected(
+                (boolean) config.getField(Config.FIELD_NIGHT_MODE_ENABLED));
+        nightModeReaderCheck.setSelected(
+                (boolean) config.getField(Config.FIELD_NIGHT_MODE_READER_ONLY));
+        effectColorRadio.setSelected("color".equals(
+                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+        effectBrightnessRadio.setSelected("brightness".equals(
+                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+        effectNoneRadio.setSelected("none".equals(
+                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+        filterHueSlider.setValue(
+                (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_HUE));
+        filterSaturationSlider.setValue(
+                (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_SATURATION));
+        filterBrightnessSlider.setValue(
+                (double) config.getField(Config.FIELD_PAGE_FILTER_BRIGHTNESS));
     }
 
     /**
@@ -195,14 +203,19 @@ public class ConfigController extends Controller {
     @FXML
     private void confirm() {
         Config config = sceneManager.getConfig();
-        config.updateField("night_mode_enabled", nightModeCheck.isSelected());
-        config.updateField("night_mode_reader_only", nightModeReaderCheck.isSelected());
-        config.updateField("page_filter_type",
+        config.updateField(Config.FIELD_NIGHT_MODE_ENABLED,
+                nightModeCheck.isSelected());
+        config.updateField(Config.FIELD_NIGHT_MODE_READER_ONLY,
+                nightModeReaderCheck.isSelected());
+        config.updateField(Config.FIELD_PAGE_FILTER_TYPE,
                 effectColorRadio.isSelected() ? "color" :
                         effectBrightnessRadio.isSelected() ? "brightness" : "none");
-        config.updateField("page_filter_color_hue", filterHueSlider.getValue());
-        config.updateField("page_filter_color_saturation", filterSaturationSlider.getValue());
-        config.updateField("page_filter_brightness", filterBrightnessSlider.getValue());
+        config.updateField(Config.FIELD_PAGE_FILTER_COLOR_HUE,
+                filterHueSlider.getValue());
+        config.updateField(Config.FIELD_PAGE_FILTER_COLOR_SATURATION,
+                filterSaturationSlider.getValue());
+        config.updateField(Config.FIELD_PAGE_FILTER_BRIGHTNESS,
+                filterBrightnessSlider.getValue());
         sceneManager.saveConfig();
 
         // ensure that night_mode_reader_only is properly applied
@@ -250,12 +263,18 @@ public class ConfigController extends Controller {
     @FXML
     private void resetPageEffects() {
         Config config = sceneManager.getConfig();
-        filterHueSlider.setValue((double) config.getField("page_filter_color_hue"));
-        filterSaturationSlider.setValue((double) config.getField("page_filter_color_saturation"));
-        filterBrightnessSlider.setValue((double) config.getField("page_filter_brightness"));
+        filterHueSlider.setValue(
+                (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_HUE));
+        filterSaturationSlider.setValue(
+                (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_SATURATION));
+        filterBrightnessSlider.setValue(
+                (double) config.getField(Config.FIELD_PAGE_FILTER_BRIGHTNESS));
 
-        effectColorRadio.setSelected("color".equals(config.getField("page_filter_type")));
-        effectBrightnessRadio.setSelected("brightness".equals(config.getField("page_filter_type")));
-        effectNoneRadio.setSelected("none".equals(config.getField("page_filter_type")));
+        effectColorRadio.setSelected("color".equals(
+                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+        effectBrightnessRadio.setSelected("brightness".equals(
+                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+        effectNoneRadio.setSelected("none".equals(
+                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
     }
 }

@@ -7,19 +7,58 @@ import java.util.HashMap;
  */
 public class Config {
     /**
+     * Whether the night mode theme is currently enabled.
+     */
+    public static final String FIELD_NIGHT_MODE_ENABLED = "night_mode_enabled";
+    /**
+     * Whether the night mode theme is only applied to the reader page.
+     */
+    public static final String FIELD_NIGHT_MODE_READER_ONLY = "night_mode_reader_only";
+    /**
+     * The type of filter to apply to the reader page when night mode is active.
+     * <p>
+     * Available values are: "color", "brightness", "none"
+     */
+    public static final String FIELD_PAGE_FILTER_TYPE = "page_filter_type";
+    /**
+     * The hue modifier to use on the reader page when night mode is active and
+     * the page filter is set to "color".
+     */
+    public static final String FIELD_PAGE_FILTER_COLOR_HUE = "page_filter_color_hue";
+    /**
+     * The saturation modifier to use on the reader page when night mode is
+     * active and the page filter is set to "color".
+     */
+    public static final String FIELD_PAGE_FILTER_COLOR_SATURATION = "page_filter_color_saturation";
+    /**
+     * The brightness modifier to use on the reader page when night mode is
+     * active and the page filter is set to "brightness".
+     */
+    public static final String FIELD_PAGE_FILTER_BRIGHTNESS = "page_filter_brightness";
+    /**
+     * Whether to restrict the preloading of pages in the reader. If the value
+     * is false, the reader will preload the entire chapter even if the user
+     * stays on the first page.
+     */
+    public static final String FIELD_RESTRICT_PRELOAD_PAGES = "restrict_preload_pages";
+    /**
+     * The number of pages to preload if preloading pages is restricted.
+     */
+    public static final String FIELD_PRELOAD_PAGES_AMOUNT = "preload_pages_amount";
+    /**
      * The HashMap of default configuration values.
      */
     private static final HashMap<String, Object> DEFAULTS = new HashMap<>();
 
     static {
-        DEFAULTS.put("night_mode_enabled", false);
-        DEFAULTS.put("night_mode_reader_only", false);
-        DEFAULTS.put("page_filter_type", "color");
-        DEFAULTS.put("page_filter_color_hue", 0.25);
-        DEFAULTS.put("page_filter_color_saturation", 0.33);
-        DEFAULTS.put("page_filter_brightness", 0.50);
-        DEFAULTS.put("restrict_preload_pages", false);
-        DEFAULTS.put("preload_pages_amount", 6);
+        DEFAULTS.put(FIELD_NIGHT_MODE_ENABLED, false);
+        DEFAULTS.put(FIELD_NIGHT_MODE_READER_ONLY, false);
+        DEFAULTS.put(FIELD_PAGE_FILTER_TYPE, "color");
+        DEFAULTS.put(FIELD_PAGE_FILTER_COLOR_HUE, 0.25);
+        DEFAULTS.put(FIELD_PAGE_FILTER_COLOR_SATURATION, 0.33);
+        DEFAULTS.put(FIELD_PAGE_FILTER_BRIGHTNESS, 0.50);
+        DEFAULTS.put(FIELD_RESTRICT_PRELOAD_PAGES, false);
+        DEFAULTS.put(FIELD_PRELOAD_PAGES_AMOUNT, 6);
     }
 
     private HashMap<String, Object> data;

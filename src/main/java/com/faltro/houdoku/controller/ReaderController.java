@@ -209,9 +209,10 @@ public class ReaderController extends Controller {
 
         // determine how many pages to preload, if any
         Config config = sceneManager.getConfig();
-        boolean restrict_preload_pages = (boolean) config.getField("restrict_preload_pages");
+        boolean restrict_preload_pages =
+                (boolean) config.getField(Config.FIELD_RESTRICT_PRELOAD_PAGES);
         int preloading_amount = restrict_preload_pages ?
-                (int) config.getField("preload_pages_amount") : -1;
+                (int) config.getField(Config.FIELD_PRELOAD_PAGES_AMOUNT) : -1;
 
         // start the thread to load the page, will will subsequently begin
         // preloading pages if necessary
@@ -358,19 +359,21 @@ public class ReaderController extends Controller {
     private void applyImageFilter() {
         Config config = sceneManager.getConfig();
         ColorAdjust filter_adjust = null;
-        if ((boolean) config.getField("night_mode_enabled")) {
-            String filter_type = (String) config.getField("page_filter_type");
+        if ((boolean) config.getField(Config.FIELD_NIGHT_MODE_ENABLED)) {
+            String filter_type = (String) config.getField(Config.FIELD_PAGE_FILTER_TYPE);
             switch (filter_type) {
                 case "color": {
                     filter_adjust = new ColorAdjust();
-                    filter_adjust.setHue((double) config.getField("page_filter_color_hue"));
+                    filter_adjust.setHue(
+                            (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_HUE));
                     filter_adjust.setSaturation(
-                            (double) config.getField("page_filter_color_saturation"));
+                            (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_SATURATION));
                     break;
                 }
                 case "brightness": {
                     filter_adjust = new ColorAdjust();
-                    filter_adjust.setBrightness((double) config.getField("page_filter_brightness"));
+                    filter_adjust.setBrightness(
+                            (double) config.getField(Config.FIELD_PAGE_FILTER_BRIGHTNESS));
                     break;
                 }
             }
