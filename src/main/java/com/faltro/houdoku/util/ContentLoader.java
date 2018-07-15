@@ -122,6 +122,18 @@ public class ContentLoader {
         }
     }
 
+    /**
+     * Request all threads to stop.
+     * <p>
+     * This method does not guarantee the threads to immediately stop -- it
+     * simply calls requestStop() on all matching running LoaderRunnable's.
+     */
+    public void stopAllThreads() {
+        for (LoaderRunnable runnable : runnables) {
+            runnable.requestStop();
+        }
+    }
+
     public ArrayList<LoaderRunnable> getRunnables() {
         return runnables;
     }
