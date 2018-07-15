@@ -15,6 +15,16 @@ public class Category {
         this.subcategories = new ArrayList<>();
     }
 
+    /**
+     * Determine whether a category name is valid.
+     * <p>
+     * This method does not determine whether the name overlaps with an existing
+     * category -- it only checks that the given name string is not inherently
+     * invalid.
+     *
+     * @param name the name to check
+     * @return whether the given string is a valid category name
+     */
     public static boolean nameIsValid(String name) {
         boolean result = true;
         if (name.equals("")) {
@@ -23,14 +33,21 @@ public class Category {
         return result;
     }
 
+    /**
+     * Add a Category as a subcategory to this one.
+     *
+     * @param category the subcategory to add
+     */
     public void addSubcategory(Category category) {
         this.subcategories.add(category);
     }
 
-    public void deltaOccurrences(int delta) {
-        occurrences += delta;
-    }
-
+    /**
+     * Find a Category which is subordinate to this one at any depth.
+     *
+     * @param name the name of the Category to find
+     * @return the Category with the given name, or null
+     */
     public Category recursiveFindSubcategory(String name) {
         Category result = null;
         if (this.name.toLowerCase().equals(name.toLowerCase())) {
@@ -45,9 +62,9 @@ public class Category {
     }
 
     /**
-     * Remove the given category from the subcategories of this.
+     * Remove the given Category from the subcategories of this.
      *
-     * @param category the category to remove, which should be a direct
+     * @param category the Category to remove, which should be a direct
      *                 subcategory of this
      */
     public void removeSubcategory(Category category) {

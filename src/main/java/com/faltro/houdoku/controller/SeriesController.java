@@ -263,12 +263,11 @@ public class SeriesController extends Controller {
         refreshContent();
         updateCoverSize();
 
-        // series.reloadFromSource will call this.refreshContent after the
-        // series has been reloaded
+        // reload the series from the content source
         ContentSource contentSource = sceneManager.getPluginManager().getSource(
                 series.getContentSourceId()
         );
-        series.reloadFromSource(sceneManager.getContentLoader(), contentSource, this);
+        sceneManager.getContentLoader().reloadSeries(contentSource, series, this);
     }
 
     /**

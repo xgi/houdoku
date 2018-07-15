@@ -50,10 +50,25 @@ public class Library {
         }
     }
 
+    /**
+     * Add a Series to the library.
+     * <p>
+     * This method does not check whether the series already exists in the
+     * library.
+     *
+     * @param series the Series to add
+     */
     public void addSeries(Series series) {
         serieses.add(series);
     }
 
+    /**
+     * Remove a Series from the library.
+     * <p>
+     * This method also deletes the cached series cover from the filesystem.
+     *
+     * @param series the Series to remove
+     */
     public void removeSeries(Series series) {
         serieses.remove(series);
         Data.deleteCover(series);

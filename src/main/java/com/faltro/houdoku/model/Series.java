@@ -1,8 +1,5 @@
 package com.faltro.houdoku.model;
 
-import com.faltro.houdoku.controller.SeriesController;
-import com.faltro.houdoku.util.ContentLoader;
-import com.faltro.houdoku.util.ContentSource;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -99,15 +96,6 @@ public class Series {
                     break;
             }
         }
-    }
-
-    public void addCategory(Category category) {
-        stringCategories.add(category.getName());
-    }
-
-    public void reloadFromSource(ContentLoader contentLoader, ContentSource contentSource,
-                                 SeriesController seriesController) {
-        contentLoader.reloadSeries(contentSource, this, seriesController);
     }
 
     /**
