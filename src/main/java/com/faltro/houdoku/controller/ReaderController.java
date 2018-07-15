@@ -386,9 +386,7 @@ public class ReaderController extends Controller {
     }
 
     /**
-     * Apply an image filter as appropriate from the
-     *
-     * @{@link com.faltro.houdoku.model.Config}.
+     * Apply the appropriate filter to the page ImageView, if necessary.
      */
     private void applyImageFilter() {
         Config config = sceneManager.getConfig();
