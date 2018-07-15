@@ -128,11 +128,11 @@ public class Config {
         READER_KEY_TO_SERIES("reader_key_to_series", KeyCode.BACK_SPACE.toString());
 
         String name;
-        Object default_value;
+        Object defaultValue;
 
         Field(String name, Object default_value) {
             this.name = name;
-            this.default_value = default_value;
+            this.defaultValue = default_value;
         }
 
         public String getName() {
@@ -140,7 +140,7 @@ public class Config {
         }
 
         public Object getDefaultValue() {
-            return default_value;
+            return defaultValue;
         }
 
         public String toString() {
