@@ -180,8 +180,8 @@ public class ConfigController extends Controller {
                 (double) config.getField(Config.FIELD_PAGE_FILTER_BRIGHTNESS));
         restrictPreloadingCheck.setSelected(
                 (boolean) config.getField(Config.FIELD_RESTRICT_PRELOAD_PAGES));
-//        preloadingAmountSpinner.getValueFactory().setValue(
-//                config.getField(Config.FIELD_PRELOAD_PAGES_AMOUNT));
+        preloadingAmountSpinner.getValueFactory().setValue(
+                (int) Math.round((double) config.getField(Config.FIELD_PRELOAD_PAGES_AMOUNT)));
     }
 
     /**

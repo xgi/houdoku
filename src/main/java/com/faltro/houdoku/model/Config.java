@@ -58,7 +58,7 @@ public class Config {
         DEFAULTS.put(FIELD_PAGE_FILTER_COLOR_SATURATION, 0.33);
         DEFAULTS.put(FIELD_PAGE_FILTER_BRIGHTNESS, 0.50);
         DEFAULTS.put(FIELD_RESTRICT_PRELOAD_PAGES, false);
-        DEFAULTS.put(FIELD_PRELOAD_PAGES_AMOUNT, 6);
+        DEFAULTS.put(FIELD_PRELOAD_PAGES_AMOUNT, 6.0);
     }
 
     private HashMap<String, Object> data;
