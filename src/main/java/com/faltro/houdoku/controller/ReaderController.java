@@ -165,7 +165,7 @@ public class ReaderController extends Controller {
      * client is restarted, so we instead make a new event handler at every
      * onMadeActive() using the current config.
      * <p>
-     * We also could have put Config.getField's in the event itself, but that
+     * We also could have put Config.getValue's in the event itself, but that
      * would be very inefficient.
      *
      * @return a complete KeyEvent EventHandler for the reader page
@@ -173,15 +173,15 @@ public class ReaderController extends Controller {
     private EventHandler<KeyEvent> newKeyEventHandler() {
         Config config = sceneManager.getConfig();
         KeyCode keyPrevPage = KeyCode.valueOf(
-                (String) config.getField(Config.FIELD_READER_KEY_PREV_PAGE));
+                (String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
         KeyCode keyNextPage = KeyCode.valueOf(
-                (String) config.getField(Config.FIELD_READER_KEY_NEXT_PAGE));
+                (String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
         KeyCode keyFirstPage = KeyCode.valueOf(
-                (String) config.getField(Config.FIELD_READER_KEY_FIRST_PAGE));
+                (String) config.getValue(Config.Field.READER_KEY_FIRST_PAGE));
         KeyCode keyLastPage = KeyCode.valueOf(
-                (String) config.getField(Config.FIELD_READER_KEY_LAST_PAGE));
+                (String) config.getValue(Config.Field.READER_KEY_LAST_PAGE));
         KeyCode keyToSeries = KeyCode.valueOf(
-                (String) config.getField(Config.FIELD_READER_KEY_TO_SERIES));
+                (String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
 
         return event -> {
             // only handle KeyEvent.KEY_RELEASE -- not ideal, since this may
@@ -244,9 +244,9 @@ public class ReaderController extends Controller {
         // determine how many pages to preload, if any
         Config config = sceneManager.getConfig();
         boolean restrict_preload_pages =
-                (boolean) config.getField(Config.FIELD_RESTRICT_PRELOAD_PAGES);
+                (boolean) config.getValue(Config.Field.RESTRICT_PRELOAD_PAGES);
         int preloading_amount = restrict_preload_pages ?
-                (int) config.getField(Config.FIELD_PRELOAD_PAGES_AMOUNT) : -1;
+                (int) config.getValue(Config.Field.PRELOAD_PAGES_AMOUNT) : -1;
 
         // start the thread to load the page, will will subsequently begin
         // preloading pages if necessary
@@ -393,21 +393,21 @@ public class ReaderController extends Controller {
     private void applyImageFilter() {
         Config config = sceneManager.getConfig();
         ColorAdjust filter_adjust = null;
-        if ((boolean) config.getField(Config.FIELD_NIGHT_MODE_ENABLED)) {
-            String filter_type = (String) config.getField(Config.FIELD_PAGE_FILTER_TYPE);
+        if ((boolean) config.getValue(Config.Field.NIGHT_MODE_ENABLED)) {
+            String filter_type = (String) config.getValue(Config.Field.PAGE_FILTER_TYPE);
             switch (filter_type) {
                 case "color": {
                     filter_adjust = new ColorAdjust();
                     filter_adjust.setHue(
-                            (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_HUE));
+                            (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_HUE));
                     filter_adjust.setSaturation(
-                            (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_SATURATION));
+                            (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_SATURATION));
                     break;
                 }
                 case "brightness": {
                     filter_adjust = new ColorAdjust();
                     filter_adjust.setBrightness(
-                            (double) config.getField(Config.FIELD_PAGE_FILTER_BRIGHTNESS));
+                            (double) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS));
                     break;
                 }
             }

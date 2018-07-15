@@ -175,35 +175,35 @@ public class ConfigController extends Controller {
         // update controls with current values
         Config config = sceneManager.getConfig();
         nightModeCheck.setSelected(
-                (boolean) config.getField(Config.FIELD_NIGHT_MODE_ENABLED));
+                (boolean) config.getValue(Config.Field.NIGHT_MODE_ENABLED));
         nightModeReaderCheck.setSelected(
-                (boolean) config.getField(Config.FIELD_NIGHT_MODE_READER_ONLY));
+                (boolean) config.getValue(Config.Field.NIGHT_MODE_READER_ONLY));
         effectColorRadio.setSelected("color".equals(
-                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
         effectBrightnessRadio.setSelected("brightness".equals(
-                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
         effectNoneRadio.setSelected("none".equals(
-                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
         filterHueSlider.setValue(
-                (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_HUE));
+                (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_HUE));
         filterSaturationSlider.setValue(
-                (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_SATURATION));
+                (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_SATURATION));
         filterBrightnessSlider.setValue(
-                (double) config.getField(Config.FIELD_PAGE_FILTER_BRIGHTNESS));
+                (double) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS));
         restrictPreloadingCheck.setSelected(
-                (boolean) config.getField(Config.FIELD_RESTRICT_PRELOAD_PAGES));
+                (boolean) config.getValue(Config.Field.RESTRICT_PRELOAD_PAGES));
         preloadingAmountSpinner.getValueFactory().setValue(
-                (int) Math.round((double) config.getField(Config.FIELD_PRELOAD_PAGES_AMOUNT)));
+                (int) Math.round((double) config.getValue(Config.Field.PRELOAD_PAGES_AMOUNT)));
         readerKeyPrevPage.setText(
-                (String) config.getField(Config.FIELD_READER_KEY_PREV_PAGE));
+                (String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
         readerKeyNextPage.setText(
-                (String) config.getField(Config.FIELD_READER_KEY_NEXT_PAGE));
+                (String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
         readerKeyFirstPage.setText(
-                (String) config.getField(Config.FIELD_READER_KEY_FIRST_PAGE));
+                (String) config.getValue(Config.Field.READER_KEY_FIRST_PAGE));
         readerKeyLastPage.setText(
-                (String) config.getField(Config.FIELD_READER_KEY_LAST_PAGE));
+                (String) config.getValue(Config.Field.READER_KEY_LAST_PAGE));
         readerKeyToSeries.setText(
-                (String) config.getField(Config.FIELD_READER_KEY_TO_SERIES));
+                (String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
     }
 
     /**
@@ -237,32 +237,32 @@ public class ConfigController extends Controller {
     @FXML
     private void confirm() {
         Config config = sceneManager.getConfig();
-        config.updateField(Config.FIELD_NIGHT_MODE_ENABLED,
+        config.replaceValue(Config.Field.NIGHT_MODE_ENABLED,
                 nightModeCheck.isSelected());
-        config.updateField(Config.FIELD_NIGHT_MODE_READER_ONLY,
+        config.replaceValue(Config.Field.NIGHT_MODE_READER_ONLY,
                 nightModeReaderCheck.isSelected());
-        config.updateField(Config.FIELD_PAGE_FILTER_TYPE,
+        config.replaceValue(Config.Field.PAGE_FILTER_TYPE,
                 effectColorRadio.isSelected() ? "color" :
                         effectBrightnessRadio.isSelected() ? "brightness" : "none");
-        config.updateField(Config.FIELD_PAGE_FILTER_COLOR_HUE,
+        config.replaceValue(Config.Field.PAGE_FILTER_COLOR_HUE,
                 filterHueSlider.getValue());
-        config.updateField(Config.FIELD_PAGE_FILTER_COLOR_SATURATION,
+        config.replaceValue(Config.Field.PAGE_FILTER_COLOR_SATURATION,
                 filterSaturationSlider.getValue());
-        config.updateField(Config.FIELD_PAGE_FILTER_BRIGHTNESS,
+        config.replaceValue(Config.Field.PAGE_FILTER_BRIGHTNESS,
                 filterBrightnessSlider.getValue());
-        config.updateField(Config.FIELD_RESTRICT_PRELOAD_PAGES,
+        config.replaceValue(Config.Field.RESTRICT_PRELOAD_PAGES,
                 restrictPreloadingCheck.isSelected());
-        config.updateField(Config.FIELD_PRELOAD_PAGES_AMOUNT,
+        config.replaceValue(Config.Field.PRELOAD_PAGES_AMOUNT,
                 preloadingAmountSpinner.getValue());
-        config.updateField(Config.FIELD_READER_KEY_PREV_PAGE,
+        config.replaceValue(Config.Field.READER_KEY_PREV_PAGE,
                 readerKeyPrevPage.getText());
-        config.updateField(Config.FIELD_READER_KEY_NEXT_PAGE,
+        config.replaceValue(Config.Field.READER_KEY_NEXT_PAGE,
                 readerKeyNextPage.getText());
-        config.updateField(Config.FIELD_READER_KEY_FIRST_PAGE,
+        config.replaceValue(Config.Field.READER_KEY_FIRST_PAGE,
                 readerKeyFirstPage.getText());
-        config.updateField(Config.FIELD_READER_KEY_LAST_PAGE,
+        config.replaceValue(Config.Field.READER_KEY_LAST_PAGE,
                 readerKeyLastPage.getText());
-        config.updateField(Config.FIELD_READER_KEY_TO_SERIES,
+        config.replaceValue(Config.Field.READER_KEY_TO_SERIES,
                 readerKeyToSeries.getText());
 
         sceneManager.saveConfig();
@@ -330,17 +330,17 @@ public class ConfigController extends Controller {
     private void resetPageEffects() {
         Config config = sceneManager.getConfig();
         filterHueSlider.setValue(
-                (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_HUE));
+                (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_HUE));
         filterSaturationSlider.setValue(
-                (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_SATURATION));
+                (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_SATURATION));
         filterBrightnessSlider.setValue(
-                (double) config.getField(Config.FIELD_PAGE_FILTER_BRIGHTNESS));
+                (double) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS));
 
         effectColorRadio.setSelected("color".equals(
-                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
         effectBrightnessRadio.setSelected("brightness".equals(
-                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
         effectNoneRadio.setSelected("none".equals(
-                config.getField(Config.FIELD_PAGE_FILTER_TYPE)));
+                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
     }
 }
