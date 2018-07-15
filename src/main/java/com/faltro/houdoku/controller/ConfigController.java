@@ -70,6 +70,12 @@ public class ConfigController extends Controller {
     private ImageView effectColorPreview;
     @FXML
     private ImageView effectBrightnessPreview;
+    @FXML
+    private CheckBox restrictPreloadingCheck;
+    @FXML
+    private HBox preloadingAmountBox;
+    @FXML
+    private Spinner preloadingAmountSpinner;
 
     public ConfigController(SceneManager sceneManager) {
         super(sceneManager);
@@ -143,6 +149,8 @@ public class ConfigController extends Controller {
 
         // add bindings for miscellaneous properties
         nightModeReaderCheck.disableProperty().bind(nightModeCheck.selectedProperty().not());
+        preloadingAmountBox.disableProperty().bind(
+                restrictPreloadingCheck.selectedProperty().not());
     }
 
     /**
@@ -170,6 +178,10 @@ public class ConfigController extends Controller {
                 (double) config.getField(Config.FIELD_PAGE_FILTER_COLOR_SATURATION));
         filterBrightnessSlider.setValue(
                 (double) config.getField(Config.FIELD_PAGE_FILTER_BRIGHTNESS));
+        restrictPreloadingCheck.setSelected(
+                (boolean) config.getField(Config.FIELD_RESTRICT_PRELOAD_PAGES));
+//        preloadingAmountSpinner.getValueFactory().setValue(
+//                config.getField(Config.FIELD_PRELOAD_PAGES_AMOUNT));
     }
 
     /**
@@ -216,6 +228,10 @@ public class ConfigController extends Controller {
                 filterSaturationSlider.getValue());
         config.updateField(Config.FIELD_PAGE_FILTER_BRIGHTNESS,
                 filterBrightnessSlider.getValue());
+        config.updateField(Config.FIELD_RESTRICT_PRELOAD_PAGES,
+                restrictPreloadingCheck.isSelected());
+        config.updateField(Config.FIELD_PRELOAD_PAGES_AMOUNT,
+                preloadingAmountSpinner.getValue());
         sceneManager.saveConfig();
 
         // ensure that night_mode_reader_only is properly applied
@@ -254,6 +270,7 @@ public class ConfigController extends Controller {
 
         if (alert.getResult() == ButtonType.YES) {
             sceneManager.getConfig().restoreDefaults();
+            onMadeActive();
         }
     }
 

@@ -5,7 +5,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.*?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -23,7 +23,7 @@
                     <Text text="Night Mode"/>
                 </HBox>
                 <TabPane styleClass="configTabPane" VBox.vgrow="ALWAYS">
-                    <Tab text="Settings">
+                    <Tab text="Settings" closable="false">
                         <VBox VBox.vgrow="ALWAYS" spacing="15">
                             <VBox>
                                 <Text styleClass="bareTextAlt" text="Settings"/>
@@ -116,11 +116,32 @@
                     </Tab>
                 </TabPane>
             </VBox>
-            <VBox styleClass="topicContainer" spacing="15" userData="Plugins" visible="false"
-                  managed="false">
+            <VBox styleClass="topicContainer" spacing="15" VBox.vgrow="ALWAYS"
+                  alignment="CENTER_LEFT" userData="Reader">
                 <HBox styleClass="topicHeaderBar">
-                    <Text text="Plugins"/>
+                    <Text text="Reader"/>
                 </HBox>
+                <TabPane styleClass="configTabPane" VBox.vgrow="ALWAYS">
+                    <Tab text="Settings" closable="false">
+                        <VBox VBox.vgrow="ALWAYS" spacing="15">
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="Preloading"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <CheckBox fx:id="restrictPreloadingCheck"
+                                              text="Restrict the number of images to preload"
+                                              styleClass="bareTextAlt"/>
+                                    <HBox fx:id="preloadingAmountBox" spacing="20"
+                                          styleClass="controlSubBox" alignment="CENTER_LEFT">
+                                        <Label text="Number of images to preload: "
+                                               styleClass="bareTextAlt"/>
+                                        <Spinner fx:id="preloadingAmountSpinner" maxWidth="70"
+                                                 min="0" max="99"/>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                        </VBox>
+                    </Tab>
+                </TabPane>
             </VBox>
         </VBox>
     </SplitPane>
