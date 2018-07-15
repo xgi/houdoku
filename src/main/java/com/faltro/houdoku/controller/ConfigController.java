@@ -4,6 +4,7 @@ import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -76,6 +77,17 @@ public class ConfigController extends Controller {
     private HBox preloadingAmountBox;
     @FXML
     private Spinner preloadingAmountSpinner;
+    @FXML
+    private Button readerKeyPrevPage;
+    @FXML
+    private Button readerKeyNextPage;
+    @FXML
+    private Button readerKeyFirstPage;
+    @FXML
+    private Button readerKeyLastPage;
+    @FXML
+    private Button readerKeyToSeries;
+
 
     public ConfigController(SceneManager sceneManager) {
         super(sceneManager);
@@ -182,6 +194,16 @@ public class ConfigController extends Controller {
                 (boolean) config.getField(Config.FIELD_RESTRICT_PRELOAD_PAGES));
         preloadingAmountSpinner.getValueFactory().setValue(
                 (int) Math.round((double) config.getField(Config.FIELD_PRELOAD_PAGES_AMOUNT)));
+        readerKeyPrevPage.setText(
+                (String) config.getField(Config.FIELD_READER_KEY_PREV_PAGE));
+        readerKeyNextPage.setText(
+                (String) config.getField(Config.FIELD_READER_KEY_NEXT_PAGE));
+        readerKeyFirstPage.setText(
+                (String) config.getField(Config.FIELD_READER_KEY_FIRST_PAGE));
+        readerKeyLastPage.setText(
+                (String) config.getField(Config.FIELD_READER_KEY_LAST_PAGE));
+        readerKeyToSeries.setText(
+                (String) config.getField(Config.FIELD_READER_KEY_TO_SERIES));
     }
 
     /**
@@ -232,6 +254,17 @@ public class ConfigController extends Controller {
                 restrictPreloadingCheck.isSelected());
         config.updateField(Config.FIELD_PRELOAD_PAGES_AMOUNT,
                 preloadingAmountSpinner.getValue());
+        config.updateField(Config.FIELD_READER_KEY_PREV_PAGE,
+                readerKeyPrevPage.getText());
+        config.updateField(Config.FIELD_READER_KEY_NEXT_PAGE,
+                readerKeyNextPage.getText());
+        config.updateField(Config.FIELD_READER_KEY_FIRST_PAGE,
+                readerKeyFirstPage.getText());
+        config.updateField(Config.FIELD_READER_KEY_LAST_PAGE,
+                readerKeyLastPage.getText());
+        config.updateField(Config.FIELD_READER_KEY_TO_SERIES,
+                readerKeyToSeries.getText());
+
         sceneManager.saveConfig();
 
         // ensure that night_mode_reader_only is properly applied
@@ -272,6 +305,22 @@ public class ConfigController extends Controller {
             sceneManager.getConfig().restoreDefaults();
             onMadeActive();
         }
+    }
+
+    @FXML
+    private void promptKeyBinding(ActionEvent event) {
+        Button caller_button = (Button) event.getSource();
+
+        Alert alert = new Alert(Alert.AlertType.NONE,
+                "Press the key to bind to this operation.", ButtonType.CANCEL);
+        Button cancel_button = (Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL);
+        cancel_button.setOnKeyPressed(keyEvent -> {
+            caller_button.setText(keyEvent.getCode().toString());
+            alert.close();
+        });
+
+        alert.setTitle(stage.getTitle());
+        alert.showAndWait();
     }
 
     /**

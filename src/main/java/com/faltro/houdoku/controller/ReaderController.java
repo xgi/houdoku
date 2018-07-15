@@ -119,32 +119,6 @@ public class ReaderController extends Controller {
         imageScrollPane.minWidthProperty().bind(stage.widthProperty());
         imageScrollPane.minHeightProperty().bind(stage.heightProperty());
 
-        // create the keyEventHandler for controlling reader with key commands
-        keyEventHandler = event -> {
-            // only perform actions if the user is not in the page num textfield
-            if (!pageNumField.isFocused()) {
-                if (event.getCode() == KeyCode.RIGHT || event.getCode() == KeyCode.PAGE_DOWN) {
-                    if (chapter.getCurrentPageNum() >= chapter.getTotalPages() - 1 &&
-                            !nextChapterButton.isDisabled()) {
-                        nextChapter();
-                    } else {
-                        nextPage();
-                    }
-                } else if (event.getCode() == KeyCode.LEFT || event.getCode() == KeyCode.PAGE_UP) {
-                    if (chapter.getCurrentPageNum() == 0 && !prevChapterButton.isDisabled()) {
-                        previousChapter();
-                    } else {
-                        previousPage();
-                    }
-                } else if (event.getCode() == KeyCode.HOME) {
-                    firstPage();
-                } else if (event.getCode() == KeyCode.END) {
-                    lastPage();
-                }
-            }
-            event.consume();
-        };
-
         // properly size the ImageView based on default fit setting
         updateImageViewFit();
     }
@@ -157,6 +131,7 @@ public class ReaderController extends Controller {
      */
     @Override
     public void onMadeActive() {
+        keyEventHandler = newKeyEventHandler();
         sceneManager.getStage().getScene().addEventHandler(KeyEvent.ANY, keyEventHandler);
         applyImageFilter();
         imageView.requestFocus();
@@ -180,6 +155,65 @@ public class ReaderController extends Controller {
 
         totalPagesField.setText("??");
         chapter.clearImages();
+    }
+
+    /**
+     * Create a new KeyEvent EventHandler for controlling the page.
+     * <p>
+     * Normally it would be sufficient to simply create the handler in
+     * initialize(), but the config with key bindings may change before the
+     * client is restarted, so we instead make a new event handler at every
+     * onMadeActive() using the current config.
+     * <p>
+     * We also could have put Config.getField's in the event itself, but that
+     * would be very inefficient.
+     *
+     * @return a complete KeyEvent EventHandler for the reader page
+     */
+    private EventHandler<KeyEvent> newKeyEventHandler() {
+        Config config = sceneManager.getConfig();
+        KeyCode keyPrevPage = KeyCode.valueOf(
+                (String) config.getField(Config.FIELD_READER_KEY_PREV_PAGE));
+        KeyCode keyNextPage = KeyCode.valueOf(
+                (String) config.getField(Config.FIELD_READER_KEY_NEXT_PAGE));
+        KeyCode keyFirstPage = KeyCode.valueOf(
+                (String) config.getField(Config.FIELD_READER_KEY_FIRST_PAGE));
+        KeyCode keyLastPage = KeyCode.valueOf(
+                (String) config.getField(Config.FIELD_READER_KEY_LAST_PAGE));
+        KeyCode keyToSeries = KeyCode.valueOf(
+                (String) config.getField(Config.FIELD_READER_KEY_TO_SERIES));
+
+        return event -> {
+            // only handle KeyEvent.KEY_RELEASE -- not ideal, since this may
+            // make the client appear slower to respond, but most non-letter
+            // keys are not picked up by KEY_PRESSED
+            if (event.getEventType() == KeyEvent.KEY_RELEASED) {
+                // only perform actions if the user is not in the page num textfield
+                if (!pageNumField.isFocused()) {
+                    if (event.getCode() == keyPrevPage) {
+                        if (chapter.getCurrentPageNum() == 0 && !prevChapterButton.isDisabled()) {
+                            previousChapter();
+                        } else {
+                            previousPage();
+                        }
+                    } else if (event.getCode() == keyNextPage) {
+                        if (chapter.getCurrentPageNum() >= chapter.getTotalPages() - 1 &&
+                                !nextChapterButton.isDisabled()) {
+                            nextChapter();
+                        } else {
+                            nextPage();
+                        }
+                    } else if (event.getCode() == keyFirstPage) {
+                        firstPage();
+                    } else if (event.getCode() == keyLastPage) {
+                        lastPage();
+                    } else if (event.getCode() == keyToSeries) {
+                        goToSeries();
+                    }
+                }
+                event.consume();
+            }
+        };
     }
 
     /**

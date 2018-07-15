@@ -144,3 +144,7 @@
 #configControlBar .button {
     -fx-min-width: 8em;
 }
+
+.configTabWell .button {
+    -fx-min-width: 9em;
+}

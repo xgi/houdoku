@@ -132,10 +132,36 @@
                                               styleClass="bareTextAlt"/>
                                     <HBox fx:id="preloadingAmountBox" spacing="20"
                                           styleClass="controlSubBox" alignment="CENTER_LEFT">
-                                        <Label text="Number of images to preload: "
+                                        <Label text="Number of images to preload:"
                                                styleClass="bareTextAlt"/>
                                         <Spinner fx:id="preloadingAmountSpinner" maxWidth="70"
                                                  min="0" max="99"/>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="Key Bindings"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <HBox spacing="20">
+                                        <VBox alignment="CENTER_RIGHT" spacing="16">
+                                            <Label text="Previous page:" styleClass="bareTextAlt"/>
+                                            <Label text="Next page:" styleClass="bareTextAlt"/>
+                                            <Label text="First page:" styleClass="bareTextAlt"/>
+                                            <Label text="Last page:" styleClass="bareTextAlt"/>
+                                            <Label text="Back to series:" styleClass="bareTextAlt"/>
+                                        </VBox>
+                                        <VBox alignment="CENTER" spacing="6">
+                                            <Button fx:id="readerKeyPrevPage"
+                                                    onAction="#promptKeyBinding"/>
+                                            <Button fx:id="readerKeyNextPage"
+                                                    onAction="#promptKeyBinding"/>
+                                            <Button fx:id="readerKeyFirstPage"
+                                                    onAction="#promptKeyBinding"/>
+                                            <Button fx:id="readerKeyLastPage"
+                                                    onAction="#promptKeyBinding"/>
+                                            <Button fx:id="readerKeyToSeries"
+                                                    onAction="#promptKeyBinding"/>
+                                        </VBox>
                                     </HBox>
                                 </VBox>
                             </VBox>

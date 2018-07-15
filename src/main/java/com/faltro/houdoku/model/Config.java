@@ -1,5 +1,7 @@
 package com.faltro.houdoku.model;
 
+import javafx.scene.input.KeyCode;
+
 import java.util.HashMap;
 
 /**
@@ -46,6 +48,27 @@ public class Config {
      */
     public static final String FIELD_PRELOAD_PAGES_AMOUNT = "preload_pages_amount";
     /**
+     * Key binding in the reader for going to the previous page.
+     */
+    public static final String FIELD_READER_KEY_PREV_PAGE = "reader_key_prev_page";
+    /**
+     * Key binding in the reader for going to the next page.
+     */
+    public static final String FIELD_READER_KEY_NEXT_PAGE = "reader_key_next_page";
+    /**
+     * Key binding in the reader for going to the first page.
+     */
+    public static final String FIELD_READER_KEY_FIRST_PAGE = "reader_key_first_page";
+    /**
+     * Key binding in the reader for going to the last page.
+     */
+    public static final String FIELD_READER_KEY_LAST_PAGE = "reader_key_last_page";
+    /**
+     * Key binding in the reader for going back to the series view.
+     */
+    public static final String FIELD_READER_KEY_TO_SERIES = "reader_key_to_series";
+
+    /**
      * The HashMap of default configuration values.
      */
     private static final HashMap<String, Object> DEFAULTS = new HashMap<>();
@@ -59,6 +82,11 @@ public class Config {
         DEFAULTS.put(FIELD_PAGE_FILTER_BRIGHTNESS, 0.50);
         DEFAULTS.put(FIELD_RESTRICT_PRELOAD_PAGES, false);
         DEFAULTS.put(FIELD_PRELOAD_PAGES_AMOUNT, 6.0);
+        DEFAULTS.put(FIELD_READER_KEY_PREV_PAGE, KeyCode.LEFT.toString());
+        DEFAULTS.put(FIELD_READER_KEY_NEXT_PAGE, KeyCode.RIGHT.toString());
+        DEFAULTS.put(FIELD_READER_KEY_FIRST_PAGE, KeyCode.HOME.toString());
+        DEFAULTS.put(FIELD_READER_KEY_LAST_PAGE, KeyCode.END.toString());
+        DEFAULTS.put(FIELD_READER_KEY_TO_SERIES, KeyCode.BACK_SPACE.toString());
     }
 
     private HashMap<String, Object> data;
