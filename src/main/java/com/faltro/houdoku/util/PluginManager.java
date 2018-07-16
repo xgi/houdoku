@@ -15,7 +15,7 @@ import java.util.Arrays;
  * multiple plugin instances are not necessary.
  */
 public class PluginManager {
-    private ArrayList<ContentSource> contentSources;
+    private final ArrayList<ContentSource> contentSources;
 
     /**
      * Create the PluginManager.

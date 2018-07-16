@@ -24,7 +24,7 @@ abstract public class Controller {
     /**
      * The client's unique SceneManager.
      */
-    SceneManager sceneManager;
+    final SceneManager sceneManager;
     /**
      * The stage which the controller's view resides on.
      */
@@ -56,7 +56,7 @@ abstract public class Controller {
      * Initialize the components of the controller's view.
      */
     @FXML
-    public void initialize() {
+    void initialize() {
         container.prefWidthProperty().bind(
                 stage.widthProperty()
         );
@@ -69,7 +69,7 @@ abstract public class Controller {
      * Reload/"restart" the page. Primarily expected to be run after changes
      * have been made to the @{@link com.faltro.houdoku.model.Config}.
      */
-    public void reload() {
+    void reload() {
         onMadeInactive();
         onMadeActive();
     }
@@ -85,7 +85,7 @@ abstract public class Controller {
     /**
      * Toggle whether night mode is enabled.
      */
-    public void toggleNightMode() {
+    void toggleNightMode() {
         sceneManager.toggleTheme();
     }
 

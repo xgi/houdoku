@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SearchRunnable extends LoaderRunnable {
-    private ContentSource contentSource;
-    private String query;
-    private SearchSeriesController searchSeriesController;
+    private final ContentSource contentSource;
+    private final String query;
+    private final SearchSeriesController searchSeriesController;
 
     /**
      * Start a thread for searching for series'.

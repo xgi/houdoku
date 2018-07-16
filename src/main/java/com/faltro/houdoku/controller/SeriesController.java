@@ -142,9 +142,7 @@ public class SeriesController extends Controller {
     public void initialize() {
         super.initialize();
 
-        stage.widthProperty().addListener((o, oldValue, newValue) -> {
-            updateCoverSize();
-        });
+        stage.widthProperty().addListener((o, oldValue, newValue) -> updateCoverSize());
 
         infoContainer.prefWidthProperty().bind(
                 stage.widthProperty().multiply(INFO_WIDTH)

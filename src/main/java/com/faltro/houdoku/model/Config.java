@@ -8,7 +8,7 @@ import java.util.HashMap;
  * Stores user-specific config information for the client.
  */
 public class Config {
-    private HashMap<String, Object> data;
+    private final HashMap<String, Object> data;
 
     /**
      * Create a Config instance with data using the default values.
@@ -31,25 +31,16 @@ public class Config {
 
     /**
      * Update the value for a field in the config data.
-     * <p>
-     * This method returns a boolean of whether it was successful in updating
-     * the field. It is considered unsuccessful if the given field name is not
-     * in the data HashMap, or if the type of the new value does not match the
-     * type of the existing value.
      *
      * @param field the Field to replace
      * @param value the new value of the field
-     * @return whether or not the field was successfully updated
      */
-    public boolean replaceValue(Field field, Object value) {
-        boolean successful = false;
+    public void replaceValue(Field field, Object value) {
         if (data.containsKey(field.name)) {
             if (data.get(field.name).getClass() == value.getClass()) {
                 data.replace(field.name, value);
-                successful = true;
             }
         }
-        return successful;
     }
 
     /**
@@ -127,19 +118,19 @@ public class Config {
          */
         READER_KEY_TO_SERIES("reader_key_to_series", KeyCode.BACK_SPACE.toString());
 
-        String name;
-        Object defaultValue;
+        final String name;
+        final Object defaultValue;
 
         Field(String name, Object default_value) {
             this.name = name;
             this.defaultValue = default_value;
         }
 
-        public String getName() {
+        String getName() {
             return name;
         }
 
-        public Object getDefaultValue() {
+        Object getDefaultValue() {
             return defaultValue;
         }
 

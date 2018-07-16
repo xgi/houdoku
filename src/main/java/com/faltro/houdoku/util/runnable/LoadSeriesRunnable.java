@@ -11,9 +11,9 @@ import com.faltro.houdoku.util.ContentSource;
 import java.io.IOException;
 
 public class LoadSeriesRunnable extends LoaderRunnable {
-    private ContentSource contentSource;
-    private String source;
-    private LibraryController libraryController;
+    private final ContentSource contentSource;
+    private final String source;
+    private final LibraryController libraryController;
 
     /**
      * Runnable for loading a series.

@@ -50,6 +50,6 @@ public class Requests {
      * @throws IOException an IOException occurred when handling the Response
      */
     public static Document parse(Response response) throws IOException {
-        return Jsoup.parse(response.body().string());
+        return response.body() == null ? null : Jsoup.parse(response.body().string());
     }
 }

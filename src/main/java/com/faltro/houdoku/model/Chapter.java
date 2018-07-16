@@ -14,8 +14,8 @@ public class Chapter {
     public LocalDateTime localDateTime;
     public transient Image[] images;
     private transient Series series;
-    private String title;
-    private String source;
+    private final String title;
+    private final String source;
     private int currentPageNum;
 
     private Chapter(Series series, String title, String source) {

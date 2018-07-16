@@ -63,13 +63,13 @@ public class SceneManager {
      */
     private static final double DEFAULT_CONFIG_HEIGHT_MULTIPLIER = 0.85;
 
-    private Stage stage;
-    private Stage stage_config;
-    private HashMap<Integer, Parent> roots;
-    private HashMap<Parent, Controller> controllers;
-    private PluginManager pluginManager;
-    private ContentLoader contentLoader;
-    private Config config;
+    private final Stage stage;
+    private final Stage stage_config;
+    private final HashMap<Integer, Parent> roots;
+    private final HashMap<Parent, Controller> controllers;
+    private final PluginManager pluginManager;
+    private final ContentLoader contentLoader;
+    private final Config config;
 
     /**
      * Create the SceneManager.
@@ -217,7 +217,7 @@ public class SceneManager {
      * @see #MIN_DEFAULT_WIDTH
      * @see #MIN_DEFAULT_HEIGHT
      */
-    public void sizeStage(Stage stg) {
+    private void sizeStage(Stage stg) {
         sizeStage(stg, 1, 1);
     }
 
@@ -250,7 +250,7 @@ public class SceneManager {
         Data.saveConfig(config);
     }
 
-    public Parent getRoot(int id) {
+    private Parent getRoot(int id) {
         return roots.get(id);
     }
 

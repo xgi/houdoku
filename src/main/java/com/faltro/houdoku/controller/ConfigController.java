@@ -70,7 +70,7 @@ public class ConfigController extends Controller {
     @FXML
     private HBox preloadingAmountBox;
     @FXML
-    private Spinner preloadingAmountSpinner;
+    private Spinner<Integer> preloadingAmountSpinner;
     @FXML
     private Button readerKeyPrevPage;
     @FXML

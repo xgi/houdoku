@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class ContentLoader {
     public static final String PREFIX_LOAD_PAGE = "loadPage_";
-    public static final String PREFIX_LOAD_SERIES = "loadSeries_";
+    private static final String PREFIX_LOAD_SERIES = "loadSeries_";
     public static final String PREFIX_RELOAD_SERIES = "reloadSeries_";
     public static final String PREFIX_SEARCH = "search_";
-    private ArrayList<LoaderRunnable> runnables;
+    private final ArrayList<LoaderRunnable> runnables;
 
     public ContentLoader() {
         this.runnables = new ArrayList<>();

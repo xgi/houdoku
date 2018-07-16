@@ -85,7 +85,7 @@ public class LibraryController extends Controller {
     @FXML
     private CheckMenuItem showActionBarItem;
 
-    private Library library;
+    private final Library library;
 
     public LibraryController(SceneManager sceneManager) {
         super(sceneManager);

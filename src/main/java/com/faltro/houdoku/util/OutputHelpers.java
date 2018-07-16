@@ -44,6 +44,6 @@ public class OutputHelpers {
     public static String sanitizeFilename(String filename) {
         // based on https://stackoverflow.com/a/17745189
         // this could have issues with non-latin characters
-        return filename.replaceAll("[^a-zA-Z0-9\\._]+", "_");
+        return filename.replaceAll("[^a-zA-Z0-9._]+", "_");
     }
 }

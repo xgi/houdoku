@@ -32,10 +32,10 @@ import static com.faltro.houdoku.net.Requests.parse;
  * @see com.faltro.houdoku.util.ContentSource
  */
 public class MangaHere extends GenericContentSource {
-    public static final int ID = 1;
-    public static final String NAME = "MangaHere";
-    public static final String DOMAIN = "www.mangahere.cc";
-    public static final String PROTOCOL = "https";
+    private static final int ID = 1;
+    private static final String NAME = "MangaHere";
+    private static final String DOMAIN = "www.mangahere.cc";
+    private static final String PROTOCOL = "https";
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {

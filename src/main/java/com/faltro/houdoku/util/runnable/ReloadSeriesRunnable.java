@@ -10,9 +10,9 @@ import com.faltro.houdoku.util.ContentSource;
 import java.io.IOException;
 
 public class ReloadSeriesRunnable extends LoaderRunnable {
-    private ContentSource contentSource;
-    private Series series;
-    private SeriesController seriesController;
+    private final ContentSource contentSource;
+    private final Series series;
+    private final SeriesController seriesController;
 
     /**
      * Runnable for reloading an existing series.

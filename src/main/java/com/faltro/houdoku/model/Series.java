@@ -19,10 +19,10 @@ public class Series {
     public double rating;
     public int ratings;
     public String[] genres;
-    private String title;
-    private String source;
+    private final String title;
+    private final String source;
     private transient Image cover;
-    private int contentSourceId;
+    private final int contentSourceId;
     private int numChapters;
     private int numHighestChapter;
     private ArrayList<String> stringCategories;
@@ -57,7 +57,7 @@ public class Series {
      * @param metadata a HashMap where keys are the field names listed above
      *                 as Strings and values of the matching type
      */
-    public void setMetadata(HashMap<String, Object> metadata) {
+    private void setMetadata(HashMap<String, Object> metadata) {
         for (String key : metadata.keySet()) {
             switch (key) {
                 case "language":

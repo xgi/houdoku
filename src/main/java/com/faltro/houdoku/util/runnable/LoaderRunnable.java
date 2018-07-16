@@ -3,8 +3,8 @@ package com.faltro.houdoku.util.runnable;
 import com.faltro.houdoku.util.ContentLoader;
 
 public class LoaderRunnable implements Runnable {
-    ContentLoader contentLoader;
-    String name;
+    final ContentLoader contentLoader;
+    private final String name;
     boolean running;
 
     /**

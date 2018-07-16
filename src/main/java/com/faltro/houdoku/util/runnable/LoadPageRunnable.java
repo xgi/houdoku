@@ -11,12 +11,12 @@ import javafx.scene.image.Image;
 import java.io.IOException;
 
 public class LoadPageRunnable extends LoaderRunnable {
-    private ContentSource contentSource;
-    private Chapter chapter;
-    private int page;
-    private ReaderController readerController;
-    private boolean preloading;
-    private int preloading_amount;
+    private final ContentSource contentSource;
+    private final Chapter chapter;
+    private final int page;
+    private final ReaderController readerController;
+    private final boolean preloading;
+    private final int preloading_amount;
 
     /**
      * Runnable for loading a chapter page.

@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Library {
-    private ArrayList<Series> serieses;
-    private Category rootCategory;
+    private final ArrayList<Series> serieses;
+    private final Category rootCategory;
 
     public Library() {
         this.serieses = new ArrayList<>();

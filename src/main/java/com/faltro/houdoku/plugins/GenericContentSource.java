@@ -25,20 +25,21 @@ import static com.faltro.houdoku.net.Requests.GET;
  */
 public class GenericContentSource implements ContentSource {
     public static final int ID = -1;
-    public static final String NAME = "GenericContentSource";
-    public static final String DOMAIN = "example.com";
+    private static final String NAME = "GenericContentSource";
+    private static final String DOMAIN = "example.com";
     public static final String PROTOCOL = "https";
 
     @Override
     public Image imageFromURL(String url) throws IOException {
         Response response = GET(url);
-        return new Image(response.body().byteStream());
+        return response.body() == null ? null : new Image(response.body().byteStream());
     }
 
     @Override
     public Image imageFromURL(String url, int width) throws IOException {
         Response response = GET(url);
-        return new Image(response.body().byteStream(), width, 0, true, false);
+        return response.body() == null ? null :
+                new Image(response.body().byteStream(), width, 0, true, false);
     }
 
     @Override

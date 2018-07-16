@@ -1,11 +1,12 @@
 package com.faltro.houdoku.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Category {
     private String name;
     private transient Category parent;
-    private ArrayList<Category> subcategories;
+    private final ArrayList<Category> subcategories;
     private transient int occurrences;
 
     public Category(String name, Category parent) {
@@ -84,11 +85,11 @@ public class Category {
         return parent;
     }
 
-    public void setParent(Category category) {
+    private void setParent(Category category) {
         parent = category;
     }
 
-    public ArrayList<Category> getSubcategories() {
+    public List<Category> getSubcategories() {
         subcategories.sort((a, b) -> {
             String name_a = a.getName();
             String name_b = b.getName();
@@ -105,7 +106,12 @@ public class Category {
         return name + " (" + Integer.toString(occurrences) + ")";
     }
 
-    public boolean equals(Category category) {
-        return name.toLowerCase().equals(category.name.toLowerCase());
+    @Override
+    public boolean equals(Object object) {
+        boolean result = false;
+        if (object != null && object.getClass() == this.getClass()) {
+            result = name.equalsIgnoreCase(((Category) object).name);
+        }
+        return result;
     }
 }

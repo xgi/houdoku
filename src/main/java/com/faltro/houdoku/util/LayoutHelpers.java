@@ -13,9 +13,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 public class LayoutHelpers {
-    private static DropShadow COVER_DROPSHADOW = new DropShadow(5, Color.BLACK);
-    private static ColorAdjust COVER_ADJUST_DEFAULT = new ColorAdjust(0, 0, -0.2, 0);
-    private static ColorAdjust COVER_ADJUST_HOVER = new ColorAdjust(0, 0, -0.5, 0);
+    private static final DropShadow COVER_DROPSHADOW = new DropShadow(5, Color.BLACK);
+    private static final ColorAdjust COVER_ADJUST_DEFAULT = new ColorAdjust(0, 0, -0.2, 0);
+    private static final ColorAdjust COVER_ADJUST_HOVER = new ColorAdjust(0, 0, -0.5, 0);
 
     /**
      * Create the container for displaying a series cover, for use in FlowPane

@@ -21,29 +21,29 @@ public class Data {
     /**
      * The name of the encoding to use for all saved text.
      */
-    private static String CHAR_ENCODING = "UTF-8";
+    private static final String CHAR_ENCODING = "UTF-8";
     /**
      * AppDirs instance for determining cross-platform application directories.
      */
-    private static AppDirs appDirs = AppDirsFactory.getInstance();
+    private static final AppDirs appDirs = AppDirsFactory.getInstance();
     /**
      * The base directory for storing application-specific user data.
      */
-    private static String USER_DATA_DIR = appDirs.getUserDataDir("houdoku", null, "xgi");
+    private static final String USER_DATA_DIR = appDirs.getUserDataDir("houdoku", null, "xgi");
     /**
      * The Path for storing library data.
      */
-    private static Path PATH_LIBRARY = Paths.get(
+    private static final Path PATH_LIBRARY = Paths.get(
             USER_DATA_DIR + File.separator + "library.json.gzip");
     /**
      * The Path for storing config data.
      */
-    private static Path PATH_CONFIG = Paths.get(
+    private static final Path PATH_CONFIG = Paths.get(
             USER_DATA_DIR + File.separator + "config.json.gzip");
     /**
      * The Path for storing series cover images.
      */
-    private static Path PATH_COVERS = Paths.get(USER_DATA_DIR + File.separator + "covers");
+    private static final Path PATH_COVERS = Paths.get(USER_DATA_DIR + File.separator + "covers");
 
     /**
      * Save the given Library to the filesystem.

@@ -298,7 +298,7 @@ public class ReaderController extends Controller {
      * Go to, and load, the first page.
      */
     @FXML
-    public void firstPage() {
+    private void firstPage() {
         chapter.specificPage(0);
         loadCurrentPage();
     }
@@ -307,7 +307,7 @@ public class ReaderController extends Controller {
      * Go to, and load, the next page.
      */
     @FXML
-    public void nextPage() {
+    private void nextPage() {
         chapter.deltaPage(1);
         loadCurrentPage();
     }
@@ -316,7 +316,7 @@ public class ReaderController extends Controller {
      * Go to, and load, the previous page.
      */
     @FXML
-    public void previousPage() {
+    private void previousPage() {
         chapter.deltaPage(-1);
         loadCurrentPage();
     }
@@ -325,7 +325,7 @@ public class ReaderController extends Controller {
      * Go to, and load, the last page.
      */
     @FXML
-    public void lastPage() {
+    private void lastPage() {
         chapter.specificPage(chapter.getTotalPages());
         loadCurrentPage();
     }
@@ -337,7 +337,7 @@ public class ReaderController extends Controller {
      * available - that should be enforced by disabling the prev chapter button.
      */
     @FXML
-    public void previousChapter() {
+    private void previousChapter() {
         setChapter(chapter.getSeries().smartPreviousChapter(chapter));
 
         // reset the number of total pages
@@ -350,7 +350,7 @@ public class ReaderController extends Controller {
      * Go to the next chapter and load the first page.
      */
     @FXML
-    public void nextChapter() {
+    private void nextChapter() {
         setChapter(chapter.getSeries().smartNextChapter(chapter));
 
         // reset the number of total pages
@@ -487,7 +487,7 @@ public class ReaderController extends Controller {
      * @see SeriesController
      */
     @FXML
-    public void goToSeries() {
+    private void goToSeries() {
         sceneManager.changeToRoot(SeriesController.ID);
     }
 

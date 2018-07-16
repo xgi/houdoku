@@ -41,7 +41,7 @@ public class SearchSeriesController extends Controller {
     private static final double COL_COVER_WIDTH = 0.15;
     private static final double COL_TITLE_WIDTH = 0.85;
     private static final double FLOW_RESULTS_ROWS = 5;
-    public ObservableList<HashMap<String, Object>> results;
+    public final ObservableList<HashMap<String, Object>> results;
     @FXML
     public ProgressIndicator searchProgressIndicator;
     @FXML
@@ -135,9 +135,7 @@ public class SearchSeriesController extends Controller {
 
         // search with a blank query when changing content sources in order
         // to populate the window
-        ChangeListener listener = (o, oldValue, newValue) -> {
-            search();
-        };
+        ChangeListener<ContentSource> listener = (o, oldValue, newValue) -> search();
         contentSourcesBox.valueProperty().addListener(listener);
     }
 
@@ -328,7 +326,7 @@ public class SearchSeriesController extends Controller {
      * @see #searchTextField
      */
     @FXML
-    public void search() {
+    private void search() {
         // clear current results
         tableView.setItems(FXCollections.emptyObservableList());
         tableView.refresh();
@@ -355,7 +353,7 @@ public class SearchSeriesController extends Controller {
      * Change to the library page.
      */
     @FXML
-    public void goToLibrary() {
+    private void goToLibrary() {
         sceneManager.changeToRoot(LibraryController.ID);
     }
 }
