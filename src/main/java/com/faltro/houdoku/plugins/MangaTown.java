@@ -30,8 +30,8 @@ import static com.faltro.houdoku.net.Requests.parse;
  * @see com.faltro.houdoku.util.ContentSource
  */
 public class MangaTown extends GenericContentSource {
-    private static final int ID = 3;
     public static final String NAME = "MangaTown";
+    private static final int ID = 3;
     private static final String DOMAIN = "www.mangatown.com";
     private static final String PROTOCOL = "https";
 

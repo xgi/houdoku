@@ -48,6 +48,7 @@ public class LibraryController extends Controller {
     private static final double COL_COVER_WIDTH = 0.1;
     private static final double COL_TITLE_WIDTH = 0.7;
     private static final double COL_NUMCHAPTERS_WIDTH = 0.2;
+    private final Library library;
     @FXML
     public ProgressIndicator reloadProgressIndicator;
     @FXML
@@ -84,8 +85,6 @@ public class LibraryController extends Controller {
     private TextField filterTextField;
     @FXML
     private CheckMenuItem showActionBarItem;
-
-    private final Library library;
 
     public LibraryController(SceneManager sceneManager) {
         super(sceneManager);
@@ -255,7 +254,6 @@ public class LibraryController extends Controller {
     /**
      * @see Controller#onMadeInactive()
      */
-    @Override
     public void onMadeInactive() {
     }
 

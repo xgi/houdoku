@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Category {
+    private final ArrayList<Category> subcategories;
     private String name;
     private transient Category parent;
-    private final ArrayList<Category> subcategories;
     private transient int occurrences;
 
     public Category(String name, Category parent) {
@@ -102,10 +102,6 @@ public class Category {
         this.occurrences = occurrences;
     }
 
-    public String toString() {
-        return name + " (" + Integer.toString(occurrences) + ")";
-    }
-
     @Override
     public boolean equals(Object object) {
         boolean result = false;
@@ -113,5 +109,9 @@ public class Category {
             result = name.equalsIgnoreCase(((Category) object).name);
         }
         return result;
+    }
+
+    public String toString() {
+        return name + " (" + Integer.toString(occurrences) + ")";
     }
 }

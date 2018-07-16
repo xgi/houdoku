@@ -17,14 +17,14 @@ abstract public class Controller {
      */
     public static int ID = -1;
     /**
+     * The client's unique SceneManager.
+     */
+    final SceneManager sceneManager;
+    /**
      * Toggle for whether night mode is active (optional).
      */
     @FXML
     public CheckMenuItem nightModeItem;
-    /**
-     * The client's unique SceneManager.
-     */
-    final SceneManager sceneManager;
     /**
      * The stage which the controller's view resides on.
      */

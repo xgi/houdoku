@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 
 public class Chapter {
+    private final String title;
+    private final String source;
     public double chapterNum;
     public int volumeNum;
     public String language;
@@ -14,8 +16,6 @@ public class Chapter {
     public LocalDateTime localDateTime;
     public transient Image[] images;
     private transient Series series;
-    private final String title;
-    private final String source;
     private int currentPageNum;
 
     private Chapter(Series series, String title, String source) {

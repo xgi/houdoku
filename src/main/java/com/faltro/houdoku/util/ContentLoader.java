@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 public class ContentLoader {
     public static final String PREFIX_LOAD_PAGE = "loadPage_";
-    private static final String PREFIX_LOAD_SERIES = "loadSeries_";
     public static final String PREFIX_RELOAD_SERIES = "reloadSeries_";
     public static final String PREFIX_SEARCH = "search_";
+    private static final String PREFIX_LOAD_SERIES = "loadSeries_";
     private final ArrayList<LoaderRunnable> runnables;
 
     public ContentLoader() {

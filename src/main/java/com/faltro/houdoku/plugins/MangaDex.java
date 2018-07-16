@@ -30,8 +30,8 @@ import static com.faltro.houdoku.net.Requests.parse;
  * @see com.faltro.houdoku.util.ContentSource
  */
 public class MangaDex extends GenericContentSource {
-    private static final int ID = 0;
     public static final String NAME = "MangaDex";
+    private static final int ID = 0;
     private static final String DOMAIN = "mangadex.org";
     private static final String PROTOCOL = "https";
 

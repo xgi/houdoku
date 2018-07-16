@@ -129,7 +129,6 @@ public class ReaderController extends Controller {
      *
      * @see Controller#onMadeActive()
      */
-    @Override
     public void onMadeActive() {
         keyEventHandler = newKeyEventHandler();
         sceneManager.getStage().getScene().addEventHandler(KeyEvent.ANY, keyEventHandler);
@@ -143,7 +142,6 @@ public class ReaderController extends Controller {
      *
      * @see Controller#onMadeInactive()
      */
-    @Override
     public void onMadeInactive() {
         // stop active page loads
         sceneManager.getContentLoader().stopThreads(ContentLoader.PREFIX_LOAD_PAGE);

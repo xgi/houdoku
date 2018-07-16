@@ -147,7 +147,6 @@ public class SearchSeriesController extends Controller {
      * @see com.faltro.houdoku.util.PluginManager
      * @see ContentSource
      */
-    @Override
     public void onMadeActive() {
         // check available content sources
         ObservableList<ContentSource> contentSources = FXCollections.observableArrayList(
@@ -159,7 +158,6 @@ public class SearchSeriesController extends Controller {
     /**
      * @see Controller#onMadeInactive()
      */
-    @Override
     public void onMadeInactive() {
         // clear current content
         searchTextField.setText("");

@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class Series {
+    private final String title;
+    private final String source;
+    private final int contentSourceId;
     public String language;
     public String author;
     public String artist;
@@ -19,10 +22,7 @@ public class Series {
     public double rating;
     public int ratings;
     public String[] genres;
-    private final String title;
-    private final String source;
     private transient Image cover;
-    private final int contentSourceId;
     private int numChapters;
     private int numHighestChapter;
     private ArrayList<String> stringCategories;

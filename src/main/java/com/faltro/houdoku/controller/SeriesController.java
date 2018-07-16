@@ -256,7 +256,6 @@ public class SeriesController extends Controller {
     /**
      * @see Controller#onMadeActive()
      */
-    @Override
     public void onMadeActive() {
         refreshContent();
         updateCoverSize();
@@ -271,7 +270,6 @@ public class SeriesController extends Controller {
     /**
      * @see Controller#onMadeInactive() ()
      */
-    @Override
     public void onMadeInactive() {
         filterTextField.setText("");
     }
