@@ -104,6 +104,9 @@
 
 #listView {
     -fx-font-size: 1.4em;
+    -fx-border-width: 0 1 0 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
 }
 
 #listView .list-cell .listItem {

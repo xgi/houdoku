@@ -25,18 +25,12 @@ import javafx.scene.text.Text;
 public class ConfigController extends Controller {
     public static final int ID = 4;
     /**
-     * The fixed position of the divider between the topics list and content.
+     * The width of the list of topics as a multiplier of the container width.
      */
-    private static final float FIXED_CONTENT_DIVIDER_POS = 0.3f;
-    /**
-     * The width of the content container as a multiplier of the root width.
-     */
-    private static final double CONTENT_WIDTH = 0.7;
+    private static final double TOPIC_LIST_WIDTH = 0.25;
 
     @FXML
     private VBox container;
-    @FXML
-    private SplitPane configSplitPane;
     @FXML
     private ListView<HBox> listView;
     @FXML
@@ -103,8 +97,10 @@ public class ConfigController extends Controller {
     public void initialize() {
         super.initialize();
 
-        // set the position of the divider
-        configSplitPane.setDividerPosition(0, FIXED_CONTENT_DIVIDER_POS);
+        // set the width of the topic listView
+        listView.prefWidthProperty().bind(
+                container.widthProperty()
+                        .multiply(TOPIC_LIST_WIDTH));
 
         // populate the listView with topics
         ObservableList<HBox> items = FXCollections.observableArrayList();

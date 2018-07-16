@@ -14,9 +14,9 @@
     <padding>
         <Insets bottom="15" top="15" left="15" right="15"/>
     </padding>
-    <SplitPane fx:id="configSplitPane" VBox.vgrow="ALWAYS">
+    <HBox VBox.vgrow="ALWAYS">
         <ListView fx:id="listView"/>
-        <VBox fx:id="configContentContainer">
+        <VBox fx:id="configContentContainer" HBox.hgrow="ALWAYS">
             <VBox styleClass="topicContainer" spacing="15" VBox.vgrow="ALWAYS"
                   alignment="CENTER_LEFT" userData="Night Mode">
                 <HBox styleClass="topicHeaderBar">
@@ -170,7 +170,7 @@
                 </TabPane>
             </VBox>
         </VBox>
-    </SplitPane>
+    </HBox>
     <HBox fx:id="configControlBar" maxWidth="Infinity">
         <padding>
             <Insets top="15"/>

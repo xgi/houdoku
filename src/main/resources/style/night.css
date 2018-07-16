@@ -138,6 +138,10 @@
     -fx-fill: -color-background-alt;
 }
 
+#listView {
+    -fx-border-color: -color-foreground;
+}
+
 #listView .list-cell {
     -fx-background-color: -color-background-alt;
 }
