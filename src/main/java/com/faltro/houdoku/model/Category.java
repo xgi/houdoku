@@ -39,6 +39,7 @@ public class Category {
      * @param category the subcategory to add
      */
     public void addSubcategory(Category category) {
+        category.setParent(this);
         this.subcategories.add(category);
     }
 
@@ -83,6 +84,10 @@ public class Category {
         return parent;
     }
 
+    public void setParent(Category category) {
+        parent = category;
+    }
+
     public ArrayList<Category> getSubcategories() {
         subcategories.sort((a, b) -> {
             String name_a = a.getName();
@@ -90,10 +95,6 @@ public class Category {
             return name_a.compareTo(name_b);
         });
         return subcategories;
-    }
-
-    public int getOccurrences() {
-        return occurrences;
     }
 
     public void setOccurrences(int occurrences) {

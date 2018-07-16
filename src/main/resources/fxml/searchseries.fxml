@@ -2,10 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -65,7 +65,8 @@
                 <Insets top="10" bottom="10" left="15" right="15"/>
             </padding>
             <ComboBox fx:id="contentSourcesBox"/>
-            <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" promptText="Search for a series..."
+            <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS"
+                       promptText="Search for a series..."
                        onAction="#search"/>
             <Button text="Search" onAction="#search"/>
         </HBox>
