@@ -217,7 +217,7 @@ public class SeriesController extends Controller {
         });
         dateColumn.setCellValueFactory(p -> {
             LocalDateTime localDateTime = p.getValue().localDateTime;
-            return new SimpleStringProperty(
+            return new SimpleStringProperty(localDateTime == null ? "?" :
                     localDateTime.format(OutputHelpers.dateTimeFormatter));
         });
 
@@ -236,10 +236,10 @@ public class SeriesController extends Controller {
                             for (String filter : filters) {
                                 boolean titleMatches = chapter.getTitle()
                                         .toLowerCase().contains(filter);
-                                boolean groupMatches = chapter.group
-                                        .toLowerCase().contains(filter);
-                                boolean languageMatches = chapter.language
-                                        .toLowerCase().contains(filter);
+                                boolean groupMatches = chapter.group != null &&
+                                        chapter.group.toLowerCase().contains(filter);
+                                boolean languageMatches = chapter.language != null &&
+                                        chapter.language.toLowerCase().contains(filter);
                                 boolean chapterNumMatches = Double.toString(chapter.chapterNum)
                                         .toLowerCase().contains(filter);
 
