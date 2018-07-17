@@ -30,10 +30,10 @@ import static com.faltro.houdoku.net.Requests.parse;
  * @see com.faltro.houdoku.util.ContentSource
  */
 public class MangaDex extends GenericContentSource {
+    public static final int ID = 0;
     public static final String NAME = "MangaDex";
-    private static final int ID = 0;
-    private static final String DOMAIN = "mangadex.org";
-    private static final String PROTOCOL = "https";
+    public static final String DOMAIN = "mangadex.org";
+    public static final String PROTOCOL = "https";
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {

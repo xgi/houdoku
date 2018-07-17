@@ -85,7 +85,7 @@ abstract public class Controller {
     /**
      * Toggle whether night mode is enabled.
      */
-    void toggleNightMode() {
+    public void toggleNightMode() {
         sceneManager.toggleTheme();
     }
 

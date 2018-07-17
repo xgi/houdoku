@@ -29,10 +29,10 @@ import static com.faltro.houdoku.net.Requests.*;
  * @see com.faltro.houdoku.util.ContentSource
  */
 public class MangaSee extends GenericContentSource {
+    public static final int ID = 2;
     public static final String NAME = "MangaSee";
-    private static final int ID = 2;
-    private static final String DOMAIN = "mangaseeonline.us";
-    private static final String PROTOCOL = "https";
+    public static final String DOMAIN = "mangaseeonline.us";
+    public static final String PROTOCOL = "https";
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
