@@ -18,7 +18,7 @@ public class Chapter {
     private transient Series series;
     private int currentPageNum;
 
-    private Chapter(Series series, String title, String source) {
+    public Chapter(Series series, String title, String source) {
         this.series = series;
         this.title = title;
         this.source = source;
@@ -38,10 +38,10 @@ public class Chapter {
      * than the total number of pages.
      */
     private void sanitizePageNumber() {
-        if (this.currentPageNum < 0) {
-            this.currentPageNum = 0;
-        } else if (this.currentPageNum >= this.images.length) {
-            this.currentPageNum = this.images.length - 1;
+        if (currentPageNum < 0) {
+            currentPageNum = 0;
+        } else if (currentPageNum >= images.length) {
+            currentPageNum = images.length - 1;
         }
     }
 
