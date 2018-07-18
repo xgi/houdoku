@@ -318,6 +318,10 @@ public class LibraryController extends Controller {
                 flowPane.getChildren().add(result_pane);
             }
         });
+
+        // update occurrence listings in category tree
+        library.calculateCategoryOccurrences();
+        treeView.refresh();
     }
 
     /**
