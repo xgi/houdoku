@@ -110,6 +110,8 @@
 }
 
 #listView .list-cell .listItem {
+    -fx-alignment: center-left;
+    -fx-spacing: 7;
     -fx-padding: 10 0 10 6;
 }
 

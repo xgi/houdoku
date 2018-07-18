@@ -10,10 +10,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+
+import java.util.HashMap;
 
 /**
  * The controller for the config page.
@@ -28,6 +31,15 @@ public class ConfigController extends Controller {
      * The width of the list of topics as a multiplier of the container width.
      */
     private static final double TOPIC_LIST_WIDTH = 0.25;
+    /**
+     * A mapping of topic names and the string to their matching icon file.
+     */
+    private static final HashMap<String, String> ICON_MAP = new HashMap<>();
+
+    static {
+        ICON_MAP.put("Night Mode", "/img/icon_night_mode.png");
+        ICON_MAP.put("Reader", "/img/icon_reader.png");
+    }
 
     @FXML
     private VBox container;
@@ -105,9 +117,13 @@ public class ConfigController extends Controller {
         // populate the listView with topics
         ObservableList<HBox> items = FXCollections.observableArrayList();
         for (Node node : configContentContainer.getChildren()) {
+            String topic_name = node.getUserData().toString();
             HBox item_container = new HBox();
             item_container.getStyleClass().add("listItem");
-            Text item_text = new Text(node.getUserData().toString());
+            Text item_text = new Text(topic_name);
+            Image item_image = new Image(ICON_MAP.get(topic_name));
+            ImageView item_imageview = new ImageView(item_image);
+            item_container.getChildren().add(item_imageview);
             item_container.getChildren().add(item_text);
             items.add(item_container);
         }
@@ -219,7 +235,7 @@ public class ConfigController extends Controller {
      */
     private void updateContent() {
         HBox selected_item = listView.getSelectionModel().getSelectedItem();
-        Text selected_text = (Text) selected_item.getChildren().get(0);
+        Text selected_text = (Text) selected_item.getChildren().get(1);
         for (Node node : configContentContainer.getChildren()) {
             boolean matches_clicked = node.getUserData().toString().equals(selected_text.getText());
             node.setVisible(matches_clicked);
