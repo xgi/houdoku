@@ -46,7 +46,6 @@ public class LoadSeriesRunnable extends LoaderRunnable {
         if (series != null) {
             Library library = libraryController.getLibrary();
             library.addSeries(series);
-            Data.saveLibrary(library);
             libraryController.updateContent();
         }
 

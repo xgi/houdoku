@@ -60,6 +60,7 @@ public class Library {
      */
     public void addSeries(Series series) {
         serieses.add(series);
+        Data.saveLibrary(this);
     }
 
     /**
@@ -72,6 +73,7 @@ public class Library {
     public void removeSeries(Series series) {
         serieses.remove(series);
         Data.deleteCover(series);
+        Data.saveLibrary(this);
     }
 
     /**
