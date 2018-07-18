@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Category {
-    private final ArrayList<Category> subcategories;
+    private ArrayList<Category> subcategories;
     private String name;
     private transient Category parent;
     private transient int occurrences;
@@ -96,6 +96,10 @@ public class Category {
             return name_a.compareTo(name_b);
         });
         return subcategories;
+    }
+
+    public void setSubcategories(ArrayList<Category> subcategories) {
+        this.subcategories = subcategories;
     }
 
     public void setOccurrences(int occurrences) {

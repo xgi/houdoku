@@ -10,8 +10,32 @@ public class Library {
     private final Category rootCategory;
 
     public Library() {
-        this.serieses = new ArrayList<>();
-        this.rootCategory = new Category("All Series", null);
+        serieses = new ArrayList<>();
+
+        // add default categories
+        rootCategory = new Category("All Series", null);
+        Category action = new Category("Action", rootCategory);
+        Category adventure = new Category("Adventure", rootCategory);
+        Category comedy = new Category("Comedy", rootCategory);
+        Category drama = new Category("Drama", rootCategory);
+        Category fantasy = new Category("Fantasy", rootCategory);
+        Category historical = new Category("Historical", rootCategory);
+        Category mystery = new Category("Mystery", rootCategory);
+        Category psychological = new Category("Psychological", rootCategory);
+        Category romance = new Category("Romance", rootCategory);
+        Category scifi = new Category("Sci-Fi", rootCategory);
+        Category sliceoflife = new Category("Slice of Life", rootCategory);
+        Category supernatural = new Category("Supernatural", rootCategory);
+
+        psychological.addSubcategory(new Category("Horror", psychological));
+        fantasy.addSubcategory(new Category("Magic", fantasy));
+        scifi.addSubcategory(new Category("Mecha", scifi));
+
+        ArrayList<Category> subcategories = new ArrayList<>(Arrays.asList(
+                action, adventure, comedy, drama, fantasy, historical, mystery, psychological,
+                romance, scifi, sliceoflife, supernatural));
+        rootCategory.setSubcategories(subcategories);
+
     }
 
     public Library(ArrayList<Series> serieses, Category rootCategory) {
