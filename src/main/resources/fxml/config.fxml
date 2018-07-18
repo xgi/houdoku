@@ -14,7 +14,7 @@
     <padding>
         <Insets bottom="15" top="15" left="15" right="15"/>
     </padding>
-    <HBox VBox.vgrow="ALWAYS">
+    <HBox fx:id="configContainer" VBox.vgrow="ALWAYS">
         <ListView fx:id="listView"/>
         <VBox fx:id="configContentContainer" HBox.hgrow="ALWAYS">
             <VBox styleClass="topicContainer" spacing="15" VBox.vgrow="ALWAYS"

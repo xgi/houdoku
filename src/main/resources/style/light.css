@@ -118,7 +118,7 @@
     -fx-background-color: -color-accent;
 }
 
-#configSplitPane {
+#configContainer {
     -fx-border-color: -color-foreground;
 }
 
