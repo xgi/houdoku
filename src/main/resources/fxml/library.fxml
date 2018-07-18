@@ -65,6 +65,15 @@
                 </ImageView>
             </graphic>
         </Button>
+        <Separator orientation="VERTICAL"/>
+        <Button text="Settings" prefHeight="${actionContainer.prefHeight}"
+                onAction="#showConfigStage">
+            <graphic>
+                <ImageView>
+                    <Image url="/img/icon_settings.png"/>
+                </ImageView>
+            </graphic>
+        </Button>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="15">
             <Separator orientation="VERTICAL"/>
             <TextField fx:id="filterTextField" prefWidth="240"

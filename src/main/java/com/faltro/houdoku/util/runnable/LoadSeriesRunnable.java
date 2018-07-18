@@ -1,7 +1,6 @@
 package com.faltro.houdoku.util.runnable;
 
 import com.faltro.houdoku.controller.LibraryController;
-import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
