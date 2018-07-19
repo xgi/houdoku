@@ -234,14 +234,14 @@ public class ReaderController extends Controller {
      * Chapter, int, ReaderController, boolean, int)
      */
     private void loadCurrentPage() {
-        int currentPageNum = chapter.getCurrentPageNum();
+        // clear current page and show progress indicator so the user
+        // clearly understands that the new page is being loaded
+        setImage(null);
+        imageProgressIndicator.setVisible(true);
 
         // set text field to current page number
+        int currentPageNum = chapter.getCurrentPageNum();
         pageNumField.setText(Integer.toString(currentPageNum + 1));
-
-        ContentSource contentSource = sceneManager.getPluginManager().getSource(
-                chapter.getSeries().getContentSourceId()
-        );
 
         // determine how many pages to preload, if any
         Config config = sceneManager.getConfig();
@@ -250,15 +250,18 @@ public class ReaderController extends Controller {
         int preloading_amount = restrict_preload_pages ?
                 (int) config.getValue(Config.Field.PRELOAD_PAGES_AMOUNT) : -1;
 
-        // start the thread to load the page, will will subsequently begin
+        // start the thread to load the page, which will subsequently begin
         // preloading pages if necessary
+        ContentSource contentSource = sceneManager.getPluginManager().getSource(
+                chapter.getSeries().getContentSourceId()
+        );
         sceneManager.getContentLoader().loadPage(
                 contentSource, chapter, currentPageNum, this, false, preloading_amount);
     }
 
     /**
      * Set the image of the reader's ImageView.
-     *
+     * <p>
      * This method ensures that the image is set when the FX thread is
      * available.
      *
@@ -485,7 +488,9 @@ public class ReaderController extends Controller {
                 imageView.fitHeightProperty().unbind();
                 imageView.fitWidthProperty().unbind();
                 imageView.setFitHeight(-1);
-                imageView.fitWidthProperty().bind(imageView.getImage().widthProperty());
+                imageView.fitWidthProperty().bind(
+                        imageView.getImage() == null ? new SimpleDoubleProperty(0)
+                                : imageView.getImage().widthProperty());
 
                 centerImageView();
             };

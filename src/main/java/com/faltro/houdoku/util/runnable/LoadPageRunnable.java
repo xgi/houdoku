@@ -45,11 +45,6 @@ public class LoadPageRunnable extends LoaderRunnable {
 
     @Override
     public void run() {
-        if (!preloading) {
-            readerController.setImage(null);
-            readerController.imageProgressIndicator.setVisible(true);
-        }
-
         if (page < chapter.images.length) {
             if (chapter.images[page] == null) {
                 Image image = null;
