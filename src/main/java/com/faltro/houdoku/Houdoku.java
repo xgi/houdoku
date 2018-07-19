@@ -5,7 +5,11 @@ import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class Main extends Application {
+import java.io.IOException;
+import java.util.Properties;
+
+public class Houdoku extends Application {
+    private static final Properties properties = new Properties();
     private SceneManager sceneManager;
 
     public static void main(String[] args) {
@@ -14,6 +18,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primary_stage) throws Exception {
+        // load project properties
+        try {
+            properties.load(getClass().getClassLoader().getResourceAsStream("project.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         sceneManager = new SceneManager(primary_stage);
 
         LibraryController library_controller = new LibraryController(sceneManager);
@@ -43,5 +54,13 @@ public class Main extends Application {
     @Override
     public void stop() {
         sceneManager.getContentLoader().stopAllThreads();
+    }
+
+    public static String getName() {
+        return properties.getProperty("name");
+    }
+
+    public static String getVersion() {
+        return properties.getProperty("version");
     }
 }

@@ -29,7 +29,7 @@ public class Data {
     /**
      * The base directory for storing application-specific user data.
      */
-    private static final String USER_DATA_DIR = appDirs.getUserDataDir("houdoku", null, "xgi");
+    private static final String USER_DATA_DIR = appDirs.getUserDataDir("houdoku", null, "faltro");
     /**
      * The Path for storing library data.
      */
