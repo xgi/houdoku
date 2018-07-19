@@ -1,5 +1,6 @@
 package com.faltro.houdoku.util;
 
+import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.controller.ConfigController;
 import com.faltro.houdoku.controller.Controller;
 import com.faltro.houdoku.controller.ReaderController;
@@ -146,7 +147,7 @@ public class SceneManager {
     public void showConfigStage() {
         Parent root = roots.get(ConfigController.ID);
         changeStageRoot(stage_config, root);
-        stage_config.setTitle(stage.getTitle());
+        stage_config.setTitle(Houdoku.getName() + " - Settings");
         getController(root).setStage(stage_config);
         stage_config.show();
         sizeStage(stage_config, DEFAULT_CONFIG_WIDTH_MULTIPLIER, DEFAULT_CONFIG_HEIGHT_MULTIPLIER);

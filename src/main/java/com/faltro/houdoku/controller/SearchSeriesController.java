@@ -1,5 +1,6 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
@@ -148,6 +149,8 @@ public class SearchSeriesController extends Controller {
      * @see ContentSource
      */
     public void onMadeActive() {
+        stage.setTitle(Houdoku.getName() + " - Search");
+
         // check available content sources
         ObservableList<ContentSource> contentSources = FXCollections.observableArrayList(
                 sceneManager.getPluginManager().getContentSources());

@@ -1,5 +1,6 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Series;
@@ -505,5 +506,7 @@ public class ReaderController extends Controller {
         Series series = chapter.getSeries();
         nextChapterButton.setDisable(series.smartNextChapter(chapter) == null);
         prevChapterButton.setDisable(series.smartPreviousChapter(chapter) == null);
+
+        stage.setTitle(Houdoku.getName() + " - " + chapter.toString());
     }
 }

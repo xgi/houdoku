@@ -1,5 +1,6 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.model.Category;
 import com.faltro.houdoku.model.Library;
@@ -245,6 +246,8 @@ public class LibraryController extends Controller {
      * @see Controller#onMadeActive()
      */
     public void onMadeActive() {
+        stage.setTitle(Houdoku.getName());
+
         // hack to force the table's FilteredList to update, since series
         // info may have changed since returning to this scene
         filterTextField.setText(".");

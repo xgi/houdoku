@@ -140,4 +140,11 @@ public class Chapter {
     public String getSource() {
         return source;
     }
+
+    public String toString() {
+        return String.format("%s - %s",
+                series.getTitle(),
+                title.equals("") ? String.valueOf(chapterNum) : title
+        );
+    }
 }

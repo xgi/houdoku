@@ -1,5 +1,6 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
@@ -257,6 +258,8 @@ public class SeriesController extends Controller {
      * @see Controller#onMadeActive()
      */
     public void onMadeActive() {
+        stage.setTitle(Houdoku.getName() + " - " + series.getTitle());
+
         refreshContent();
         updateCoverSize();
 
