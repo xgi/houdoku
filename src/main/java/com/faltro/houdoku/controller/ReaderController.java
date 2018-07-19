@@ -74,6 +74,7 @@ public class ReaderController extends Controller {
 
     private Chapter chapter;
     private EventHandler<KeyEvent> keyEventHandler;
+    private ChangeListener imageViewListener;
 
     public ReaderController(SceneManager sceneManager) {
         super(sceneManager);
@@ -424,54 +425,66 @@ public class ReaderController extends Controller {
     @FXML
     private void updateImageViewFit() {
         if (fitAutoRadio.isSelected()) {
-            imageView.fitWidthProperty().unbind();
-            imageView.fitHeightProperty().unbind();
-            ChangeListener listener = (o, oldValue, newValue) -> {
+            imageViewListener = (o, oldValue, newValue) -> {
+                imageView.fitWidthProperty().unbind();
+                imageView.fitHeightProperty().unbind();
                 imageView.fitHeightProperty().bind(
-                        stage.heightProperty()
+                        container.heightProperty()
                                 .subtract(menuBar.heightProperty())
                                 .subtract(navContainer.minHeightProperty())
-                                .subtract(SceneManager.VSCROLLBAR_WIDTH)
                 );
-                if (imageView.getBoundsInParent().getWidth() > stage.getWidth()) {
+                if (imageView.getBoundsInParent().getWidth() > container.getWidth()) {
                     imageView.fitHeightProperty().unbind();
                     imageView.fitWidthProperty().bind(
-                            stage.widthProperty()
+                            container.widthProperty()
                     );
                 }
+
+                centerImageView();
             };
-            stage.heightProperty().addListener(listener);
-            imageView.imageProperty().addListener(listener);
-            // hack to force listener operation to run
-            // we wouldn't be able to do this if the listener function depended
-            // on the given arguments
-            listener.changed(new SimpleDoubleProperty(0), 0, 0);
         } else if (fitHeightRadio.isSelected()) {
-            imageView.fitWidthProperty().unbind();
-            imageView.setFitWidth(-1);
-            imageView.fitHeightProperty().bind(
-                    stage.heightProperty()
-                            .subtract(menuBar.heightProperty())
-                            .subtract(navContainer.minHeightProperty())
-                            .subtract(SceneManager.VSCROLLBAR_WIDTH)
-            );
+            imageViewListener = (o, oldValue, newValue) -> {
+                imageView.fitWidthProperty().unbind();
+                imageView.setFitWidth(-1);
+                imageView.fitHeightProperty().bind(
+                        container.heightProperty()
+                                .subtract(menuBar.heightProperty())
+                                .subtract(navContainer.minHeightProperty())
+                );
+
+                centerImageView();
+            };
         } else if (fitWidthRadio.isSelected()) {
-            imageView.fitHeightProperty().unbind();
-            imageView.setPreserveRatio(false);
-            imageView.setFitHeight(-1);
-            imageView.setPreserveRatio(true);
-            imageView.fitWidthProperty().bind(
-                    imageScrollPane.widthProperty()
-                            .subtract(SceneManager.VSCROLLBAR_WIDTH)
-            );
+            imageViewListener = (o, oldValue, newValue) -> {
+                imageView.fitHeightProperty().unbind();
+                imageView.setPreserveRatio(false);
+                imageView.setFitHeight(-1);
+                imageView.setPreserveRatio(true);
+                imageView.fitWidthProperty().bind(
+                        container.widthProperty()
+                                .subtract(SceneManager.VSCROLLBAR_WIDTH)
+                );
+            };
         } else if (actualSizeRadio.isSelected()) {
-            imageView.fitHeightProperty().unbind();
-            imageView.fitWidthProperty().unbind();
-            imageView.setFitHeight(-1);
-            imageView.fitWidthProperty().bind(imageView.getImage().widthProperty());
+            imageViewListener = (o, oldValue, newValue) -> {
+                imageView.fitHeightProperty().unbind();
+                imageView.fitWidthProperty().unbind();
+                imageView.setFitHeight(-1);
+                imageView.fitWidthProperty().bind(imageView.getImage().widthProperty());
+
+                centerImageView();
+            };
         }
 
-        centerImageView();
+        // add the listener to all meaningful properties -- the value of the
+        // passed arguments don't matter
+        container.heightProperty().addListener(imageViewListener);
+        container.widthProperty().addListener(imageViewListener);
+        imageView.imageProperty().addListener(imageViewListener);
+        // hack to force listener operation to run
+        // we wouldn't be able to do this if the listener function depended
+        // on the given arguments
+        imageViewListener.changed(new SimpleDoubleProperty(0), 0, 0);
     }
 
     /**
