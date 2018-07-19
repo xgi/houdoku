@@ -7,12 +7,14 @@ import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.SceneManager;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -252,6 +254,19 @@ public class ReaderController extends Controller {
         // preloading pages if necessary
         sceneManager.getContentLoader().loadPage(
                 contentSource, chapter, currentPageNum, this, false, preloading_amount);
+    }
+
+    /**
+     * Set the image of the reader's ImageView.
+     *
+     * This method ensures that the image is set when the FX thread is
+     * available.
+     *
+     * @param image the Image to display in the ImageView
+     * @see #imageView
+     */
+    public void setImage(Image image) {
+        Platform.runLater(() -> imageView.setImage(image));
     }
 
     /**

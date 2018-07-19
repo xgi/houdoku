@@ -46,7 +46,7 @@ public class LoadPageRunnable extends LoaderRunnable {
     @Override
     public void run() {
         if (!preloading) {
-            readerController.imageView.setImage(null);
+            readerController.setImage(null);
             readerController.imageProgressIndicator.setVisible(true);
         }
 
@@ -69,7 +69,7 @@ public class LoadPageRunnable extends LoaderRunnable {
                 if (chapter == readerController.getChapter() && running) {
                     chapter.images[page] = image;
                     if (image != null && chapter.getCurrentPageNum() == page) {
-                        readerController.imageView.setImage(image);
+                        readerController.setImage(image);
                         readerController.imageProgressIndicator.setVisible(false);
                         readerController.errorText.getParent().setVisible(false);
                         readerController.errorText.getParent().setManaged(false);
@@ -78,7 +78,7 @@ public class LoadPageRunnable extends LoaderRunnable {
                 }
             } else {
                 if (chapter.getCurrentPageNum() == page) {
-                    readerController.imageView.setImage(chapter.images[page]);
+                    readerController.setImage(chapter.images[page]);
                     readerController.imageProgressIndicator.setVisible(false);
                     readerController.errorText.getParent().setVisible(false);
                     readerController.errorText.getParent().setManaged(false);
