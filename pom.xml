@@ -4,9 +4,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <name>Houdoku</name>
-    <groupId>com.faltro.houdoku</groupId>
-    <artifactId>houdoku</artifactId>
+    <description>Houdoku is a manga reader and library manager for the desktop.</description>
+    <url>https://github.com/xgi/houdoku</url>
     <version>1.0</version>
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://github.com/xgi/houdoku/blob/master/LICENSE.txt</url>
+        </license>
+    </licenses>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/xgi/houdoku/issues</url>
+    </issueManagement>
+    <developers>
+        <developer>
+            <name>Jake Robertson</name>
+            <email>jake@faltro.com</email>
+        </developer>
+    </developers>
+    <groupId>com.faltro</groupId>
+    <artifactId>houdoku</artifactId>
     <build>
         <outputDirectory>out/production/houdoku</outputDirectory>
         <testOutputDirectory>out/test/houdoku</testOutputDirectory>
