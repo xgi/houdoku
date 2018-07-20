@@ -543,6 +543,7 @@ public class LibraryController extends Controller {
                 }
             });
 
+            Platform.runLater(name_field::requestFocus);
             alert.getDialogPane().setContent(alert_container);
             alert.setTitle(stage.getTitle());
             alert.showAndWait();
@@ -618,6 +619,7 @@ public class LibraryController extends Controller {
             }
         });
 
+        Platform.runLater(name_field::requestFocus);
         alert.getDialogPane().setContent(alert_container);
         alert.setTitle(stage.getTitle());
         alert.showAndWait();
