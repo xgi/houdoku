@@ -21,6 +21,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
@@ -214,6 +216,15 @@ public class LibraryController extends Controller {
         numChaptersColumn.setCellValueFactory(p -> new SimpleStringProperty(
                 Integer.toString(p.getValue().getNumHighestChapter())
         ));
+
+        // add KeyEvent handlers for navigation
+        tableView.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    goToSelectedSeries();
+                }
+            }
+        });
 
         // create cell/value factories for the tree
         categoriesColumn.setCellFactory(tc -> {
@@ -804,7 +815,7 @@ public class LibraryController extends Controller {
     }
 
     /**
-     * Changes to the series page with the selected series.
+     * Change to the series page with the selected series.
      * <p>
      * If no series is selected, this function does nothing.
      */

@@ -12,6 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -175,6 +177,15 @@ public class ConfigController extends Controller {
         nightModeReaderCheck.disableProperty().bind(nightModeCheck.selectedProperty().not());
         preloadingAmountBox.disableProperty().bind(
                 restrictPreloadingCheck.selectedProperty().not());
+
+        // add KeyEvent handlers for navigation
+        container.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                    cancel();
+                }
+            }
+        });
     }
 
     /**

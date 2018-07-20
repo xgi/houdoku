@@ -19,6 +19,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -252,6 +254,22 @@ public class SeriesController extends Controller {
                             return matches_all;
                         })
         );
+
+        // add KeyEvent handlers for navigation
+        container.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
+                    goToLibrary();
+                }
+            }
+        });
+        tableView.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    goToSelectedChapter();
+                }
+            }
+        });
     }
 
     /**
@@ -437,6 +455,19 @@ public class SeriesController extends Controller {
                 (ReaderController) sceneManager.getController(ReaderController.ID);
         readerController.setChapter(chapter);
         sceneManager.changeToRoot(ReaderController.ID);
+    }
+
+    /**
+     * Change to the reader page with the selected chapter.
+     * <p>
+     * If no chapter is selected, this function does nothing.
+     */
+    @FXML
+    private void goToSelectedChapter() {
+        Chapter chapter = tableView.getSelectionModel().getSelectedItem();
+        if (series != null) {
+            goToReader(chapter);
+        }
     }
 
     public Library getLibrary() {

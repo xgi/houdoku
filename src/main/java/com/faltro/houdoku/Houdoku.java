@@ -16,6 +16,14 @@ public class Houdoku extends Application {
         launch(args);
     }
 
+    public static String getName() {
+        return properties.getProperty("name");
+    }
+
+    public static String getVersion() {
+        return properties.getProperty("version");
+    }
+
     @Override
     public void start(Stage primary_stage) throws Exception {
         // load project properties
@@ -54,13 +62,5 @@ public class Houdoku extends Application {
     @Override
     public void stop() {
         sceneManager.getContentLoader().stopAllThreads();
-    }
-
-    public static String getName() {
-        return properties.getProperty("name");
-    }
-
-    public static String getVersion() {
-        return properties.getProperty("version");
     }
 }

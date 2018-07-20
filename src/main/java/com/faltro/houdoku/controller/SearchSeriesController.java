@@ -17,11 +17,14 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -45,6 +48,8 @@ public class SearchSeriesController extends Controller {
     public final ObservableList<HashMap<String, Object>> results;
     @FXML
     public ProgressIndicator searchProgressIndicator;
+    @FXML
+    private VBox container;
     @FXML
     private FlowPane flowPane;
     @FXML
@@ -138,6 +143,22 @@ public class SearchSeriesController extends Controller {
         // to populate the window
         ChangeListener<ContentSource> listener = (o, oldValue, newValue) -> search();
         contentSourcesBox.valueProperty().addListener(listener);
+
+        // add KeyEvent handlers for navigation
+        container.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
+                    goToLibrary();
+                }
+            }
+        });
+        tableView.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    promptAddSeries(tableView.getSelectionModel().getSelectedItem());
+                }
+            }
+        });
     }
 
     /**
