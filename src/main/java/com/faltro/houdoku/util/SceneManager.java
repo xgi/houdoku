@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -90,6 +91,12 @@ public class SceneManager {
 
         Config loaded_config = Data.loadConfig();
         this.config = loaded_config == null ? new Config() : loaded_config;
+
+        // add icon to the window bar
+        Image window_icon = new Image(getClass().getResourceAsStream(
+                "/img/window_icon.png"));
+        stage.getIcons().add(window_icon);
+        stage_config.getIcons().add(window_icon);
     }
 
     /**
