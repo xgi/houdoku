@@ -5,6 +5,12 @@ import javafx.scene.image.Image;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
+/**
+ * An individual release of a chapter for a Series.
+ * <p>
+ * A series can have multiple chapters with the same number, since the content
+ * source may provide multiple groups' scanlations for the chapter.
+ */
 public class Chapter {
     private final String title;
     private final String source;

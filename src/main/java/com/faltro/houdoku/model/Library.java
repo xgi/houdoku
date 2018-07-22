@@ -5,6 +5,12 @@ import com.faltro.houdoku.data.Data;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * A user-specific library of Series'.
+ * <p>
+ * This class also defines the root category, "All Series", which cannot be
+ * altered or removed.
+ */
 public class Library {
     private final ArrayList<Series> serieses;
     private final Category rootCategory;

@@ -7,6 +7,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+/**
+ * A series from a ContentSource, which contains an array of Chapter's that the
+ * user can read from.
+ */
 public class Series {
     private final String title;
     private final String source;

@@ -3,6 +3,13 @@ package com.faltro.houdoku.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Category's are effectively "tags" for Series' in the Library. Series' can be
+ * assigned an array of categories (handled as an array of strings) which are
+ * then matched with instances of this class.
+ * <p>
+ * Instances of categories are unique -- the name of categories can not overlap.
+ */
 public class Category {
     private ArrayList<Category> subcategories;
     private String name;
