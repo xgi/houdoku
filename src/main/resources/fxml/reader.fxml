@@ -12,17 +12,9 @@
       alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar" minHeight="30">
         <Menu text="File">
-            <MenuItem text="New" onAction="#showConfigStage"/>
-            <MenuItem text="Open"/>
-            <MenuItem text="Save"/>
-            <MenuItem text="Save As"/>
+            <MenuItem text="Settings" onAction="#showConfigStage"/>
             <SeparatorMenuItem/>
             <MenuItem id="exitButton" text="Exit" onAction="#exit"/>
-        </Menu>
-        <Menu text="Edit">
-            <MenuItem text="Copy"/>
-            <MenuItem text="Cut"/>
-            <MenuItem text="Paste"/>
         </Menu>
         <Menu text="View">
             <CheckMenuItem fx:id="nightModeItem" text="Night Mode" onAction="#toggleNightMode"/>
@@ -44,14 +36,7 @@
                                onAction="#updateImageViewFit"/>
             </Menu>
         </Menu>
-        <Menu text="Help">
-            <MenuItem text="Search" disable="true"/>
-            <MenuItem text="Online Manual" visible="false"/>
-            <SeparatorMenuItem/>
-            <MenuItem text="About"/>
-        </Menu>
     </MenuBar>
-
     <HBox fx:id="navContainer" maxWidth="Infinity">
         <padding>
             <Insets left="15" right="15"/>
