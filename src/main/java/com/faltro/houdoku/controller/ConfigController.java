@@ -39,7 +39,7 @@ public class ConfigController extends Controller {
     private static final HashMap<String, String> ICON_MAP = new HashMap<>();
 
     static {
-        ICON_MAP.put("Night Mode", "/img/icon_night_mode.png");
+        ICON_MAP.put("General", "/img/icon_settings.png");
         ICON_MAP.put("Reader", "/img/icon_reader.png");
     }
 

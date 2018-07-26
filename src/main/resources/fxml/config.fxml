@@ -18,15 +18,15 @@
         <ListView fx:id="listView"/>
         <VBox fx:id="configContentContainer" HBox.hgrow="ALWAYS">
             <VBox styleClass="topicContainer" spacing="15" VBox.vgrow="ALWAYS"
-                  alignment="CENTER_LEFT" userData="Night Mode">
+                  alignment="CENTER_LEFT" userData="General">
                 <HBox styleClass="topicHeaderBar">
-                    <Text text="Night Mode"/>
+                    <Text text="General"/>
                 </HBox>
                 <TabPane styleClass="configTabPane" VBox.vgrow="ALWAYS">
                     <Tab text="Settings" closable="false">
                         <VBox VBox.vgrow="ALWAYS" spacing="15">
                             <VBox>
-                                <Text styleClass="bareTextAlt" text="Settings"/>
+                                <Text styleClass="bareTextAlt" text="Night Mode"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <CheckBox fx:id="nightModeCheck" text="Night mode enabled"
                                               styleClass="bareTextAlt"/>
