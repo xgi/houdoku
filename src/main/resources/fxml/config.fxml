@@ -36,82 +36,6 @@
                                               disable="${nightModeCheck.selected}"/>
                                 </VBox>
                             </VBox>
-                            <VBox>
-                                <Text styleClass="bareTextAlt" text="Page effects"/>
-                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
-                                    <fx:define>
-                                        <ToggleGroup fx:id="pageEffectsGroup"/>
-                                    </fx:define>
-                                    <RadioButton fx:id="effectColorRadio" styleClass="bareTextAlt"
-                                                 text="Color filter" toggleGroup="$pageEffectsGroup"
-                                                 selected="true"/>
-                                    <VBox fx:id="effectColorBox" styleClass="controlSubBox">
-                                        <HBox spacing="20">
-                                            <VBox alignment="CENTER_RIGHT" spacing="18">
-                                                <Label text="Hue:" styleClass="bareTextAlt"/>
-                                                <Label text="Saturation:" styleClass="bareTextAlt"/>
-                                            </VBox>
-                                            <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
-                                                  maxWidth="300">
-                                                <Slider fx:id="filterHueSlider"
-                                                        majorTickUnit="0.5" max="1.0" min="-1.0"
-                                                        showTickLabels="true" showTickMarks="true"/>
-                                                <Slider fx:id="filterSaturationSlider"
-                                                        majorTickUnit="0.5" max="1.0"
-                                                        showTickLabels="true" showTickMarks="true"/>
-                                            </VBox>
-                                            <VBox alignment="CENTER" spacing="18">
-                                                <Label fx:id="filterHueSliderLabel"
-                                                       styleClass="bareTextAlt"/>
-                                                <Label fx:id="filterSaturationSliderLabel"
-                                                       styleClass="bareTextAlt"/>
-                                            </VBox>
-                                            <VBox alignment="CENTER">
-                                                <HBox style="-fx-border-color: black">
-                                                    <ImageView fx:id="effectColorPreview"
-                                                               fitWidth="50"
-                                                               fitHeight="20">
-                                                        <Image url="/img/white_pixel.png"/>
-                                                    </ImageView>
-                                                </HBox>
-                                            </VBox>
-                                        </HBox>
-                                    </VBox>
-                                    <RadioButton fx:id="effectBrightnessRadio"
-                                                 styleClass="bareTextAlt" text="Brightness filter"
-                                                 toggleGroup="$pageEffectsGroup"/>
-                                    <VBox fx:id="effectBrightnessBox" styleClass="controlSubBox">
-                                        <HBox spacing="20">
-                                            <VBox alignment="CENTER_RIGHT">
-                                                <Label text="Brightness:" styleClass="bareTextAlt"/>
-                                            </VBox>
-                                            <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
-                                                  maxWidth="300">
-                                                <Slider fx:id="filterBrightnessSlider"
-                                                        majorTickUnit="0.5" max="0" min="-1.0"
-                                                        showTickLabels="true" showTickMarks="true"/>
-                                            </VBox>
-                                            <VBox alignment="CENTER">
-                                                <Label fx:id="filterBrightnessSliderLabel"
-                                                       styleClass="bareTextAlt"/>
-                                            </VBox>
-                                            <VBox alignment="CENTER">
-                                                <HBox style="-fx-border-color: black">
-                                                    <ImageView fx:id="effectBrightnessPreview"
-                                                               fitWidth="50" fitHeight="20">
-                                                        <Image url="/img/white_pixel.png"/>
-                                                    </ImageView>
-                                                </HBox>
-                                            </VBox>
-                                        </HBox>
-                                    </VBox>
-                                    <RadioButton fx:id="effectNoneRadio" styleClass="bareTextAlt"
-                                                 text="No effect" toggleGroup="$pageEffectsGroup"/>
-                                    <HBox alignment="CENTER_RIGHT">
-                                        <Hyperlink text="Reset" onAction="#resetPageEffects"/>
-                                    </HBox>
-                                </VBox>
-                            </VBox>
                         </VBox>
                     </Tab>
                 </TabPane>
@@ -162,6 +86,83 @@
                                             <Button fx:id="readerKeyToSeries"
                                                     onAction="#promptKeyBinding"/>
                                         </VBox>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                        </VBox>
+                    </Tab>
+                    <Tab text="Page Effects" closable="false">
+                        <VBox VBox.vgrow="ALWAYS" spacing="15">
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="Settings"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <CheckBox fx:id="effectNightModeOnlyCheck"
+                                              text="Only apply effects when night mode is enabled"
+                                              styleClass="bareTextAlt"/>
+                                </VBox>
+                            </VBox>
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="Page effects"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <CheckBox fx:id="effectColorCheck" styleClass="bareTextAlt"
+                                              text="Color filter" onAction="#updateEffectPreview"/>
+                                    <VBox fx:id="effectColorBox" styleClass="controlSubBox">
+                                        <HBox spacing="20">
+                                            <VBox alignment="CENTER_RIGHT" spacing="18">
+                                                <Label text="Hue:" styleClass="bareTextAlt"/>
+                                                <Label text="Saturation:" styleClass="bareTextAlt"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
+                                                  maxWidth="300">
+                                                <Slider fx:id="filterHueSlider"
+                                                        majorTickUnit="0.5" max="1.0" min="-1.0"
+                                                        showTickLabels="true" showTickMarks="true"/>
+                                                <Slider fx:id="filterSaturationSlider"
+                                                        majorTickUnit="0.5" max="1.0"
+                                                        showTickLabels="true" showTickMarks="true"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER" spacing="18">
+                                                <Label fx:id="filterHueSliderLabel"
+                                                       styleClass="bareTextAlt"/>
+                                                <Label fx:id="filterSaturationSliderLabel"
+                                                       styleClass="bareTextAlt"/>
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+                                    <CheckBox fx:id="effectBrightnessCheck"
+                                              styleClass="bareTextAlt" text="Brightness filter"
+                                              onAction="#updateEffectPreview"/>
+                                    <VBox fx:id="effectBrightnessBox" styleClass="controlSubBox">
+                                        <HBox spacing="20">
+                                            <VBox alignment="CENTER_RIGHT">
+                                                <Label text="Brightness:" styleClass="bareTextAlt"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
+                                                  maxWidth="300">
+                                                <Slider fx:id="filterBrightnessSlider"
+                                                        majorTickUnit="0.5" max="0" min="-1.0"
+                                                        showTickLabels="true" showTickMarks="true"/>
+                                            </VBox>
+                                            <VBox alignment="CENTER">
+                                                <Label fx:id="filterBrightnessSliderLabel"
+                                                       styleClass="bareTextAlt"/>
+                                            </VBox>
+                                        </HBox>
+                                    </VBox>
+                                    <HBox alignment="CENTER_RIGHT">
+                                        <Hyperlink text="Reset" onAction="#resetPageEffects"/>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="Preview"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <HBox fx:id="effectPreviewContainer">
+                                        <ImageView fx:id="effectPreview"
+                                                   fitWidth="${effectPreviewContainer.width}"
+                                                   fitHeight="80">
+                                            <Image url="/img/white_pixel.png"/>
+                                        </ImageView>
                                     </HBox>
                                 </VBox>
                             </VBox>

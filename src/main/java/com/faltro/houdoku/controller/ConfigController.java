@@ -54,15 +54,15 @@ public class ConfigController extends Controller {
     @FXML
     private CheckBox nightModeReaderCheck;
     @FXML
-    private RadioButton effectColorRadio;
+    private CheckBox effectNightModeOnlyCheck;
+    @FXML
+    private CheckBox effectColorCheck;
     @FXML
     private VBox effectColorBox;
     @FXML
-    private RadioButton effectBrightnessRadio;
+    private CheckBox effectBrightnessCheck;
     @FXML
     private VBox effectBrightnessBox;
-    @FXML
-    private RadioButton effectNoneRadio;
     @FXML
     private Slider filterHueSlider;
     @FXML
@@ -76,9 +76,7 @@ public class ConfigController extends Controller {
     @FXML
     private Label filterBrightnessSliderLabel;
     @FXML
-    private ImageView effectColorPreview;
-    @FXML
-    private ImageView effectBrightnessPreview;
+    private ImageView effectPreview;
     @FXML
     private CheckBox restrictPreloadingCheck;
     @FXML
@@ -136,41 +134,22 @@ public class ConfigController extends Controller {
                 (observableValue, hBox, t1) -> updateContent()
         );
 
-        // Bind the disable property of radio buttons with sub-boxes with the
+        // Bind the disable property of checkboxes with sub-boxes with the
         // matching sub-box. We would have liked to do this in the FXML file,
         // but there appears to be no way to bind with the inverse of a property
         // in FXML.
-        effectColorBox.disableProperty().bind(effectColorRadio.selectedProperty().not());
-        effectBrightnessBox.disableProperty().bind(effectBrightnessRadio.selectedProperty().not());
+        effectColorBox.disableProperty().bind(effectColorCheck.selectedProperty().not());
+        effectBrightnessBox.disableProperty().bind(effectBrightnessCheck.selectedProperty().not());
 
         // add bindings for page color/brightness filter previews
         filterHueSlider.valueProperty().addListener(
-                (observableValue, oldValue, newValue) -> {
-                    filterHueSliderLabel.setText(String.format("%.2f", newValue.doubleValue()));
-                    ColorAdjust color_adjust = new ColorAdjust();
-                    color_adjust.setHue(newValue.doubleValue());
-                    color_adjust.setSaturation(filterSaturationSlider.getValue());
-                    effectColorPreview.setEffect(color_adjust);
-                }
+                (observableValue, oldValue, newValue) -> updateEffectPreview()
         );
         filterSaturationSlider.valueProperty().addListener(
-                (observableValue, oldValue, newValue) -> {
-                    filterSaturationSliderLabel.setText(
-                            String.format("%.2f", newValue.doubleValue()));
-                    ColorAdjust color_adjust = new ColorAdjust();
-                    color_adjust.setSaturation(newValue.doubleValue());
-                    color_adjust.setHue(filterHueSlider.getValue());
-                    effectColorPreview.setEffect(color_adjust);
-                }
+                (observableValue, oldValue, newValue) -> updateEffectPreview()
         );
         filterBrightnessSlider.valueProperty().addListener(
-                (observableValue, oldValue, newValue) -> {
-                    filterBrightnessSliderLabel.setText(
-                            String.format("%.2f", newValue.doubleValue()));
-                    ColorAdjust color_adjust = new ColorAdjust();
-                    color_adjust.setBrightness(newValue.doubleValue());
-                    effectBrightnessPreview.setEffect(color_adjust);
-                }
+                (observableValue, oldValue, newValue) -> updateEffectPreview()
         );
 
         // add bindings for miscellaneous properties
@@ -189,6 +168,35 @@ public class ConfigController extends Controller {
     }
 
     /**
+     * Update the page effect/filter preview using the slider values.
+     * <p>
+     * This method also updates the labels next to each slider.
+     */
+    @FXML
+    private void updateEffectPreview() {
+        ColorAdjust color_adjust = new ColorAdjust();
+        double hue = filterHueSlider.getValue();
+        double saturation = filterSaturationSlider.getValue();
+        double brightness = filterBrightnessSlider.getValue();
+
+        if (effectColorCheck.isSelected()) {
+            filterHueSliderLabel.setText(String.format("%.2f", hue));
+            color_adjust.setHue(hue);
+            color_adjust.setSaturation(filterSaturationSlider.getValue());
+
+            filterSaturationSliderLabel.setText(String.format("%.2f", saturation));
+            color_adjust.setSaturation(saturation);
+            color_adjust.setHue(filterHueSlider.getValue());
+        }
+        if (effectBrightnessCheck.isSelected()) {
+            filterBrightnessSliderLabel.setText(String.format("%.2f", brightness));
+            color_adjust.setBrightness(brightness);
+        }
+
+        effectPreview.setEffect(color_adjust);
+    }
+
+    /**
      * @see Controller#onMadeActive()
      */
     @Override
@@ -201,12 +209,12 @@ public class ConfigController extends Controller {
                 (boolean) config.getValue(Config.Field.NIGHT_MODE_ENABLED));
         nightModeReaderCheck.setSelected(
                 (boolean) config.getValue(Config.Field.NIGHT_MODE_READER_ONLY));
-        effectColorRadio.setSelected("color".equals(
-                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
-        effectBrightnessRadio.setSelected("brightness".equals(
-                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
-        effectNoneRadio.setSelected("none".equals(
-                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
+        effectNightModeOnlyCheck.setSelected(
+                (boolean) config.getValue(Config.Field.PAGE_FILTER_NIGHT_MODE_ONLY));
+        effectColorCheck.setSelected(
+                (boolean) config.getValue(Config.Field.PAGE_FILTER_COLOR_ENABLED));
+        effectBrightnessCheck.setSelected(
+                (boolean) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS_ENABLED));
         filterHueSlider.setValue(
                 (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_HUE));
         filterSaturationSlider.setValue(
@@ -264,9 +272,12 @@ public class ConfigController extends Controller {
                 nightModeCheck.isSelected());
         config.replaceValue(Config.Field.NIGHT_MODE_READER_ONLY,
                 nightModeReaderCheck.isSelected());
-        config.replaceValue(Config.Field.PAGE_FILTER_TYPE,
-                effectColorRadio.isSelected() ? "color" :
-                        effectBrightnessRadio.isSelected() ? "brightness" : "none");
+        config.replaceValue(Config.Field.PAGE_FILTER_NIGHT_MODE_ONLY,
+                effectNightModeOnlyCheck.isSelected());
+        config.replaceValue(Config.Field.PAGE_FILTER_COLOR_ENABLED,
+                effectColorCheck.isSelected());
+        config.replaceValue(Config.Field.PAGE_FILTER_BRIGHTNESS_ENABLED,
+                effectBrightnessCheck.isSelected());
         config.replaceValue(Config.Field.PAGE_FILTER_COLOR_HUE,
                 filterHueSlider.getValue());
         config.replaceValue(Config.Field.PAGE_FILTER_COLOR_SATURATION,
@@ -347,7 +358,7 @@ public class ConfigController extends Controller {
     }
 
     /**
-     * Reset the page effect sliders/radios to their initial values.
+     * Reset the page effect sliders/checks to their initial values.
      */
     @FXML
     private void resetPageEffects() {
@@ -359,11 +370,9 @@ public class ConfigController extends Controller {
         filterBrightnessSlider.setValue(
                 (double) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS));
 
-        effectColorRadio.setSelected("color".equals(
-                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
-        effectBrightnessRadio.setSelected("brightness".equals(
-                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
-        effectNoneRadio.setSelected("none".equals(
-                config.getValue(Config.Field.PAGE_FILTER_TYPE)));
+        effectColorCheck.setSelected(
+                (boolean) config.getValue(Config.Field.PAGE_FILTER_COLOR_ENABLED));
+        effectBrightnessCheck.setSelected(
+                (boolean) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS_ENABLED));
     }
 }

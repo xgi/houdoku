@@ -407,25 +407,27 @@ public class ReaderController extends Controller {
      * Apply the appropriate filter to the page ImageView, if necessary.
      */
     private void applyImageFilter() {
-        Config config = sceneManager.getConfig();
         ColorAdjust filter_adjust = null;
-        if ((boolean) config.getValue(Config.Field.NIGHT_MODE_ENABLED)) {
-            String filter_type = (String) config.getValue(Config.Field.PAGE_FILTER_TYPE);
-            switch (filter_type) {
-                case "color": {
-                    filter_adjust = new ColorAdjust();
-                    filter_adjust.setHue(
-                            (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_HUE));
-                    filter_adjust.setSaturation(
-                            (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_SATURATION));
-                    break;
-                }
-                case "brightness": {
-                    filter_adjust = new ColorAdjust();
-                    filter_adjust.setBrightness(
-                            (double) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS));
-                    break;
-                }
+        Config config = sceneManager.getConfig();
+
+        boolean night_mode_enabled = (boolean) config.getValue(Config.Field.NIGHT_MODE_ENABLED);
+        boolean night_mode_only =
+                (boolean) config.getValue(Config.Field.PAGE_FILTER_NIGHT_MODE_ONLY);
+
+        if (night_mode_enabled || !night_mode_only) {
+            filter_adjust = new ColorAdjust();
+            // apply color filter
+            if ((boolean) config.getValue(Config.Field.PAGE_FILTER_COLOR_ENABLED)) {
+                filter_adjust.setHue(
+                        (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_HUE));
+                filter_adjust.setSaturation(
+                        (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_SATURATION));
+            }
+            // apply brightness filter
+            if ((boolean) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS_ENABLED)) {
+                filter_adjust = new ColorAdjust();
+                filter_adjust.setBrightness(
+                        (double) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS));
             }
         }
         imageView.setEffect(filter_adjust);

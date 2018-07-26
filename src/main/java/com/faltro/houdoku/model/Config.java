@@ -67,30 +67,36 @@ public class Config {
          */
         NIGHT_MODE_READER_ONLY("night_mode_reader_only", false),
         /**
-         * The type of filter to apply to the reader page when night mode is active.
-         * <p>
-         * Available values are: "color", "brightness", "none"
+         * Whether to apply page filters only when night mode is enabled.
          */
-        PAGE_FILTER_TYPE("page_filter_type", "color"),
+        PAGE_FILTER_NIGHT_MODE_ONLY("page_filter_night_mode_only", true),
         /**
-         * The hue modifier to use on the reader page when night mode is active and
-         * the page filter is set to "color".
+         * Whether the color page filter is enabled.
+         */
+        PAGE_FILTER_COLOR_ENABLED("page_filter_color_enabled", true),
+        /**
+         * The hue modifier to use on the reader page when effects are active
+         * and the page filter is set to "color".
          */
         PAGE_FILTER_COLOR_HUE("page_filter_color_hue", 0.25),
         /**
-         * The saturation modifier to use on the reader page when night mode is
+         * The saturation modifier to use on the reader page when effects are
          * active and the page filter is set to "color".
          */
         PAGE_FILTER_COLOR_SATURATION("page_filter_color_saturation", 0.33),
         /**
-         * The brightness modifier to use on the reader page when night mode is
+         * Whether the color page filter is enabled.
+         */
+        PAGE_FILTER_BRIGHTNESS_ENABLED("page_filter_brightness_enabled", false),
+        /**
+         * The brightness modifier to use on the reader page when effects are
          * active and the page filter is set to "brightness".
          */
         PAGE_FILTER_BRIGHTNESS("page_filter_brightness", 0.50),
         /**
-         * Whether to restrict the preloading of pages in the reader. If the value
-         * is false, the reader will preload the entire chapter even if the user
-         * stays on the first page.
+         * Whether to restrict the preloading of pages in the reader. If the
+         * value is false, the reader will preload the entire chapter even if
+         * the user stays on the first page.
          */
         RESTRICT_PRELOAD_PAGES("restrict_preload_pages", false),
         /**
