@@ -1,2 +1,15 @@
 language: java
 sudo: false
+
+before_deploy: "mvn package"
+
+deploy:
+  provider: releases
+  api_key: '$GITHUB_API_TOKEN'
+  file: 'out/artifacts/houdoku/houdoku-*-jar-with-dependencies.jar'
+  skip_cleanup: true
+  on:
+    tags: true
+
+notifications:
+  email: false
