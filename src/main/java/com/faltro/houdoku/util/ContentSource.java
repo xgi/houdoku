@@ -56,13 +56,16 @@ public interface ContentSource {
      * This method does NOT load Series objects, since the amount of series
      * information provided by the search page is often limited. Instead, the
      * following data about each result is retrieved:
-     * - contentSourceId (int) - the ContentSource's ID field
-     * - source (String) - the URL to the series page
-     * - coverSrc (optional) (String) - a URL to an image of the series' cover
-     * - title (String) - the title of the series
-     * - details (String) - a generally multiline string which contains the
+     * <ul>
+     * <li>contentSourceId (int) - the ContentSource's ID field</li>
+     * <li>source (String) - the URL to the series page</li>
+     * <li>coverSrc (optional) (String) - a URL to an image of the series'
+     * cover</li>
+     * <li>title (String) - the title of the series</li>
+     * <li>details (String) - a generally multiline string which contains the
      * information about the series that will appear in the client's table of
-     * search results
+     * search results</li>
+     * </ul>
      *
      * @param query the text to search for
      * @return an ArrayList of HashMap's where keys are the field names listed

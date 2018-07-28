@@ -55,9 +55,14 @@ public class Chapter {
      * Sets the "metadata" content of this object.
      * <p>
      * The following fields are stored:
-     * chapterNum (double), volumeNum (int)
-     * language (String), group (String)
-     * views (int), localDateTime (LocalDateTime)
+     * <ul>
+     * <li>chapterNum (double)</li>
+     * <li>volumeNum (int)</li>
+     * <li>language (String)</li>
+     * <li>group (String)</li>
+     * <li>views (int)</li>
+     * <li>localDateTime (LocalDateTime)</li>
+     * </ul>
      *
      * @param metadata a HashMap where keys are the field names listed above
      *                 as Strings and values of the matching type

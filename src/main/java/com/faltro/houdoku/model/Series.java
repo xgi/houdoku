@@ -51,12 +51,19 @@ public class Series {
      * Sets the "metadata" content of this object.
      * <p>
      * The following fields are stored:
-     * language (String), author (String)
-     * artist (String), status (String)
-     * altNames (String[]), description (String)
-     * views (int), follows (int)
-     * rating (double), ratings (int)
-     * genres (String[])
+     * <ul>
+     * <li>language (String)</li>
+     * <li>author (String)</li>
+     * <li>artist (String)</li>
+     * <li>status (String)</li>
+     * <li>altNames (String[])</li>
+     * <li>description (String)</li>
+     * <li>views (int)</li>
+     * <li>follows (int)</li>
+     * <li>rating (double)</li>
+     * <li>ratings (int)</li>
+     * <li>genres (String[])</li>
+     * </ul>
      *
      * @param metadata a HashMap where keys are the field names listed above
      *                 as Strings and values of the matching type
