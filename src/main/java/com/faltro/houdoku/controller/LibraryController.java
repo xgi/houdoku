@@ -295,7 +295,7 @@ public class LibraryController extends Controller {
         FilteredList<Series> filtered_data = new FilteredList<>(master_data, p -> true);
         setCombinedPredicate(filtered_data);
         SortedList<Series> sorted_data = new SortedList<>(filtered_data);
-        sorted_data.comparatorProperty().bind(tableView.comparatorProperty());
+        sorted_data.setComparator((s1, s2) -> s1.getTitle().compareToIgnoreCase(s2.getTitle()));
         tableView.setItems(sorted_data);
 
         // update gridPane when FX app thread is available
