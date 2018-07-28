@@ -6,7 +6,7 @@
     <name>Houdoku</name>
     <description>Houdoku is a manga reader and library manager for the desktop.</description>
     <url>https://github.com/xgi/houdoku</url>
-    <version>1.0</version>
+    <version>0.1.0</version>
     <licenses>
         <license>
             <name>The MIT License</name>
@@ -26,6 +26,7 @@
     <groupId>com.faltro</groupId>
     <artifactId>houdoku</artifactId>
     <build>
+        <directory>out/artifacts/houdoku</directory>
         <outputDirectory>out/production/houdoku</outputDirectory>
         <testOutputDirectory>out/test/houdoku</testOutputDirectory>
         <plugins>
@@ -36,6 +37,26 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
