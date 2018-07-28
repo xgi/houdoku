@@ -58,11 +58,11 @@ public class ContentLoader {
      *
      * @see ReloadSeriesRunnable
      */
-    public void reloadSeries(ContentSource contentSource, Series series,
+    public void reloadSeries(ContentSource contentSource, Series series, boolean quick,
                              SeriesController seriesController) {
         String name = PREFIX_RELOAD_SERIES + contentSource.toString() + "_" + series.getSource();
         LoaderRunnable runnable = new ReloadSeriesRunnable(
-                name, this, contentSource, series, seriesController
+                name, this, contentSource, series, quick, seriesController
         );
         startThreadSafely(name, runnable);
     }

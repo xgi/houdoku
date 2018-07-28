@@ -2,6 +2,7 @@ package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.model.Chapter;
+import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ContentLoader;
@@ -285,7 +286,9 @@ public class SeriesController extends Controller {
         ContentSource contentSource = sceneManager.getPluginManager().getSource(
                 series.getContentSourceId()
         );
-        sceneManager.getContentLoader().reloadSeries(contentSource, series, this);
+        sceneManager.getContentLoader().reloadSeries(contentSource, series,
+                (boolean) sceneManager.getConfig().getValue(Config.Field.QUICK_RELOAD_SERIES),
+                this);
     }
 
     /**

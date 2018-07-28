@@ -37,7 +37,7 @@ public class LoadSeriesRunnable extends LoaderRunnable {
 
         Series series = null;
         try {
-            series = contentSource.series(source);
+            series = contentSource.series(source, false);
         } catch (IOException | NotImplementedException e) {
             e.printStackTrace();
         }

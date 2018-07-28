@@ -138,7 +138,7 @@ public class MangaDex extends GenericContentSource {
     }
 
     @Override
-    public Series series(String source) throws IOException {
+    public Series series(String source, boolean quick) throws IOException {
         Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
 
         Element titlePanel = seriesDocument.selectFirst("h3");
@@ -188,7 +188,7 @@ public class MangaDex extends GenericContentSource {
         metadata.put("genres", genres);
 
         Series series = new Series(title, source, cover, ID, metadata);
-        series.setChapters(chapters(series));
+        series.setChapters(quick ? chapters(series, seriesDocument) : chapters(series));
         return series;
     }
 

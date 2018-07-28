@@ -115,7 +115,7 @@ public class MangaTown extends GenericContentSource {
     }
 
     @Override
-    public Series series(String source) throws IOException {
+    public Series series(String source, boolean quick) throws IOException {
         Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
 
         String title = seriesDocument.selectFirst("h1[class=title-top]").text();

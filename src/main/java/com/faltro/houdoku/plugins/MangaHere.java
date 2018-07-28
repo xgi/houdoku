@@ -94,7 +94,7 @@ public class MangaHere extends GenericContentSource {
     }
 
     @Override
-    public Series series(String source) throws IOException {
+    public Series series(String source, boolean quick) throws IOException {
         Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
 
         String titleExtended = seriesDocument.selectFirst("h2").text();

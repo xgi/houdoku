@@ -67,6 +67,11 @@ public class Config {
          */
         NIGHT_MODE_READER_ONLY("night_mode_reader_only", false),
         /**
+         * Quickly reload series information by only making one HTTP request, at
+         * the expense of potentially not retrieving all of a series' chapters.
+         */
+        QUICK_RELOAD_SERIES("quick_reload_series", true),
+        /**
          * Whether to apply page filters only when night mode is enabled.
          */
         PAGE_FILTER_NIGHT_MODE_ONLY("page_filter_night_mode_only", true),

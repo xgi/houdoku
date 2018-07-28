@@ -36,6 +36,19 @@
                                               disable="${nightModeCheck.selected}"/>
                                 </VBox>
                             </VBox>
+                            <VBox VBox.vgrow="NEVER">
+                                <Text styleClass="bareTextAlt" text="Behavior"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <CheckBox fx:id="quickReloadCheck"
+                                              text="Enable quick reloading of series' chapter lists"
+                                              styleClass="bareTextAlt"/>
+                                    <VBox fx:id="quickReloadInfoBox" styleClass="controlSubBox">
+                                        <Label maxWidth="${quickReloadInfoBox.width}"
+                                                text="Some content sources require multiple page requests to load all of a series' chapters. Enable this option to load only the first page when reloading series information."
+                                               styleClass="bareTextAlt" wrapText="true"/>
+                                    </VBox>
+                                </VBox>
+                            </VBox>
                         </VBox>
                     </Tab>
                 </TabPane>

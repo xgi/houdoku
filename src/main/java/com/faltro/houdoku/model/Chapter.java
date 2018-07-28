@@ -12,8 +12,6 @@ import java.util.HashMap;
  * source may provide multiple groups' scanlations for the chapter.
  */
 public class Chapter {
-    private final String title;
-    private final String source;
     public double chapterNum;
     public int volumeNum;
     public String language;
@@ -21,6 +19,8 @@ public class Chapter {
     public int views;
     public LocalDateTime localDateTime;
     public transient Image[] images;
+    private String title;
+    private String source;
     private transient Series series;
     private int currentPageNum;
 
@@ -143,8 +143,16 @@ public class Chapter {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getSource() {
         return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String toString() {

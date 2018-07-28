@@ -54,6 +54,8 @@ public class ConfigController extends Controller {
     @FXML
     private CheckBox nightModeReaderCheck;
     @FXML
+    private CheckBox quickReloadCheck;
+    @FXML
     private CheckBox effectNightModeOnlyCheck;
     @FXML
     private CheckBox effectColorCheck;
@@ -209,6 +211,8 @@ public class ConfigController extends Controller {
                 (boolean) config.getValue(Config.Field.NIGHT_MODE_ENABLED));
         nightModeReaderCheck.setSelected(
                 (boolean) config.getValue(Config.Field.NIGHT_MODE_READER_ONLY));
+        quickReloadCheck.setSelected(
+                (boolean) config.getValue(Config.Field.QUICK_RELOAD_SERIES));
         effectNightModeOnlyCheck.setSelected(
                 (boolean) config.getValue(Config.Field.PAGE_FILTER_NIGHT_MODE_ONLY));
         effectColorCheck.setSelected(
@@ -272,6 +276,8 @@ public class ConfigController extends Controller {
                 nightModeCheck.isSelected());
         config.replaceValue(Config.Field.NIGHT_MODE_READER_ONLY,
                 nightModeReaderCheck.isSelected());
+        config.replaceValue(Config.Field.QUICK_RELOAD_SERIES,
+                quickReloadCheck.isSelected());
         config.replaceValue(Config.Field.PAGE_FILTER_NIGHT_MODE_ONLY,
                 effectNightModeOnlyCheck.isSelected());
         config.replaceValue(Config.Field.PAGE_FILTER_COLOR_ENABLED,

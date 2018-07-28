@@ -114,12 +114,15 @@ public interface ContentSource {
      * and may depend the source URL's retrieved from search results.
      *
      * @param source the source of the series page
+     * @param quick  whether the list of chapters should be "quickly" reloaded,
+     *               which ensures that only one total HTTP request is made, but
+     *               does not guarantee that all chapters are loaded
      * @return a Series using the data on the series page
      * @throws IOException             an IOException occurred when loading the series page
      * @throws NotImplementedException the operation has not yet been
      *                                 implemented for this content source
      */
-    Series series(String source) throws IOException, NotImplementedException;
+    Series series(String source, boolean quick) throws IOException, NotImplementedException;
 
     /**
      * Retrieves a series' cover image from the given URL.

@@ -61,7 +61,7 @@ public class GenericContentSource implements ContentSource {
     }
 
     @Override
-    public Series series(String source) throws IOException, NotImplementedException {
+    public Series series(String source, boolean quick) throws IOException, NotImplementedException {
         throw new NotImplementedException();
     }
 
