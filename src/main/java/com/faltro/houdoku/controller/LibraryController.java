@@ -392,8 +392,7 @@ public class LibraryController extends Controller {
                 TreeItem<Category> selectedTreeCell = treeView.getSelectionModel().getSelectedItem();
                 Category category = selectedTreeCell.getValue();
                 category_matches = series.getStringCategories().stream().anyMatch(
-                        stringCategory -> stringCategory.equals(category.getName()) ||
-                                category.recursiveFindSubcategory(stringCategory) != null
+                        stringCategory -> stringCategory.equals(category.getName())
                 ) || category.equals(library.getRootCategory());
             }
 
