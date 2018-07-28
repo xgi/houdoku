@@ -1,5 +1,6 @@
 package com.faltro.houdoku.net;
 
+import com.faltro.houdoku.Houdoku;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -11,6 +12,12 @@ import java.io.IOException;
 
 public class Requests {
     /**
+     * The generic User-Agent to use when making HTTP requests.
+     */
+    private static final String USER_AGENT = String.format("%s %s",
+            Houdoku.getName(), Houdoku.getVersion());
+
+    /**
      * Executes an HTTP GET request on the given URL.
      *
      * @param url the URL to request
@@ -21,6 +28,7 @@ public class Requests {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
+                .addHeader("User-Agent", USER_AGENT)
                 .build();
         return client.newCall(request).execute();
     }
@@ -38,6 +46,7 @@ public class Requests {
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
+                .addHeader("User-Agent", USER_AGENT)
                 .build();
         return client.newCall(request).execute();
     }
