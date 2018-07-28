@@ -7,7 +7,8 @@ deploy:
   provider: releases
   api_key: '$GITHUB_API_TOKEN'
   file_glob: true
-  file: 'out/artifacts/houdoku/Houdoku-0.1.0.jar'
+  file: 'out/artifacts/houdoku/Houdoku-*.jar'
+  skip_cleanup: true
   on:
     tags: true
 
