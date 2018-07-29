@@ -1,6 +1,7 @@
 ![Houdoku Header](/res/houdoku_header.png)
 
-[![GitHub release](https://img.shields.io/github/release/xgi/castero.svg)](https://github.com/xgi/castero/releases) [![Build Status](https://travis-ci.org/xgi/castero.svg?branch=master)](https://travis-ci.org/xgi/castero) [![codecov](https://codecov.io/gh/xgi/castero/branch/master/graph/badge.svg)](https://codecov.io/gh/xgi/castero)
+[![GitHub release](https://img.shields.io/github/release/xgi/houdoku.svg)](https://github.com/xgi/houdoku/releases) 
+[![Build Status](https://travis-ci.org/xgi/houdoku.svg?branch=master)](https://travis-ci.org/xgi/houdoku)
 
 Houdoku is a manga reader and library manager for the desktop.
 
