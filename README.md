@@ -14,6 +14,8 @@ Houdoku is a manga reader and library manager for the desktop.
 * Customizable reader interface with optional dark/night mode.
 * Browse and manage your library with tagging and filtering support.
 
+![Screenshots](/res/screenshots.png)
+
 # Download
 
 Download Houdoku from [the releases page](https://github.com/xgi/houdoku/releases).
