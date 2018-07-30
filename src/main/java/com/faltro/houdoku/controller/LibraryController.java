@@ -280,7 +280,6 @@ public class LibraryController extends Controller {
      * will handle that properly with just tableView.refresh().
      */
     public void updateContent() {
-        System.out.println("updating");
         // Use filterTextField to filter series in table by title
         // Filter code/method derived from
         //   http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering
