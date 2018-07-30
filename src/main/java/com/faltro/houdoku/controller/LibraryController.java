@@ -239,18 +239,18 @@ public class LibraryController extends Controller {
                 new SimpleStringProperty(p.getValue().getValue().toString())
         );
 
-        // add listeners to update tree/table content when fields are changed
-        filterTextField.textProperty().addListener(
-                (observable, oldValue, newValue) ->
-                        updateContent()
-        );
+        // add listeners to update tree/table content
+        filterTextField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    updateContent();
+                }
+            }
+        });
         treeView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) ->
                         updateContent()
         );
-
-        recreateTreeView();
-        updateContent();
     }
 
     /**
@@ -259,16 +259,16 @@ public class LibraryController extends Controller {
     public void onMadeActive() {
         stage.setTitle(Houdoku.getName());
 
-        // hack to force the table's FilteredList to update, since series
-        // info may have changed since returning to this scene
-        filterTextField.setText(".");
-        filterTextField.setText("");
+        recreateTreeView(); // will trigger updateContent()
     }
 
     /**
      * @see Controller#onMadeInactive()
      */
     public void onMadeInactive() {
+        tableView.setItems(FXCollections.emptyObservableList());
+        tableView.refresh();
+        flowPane.getChildren().clear();
     }
 
     /**
@@ -280,6 +280,7 @@ public class LibraryController extends Controller {
      * will handle that properly with just tableView.refresh().
      */
     public void updateContent() {
+        System.out.println("updating");
         // Use filterTextField to filter series in table by title
         // Filter code/method derived from
         //   http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering
