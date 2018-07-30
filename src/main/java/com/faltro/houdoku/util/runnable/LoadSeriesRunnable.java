@@ -1,6 +1,8 @@
 package com.faltro.houdoku.util.runnable;
 
 import com.faltro.houdoku.controller.LibraryController;
+import com.faltro.houdoku.controller.SearchSeriesController;
+import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
@@ -12,6 +14,7 @@ import java.io.IOException;
 public class LoadSeriesRunnable extends LoaderRunnable {
     private final ContentSource contentSource;
     private final String source;
+    private final SearchSeriesController searchSeriesController;
     private final LibraryController libraryController;
 
     /**
@@ -24,10 +27,12 @@ public class LoadSeriesRunnable extends LoaderRunnable {
      *                          the series is loaded
      */
     public LoadSeriesRunnable(String name, ContentLoader contentLoader, ContentSource contentSource,
-                              String source, LibraryController libraryController) {
+                              String source, SearchSeriesController searchSeriesController,
+                              LibraryController libraryController) {
         super(contentLoader, name);
         this.contentSource = contentSource;
         this.source = source;
+        this.searchSeriesController = searchSeriesController;
         this.libraryController = libraryController;
     }
 
@@ -38,6 +43,9 @@ public class LoadSeriesRunnable extends LoaderRunnable {
         Series series = null;
         try {
             series = contentSource.series(source, false);
+        } catch (ContentUnavailableException e) {
+            searchSeriesController.promptError(
+                    "An error occurred while adding the series:\n\n" + e.getMessage());
         } catch (IOException | NotImplementedException e) {
             e.printStackTrace();
         }

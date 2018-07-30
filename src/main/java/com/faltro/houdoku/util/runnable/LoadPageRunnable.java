@@ -57,7 +57,7 @@ public class LoadPageRunnable extends LoaderRunnable {
                     readerController.errorText.getParent().setVisible(true);
                     readerController.errorText.getParent().setManaged(true);
                     readerController.errorText.setText(e.getMessage() +
-                            "\n(" + e.getClass().getSimpleName() + ")");
+                            "\n\n(" + e.getClass().getSimpleName() + ")");
                 }
 
                 // ensure that our chapter is still the active one in the reader

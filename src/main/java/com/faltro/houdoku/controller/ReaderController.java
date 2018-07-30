@@ -32,7 +32,7 @@ import javafx.scene.text.Text;
 public class ReaderController extends Controller {
     public static final int ID = 2;
     @FXML
-    public ImageView imageView;
+    private ImageView imageView;
     @FXML
     public ProgressIndicator imageProgressIndicator;
     @FXML

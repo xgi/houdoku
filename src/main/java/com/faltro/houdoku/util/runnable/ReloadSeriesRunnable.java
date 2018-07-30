@@ -2,6 +2,7 @@ package com.faltro.houdoku.util.runnable;
 
 import com.faltro.houdoku.controller.SeriesController;
 import com.faltro.houdoku.data.Data;
+import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
@@ -46,7 +47,7 @@ public class ReloadSeriesRunnable extends LoaderRunnable {
         Series new_series = null;
         try {
             new_series = contentSource.series(series.getSource(), quick);
-        } catch (IOException | NotImplementedException e) {
+        } catch (IOException | NotImplementedException | ContentUnavailableException e) {
             e.printStackTrace();
         }
 

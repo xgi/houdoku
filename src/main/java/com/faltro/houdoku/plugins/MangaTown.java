@@ -1,5 +1,6 @@
 package com.faltro.houdoku.plugins;
 
+import com.faltro.houdoku.exception.LicensedContentException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ParseHelpers;
@@ -115,8 +116,15 @@ public class MangaTown extends GenericContentSource {
     }
 
     @Override
-    public Series series(String source, boolean quick) throws IOException {
+    public Series series(String source, boolean quick) throws IOException,
+            LicensedContentException {
         Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
+
+        if (seriesDocument.selectFirst("div[class=chapter_content]").text().contains(
+                " has been licensed, it is not available in ")) {
+            throw new LicensedContentException(
+                    "This series has been licensed and is not available on " + NAME + ".");
+        }
 
         String title = seriesDocument.selectFirst("h1[class=title-top]").text();
         Element container = seriesDocument.selectFirst("div[class=detail_content]");

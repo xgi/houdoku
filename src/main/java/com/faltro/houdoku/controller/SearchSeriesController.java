@@ -313,6 +313,22 @@ public class SearchSeriesController extends Controller {
     }
 
     /**
+     * Display an error as an alert.
+     *
+     * @param text the error text to display
+     */
+    public void promptError(String text) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+            Label label = new Label(text);
+            label.setWrapText(true);
+            alert.getDialogPane().setContent(label);
+            alert.setTitle(stage.getTitle());
+            alert.showAndWait();
+        });
+    }
+
+    /**
      * Adds a series to the library from an item HashMap.
      * <p>
      * Since the data retrieved from content source search pages can vary, this
@@ -325,7 +341,7 @@ public class SearchSeriesController extends Controller {
      *
      * @param item a HashMap containing the fields described above
      * @see com.faltro.houdoku.util.ContentLoader#loadSeries(ContentSource, String,
-     * LibraryController)
+     * SearchSeriesController, LibraryController)
      */
     private void addSeriesFromItem(HashMap<String, Object> item) {
         // load full series details and add to library
@@ -334,7 +350,7 @@ public class SearchSeriesController extends Controller {
         String source = (String) item.get("source");
         LibraryController libraryController = (LibraryController) sceneManager
                 .getController(LibraryController.ID);
-        sceneManager.getContentLoader().loadSeries(contentSource, source, libraryController);
+        sceneManager.getContentLoader().loadSeries(contentSource, source, this, libraryController);
         goToLibrary();
     }
 

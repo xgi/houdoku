@@ -45,10 +45,11 @@ public class ContentLoader {
      * @see LoadSeriesRunnable
      */
     public void loadSeries(ContentSource contentSource, String source,
+                           SearchSeriesController searchSeriesController,
                            LibraryController libraryController) {
         String name = PREFIX_LOAD_SERIES + contentSource.toString() + "_" + source;
         LoaderRunnable runnable = new LoadSeriesRunnable(
-                name, this, contentSource, source, libraryController
+                name, this, contentSource, source, searchSeriesController, libraryController
         );
         startThreadSafely(name, runnable);
     }

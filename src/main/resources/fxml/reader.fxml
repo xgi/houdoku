@@ -71,7 +71,8 @@
         </ScrollPane>
         <ProgressIndicator fx:id="imageProgressIndicator" visible="false"/>
         <HBox alignment="CENTER" visible="false" managed="false">
-            <Text fx:id="errorText" textAlignment="CENTER" text="An error occurred."/>
+            <Text fx:id="errorText" styleClass="bareText" textAlignment="CENTER"
+                  text="An error occurred."/>
         </HBox>
     </StackPane>
 </VBox>

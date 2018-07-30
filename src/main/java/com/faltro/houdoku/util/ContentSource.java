@@ -121,11 +121,15 @@ public interface ContentSource {
      *               which ensures that only one total HTTP request is made, but
      *               does not guarantee that all chapters are loaded
      * @return a Series using the data on the series page
-     * @throws IOException             an IOException occurred when loading the series page
-     * @throws NotImplementedException the operation has not yet been
-     *                                 implemented for this content source
+     * @throws IOException                 an IOException occurred when loading the series page
+     * @throws NotImplementedException     the operation has not yet been
+     *                                     implemented for this content source
+     * @throws ContentUnavailableException the retrieval of the series was
+     *                                     blocked by the ContentSource's
+     *                                     website itself
      */
-    Series series(String source, boolean quick) throws IOException, NotImplementedException;
+    Series series(String source, boolean quick) throws IOException, NotImplementedException,
+            ContentUnavailableException;
 
     /**
      * Retrieves a series' cover image from the given URL.
