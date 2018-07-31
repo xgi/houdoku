@@ -1,4 +1,4 @@
-package com.faltro.houdoku.plugins;
+package com.faltro.houdoku.plugins.content;
 
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;

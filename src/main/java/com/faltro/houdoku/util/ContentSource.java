@@ -11,6 +11,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * A content source is a website which contains series information and provides
+ * a list of chapters for series', from which pages can be downloaded as images.
+ * <p>
+ * The client maintains numerous ContentSource's, and the user can choose to use
+ * a different ContentSource for each series in their library.
+ *
+ * @see com.faltro.houdoku.plugins.content
+ */
 public interface ContentSource {
     /**
      * The unique identifier for the ContentSource.

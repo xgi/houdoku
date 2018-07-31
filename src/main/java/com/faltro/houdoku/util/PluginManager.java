@@ -1,6 +1,6 @@
 package com.faltro.houdoku.util;
 
-import com.faltro.houdoku.plugins.*;
+import com.faltro.houdoku.plugins.content.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

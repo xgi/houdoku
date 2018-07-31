@@ -1,4 +1,4 @@
-package com.faltro.houdoku.plugins;
+package com.faltro.houdoku.plugins.content;
 
 import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.model.Chapter;
