@@ -39,27 +39,6 @@ public interface ContentSource {
     String PROTOCOL = "https";
 
     /**
-     * Retrieves an Image from the given URL.
-     *
-     * @param url the URL for an image file
-     * @return an Image retrieved from the given url
-     * @throws IOException an IOException occurred when loading the image
-     */
-    Image imageFromURL(String url) throws IOException;
-
-    /**
-     * Retrieves an Image from the given URL with a strict width.
-     * <p>
-     * The aspect ratio of the original image is maintained.
-     *
-     * @param url   the URL for an image file
-     * @param width the width of the retrieved image
-     * @return an Image retrieved from the given url
-     * @throws IOException an IOException occurred when loading the image
-     */
-    Image imageFromURL(String url, int width) throws IOException;
-
-    /**
      * Searches the source using a provided query.
      * <p>
      * This method does NOT load Series objects, since the amount of series
@@ -156,7 +135,6 @@ public interface ContentSource {
      *                                 image
      * @throws NotImplementedException the operation has not yet been
      *                                 implemented for this content source
-     * @see #imageFromURL(String)
      */
     Image cover(String source) throws IOException, NotImplementedException;
 
@@ -189,7 +167,6 @@ public interface ContentSource {
      *                                     website itself
      * @throws NotImplementedException     the operation has not yet been
      *                                     implemented for this content source
-     * @see #imageFromURL(String)
      */
     Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException,
             NotImplementedException;

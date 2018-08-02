@@ -1,5 +1,11 @@
 package com.faltro.houdoku.util;
 
+import com.faltro.houdoku.exception.NotImplementedException;
+import com.faltro.houdoku.model.Series;
+import javafx.scene.image.Image;
+
+import java.io.IOException;
+
 /**
  * An info source is a website which contains generic series information and
  * media. This type differs from {@link ContentSource} in that instances of this
@@ -34,6 +40,18 @@ public interface InfoSource {
      * The protocol for the InfoSource, which is likely either http or https.
      */
     String PROTOCOL = "https";
+
+    /**
+     * Retrieve a banner image for a series.
+     *
+     * @param series the Series to retrieve the banner of
+     * @return an Image which is a banner for the series, or null
+     * @throws IOException             an IOException occurred when finding the
+     *                                 Image
+     * @throws NotImplementedException the operation has not yet been
+     *                                 implemented for this info source
+     */
+    Image banner(Series series) throws IOException, NotImplementedException;
 
     /**
      * Represents this InfoSource as a string.

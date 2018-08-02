@@ -1,6 +1,7 @@
 package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.plugins.content.*;
+import com.faltro.houdoku.plugins.info.AniList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import java.util.Arrays;
  */
 public class PluginManager {
     private final ArrayList<ContentSource> contentSources;
+    private final InfoSource infoSource;
 
     /**
      * Create the PluginManager.
@@ -30,6 +32,7 @@ public class PluginManager {
                 new MangaPark()
                 // add other sources here
         ));
+        infoSource = new AniList(); // change to desired InfoSource
     }
 
     /**
@@ -63,5 +66,9 @@ public class PluginManager {
 
     public ArrayList<ContentSource> getContentSources() {
         return contentSources;
+    }
+
+    public InfoSource getInfoSource() {
+        return infoSource;
     }
 }

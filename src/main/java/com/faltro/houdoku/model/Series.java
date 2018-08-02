@@ -31,6 +31,7 @@ public class Series {
     private int numHighestChapter;
     private ArrayList<String> stringCategories;
     private ArrayList<Chapter> chapters;
+    private String infoSourceId;
 
     public Series(String title, String source, Image cover, int contentSourceId) {
         this.title = title;
@@ -206,5 +207,13 @@ public class Series {
 
     public int getContentSourceId() {
         return contentSourceId;
+    }
+
+    public String getInfoSourceId() {
+        return infoSourceId;
+    }
+
+    public void setInfoSourceId(String infoSourceId) {
+        this.infoSourceId = infoSourceId;
     }
 }

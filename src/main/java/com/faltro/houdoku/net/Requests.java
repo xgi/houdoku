@@ -1,10 +1,8 @@
 package com.faltro.houdoku.net;
 
 import com.faltro.houdoku.Houdoku;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import javafx.scene.image.Image;
+import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -52,6 +50,21 @@ public class Requests {
     }
 
     /**
+     * Executes an HTTP POST request on the given URL with a JSON body.
+     *
+     * @param url  the URL to request
+     * @param json the json-formatted body of the request
+     * @return the Response of the request
+     * @throws IOException an IOException occurred when making the request
+     */
+    public static Response POST(String url, String json) throws IOException {
+        RequestBody body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"),
+                json);
+        return POST(url, body);
+    }
+
+    /**
      * Parse the given okhttp3.Response as a Jsoup.Document.
      *
      * @param response the Response to parse
@@ -60,5 +73,33 @@ public class Requests {
      */
     public static Document parse(Response response) throws IOException {
         return response.body() == null ? null : Jsoup.parse(response.body().string());
+    }
+
+    /**
+     * Retrieves an Image from the given URL.
+     *
+     * @param url the URL for an image file
+     * @return an Image retrieved from the given url
+     * @throws IOException an IOException occurred when loading the image
+     */
+    public static Image imageFromURL(String url) throws IOException {
+        Response response = GET(url);
+        return response.body() == null ? null : new Image(response.body().byteStream());
+    }
+
+    /**
+     * Retrieves an Image from the given URL with a strict width.
+     * <p>
+     * The aspect ratio of the original image is maintained.
+     *
+     * @param url   the URL for an image file
+     * @param width the width of the retrieved image
+     * @return an Image retrieved from the given url
+     * @throws IOException an IOException occurred when loading the image
+     */
+    public static Image imageFromURL(String url, int width) throws IOException {
+        Response response = GET(url);
+        return response.body() == null ? null :
+                new Image(response.body().byteStream(), width, 0, true, false);
     }
 }

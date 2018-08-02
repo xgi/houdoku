@@ -2,6 +2,7 @@ package com.faltro.houdoku.util.runnable;
 
 import com.faltro.houdoku.controller.SearchSeriesController;
 import com.faltro.houdoku.exception.NotImplementedException;
+import com.faltro.houdoku.net.Requests;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.ParseHelpers;
@@ -71,7 +72,7 @@ public class SearchRunnable extends LoaderRunnable {
                     try {
                         if (item.containsKey("coverSrc")) {
                             // load cover using direct image source
-                            cover = contentSource.imageFromURL(
+                            cover = Requests.imageFromURL(
                                     (String) item.get("coverSrc"), ParseHelpers.COVER_MAX_WIDTH);
                         } else {
                             // load cover by passing series url and finding the

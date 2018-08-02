@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class Serializer {
-    private static final Gson gson = new Gson();
+    public static final Gson gson = new Gson();
 
     /**
      * Serializes a Library object into JSON data.

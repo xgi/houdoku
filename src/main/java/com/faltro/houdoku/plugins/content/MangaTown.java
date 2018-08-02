@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
-import static com.faltro.houdoku.net.Requests.GET;
-import static com.faltro.houdoku.net.Requests.parse;
+import static com.faltro.houdoku.net.Requests.*;
 
 /**
  * This class contains implementation details for processing data from a
