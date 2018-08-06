@@ -31,19 +31,25 @@
         <HBox alignment="BOTTOM_LEFT">
             <Text fx:id="textTitle" styleClass="bannerTitle"/>
         </HBox>
+        <HBox>
+            <padding>
+                <Insets top="5" left="5"/>
+            </padding>
+            <Button fx:id="toLibraryButton" text="◂ Back to library"
+                    onAction="#goToLibrary"/>
+        </HBox>
     </StackPane>
-
-    <VBox styleClass="containerAlt" spacing="20" VBox.vgrow="ALWAYS">
+    <VBox styleClass="containerAlt" spacing="15" VBox.vgrow="ALWAYS">
         <padding>
             <Insets top="15" bottom="15" left="15" right="15"/>
         </padding>
         <TabPane fx:id="seriesTabPane" VBox.vgrow="ALWAYS">
             <Tab text="Series Information" closable="false">
-                <ScrollPane fx:id="metadataScrollPane" styleClass="containerAlt">
+                <ScrollPane fx:id="metadataScrollPane">
                     <padding>
                         <Insets top="20" bottom="20" left="20" right="10"/>
                     </padding>
-                    <VBox fx:id="metadataContainer" styleClass="containerAlt" spacing="8"
+                    <VBox fx:id="metadataContainer" spacing="8"
                           alignment="CENTER"
                           VBox.vgrow="ALWAYS">
                         <HBox spacing="5">
@@ -105,13 +111,10 @@
                         <TextArea fx:id="textAreaDescription" wrapText="true" editable="false"
                                   prefRowCount="3"/>
                         <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
-                        <Button fx:id="toLibraryButton" text="◂ Back to library"
-                                onAction="#goToLibrary"/>
                     </VBox>
                 </ScrollPane>
             </Tab>
         </TabPane>
-
         <VBox fx:id="chaptersContainer">
             <HBox fx:id="filterBar" spacing="5" alignment="CENTER" VBox.vgrow="NEVER">
                 <padding>

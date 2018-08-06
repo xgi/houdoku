@@ -44,7 +44,7 @@
                                               styleClass="bareTextAlt"/>
                                     <VBox fx:id="quickReloadInfoBox" styleClass="controlSubBox">
                                         <Label maxWidth="${quickReloadInfoBox.width}"
-                                                text="Some content sources require multiple page requests to load all of a series' chapters. Enable this option to load only the first page when reloading series information."
+                                               text="Some content sources require multiple page requests to load all of a series' chapters. Enable this option to load only the first page when reloading series information."
                                                styleClass="bareTextAlt" wrapText="true"/>
                                     </VBox>
                                 </VBox>

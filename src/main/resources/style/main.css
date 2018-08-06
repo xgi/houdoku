@@ -24,6 +24,10 @@
     -fx-underline: true;
 }
 
+.tab-pane > .tab-header-area > .headers-region > .tab .focus-indicator {
+    -fx-border-width: 0;
+}
+
 #navContainer {
     -fx-min-height: 50;
     -fx-pref-height: 50;

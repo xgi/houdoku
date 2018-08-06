@@ -2,14 +2,16 @@ package com.faltro.houdoku.plugins.info;
 
 import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.model.Series;
-import com.google.gson.*;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.scene.image.Image;
 import okhttp3.Response;
-import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
-import static com.faltro.houdoku.net.Requests.*;
+import static com.faltro.houdoku.net.Requests.POST;
+import static com.faltro.houdoku.net.Requests.imageFromURL;
 
 /**
  * This class contains implementation details for processing data from a
