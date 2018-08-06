@@ -17,6 +17,11 @@
     -fx-text-fill: -color-foreground-alt;
 }
 
+.containerAlt,
+.containerAlt .viewport {
+    -fx-background-color: -color-background-alt;
+}
+
 .h1 {
     -fx-fill: -color-foreground;
 }
@@ -55,10 +60,6 @@
 
 #imageScrollPane, #coversContainer {
     -fx-background: -color-background;
-}
-
-#filterBar {
-    -fx-background-color: -color-background;
 }
 
 #treeView .tree-table-row-cell {
@@ -160,4 +161,8 @@
 
 #listView .list-cell:selected .listItem > * {
     -fx-fill: -color-background-alt;
+}
+
+#seriesTabPane, #chaptersContainer {
+    -fx-border-color: -color-accent;
 }

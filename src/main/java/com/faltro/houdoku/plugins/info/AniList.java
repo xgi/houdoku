@@ -40,7 +40,7 @@ public class AniList extends GenericInfoSource {
 
         JsonObject json_root = new JsonObject();
         JsonObject json_variables = new JsonObject();
-        json_variables.add("q", Serializer.gson.toJsonTree("punpun"));
+        json_variables.add("q", Serializer.gson.toJsonTree(series.getTitle()));
         json_root.add("query", Serializer.gson.toJsonTree(banner_request_body));
         json_root.add("variables", json_variables);
 

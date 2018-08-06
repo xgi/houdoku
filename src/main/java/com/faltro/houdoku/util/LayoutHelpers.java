@@ -13,9 +13,28 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 public class LayoutHelpers {
+    /**
+     * ColorAdjust for the banner on the
+     * {@link com.faltro.houdoku.controller.SeriesController} page.
+     */
+    public static final ColorAdjust BANNER_ADJUST = new ColorAdjust(0, 0, -0.5, 0);
+    /**
+     * ColorAdjust for non-hovered cover images.
+     */
+    public static final ColorAdjust COVER_ADJUST_DEFAULT = new ColorAdjust(0, 0, -0.2, 0);
+    /**
+     * DropShadow for cover images.
+     */
     private static final DropShadow COVER_DROPSHADOW = new DropShadow(5, Color.BLACK);
-    private static final ColorAdjust COVER_ADJUST_DEFAULT = new ColorAdjust(0, 0, -0.2, 0);
+    /**
+     * ColorAdjust for hovered cover images.
+     */
     private static final ColorAdjust COVER_ADJUST_HOVER = new ColorAdjust(0, 0, -0.5, 0);
+
+    static {
+        COVER_ADJUST_DEFAULT.setInput(COVER_DROPSHADOW);
+        COVER_ADJUST_HOVER.setInput(COVER_DROPSHADOW);
+    }
 
     /**
      * Create the container for displaying a series cover, for use in FlowPane
@@ -30,9 +49,6 @@ public class LayoutHelpers {
      */
     public static StackPane createCoverContainer(FlowPane container, String title,
                                                  ImageView cover) {
-        COVER_ADJUST_DEFAULT.setInput(COVER_DROPSHADOW);
-        COVER_ADJUST_HOVER.setInput(COVER_DROPSHADOW);
-
         StackPane result_pane = new StackPane();
         result_pane.prefWidthProperty().bind(
                 container.widthProperty()

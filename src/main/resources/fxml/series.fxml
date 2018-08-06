@@ -21,119 +21,121 @@
         </Menu>
     </MenuBar>
 
-    <StackPane fx:id="topContainer">
-        <HBox fx:id="infoContainer" spacing="15" alignment="CENTER">
-            <padding>
-                <Insets fx:id="infoContainerInsets" top="30" bottom="15" left="15" right="15"/>
-            </padding>
+    <StackPane fx:id="bannerContainer" styleClass="containerAlt">
+        <HBox alignment="TOP_CENTER">
+            <ImageView fx:id="bannerImageView" preserveRatio="true"/>
+        </HBox>
+        <HBox alignment="BOTTOM_LEFT">
             <ImageView fx:id="coverImageView" preserveRatio="true"/>
-            <VBox fx:id="metadataContainer" spacing="8" alignment="CENTER">
-                <TextFlow>
-                    <Text fx:id="textTitle" styleClass="h1"/>
-                </TextFlow>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Alt. names:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textAltNames"/>
-                    </TextFlow>
-                </HBox>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Author:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textAuthor"/>
-                    </TextFlow>
-                </HBox>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Artist:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textArtist"/>
-                    </TextFlow>
-                </HBox>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Rating:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textRating"/>
-                    </TextFlow>
-                </HBox>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Views:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textViews"/>
-                    </TextFlow>
-                </HBox>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Follows:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textFollows"/>
-                    </TextFlow>
-                </HBox>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Genres:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textGenres"/>
-                    </TextFlow>
-                </HBox>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Status:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textStatus"/>
-                    </TextFlow>
-                </HBox>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Chapters:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textNumChapters"/>
-                    </TextFlow>
-                </HBox>
-                <HBox spacing="5">
-                    <Text styleClass="metadataLabel" text="Content source:"/>
-                    <TextFlow styleClass="metadataTextFlow">
-                        <Text fx:id="textContentSource"/>
-                    </TextFlow>
-                </HBox>
-            </VBox>
         </HBox>
-        <HBox alignment="CENTER">
-            <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
-        </HBox>
-        <HBox>
-            <padding>
-                <Insets top="10" left="10"/>
-            </padding>
-            <Button fx:id="toLibraryButton" text="◂ Back to library" onAction="#goToLibrary"/>
+        <HBox alignment="BOTTOM_LEFT">
+            <Text fx:id="textTitle" styleClass="bannerTitle"/>
         </HBox>
     </StackPane>
 
-    <HBox fx:id="descriptionContainer" spacing="15" alignment="CENTER">
+    <VBox styleClass="containerAlt" spacing="20" VBox.vgrow="ALWAYS">
         <padding>
-            <Insets bottom="15" left="15" right="15"/>
+            <Insets top="15" bottom="15" left="15" right="15"/>
         </padding>
-        <TextArea fx:id="textAreaDescription" wrapText="true" editable="false" prefRowCount="3"/>
-    </HBox>
+        <TabPane fx:id="seriesTabPane" VBox.vgrow="ALWAYS">
+            <Tab text="Series Information" closable="false">
+                <ScrollPane fx:id="metadataScrollPane" styleClass="containerAlt">
+                    <padding>
+                        <Insets top="20" bottom="20" left="20" right="10"/>
+                    </padding>
+                    <VBox fx:id="metadataContainer" styleClass="containerAlt" spacing="8"
+                          alignment="CENTER"
+                          VBox.vgrow="ALWAYS">
+                        <HBox spacing="5">
+                            <Text styleClass="metadataLabel" text="Alt. names:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textAltNames"/>
+                            </TextFlow>
+                        </HBox>
+                        <HBox spacing="5">
+                            <Text styleClass="metadataLabel" text="Author:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textAuthor"/>
+                            </TextFlow>
+                            <Text styleClass="metadataLabel" text="  /  "/>
+                            <Text styleClass="metadataLabel" text="Artist:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textArtist"/>
+                            </TextFlow>
+                        </HBox>
+                        <HBox spacing="5">
+                            <Text styleClass="metadataLabel" text="Rating:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textRating"/>
+                            </TextFlow>
+                            <Text styleClass="metadataLabel" text="  /  "/>
+                            <Text styleClass="metadataLabel" text="Views:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textViews"/>
+                            </TextFlow>
+                            <Text styleClass="metadataLabel" text="  /  "/>
+                            <Text styleClass="metadataLabel" text="Follows:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textFollows"/>
+                            </TextFlow>
+                        </HBox>
+                        <HBox spacing="5">
+                            <Text styleClass="metadataLabel" text="Genres:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textGenres"/>
+                            </TextFlow>
+                        </HBox>
+                        <HBox spacing="5">
+                            <Text styleClass="metadataLabel" text="Chapters:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textNumChapters"/>
+                            </TextFlow>
+                            <Text styleClass="metadataLabel" text="  /  "/>
+                            <Text styleClass="metadataLabel" text="Status:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textStatus"/>
+                            </TextFlow>
+                        </HBox>
+                        <HBox spacing="5">
+                            <Text styleClass="metadataLabel" text="Content source:"/>
+                            <TextFlow styleClass="metadataTextFlow">
+                                <Text fx:id="textContentSource"/>
+                            </TextFlow>
+                        </HBox>
+                        <TextArea fx:id="textAreaDescription" wrapText="true" editable="false"
+                                  prefRowCount="3"/>
+                        <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
+                        <Button fx:id="toLibraryButton" text="◂ Back to library"
+                                onAction="#goToLibrary"/>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+        </TabPane>
 
-    <VBox fx:id="contentContainer" VBox.vgrow="ALWAYS">
-        <HBox fx:id="filterBar" spacing="5" alignment="CENTER" VBox.vgrow="NEVER">
-            <padding>
-                <Insets top="15" bottom="15" left="15" right="15"/>
-            </padding>
-            <Text text="Filter chapters: " styleClass="bareText"/>
-            <TextField fx:id="filterTextField" prefWidth="280"
-                       promptText="Filter title, language, group..."/>
-            <Button fx:id="toggleInfoButton" text="Expand table ▲" onAction="#toggleInfo"/>
-        </HBox>
-        <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
-            <placeholder>
-                <Label styleClass="placeholderLabel" text="No chapters found."/>
-            </placeholder>
-            <columns>
-                <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
-                <TableColumn fx:id="volumeColumn" resizable="false" text="Vol"/>
-                <TableColumn fx:id="chapterColumn" resizable="false" text="Chp"/>
-                <TableColumn fx:id="languageColumn" resizable="false" text="Language"/>
-                <TableColumn fx:id="groupColumn" resizable="false" text="Group"/>
-                <TableColumn fx:id="viewsColumn" resizable="false" text="Views"/>
-                <TableColumn fx:id="dateColumn" resizable="false" text="Date"/>
-            </columns>
-        </TableView>
+        <VBox fx:id="chaptersContainer">
+            <HBox fx:id="filterBar" spacing="5" alignment="CENTER" VBox.vgrow="NEVER">
+                <padding>
+                    <Insets top="15" bottom="15" left="15" right="15"/>
+                </padding>
+                <Text text="Filter chapters: " styleClass="bareText"/>
+                <TextField fx:id="filterTextField" prefWidth="280"
+                           promptText="Filter title, language, group..."/>
+                <Button fx:id="toggleInfoButton" text="Expand table ▲" onAction="#toggleInfo"/>
+            </HBox>
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+                <placeholder>
+                    <Label styleClass="placeholderLabel" text="No chapters found."/>
+                </placeholder>
+                <columns>
+                    <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
+                    <TableColumn fx:id="volumeColumn" resizable="false" text="Vol"/>
+                    <TableColumn fx:id="chapterColumn" resizable="false" text="Chp"/>
+                    <TableColumn fx:id="languageColumn" resizable="false" text="Language"/>
+                    <TableColumn fx:id="groupColumn" resizable="false" text="Group"/>
+                    <TableColumn fx:id="viewsColumn" resizable="false" text="Views"/>
+                    <TableColumn fx:id="dateColumn" resizable="false" text="Date"/>
+                </columns>
+            </TableView>
+        </VBox>
     </VBox>
 </VBox>

@@ -27,6 +27,7 @@ public class Series {
     public int ratings;
     public String[] genres;
     private transient Image cover;
+    private transient Image banner;
     private int numChapters;
     private int numHighestChapter;
     private ArrayList<String> stringCategories;
@@ -150,6 +151,14 @@ public class Series {
 
     public void setCover(Image image) {
         cover = image;
+    }
+
+    public Image getBanner() {
+        return banner;
+    }
+
+    public void setBanner(Image banner) {
+        this.banner = banner;
     }
 
     public int getNumHighestChapter() {

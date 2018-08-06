@@ -16,6 +16,7 @@ public class ContentLoader {
     public static final String PREFIX_RELOAD_SERIES = "reloadSeries_";
     public static final String PREFIX_SEARCH = "search_";
     private static final String PREFIX_LOAD_SERIES = "loadSeries_";
+    private static final String PREFIX_LOAD_BANNER = "loadBanner_";
     private final ArrayList<LoaderRunnable> runnables;
 
     public ContentLoader() {
@@ -82,6 +83,20 @@ public class ContentLoader {
         String name = PREFIX_SEARCH + contentSource.toString() + "_" + query;
         LoaderRunnable runnable = new SearchRunnable(
                 name, this, contentSource, query, searchSeriesController
+        );
+        startThreadSafely(name, runnable);
+    }
+
+    /**
+     * Create a LoaderRunnable for loading a series banner.
+     *
+     * @see LoadBannerRunnable
+     */
+    public void loadBanner(InfoSource infoSource, Series series,
+                           SeriesController seriesController) {
+        String name = PREFIX_LOAD_BANNER + infoSource.toString() + "_" + series.getTitle();
+        LoaderRunnable runnable = new LoadBannerRunnable(
+                name, this, infoSource, series, seriesController
         );
         startThreadSafely(name, runnable);
     }

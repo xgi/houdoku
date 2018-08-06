@@ -5,17 +5,17 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
-import com.faltro.houdoku.util.ContentLoader;
-import com.faltro.houdoku.util.ContentSource;
-import com.faltro.houdoku.util.OutputHelpers;
-import com.faltro.houdoku.util.SceneManager;
+import com.faltro.houdoku.util.*;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -44,7 +44,6 @@ import java.util.List;
  */
 public class SeriesController extends Controller {
     public static final int ID = 1;
-    private static final double COVER_WIDTH = 0.3;
     private static final double INFO_WIDTH = 0.7;
     private static final double[] COL_WIDTHS = {
             0.30, // title
@@ -55,8 +54,34 @@ public class SeriesController extends Controller {
             0.10, // views
             0.20, // date
     };
-    private static final int COVER_MAX_HEIGHT = 400;
-    private static final int DESCRIPTION_MAX_LENGTH = 320;
+    /**
+     * The height of the banner image.
+     */
+    private static final int BANNER_HEIGHT = 220;
+    /**
+     * The height of the cover image.
+     */
+    private static final int COVER_HEIGHT = 176;
+    /**
+     * The offset of the cover from the left of the container.
+     */
+    private static final int COVER_OFFSET_X = 80;
+    /**
+     * The offset of the cover from the top of the container.
+     */
+    private static final int COVER_OFFSET_Y = 30;
+    /**
+     * The maximum number of characters to display of the title.
+     */
+    private static final int TITLE_MAX_CHARS = 30;
+    /**
+     * The offset of the title from the left of the container.
+     */
+    private static final int TITLE_OFFSET_X = 230;
+    /**
+     * The offset of the title from the bottom of the banner image.
+     */
+    private static final int TITLE_OFFSET_Y = -15;
     @FXML
     public ProgressIndicator reloadProgressIndicator;
     @FXML
@@ -64,15 +89,13 @@ public class SeriesController extends Controller {
     @FXML
     private MenuBar menuBar;
     @FXML
-    private StackPane topContainer;
+    private StackPane bannerContainer;
     @FXML
-    private HBox infoContainer;
-    @FXML
-    private HBox descriptionContainer;
+    private ImageView bannerImageView;
     @FXML
     private VBox metadataContainer;
     @FXML
-    private VBox contentContainer;
+    private ScrollPane metadataScrollPane;
     @FXML
     private ImageView coverImageView;
     @FXML
@@ -148,18 +171,11 @@ public class SeriesController extends Controller {
 
         stage.widthProperty().addListener((o, oldValue, newValue) -> updateCoverSize());
 
-        infoContainer.prefWidthProperty().bind(
-                stage.widthProperty().multiply(INFO_WIDTH)
-        );
-        textAreaDescription.prefWidthProperty().bind(
-                coverImageView.fitWidthProperty().add(metadataContainer.widthProperty())
-        );
-        toggleInfoButton.translateXProperty().bind(
-                toggleInfoButton.layoutXProperty()
-                        .multiply(-1)
-                        .add(textAreaDescription.layoutXProperty())
-                        .add(textAreaDescription.prefWidthProperty())
-                        .subtract(toggleInfoButton.widthProperty())
+        metadataContainer.maxWidthProperty().bind(
+                metadataScrollPane.widthProperty()
+                        .subtract(new SimpleIntegerProperty(SceneManager.VSCROLLBAR_WIDTH))
+                        .subtract(new SimpleDoubleProperty(metadataScrollPane.getPadding().getLeft()))
+                        .subtract(new SimpleDoubleProperty(metadataScrollPane.getPadding().getRight()))
         );
 
         // create an array of the columns for easier bulk operations
@@ -256,6 +272,21 @@ public class SeriesController extends Controller {
                         })
         );
 
+        // apply adjustments to the banner and its contents
+        bannerContainer.setMinHeight(BANNER_HEIGHT + COVER_OFFSET_Y);
+
+        bannerImageView.setEffect(LayoutHelpers.BANNER_ADJUST);
+        container.widthProperty().addListener((observableValue, oldValue, newValue) ->
+                updateBannerSize()
+        );
+
+        coverImageView.setFitHeight(COVER_HEIGHT);
+        coverImageView.setTranslateX(COVER_OFFSET_X);
+        textTitle.setTranslateX(TITLE_OFFSET_X);
+        textTitle.setTranslateY(-COVER_OFFSET_Y + TITLE_OFFSET_Y);
+
+        coverImageView.setEffect(LayoutHelpers.COVER_ADJUST_DEFAULT);
+
         // add KeyEvent handlers for navigation
         container.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
@@ -289,6 +320,10 @@ public class SeriesController extends Controller {
         sceneManager.getContentLoader().reloadSeries(contentSource, series,
                 (boolean) sceneManager.getConfig().getValue(Config.Field.QUICK_RELOAD_SERIES),
                 this);
+
+        // load the banner for the series
+        InfoSource infoSource = sceneManager.getPluginManager().getInfoSource();
+        sceneManager.getContentLoader().loadBanner(infoSource, series, this);
     }
 
     /**
@@ -303,14 +338,56 @@ public class SeriesController extends Controller {
      * maximum height.
      */
     private void updateCoverSize() {
-        coverImageView.setFitWidth(stage.getWidth() * COVER_WIDTH);
-        if (coverImageView.getBoundsInParent().getHeight() > COVER_MAX_HEIGHT) {
-            // we would like to simply use setFitHeight, but some later
-            // binds require fitWidth to be appropriately set, which is
-            // not done automatically
-            Image image = coverImageView.getImage();
-            double aspectRatio = image.getWidth() / image.getHeight();
-            coverImageView.setFitWidth(aspectRatio * COVER_MAX_HEIGHT);
+//        coverImageView.setFitWidth(stage.getWidth() * COVER_WIDTH);
+//        if (coverImageView.getBoundsInParent().getHeight() > COVER_MAX_HEIGHT) {
+//            // we would like to simply use setFitHeight, but some later
+//            // binds require fitWidth to be appropriately set, which is
+//            // not done automatically
+//            Image image = coverImageView.getImage();
+//            double aspectRatio = image.getWidth() / image.getHeight();
+//            coverImageView.setFitWidth(aspectRatio * COVER_MAX_HEIGHT);
+//        }
+    }
+
+    /**
+     * Update the size/viewport of the banner to fill the container width.
+     */
+    private void updateBannerSize() {
+        Image image = series.getBanner();
+
+        if (bannerImageView.getImage() != null) {
+            double image_width = image.getWidth();
+            double image_height = image.getHeight();
+            double max_width = container.getWidth();
+            double max_height = BANNER_HEIGHT;
+            double image_aspect_ratio = image_width / image_height;
+            double max_aspect_ratio = max_width / max_height;
+
+            if (max_aspect_ratio >= image_aspect_ratio) {
+                double width = image_width;
+                double height = width * max_height / max_width;
+                double start_x = (image_width - width) / 2;
+                double start_y = (image_height - height) / 2;
+
+                Rectangle2D banner_viewport = new Rectangle2D(
+                        start_x, start_y, width, height
+                );
+
+                bannerImageView.setViewport(banner_viewport);
+                bannerImageView.setFitWidth(max_width);
+            } else {
+                double height = image_height;
+                double width = height * max_width / max_height;
+                double start_x = (image_width - width) / 2;
+                double start_y = (image_height - height) / 2;
+
+                Rectangle2D banner_viewport = new Rectangle2D(
+                        start_x, start_y, width, height
+                );
+
+                bannerImageView.setViewport(banner_viewport);
+                bannerImageView.setFitHeight(max_height);
+            }
         }
     }
 
@@ -321,7 +398,9 @@ public class SeriesController extends Controller {
         // set metadata/info fields using series info
         coverImageView.setImage(series.getCover());
         updateCoverSize();
-        textTitle.setText(series.getTitle());
+        bannerImageView.setImage(series.getBanner());
+        updateBannerSize();
+        textTitle.setText(OutputHelpers.truncate(series.getTitle(), TITLE_MAX_CHARS));
         textAltNames.setText(String.join(", ", series.altNames));
         textAuthor.setText(series.author);
         textArtist.setText(series.artist);
@@ -420,15 +499,15 @@ public class SeriesController extends Controller {
      */
     @FXML
     public void toggleInfo() {
-        // hide/show top containers
-        topContainer.setVisible(!topContainer.isVisible());
-        descriptionContainer.setVisible(!descriptionContainer.isVisible());
-
-        topContainer.setManaged(topContainer.isVisible());
-        descriptionContainer.setManaged(descriptionContainer.isVisible());
-
-        // set toggle button to the appropriate symbol
-        toggleInfoButton.setText(topContainer.isVisible() ? "Expand table ▲" : "Minimize table ▼");
+//        // hide/show top containers
+//        topContainer.setVisible(!topContainer.isVisible());
+//        descriptionContainer.setVisible(!descriptionContainer.isVisible());
+//
+//        topContainer.setManaged(topContainer.isVisible());
+//        descriptionContainer.setManaged(descriptionContainer.isVisible());
+//
+//        // set toggle button to the appropriate symbol
+//        toggleInfoButton.setText(topContainer.isVisible() ? "Expand table ▲" : "Minimize table ▼");
     }
 
     /**

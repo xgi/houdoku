@@ -67,16 +67,19 @@
     -fx-font-weight: bold;
 }
 
-#metadataContainer, #descriptionContainer {
+.bannerTitle {
+    -fx-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 2.6em;
+    -fx-effect: dropshadow(one-pass-box, #333, 9, 0, 2, 1);
+}
+
+#metadataContainer {
     -fx-font-size: 1.4em;
 }
 
 .metadataLabel {
     -fx-font-weight: bold;
-}
-
-.metadataTextFlow {
-    -fx-max-width: 600px;
 }
 
 #textAreaDescription {
@@ -128,7 +131,7 @@
     -fx-padding: 5;
 }
 
-.configTabPane .tab-content-area {
+.tab-content-area {
     -fx-padding: 20;
 }
 
@@ -156,4 +159,8 @@
 
 #effectPreviewContainer {
     -fx-effect: dropshadow(one-pass-box, black, 6, 0, 0, 0);
+}
+
+#seriesTabPane .tab-content-area {
+    -fx-padding: 0;
 }
