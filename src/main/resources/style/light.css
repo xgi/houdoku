@@ -82,6 +82,8 @@
 
 .tab-pane > .tab-header-area > .tab-header-background {
     -fx-background-color: -color-background-alt;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -color-foreground;
 }
 
 .tab-pane > .tab-header-area > .headers-region > .tab {
