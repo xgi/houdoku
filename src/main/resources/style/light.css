@@ -9,7 +9,7 @@
 
 .bareText {
     -fx-fill: -color-foreground;
-    -fx-text-fill: -color-foreground;
+    -fx-text-fill: -color-accent;
 }
 
 .bareTextAlt {
@@ -24,6 +24,52 @@
 
 .h1 {
     -fx-fill: -color-foreground;
+}
+
+.button {
+    -fx-background-color: -color-background-alt;
+    -fx-border-color: -color-foreground;
+    -fx-background-insets: 0;
+}
+
+.button > .text {
+    -fx-fill: -color-foreground;
+}
+
+.button:hover {
+    -fx-background-color: -color-accent;
+}
+
+.button:pressed {
+    -fx-background-color: -color-accent-alt;
+}
+
+.menu-bar {
+    -fx-background-color: -color-background-alt;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: -color-foreground;
+}
+
+.menu-bar > .container > .menu-button > .label > .text, .menu-item > .label > .text {
+    -fx-fill: -color-foreground;
+}
+
+.menu-bar > .container > .menu-button:hover > .label > .text,
+.menu-bar > .container > .menu-button:showing > .label > .text,
+.menu-bar > .container > .menu .menu-item:hover > .label > .text {
+    -fx-fill: -color-background;
+}
+
+.menu-button {
+    -fx-background-color: -color-background-alt;
+}
+
+.menu-button:hover, .menu-button:showing, .menu-item:hover {
+    -fx-background-color: -color-accent-alt;
+}
+
+.menu-item {
+    -fx-background-color: -color-background;
 }
 
 .scroll-pane {
