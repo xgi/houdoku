@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -307,18 +307,24 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 </td>
 </tr>
 <tr id="i8" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#promptError-java.lang.String-">promptError</a></span>(java.lang.String&nbsp;text)</code>
+<div class="block">Display an error as an alert.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>private void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#search--">search</a></span>()</code>
 <div class="block">Searches from the selected content source using the searchTextField.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#updateContent--">updateContent</a></span>()</code>
 <div class="block">Updates the content of the results layouts.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>private void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html#updateLayout--">updateLayout</a></span>()</code>
 <div class="block">Update the visible layout based on the selected option.</div>
@@ -685,6 +691,20 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 </dl>
 </li>
 </ul>
+<a name="promptError-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>promptError</h4>
+<pre>public&nbsp;void&nbsp;promptError(java.lang.String&nbsp;text)</pre>
+<div class="block">Display an error as an alert.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>text</code> - the error text to display</dd>
+</dl>
+</li>
+</ul>
 <a name="addSeriesFromItem-java.util.HashMap-">
 <!--   -->
 </a>
@@ -705,8 +725,8 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>item</code> - a HashMap containing the fields described above</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#loadSeries-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.LibraryController-"><code>ContentLoader.loadSeries(ContentSource, String,
- LibraryController)</code></a></dd>
+<dd><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#loadSeries-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.SearchSeriesController-com.faltro.houdoku.controller.LibraryController-"><code>ContentLoader.loadSeries(ContentSource, String,
+ SearchSeriesController, LibraryController)</code></a></dd>
 </dl>
 </li>
 </ul>

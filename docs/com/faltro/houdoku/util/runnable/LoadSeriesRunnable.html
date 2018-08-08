@@ -145,6 +145,10 @@ extends <a href="../../../../../com/faltro/houdoku/util/runnable/LoaderRunnable.
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html#libraryController">libraryController</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>private <a href="../../../../../com/faltro/houdoku/controller/SearchSeriesController.html" title="class in com.faltro.houdoku.controller">SearchSeriesController</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html#searchSeriesController">searchSeriesController</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>private java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html#source">source</a></span></code>&nbsp;</td>
 </tr>
@@ -170,10 +174,11 @@ extends <a href="../../../../../com/faltro/houdoku/util/runnable/LoaderRunnable.
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html#LoadSeriesRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.LibraryController-">LoadSeriesRunnable</a></span>(java.lang.String&nbsp;name,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html#LoadSeriesRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.SearchSeriesController-com.faltro.houdoku.controller.LibraryController-">LoadSeriesRunnable</a></span>(java.lang.String&nbsp;name,
                   <a href="../../../../../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a>&nbsp;contentLoader,
                   <a href="../../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;contentSource,
                   java.lang.String&nbsp;source,
+                  <a href="../../../../../com/faltro/houdoku/controller/SearchSeriesController.html" title="class in com.faltro.houdoku.controller">SearchSeriesController</a>&nbsp;searchSeriesController,
                   <a href="../../../../../com/faltro/houdoku/controller/LibraryController.html" title="class in com.faltro.houdoku.controller">LibraryController</a>&nbsp;libraryController)</code>
 <div class="block">Runnable for loading a series.</div>
 </td>
@@ -244,6 +249,15 @@ extends <a href="../../../../../com/faltro/houdoku/util/runnable/LoaderRunnable.
 <pre>private final&nbsp;java.lang.String source</pre>
 </li>
 </ul>
+<a name="searchSeriesController">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>searchSeriesController</h4>
+<pre>private final&nbsp;<a href="../../../../../com/faltro/houdoku/controller/SearchSeriesController.html" title="class in com.faltro.houdoku.controller">SearchSeriesController</a> searchSeriesController</pre>
+</li>
+</ul>
 <a name="libraryController">
 <!--   -->
 </a>
@@ -261,7 +275,7 @@ extends <a href="../../../../../com/faltro/houdoku/util/runnable/LoaderRunnable.
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="LoadSeriesRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.LibraryController-">
+<a name="LoadSeriesRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.SearchSeriesController-com.faltro.houdoku.controller.LibraryController-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -271,6 +285,7 @@ extends <a href="../../../../../com/faltro/houdoku/util/runnable/LoaderRunnable.
                           <a href="../../../../../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a>&nbsp;contentLoader,
                           <a href="../../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;contentSource,
                           java.lang.String&nbsp;source,
+                          <a href="../../../../../com/faltro/houdoku/controller/SearchSeriesController.html" title="class in com.faltro.houdoku.controller">SearchSeriesController</a>&nbsp;searchSeriesController,
                           <a href="../../../../../com/faltro/houdoku/controller/LibraryController.html" title="class in com.faltro.houdoku.controller">LibraryController</a>&nbsp;libraryController)</pre>
 <div class="block">Runnable for loading a series.</div>
 <dl>

@@ -14,7 +14,7 @@ public class Serializer {
      * Serializes a Library object into JSON data.
      *
      * @param library the Library to serialize
-     * @return a string contains the JSON representation of the library
+     * @return a string containing the JSON representation of the library
      */
     static String serializeLibrary(Library library) {
         JsonObject json_root = new JsonObject();

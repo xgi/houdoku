@@ -31,7 +31,7 @@ class Compressor {
     /**
      * Decompress a compressed array of bytes.
      *
-     * @param bytes an array of bytes encoded using UTF-8
+     * @param bytes an array of bytes
      * @return the given bytes decompressed
      */
     static byte[] decompress(byte[] bytes) {

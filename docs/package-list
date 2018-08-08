@@ -4,6 +4,6 @@ com.faltro.houdoku.data
 com.faltro.houdoku.exception
 com.faltro.houdoku.model
 com.faltro.houdoku.net
-com.faltro.houdoku.plugins
+com.faltro.houdoku.plugins.content
 com.faltro.houdoku.util
 com.faltro.houdoku.util.runnable
