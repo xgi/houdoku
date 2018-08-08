@@ -43,78 +43,80 @@
         <padding>
             <Insets top="15" bottom="15" left="15" right="15"/>
         </padding>
-        <TabPane fx:id="seriesTabPane" VBox.vgrow="ALWAYS">
-            <Tab text="Series Information" closable="false">
-                <ScrollPane fx:id="metadataScrollPane">
-                    <padding>
-                        <Insets top="20" bottom="20" left="20" right="10"/>
-                    </padding>
-                    <VBox fx:id="metadataContainer" spacing="8"
-                          alignment="CENTER"
-                          VBox.vgrow="ALWAYS">
-                        <HBox spacing="5">
-                            <Text styleClass="metadataLabel" text="Alt. names:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textAltNames"/>
-                            </TextFlow>
-                        </HBox>
-                        <HBox spacing="5">
-                            <Text styleClass="metadataLabel" text="Author:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textAuthor"/>
-                            </TextFlow>
-                            <Text styleClass="metadataLabel" text="  /  "/>
-                            <Text styleClass="metadataLabel" text="Artist:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textArtist"/>
-                            </TextFlow>
-                        </HBox>
-                        <HBox spacing="5">
-                            <Text styleClass="metadataLabel" text="Rating:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textRating"/>
-                            </TextFlow>
-                            <Text styleClass="metadataLabel" text="  /  "/>
-                            <Text styleClass="metadataLabel" text="Views:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textViews"/>
-                            </TextFlow>
-                            <Text styleClass="metadataLabel" text="  /  "/>
-                            <Text styleClass="metadataLabel" text="Follows:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textFollows"/>
-                            </TextFlow>
-                        </HBox>
-                        <HBox spacing="5">
-                            <Text styleClass="metadataLabel" text="Genres:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textGenres"/>
-                            </TextFlow>
-                        </HBox>
-                        <HBox spacing="5">
-                            <Text styleClass="metadataLabel" text="Chapters:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textNumChapters"/>
-                            </TextFlow>
-                            <Text styleClass="metadataLabel" text="  /  "/>
-                            <Text styleClass="metadataLabel" text="Status:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textStatus"/>
-                            </TextFlow>
-                        </HBox>
-                        <HBox spacing="5">
-                            <Text styleClass="metadataLabel" text="Content source:"/>
-                            <TextFlow styleClass="metadataTextFlow">
-                                <Text fx:id="textContentSource"/>
-                            </TextFlow>
-                        </HBox>
-                        <TextArea fx:id="textAreaDescription" wrapText="true" editable="false"
-                                  prefRowCount="3"/>
-                        <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
-                    </VBox>
-                </ScrollPane>
-            </Tab>
-        </TabPane>
+        <StackPane>
+            <TabPane fx:id="seriesTabPane" VBox.vgrow="ALWAYS">
+                <Tab text="Series Information" closable="false">
+                    <ScrollPane fx:id="metadataScrollPane">
+                        <padding>
+                            <Insets top="20" bottom="20" left="20" right="10"/>
+                        </padding>
+                        <VBox fx:id="metadataContainer" spacing="8"
+                              alignment="CENTER"
+                              VBox.vgrow="ALWAYS">
+                            <HBox spacing="5">
+                                <Text styleClass="metadataLabel" text="Alt. names:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textAltNames"/>
+                                </TextFlow>
+                            </HBox>
+                            <HBox spacing="5">
+                                <Text styleClass="metadataLabel" text="Author:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textAuthor"/>
+                                </TextFlow>
+                                <Text styleClass="metadataLabel" text="  /  "/>
+                                <Text styleClass="metadataLabel" text="Artist:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textArtist"/>
+                                </TextFlow>
+                            </HBox>
+                            <HBox spacing="5">
+                                <Text styleClass="metadataLabel" text="Rating:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textRating"/>
+                                </TextFlow>
+                                <Text styleClass="metadataLabel" text="  /  "/>
+                                <Text styleClass="metadataLabel" text="Views:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textViews"/>
+                                </TextFlow>
+                                <Text styleClass="metadataLabel" text="  /  "/>
+                                <Text styleClass="metadataLabel" text="Follows:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textFollows"/>
+                                </TextFlow>
+                            </HBox>
+                            <HBox spacing="5">
+                                <Text styleClass="metadataLabel" text="Genres:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textGenres"/>
+                                </TextFlow>
+                            </HBox>
+                            <HBox spacing="5">
+                                <Text styleClass="metadataLabel" text="Chapters:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textNumChapters"/>
+                                </TextFlow>
+                                <Text styleClass="metadataLabel" text="  /  "/>
+                                <Text styleClass="metadataLabel" text="Status:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textStatus"/>
+                                </TextFlow>
+                            </HBox>
+                            <HBox spacing="5">
+                                <Text styleClass="metadataLabel" text="Content source:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textContentSource"/>
+                                </TextFlow>
+                            </HBox>
+                            <TextArea fx:id="textAreaDescription" wrapText="true" editable="false"
+                                      prefRowCount="3"/>
+                        </VBox>
+                    </ScrollPane>
+                </Tab>
+            </TabPane>
+            <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
+        </StackPane>
         <VBox fx:id="chaptersContainer">
             <HBox fx:id="filterBar" spacing="5" alignment="CENTER" VBox.vgrow="NEVER">
                 <padding>
