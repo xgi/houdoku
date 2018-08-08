@@ -123,7 +123,7 @@ public class SeriesController extends Controller {
     @FXML
     private Text textContentSource;
     @FXML
-    private TextArea textAreaDescription;
+    private Text textDescription;
     @FXML
     private TableView<Chapter> tableView;
     @FXML
@@ -414,7 +414,7 @@ public class SeriesController extends Controller {
                 Integer.toString(series.getNumChapters()) + " releases)");
         textContentSource.setText(sceneManager.getPluginManager().getSource(
                 series.getContentSourceId()).toString());
-        textAreaDescription.setText(series.description);
+        textDescription.setText(series.description);
 
         // hide metadata field rows if the field is unset
         textAltNames.getParent().getParent().setVisible(series.altNames.length > 0);

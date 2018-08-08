@@ -109,8 +109,14 @@
                                     <Text fx:id="textContentSource"/>
                                 </TextFlow>
                             </HBox>
-                            <TextArea fx:id="textAreaDescription" wrapText="true" editable="false"
-                                      prefRowCount="3"/>
+                            <HBox>
+                                <Text styleClass="metadataLabel" text="Description:"/>
+                            </HBox>
+                            <HBox>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="textDescription"/>
+                                </TextFlow>
+                            </HBox>
                         </VBox>
                     </ScrollPane>
                 </Tab>
