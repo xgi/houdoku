@@ -131,7 +131,6 @@
                 <Text text="Filter chapters: " styleClass="bareText"/>
                 <TextField fx:id="filterTextField" prefWidth="280"
                            promptText="Filter title, language, group..."/>
-                <Button fx:id="toggleInfoButton" text="Expand table ▲" onAction="#toggleInfo"/>
             </HBox>
             <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
                 <placeholder>

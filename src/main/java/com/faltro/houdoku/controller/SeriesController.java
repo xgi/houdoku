@@ -143,8 +143,6 @@ public class SeriesController extends Controller {
     @FXML
     private HBox filterBar;
     @FXML
-    private Button toggleInfoButton;
-    @FXML
     private TextField filterTextField;
 
     private Series series;
@@ -168,8 +166,6 @@ public class SeriesController extends Controller {
     @FXML
     public void initialize() {
         super.initialize();
-
-        stage.widthProperty().addListener((o, oldValue, newValue) -> updateCoverSize());
 
         metadataContainer.maxWidthProperty().bind(
                 metadataScrollPane.widthProperty()
@@ -311,7 +307,6 @@ public class SeriesController extends Controller {
         stage.setTitle(Houdoku.getName() + " - " + series.getTitle());
 
         refreshContent();
-        updateCoverSize();
 
         // reload the series from the content source
         ContentSource contentSource = sceneManager.getPluginManager().getSource(
@@ -331,22 +326,6 @@ public class SeriesController extends Controller {
      */
     public void onMadeInactive() {
         filterTextField.setText("");
-    }
-
-    /**
-     * Set the cover image width a percentage of the stage while enforcing a
-     * maximum height.
-     */
-    private void updateCoverSize() {
-//        coverImageView.setFitWidth(stage.getWidth() * COVER_WIDTH);
-//        if (coverImageView.getBoundsInParent().getHeight() > COVER_MAX_HEIGHT) {
-//            // we would like to simply use setFitHeight, but some later
-//            // binds require fitWidth to be appropriately set, which is
-//            // not done automatically
-//            Image image = coverImageView.getImage();
-//            double aspectRatio = image.getWidth() / image.getHeight();
-//            coverImageView.setFitWidth(aspectRatio * COVER_MAX_HEIGHT);
-//        }
     }
 
     /**
@@ -397,7 +376,6 @@ public class SeriesController extends Controller {
     public void refreshContent() {
         // set metadata/info fields using series info
         coverImageView.setImage(series.getCover());
-        updateCoverSize();
         bannerImageView.setImage(series.getBanner());
         updateBannerSize();
         textTitle.setText(OutputHelpers.truncate(series.getTitle(), TITLE_MAX_CHARS));
@@ -486,28 +464,6 @@ public class SeriesController extends Controller {
             cell.setOnMouseClicked(newCellClickHandler());
             return cell;
         };
-    }
-
-    /**
-     * Toggles whether or not the info container is displayed.
-     * <p>
-     * This method also automatically forces the content to fill up the
-     * available space, as appropriate based on whether the info
-     * container is visible.
-     * <p>
-     * Called exclusively by toggleInfoButton
-     */
-    @FXML
-    public void toggleInfo() {
-//        // hide/show top containers
-//        topContainer.setVisible(!topContainer.isVisible());
-//        descriptionContainer.setVisible(!descriptionContainer.isVisible());
-//
-//        topContainer.setManaged(topContainer.isVisible());
-//        descriptionContainer.setManaged(descriptionContainer.isVisible());
-//
-//        // set toggle button to the appropriate symbol
-//        toggleInfoButton.setText(topContainer.isVisible() ? "Expand table ▲" : "Minimize table ▼");
     }
 
     /**
