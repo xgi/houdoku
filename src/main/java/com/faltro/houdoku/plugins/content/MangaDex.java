@@ -1,20 +1,25 @@
 package com.faltro.houdoku.plugins.content;
 
+import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ParseHelpers;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.scene.image.Image;
+import okhttp3.Response;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
+import java.util.*;
 
 import static com.faltro.houdoku.net.Requests.*;
 
@@ -40,7 +45,7 @@ public class MangaDex extends GenericContentSource {
         Document document = parse(GET(PROTOCOL + "://" + DOMAIN + "/?page=search&title=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
-        Elements links = document.select("a[class=manga_title]");
+        Elements links = document.select("a[class*=manga_title]");
         for (Element link : links) {
             String linkHref = link.attr("href");
             String source = linkHref.substring(0, linkHref.lastIndexOf("/"));
@@ -73,12 +78,12 @@ public class MangaDex extends GenericContentSource {
 
         // Determine if there is a pager. If there is, we will need to make
         // multiple requests to get all chapters.
-        Element pager = documents.get(0).selectFirst("ul[class=pagination]");
+        Element pager = documents.get(0).selectFirst("ul[class*=pagination]");
         if (pager != null) {
             // we will avoid navigating using the pager and simply predict
             // the url for each page, checking whether the link is present
             // on the most recent document before trying to access it
-            String first_url = pager.selectFirst("li[class=paging]")
+            String first_url = pager.selectFirst("li[class*=page-item]")
                     .selectFirst("a").attr("href");
             String url_base = first_url.substring(0, first_url.length() - 2);
 
@@ -103,25 +108,26 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public ArrayList<Chapter> chapters(Series series, Document document) {
-        Element tbody = document.select("tbody").get(1);
+        Elements chapterRows = document.selectFirst("div[class=chapter-container]")
+                .select("div[class*=chapter-row]");
+        chapterRows.remove(0);
 
         ArrayList<Chapter> chapters = new ArrayList<>();
-        for (Element row : tbody.select("tr")) {
-            Elements cells = row.select("td");
+        for (Element row : chapterRows) {
+            Elements cells = row.select("div");
 
-            Element link = cells.get(1).selectFirst("a");
-            String title = link.attr("title");
-            String source = link.attr("href");
-            double chapterNum = ParseHelpers.parseDouble(link.attr("data-chapter-num"));
-            int volumeNum = ParseHelpers.parseInt(link.attr("data-volume-num"));
-            String language = cells.get(3).selectFirst("img").attr("title");
-            String group = cells.get(4).selectFirst("a").text();
-            int views = ParseHelpers.parseInt(cells.get(6).text());
-            String dateString = cells.get(7).attr("title");
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
-                    "yyyy-MM-dd HH:mm:ss z", Locale.ENGLISH
+            String title = row.attr("data-title");
+            double chapterNum = ParseHelpers.parseDouble(row.attr("data-chapter"));
+            int volumeNum = ParseHelpers.parseInt(row.attr("data-volume"));
+            String source = "/chapter/" + row.attr("data-id");
+            int views = ParseHelpers.parseInt(row.attr("data-views"));
+            String language = cells.get(7).selectFirst("img").attr("title");
+            String group = cells.get(8).selectFirst("a").text();
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(
+                    Instant.ofEpochSecond(
+                            ParseHelpers.parseLong(row.attr("data-timestamp"))),
+                    TimeZone.getDefault().toZoneId()
             );
-            LocalDateTime localDateTime = LocalDateTime.parse(dateString, dateTimeFormatter);
 
             HashMap<String, Object> metadata = new HashMap<>();
             metadata.put("chapterNum", chapterNum);
@@ -141,38 +147,48 @@ public class MangaDex extends GenericContentSource {
     public Series series(String source, boolean quick) throws IOException {
         Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
 
-        Element titlePanel = seriesDocument.selectFirst("h3");
-        String title = titlePanel.text();
+        Element titlePanel = seriesDocument.selectFirst("h6");
+        String title = titlePanel.ownText();
         String language = titlePanel.selectFirst("img").attr("title");
 
-        String imageSource = seriesDocument.selectFirst("img[title='Manga image']").attr("src");
+        Element contentContainer = seriesDocument.selectFirst("div[class=card-body p-0]");
+        String imageSource = contentContainer.selectFirst("img[class=rounded]").attr("src");
         Image cover = imageFromURL(PROTOCOL + "://" + DOMAIN + imageSource,
                 ParseHelpers.COVER_MAX_WIDTH);
 
-        Element tbody = seriesDocument.selectFirst("tbody");
-        Element rowAltNames = ParseHelpers.tdWithHeader(tbody, "Alt name(s):");
-        Element rowAuthor = ParseHelpers.tdWithHeader(tbody, "Author:");
-        Element rowArtist = ParseHelpers.tdWithHeader(tbody, "Artist:");
-        Element rowGenres = ParseHelpers.tdWithHeader(tbody, "Genres:");
-        Element rowRating = ParseHelpers.tdWithHeader(tbody, "Rating:");
-        Element rowStatus = ParseHelpers.tdWithHeader(tbody, "Pub. status:");
-        Element rowStats = ParseHelpers.tdWithHeader(tbody, "Stats:");
-        Element rowDescription = ParseHelpers.tdWithHeader(tbody, "Description:");
+        Element metadataContainer = contentContainer.selectFirst(
+                "div[class=col-xl-9 col-lg-8 col-md-7]");
+        Element rowAltNames = metadataContainer.selectFirst(
+                "div:containsOwn(Alt name)").parent().select("div").get(2);
+        Element rowAuthor = metadataContainer.selectFirst(
+                "div:containsOwn(Author)").parent().select("div").get(2);
+        Element rowArtist = metadataContainer.selectFirst(
+                "div:containsOwn(Artist)").parent().select("div").get(2);
+        Element rowGenres = metadataContainer.selectFirst(
+                "div:containsOwn(Genres)").parent().select("div").get(2);
+        Element rowRating = metadataContainer.selectFirst(
+                "div:containsOwn(Rating)").parent().select("div").get(2);
+        Element rowStatus = metadataContainer.selectFirst(
+                "div:containsOwn(Pub. status)").parent().select("div").get(2);
+        Element rowStats = metadataContainer.selectFirst(
+                "div:containsOwn(Stats)").parent().select("div").get(2);
+        Element rowDescription = metadataContainer.selectFirst(
+                "div:containsOwn(Description)").parent().select("div").get(2);
 
         String[] altNames = ParseHelpers.htmlListToStringArray(rowAltNames.selectFirst("ul"));
         String author = rowAuthor.selectFirst("a").text();
         String artist = rowArtist.selectFirst("a").text();
-        String[] genres = ParseHelpers.htmlListToStringArray(rowGenres.selectFirst("td"), "span");
-        double rating = ParseHelpers.parseDouble(ParseHelpers.tdWithHeader(tbody, "Rating:")
-                .selectFirst("span[title=Rating]").parent().text());
-        int ratings = ParseHelpers.parseInt(rowRating.selectFirst("span[title=Users]")
-                .parent().text());
-        String status = rowStatus.selectFirst("td").text();
+        String[] genres = ParseHelpers.htmlListToStringArray(rowGenres, "span");
+        double rating = ParseHelpers.parseDouble(
+                rowRating.selectFirst("span[title=Rating]").parent().text());
+        int ratings = ParseHelpers.parseInt(
+                rowRating.selectFirst("span[title=Users]").parent().text());
+        String status = rowStatus.text();
         int views = ParseHelpers.parseInt(rowStats.selectFirst("span[title=Views]")
                 .parent().text());
         int follows = ParseHelpers.parseInt(rowStats.selectFirst("span[title=Follows]")
                 .parent().text());
-        String description = rowDescription.selectFirst("td").text();
+        String description = rowDescription.text();
 
         HashMap<String, Object> metadata = new HashMap<>();
         metadata.put("language", language);
@@ -194,31 +210,32 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException {
-        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + chapter.getSource() + "/" +
-                Integer.toString(page)));
+        Response response = GET(PROTOCOL + "://" + DOMAIN + "/api" + chapter.getSource());
+        JsonObject json_data = new JsonParser().parse(response.body().string())
+                .getAsJsonObject();
 
-        // we may not have determined the number of pages yet, so do that here
-        if (chapter.images.length == 1) {
-            Elements page_options = document.selectFirst("select#jump_page")
-                    .select("option");
-            int last_page = Integer.parseInt(page_options.last().attr("value"));
+        Image result = null;
+        String status = json_data.get("status").getAsString();
+        if (status.equals("OK")) {
+            JsonArray pages = json_data.get("page_array").getAsJsonArray();
 
-            chapter.images = new Image[last_page];
+            // we may not have determined the number of pages yet, so do that here
+            if (chapter.images.length == 1) {
+                chapter.images = new Image[pages.size()];
+            }
+
+            String url = json_data.get("server").getAsString() +
+                    json_data.get("hash").getAsString() +
+                    "/" + pages.get(page - 1).getAsString();
+
+            result = imageFromURL(url);
+        } else if (status.equals("delayed")) {
+            String group_website = json_data.get("group_website").getAsString();
+            throw new ContentUnavailableException(
+                    "This content is not available because its release has been delayed by the " +
+                            "group.\nYou may be able to read it at: "  + group_website);
         }
 
-        Element img = document.selectFirst("img#current_page");
-        if (img == null) {
-            String error_text = document.selectFirst("div[class*=alert alert-danger]").ownText();
-            throw new ContentUnavailableException("This content is not available. The website " +
-                    "said:\n" + error_text);
-        }
-
-        String img_src = document.selectFirst("img#current_page").attr("src");
-        String url = img_src;
-        if (!img_src.contains(DOMAIN)) {
-            url = PROTOCOL + "://" + DOMAIN + img_src;
-        }
-
-        return imageFromURL(url);
+        return result;
     }
 }

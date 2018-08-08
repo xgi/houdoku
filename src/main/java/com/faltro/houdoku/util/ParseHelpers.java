@@ -89,6 +89,31 @@ public class ParseHelpers {
     }
 
     /**
+     * Safely parses a long from the given string.
+     * <p>
+     * This method can parse longs from text which uses US-style formatting,
+     * particularly including comma separated digits.
+     * <p>
+     * If the given text is blank, this method will return 0.
+     *
+     * @param text a string which can reasonably be represented as an integer
+     * @return the int which is represented by the given text
+     */
+    public static long parseLong(String text) {
+        text = text.replaceAll(",", "");
+        text = text.split("\\s+|-+")[0];
+        long result = 0;
+        if (!text.equals("")) {
+            try {
+                result = NumberFormat.getNumberInstance(java.util.Locale.US).parse(text).longValue();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    /**
      * Safely parses a double from the given string.
      * <p>
      * If the given text is blank, this method will return 0.
