@@ -19,6 +19,7 @@ public class Chapter {
     public int views;
     public LocalDateTime localDateTime;
     public transient Image[] images;
+    public transient String imageUrlTemplate;
     private String title;
     private String source;
     private transient Series series;

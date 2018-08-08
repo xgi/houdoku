@@ -210,30 +210,32 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException {
-        Response response = GET(PROTOCOL + "://" + DOMAIN + "/api" + chapter.getSource());
-        JsonObject json_data = new JsonParser().parse(response.body().string())
-                .getAsJsonObject();
-
         Image result = null;
-        String status = json_data.get("status").getAsString();
-        if (status.equals("OK")) {
-            JsonArray pages = json_data.get("page_array").getAsJsonArray();
 
-            // we may not have determined the number of pages yet, so do that here
-            if (chapter.images.length == 1) {
+        if (chapter.imageUrlTemplate != null) {
+            result = imageFromURL(String.format(chapter.imageUrlTemplate, page));
+        } else {
+            Response response = GET(PROTOCOL + "://" + DOMAIN + "/api" + chapter.getSource());
+            JsonObject json_data = new JsonParser().parse(response.body().string())
+                    .getAsJsonObject();
+
+            String status = json_data.get("status").getAsString();
+            if (status.equals("OK")) {
+                JsonArray pages = json_data.get("page_array").getAsJsonArray();
+
                 chapter.images = new Image[pages.size()];
+                chapter.imageUrlTemplate = json_data.get("server").getAsString() +
+                        json_data.get("hash").getAsString() + "/" +
+                        (pages.get(page - 1).getAsString().replace("1", "%s"));
+
+                // rerun the method, but we should now match chapter.iUT != null
+                result = image(chapter, page);
+            } else if (status.equals("delayed")) {
+                String group_website = json_data.get("group_website").getAsString();
+                throw new ContentUnavailableException(
+                        "This content is not available because its release has been delayed by the " +
+                                "group.\nYou may be able to read it at: " + group_website);
             }
-
-            String url = json_data.get("server").getAsString() +
-                    json_data.get("hash").getAsString() +
-                    "/" + pages.get(page - 1).getAsString();
-
-            result = imageFromURL(url);
-        } else if (status.equals("delayed")) {
-            String group_website = json_data.get("group_website").getAsString();
-            throw new ContentUnavailableException(
-                    "This content is not available because its release has been delayed by the " +
-                            "group.\nYou may be able to read it at: "  + group_website);
         }
 
         return result;
