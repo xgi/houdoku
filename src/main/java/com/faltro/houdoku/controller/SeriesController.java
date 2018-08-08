@@ -82,6 +82,11 @@ public class SeriesController extends Controller {
      * The offset of the title from the bottom of the banner image.
      */
     private static final int TITLE_OFFSET_Y = -15;
+    /**
+     * Placeholder banner image.
+     */
+    private static final Image BANNER_PLACEHOLDER =
+            new Image(SeriesController.class.getResource("/img/blank_banner.png").toString());
     @FXML
     public ProgressIndicator reloadProgressIndicator;
     @FXML
@@ -332,7 +337,7 @@ public class SeriesController extends Controller {
      * Update the size/viewport of the banner to fill the container width.
      */
     private void updateBannerSize() {
-        Image image = series.getBanner();
+        Image image = bannerImageView.getImage();
 
         if (bannerImageView.getImage() != null) {
             double image_width = image.getWidth();
@@ -376,7 +381,8 @@ public class SeriesController extends Controller {
     public void refreshContent() {
         // set metadata/info fields using series info
         coverImageView.setImage(series.getCover());
-        bannerImageView.setImage(series.getBanner());
+        bannerImageView.setImage(series.getBanner() == null ? BANNER_PLACEHOLDER
+                : series.getBanner());
         updateBannerSize();
         textTitle.setText(OutputHelpers.truncate(series.getTitle(), TITLE_MAX_CHARS));
         textAltNames.setText(String.join(", ", series.altNames));
