@@ -36,7 +36,7 @@
         <Text styleClass="h1" text="Add series to your library"/>
     </HBox>
 
-    <VBox fx:id="searchBar">
+    <VBox fx:id="searchBar" styleClass="container">
         <HBox alignment="CENTER" spacing="5">
             <padding>
                 <Insets top="10" bottom="10" left="15" right="15"/>
@@ -73,7 +73,7 @@
                 <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
             </columns>
         </TableView>
-        <ScrollPane fx:id="coversContainer" fitToWidth="true">
+        <ScrollPane fx:id="coversContainer" fitToWidth="true" styleClass="container">
             <StackPane alignment="TOP_CENTER">
                 <padding>
                     <Insets bottom="10" top="10" left="10" right="10"/>

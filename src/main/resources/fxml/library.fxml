@@ -28,7 +28,8 @@
         </Menu>
     </MenuBar>
 
-    <HBox fx:id="actionBar" alignment="CENTER_LEFT" spacing="10" prefHeight="50">
+    <HBox fx:id="actionBar" alignment="CENTER_LEFT" spacing="10" prefHeight="50"
+          styleClass="container">
         <padding>
             <Insets bottom="5" top="5" left="15" right="15"/>
         </padding>
@@ -94,12 +95,12 @@
                         <TableColumn fx:id="numChaptersColumn" resizable="false" text="Chapters"/>
                     </columns>
                 </TableView>
-                <ScrollPane fx:id="coversContainer" fitToWidth="true">
-                    <StackPane alignment="TOP_CENTER">
+                <ScrollPane fx:id="coversContainer" fitToWidth="true" styleClass="container">
+                    <StackPane alignment="TOP_CENTER" styleClass="container">
                         <padding>
                             <Insets bottom="10" top="10" left="10" right="10"/>
                         </padding>
-                        <FlowPane fx:id="flowPane" hgap="10" vgap="10"/>
+                        <FlowPane fx:id="flowPane" hgap="10" vgap="10" styleClass="container"/>
                     </StackPane>
                 </ScrollPane>
             </StackPane>
@@ -110,7 +111,7 @@
         </HBox>
     </StackPane>
 
-    <HBox fx:id="layoutBar" alignment="CENTER_RIGHT" spacing="10">
+    <HBox fx:id="layoutBar" alignment="CENTER_RIGHT" spacing="10" styleClass="container">
         <padding>
             <Insets bottom="5" top="5" right="15"/>
         </padding>

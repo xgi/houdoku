@@ -124,7 +124,8 @@
             <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
         </StackPane>
         <VBox fx:id="chaptersContainer">
-            <HBox fx:id="filterBar" spacing="5" alignment="CENTER" VBox.vgrow="NEVER">
+            <HBox fx:id="filterBar" spacing="5" alignment="CENTER" VBox.vgrow="NEVER"
+                  styleClass="container">
                 <padding>
                     <Insets top="15" bottom="15" left="15" right="15"/>
                 </padding>
