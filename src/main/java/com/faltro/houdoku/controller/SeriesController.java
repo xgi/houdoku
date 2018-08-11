@@ -311,8 +311,28 @@ public class SeriesController extends Controller {
     public void onMadeActive() {
         stage.setTitle(Houdoku.getName() + " - " + series.getTitle());
 
+        // update page with known series information
         refreshContent();
 
+        // reload the series to check for updates
+        reloadSeries();
+    }
+
+    /**
+     * @see Controller#onMadeInactive() ()
+     */
+    public void onMadeInactive() {
+        filterTextField.setText("");
+    }
+
+    /**
+     * Reload the series and necessary media from the content source.
+     *
+     * This method will call {@link #refreshContent()} after reloading the
+     * series, and it will update the banner after that is loaded as well.
+     */
+    @FXML
+    private void reloadSeries() {
         // reload the series from the content source
         ContentSource contentSource = sceneManager.getPluginManager().getSource(
                 series.getContentSourceId()
@@ -324,13 +344,6 @@ public class SeriesController extends Controller {
         // load the banner for the series
         InfoSource infoSource = sceneManager.getPluginManager().getInfoSource();
         sceneManager.getContentLoader().loadBanner(infoSource, series, this);
-    }
-
-    /**
-     * @see Controller#onMadeInactive() ()
-     */
-    public void onMadeInactive() {
-        filterTextField.setText("");
     }
 
     /**

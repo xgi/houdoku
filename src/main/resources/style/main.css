@@ -218,6 +218,10 @@ Generic TableView styles
     -fx-background-color: -color-background;
 }
 
+#tableView .placeholder > .label > .text {
+    -fx-fill: -color-foreground;
+}
+
 /*
 Generic ListView styles
  */

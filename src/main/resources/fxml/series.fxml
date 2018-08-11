@@ -124,14 +124,17 @@
             <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
         </StackPane>
         <VBox fx:id="chaptersContainer">
-            <HBox fx:id="filterBar" spacing="5" alignment="CENTER" VBox.vgrow="NEVER"
-                  styleClass="container">
+            <HBox fx:id="filterBar" maxWidth="Infinity" styleClass="container">
                 <padding>
-                    <Insets top="15" bottom="15" left="15" right="15"/>
+                    <Insets top="5" bottom="5" left="10" right="10"/>
                 </padding>
-                <Text text="Filter chapters: " styleClass="bareText"/>
-                <TextField fx:id="filterTextField" prefWidth="280"
-                           promptText="Filter title, language, group..."/>
+                <HBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                    <Button text="Refresh chapters" onAction="#reloadSeries"/>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT">
+                    <TextField fx:id="filterTextField" prefWidth="280"
+                               promptText="Filter title, language, group..."/>
+                </HBox>
             </HBox>
             <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
                 <placeholder>
