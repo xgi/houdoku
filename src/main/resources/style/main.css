@@ -83,6 +83,8 @@ Generic minor element styles
  */
 .scroll-pane {
     -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
 }
 
 .scroll-bar:vertical {
@@ -109,6 +111,16 @@ Generic minor element styles
     -fx-border-color: -color-accent;
 }
 
+.split-pane-divider {
+    -fx-padding: 0 0.10em 0 0.10em;
+    -fx-background-color: -color-accent;
+}
+
+.table-view {
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
 /*
 Menu bar styles
  */
@@ -118,22 +130,33 @@ Menu bar styles
     -fx-border-color: -color-foreground;
 }
 
-.menu-bar > .container > .menu-button > .label > .text, .menu-item > .label > .text {
+.menu-button > .label > .text,
+.menu-item > .label > .text {
     -fx-fill: -color-foreground;
 }
 
-.menu-bar > .container > .menu-button:hover > .label > .text,
-.menu-bar > .container > .menu-button:showing > .label > .text,
-.menu-bar > .container > .menu .menu-item:hover > .label > .text {
-    -fx-fill: -color-background;
+.menu-button:hover > .label > .text,
+.menu-button:showing > .label > .text,
+.menu-item:hover > .label > .text {
+    -fx-fill: -color-background !important;
 }
 
 .menu-button, .menu-item {
     -fx-background-color: -color-background;
 }
 
-.menu-button:hover, .menu-button:showing, .menu-item:hover {
+.menu-button:hover,
+.menu-button:showing,
+.menu-item:hover {
     -fx-background-color: -color-accent-alt;
+}
+
+.check-menu-item:checked > .left-container > .check {
+    -fx-background-color: -color-foreground;
+}
+
+.check-menu-item:hover:checked > .left-container > .check {
+    -fx-background-color: -color-background;
 }
 
 /*
@@ -174,6 +197,10 @@ Generic TreeView styles (also affects TreeTableView)
     -fx-background-color: -color-foreground-alt;
 }
 
+#treeView .tree-table-row-cell .tree-table-cell {
+    -fx-border-width: 0;
+}
+
 #treeView .tree-table-row-cell .tree-table-cell > * {
     -fx-fill: -color-foreground;
 }
@@ -185,6 +212,17 @@ Generic TreeView styles (also affects TreeTableView)
 /*
 Generic TableView styles
  */
+.column-header-background > .filler,
+.column-header-background > .nested-column-header > .column-header {
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: -color-background-alt;
+    -fx-border-color: -color-accent;
+}
+
+.nested-column-header > .column-header > .label > .text {
+    -fx-fill: -color-foreground;
+}
+
 .tableCell {
     -fx-alignment: center-left;
 }
@@ -336,6 +374,10 @@ Generic ListView styles
     -fx-font-weight: bold;
     -fx-font-size: 2.6em;
     -fx-effect: dropshadow(one-pass-box, #333, 9, 0, 2, 1);
+}
+
+#metadataContainer {
+    -fx-padding: 10 15 10 15;
 }
 
 #metadataScrollPane, #metadataScrollPane .viewport, #metadataContainer {
