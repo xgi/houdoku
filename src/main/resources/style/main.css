@@ -21,6 +21,12 @@ Basic custom element styles
     -fx-background-color: -color-background-alt;
 }
 
+.context-menu {
+    -fx-border-width: 1;
+    -fx-border-color: -color-foreground;
+    -fx-background-color: -color-background;
+}
+
 /*
 Generic text styles
  */
