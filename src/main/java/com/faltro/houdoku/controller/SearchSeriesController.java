@@ -277,6 +277,8 @@ public class SearchSeriesController extends Controller {
      * <p>
      * This handler handles double clicking to prompt for adding a series.
      *
+     * @param item a HashMap containing the fields described in
+     *             the documentation for {@link #addSeriesFromItem(HashMap)}
      * @return a complete MouseEvent EventHandler for a cover result
      */
     private EventHandler<MouseEvent> newCoverClickHandler(HashMap<String, Object> item) {

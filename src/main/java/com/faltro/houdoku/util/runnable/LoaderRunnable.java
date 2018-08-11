@@ -10,12 +10,12 @@ public class LoaderRunnable implements Runnable {
     /**
      * A generic Runnable that is run by ContentLoader.
      *
-     * @param contentLoader the ContentLoader which created this instance
      * @param name          the name of the thread
+     * @param contentLoader the ContentLoader which created this instance
      */
-    LoaderRunnable(ContentLoader contentLoader, String name) {
-        this.contentLoader = contentLoader;
+    LoaderRunnable(String name, ContentLoader contentLoader) {
         this.name = name;
+        this.contentLoader = contentLoader;
         this.running = true;
     }
 

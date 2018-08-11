@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -197,32 +197,19 @@ var activeTableTab = "activeTableTab";
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>javafx.scene.image.Image</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentSource.html#imageFromURL-java.lang.String-">imageFromURL</a></span>(java.lang.String&nbsp;url)</code>
-<div class="block">Retrieves an Image from the given URL.</div>
-</td>
-</tr>
-<tr id="i5" class="rowColor">
-<td class="colFirst"><code>javafx.scene.image.Image</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentSource.html#imageFromURL-java.lang.String-int-">imageFromURL</a></span>(java.lang.String&nbsp;url,
-            int&nbsp;width)</code>
-<div class="block">Retrieves an Image from the given URL with a strict width.</div>
-</td>
-</tr>
-<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentSource.html#search-java.lang.String-">search</a></span>(java.lang.String&nbsp;query)</code>
 <div class="block">Searches the source using a provided query.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentSource.html#series-java.lang.String-boolean-">series</a></span>(java.lang.String&nbsp;source,
       boolean&nbsp;quick)</code>
 <div class="block">Parses the given source as a Series.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentSource.html#toString--">toString</a></span>()</code>
 <div class="block">Represents this ContentSource as a string.</div>
@@ -307,48 +294,6 @@ var activeTableTab = "activeTableTab";
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="imageFromURL-java.lang.String-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>imageFromURL</h4>
-<pre>javafx.scene.image.Image&nbsp;imageFromURL(java.lang.String&nbsp;url)
-                               throws java.io.IOException</pre>
-<div class="block">Retrieves an Image from the given URL.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>url</code> - the URL for an image file</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>an Image retrieved from the given url</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.io.IOException</code> - an IOException occurred when loading the image</dd>
-</dl>
-</li>
-</ul>
-<a name="imageFromURL-java.lang.String-int-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>imageFromURL</h4>
-<pre>javafx.scene.image.Image&nbsp;imageFromURL(java.lang.String&nbsp;url,
-                                      int&nbsp;width)
-                               throws java.io.IOException</pre>
-<div class="block">Retrieves an Image from the given URL with a strict width.
- <p>
- The aspect ratio of the original image is maintained.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>url</code> - the URL for an image file</dd>
-<dd><code>width</code> - the width of the retrieved image</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>an Image retrieved from the given url</dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.io.IOException</code> - an IOException occurred when loading the image</dd>
-</dl>
-</li>
-</ul>
 <a name="search-java.lang.String-">
 <!--   -->
 </a>
@@ -501,8 +446,6 @@ var activeTableTab = "activeTableTab";
                                  image</dd>
 <dd><code><a href="../../../../com/faltro/houdoku/exception/NotImplementedException.html" title="class in com.faltro.houdoku.exception">NotImplementedException</a></code> - the operation has not yet been
                                  implemented for this content source</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../com/faltro/houdoku/util/ContentSource.html#imageFromURL-java.lang.String-"><code>imageFromURL(String)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -548,8 +491,6 @@ var activeTableTab = "activeTableTab";
                                      website itself</dd>
 <dd><code><a href="../../../../com/faltro/houdoku/exception/NotImplementedException.html" title="class in com.faltro.houdoku.exception">NotImplementedException</a></code> - the operation has not yet been
                                      implemented for this content source</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../com/faltro/houdoku/util/ContentSource.html#imageFromURL-java.lang.String-"><code>imageFromURL(String)</code></a></dd>
 </dl>
 </li>
 </ul>

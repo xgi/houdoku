@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -135,6 +135,10 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>private java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#contentSources">contentSources</a></span></code>&nbsp;</td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><code>private <a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#infoSource">infoSource</a></span></code>&nbsp;</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -174,12 +178,16 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getContentSources--">getContentSources</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getInfoSource--">getInfoSource</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getSource-int-">getSource</a></span>(int&nbsp;id)</code>
 <div class="block">Gets the ContentSource instance whose class has the given ID.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>private int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getSourceId-com.faltro.houdoku.util.ContentSource-">getSourceId</a></span>(<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;contentSource)</code>
 <div class="block">Gets the ID of a content source instance.</div>
@@ -210,10 +218,19 @@ extends java.lang.Object</pre>
 <a name="contentSources">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>contentSources</h4>
 <pre>private final&nbsp;java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&gt; contentSources</pre>
+</li>
+</ul>
+<a name="infoSource">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>infoSource</h4>
+<pre>private final&nbsp;<a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a> infoSource</pre>
 </li>
 </ul>
 </li>
@@ -281,10 +298,19 @@ extends java.lang.Object</pre>
 <a name="getContentSources--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getContentSources</h4>
 <pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&gt;&nbsp;getContentSources()</pre>
+</li>
+</ul>
+<a name="getInfoSource--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getInfoSource</h4>
+<pre>public&nbsp;<a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a>&nbsp;getInfoSource()</pre>
 </li>
 </ul>
 </li>

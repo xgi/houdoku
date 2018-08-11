@@ -327,7 +327,7 @@ public class SeriesController extends Controller {
 
     /**
      * Reload the series and necessary media from the content source.
-     *
+     * <p>
      * This method will call {@link #refreshContent()} after reloading the
      * series, and it will update the banner after that is loaded as well.
      */

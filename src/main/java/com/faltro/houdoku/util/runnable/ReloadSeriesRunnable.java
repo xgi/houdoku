@@ -21,6 +21,8 @@ public class ReloadSeriesRunnable extends LoaderRunnable {
     /**
      * Runnable for reloading an existing series.
      *
+     * @param name             the name of the thread
+     * @param contentLoader    the ContentLoader which created this instance
      * @param contentSource    the ContentSource to load from
      * @param series           the series to reload
      * @param quick            whether the list of chapters should be "quickly"
@@ -33,7 +35,7 @@ public class ReloadSeriesRunnable extends LoaderRunnable {
     public ReloadSeriesRunnable(String name, ContentLoader contentLoader,
                                 ContentSource contentSource, Series series, boolean quick,
                                 SeriesController seriesController) {
-        super(contentLoader, name);
+        super(name, contentLoader);
         this.contentSource = contentSource;
         this.series = series;
         this.quick = quick;

@@ -140,6 +140,26 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>private static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#BANNER_HEIGHT">BANNER_HEIGHT</a></span></code>
+<div class="block">The height of the banner image.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>private static javafx.scene.image.Image</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#BANNER_PLACEHOLDER">BANNER_PLACEHOLDER</a></span></code>
+<div class="block">Placeholder banner image.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>private javafx.scene.layout.StackPane</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#bannerContainer">bannerContainer</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>private javafx.scene.image.ImageView</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#bannerImageView">bannerImageView</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.control.TableColumn&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>,java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#chapterColumn">chapterColumn</a></span></code>&nbsp;</td>
 </tr>
@@ -152,16 +172,22 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#container">container</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private javafx.scene.layout.VBox</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#contentContainer">contentContainer</a></span></code>&nbsp;</td>
+<td class="colFirst"><code>private static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#COVER_HEIGHT">COVER_HEIGHT</a></span></code>
+<div class="block">The height of the cover image.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>private static int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#COVER_MAX_HEIGHT">COVER_MAX_HEIGHT</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#COVER_OFFSET_X">COVER_OFFSET_X</a></span></code>
+<div class="block">The offset of the cover from the left of the container.</div>
+</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private static double</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#COVER_WIDTH">COVER_WIDTH</a></span></code>&nbsp;</td>
+<td class="colFirst"><code>private static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#COVER_OFFSET_Y">COVER_OFFSET_Y</a></span></code>
+<div class="block">The offset of the cover from the top of the container.</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.image.ImageView</code></td>
@@ -170,14 +196,6 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <tr class="rowColor">
 <td class="colFirst"><code>private javafx.scene.control.TableColumn&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>,java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#dateColumn">dateColumn</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>private static int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#DESCRIPTION_MAX_LENGTH">DESCRIPTION_MAX_LENGTH</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>private javafx.scene.layout.HBox</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#descriptionContainer">descriptionContainer</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.layout.HBox</code></td>
@@ -204,24 +222,24 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#INFO_WIDTH">INFO_WIDTH</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private javafx.scene.layout.HBox</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#infoContainer">infoContainer</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>private javafx.scene.control.TableColumn&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>,java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#languageColumn">languageColumn</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>private <a href="../../../../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model">Library</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#library">library</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.control.MenuBar</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#menuBar">menuBar</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>private javafx.scene.layout.VBox</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#metadataContainer">metadataContainer</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>private javafx.scene.control.ScrollPane</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#metadataScrollPane">metadataScrollPane</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>javafx.scene.control.ProgressIndicator</code></td>
@@ -240,20 +258,20 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#textAltNames">textAltNames</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private javafx.scene.control.TextArea</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#textAreaDescription">textAreaDescription</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.text.Text</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#textArtist">textArtist</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.text.Text</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#textAuthor">textAuthor</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>private javafx.scene.text.Text</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#textContentSource">textContentSource</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>private javafx.scene.text.Text</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#textDescription">textDescription</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>private javafx.scene.text.Text</code></td>
@@ -284,26 +302,36 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#textViews">textViews</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private javafx.scene.control.TableColumn&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>,java.lang.String&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#titleColumn">titleColumn</a></span></code>&nbsp;</td>
+<td class="colFirst"><code>private static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#TITLE_MAX_CHARS">TITLE_MAX_CHARS</a></span></code>
+<div class="block">The maximum number of characters to display of the title.</div>
+</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private javafx.scene.control.Button</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#toggleInfoButton">toggleInfoButton</a></span></code>&nbsp;</td>
+<td class="colFirst"><code>private static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#TITLE_OFFSET_X">TITLE_OFFSET_X</a></span></code>
+<div class="block">The offset of the title from the left of the container.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>private static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#TITLE_OFFSET_Y">TITLE_OFFSET_Y</a></span></code>
+<div class="block">The offset of the title from the bottom of the banner image.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>private javafx.scene.control.TableColumn&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>,java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#titleColumn">titleColumn</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.control.Button</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#toLibraryButton">toLibraryButton</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private javafx.scene.layout.StackPane</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#topContainer">topContainer</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.control.TableColumn&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>,java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#viewsColumn">viewsColumn</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.control.TableColumn&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>,java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#volumeColumn">volumeColumn</a></span></code>&nbsp;</td>
 </tr>
@@ -407,24 +435,23 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 </td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#setLibrary-com.faltro.houdoku.model.Library-">setLibrary</a></span>(<a href="../../../../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model">Library</a>&nbsp;library)</code>&nbsp;</td>
+<td class="colFirst"><code>private void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#reloadSeries--">reloadSeries</a></span>()</code>
+<div class="block">Reload the series and necessary media from the content source.</div>
+</td>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#setSeries-com.faltro.houdoku.model.Series-">setSeries</a></span>(<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#setLibrary-com.faltro.houdoku.model.Library-">setLibrary</a></span>(<a href="../../../../com/faltro/houdoku/model/Library.html" title="class in com.faltro.houdoku.model">Library</a>&nbsp;library)</code>&nbsp;</td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#toggleInfo--">toggleInfo</a></span>()</code>
-<div class="block">Toggles whether or not the info container is displayed.</div>
-</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#setSeries-com.faltro.houdoku.model.Series-">setSeries</a></span>(<a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series)</code>&nbsp;</td>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>private void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#updateCoverSize--">updateCoverSize</a></span>()</code>
-<div class="block">Set the cover image width a percentage of the stage while enforcing a
- maximum height.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/controller/SeriesController.html#updateBannerSize--">updateBannerSize</a></span>()</code>
+<div class="block">Update the size/viewport of the banner to fill the container width.</div>
 </td>
 </tr>
 </table>
@@ -469,19 +496,6 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 </dl>
 </li>
 </ul>
-<a name="COVER_WIDTH">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>COVER_WIDTH</h4>
-<pre>private static final&nbsp;double COVER_WIDTH</pre>
-<dl>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.COVER_WIDTH">Constant Field Values</a></dd>
-</dl>
-</li>
-</ul>
 <a name="INFO_WIDTH">
 <!--   -->
 </a>
@@ -504,30 +518,112 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <pre>private static final&nbsp;double[] COL_WIDTHS</pre>
 </li>
 </ul>
-<a name="COVER_MAX_HEIGHT">
+<a name="BANNER_HEIGHT">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>COVER_MAX_HEIGHT</h4>
-<pre>private static final&nbsp;int COVER_MAX_HEIGHT</pre>
+<h4>BANNER_HEIGHT</h4>
+<pre>private static final&nbsp;int BANNER_HEIGHT</pre>
+<div class="block">The height of the banner image.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.COVER_MAX_HEIGHT">Constant Field Values</a></dd>
+<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.BANNER_HEIGHT">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
-<a name="DESCRIPTION_MAX_LENGTH">
+<a name="COVER_HEIGHT">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>DESCRIPTION_MAX_LENGTH</h4>
-<pre>private static final&nbsp;int DESCRIPTION_MAX_LENGTH</pre>
+<h4>COVER_HEIGHT</h4>
+<pre>private static final&nbsp;int COVER_HEIGHT</pre>
+<div class="block">The height of the cover image.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.DESCRIPTION_MAX_LENGTH">Constant Field Values</a></dd>
+<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.COVER_HEIGHT">Constant Field Values</a></dd>
 </dl>
+</li>
+</ul>
+<a name="COVER_OFFSET_X">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>COVER_OFFSET_X</h4>
+<pre>private static final&nbsp;int COVER_OFFSET_X</pre>
+<div class="block">The offset of the cover from the left of the container.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.COVER_OFFSET_X">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="COVER_OFFSET_Y">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>COVER_OFFSET_Y</h4>
+<pre>private static final&nbsp;int COVER_OFFSET_Y</pre>
+<div class="block">The offset of the cover from the top of the container.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.COVER_OFFSET_Y">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="TITLE_MAX_CHARS">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>TITLE_MAX_CHARS</h4>
+<pre>private static final&nbsp;int TITLE_MAX_CHARS</pre>
+<div class="block">The maximum number of characters to display of the title.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.TITLE_MAX_CHARS">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="TITLE_OFFSET_X">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>TITLE_OFFSET_X</h4>
+<pre>private static final&nbsp;int TITLE_OFFSET_X</pre>
+<div class="block">The offset of the title from the left of the container.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.TITLE_OFFSET_X">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="TITLE_OFFSET_Y">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>TITLE_OFFSET_Y</h4>
+<pre>private static final&nbsp;int TITLE_OFFSET_Y</pre>
+<div class="block">The offset of the title from the bottom of the banner image.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#com.faltro.houdoku.controller.SeriesController.TITLE_OFFSET_Y">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="BANNER_PLACEHOLDER">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>BANNER_PLACEHOLDER</h4>
+<pre>private static final&nbsp;javafx.scene.image.Image BANNER_PLACEHOLDER</pre>
+<div class="block">Placeholder banner image.</div>
 </li>
 </ul>
 <a name="reloadProgressIndicator">
@@ -557,31 +653,22 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <pre>private&nbsp;javafx.scene.control.MenuBar menuBar</pre>
 </li>
 </ul>
-<a name="topContainer">
+<a name="bannerContainer">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>topContainer</h4>
-<pre>private&nbsp;javafx.scene.layout.StackPane topContainer</pre>
+<h4>bannerContainer</h4>
+<pre>private&nbsp;javafx.scene.layout.StackPane bannerContainer</pre>
 </li>
 </ul>
-<a name="infoContainer">
+<a name="bannerImageView">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>infoContainer</h4>
-<pre>private&nbsp;javafx.scene.layout.HBox infoContainer</pre>
-</li>
-</ul>
-<a name="descriptionContainer">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>descriptionContainer</h4>
-<pre>private&nbsp;javafx.scene.layout.HBox descriptionContainer</pre>
+<h4>bannerImageView</h4>
+<pre>private&nbsp;javafx.scene.image.ImageView bannerImageView</pre>
 </li>
 </ul>
 <a name="metadataContainer">
@@ -593,13 +680,13 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <pre>private&nbsp;javafx.scene.layout.VBox metadataContainer</pre>
 </li>
 </ul>
-<a name="contentContainer">
+<a name="metadataScrollPane">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>contentContainer</h4>
-<pre>private&nbsp;javafx.scene.layout.VBox contentContainer</pre>
+<h4>metadataScrollPane</h4>
+<pre>private&nbsp;javafx.scene.control.ScrollPane metadataScrollPane</pre>
 </li>
 </ul>
 <a name="coverImageView">
@@ -719,13 +806,13 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <pre>private&nbsp;javafx.scene.text.Text textContentSource</pre>
 </li>
 </ul>
-<a name="textAreaDescription">
+<a name="textDescription">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>textAreaDescription</h4>
-<pre>private&nbsp;javafx.scene.control.TextArea textAreaDescription</pre>
+<h4>textDescription</h4>
+<pre>private&nbsp;javafx.scene.text.Text textDescription</pre>
 </li>
 </ul>
 <a name="tableView">
@@ -807,15 +894,6 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <li class="blockList">
 <h4>filterBar</h4>
 <pre>private&nbsp;javafx.scene.layout.HBox filterBar</pre>
-</li>
-</ul>
-<a name="toggleInfoButton">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>toggleInfoButton</h4>
-<pre>private&nbsp;javafx.scene.control.Button toggleInfoButton</pre>
 </li>
 </ul>
 <a name="filterTextField">
@@ -935,15 +1013,27 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 </dl>
 </li>
 </ul>
-<a name="updateCoverSize--">
+<a name="reloadSeries--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>updateCoverSize</h4>
-<pre>private&nbsp;void&nbsp;updateCoverSize()</pre>
-<div class="block">Set the cover image width a percentage of the stage while enforcing a
- maximum height.</div>
+<h4>reloadSeries</h4>
+<pre>private&nbsp;void&nbsp;reloadSeries()</pre>
+<div class="block">Reload the series and necessary media from the content source.
+ <p>
+ This method will call <a href="../../../../com/faltro/houdoku/controller/SeriesController.html#refreshContent--"><code>refreshContent()</code></a> after reloading the
+ series, and it will update the banner after that is loaded as well.</div>
+</li>
+</ul>
+<a name="updateBannerSize--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>updateBannerSize</h4>
+<pre>private&nbsp;void&nbsp;updateBannerSize()</pre>
+<div class="block">Update the size/viewport of the banner to fill the container width.</div>
 </li>
 </ul>
 <a name="refreshContent--">
@@ -992,22 +1082,6 @@ extends <a href="../../../../com/faltro/houdoku/controller/Controller.html" titl
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a Callback of a standard cell factory for a table cell</dd>
 </dl>
-</li>
-</ul>
-<a name="toggleInfo--">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>toggleInfo</h4>
-<pre>public&nbsp;void&nbsp;toggleInfo()</pre>
-<div class="block">Toggles whether or not the info container is displayed.
- <p>
- This method also automatically forces the content to fill up the
- available space, as appropriate based on whether the info
- container is visible.
- <p>
- Called exclusively by toggleInfoButton</div>
 </li>
 </ul>
 <a name="goToLibrary--">

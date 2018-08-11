@@ -20,16 +20,21 @@ public class LoadSeriesRunnable extends LoaderRunnable {
     /**
      * Runnable for loading a series.
      *
-     * @param contentSource     the ContentSource to load from
-     * @param source            the source for the series, relative to the
-     *                          ContentSource domain
-     * @param libraryController the LibraryController to update before/after
-     *                          the series is loaded
+     * @param name                   the name of the thread
+     * @param contentLoader          the ContentLoader which created this
+     *                               instance
+     * @param contentSource          the ContentSource to load from
+     * @param source                 the source for the series, relative to the
+     *                               ContentSource domain
+     * @param searchSeriesController the SearchSeriesController to report errors
+     *                               to
+     * @param libraryController      the LibraryController to update
+     *                               before/after the series is loaded
      */
     public LoadSeriesRunnable(String name, ContentLoader contentLoader, ContentSource contentSource,
                               String source, SearchSeriesController searchSeriesController,
                               LibraryController libraryController) {
-        super(contentLoader, name);
+        super(name, contentLoader);
         this.contentSource = contentSource;
         this.source = source;
         this.searchSeriesController = searchSeriesController;

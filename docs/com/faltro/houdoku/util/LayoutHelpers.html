@@ -128,16 +128,29 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private static javafx.scene.effect.ColorAdjust</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/LayoutHelpers.html#COVER_ADJUST_DEFAULT">COVER_ADJUST_DEFAULT</a></span></code>&nbsp;</td>
+<td class="colFirst"><code>static javafx.scene.effect.ColorAdjust</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/LayoutHelpers.html#BANNER_ADJUST">BANNER_ADJUST</a></span></code>
+<div class="block">ColorAdjust for the banner on the
+ <a href="../../../../com/faltro/houdoku/controller/SeriesController.html" title="class in com.faltro.houdoku.controller"><code>SeriesController</code></a> page.</div>
+</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private static javafx.scene.effect.ColorAdjust</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/LayoutHelpers.html#COVER_ADJUST_HOVER">COVER_ADJUST_HOVER</a></span></code>&nbsp;</td>
+<td class="colFirst"><code>static javafx.scene.effect.ColorAdjust</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/LayoutHelpers.html#COVER_ADJUST_DEFAULT">COVER_ADJUST_DEFAULT</a></span></code>
+<div class="block">ColorAdjust for non-hovered cover images.</div>
+</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>private static javafx.scene.effect.ColorAdjust</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/LayoutHelpers.html#COVER_ADJUST_HOVER">COVER_ADJUST_HOVER</a></span></code>
+<div class="block">ColorAdjust for hovered cover images.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>private static javafx.scene.effect.DropShadow</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/LayoutHelpers.html#COVER_DROPSHADOW">COVER_DROPSHADOW</a></span></code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/LayoutHelpers.html#COVER_DROPSHADOW">COVER_DROPSHADOW</a></span></code>
+<div class="block">DropShadow for cover images.</div>
+</td>
 </tr>
 </table>
 </li>
@@ -209,13 +222,15 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Field Detail</h3>
-<a name="COVER_DROPSHADOW">
+<a name="BANNER_ADJUST">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>COVER_DROPSHADOW</h4>
-<pre>private static final&nbsp;javafx.scene.effect.DropShadow COVER_DROPSHADOW</pre>
+<h4>BANNER_ADJUST</h4>
+<pre>public static final&nbsp;javafx.scene.effect.ColorAdjust BANNER_ADJUST</pre>
+<div class="block">ColorAdjust for the banner on the
+ <a href="../../../../com/faltro/houdoku/controller/SeriesController.html" title="class in com.faltro.houdoku.controller"><code>SeriesController</code></a> page.</div>
 </li>
 </ul>
 <a name="COVER_ADJUST_DEFAULT">
@@ -224,7 +239,18 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>COVER_ADJUST_DEFAULT</h4>
-<pre>private static final&nbsp;javafx.scene.effect.ColorAdjust COVER_ADJUST_DEFAULT</pre>
+<pre>public static final&nbsp;javafx.scene.effect.ColorAdjust COVER_ADJUST_DEFAULT</pre>
+<div class="block">ColorAdjust for non-hovered cover images.</div>
+</li>
+</ul>
+<a name="COVER_DROPSHADOW">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>COVER_DROPSHADOW</h4>
+<pre>private static final&nbsp;javafx.scene.effect.DropShadow COVER_DROPSHADOW</pre>
+<div class="block">DropShadow for cover images.</div>
 </li>
 </ul>
 <a name="COVER_ADJUST_HOVER">
@@ -234,6 +260,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>COVER_ADJUST_HOVER</h4>
 <pre>private static final&nbsp;javafx.scene.effect.ColorAdjust COVER_ADJUST_HOVER</pre>
+<div class="block">ColorAdjust for hovered cover images.</div>
 </li>
 </ul>
 </li>

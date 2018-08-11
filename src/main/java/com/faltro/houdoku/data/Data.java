@@ -201,6 +201,8 @@ public class Data {
 
     /**
      * Delete a series' cover from the filesystem, if it has been saved.
+     *
+     * @param series the Series whose cover is being deleted
      */
     public static void deleteCover(Series series) {
         Path path = findCoverPath(series);

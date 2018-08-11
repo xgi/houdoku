@@ -436,6 +436,7 @@ public class LibraryController extends Controller {
      * <p>
      * This handler handles double clicking to go to a series' page.
      *
+     * @param series the Series represented by the cover
      * @return a complete MouseEvent EventHandler for a cover result
      */
     private EventHandler<MouseEvent> newCoverClickHandler(Series series) {
@@ -766,6 +767,8 @@ public class LibraryController extends Controller {
      * <p>
      * Enabling the compact view removes the cover column of the series table,
      * making the height of each row much smaller.
+     *
+     * @param compact whether the compact view is enabled
      */
     private void setCompact(boolean compact) {
         coverColumn.setVisible(!compact);

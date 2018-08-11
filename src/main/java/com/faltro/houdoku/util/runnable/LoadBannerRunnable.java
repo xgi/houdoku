@@ -17,19 +17,16 @@ public class LoadBannerRunnable extends LoaderRunnable {
     /**
      * Runnable for loading a chapter page.
      *
-     * @param contentSource     the ContentSource to load from
-     * @param chapter           the Chapter the page is from
-     * @param page              the 0-indexed page number
-     * @param readerController  the ReaderController to update before/after
-     *                          the page is loaded
-     * @param preloading        whether the page is being preloaded or not
-     *                          (loaded before the user gets to the page)
-     * @param preloading_amount the number of subsequent pages to preload, or
-     *                          -1 for infinite
+     * @param name             the name of the thread
+     * @param contentLoader    the ContentLoader which created this instance
+     * @param infoSource       the InfoSource to load from
+     * @param series           the Series the banner is from
+     * @param seriesController the SeriesController to update after the banner
+     *                         is loaded
      */
     public LoadBannerRunnable(String name, ContentLoader contentLoader, InfoSource infoSource,
                               Series series, SeriesController seriesController) {
-        super(contentLoader, name);
+        super(name, contentLoader);
         this.infoSource = infoSource;
         this.series = series;
         this.seriesController = seriesController;

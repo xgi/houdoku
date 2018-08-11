@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -142,28 +142,36 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#author">author</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>private javafx.scene.image.Image</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#banner">banner</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>private java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#chapters">chapters</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>private int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#contentSourceId">contentSourceId</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>private javafx.scene.image.Image</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#cover">cover</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#description">description</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#follows">follows</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#genres">genres</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>private java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#infoSourceId">infoSourceId</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
@@ -248,64 +256,80 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>javafx.scene.image.Image</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getBanner--">getBanner</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getChapters--">getChapters</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getContentSourceId--">getContentSourceId</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>javafx.scene.image.Image</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getCover--">getCover</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getInfoSourceId--">getInfoSourceId</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getNumChapters--">getNumChapters</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getNumHighestChapter--">getNumHighestChapter</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getSource--">getSource</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>java.util.ArrayList&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getStringCategories--">getStringCategories</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#getTitle--">getTitle</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#setBanner-javafx.scene.image.Image-">setBanner</a></span>(javafx.scene.image.Image&nbsp;banner)</code>&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#setChapters-java.util.ArrayList-">setChapters</a></span>(java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&gt;&nbsp;chapters)</code>
 <div class="block">Sets the chapters field using a provided ArrayList.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#setCover-javafx.scene.image.Image-">setCover</a></span>(javafx.scene.image.Image&nbsp;image)</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#setInfoSourceId-java.lang.String-">setInfoSourceId</a></span>(java.lang.String&nbsp;infoSourceId)</code>&nbsp;</td>
+</tr>
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>private void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#setMetadata-java.util.HashMap-">setMetadata</a></span>(java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&nbsp;metadata)</code>
 <div class="block">Sets the "metadata" content of this object.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#setStringCategories-java.util.ArrayList-">setStringCategories</a></span>(java.util.ArrayList&lt;java.lang.String&gt;&nbsp;stringCategories)</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#smartNextChapter-com.faltro.houdoku.model.Chapter-">smartNextChapter</a></span>(<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&nbsp;chapter)</code>
 <div class="block">Smartly determine the next chapter after the given one.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/model/Series.html#smartPreviousChapter-com.faltro.houdoku.model.Chapter-">smartPreviousChapter</a></span>(<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&nbsp;chapter)</code>
 <div class="block">Smartly determine the previous chapter before the given one.</div>
@@ -468,6 +492,15 @@ extends java.lang.Object</pre>
 <pre>private transient&nbsp;javafx.scene.image.Image cover</pre>
 </li>
 </ul>
+<a name="banner">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>banner</h4>
+<pre>private transient&nbsp;javafx.scene.image.Image banner</pre>
+</li>
+</ul>
 <a name="numChapters">
 <!--   -->
 </a>
@@ -498,10 +531,19 @@ extends java.lang.Object</pre>
 <a name="chapters">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>chapters</h4>
 <pre>private&nbsp;java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&gt; chapters</pre>
+</li>
+</ul>
+<a name="infoSourceId">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>infoSourceId</h4>
+<pre>private&nbsp;java.lang.String infoSourceId</pre>
 </li>
 </ul>
 </li>
@@ -634,6 +676,24 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;void&nbsp;setCover(javafx.scene.image.Image&nbsp;image)</pre>
 </li>
 </ul>
+<a name="getBanner--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getBanner</h4>
+<pre>public&nbsp;javafx.scene.image.Image&nbsp;getBanner()</pre>
+</li>
+</ul>
+<a name="setBanner-javafx.scene.image.Image-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setBanner</h4>
+<pre>public&nbsp;void&nbsp;setBanner(javafx.scene.image.Image&nbsp;banner)</pre>
+</li>
+</ul>
 <a name="getNumHighestChapter--">
 <!--   -->
 </a>
@@ -717,10 +777,28 @@ extends java.lang.Object</pre>
 <a name="getContentSourceId--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>getContentSourceId</h4>
 <pre>public&nbsp;int&nbsp;getContentSourceId()</pre>
+</li>
+</ul>
+<a name="getInfoSourceId--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getInfoSourceId</h4>
+<pre>public&nbsp;java.lang.String&nbsp;getInfoSourceId()</pre>
+</li>
+</ul>
+<a name="setInfoSourceId-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setInfoSourceId</h4>
+<pre>public&nbsp;void&nbsp;setInfoSourceId(java.lang.String&nbsp;infoSourceId)</pre>
 </li>
 </ul>
 </li>

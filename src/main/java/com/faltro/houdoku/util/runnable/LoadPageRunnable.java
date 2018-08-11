@@ -21,6 +21,8 @@ public class LoadPageRunnable extends LoaderRunnable {
     /**
      * Runnable for loading a chapter page.
      *
+     * @param name              the name of the thread
+     * @param contentLoader     the ContentLoader which created this instance
      * @param contentSource     the ContentSource to load from
      * @param chapter           the Chapter the page is from
      * @param page              the 0-indexed page number
@@ -34,7 +36,7 @@ public class LoadPageRunnable extends LoaderRunnable {
     public LoadPageRunnable(String name, ContentLoader contentLoader, ContentSource contentSource,
                             Chapter chapter, int page, ReaderController readerController,
                             boolean preloading, int preloading_amount) {
-        super(contentLoader, name);
+        super(name, contentLoader);
         this.contentSource = contentSource;
         this.chapter = chapter;
         this.page = page;

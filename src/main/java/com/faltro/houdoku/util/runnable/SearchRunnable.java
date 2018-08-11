@@ -22,6 +22,9 @@ public class SearchRunnable extends LoaderRunnable {
     /**
      * Start a thread for searching for series'.
      *
+     * @param name                   the name of the thread
+     * @param contentLoader          the ContentLoader which created this
+     *                               instance
      * @param contentSource          the ContentSource to load from
      * @param query                  the text to search for
      * @param searchSeriesController the SearchSeriesController to update
@@ -29,7 +32,7 @@ public class SearchRunnable extends LoaderRunnable {
      */
     public SearchRunnable(String name, ContentLoader contentLoader, ContentSource contentSource,
                           String query, SearchSeriesController searchSeriesController) {
-        super(contentLoader, name);
+        super(name, contentLoader);
         this.contentSource = contentSource;
         this.query = query;
         this.searchSeriesController = searchSeriesController;

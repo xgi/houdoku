@@ -26,6 +26,15 @@ public class ContentLoader {
     /**
      * Create a LoaderRunnable for loading a chapter page.
      *
+     * @param contentSource     the ContentSource to load from
+     * @param chapter           the Chapter the page is from
+     * @param page              the 0-indexed page number
+     * @param readerController  the ReaderController to update before/after
+     *                          the page is loaded
+     * @param preloading        whether the page is being preloaded or not
+     *                          (loaded before the user gets to the page)
+     * @param preloading_amount the number of subsequent pages to preload, or
+     *                          -1 for infinite
      * @see LoadPageRunnable
      */
     public void loadPage(ContentSource contentSource, Chapter chapter, int page,
@@ -43,6 +52,13 @@ public class ContentLoader {
     /**
      * Create a LoaderRunnable for loading a series.
      *
+     * @param contentSource          the ContentSource to load from
+     * @param source                 the source for the series, relative to the
+     *                               ContentSource domain
+     * @param searchSeriesController the SearchSeriesController to report errors
+     *                               to
+     * @param libraryController      the LibraryController to update
+     *                               before/after the series is loaded
      * @see LoadSeriesRunnable
      */
     public void loadSeries(ContentSource contentSource, String source,
@@ -58,6 +74,14 @@ public class ContentLoader {
     /**
      * Create a LoaderRunnable for reloading an existing series.
      *
+     * @param contentSource    the ContentSource to load from
+     * @param series           the series to reload
+     * @param quick            whether the list of chapters should be "quickly"
+     *                         reloaded, which ensures that only one total HTTP
+     *                         request is made, but does not guarantee that all
+     *                         chapters are loaded
+     * @param seriesController the SeriesController to update before/after the
+     *                         series is reloaded
      * @see ReloadSeriesRunnable
      */
     public void reloadSeries(ContentSource contentSource, Series series, boolean quick,
@@ -72,6 +96,10 @@ public class ContentLoader {
     /**
      * Create a LoaderRunnable for searching for series'.
      *
+     * @param contentSource          the ContentSource to load from
+     * @param query                  the text to search for
+     * @param searchSeriesController the SearchSeriesController to update
+     *                               before/after the results are loaded
      * @see SearchRunnable
      */
     public void search(ContentSource contentSource, String query,
@@ -90,6 +118,10 @@ public class ContentLoader {
     /**
      * Create a LoaderRunnable for loading a series banner.
      *
+     * @param infoSource       the InfoSource to load from
+     * @param series           the Series the banner is from
+     * @param seriesController the SeriesController to update after the banner
+     *                         is loaded
      * @see LoadBannerRunnable
      */
     public void loadBanner(InfoSource infoSource, Series series,

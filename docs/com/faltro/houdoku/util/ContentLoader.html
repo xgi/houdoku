@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -128,22 +128,26 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>private static java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#PREFIX_LOAD_BANNER">PREFIX_LOAD_BANNER</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#PREFIX_LOAD_PAGE">PREFIX_LOAD_PAGE</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>private static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#PREFIX_LOAD_SERIES">PREFIX_LOAD_SERIES</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#PREFIX_RELOAD_SERIES">PREFIX_RELOAD_SERIES</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#PREFIX_SEARCH">PREFIX_SEARCH</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>private java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/util/runnable/LoaderRunnable.html" title="class in com.faltro.houdoku.util.runnable">LoaderRunnable</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#runnables">runnables</a></span></code>&nbsp;</td>
 </tr>
@@ -185,6 +189,14 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#loadBanner-com.faltro.houdoku.util.InfoSource-com.faltro.houdoku.model.Series-com.faltro.houdoku.controller.SeriesController-">loadBanner</a></span>(<a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a>&nbsp;infoSource,
+          <a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series,
+          <a href="../../../../com/faltro/houdoku/controller/SeriesController.html" title="class in com.faltro.houdoku.controller">SeriesController</a>&nbsp;seriesController)</code>
+<div class="block">Create a LoaderRunnable for loading a series banner.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#loadPage-com.faltro.houdoku.util.ContentSource-com.faltro.houdoku.model.Chapter-int-com.faltro.houdoku.controller.ReaderController-boolean-int-">loadPage</a></span>(<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;contentSource,
         <a href="../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&nbsp;chapter,
         int&nbsp;page,
@@ -194,7 +206,7 @@ extends java.lang.Object</pre>
 <div class="block">Create a LoaderRunnable for loading a chapter page.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#loadSeries-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.SearchSeriesController-com.faltro.houdoku.controller.LibraryController-">loadSeries</a></span>(<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;contentSource,
           java.lang.String&nbsp;source,
@@ -203,7 +215,7 @@ extends java.lang.Object</pre>
 <div class="block">Create a LoaderRunnable for loading a series.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#reloadSeries-com.faltro.houdoku.util.ContentSource-com.faltro.houdoku.model.Series-boolean-com.faltro.houdoku.controller.SeriesController-">reloadSeries</a></span>(<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;contentSource,
             <a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series,
@@ -212,7 +224,7 @@ extends java.lang.Object</pre>
 <div class="block">Create a LoaderRunnable for reloading an existing series.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#search-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.SearchSeriesController-">search</a></span>(<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;contentSource,
       java.lang.String&nbsp;query,
@@ -220,7 +232,7 @@ extends java.lang.Object</pre>
 <div class="block">Create a LoaderRunnable for searching for series'.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>private void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#startThreadSafely-java.lang.String-com.faltro.houdoku.util.runnable.LoaderRunnable-">startThreadSafely</a></span>(java.lang.String&nbsp;name,
                  <a href="../../../../com/faltro/houdoku/util/runnable/LoaderRunnable.html" title="class in com.faltro.houdoku.util.runnable">LoaderRunnable</a>&nbsp;runnable)</code>
@@ -228,13 +240,13 @@ extends java.lang.Object</pre>
  overlap with pre-existing threads.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#stopAllThreads--">stopAllThreads</a></span>()</code>
 <div class="block">Request all threads to stop.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/ContentLoader.html#stopThreads-java.lang.String-">stopThreads</a></span>(java.lang.String&nbsp;prefix)</code>
 <div class="block">Request threads with names starting with the given prefix to stop.</div>
@@ -314,6 +326,19 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
+<a name="PREFIX_LOAD_BANNER">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>PREFIX_LOAD_BANNER</h4>
+<pre>private static final&nbsp;java.lang.String PREFIX_LOAD_BANNER</pre>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../constant-values.html#com.faltro.houdoku.util.ContentLoader.PREFIX_LOAD_BANNER">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
 <a name="runnables">
 <!--   -->
 </a>
@@ -362,6 +387,16 @@ extends java.lang.Object</pre>
                      int&nbsp;preloading_amount)</pre>
 <div class="block">Create a LoaderRunnable for loading a chapter page.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>contentSource</code> - the ContentSource to load from</dd>
+<dd><code>chapter</code> - the Chapter the page is from</dd>
+<dd><code>page</code> - the 0-indexed page number</dd>
+<dd><code>readerController</code> - the ReaderController to update before/after
+                          the page is loaded</dd>
+<dd><code>preloading</code> - whether the page is being preloaded or not
+                          (loaded before the user gets to the page)</dd>
+<dd><code>preloading_amount</code> - the number of subsequent pages to preload, or
+                          -1 for infinite</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/faltro/houdoku/util/runnable/LoadPageRunnable.html" title="class in com.faltro.houdoku.util.runnable"><code>LoadPageRunnable</code></a></dd>
 </dl>
@@ -379,6 +414,14 @@ extends java.lang.Object</pre>
                        <a href="../../../../com/faltro/houdoku/controller/LibraryController.html" title="class in com.faltro.houdoku.controller">LibraryController</a>&nbsp;libraryController)</pre>
 <div class="block">Create a LoaderRunnable for loading a series.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>contentSource</code> - the ContentSource to load from</dd>
+<dd><code>source</code> - the source for the series, relative to the
+                               ContentSource domain</dd>
+<dd><code>searchSeriesController</code> - the SearchSeriesController to report errors
+                               to</dd>
+<dd><code>libraryController</code> - the LibraryController to update
+                               before/after the series is loaded</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html" title="class in com.faltro.houdoku.util.runnable"><code>LoadSeriesRunnable</code></a></dd>
 </dl>
@@ -396,6 +439,15 @@ extends java.lang.Object</pre>
                          <a href="../../../../com/faltro/houdoku/controller/SeriesController.html" title="class in com.faltro.houdoku.controller">SeriesController</a>&nbsp;seriesController)</pre>
 <div class="block">Create a LoaderRunnable for reloading an existing series.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>contentSource</code> - the ContentSource to load from</dd>
+<dd><code>series</code> - the series to reload</dd>
+<dd><code>quick</code> - whether the list of chapters should be "quickly"
+                         reloaded, which ensures that only one total HTTP
+                         request is made, but does not guarantee that all
+                         chapters are loaded</dd>
+<dd><code>seriesController</code> - the SeriesController to update before/after the
+                         series is reloaded</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/faltro/houdoku/util/runnable/ReloadSeriesRunnable.html" title="class in com.faltro.houdoku.util.runnable"><code>ReloadSeriesRunnable</code></a></dd>
 </dl>
@@ -412,8 +464,34 @@ extends java.lang.Object</pre>
                    <a href="../../../../com/faltro/houdoku/controller/SearchSeriesController.html" title="class in com.faltro.houdoku.controller">SearchSeriesController</a>&nbsp;searchSeriesController)</pre>
 <div class="block">Create a LoaderRunnable for searching for series'.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>contentSource</code> - the ContentSource to load from</dd>
+<dd><code>query</code> - the text to search for</dd>
+<dd><code>searchSeriesController</code> - the SearchSeriesController to update
+                               before/after the results are loaded</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/faltro/houdoku/util/runnable/SearchRunnable.html" title="class in com.faltro.houdoku.util.runnable"><code>SearchRunnable</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="loadBanner-com.faltro.houdoku.util.InfoSource-com.faltro.houdoku.model.Series-com.faltro.houdoku.controller.SeriesController-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>loadBanner</h4>
+<pre>public&nbsp;void&nbsp;loadBanner(<a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a>&nbsp;infoSource,
+                       <a href="../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series,
+                       <a href="../../../../com/faltro/houdoku/controller/SeriesController.html" title="class in com.faltro.houdoku.controller">SeriesController</a>&nbsp;seriesController)</pre>
+<div class="block">Create a LoaderRunnable for loading a series banner.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>infoSource</code> - the InfoSource to load from</dd>
+<dd><code>series</code> - the Series the banner is from</dd>
+<dd><code>seriesController</code> - the SeriesController to update after the banner
+                         is loaded</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../com/faltro/houdoku/util/runnable/LoadBannerRunnable.html" title="class in com.faltro.houdoku.util.runnable"><code>LoadBannerRunnable</code></a></dd>
 </dl>
 </li>
 </ul>
