@@ -103,6 +103,12 @@ Generic minor element styles
     -fx-underline: true;
 }
 
+.separator *.line {
+    -fx-border-style: solid;
+    -fx-border-width: 0 1 0 1;
+    -fx-border-color: -color-accent;
+}
+
 /*
 Menu bar styles
  */
