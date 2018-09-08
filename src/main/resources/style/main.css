@@ -87,10 +87,6 @@ Generic combo box styles
     -fx-border-color: -color-foreground;
 }
 
-.combo-box > .text {
-    -fx-fill: -color-foreground;
-}
-
 .combo-box:hover {
     -fx-background-color: -color-accent;
 }
@@ -108,6 +104,7 @@ Generic combo box styles
     -fx-background-color: -color-accent-alt;
 }
 
+.combo-box .text,
 .combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell .text {
     -fx-fill: -color-foreground !important;
 }
