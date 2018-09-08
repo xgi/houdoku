@@ -16,7 +16,8 @@ Houdoku is a manga reader and library manager for the desktop.
 
 ---
 
-![Screenshots](/res/screenshots.png)
+![Screenshots (light)](/res/screenshots_light.png)
+![Screenshots (dark)](/res/screenshots_dark.png)
 
 ---
 
