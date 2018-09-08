@@ -79,6 +79,45 @@ Generic button styles
 }
 
 /*
+Generic combo box styles
+ */
+.combo-box {
+    -fx-background-insets: 0;
+    -fx-background-color: -color-background-alt;
+    -fx-border-color: -color-foreground;
+}
+
+.combo-box > .text {
+    -fx-fill: -color-foreground;
+}
+
+.combo-box:hover {
+    -fx-background-color: -color-accent;
+}
+
+.combo-box:pressed {
+    -fx-background-color: -color-accent-alt;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell {
+    -fx-background-color: -color-background;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:selected,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:hover {
+    -fx-background-color: -color-accent-alt;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell .text {
+    -fx-fill: -color-foreground !important;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:selected .text,
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:hover .text {
+    -fx-fill: -color-background !important;
+}
+
+/*
 Generic minor element styles
  */
 .scroll-pane {
