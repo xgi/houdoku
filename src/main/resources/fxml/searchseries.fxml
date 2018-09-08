@@ -22,6 +22,7 @@
             <CheckMenuItem fx:id="nightModeItem" text="Night Mode" onAction="#toggleNightMode"/>
         </Menu>
     </MenuBar>
+
     <HBox fx:id="headerBar" alignment="CENTER_LEFT" spacing="20">
         <padding>
             <Insets top="10" left="10" bottom="10"/>
@@ -33,7 +34,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Text styleClass="h1" text="Add series to your library"/>
+        <Text styleClass="h1" text="Add a series to your library"/>
     </HBox>
 
     <VBox fx:id="searchBar" styleClass="container">

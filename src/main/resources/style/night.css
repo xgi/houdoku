@@ -7,10 +7,6 @@
     -color-accent-alt: dimgray;
 }
 
-#headerBar {
-    -fx-background-color: -color-background-alt;
-}
-
 #searchBackButton {
     -fx-background-color: transparent;
 }

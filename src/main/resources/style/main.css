@@ -313,11 +313,11 @@ Generic ListView styles
  * Search page styles
  ****************************************/
 #headerBar {
-    -fx-background-color: -color-foreground;
+    -fx-background-color: -color-background-alt;
 }
 
 #headerBar .h1 {
-    -fx-fill: -color-background;
+    -fx-fill: -color-foreground-alt;
 }
 
 #searchSeriesHeader {
