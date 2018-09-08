@@ -52,7 +52,7 @@ public class LayoutHelpers {
         StackPane result_pane = new StackPane();
         result_pane.prefWidthProperty().bind(
                 container.widthProperty()
-                        .divide(5)
+                        .divide(6)
                         .subtract(container.getHgap())
         );
         result_pane.setAlignment(Pos.BOTTOM_LEFT);
