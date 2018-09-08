@@ -290,11 +290,16 @@ extends <a href="../../../../../com/faltro/houdoku/util/runnable/LoaderRunnable.
 <div class="block">Runnable for loading a series.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>name</code> - the name of the thread</dd>
+<dd><code>contentLoader</code> - the ContentLoader which created this
+                               instance</dd>
 <dd><code>contentSource</code> - the ContentSource to load from</dd>
 <dd><code>source</code> - the source for the series, relative to the
-                          ContentSource domain</dd>
-<dd><code>libraryController</code> - the LibraryController to update before/after
-                          the series is loaded</dd>
+                               ContentSource domain</dd>
+<dd><code>searchSeriesController</code> - the SearchSeriesController to report errors
+                               to</dd>
+<dd><code>libraryController</code> - the LibraryController to update
+                               before/after the series is loaded</dd>
 </dl>
 </li>
 </ul>
