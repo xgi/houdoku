@@ -115,6 +115,31 @@ Generic combo box styles
 }
 
 /*
+Scroll bar styles
+ */
+.scroll-bar {
+    -fx-background-color: -color-background-alt;
+    -fx-border-width: 0;
+}
+
+.scroll-bar > .track,
+.scroll-bar > .thumb,
+.scroll-bar > .track-background {
+    -fx-border-width: 0;
+}
+
+.scroll-bar > .increment-button > .increment-arrow,
+.scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-background-color: -color-foreground;
+}
+
+.scroll-bar > .thumb {
+    -fx-background-color: -color-accent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+/*
 Generic minor element styles
  */
 .scroll-pane {
@@ -154,14 +179,25 @@ Generic minor element styles
     -fx-border-color: -color-accent;
 }
 
+.split-pane {
+    -fx-box-border: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: -color-foreground;
+    -fx-border-width: 1 0 1 0;
+}
+
 .split-pane-divider {
     -fx-padding: 0 0.10em 0 0.10em;
     -fx-background-color: -color-accent;
 }
 
 .table-view {
+    -fx-box-border: transparent;
+    -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
+    -fx-border-color: -color-foreground;
+    -fx-border-width: 1 0 0 0;
 }
 
 /*
