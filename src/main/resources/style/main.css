@@ -135,9 +135,16 @@ Generic minor element styles
 }
 
 .text-field {
-    -fx-background-color: -fx-control-inner-background;
+    -fx-background-color: -color-background;
     -fx-background-insets: 0;
     -fx-border-color: -color-foreground;
+}
+
+.text-input {
+    -fx-text-fill: -color-foreground;
+    -fx-prompt-text-fill: -color-accent;
+    -fx-highlight-fill: -color-foreground;
+    -fx-highlight-text-fill: -color-background;
 }
 
 .hyperlink {
