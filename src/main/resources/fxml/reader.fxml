@@ -10,7 +10,7 @@
       fx:id="container"
       stylesheets="/style/main.css,/style/light.css"
       alignment="TOP_CENTER">
-    <MenuBar fx:id="menuBar" minHeight="30">
+    <MenuBar fx:id="menuBar">
         <Menu text="File">
             <MenuItem text="Settings" onAction="#showConfigStage"/>
             <SeparatorMenuItem/>
@@ -37,6 +37,7 @@
             </Menu>
         </Menu>
     </MenuBar>
+
     <HBox fx:id="navContainer" maxWidth="Infinity">
         <padding>
             <Insets left="15" right="15"/>
