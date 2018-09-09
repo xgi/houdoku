@@ -5,6 +5,7 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ParseHelpers;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.scene.image.Image;
@@ -18,6 +19,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 import static com.faltro.houdoku.net.Requests.*;
@@ -72,59 +74,24 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public ArrayList<Chapter> chapters(Series series) throws IOException {
-        ArrayList<Document> documents = new ArrayList<>();
-        documents.add(parse(GET(PROTOCOL + "://" + DOMAIN + series.getSource())));
-
-        // Determine if there is a pager. If there is, we will need to make
-        // multiple requests to get all chapters.
-        Element pager = documents.get(0).selectFirst("ul[class*=pagination]");
-        if (pager != null) {
-            // we will avoid navigating using the pager and simply predict
-            // the url for each page, checking whether the link is present
-            // on the most recent document before trying to access it
-            String first_url = pager.selectFirst("li[class*=page-item]")
-                    .selectFirst("a").attr("href");
-            String url_base = first_url.substring(0, first_url.length() - 2);
-
-            boolean running = true;
-            for (int i = 2; running; i++) {
-                String url_fragment = url_base + Integer.toString(i);
-                if (documents.get(documents.size() - 1)
-                        .selectFirst("a[href*=" + url_fragment + "]") != null) {
-                    documents.add(parse(GET(PROTOCOL + "://" + DOMAIN + url_fragment)));
-                } else {
-                    running = false;
-                }
-            }
-        }
+        String id_str = series.getSource().split("/")[2];
+        Response response = GET(PROTOCOL + "://" + DOMAIN + "/api/manga/" + id_str);
+        JsonObject json_data = new JsonParser().parse(response.body().string())
+                .getAsJsonObject();
+        JsonObject json_chapters = json_data.get("chapter").getAsJsonObject();
 
         ArrayList<Chapter> chapters = new ArrayList<>();
-        for (Document document : documents) {
-            chapters.addAll(chapters(series, document));
-        }
-        return chapters;
-    }
+        for (Map.Entry<String, JsonElement> chapter : json_chapters.entrySet()) {
+            JsonObject json_chapter = chapter.getValue().getAsJsonObject();
 
-    @Override
-    public ArrayList<Chapter> chapters(Series series, Document document) {
-        Elements chapterRows = document.selectFirst("div[class=chapter-container]")
-                .select("div[class*=chapter-row]");
-        chapterRows.remove(0);
-
-        ArrayList<Chapter> chapters = new ArrayList<>();
-        for (Element row : chapterRows) {
-            Elements cells = row.select("div");
-
-            String title = row.attr("data-title");
-            double chapterNum = ParseHelpers.parseDouble(row.attr("data-chapter"));
-            int volumeNum = ParseHelpers.parseInt(row.attr("data-volume"));
-            String source = "/chapter/" + row.attr("data-id");
-            int views = ParseHelpers.parseInt(row.attr("data-views"));
-            String language = cells.get(7).selectFirst("img").attr("title");
-            String group = cells.get(8).selectFirst("a").text();
+            String source = "/chapter/" + chapter.getKey();
+            String title = json_chapter.get("title").getAsString();
+            double chapterNum = ParseHelpers.parseDouble(json_chapter.get("chapter").getAsString());
+            int volumeNum = ParseHelpers.parseInt(json_chapter.get("volume").getAsString());
+            String language = json_chapter.get("lang_code").getAsString();
+            String group = json_chapter.get("group_name").getAsString();
             LocalDateTime localDateTime = LocalDateTime.ofInstant(
-                    Instant.ofEpochSecond(
-                            ParseHelpers.parseLong(row.attr("data-timestamp"))),
+                    Instant.ofEpochSecond(json_chapter.get("timestamp").getAsLong()),
                     TimeZone.getDefault().toZoneId()
             );
 
@@ -133,7 +100,6 @@ public class MangaDex extends GenericContentSource {
             metadata.put("volumeNum", volumeNum);
             metadata.put("language", language);
             metadata.put("group", group);
-            metadata.put("views", views);
             metadata.put("localDateTime", localDateTime);
 
             chapters.add(new Chapter(series, title, source, metadata));
@@ -203,7 +169,7 @@ public class MangaDex extends GenericContentSource {
         metadata.put("genres", genres);
 
         Series series = new Series(title, source, cover, ID, metadata);
-        series.setChapters(quick ? chapters(series, seriesDocument) : chapters(series));
+        series.setChapters(chapters(series));
         return series;
     }
 
