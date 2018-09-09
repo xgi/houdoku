@@ -73,7 +73,7 @@ public class SeriesController extends Controller {
     /**
      * The maximum number of characters to display of the title.
      */
-    private static final int TITLE_MAX_CHARS = 30;
+    private static final int TITLE_MAX_CHARS = 50;
     /**
      * The offset of the title from the left of the container.
      */
