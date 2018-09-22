@@ -129,8 +129,8 @@ public class Config {
          */
         READER_KEY_TO_SERIES("reader_key_to_series", KeyCode.BACK_SPACE.toString());
 
-        final String name;
-        final Object defaultValue;
+        private final String name;
+        private final Object defaultValue;
 
         Field(String name, Object default_value) {
             this.name = name;
