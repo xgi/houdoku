@@ -53,12 +53,17 @@ public class MangaDex extends GenericContentSource {
             String title = link.text();
             Element parentDiv = link.parent().parent();
             String coverSrc = parentDiv.selectFirst("img").attr("src");
-            String rating = parentDiv.selectFirst("span[title=Rating]").parent().text();
-            String follows = parentDiv.selectFirst("span[title=Follows]").parent().text();
-            String views = parentDiv.selectFirst("span[title=Views]").parent().text();
+            String rating = parentDiv.selectFirst("span[title=Rating]").parent()
+                    .select("span").get(2).ownText();
+            String follows = parentDiv.selectFirst("span[title=Follows]").parent().ownText();
+            String views = parentDiv.selectFirst("span[title=Views]").parent().ownText();
 
-            String details = title + "\n★" + rating + "/10\n" + views + " views, " + follows +
-                    " follows";
+            String details = String.format("%s\n★%s/10\n%s views\n%s followers",
+                    title,
+                    rating,
+                    views,
+                    follows
+            );
 
             HashMap<String, Object> content = new HashMap<>();
             content.put("contentSourceId", ID);
