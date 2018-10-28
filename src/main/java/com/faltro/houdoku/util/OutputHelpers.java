@@ -1,5 +1,6 @@
 package com.faltro.houdoku.util;
 
+import java.text.NumberFormat;
 import java.time.format.DateTimeFormatter;
 
 public class OutputHelpers {
@@ -16,6 +17,16 @@ public class OutputHelpers {
      */
     public static String truncate(String string, int length) {
         return string.length() > length ? string.substring(0, length - 3) + "..." : string;
+    }
+
+    /**
+     * Represents an int as a user-friendly String with comma separators.
+     *
+     * @param i the source int
+     * @return a String representation of i
+     */
+    public static String intToString(int i) {
+        return NumberFormat.getIntegerInstance().format(i);
     }
 
     /**

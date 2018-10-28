@@ -401,14 +401,14 @@ public class SeriesController extends Controller {
         textAltNames.setText(String.join(", ", series.altNames));
         textAuthor.setText(series.author);
         textArtist.setText(series.artist);
-        textRating.setText(Double.toString(series.rating) + " (" + Integer.toString(series.ratings)
-                + " users)");
-        textViews.setText(Integer.toString(series.views));
-        textFollows.setText(Integer.toString(series.follows));
+        textRating.setText(Double.toString(series.rating) + " (" +
+                OutputHelpers.intToString(series.ratings) + " users)");
+        textViews.setText(OutputHelpers.intToString(series.views));
+        textFollows.setText(OutputHelpers.intToString(series.follows));
         textGenres.setText(String.join(", ", series.genres));
         textStatus.setText(series.status);
-        textNumChapters.setText(Integer.toString(series.getNumHighestChapter()) + " (" +
-                Integer.toString(series.getNumChapters()) + " releases)");
+        textNumChapters.setText(OutputHelpers.intToString(series.getNumHighestChapter()) + " (" +
+                OutputHelpers.intToString(series.getNumChapters()) + " releases)");
         textContentSource.setText(sceneManager.getPluginManager().getSource(
                 series.getContentSourceId()).toString());
         textDescription.setText(series.description);
@@ -437,6 +437,9 @@ public class SeriesController extends Controller {
         SortedList<Chapter> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(tableView.comparatorProperty());
         tableView.setItems(sortedData);
+
+        // reset scrollbar to top position
+        metadataScrollPane.setVvalue(0);
     }
 
     /**
