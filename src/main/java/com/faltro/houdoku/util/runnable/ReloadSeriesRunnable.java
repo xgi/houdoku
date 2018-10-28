@@ -81,8 +81,7 @@ public class ReloadSeriesRunnable extends LoaderRunnable {
                     boolean found_match = false;
                     for (Chapter old_chapter : old_chapters) {
                         if (new_chapter.chapterNum == old_chapter.chapterNum
-                                && ((new_chapter.language == null && old_chapter.language == null)
-                                || new_chapter.language.equalsIgnoreCase(old_chapter.language))
+                                && (new_chapter.language == old_chapter.language)
                                 && ((new_chapter.group == null && old_chapter.group == null)
                                 || new_chapter.group.equalsIgnoreCase(old_chapter.group))) {
                             old_chapter.setTitle(new_chapter.getTitle());

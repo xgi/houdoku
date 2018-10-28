@@ -2,6 +2,8 @@ package com.faltro.houdoku.plugins.content;
 
 import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.model.Chapter;
+import com.faltro.houdoku.model.Languages;
+import com.faltro.houdoku.model.Languages.Language;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ParseHelpers;
 import com.google.gson.JsonArray;
@@ -93,12 +95,16 @@ public class MangaDex extends GenericContentSource {
             String title = json_chapter.get("title").getAsString();
             double chapterNum = ParseHelpers.parseDouble(json_chapter.get("chapter").getAsString());
             int volumeNum = ParseHelpers.parseInt(json_chapter.get("volume").getAsString());
-            String language = json_chapter.get("lang_code").getAsString();
+            Language language = Languages.get(json_chapter.get("lang_code").getAsString());
             String group = json_chapter.get("group_name").getAsString();
             LocalDateTime localDateTime = LocalDateTime.ofInstant(
                     Instant.ofEpochSecond(json_chapter.get("timestamp").getAsLong()),
                     TimeZone.getDefault().toZoneId()
             );
+
+            if (language == null) {
+
+            }
 
             HashMap<String, Object> metadata = new HashMap<>();
             metadata.put("chapterNum", chapterNum);
@@ -119,7 +125,7 @@ public class MangaDex extends GenericContentSource {
 
         Element titlePanel = seriesDocument.selectFirst("h6");
         String title = titlePanel.ownText();
-        String language = titlePanel.selectFirst("img").attr("title");
+        Language language = Languages.get(titlePanel.selectFirst("img").attr("title"));
 
         Element contentContainer = seriesDocument.selectFirst("div[class=card-body p-0]");
         String imageSource = contentContainer.selectFirst("img[class=rounded]").attr("src");

@@ -1,5 +1,6 @@
 package com.faltro.houdoku.model;
 
+import com.faltro.houdoku.model.Languages.Language;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class Series {
     private final String title;
     private final String source;
     private final int contentSourceId;
-    public String language;
+    public Language language;
     public String author;
     public String artist;
     public String status;
@@ -54,7 +55,7 @@ public class Series {
      * <p>
      * The following fields are stored:
      * <ul>
-     * <li>language (String)</li>
+     * <li>language (Language)</li>
      * <li>author (String)</li>
      * <li>artist (String)</li>
      * <li>status (String)</li>
@@ -74,7 +75,7 @@ public class Series {
         for (String key : metadata.keySet()) {
             switch (key) {
                 case "language":
-                    language = (String) metadata.get(key);
+                    language = (Language) metadata.get(key);
                     break;
                 case "author":
                     author = (String) metadata.get(key);

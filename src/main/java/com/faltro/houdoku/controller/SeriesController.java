@@ -3,6 +3,7 @@ package com.faltro.houdoku.controller;
 import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Config;
+import com.faltro.houdoku.model.Languages.Language;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.*;
@@ -224,8 +225,8 @@ public class SeriesController extends Controller {
             return new SimpleStringProperty(OutputHelpers.doubleToString(chapterNum));
         });
         languageColumn.setCellValueFactory(p -> {
-            String language = p.getValue().language;
-            return new SimpleStringProperty(language == null ? "?" : language);
+            Language language = p.getValue().language;
+            return new SimpleStringProperty(language == null ? "?" : language.toString());
         });
         groupColumn.setCellValueFactory(p -> {
             String group = p.getValue().group;
@@ -260,7 +261,7 @@ public class SeriesController extends Controller {
                                 boolean groupMatches = chapter.group != null &&
                                         chapter.group.toLowerCase().contains(filter);
                                 boolean languageMatches = chapter.language != null &&
-                                        chapter.language.toLowerCase().contains(filter);
+                                        chapter.language.toString().toLowerCase().contains(filter);
                                 boolean chapterNumMatches = Double.toString(chapter.chapterNum)
                                         .toLowerCase().contains(filter);
 

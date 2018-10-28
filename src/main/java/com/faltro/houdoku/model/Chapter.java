@@ -1,5 +1,6 @@
 package com.faltro.houdoku.model;
 
+import com.faltro.houdoku.model.Languages.Language;
 import javafx.scene.image.Image;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 public class Chapter {
     public double chapterNum;
     public int volumeNum;
-    public String language;
+    public Language language;
     public String group;
     public int views;
     public LocalDateTime localDateTime;
@@ -59,7 +60,7 @@ public class Chapter {
      * <ul>
      * <li>chapterNum (double)</li>
      * <li>volumeNum (int)</li>
-     * <li>language (String)</li>
+     * <li>language (Language)</li>
      * <li>group (String)</li>
      * <li>views (int)</li>
      * <li>localDateTime (LocalDateTime)</li>
@@ -78,7 +79,7 @@ public class Chapter {
                     volumeNum = (int) metadata.get(key);
                     break;
                 case "language":
-                    language = (String) metadata.get(key);
+                    language = (Language) metadata.get(key);
                     break;
                 case "group":
                     group = (String) metadata.get(key);

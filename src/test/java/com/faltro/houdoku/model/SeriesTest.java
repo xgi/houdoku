@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import com.faltro.houdoku.model.Languages.Language;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -22,16 +23,16 @@ public class SeriesTest {
         series1 = new Series("series1", "series1_source", null, -1);
         chapter1 = mock(Chapter.class);
         chapter1.chapterNum = 1;
-        chapter1.language = "language1";
+        chapter1.language = Language.ENGLISH;
         chapter2 = mock(Chapter.class);
         chapter2.chapterNum = 2;
-        chapter2.language = "language1";
+        chapter2.language = Language.ENGLISH;
         chapter3 = mock(Chapter.class);
         chapter3.chapterNum = 2;
-        chapter3.language = "language2";
+        chapter3.language = Language.JAPANESE;
         chapter4 = mock(Chapter.class);
         chapter4.chapterNum = 3;
-        chapter4.language = "language1";
+        chapter4.language = Language.ENGLISH;
         ArrayList<Chapter> chapters = new ArrayList<>(
                 Arrays.asList(chapter1, chapter2, chapter3, chapter4));
         series1.setChapters(chapters);
@@ -39,7 +40,7 @@ public class SeriesTest {
 
     @Test
     public void metadata() {
-        String language = "english";
+        Language language = Language.ENGLISH;
         String author = "author";
         String artist = "artist";
         String status = "status";
