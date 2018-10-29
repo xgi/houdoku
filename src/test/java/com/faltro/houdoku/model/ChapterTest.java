@@ -1,5 +1,6 @@
 package com.faltro.houdoku.model;
 
+import com.faltro.houdoku.model.Languages.Language;
 import javafx.scene.image.Image;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class ChapterTest {
     public void metadata() {
         double chapterNum = 2;
         int volumeNum = 3;
-        String language = "english";
+        Language language = Language.ENGLISH;
         String group = "some_group";
         int views = 101;
         LocalDateTime localDateTime = LocalDate.now().atStartOfDay();
