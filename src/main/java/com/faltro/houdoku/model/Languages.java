@@ -33,15 +33,22 @@ public class Languages {
     }
 
     public enum Language {
-        ENGLISH("English", "gb", "en"),
         ARABIC("Arabic", "sa"),
+        CHINESE("Chinese", "zh", "cn"),
+        ENGLISH("English", "gb", "en"),
+        FILIPINO("Filipino", "ph"),
         FRENCH("French", "fr"),
+        GERMAN("German", "de"),
+        INDONESIAN("Indonesian", "id"),
         ITALIAN("Italian", "it"),
         JAPANESE("Japanese", "jp"),
+        KOREAN("Korean", "kr"),
         POLISH("Polish", "pl"),
         PORTUGUESE("Portuguese", "br"),
         RUSSIAN("Russian", "ru"),
-        SPANISH("Spanish", "es");
+        SPANISH("Spanish", "es", "mx"),
+        THAI("Thai", "th"),
+        VIETNAMESE("Vietnamese", "vn");
 
         private final String name;
         private final String[] codes;
