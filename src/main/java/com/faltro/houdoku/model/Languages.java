@@ -14,7 +14,7 @@ public class Languages {
      * will return Language.ENGLISH.
      *
      * @param code the case-insensitive language code to lookup
-     * @return the matching Language, or null
+     * @return the matching Language, or Language.UNKNOWN if none match
      * @see Language
      */
     public static Language get(String code) {
@@ -29,7 +29,7 @@ public class Languages {
                 }
             }
         }
-        return null;
+        return Language.UNKNOWN;
     }
 
     public enum Language {
@@ -48,6 +48,7 @@ public class Languages {
         RUSSIAN("Russian", "ru"),
         SPANISH("Spanish", "es", "mx"),
         THAI("Thai", "th"),
+        UNKNOWN("[unknown]"),
         VIETNAMESE("Vietnamese", "vn");
 
         private final String name;
