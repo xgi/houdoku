@@ -13,13 +13,13 @@
       alignment="TOP_CENTER"
       prefHeight="700" prefWidth="500">
     <MenuBar fx:id="menuBar">
-        <Menu text="File">
-            <MenuItem text="Settings" onAction="#showConfigStage"/>
+        <Menu text="%file">
+            <MenuItem text="%settings" onAction="#showConfigStage"/>
             <SeparatorMenuItem/>
-            <MenuItem id="exitButton" text="Exit" onAction="#exit"/>
+            <MenuItem id="exitButton" text="%exit" onAction="#exit"/>
         </Menu>
-        <Menu text="View">
-            <CheckMenuItem fx:id="nightModeItem" text="Night Mode" onAction="#toggleNightMode"/>
+        <Menu text="%view">
+            <CheckMenuItem fx:id="nightModeItem" text="%night_mode" onAction="#toggleNightMode"/>
         </Menu>
     </MenuBar>
 
@@ -34,7 +34,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Text styleClass="h1" text="Add a series to your library"/>
+        <Text styleClass="h1" text="%add_a_series_to_your_library"/>
     </HBox>
 
     <VBox fx:id="searchBar" styleClass="container">
@@ -44,22 +44,22 @@
             </padding>
             <ComboBox fx:id="contentSourcesBox"/>
             <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS"
-                       promptText="Search for a series..."
+                       promptText="%search_for_series_prompt"
                        onAction="#search"/>
-            <Button text="Search" onAction="#search"/>
+            <Button text="%search" onAction="#search"/>
         </HBox>
 
         <HBox alignment="CENTER_RIGHT" spacing="10">
             <padding>
                 <Insets bottom="5" top="5" right="15"/>
             </padding>
-            <Text text="Layout: " styleClass="bareText"/>
+            <Text text="%layout" styleClass="bareText"/>
             <fx:define>
                 <ToggleGroup fx:id="selectLayoutGroup"/>
             </fx:define>
-            <RadioButton fx:id="layoutTableButton" text="Table" styleClass="bareText"
+            <RadioButton fx:id="layoutTableButton" text="%table" styleClass="bareText"
                          toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
-            <RadioButton fx:id="layoutCoversButton" text="Covers" styleClass="bareText"
+            <RadioButton fx:id="layoutCoversButton" text="%covers" styleClass="bareText"
                          toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
         </HBox>
     </VBox>
@@ -67,11 +67,11 @@
     <StackPane fx:id="resultsContainer" VBox.vgrow="ALWAYS">
         <TableView fx:id="tableView" visible="false" managed="false">
             <placeholder>
-                <Label styleClass="bareText,placeholderLabel" text="No series found."/>
+                <Label styleClass="bareText,placeholderLabel" text="%no_series_found"/>
             </placeholder>
             <columns>
-                <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
-                <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
+                <TableColumn fx:id="coverColumn" resizable="false" text="%cover"/>
+                <TableColumn fx:id="titleColumn" resizable="false" text="%title"/>
             </columns>
         </TableView>
         <ScrollPane fx:id="coversContainer" fitToWidth="true" styleClass="container">

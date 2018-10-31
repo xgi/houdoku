@@ -20,18 +20,18 @@
             <VBox styleClass="topicContainer" spacing="15" VBox.vgrow="ALWAYS"
                   alignment="CENTER_LEFT" userData="General">
                 <HBox styleClass="topicHeaderBar">
-                    <Text text="General"/>
+                    <Text text="%general"/>
                 </HBox>
                 <TabPane styleClass="configTabPane" VBox.vgrow="ALWAYS">
-                    <Tab text="Settings" closable="false">
+                    <Tab text="%settings" closable="false">
                         <VBox VBox.vgrow="ALWAYS" spacing="15">
                             <VBox>
                                 <Text styleClass="bareTextAlt" text="Night Mode"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
-                                    <CheckBox fx:id="nightModeCheck" text="Night mode enabled"
+                                    <CheckBox fx:id="nightModeCheck" text="%night_mode_enabled"
                                               styleClass="bareTextAlt"/>
                                     <CheckBox fx:id="nightModeReaderCheck"
-                                              text="Only apply theme on reader page"
+                                              text="%night_mode_reader_check"
                                               styleClass="bareTextAlt"
                                               disable="${nightModeCheck.selected}"/>
                                 </VBox>
@@ -40,11 +40,11 @@
                                 <Text styleClass="bareTextAlt" text="Behavior"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <CheckBox fx:id="quickReloadCheck"
-                                              text="Enable quick reloading of series' chapter lists"
+                                              text="%quick_reload_check"
                                               styleClass="bareTextAlt"/>
                                     <VBox fx:id="quickReloadInfoBox" styleClass="controlSubBox">
                                         <Label maxWidth="${quickReloadInfoBox.width}"
-                                               text="Some content sources require multiple page requests to load all of a series' chapters. Enable this option to load only the first page when reloading series information."
+                                               text="%quick_reload_info_box"
                                                styleClass="bareTextAlt" wrapText="true"/>
                                     </VBox>
                                 </VBox>
@@ -56,20 +56,20 @@
             <VBox styleClass="topicContainer" spacing="15" VBox.vgrow="ALWAYS"
                   alignment="CENTER_LEFT" userData="Reader">
                 <HBox styleClass="topicHeaderBar">
-                    <Text text="Reader"/>
+                    <Text text="%reader"/>
                 </HBox>
                 <TabPane styleClass="configTabPane" VBox.vgrow="ALWAYS">
-                    <Tab text="Settings" closable="false">
+                    <Tab text="%settings" closable="false">
                         <VBox VBox.vgrow="ALWAYS" spacing="15">
                             <VBox>
                                 <Text styleClass="bareTextAlt" text="Preloading"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <CheckBox fx:id="restrictPreloadingCheck"
-                                              text="Restrict the number of images to preload"
+                                              text="%restrict_preloading_check"
                                               styleClass="bareTextAlt"/>
                                     <HBox fx:id="preloadingAmountBox" spacing="20"
                                           styleClass="controlSubBox" alignment="CENTER_LEFT">
-                                        <Label text="Number of images to preload:"
+                                        <Label text="%preloading_amount_box"
                                                styleClass="bareTextAlt"/>
                                         <Spinner fx:id="preloadingAmountSpinner" maxWidth="70"
                                                  min="0" max="99"/>
@@ -77,15 +77,15 @@
                                 </VBox>
                             </VBox>
                             <VBox>
-                                <Text styleClass="bareTextAlt" text="Key Bindings"/>
+                                <Text styleClass="bareTextAlt" text="%key_bindings"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <HBox spacing="20">
                                         <VBox alignment="CENTER_RIGHT" spacing="16">
-                                            <Label text="Previous page:" styleClass="bareTextAlt"/>
-                                            <Label text="Next page:" styleClass="bareTextAlt"/>
-                                            <Label text="First page:" styleClass="bareTextAlt"/>
-                                            <Label text="Last page:" styleClass="bareTextAlt"/>
-                                            <Label text="Back to series:" styleClass="bareTextAlt"/>
+                                            <Label text="%previous_page" styleClass="bareTextAlt"/>
+                                            <Label text="%next_page" styleClass="bareTextAlt"/>
+                                            <Label text="%first_page" styleClass="bareTextAlt"/>
+                                            <Label text="%last_page" styleClass="bareTextAlt"/>
+                                            <Label text="%back_to_series" styleClass="bareTextAlt"/>
                                         </VBox>
                                         <VBox alignment="CENTER" spacing="6">
                                             <Button fx:id="readerKeyPrevPage"
@@ -104,13 +104,13 @@
                             </VBox>
                         </VBox>
                     </Tab>
-                    <Tab text="Page Effects" closable="false">
+                    <Tab text="%page_effects" closable="false">
                         <VBox VBox.vgrow="ALWAYS" spacing="15">
                             <VBox>
-                                <Text styleClass="bareTextAlt" text="Settings"/>
+                                <Text styleClass="bareTextAlt" text="%settings"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <CheckBox fx:id="effectNightModeOnlyCheck"
-                                              text="Only apply effects when night mode is enabled"
+                                              text="%effect_night_mode_only_check"
                                               styleClass="bareTextAlt"/>
                                 </VBox>
                             </VBox>
@@ -118,12 +118,12 @@
                                 <Text styleClass="bareTextAlt" text="Page effects"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <CheckBox fx:id="effectColorCheck" styleClass="bareTextAlt"
-                                              text="Color filter" onAction="#updateEffectPreview"/>
+                                              text="%color_filter" onAction="#updateEffectPreview"/>
                                     <VBox fx:id="effectColorBox" styleClass="controlSubBox">
                                         <HBox spacing="20">
                                             <VBox alignment="CENTER_RIGHT" spacing="18">
-                                                <Label text="Hue:" styleClass="bareTextAlt"/>
-                                                <Label text="Saturation:" styleClass="bareTextAlt"/>
+                                                <Label text="%hue" styleClass="bareTextAlt"/>
+                                                <Label text="%saturation" styleClass="bareTextAlt"/>
                                             </VBox>
                                             <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
                                                   maxWidth="300">
@@ -143,12 +143,12 @@
                                         </HBox>
                                     </VBox>
                                     <CheckBox fx:id="effectBrightnessCheck"
-                                              styleClass="bareTextAlt" text="Brightness filter"
+                                              styleClass="bareTextAlt" text="%brightness_filter"
                                               onAction="#updateEffectPreview"/>
                                     <VBox fx:id="effectBrightnessBox" styleClass="controlSubBox">
                                         <HBox spacing="20">
                                             <VBox alignment="CENTER_RIGHT">
-                                                <Label text="Brightness:" styleClass="bareTextAlt"/>
+                                                <Label text="%brightness" styleClass="bareTextAlt"/>
                                             </VBox>
                                             <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
                                                   maxWidth="300">
@@ -163,12 +163,12 @@
                                         </HBox>
                                     </VBox>
                                     <HBox alignment="CENTER_RIGHT">
-                                        <Hyperlink text="Reset" onAction="#resetPageEffects"/>
+                                        <Hyperlink text="%reset" onAction="#resetPageEffects"/>
                                     </HBox>
                                 </VBox>
                             </VBox>
                             <VBox>
-                                <Text styleClass="bareTextAlt" text="Preview"/>
+                                <Text styleClass="bareTextAlt" text="%preview"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <HBox fx:id="effectPreviewContainer">
                                         <ImageView fx:id="effectPreview"
@@ -190,11 +190,11 @@
             <Insets top="15"/>
         </padding>
         <HBox alignment="BOTTOM_LEFT">
-            <Hyperlink text="Restore defaults" onAction="#promptRestoreDefaults"/>
+            <Hyperlink text="%restore_defaults" onAction="#promptRestoreDefaults"/>
         </HBox>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="10">
-            <Button text="OK" onAction="#confirm"/>
-            <Button text="Cancel" onAction="#cancel"/>
+            <Button text="%ok" onAction="#confirm"/>
+            <Button text="%cancel" onAction="#cancel"/>
         </HBox>
     </HBox>
 </VBox>

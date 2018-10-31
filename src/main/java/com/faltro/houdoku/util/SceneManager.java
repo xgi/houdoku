@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Manager and container for scene-related class instances. The instance of this
@@ -116,6 +118,7 @@ public class SceneManager {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(source);
         loader.setController(controller);
+        loader.setResources(ResourceBundle.getBundle("bundles.Bundle", new Locale("en")));
         Parent root = loader.load();
         roots.put(id, root);
         controllers.put(root, controller);

@@ -11,19 +11,19 @@
       stylesheets="/style/main.css,/style/light.css"
       alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar">
-        <Menu text="File">
-            <MenuItem text="Settings" onAction="#showConfigStage"/>
+        <Menu text="%file">
+            <MenuItem text="%settings" onAction="#showConfigStage"/>
             <SeparatorMenuItem/>
-            <MenuItem id="exitButton" text="Exit" onAction="#exit"/>
+            <MenuItem id="exitButton" text="%exit" onAction="#exit"/>
         </Menu>
-        <Menu text="Action">
-            <MenuItem text="Add Series" onAction="#goToSearchSeries"/>
-            <MenuItem text="Remove Series" onAction="#promptRemoveSelectedSeries"/>
-            <MenuItem text="View Series" onAction="#goToSelectedSeries"/>
+        <Menu text="%action">
+            <MenuItem text="%add_series" onAction="#goToSearchSeries"/>
+            <MenuItem text="%remove_series" onAction="#promptRemoveSelectedSeries"/>
+            <MenuItem text="%view_series" onAction="#goToSelectedSeries"/>
         </Menu>
-        <Menu text="View">
-            <CheckMenuItem fx:id="nightModeItem" text="Night Mode" onAction="#toggleNightMode"/>
-            <CheckMenuItem fx:id="showActionBarItem" text="Show Action Bar" selected="true"
+        <Menu text="%view">
+            <CheckMenuItem fx:id="nightModeItem" text="%night_mode" onAction="#toggleNightMode"/>
+            <CheckMenuItem fx:id="showActionBarItem" text="%show_action_bar" selected="true"
                            onAction="#toggleActionBar"/>
         </Menu>
     </MenuBar>
@@ -33,7 +33,7 @@
         <padding>
             <Insets bottom="5" top="5" left="15" right="15"/>
         </padding>
-        <Button text="Add Series" prefHeight="${actionContainer.prefHeight}"
+        <Button text="%add_series" prefHeight="${actionContainer.prefHeight}"
                 onAction="#goToSearchSeries">
             <graphic>
                 <ImageView>
@@ -41,7 +41,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button text="Remove Series" prefHeight="${actionContainer.prefHeight}"
+        <Button text="%remove_series" prefHeight="${actionContainer.prefHeight}"
                 onAction="#promptRemoveSelectedSeries">
             <graphic>
                 <ImageView>
@@ -49,7 +49,7 @@
                 </ImageView>
             </graphic>
         </Button>
-        <Button text="View Series" prefHeight="${actionContainer.prefHeight}"
+        <Button text="%view_series" prefHeight="${actionContainer.prefHeight}"
                 onAction="#goToSelectedSeries">
             <graphic>
                 <ImageView>
@@ -58,7 +58,7 @@
             </graphic>
         </Button>
         <Separator orientation="VERTICAL"/>
-        <Button text="Settings" prefHeight="${actionContainer.prefHeight}"
+        <Button text="%settings" prefHeight="${actionContainer.prefHeight}"
                 onAction="#showConfigStage">
             <graphic>
                 <ImageView>
@@ -69,7 +69,7 @@
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="15">
             <Separator orientation="VERTICAL"/>
             <TextField fx:id="filterTextField" prefWidth="240"
-                       promptText="Filter library by title or author"/>
+                       promptText="%filter_library_prompt"/>
         </HBox>
     </HBox>
 
@@ -77,22 +77,22 @@
         <SplitPane fx:id="contentContainer" VBox.vgrow="ALWAYS">
             <TreeTableView fx:id="treeView">
                 <placeholder>
-                    <Label styleClass="placeholderLabel" text="No series found."/>
+                    <Label styleClass="placeholderLabel" text="%no_series_found"/>
                 </placeholder>
                 <columns>
                     <TreeTableColumn fx:id="categoriesColumn" prefWidth="${treeView.width}"
-                                     resizable="false" text="Categories"/>
+                                     resizable="false" text="%categories"/>
                 </columns>
             </TreeTableView>
             <StackPane>
                 <TableView fx:id="tableView" visible="false" managed="false">
                     <placeholder>
-                        <Label styleClass="bareText,placeholderLabel" text="No series found."/>
+                        <Label styleClass="bareText,placeholderLabel" text="%no_series_found"/>
                     </placeholder>
                     <columns>
-                        <TableColumn fx:id="coverColumn" resizable="false" text="Cover"/>
-                        <TableColumn fx:id="titleColumn" resizable="false" text="Title"/>
-                        <TableColumn fx:id="numChaptersColumn" resizable="false" text="Chapters"/>
+                        <TableColumn fx:id="coverColumn" resizable="false" text="%cover"/>
+                        <TableColumn fx:id="titleColumn" resizable="false" text="%title"/>
+                        <TableColumn fx:id="numChaptersColumn" resizable="false" text="%chapters"/>
                     </columns>
                 </TableView>
                 <ScrollPane fx:id="coversContainer" fitToWidth="true" styleClass="container">
@@ -115,15 +115,15 @@
         <padding>
             <Insets bottom="5" top="5" right="15"/>
         </padding>
-        <Text text="Layout: " styleClass="bareText"/>
+        <Text text="%layout" styleClass="bareText"/>
         <fx:define>
             <ToggleGroup fx:id="selectLayoutGroup"/>
         </fx:define>
-        <RadioButton fx:id="layoutTableButton" text="Table" styleClass="bareText"
+        <RadioButton fx:id="layoutTableButton" text="%table" styleClass="bareText"
                      toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
-        <RadioButton fx:id="layoutCoversButton" text="Covers" styleClass="bareText"
+        <RadioButton fx:id="layoutCoversButton" text="%covers" styleClass="bareText"
                      toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
-        <RadioButton fx:id="layoutCompactButton" text="Compact" styleClass="bareText"
+        <RadioButton fx:id="layoutCompactButton" text="%compact" styleClass="bareText"
                      toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
     </HBox>
 </VBox>

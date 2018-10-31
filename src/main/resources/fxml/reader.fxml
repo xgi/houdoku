@@ -11,27 +11,27 @@
       stylesheets="/style/main.css,/style/light.css"
       alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar">
-        <Menu text="File">
-            <MenuItem text="Settings" onAction="#showConfigStage"/>
+        <Menu text="%file">
+            <MenuItem text="%settings" onAction="#showConfigStage"/>
             <SeparatorMenuItem/>
-            <MenuItem id="exitButton" text="Exit" onAction="#exit"/>
+            <MenuItem id="exitButton" text="%exit" onAction="#exit"/>
         </Menu>
         <Menu text="View">
-            <CheckMenuItem fx:id="nightModeItem" text="Night Mode" onAction="#toggleNightMode"/>
-            <CheckMenuItem fx:id="showNavBarItem" text="Show Navigation Bar" selected="true"
+            <CheckMenuItem fx:id="nightModeItem" text="%night_mode" onAction="#toggleNightMode"/>
+            <CheckMenuItem fx:id="showNavBarItem" text="%show_navigation_bar" selected="true"
                            onAction="#toggleNavBar"/>
             <Menu text="Zoom">
                 <fx:define>
                     <ToggleGroup fx:id="zoomTypeGroup"/>
                 </fx:define>
-                <RadioMenuItem fx:id="fitAutoRadio" text="Auto Fit" toggleGroup="$zoomTypeGroup"
+                <RadioMenuItem fx:id="fitAutoRadio" text="%auto_fit" toggleGroup="$zoomTypeGroup"
                                selected="true"
                                onAction="#updateImageViewFit"/>
-                <RadioMenuItem fx:id="fitHeightRadio" text="Fit Height" toggleGroup="$zoomTypeGroup"
+                <RadioMenuItem fx:id="fitHeightRadio" text="%fit_height" toggleGroup="$zoomTypeGroup"
                                onAction="#updateImageViewFit"/>
-                <RadioMenuItem fx:id="fitWidthRadio" text="Fit Width" toggleGroup="$zoomTypeGroup"
+                <RadioMenuItem fx:id="fitWidthRadio" text="%fit_width" toggleGroup="$zoomTypeGroup"
                                onAction="#updateImageViewFit"/>
-                <RadioMenuItem fx:id="actualSizeRadio" text="Actual Size"
+                <RadioMenuItem fx:id="actualSizeRadio" text="%actual_size"
                                toggleGroup="$zoomTypeGroup"
                                onAction="#updateImageViewFit"/>
             </Menu>
@@ -43,7 +43,7 @@
             <Insets left="15" right="15"/>
         </padding>
         <HBox fx:id="navLeftContainer" alignment="CENTER_LEFT">
-            <Button text="◂ Back to series" onAction="#goToSeries"/>
+            <Button text="%back_to_series" onAction="#goToSeries"/>
         </HBox>
         <HBox fx:id="navCenterContainer" spacing="5" alignment="CENTER" HBox.hgrow="ALWAYS">
             <Button fx:id="firstPageButton" text="⇤" minHeight="40" minWidth="40"
@@ -61,8 +61,8 @@
                     onAction="#lastPage"/>
         </HBox>
         <HBox fx:id="navRightContainer" spacing="5" alignment="CENTER_RIGHT">
-            <Button fx:id="prevChapterButton" text="Previous chapter" onAction="#previousChapter"/>
-            <Button fx:id="nextChapterButton" text="Next chapter" onAction="#nextChapter"/>
+            <Button fx:id="prevChapterButton" text="%previous_chapter" onAction="#previousChapter"/>
+            <Button fx:id="nextChapterButton" text="%next_chapter" onAction="#nextChapter"/>
         </HBox>
     </HBox>
 
@@ -73,7 +73,7 @@
         <ProgressIndicator fx:id="imageProgressIndicator" visible="false"/>
         <HBox alignment="CENTER" visible="false" managed="false">
             <Text fx:id="errorText" styleClass="bareText" textAlignment="CENTER"
-                  text="An error occurred."/>
+                  text="%an_error_occurred"/>
         </HBox>
     </StackPane>
 </VBox>
