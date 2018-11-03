@@ -1,7 +1,19 @@
 package com.faltro.houdoku.plugins.tracker;
 
 /**
- * TODO: write a description for this class
+ * A tracker is a website for users to individually track their manga/comic
+ * lists. These websites generally hold a database of series' with extensive
+ * information for each. Users can create a 'list' of series' that they are
+ * interested in, generally also being able to categorize them in various ways
+ * (i.e. "Reading", "Planning", "Completed"). Users are also able to record the
+ * number of chapters from each series that they have read.
+ * <p>
+ * For this client, we want users to link with a tracker and have their lists
+ * be automatically updated. When they read a chapter in the client, their list
+ * should be updated. One of the primary difficulties faced here is that
+ * tracker websites often store series' under different names/titles. It is
+ * unfortunately necessary that we create an interface for the user to manually
+ * search each database in order to link it with a Series in their Library.
  *
  * @see com.faltro.houdoku.plugins.tracker
  */

@@ -5,8 +5,9 @@ import com.faltro.houdoku.exception.NotImplementedException;
 import java.io.IOException;
 
 /**
- * TODO: write a description for this class
+ * A Tracker with OAuth-based authentication.
  *
+ * @see Tracker
  * @see com.faltro.houdoku.plugins.tracker
  */
 public interface TrackerOAuth extends Tracker {

@@ -4,6 +4,14 @@ import com.faltro.houdoku.exception.NotImplementedException;
 
 import java.io.IOException;
 
+/**
+ * This class contains implementations for some methods from TrackerOAuth that
+ * are expected to be common between most OAuth-based tracker plugins.
+ * <p>
+ * For method and field documentation, please see the TrackerOAuth class.
+ *
+ * @see TrackerOAuth
+ */
 public class GenericTrackerOAuth implements TrackerOAuth {
     public static final int ID = -1;
     public static final String NAME = "GenericTrackerOAuth";

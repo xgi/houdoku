@@ -10,6 +10,18 @@ import java.io.IOException;
 
 import static com.faltro.houdoku.net.Requests.POST;
 
+/**
+ * This class contains implementation details for processing data from a
+ * specific "tracker" - a website for users to track their reading.
+ * <p>
+ * For method and field documentation, please see the Tracker/TrackerOAuth
+ * classes. Additionally, the implementation of some common methods is done in
+ * the GenericTrackerOAuth class.
+ *
+ * @see GenericTrackerOAuth
+ * @see TrackerOAuth
+ * @see Tracker
+ */
 public class AniList extends GenericTrackerOAuth {
     public static final int ID = 0;
     public static final String NAME = "AniList";
