@@ -196,7 +196,7 @@
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <Label text="%anilist_auth_step_1"
                                            styleClass="bareTextAlt"/>
-                                    <TextField fx:id="authUrlFieldAniList"
+                                    <TextField fx:id="authUrlFieldAniList" editable="false"
                                                styleClass="bareTextAlt"/>
                                     <Label text="%anilist_auth_step_2"
                                            styleClass="bareTextAlt"/>

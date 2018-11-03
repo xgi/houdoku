@@ -1,6 +1,5 @@
 package com.faltro.houdoku.controller;
 
-import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.plugins.tracker.AniList;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
@@ -21,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -405,10 +403,7 @@ public class ConfigController extends Controller {
     private void anilistGenerateToken() {
         TrackerOAuth anilist =
                 (TrackerOAuth) sceneManager.getPluginManager().getTracker(AniList.ID);
-        try {
-            anilist.generate_token(tokenFieldAniList.getText());
-        } catch (NotImplementedException | IOException e) {
-            e.printStackTrace();
-        }
+        String code = tokenFieldAniList.getText();
+        sceneManager.getContentLoader().generateOAuthToken(anilist, code, this);
     }
 }

@@ -1,13 +1,11 @@
 package com.faltro.houdoku.util;
 
-import com.faltro.houdoku.controller.LibraryController;
-import com.faltro.houdoku.controller.ReaderController;
-import com.faltro.houdoku.controller.SearchSeriesController;
-import com.faltro.houdoku.controller.SeriesController;
+import com.faltro.houdoku.controller.*;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
+import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.runnable.*;
 
 import java.util.ArrayList;
@@ -19,6 +17,7 @@ public class ContentLoader {
     public static final String PREFIX_SEARCH = "search_";
     private static final String PREFIX_LOAD_SERIES = "loadSeries_";
     private static final String PREFIX_LOAD_BANNER = "loadBanner_";
+    private static final String PREFIX_GENERATE_OAUTH_TOKEN = "generateOAuthToken_";
     private final ArrayList<LoaderRunnable> runnables;
 
     public ContentLoader() {
@@ -131,6 +130,24 @@ public class ContentLoader {
         String name = PREFIX_LOAD_BANNER + infoSource.toString() + "_" + series.getTitle();
         LoaderRunnable runnable = new LoadBannerRunnable(
                 name, this, infoSource, series, seriesController
+        );
+        startThreadSafely(name, runnable);
+    }
+
+    /**
+     * Generate an OAuth token using a verification code.
+     *
+     * @param tracker          the TrackerOAuth to load from
+     * @param code             a verification code given by the user after authorization
+     * @param configController the ConfigController to update after the token
+     *                         is generated
+     * @see LoadBannerRunnable
+     */
+    public void generateOAuthToken(TrackerOAuth tracker, String code,
+                                   ConfigController configController) {
+        String name = PREFIX_GENERATE_OAUTH_TOKEN + tracker.toString() + "_" + code;
+        LoaderRunnable runnable = new GenerateOAuthTokenRunnable(
+                name, this, tracker, code, configController
         );
         startThreadSafely(name, runnable);
     }
