@@ -2,6 +2,8 @@ package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.plugins.content.*;
 import com.faltro.houdoku.plugins.info.AniList;
+import com.faltro.houdoku.plugins.info.InfoSource;
+import com.faltro.houdoku.plugins.tracker.Tracker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import java.util.Arrays;
 public class PluginManager {
     private final ArrayList<ContentSource> contentSources;
     private final InfoSource infoSource;
+    private final ArrayList<Tracker> trackers;
 
     /**
      * Create the PluginManager.
@@ -30,9 +33,14 @@ public class PluginManager {
                 new MangaSee(),
                 new MangaTown(),
                 new MangaPark()
-                // add other sources here
+                // add other content sources here
         ));
         infoSource = new AniList(); // change to desired InfoSource
+        trackers = new ArrayList<>();
+        trackers.addAll(Arrays.asList(
+                new com.faltro.houdoku.plugins.tracker.AniList()
+                // add other trackers here
+        ));
     }
 
     /**
@@ -61,6 +69,35 @@ public class PluginManager {
     public ContentSource getSource(int id) {
         return contentSources.stream().filter(
                 contentSource -> getSourceId(contentSource) == id
+        ).findFirst().orElse(null);
+    }
+
+    /**
+     * Gets the ID of a tracker instance.
+     *
+     * @param tracker the Tracker to get the id of
+     * @return the ID of the tracker's class.
+     */
+    private int getTrackerId(Tracker tracker) {
+        int result = -1;
+        try {
+            result = tracker.getClass().getField("ID").getInt(null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * Gets the Tracker instance whose class has the given ID.
+     *
+     * @param id the Tracker ID (the static ID field of the
+     *           implementing plugin class)
+     * @return the Tracker instance whose class has the given ID.
+     */
+    public Tracker getTracker(int id) {
+        return trackers.stream().filter(
+                tracker -> getTrackerId(tracker) == id
         ).findFirst().orElse(null);
     }
 

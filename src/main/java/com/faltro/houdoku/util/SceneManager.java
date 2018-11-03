@@ -66,6 +66,14 @@ public class SceneManager {
      * The multiplier of the default height for the config window.
      */
     private static final double DEFAULT_CONFIG_HEIGHT_MULTIPLIER = 0.85;
+    /**
+     * The multiplier of the default width for the tracker auth window.
+     */
+    private static final double DEFAULT_TRACKER_AUTH_WIDTH_MULTIPLIER = 0.30;
+    /**
+     * The multiplier of the default height for the tracker auth window.
+     */
+    private static final double DEFAULT_TRACKER_AUTH_HEIGHT_MULTIPLIER = 0.85;
 
     private final Stage stage;
     private final Stage stage_config;

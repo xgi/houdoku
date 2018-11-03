@@ -35,7 +35,7 @@ import static com.faltro.houdoku.net.Requests.*;
  * GenericContentSource class.
  *
  * @see GenericContentSource
- * @see com.faltro.houdoku.util.ContentSource
+ * @see ContentSource
  */
 public class MangaDex extends GenericContentSource {
     public static final int ID = 0;
@@ -101,10 +101,6 @@ public class MangaDex extends GenericContentSource {
                     Instant.ofEpochSecond(json_chapter.get("timestamp").getAsLong()),
                     TimeZone.getDefault().toZoneId()
             );
-
-            if (language == null) {
-
-            }
 
             HashMap<String, Object> metadata = new HashMap<>();
             metadata.put("chapterNum", chapterNum);

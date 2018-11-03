@@ -3,8 +3,8 @@ package com.faltro.houdoku.util.runnable;
 import com.faltro.houdoku.controller.SeriesController;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.util.ContentLoader;
-import com.faltro.houdoku.util.InfoSource;
 import javafx.scene.image.Image;
 
 import java.io.IOException;

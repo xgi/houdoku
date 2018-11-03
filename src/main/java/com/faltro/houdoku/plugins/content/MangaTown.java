@@ -27,7 +27,7 @@ import static com.faltro.houdoku.net.Requests.*;
  * GenericContentSource class.
  *
  * @see GenericContentSource
- * @see com.faltro.houdoku.util.ContentSource
+ * @see ContentSource
  */
 public class MangaTown extends GenericContentSource {
     public static final int ID = 3;

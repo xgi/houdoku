@@ -6,8 +6,8 @@ import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.ContentLoader;
-import com.faltro.houdoku.util.ContentSource;
 
 import java.io.IOException;
 import java.util.ArrayList;

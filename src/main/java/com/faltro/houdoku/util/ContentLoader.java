@@ -6,6 +6,8 @@ import com.faltro.houdoku.controller.SearchSeriesController;
 import com.faltro.houdoku.controller.SeriesController;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.plugins.content.ContentSource;
+import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.util.runnable.*;
 
 import java.util.ArrayList;

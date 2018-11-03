@@ -2,8 +2,8 @@ package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.ContentLoader;
-import com.faltro.houdoku.util.ContentSource;
 import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Platform;

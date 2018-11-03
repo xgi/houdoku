@@ -23,7 +23,7 @@ import static com.faltro.houdoku.net.Requests.imageFromURL;
  * GenericInfoSource class.
  *
  * @see GenericInfoSource
- * @see com.faltro.houdoku.util.InfoSource
+ * @see InfoSource
  */
 public class AniList extends GenericInfoSource {
     public static final int ID = 0;

@@ -1,6 +1,9 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Config;
+import com.faltro.houdoku.plugins.tracker.AniList;
+import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -41,6 +45,7 @@ public class ConfigController extends Controller {
     static {
         ICON_MAP.put("General", "/img/icon_settings.png");
         ICON_MAP.put("Reader", "/img/icon_reader.png");
+        ICON_MAP.put("Trackers", "/img/icon_settings.png");
     }
 
     @FXML
@@ -95,7 +100,10 @@ public class ConfigController extends Controller {
     private Button readerKeyLastPage;
     @FXML
     private Button readerKeyToSeries;
-
+    @FXML
+    private TextField authUrlFieldAniList;
+    @FXML
+    private TextField tokenFieldAniList;
 
     public ConfigController(SceneManager sceneManager) {
         super(sceneManager);
@@ -167,6 +175,12 @@ public class ConfigController extends Controller {
                 }
             }
         });
+
+        // manually fill auth url fields for trackers
+        TrackerOAuth anilist =
+                (TrackerOAuth) sceneManager.getPluginManager().getTracker(AniList.ID);
+        authUrlFieldAniList.setText(anilist.full_auth_url());
+
     }
 
     /**
@@ -380,5 +394,21 @@ public class ConfigController extends Controller {
                 (boolean) config.getValue(Config.Field.PAGE_FILTER_COLOR_ENABLED));
         effectBrightnessCheck.setSelected(
                 (boolean) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS_ENABLED));
+    }
+
+    /**
+     * Generate the user's access token for the AniList tracker.
+     *
+     * @see AniList
+     */
+    @FXML
+    private void anilistGenerateToken() {
+        TrackerOAuth anilist =
+                (TrackerOAuth) sceneManager.getPluginManager().getTracker(AniList.ID);
+        try {
+            anilist.generate_token(tokenFieldAniList.getText());
+        } catch (NotImplementedException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }

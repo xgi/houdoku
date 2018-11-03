@@ -2,7 +2,6 @@ package com.faltro.houdoku.plugins.info;
 
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Series;
-import com.faltro.houdoku.util.InfoSource;
 import javafx.scene.image.Image;
 
 import java.io.IOException;
@@ -13,7 +12,7 @@ import java.io.IOException;
  * <p>
  * For method and field documentation, please see the InfoSource class.
  *
- * @see com.faltro.houdoku.util.InfoSource
+ * @see InfoSource
  */
 public class GenericInfoSource implements InfoSource {
     public static final int ID = -1;
