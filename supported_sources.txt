@@ -11,3 +11,4 @@ ID - NAME      - DOMAIN            - COMMENTS
 2  - MangaSee  - mangaseeonline.us -
 3  - MangaTown - www.mangatown.com -
 4  - MangaPark - mangapark.me      -
+5  - MangaFree - mangafree.online  -

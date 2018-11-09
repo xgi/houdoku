@@ -101,7 +101,7 @@ public class ParseHelpers {
      */
     public static long parseLong(String text) {
         text = text.replaceAll(",", "");
-        text = text.split("\\s+|-+")[0];
+        text = text.split("\\s+|-|:+")[0];
         long result = 0;
         if (!text.equals("")) {
             try {
@@ -123,7 +123,7 @@ public class ParseHelpers {
      */
     public static double parseDouble(String text) {
         text = text.replaceAll(",", "");
-        text = text.split("\\s+|-+")[0];
+        text = text.split("\\s+|-|:+")[0];
         return text.length() > 0 ? Double.parseDouble(text) : 0;
     }
 

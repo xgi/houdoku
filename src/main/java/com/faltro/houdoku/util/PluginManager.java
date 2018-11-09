@@ -32,7 +32,8 @@ public class PluginManager {
                 new MangaHere(),
                 new MangaSee(),
                 new MangaTown(),
-                new MangaPark()
+                new MangaPark(),
+                new MangaFree()
                 // add other content sources here
         ));
         infoSource = new AniList(); // change to desired InfoSource
