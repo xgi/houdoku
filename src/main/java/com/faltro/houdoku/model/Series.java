@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +35,7 @@ public class Series {
     private ArrayList<String> stringCategories;
     private ArrayList<Chapter> chapters;
     private String infoSourceId;
+    private Map<Integer, String> trackerIds;
 
     public Series(String title, String source, Image cover, int contentSourceId) {
         this.title = title;
@@ -140,6 +142,20 @@ public class Series {
 
         int chapter_index = possible.indexOf(chapter);
         return chapter_index == possible.size() - 1 ? null : possible.get(chapter_index + 1);
+    }
+
+    /**
+     * Update or add a tracker's series id.
+     *
+     * @param tracker_id the ID field of the Tracker class being used
+     * @param series_id the series' id on the Tracker website
+     */
+    public void updateTrackerId(int tracker_id, String series_id) {
+        if (this.trackerIds.containsKey(tracker_id)) {
+            this.trackerIds.replace(tracker_id, series_id);
+        } else {
+            this.trackerIds.put(tracker_id, series_id);
+        }
     }
 
     public String getTitle() {

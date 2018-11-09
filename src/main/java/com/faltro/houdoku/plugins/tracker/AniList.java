@@ -1,5 +1,7 @@
 package com.faltro.houdoku.plugins.tracker;
 
+import com.faltro.houdoku.data.Serializer;
+import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -50,7 +52,56 @@ public class AniList extends GenericTrackerOAuth {
         if (json_access_token != null) {
             this.access_token = json_access_token.getAsString();
             this.authenticated = true;
-            System.out.println("authenticated!");
         }
+    }
+
+    /**
+     * Make an authenticated HTTP POST request to the tracker's API.
+     *
+     * @param body      the JSON-formatted body of the request
+     * @param variables an array of [key, value] pairs
+     * @return a JsonObject of the response
+     * @throws IOException               an IOException occurred when making the request
+     * @throws NotAuthenticatedException the user is not authenticated
+     */
+    private JsonObject authenticated_post(String body, String[]... variables) throws IOException,
+            NotAuthenticatedException {
+        if (!this.authenticated) {
+            throw new NotAuthenticatedException();
+        }
+
+        JsonObject json_root = new JsonObject();
+        JsonObject json_variables = new JsonObject();
+        for (String[] pair : variables) {
+            json_variables.add(pair[0], Serializer.gson.toJsonTree(pair[1]));
+        }
+        json_root.add("query", Serializer.gson.toJsonTree(body));
+        json_root.add("variables", json_variables);
+
+        String authorization_str = "Bearer " + this.access_token;
+        Response response = POST(PROTOCOL + "://graphql." + DOMAIN, json_root.toString(),
+                authorization_str);
+        JsonObject json_response = new JsonParser().parse(response.body().string())
+                .getAsJsonObject();
+        return json_response.get("data").getAsJsonObject();
+    }
+
+    private long getAuthenticatedUserId() throws IOException, NotAuthenticatedException {
+        if (!this.authenticated) {
+            throw new NotAuthenticatedException();
+        }
+
+        final String body = "" +
+                "query User {\n" +
+                "  Viewer {" +
+                "    id\n" +
+                "    mediaListOptions {\n" +
+                "      scoreFormat\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+
+        JsonObject response = authenticated_post(body);
+        return response.get("Viewer").getAsJsonObject().get("id").getAsLong();
     }
 }

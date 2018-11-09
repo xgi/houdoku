@@ -59,4 +59,9 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     public boolean isAuthenticated() {
         return authenticated;
     }
+
+    @Override
+    public void updateChaptersRead(String id, int num) throws NotImplementedException {
+        throw new NotImplementedException();
+    }
 }

@@ -51,14 +51,14 @@ public interface TrackerOAuth extends Tracker {
      *
      * @param code a verification code given by the user after authorization
      * @throws NotImplementedException the operation has not yet been
-     *                                 implemented for this info source
+     *                                 implemented for this tracker
      */
     void generate_token(String code) throws NotImplementedException, IOException;
 
     /**
-     * Represents this InfoSource as a string.
+     * Represents this Tracker as a string.
      *
-     * @return the user-friendly representation of this InfoSource
+     * @return the user-friendly representation of this Tracker
      */
     String toString();
 }

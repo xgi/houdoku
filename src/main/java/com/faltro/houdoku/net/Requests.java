@@ -50,6 +50,27 @@ public class Requests {
     }
 
     /**
+     * Executes an HTTP POST request on the given URL with authorization.
+     *
+     * @param url           the URL to request
+     * @param body          the body content of the POST request
+     * @param authorization the content of the Authorization HTTP header.
+     * @return the Response of the request
+     * @throws IOException an IOException occurred when making the request
+     */
+    public static Response POST(String url, RequestBody body, String authorization) throws
+            IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("User-Agent", USER_AGENT)
+                .addHeader("Authorization", authorization)
+                .build();
+        return client.newCall(request).execute();
+    }
+
+    /**
      * Executes an HTTP POST request on the given URL with a JSON body.
      *
      * @param url  the URL to request
@@ -62,6 +83,23 @@ public class Requests {
                 MediaType.parse("application/json; charset=utf-8"),
                 json);
         return POST(url, body);
+    }
+
+    /**
+     * Executes an HTTP POST request on the given URL with a JSON body with
+     * authorization.
+     *
+     * @param url           the URL to request
+     * @param json          the json-formatted body of the request
+     * @param authorization the content of the Authorization HTTP header.
+     * @return the Response of the request
+     * @throws IOException an IOException occurred when making the request
+     */
+    public static Response POST(String url, String json, String authorization) throws IOException {
+        RequestBody body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"),
+                json);
+        return POST(url, body, authorization);
     }
 
     /**

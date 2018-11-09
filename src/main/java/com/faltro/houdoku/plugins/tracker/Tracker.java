@@ -1,5 +1,7 @@
 package com.faltro.houdoku.plugins.tracker;
 
+import com.faltro.houdoku.exception.NotImplementedException;
+
 /**
  * A tracker is a website for users to individually track their manga/comic
  * lists. These websites generally hold a database of series' with extensive
@@ -25,7 +27,7 @@ public interface Tracker {
     /**
      * The user-friendly name of the Tracker.
      */
-    String NAME = "UnimplementedInfoSource";
+    String NAME = "UnimplementedTracker";
     /**
      * The domain of the Tracker.
      */
@@ -41,9 +43,19 @@ public interface Tracker {
     boolean isAuthenticated();
 
     /**
-     * Represents this InfoSource as a string.
+     * Update the number of chapters read for a series.
      *
-     * @return the user-friendly representation of this InfoSource
+     * @param id  the series id
+     * @param num the number of chapters read
+     * @throws NotImplementedException the operation has not yet been
+     *                                 implemented for this tracker
+     */
+    void updateChaptersRead(String id, int num) throws NotImplementedException;
+
+    /**
+     * Represents this Tracker as a string.
+     *
+     * @return the user-friendly representation of this Tracker
      */
     String toString();
 }
