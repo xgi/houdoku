@@ -5,6 +5,8 @@
     -color-background-alt: #111315;
     -color-accent: darkgray;
     -color-accent-alt: dimgray;
+    -color-success: #5c946e;
+    -color-fail: #f64740;
 }
 
 #searchBackButton {

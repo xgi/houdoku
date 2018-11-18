@@ -37,7 +37,7 @@ public class AniList extends GenericTrackerOAuth {
     public static final String RESPONSE_TYPE = "code";
 
     @Override
-    public void generate_token(String code) throws IOException {
+    public void generateToken(String code) throws IOException {
         FormBody.Builder body = new FormBody.Builder();
         body.add("grant_type", "authorization_code");
         body.add("client_id", CLIENT_ID);
@@ -64,7 +64,7 @@ public class AniList extends GenericTrackerOAuth {
      * @throws IOException               an IOException occurred when making the request
      * @throws NotAuthenticatedException the user is not authenticated
      */
-    private JsonObject authenticated_post(String body, String[]... variables) throws IOException,
+    private JsonObject authenticatedPost(String body, String[]... variables) throws IOException,
             NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
@@ -86,7 +86,7 @@ public class AniList extends GenericTrackerOAuth {
         return json_response.get("data").getAsJsonObject();
     }
 
-    private long getAuthenticatedUserId() throws IOException, NotAuthenticatedException {
+    private JsonObject getAuthenticatedUser() throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
         }
@@ -95,13 +95,18 @@ public class AniList extends GenericTrackerOAuth {
                 "query User {\n" +
                 "  Viewer {" +
                 "    id\n" +
+                "    name\n" +
                 "    mediaListOptions {\n" +
                 "      scoreFormat\n" +
                 "    }\n" +
                 "  }\n" +
                 "}";
 
-        JsonObject response = authenticated_post(body);
-        return response.get("Viewer").getAsJsonObject().get("id").getAsLong();
+        JsonObject response = authenticatedPost(body);
+        return response.get("Viewer").getAsJsonObject();
+    }
+
+    public String authenticatedUserName() throws IOException, NotAuthenticatedException {
+        return getAuthenticatedUser().get("name").getAsString();
     }
 }

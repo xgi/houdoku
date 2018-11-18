@@ -1,5 +1,6 @@
 package com.faltro.houdoku.plugins.tracker;
 
+import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     String access_token = null;
 
     @Override
-    public String full_auth_url() {
+    public String fullAuthUrl() {
         try {
             String protocol = this.getClass().getField("PROTOCOL").get(null).toString();
             String domain = this.getClass().getField("DOMAIN").get(null).toString();
@@ -51,7 +52,12 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public void generate_token(String code) throws NotImplementedException, IOException {
+    public void generateToken(String code) throws NotImplementedException, IOException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public String authenticatedUserName() throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }
 

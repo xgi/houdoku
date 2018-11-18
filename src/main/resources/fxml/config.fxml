@@ -202,6 +202,11 @@
                                            styleClass="bareTextAlt"/>
                                     <TextField fx:id="tokenFieldAniList" styleClass="bareTextAlt"/>
                                     <Button text="%authenticate" onAction="#anilistGenerateToken"/>
+                                    <HBox alignment="CENTER">
+                                        <Label fx:id="statusAniList" visible="false"
+                                               managed="false"/>
+                                    </HBox>
+
                                 </VBox>
                             </VBox>
                         </VBox>

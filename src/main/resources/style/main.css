@@ -40,6 +40,16 @@ Generic text styles
     -fx-text-fill: -color-foreground-alt;
 }
 
+.successText {
+    -fx-fill: -color-success;
+    -fx-text-fill: -color-success;
+}
+
+.failText {
+    -fx-fill: -color-fail;
+    -fx-text-fill: -color-fail;
+}
+
 .h1 {
     -fx-font-size: 2.1em;
     -fx-font-weight: bold;

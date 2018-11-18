@@ -4,6 +4,7 @@ import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.plugins.tracker.AniList;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.SceneManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -102,6 +103,8 @@ public class ConfigController extends Controller {
     private TextField authUrlFieldAniList;
     @FXML
     private TextField tokenFieldAniList;
+    @FXML
+    private Label statusAniList;
 
     public ConfigController(SceneManager sceneManager) {
         super(sceneManager);
@@ -177,7 +180,7 @@ public class ConfigController extends Controller {
         // manually fill auth url fields for trackers
         TrackerOAuth anilist =
                 (TrackerOAuth) sceneManager.getPluginManager().getTracker(AniList.ID);
-        authUrlFieldAniList.setText(anilist.full_auth_url());
+        authUrlFieldAniList.setText(anilist.fullAuthUrl());
 
     }
 
@@ -263,6 +266,31 @@ public class ConfigController extends Controller {
         // reload the active page
         Parent root = sceneManager.getStage().getScene().getRoot();
         sceneManager.getController(root).reload();
+    }
+
+    /**
+     * Update the displayed authentication status of the given tracker.
+     *
+     * @param id      the id of the tracker to update
+     * @param success whether the previous operation was successful
+     * @param text    the status message to display
+     */
+    public void updateTrackerStatus(int id, boolean success, String text) {
+        // update when FX app thread is available
+        Platform.runLater(() -> {
+            Label label = null;
+            if (id == AniList.ID) {
+                label = statusAniList;
+            }
+
+            if (label != null) {
+                label.setText(text);
+                label.setVisible(true);
+                label.setManaged(true);
+                label.getStyleClass().removeAll();
+                label.getStyleClass().add(success ? "successText" : "failText");
+            }
+        });
     }
 
     /**

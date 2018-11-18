@@ -1,6 +1,7 @@
 package com.faltro.houdoku.util.runnable;
 
 import com.faltro.houdoku.controller.ConfigController;
+import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.ContentLoader;
@@ -23,8 +24,8 @@ public class GenerateOAuthTokenRunnable extends LoaderRunnable {
      *                         is generated
      */
     public GenerateOAuthTokenRunnable(String name, ContentLoader contentLoader,
-                                      TrackerOAuth tracker,
-                                      String code, ConfigController configController) {
+                                      TrackerOAuth tracker, String code,
+                                      ConfigController configController) {
         super(name, contentLoader);
         this.tracker = tracker;
         this.code = code;
@@ -34,7 +35,18 @@ public class GenerateOAuthTokenRunnable extends LoaderRunnable {
     @Override
     public void run() {
         try {
-            tracker.generate_token(code);
+            tracker.generateToken(code);
+
+            // update the displayed authentication status
+            try {
+                String text = String.format("You are authenticated as: %s",
+                        tracker.authenticatedUserName()
+                );
+                configController.updateTrackerStatus(
+                        tracker.getClass().getField("ID").getInt(null), true, text);
+            } catch (NoSuchFieldException | IllegalAccessException | NotAuthenticatedException e) {
+                e.printStackTrace();
+            }
         } catch (IOException | NotImplementedException e) {
             e.printStackTrace();
         }
