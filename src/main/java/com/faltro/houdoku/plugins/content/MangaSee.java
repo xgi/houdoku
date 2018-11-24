@@ -39,7 +39,7 @@ public class MangaSee extends GenericContentSource {
         FormBody.Builder body = new FormBody.Builder();
         body.add("keyword", query);
         Document document = parse(
-                POST(PROTOCOL + "://" + DOMAIN + "/search/request.php", body.build())
+                POST(client, PROTOCOL + "://" + DOMAIN + "/search/request.php", body.build())
         );
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
@@ -98,13 +98,13 @@ public class MangaSee extends GenericContentSource {
 
     @Override
     public Series series(String source, boolean quick) throws IOException {
-        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(client, PROTOCOL + "://" + DOMAIN + source));
 
 
         Element container = seriesDocument.selectFirst("div[class*=mainWell]");
         String title = container.selectFirst("h1[class=SeriesName]").text();
         String imageSource = container.selectFirst("img").attr("src");
-        Image cover = imageFromURL(imageSource, ParseHelpers.COVER_MAX_WIDTH);
+        Image cover = imageFromURL(client, imageSource, ParseHelpers.COVER_MAX_WIDTH);
 
         Element details = container.selectFirst("span[class*=details]");
 
@@ -139,7 +139,7 @@ public class MangaSee extends GenericContentSource {
     public Image image(Chapter chapter, int page) throws IOException {
         String chapterFirstUrl = PROTOCOL + "://" + DOMAIN + chapter.getSource();
         String baseUrl = chapterFirstUrl.substring(0, chapterFirstUrl.lastIndexOf("-"));
-        Document document = parse(GET(baseUrl + "-" + Integer.toString(page) + ".html"));
+        Document document = parse(GET(client, baseUrl + "-" + Integer.toString(page) + ".html"));
 
         // we may not have determined the number of pages yet, so do that here
         if (chapter.images.length == 1) {
@@ -149,6 +149,6 @@ public class MangaSee extends GenericContentSource {
         }
 
         String url = document.selectFirst("img[class*=CurImage]").attr("src");
-        return imageFromURL(url);
+        return imageFromURL(client, url);
     }
 }

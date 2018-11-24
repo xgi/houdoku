@@ -46,7 +46,7 @@ public class AniList extends GenericInfoSource {
         json_root.add("query", Serializer.gson.toJsonTree(banner_request_body));
         json_root.add("variables", json_variables);
 
-        Response response = POST(PROTOCOL + "://graphql." + DOMAIN, json_root.toString());
+        Response response = POST(client, PROTOCOL + "://graphql." + DOMAIN, json_root.toString());
         JsonObject json_response = new JsonParser().parse(response.body().string())
                 .getAsJsonObject();
         JsonObject json_data = json_response.get("data").getAsJsonObject();
@@ -59,7 +59,7 @@ public class AniList extends GenericInfoSource {
             // bannerImage is not guaranteed to be non-null
             if (json_media.get("bannerImage").getClass() != JsonNull.class) {
                 String banner_source = json_media.get("bannerImage").getAsString();
-                result = imageFromURL(banner_source);
+                result = imageFromURL(client, banner_source);
             }
         }
 

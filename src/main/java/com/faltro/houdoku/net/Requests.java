@@ -22,8 +22,7 @@ public class Requests {
      * @return the Response of the request
      * @throws IOException an IOException occurred when making the request
      */
-    public static Response GET(String url) throws IOException {
-        OkHttpClient client = new OkHttpClient();
+    public static Response GET(OkHttpClient client, String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("User-Agent", USER_AGENT)
@@ -39,8 +38,8 @@ public class Requests {
      * @return the Response of the request
      * @throws IOException an IOException occurred when making the request
      */
-    public static Response POST(String url, RequestBody body) throws IOException {
-        OkHttpClient client = new OkHttpClient();
+    public static Response POST(OkHttpClient client, String url, RequestBody body) throws
+            IOException {
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
@@ -58,9 +57,9 @@ public class Requests {
      * @return the Response of the request
      * @throws IOException an IOException occurred when making the request
      */
-    public static Response POST(String url, RequestBody body, String authorization) throws
+    public static Response POST(OkHttpClient client, String url, RequestBody body,
+                                String authorization) throws
             IOException {
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
@@ -78,11 +77,12 @@ public class Requests {
      * @return the Response of the request
      * @throws IOException an IOException occurred when making the request
      */
-    public static Response POST(String url, String json) throws IOException {
+    public static Response POST(OkHttpClient client, String url, String json)
+            throws IOException {
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
                 json);
-        return POST(url, body);
+        return POST(client, url, body);
     }
 
     /**
@@ -95,11 +95,12 @@ public class Requests {
      * @return the Response of the request
      * @throws IOException an IOException occurred when making the request
      */
-    public static Response POST(String url, String json, String authorization) throws IOException {
+    public static Response POST(OkHttpClient client, String url, String json, String authorization)
+            throws IOException {
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"),
                 json);
-        return POST(url, body, authorization);
+        return POST(client, url, body, authorization);
     }
 
     /**
@@ -120,8 +121,8 @@ public class Requests {
      * @return an Image retrieved from the given url
      * @throws IOException an IOException occurred when loading the image
      */
-    public static Image imageFromURL(String url) throws IOException {
-        Response response = GET(url);
+    public static Image imageFromURL(OkHttpClient client, String url) throws IOException {
+        Response response = GET(client, url);
         return response.body() == null ? null : new Image(response.body().byteStream());
     }
 
@@ -135,8 +136,9 @@ public class Requests {
      * @return an Image retrieved from the given url
      * @throws IOException an IOException occurred when loading the image
      */
-    public static Image imageFromURL(String url, int width) throws IOException {
-        Response response = GET(url);
+    public static Image imageFromURL(OkHttpClient client, String url, int width)
+            throws IOException {
+        Response response = GET(client, url);
         return response.body() == null ? null :
                 new Image(response.body().byteStream(), width, 0, true, false);
     }

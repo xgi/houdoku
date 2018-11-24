@@ -3,6 +3,7 @@ package com.faltro.houdoku.plugins.info;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Series;
 import javafx.scene.image.Image;
+import okhttp3.OkHttpClient;
 
 import java.io.IOException;
 
@@ -19,10 +20,16 @@ public class GenericInfoSource implements InfoSource {
     public static final String NAME = "GenericInfoSource";
     public static final String DOMAIN = "example.com";
     public static final String PROTOCOL = "https";
+    final OkHttpClient client = new OkHttpClient();
 
     @Override
     public Image banner(Series series) throws IOException, NotImplementedException {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public OkHttpClient getClient() {
+        return client;
     }
 
     @Override

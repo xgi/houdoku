@@ -45,7 +45,7 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + "/?page=search&title=" + query));
+        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + "/?page=search&title=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements links = document.select("a[class*=manga_title]");
@@ -82,7 +82,7 @@ public class MangaDex extends GenericContentSource {
     @Override
     public ArrayList<Chapter> chapters(Series series) throws IOException {
         String id_str = series.getSource().split("/")[2];
-        Response response = GET(PROTOCOL + "://" + DOMAIN + "/api/manga/" + id_str);
+        Response response = GET(client, PROTOCOL + "://" + DOMAIN + "/api/manga/" + id_str);
         JsonObject json_data = new JsonParser().parse(response.body().string())
                 .getAsJsonObject();
         JsonObject json_chapters = json_data.get("chapter").getAsJsonObject();
@@ -117,7 +117,7 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public Series series(String source, boolean quick) throws IOException {
-        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(client, PROTOCOL + "://" + DOMAIN + source));
 
         Element titlePanel = seriesDocument.selectFirst("h6");
         String title = titlePanel.ownText();
@@ -125,7 +125,7 @@ public class MangaDex extends GenericContentSource {
 
         Element contentContainer = seriesDocument.selectFirst("div[class=card-body p-0]");
         String imageSource = contentContainer.selectFirst("img[class=rounded]").attr("src");
-        Image cover = imageFromURL(PROTOCOL + "://" + DOMAIN + imageSource,
+        Image cover = imageFromURL(client, PROTOCOL + "://" + DOMAIN + imageSource,
                 ParseHelpers.COVER_MAX_WIDTH);
 
         Element metadataContainer = contentContainer.selectFirst(
@@ -185,9 +185,9 @@ public class MangaDex extends GenericContentSource {
         Image result = null;
 
         if (chapter.imageUrlTemplate != null) {
-            result = imageFromURL(String.format(chapter.imageUrlTemplate, page));
+            result = imageFromURL(client, String.format(chapter.imageUrlTemplate, page));
         } else {
-            Response response = GET(PROTOCOL + "://" + DOMAIN + "/api" + chapter.getSource());
+            Response response = GET(client, PROTOCOL + "://" + DOMAIN + "/api" + chapter.getSource());
             JsonObject json_data = new JsonParser().parse(response.body().string())
                     .getAsJsonObject();
 

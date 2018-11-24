@@ -5,6 +5,7 @@ import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import javafx.scene.image.Image;
+import okhttp3.OkHttpClient;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ public class GenericContentSource implements ContentSource {
     public static final String NAME = "GenericContentSource";
     public static final String DOMAIN = "example.com";
     public static final String PROTOCOL = "https";
+    final OkHttpClient client = new OkHttpClient();
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException,
@@ -58,6 +60,11 @@ public class GenericContentSource implements ContentSource {
     public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException,
             NotImplementedException {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public OkHttpClient getClient() {
+        return client;
     }
 
     @Override

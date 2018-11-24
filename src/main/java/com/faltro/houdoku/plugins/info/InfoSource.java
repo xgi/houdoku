@@ -5,6 +5,7 @@ import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.PluginManager;
 import javafx.scene.image.Image;
+import okhttp3.OkHttpClient;
 
 import java.io.IOException;
 
@@ -54,6 +55,14 @@ public interface InfoSource {
      *                                 implemented for this info source
      */
     Image banner(Series series) throws IOException, NotImplementedException;
+
+    /**
+     * Retrieve the client for making HTTP requests, which may be built with
+     * applicable interceptors.
+     *
+     * @return an OkHttpClient for making requests to this InfoSource
+     */
+    OkHttpClient getClient();
 
     /**
      * Represents this InfoSource as a string.

@@ -38,7 +38,7 @@ public class MangaFree extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + "/search/" + query));
+        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + "/search/" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements results = document.select("div[class=list-truyen-item-wrap]");
@@ -93,12 +93,12 @@ public class MangaFree extends GenericContentSource {
 
     @Override
     public Series series(String source, boolean quick) throws IOException {
-        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(client, PROTOCOL + "://" + DOMAIN + source));
 
         Element container = seriesDocument.selectFirst("div[class=manga-info-top]");
         String title = container.selectFirst("h1").text();
         String imageSource = container.selectFirst("img").attr("src");
-        Image cover = imageFromURL(imageSource, ParseHelpers.COVER_MAX_WIDTH);
+        Image cover = imageFromURL(client, imageSource, ParseHelpers.COVER_MAX_WIDTH);
 
         String[] altNames =
                 container.selectFirst("span[class*=alternative]").text().substring(14).split(";");
@@ -130,9 +130,9 @@ public class MangaFree extends GenericContentSource {
         Image result = null;
 
         if (chapter.imageUrlTemplate != null) {
-            result = imageFromURL(String.format(chapter.imageUrlTemplate, page));
+            result = imageFromURL(client, String.format(chapter.imageUrlTemplate, page));
         } else {
-            Document document = parse(GET(PROTOCOL + "://" + DOMAIN + chapter.getSource()));
+            Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + chapter.getSource()));
             Elements pages = document.selectFirst("div[class=vung-doc]").select("img");
             String first_src = pages.get(0).attr("src");
 

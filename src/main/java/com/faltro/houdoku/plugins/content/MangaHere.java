@@ -38,7 +38,7 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
+        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements rows = document.select("div[class=result_search]").select("dl");
@@ -94,14 +94,14 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public Series series(String source, boolean quick) throws IOException {
-        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(client, PROTOCOL + "://" + DOMAIN + source));
 
         String titleExtended = seriesDocument.selectFirst("h2").text();
         String title = titleExtended.substring(0, titleExtended.length() - 6);
 
         Element detailContainer = seriesDocument.selectFirst("div[class=manga_detail]");
         String imageSource = detailContainer.selectFirst("img").attr("src");
-        Image cover = imageFromURL(imageSource, ParseHelpers.COVER_MAX_WIDTH);
+        Image cover = imageFromURL(client, imageSource, ParseHelpers.COVER_MAX_WIDTH);
         double rating = ParseHelpers.parseDouble(detailContainer.selectFirst("span#current_rating")
                 .text());
         String ratingsExtended = detailContainer.selectFirst("span[class=ml5]").text();
@@ -133,18 +133,18 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public Image cover(String source) throws IOException {
-        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(client, PROTOCOL + "://" + DOMAIN + source));
         Image result = null;
         Element coverElement = seriesDocument.selectFirst("img[class=img]");
         if (coverElement != null) {
-            result = imageFromURL(coverElement.attr("src"), ParseHelpers.COVER_MAX_WIDTH);
+            result = imageFromURL(client, coverElement.attr("src"), ParseHelpers.COVER_MAX_WIDTH);
         }
         return result;
     }
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException {
-        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + chapter.getSource() +
+        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + chapter.getSource() +
                 (page == 1 ? "" : Integer.toString(page) + ".html")));
 
         Elements errors = document.select("div[class=mangaread_error]");
@@ -164,6 +164,6 @@ public class MangaHere extends GenericContentSource {
         }
 
         String url = document.selectFirst("img#image").attr("src");
-        return imageFromURL(url);
+        return imageFromURL(client, url);
     }
 }

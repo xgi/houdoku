@@ -1,6 +1,7 @@
 package com.faltro.houdoku.plugins.tracker;
 
 import com.faltro.houdoku.exception.NotImplementedException;
+import okhttp3.OkHttpClient;
 
 /**
  * A tracker is a website for users to individually track their manga/comic
@@ -51,6 +52,14 @@ public interface Tracker {
      *                                 implemented for this tracker
      */
     void updateChaptersRead(String id, int num) throws NotImplementedException;
+
+    /**
+     * Retrieve the client for making HTTP requests, which may be built with
+     * applicable interceptors.
+     *
+     * @return an OkHttpClient for making requests to this Tracker
+     */
+    OkHttpClient getClient();
 
     /**
      * Represents this Tracker as a string.

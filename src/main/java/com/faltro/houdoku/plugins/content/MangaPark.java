@@ -37,7 +37,7 @@ public class MangaPark extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + "/search?q=" + query));
+        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + "/search?q=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements results = document.selectFirst("div[class=manga-list]").select("div[class*=item]");
@@ -111,12 +111,13 @@ public class MangaPark extends GenericContentSource {
 
     @Override
     public Series series(String source, boolean quick) throws IOException {
-        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(client, PROTOCOL + "://" + DOMAIN + source));
 
         Element container = seriesDocument.selectFirst("table[class=outer]");
 
         String image_source = container.selectFirst("img").attr("src");
-        Image cover = imageFromURL(PROTOCOL + ":" + image_source, ParseHelpers.COVER_MAX_WIDTH);
+        Image cover = imageFromURL(client, PROTOCOL + ":" + image_source,
+                ParseHelpers.COVER_MAX_WIDTH);
 
         String title = container.selectFirst("img").attr("title");
         String description = seriesDocument.selectFirst("p[class=summary]").text();
@@ -157,7 +158,7 @@ public class MangaPark extends GenericContentSource {
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException {
-        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + chapter.getSource() + "/" +
+        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + chapter.getSource() + "/" +
                 Integer.toString(page)));
 
         // we may not have determined the number of pages yet, so do that here
@@ -168,6 +169,7 @@ public class MangaPark extends GenericContentSource {
         }
 
         String img_src = document.selectFirst("img#img-1").attr("src");
-        return imageFromURL(img_src.startsWith(PROTOCOL) ? img_src : PROTOCOL + ":" + img_src);
+        return imageFromURL(client,
+                img_src.startsWith(PROTOCOL) ? img_src : PROTOCOL + ":" + img_src);
     }
 }

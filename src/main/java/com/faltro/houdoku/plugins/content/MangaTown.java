@@ -37,7 +37,7 @@ public class MangaTown extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
+        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements results = document.selectFirst("ul[class=manga_pic_list]").select("li");
@@ -117,7 +117,7 @@ public class MangaTown extends GenericContentSource {
     @Override
     public Series series(String source, boolean quick) throws IOException,
             LicensedContentException {
-        Document seriesDocument = parse(GET(PROTOCOL + "://" + DOMAIN + source));
+        Document seriesDocument = parse(GET(client, PROTOCOL + "://" + DOMAIN + source));
 
         if (seriesDocument.selectFirst("div[class=chapter_content]").text().contains(
                 " has been licensed, it is not available in ")) {
@@ -128,7 +128,7 @@ public class MangaTown extends GenericContentSource {
         String title = seriesDocument.selectFirst("h1[class=title-top]").text();
         Element container = seriesDocument.selectFirst("div[class=detail_content]");
         String imageSource = container.selectFirst("img").attr("src");
-        Image cover = imageFromURL(imageSource, ParseHelpers.COVER_MAX_WIDTH);
+        Image cover = imageFromURL(client, imageSource, ParseHelpers.COVER_MAX_WIDTH);
 
         Elements rows = container.selectFirst("ul").select("li");
         double rating = ParseHelpers.parseDouble(rows.get(0).selectFirst("span").text());
@@ -159,7 +159,7 @@ public class MangaTown extends GenericContentSource {
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException {
-        Document document = parse(GET(PROTOCOL + "://" + DOMAIN + chapter.getSource() +
+        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + chapter.getSource() +
                 (page == 1 ? "" : Integer.toString(page) + ".html")));
 
         // we may not have determined the number of pages yet, so do that here
@@ -170,6 +170,6 @@ public class MangaTown extends GenericContentSource {
         }
 
         String url = document.selectFirst("img#image").attr("src");
-        return imageFromURL(url);
+        return imageFromURL(client, url);
     }
 }

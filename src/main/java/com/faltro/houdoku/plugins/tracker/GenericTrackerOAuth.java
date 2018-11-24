@@ -2,6 +2,7 @@ package com.faltro.houdoku.plugins.tracker;
 
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
+import okhttp3.OkHttpClient;
 
 import java.io.IOException;
 
@@ -24,6 +25,7 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     public static final String CLIENT_SECRET = "default_client_secret";
     public static final String REDIRECT_URI = "default_redirect_uri";
     public static final String RESPONSE_TYPE = "default_response_type";
+    final OkHttpClient client = new OkHttpClient();
 
     boolean authenticated = false;
     String access_token = null;
@@ -69,5 +71,10 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     @Override
     public void updateChaptersRead(String id, int num) throws NotImplementedException {
         throw new NotImplementedException();
+    }
+
+    @Override
+    public OkHttpClient getClient() {
+        return client;
     }
 }

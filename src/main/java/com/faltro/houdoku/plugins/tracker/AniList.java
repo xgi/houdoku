@@ -44,7 +44,7 @@ public class AniList extends GenericTrackerOAuth {
         body.add("client_secret", CLIENT_SECRET);
         body.add("redirect_uri", REDIRECT_URI);
         body.add("code", code);
-        Response response = POST(PROTOCOL + "://" + DOMAIN + TOKEN_URL, body.build());
+        Response response = POST(client, PROTOCOL + "://" + DOMAIN + TOKEN_URL, body.build());
 
         JsonObject json_data = new JsonParser().parse(response.body().string())
                 .getAsJsonObject();
@@ -79,7 +79,7 @@ public class AniList extends GenericTrackerOAuth {
         json_root.add("variables", json_variables);
 
         String authorization_str = "Bearer " + this.access_token;
-        Response response = POST(PROTOCOL + "://graphql." + DOMAIN, json_root.toString(),
+        Response response = POST(client, PROTOCOL + "://graphql." + DOMAIN, json_root.toString(),
                 authorization_str);
         JsonObject json_response = new JsonParser().parse(response.body().string())
                 .getAsJsonObject();

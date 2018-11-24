@@ -5,6 +5,7 @@ import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import javafx.scene.image.Image;
+import okhttp3.OkHttpClient;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
@@ -170,6 +171,14 @@ public interface ContentSource {
      */
     Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException,
             NotImplementedException;
+
+    /**
+     * Retrieve the client for making HTTP requests, which may be built with
+     * applicable interceptors.
+     *
+     * @return an OkHttpClient for making requests to this ContentSource
+     */
+    OkHttpClient getClient();
 
     /**
      * Represents this ContentSource as a string.
