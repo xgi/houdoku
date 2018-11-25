@@ -2,10 +2,13 @@ package com.faltro.houdoku.plugins.tracker;
 
 import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
+import com.faltro.houdoku.net.AniListInterceptor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import okhttp3.FormBody;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 import java.io.IOException;
@@ -35,6 +38,9 @@ public class AniList extends GenericTrackerOAuth {
     public static final String CLIENT_SECRET = "CiUjj1Q0YkcIZZkEcWLCgzgNJTGolgOtVMnxGOjd";
     public static final String REDIRECT_URI = "https://anilist.co/api/v2/oauth/pin";
     public static final String RESPONSE_TYPE = "code";
+    private final AniListInterceptor interceptor = new AniListInterceptor();
+    private final OkHttpClient client =
+            new OkHttpClient().newBuilder().addInterceptor(interceptor).build();
 
     @Override
     public void generateToken(String code) throws IOException {
@@ -50,13 +56,13 @@ public class AniList extends GenericTrackerOAuth {
                 .getAsJsonObject();
         JsonElement json_access_token = json_data.get("access_token");
         if (json_access_token != null) {
-            this.access_token = json_access_token.getAsString();
+            this.setAccessToken(json_access_token.getAsString());
             this.authenticated = true;
         }
     }
 
     /**
-     * Make an authenticated HTTP POST request to the tracker's API.
+     * Make an HTTP POST request to the tracker's API.
      *
      * @param body      the JSON-formatted body of the request
      * @param variables an array of [key, value] pairs
@@ -64,7 +70,7 @@ public class AniList extends GenericTrackerOAuth {
      * @throws IOException               an IOException occurred when making the request
      * @throws NotAuthenticatedException the user is not authenticated
      */
-    private JsonObject authenticatedPost(String body, String[]... variables) throws IOException,
+    private JsonObject post(String body, String[]... variables) throws IOException,
             NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
@@ -78,9 +84,7 @@ public class AniList extends GenericTrackerOAuth {
         json_root.add("query", Serializer.gson.toJsonTree(body));
         json_root.add("variables", json_variables);
 
-        String authorization_str = "Bearer " + this.access_token;
-        Response response = POST(client, PROTOCOL + "://graphql." + DOMAIN, json_root.toString(),
-                authorization_str);
+        Response response = POST(client, PROTOCOL + "://graphql." + DOMAIN, json_root.toString());
         JsonObject json_response = new JsonParser().parse(response.body().string())
                 .getAsJsonObject();
         return json_response.get("data").getAsJsonObject();
@@ -102,11 +106,16 @@ public class AniList extends GenericTrackerOAuth {
                 "  }\n" +
                 "}";
 
-        JsonObject response = authenticatedPost(body);
+        JsonObject response = post(body);
         return response.get("Viewer").getAsJsonObject();
     }
 
     public String authenticatedUserName() throws IOException, NotAuthenticatedException {
         return getAuthenticatedUser().get("name").getAsString();
+    }
+
+    private void setAccessToken(String token) {
+        this.access_token = token;
+        interceptor.setToken(token);
     }
 }
