@@ -69,6 +69,16 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
+    public void verifyAuthenticated() throws NotImplementedException, IOException {
+        try {
+            authenticatedUserName();
+        } catch (NotAuthenticatedException e) {
+            // authenticatedUserName should set this.authenticated to false
+            // before throwing this exception, so we don't need to do anything
+        }
+    }
+
+    @Override
     public void updateChaptersRead(String id, int num) throws NotImplementedException {
         throw new NotImplementedException();
     }

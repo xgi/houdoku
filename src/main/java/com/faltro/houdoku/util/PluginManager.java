@@ -106,6 +106,10 @@ public class PluginManager {
         return contentSources;
     }
 
+    public ArrayList<Tracker> getTrackers() {
+        return trackers;
+    }
+
     public InfoSource getInfoSource() {
         return infoSource;
     }

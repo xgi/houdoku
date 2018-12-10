@@ -58,20 +58,6 @@ public interface TrackerOAuth extends Tracker {
     void generateToken(String code) throws NotImplementedException, IOException;
 
     /**
-     * Retrieve the name of the authenticated user.
-     * <p>
-     * Requires {@link #isAuthenticated()}.
-     *
-     * @return the name of the authenticated user
-     * @throws NotImplementedException   the operation has not yet been
-     *                                   implemented for this tracker
-     * @throws NotAuthenticatedException the user is not authenticated
-     * @throws IOException               an IOException occurred when retrieving
-     */
-    String authenticatedUserName() throws NotImplementedException, NotAuthenticatedException,
-            IOException;
-
-    /**
      * Represents this Tracker as a string.
      *
      * @return the user-friendly representation of this Tracker

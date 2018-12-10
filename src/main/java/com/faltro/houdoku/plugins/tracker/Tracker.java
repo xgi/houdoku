@@ -1,7 +1,10 @@
 package com.faltro.houdoku.plugins.tracker;
 
+import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import okhttp3.OkHttpClient;
+
+import java.io.IOException;
 
 /**
  * A tracker is a website for users to individually track their manga/comic
@@ -42,6 +45,35 @@ public interface Tracker {
      * @return whether or not the user is authenticated
      */
     boolean isAuthenticated();
+
+    /**
+     * Verify whether the client is actually authenticated with the server,
+     * regardless of a cached `authenticated` property.
+     * <p>
+     * The {@link #isAuthenticated()} property is updated, if necessary.
+     * <p>
+     * This function is particularly useful to check whether any access token
+     * is still valid after the client was restarted.
+     *
+     * @throws NotImplementedException the operation has not yet been
+     *                                 implemented for this tracker
+     * @throws IOException             an IOException occurred when checking
+     */
+    void verifyAuthenticated() throws NotImplementedException, IOException;
+
+    /**
+     * Retrieve the name of the authenticated user.
+     * <p>
+     * Requires {@link #isAuthenticated()}.
+     *
+     * @return the name of the authenticated user
+     * @throws NotImplementedException   the operation has not yet been
+     *                                   implemented for this tracker
+     * @throws NotAuthenticatedException the user is not authenticated
+     * @throws IOException               an IOException occurred when retrieving
+     */
+    String authenticatedUserName() throws NotImplementedException, NotAuthenticatedException,
+            IOException;
 
     /**
      * Update the number of chapters read for a series.

@@ -1,7 +1,10 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.exception.NotAuthenticatedException;
+import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.plugins.tracker.AniList;
+import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Platform;
@@ -21,6 +24,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -254,6 +258,28 @@ public class ConfigController extends Controller {
                 (String) config.getValue(Config.Field.READER_KEY_LAST_PAGE));
         readerKeyToSeries.setText(
                 (String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
+
+        // update tracker authentication statuses
+        for (Tracker tracker : sceneManager.getPluginManager().getTrackers()) {
+            try {
+                tracker.verifyAuthenticated();
+            } catch (NotImplementedException | IOException e) {
+                e.printStackTrace();
+            }
+
+            if (tracker.isAuthenticated()) {
+                try {
+                    String text = String.format("You are authenticated as: %s",
+                            tracker.authenticatedUserName()
+                    );
+                    updateTrackerStatus(tracker.getClass().getField("ID").getInt(null), true,
+                            text);
+                } catch (NotImplementedException | NotAuthenticatedException |
+                        IOException | NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**

@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import okhttp3.FormBody;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
@@ -107,7 +106,14 @@ public class AniList extends GenericTrackerOAuth {
                 "}";
 
         JsonObject response = post(body);
-        return response.get("Viewer").getAsJsonObject();
+        JsonElement viewer = response.get("Viewer");
+
+        if (viewer.isJsonNull()) {
+            this.authenticated = false;
+            throw new NotAuthenticatedException();
+        }
+
+        return viewer.getAsJsonObject();
     }
 
     public String authenticatedUserName() throws IOException, NotAuthenticatedException {
