@@ -1,6 +1,5 @@
 package com.faltro.houdoku.plugins.tracker;
 
-import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 
 import java.io.IOException;
@@ -56,6 +55,15 @@ public interface TrackerOAuth extends Tracker {
      * @throws IOException             an IOException occurred when generating
      */
     void generateToken(String code) throws NotImplementedException, IOException;
+
+    /**
+     * Get the user's access token.
+     * <p>
+     * Returns null if the user is not authenticated.
+     *
+     * @return the user's access token, or null
+     */
+    String getToken();
 
     /**
      * Represents this Tracker as a string.

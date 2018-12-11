@@ -79,6 +79,11 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
+    public String getToken() {
+        return access_token;
+    }
+
+    @Override
     public void updateChaptersRead(String id, int num) throws NotImplementedException {
         throw new NotImplementedException();
     }

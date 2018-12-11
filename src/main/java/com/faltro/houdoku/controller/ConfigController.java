@@ -371,6 +371,19 @@ public class ConfigController extends Controller {
         config.replaceValue(Config.Field.READER_KEY_TO_SERIES,
                 readerKeyToSeries.getText());
 
+        /*
+            TODO: it's strange that the field in the tracker object is separate
+            from the value we store here. In the future, we will want the Config
+            object to be the only store for these values. However, doing so can
+            pose questions of when saveConfig should be run.
+         */
+        TrackerOAuth anilist =
+                (TrackerOAuth) sceneManager.getPluginManager().getTracker(AniList.ID);
+        config.replaceValue(Config.Field.TRACKER_ANILIST_AUTHENTICATED,
+                anilist.isAuthenticated());
+        config.replaceValue(Config.Field.TRACKER_ANILIST_TOKEN,
+                anilist.getToken());
+
         sceneManager.saveConfig();
 
         // ensure that night_mode_reader_only is properly applied

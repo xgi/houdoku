@@ -127,7 +127,15 @@ public class Config {
         /**
          * Key binding in the reader for going back to the series view.
          */
-        READER_KEY_TO_SERIES("reader_key_to_series", KeyCode.BACK_SPACE.toString());
+        READER_KEY_TO_SERIES("reader_key_to_series", KeyCode.BACK_SPACE.toString()),
+        /**
+         * Whether the user is currently authenticated with AniList.
+         */
+        TRACKER_ANILIST_AUTHENTICATED("tracker_anilist_authenticated", false),
+        /**
+         * The user's AniList authentication token (only makes sense when authenticated).
+         */
+        TRACKER_ANILIST_TOKEN("tracker_anilist_token", "");
 
         private final String name;
         private final Object defaultValue;
