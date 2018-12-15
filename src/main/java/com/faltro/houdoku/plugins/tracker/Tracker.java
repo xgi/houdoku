@@ -76,14 +76,20 @@ public interface Tracker {
             IOException;
 
     /**
-     * Update the number of chapters read for a series.
+     * Safely update the number of chapters read for a series.
+     * <p>
+     * If the user's number read is greater than the given value, the number on
+     * the tracker is not changed.
      *
      * @param id  the series id
      * @param num the number of chapters read
-     * @throws NotImplementedException the operation has not yet been
-     *                                 implemented for this tracker
+     * @throws NotImplementedException   the operation has not yet been
+     *                                   implemented for this tracker
+     * @throws NotAuthenticatedException the user is not authenticated
+     * @throws IOException               an IOException occurred when updating
      */
-    void updateChaptersRead(String id, int num) throws NotImplementedException;
+    void updateChaptersRead(String id, int num) throws NotImplementedException,
+            NotAuthenticatedException, IOException;
 
     /**
      * Retrieve the client for making HTTP requests, which may be built with

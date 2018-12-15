@@ -59,7 +59,8 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public String authenticatedUserName() throws NotImplementedException, NotAuthenticatedException, IOException {
+    public String authenticatedUserName() throws NotImplementedException, NotAuthenticatedException,
+            IOException {
         throw new NotImplementedException();
     }
 
@@ -84,7 +85,8 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public void updateChaptersRead(String id, int num) throws NotImplementedException {
+    public void updateChaptersRead(String id, int num) throws NotImplementedException,
+            NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }
 
