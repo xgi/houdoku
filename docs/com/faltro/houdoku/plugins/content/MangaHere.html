@@ -47,7 +47,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../com/faltro/houdoku/plugins/content/MangaDex.html" title="class in com.faltro.houdoku.plugins.content"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/faltro/houdoku/plugins/content/MangaHasu.html" title="class in com.faltro.houdoku.plugins.content"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../com/faltro/houdoku/plugins/content/MangaPark.html" title="class in com.faltro.houdoku.plugins.content"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -112,7 +112,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><a href="../../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a></dd>
+<dd><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a></dd>
 </dl>
 <hr>
 <br>
@@ -127,7 +127,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html" title="class in com.faltro.houdoku.plugins.content"><code>GenericContentSource</code></a>, 
-<a href="../../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util"><code>ContentSource</code></a></dd>
+<a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content"><code>ContentSource</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -164,6 +164,13 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../com/faltro/houdoku/plugins/content/MangaHere.html#PROTOCOL">PROTOCOL</a></span></code>&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a name="fields.inherited.from.class.com.faltro.houdoku.plugins.content.GenericContentSource">
+<!--   -->
+</a>
+<h3>Fields inherited from class&nbsp;com.faltro.houdoku.plugins.content.<a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html" title="class in com.faltro.houdoku.plugins.content">GenericContentSource</a></h3>
+<code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#client">client</a></code></li>
+</ul>
 </li>
 </ul>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -234,7 +241,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.faltro.houdoku.plugins.content.<a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html" title="class in com.faltro.houdoku.plugins.content">GenericContentSource</a></h3>
-<code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#chapters-com.faltro.houdoku.model.Series-">chapters</a>, <a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#toString--">toString</a></code></li>
+<code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#chapters-com.faltro.houdoku.model.Series-">chapters</a>, <a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#getClient--">getClient</a>, <a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#toString--">toString</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -342,7 +349,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
 <h4>search</h4>
 <pre>public&nbsp;java.util.ArrayList&lt;java.util.HashMap&lt;java.lang.String,java.lang.Object&gt;&gt;&nbsp;search(java.lang.String&nbsp;query)
                                                                                  throws java.io.IOException</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#search-java.lang.String-">ContentSource</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#search-java.lang.String-">ContentSource</a></code></span></div>
 <div class="block">Searches the source using a provided query.
  <p>
  This method does NOT load Series objects, since the amount of series
@@ -360,7 +367,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
  </ul></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#search-java.lang.String-">search</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a></code></dd>
+<dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#search-java.lang.String-">search</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#search-java.lang.String-">search</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html" title="class in com.faltro.houdoku.plugins.content">GenericContentSource</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -381,14 +388,14 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
 <h4>chapters</h4>
 <pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a>&gt;&nbsp;chapters(<a href="../../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series,
                                              org.jsoup.nodes.Document&nbsp;seriesDocument)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#chapters-com.faltro.houdoku.model.Series-org.jsoup.nodes.Document-">ContentSource</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#chapters-com.faltro.houdoku.model.Series-org.jsoup.nodes.Document-">ContentSource</a></code></span></div>
 <div class="block">Parse all of the chapters on the given Document.
  <p>
  This method is NOT guaranteed to return all chapters of a given
  series -- use chapters(Series series) for that.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#chapters-com.faltro.houdoku.model.Series-org.jsoup.nodes.Document-">chapters</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a></code></dd>
+<dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#chapters-com.faltro.houdoku.model.Series-org.jsoup.nodes.Document-">chapters</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#chapters-com.faltro.houdoku.model.Series-org.jsoup.nodes.Document-">chapters</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html" title="class in com.faltro.houdoku.plugins.content">GenericContentSource</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -408,7 +415,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
 <pre>public&nbsp;<a href="../../../../../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a>&nbsp;series(java.lang.String&nbsp;source,
                      boolean&nbsp;quick)
               throws java.io.IOException</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#series-java.lang.String-boolean-">ContentSource</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#series-java.lang.String-boolean-">ContentSource</a></code></span></div>
 <div class="block">Parses the given source as a Series.
  <p>
  The given source is generally a URL fragment relative to the domain, but
@@ -417,7 +424,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
  and may depend the source URL's retrieved from search results.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#series-java.lang.String-boolean-">series</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a></code></dd>
+<dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#series-java.lang.String-boolean-">series</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#series-java.lang.String-boolean-">series</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html" title="class in com.faltro.houdoku.plugins.content">GenericContentSource</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -440,7 +447,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
 <h4>cover</h4>
 <pre>public&nbsp;javafx.scene.image.Image&nbsp;cover(java.lang.String&nbsp;source)
                                throws java.io.IOException</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#cover-java.lang.String-">ContentSource</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#cover-java.lang.String-">ContentSource</a></code></span></div>
 <div class="block">Retrieves a series' cover image from the given URL.
  <p>
  This method does not always need to be implemented. It is primarily
@@ -451,7 +458,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
  series page, and finds the cover image on that page.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#cover-java.lang.String-">cover</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a></code></dd>
+<dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#cover-java.lang.String-">cover</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#cover-java.lang.String-">cover</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html" title="class in com.faltro.houdoku.plugins.content">GenericContentSource</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -474,7 +481,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
                                       int&nbsp;page)
                                throws java.io.IOException,
                                       <a href="../../../../../com/faltro/houdoku/exception/ContentUnavailableException.html" title="class in com.faltro.houdoku.exception">ContentUnavailableException</a></pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#image-com.faltro.houdoku.model.Chapter-int-">ContentSource</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#image-com.faltro.houdoku.model.Chapter-int-">ContentSource</a></code></span></div>
 <div class="block">Retrieves an Image of a chapter page.
  <p>
  This method generally uses the source property of the given Chapter
@@ -494,7 +501,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
  and initialize chapter.images with the appropriate size.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html#image-com.faltro.houdoku.model.Chapter-int-">image</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a></code></dd>
+<dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html#image-com.faltro.houdoku.model.Chapter-int-">image</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a></code></dd>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
 <dd><code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html#image-com.faltro.houdoku.model.Chapter-int-">image</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../com/faltro/houdoku/plugins/content/GenericContentSource.html" title="class in com.faltro.houdoku.plugins.content">GenericContentSource</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -538,7 +545,7 @@ extends <a href="../../../../../com/faltro/houdoku/plugins/content/GenericConten
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../../com/faltro/houdoku/plugins/content/MangaDex.html" title="class in com.faltro.houdoku.plugins.content"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../../com/faltro/houdoku/plugins/content/MangaHasu.html" title="class in com.faltro.houdoku.plugins.content"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../../com/faltro/houdoku/plugins/content/MangaPark.html" title="class in com.faltro.houdoku.plugins.content"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

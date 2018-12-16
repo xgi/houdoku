@@ -74,9 +74,19 @@
 <dl>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/model/Chapter.html#language">language</a></span> - Variable in class com.faltro.houdoku.model.<a href="../com/faltro/houdoku/model/Chapter.html" title="class in com.faltro.houdoku.model">Chapter</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/model/Languages.Language.html#Language-java.lang.String-java.lang.String...-">Language(String, String...)</a></span> - Constructor for enum com.faltro.houdoku.model.<a href="../com/faltro/houdoku/model/Languages.Language.html" title="enum in com.faltro.houdoku.model">Languages.Language</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/model/Series.html#language">language</a></span> - Variable in class com.faltro.houdoku.model.<a href="../com/faltro/houdoku/model/Series.html" title="class in com.faltro.houdoku.model">Series</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/controller/SeriesController.html#languageColumn">languageColumn</a></span> - Variable in class com.faltro.houdoku.controller.<a href="../com/faltro/houdoku/controller/SeriesController.html" title="class in com.faltro.houdoku.controller">SeriesController</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="../com/faltro/houdoku/model/Languages.html" title="class in com.faltro.houdoku.model"><span class="typeNameLink">Languages</span></a> - Class in <a href="../com/faltro/houdoku/model/package-summary.html">com.faltro.houdoku.model</a></dt>
+<dd>
+<div class="block">Contains language definitions.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/model/Languages.html#Languages--">Languages()</a></span> - Constructor for class com.faltro.houdoku.model.<a href="../com/faltro/houdoku/model/Languages.html" title="class in com.faltro.houdoku.model">Languages</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="../com/faltro/houdoku/model/Languages.Language.html" title="enum in com.faltro.houdoku.model"><span class="typeNameLink">Languages.Language</span></a> - Enum in <a href="../com/faltro/houdoku/model/package-summary.html">com.faltro.houdoku.model</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/controller/ReaderController.html#lastPage--">lastPage()</a></span> - Method in class com.faltro.houdoku.controller.<a href="../com/faltro/houdoku/controller/ReaderController.html" title="class in com.faltro.houdoku.controller">ReaderController</a></dt>
 <dd>
@@ -124,13 +134,13 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="../com/faltro/houdoku/controller/ConfigController.html#listView">listView</a></span> - Variable in class com.faltro.houdoku.controller.<a href="../com/faltro/houdoku/controller/ConfigController.html" title="class in com.faltro.houdoku.controller">ConfigController</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadBanner-com.faltro.houdoku.util.InfoSource-com.faltro.houdoku.model.Series-com.faltro.houdoku.controller.SeriesController-">loadBanner(InfoSource, Series, SeriesController)</a></span> - Method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadBanner-com.faltro.houdoku.plugins.info.InfoSource-com.faltro.houdoku.model.Series-com.faltro.houdoku.controller.SeriesController-">loadBanner(InfoSource, Series, SeriesController)</a></span> - Method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
 <dd>
 <div class="block">Create a LoaderRunnable for loading a series banner.</div>
 </dd>
 <dt><a href="../com/faltro/houdoku/util/runnable/LoadBannerRunnable.html" title="class in com.faltro.houdoku.util.runnable"><span class="typeNameLink">LoadBannerRunnable</span></a> - Class in <a href="../com/faltro/houdoku/util/runnable/package-summary.html">com.faltro.houdoku.util.runnable</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/runnable/LoadBannerRunnable.html#LoadBannerRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.util.InfoSource-com.faltro.houdoku.model.Series-com.faltro.houdoku.controller.SeriesController-">LoadBannerRunnable(String, ContentLoader, InfoSource, Series, SeriesController)</a></span> - Constructor for class com.faltro.houdoku.util.runnable.<a href="../com/faltro/houdoku/util/runnable/LoadBannerRunnable.html" title="class in com.faltro.houdoku.util.runnable">LoadBannerRunnable</a></dt>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/runnable/LoadBannerRunnable.html#LoadBannerRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.plugins.info.InfoSource-com.faltro.houdoku.model.Series-com.faltro.houdoku.controller.SeriesController-">LoadBannerRunnable(String, ContentLoader, InfoSource, Series, SeriesController)</a></span> - Constructor for class com.faltro.houdoku.util.runnable.<a href="../com/faltro/houdoku/util/runnable/LoadBannerRunnable.html" title="class in com.faltro.houdoku.util.runnable">LoadBannerRunnable</a></dt>
 <dd>
 <div class="block">Runnable for loading a chapter page.</div>
 </dd>
@@ -156,23 +166,23 @@
 <dd>
 <div class="block">Load a saved Library from the filesystem.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadPage-com.faltro.houdoku.util.ContentSource-com.faltro.houdoku.model.Chapter-int-com.faltro.houdoku.controller.ReaderController-boolean-int-">loadPage(ContentSource, Chapter, int, ReaderController, boolean, int)</a></span> - Method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadPage-com.faltro.houdoku.plugins.content.ContentSource-com.faltro.houdoku.model.Chapter-int-com.faltro.houdoku.controller.ReaderController-boolean-int-">loadPage(ContentSource, Chapter, int, ReaderController, boolean, int)</a></span> - Method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
 <dd>
 <div class="block">Create a LoaderRunnable for loading a chapter page.</div>
 </dd>
 <dt><a href="../com/faltro/houdoku/util/runnable/LoadPageRunnable.html" title="class in com.faltro.houdoku.util.runnable"><span class="typeNameLink">LoadPageRunnable</span></a> - Class in <a href="../com/faltro/houdoku/util/runnable/package-summary.html">com.faltro.houdoku.util.runnable</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/runnable/LoadPageRunnable.html#LoadPageRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.util.ContentSource-com.faltro.houdoku.model.Chapter-int-com.faltro.houdoku.controller.ReaderController-boolean-int-">LoadPageRunnable(String, ContentLoader, ContentSource, Chapter, int, ReaderController, boolean, int)</a></span> - Constructor for class com.faltro.houdoku.util.runnable.<a href="../com/faltro/houdoku/util/runnable/LoadPageRunnable.html" title="class in com.faltro.houdoku.util.runnable">LoadPageRunnable</a></dt>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/runnable/LoadPageRunnable.html#LoadPageRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.plugins.content.ContentSource-com.faltro.houdoku.model.Chapter-int-com.faltro.houdoku.controller.ReaderController-boolean-int-">LoadPageRunnable(String, ContentLoader, ContentSource, Chapter, int, ReaderController, boolean, int)</a></span> - Constructor for class com.faltro.houdoku.util.runnable.<a href="../com/faltro/houdoku/util/runnable/LoadPageRunnable.html" title="class in com.faltro.houdoku.util.runnable">LoadPageRunnable</a></dt>
 <dd>
 <div class="block">Runnable for loading a chapter page.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadSeries-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.SearchSeriesController-com.faltro.houdoku.controller.LibraryController-">loadSeries(ContentSource, String, SearchSeriesController, LibraryController)</a></span> - Method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/ContentLoader.html#loadSeries-com.faltro.houdoku.plugins.content.ContentSource-java.lang.String-com.faltro.houdoku.controller.SearchSeriesController-com.faltro.houdoku.controller.LibraryController-">loadSeries(ContentSource, String, SearchSeriesController, LibraryController)</a></span> - Method in class com.faltro.houdoku.util.<a href="../com/faltro/houdoku/util/ContentLoader.html" title="class in com.faltro.houdoku.util">ContentLoader</a></dt>
 <dd>
 <div class="block">Create a LoaderRunnable for loading a series.</div>
 </dd>
 <dt><a href="../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html" title="class in com.faltro.houdoku.util.runnable"><span class="typeNameLink">LoadSeriesRunnable</span></a> - Class in <a href="../com/faltro/houdoku/util/runnable/package-summary.html">com.faltro.houdoku.util.runnable</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html#LoadSeriesRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.util.ContentSource-java.lang.String-com.faltro.houdoku.controller.SearchSeriesController-com.faltro.houdoku.controller.LibraryController-">LoadSeriesRunnable(String, ContentLoader, ContentSource, String, SearchSeriesController, LibraryController)</a></span> - Constructor for class com.faltro.houdoku.util.runnable.<a href="../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html" title="class in com.faltro.houdoku.util.runnable">LoadSeriesRunnable</a></dt>
+<dt><span class="memberNameLink"><a href="../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html#LoadSeriesRunnable-java.lang.String-com.faltro.houdoku.util.ContentLoader-com.faltro.houdoku.plugins.content.ContentSource-java.lang.String-com.faltro.houdoku.controller.SearchSeriesController-com.faltro.houdoku.controller.LibraryController-">LoadSeriesRunnable(String, ContentLoader, ContentSource, String, SearchSeriesController, LibraryController)</a></span> - Constructor for class com.faltro.houdoku.util.runnable.<a href="../com/faltro/houdoku/util/runnable/LoadSeriesRunnable.html" title="class in com.faltro.houdoku.util.runnable">LoadSeriesRunnable</a></dt>
 <dd>
 <div class="block">Runnable for loading a series.</div>
 </dd>

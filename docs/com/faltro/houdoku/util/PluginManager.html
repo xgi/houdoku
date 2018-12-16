@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -132,12 +132,16 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>private java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&gt;</code></td>
+<td class="colFirst"><code>private java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#contentSources">contentSources</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>private <a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a></code></td>
+<td class="colFirst"><code>private <a href="../../../../com/faltro/houdoku/plugins/info/InfoSource.html" title="interface in com.faltro.houdoku.plugins.info">InfoSource</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#infoSource">infoSource</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>private java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/plugins/tracker/Tracker.html" title="interface in com.faltro.houdoku.plugins.tracker">Tracker</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#trackers">trackers</a></span></code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -174,24 +178,40 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a>&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getContentSources--">getContentSources</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a></code></td>
+<td class="colFirst"><code><a href="../../../../com/faltro/houdoku/plugins/info/InfoSource.html" title="interface in com.faltro.houdoku.plugins.info">InfoSource</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getInfoSource--">getInfoSource</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a></code></td>
+<td class="colFirst"><code><a href="../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getSource-int-">getSource</a></span>(int&nbsp;id)</code>
 <div class="block">Gets the ContentSource instance whose class has the given ID.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>private int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getSourceId-com.faltro.houdoku.util.ContentSource-">getSourceId</a></span>(<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;contentSource)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getSourceId-com.faltro.houdoku.plugins.content.ContentSource-">getSourceId</a></span>(<a href="../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a>&nbsp;contentSource)</code>
 <div class="block">Gets the ID of a content source instance.</div>
 </td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code><a href="../../../../com/faltro/houdoku/plugins/tracker/Tracker.html" title="interface in com.faltro.houdoku.plugins.tracker">Tracker</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getTracker-int-">getTracker</a></span>(int&nbsp;id)</code>
+<div class="block">Gets the Tracker instance whose class has the given ID.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>private int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getTrackerId-com.faltro.houdoku.plugins.tracker.Tracker-">getTrackerId</a></span>(<a href="../../../../com/faltro/houdoku/plugins/tracker/Tracker.html" title="interface in com.faltro.houdoku.plugins.tracker">Tracker</a>&nbsp;tracker)</code>
+<div class="block">Gets the ID of a tracker instance.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/plugins/tracker/Tracker.html" title="interface in com.faltro.houdoku.plugins.tracker">Tracker</a>&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/faltro/houdoku/util/PluginManager.html#getTrackers--">getTrackers</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -221,16 +241,25 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>contentSources</h4>
-<pre>private final&nbsp;java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&gt; contentSources</pre>
+<pre>private final&nbsp;java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a>&gt; contentSources</pre>
 </li>
 </ul>
 <a name="infoSource">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>infoSource</h4>
-<pre>private final&nbsp;<a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a> infoSource</pre>
+<pre>private final&nbsp;<a href="../../../../com/faltro/houdoku/plugins/info/InfoSource.html" title="interface in com.faltro.houdoku.plugins.info">InfoSource</a> infoSource</pre>
+</li>
+</ul>
+<a name="trackers">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>trackers</h4>
+<pre>private final&nbsp;java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/plugins/tracker/Tracker.html" title="interface in com.faltro.houdoku.plugins.tracker">Tracker</a>&gt; trackers</pre>
 </li>
 </ul>
 </li>
@@ -262,13 +291,13 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="getSourceId-com.faltro.houdoku.util.ContentSource-">
+<a name="getSourceId-com.faltro.houdoku.plugins.content.ContentSource-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getSourceId</h4>
-<pre>private&nbsp;int&nbsp;getSourceId(<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;contentSource)</pre>
+<pre>private&nbsp;int&nbsp;getSourceId(<a href="../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a>&nbsp;contentSource)</pre>
 <div class="block">Gets the ID of a content source instance.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -284,7 +313,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>getSource</h4>
-<pre>public&nbsp;<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&nbsp;getSource(int&nbsp;id)</pre>
+<pre>public&nbsp;<a href="../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a>&nbsp;getSource(int&nbsp;id)</pre>
 <div class="block">Gets the ContentSource instance whose class has the given ID.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -295,13 +324,55 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
+<a name="getTrackerId-com.faltro.houdoku.plugins.tracker.Tracker-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTrackerId</h4>
+<pre>private&nbsp;int&nbsp;getTrackerId(<a href="../../../../com/faltro/houdoku/plugins/tracker/Tracker.html" title="interface in com.faltro.houdoku.plugins.tracker">Tracker</a>&nbsp;tracker)</pre>
+<div class="block">Gets the ID of a tracker instance.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>tracker</code> - the Tracker to get the id of</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the ID of the tracker's class.</dd>
+</dl>
+</li>
+</ul>
+<a name="getTracker-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTracker</h4>
+<pre>public&nbsp;<a href="../../../../com/faltro/houdoku/plugins/tracker/Tracker.html" title="interface in com.faltro.houdoku.plugins.tracker">Tracker</a>&nbsp;getTracker(int&nbsp;id)</pre>
+<div class="block">Gets the Tracker instance whose class has the given ID.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>id</code> - the Tracker ID (the static ID field of the
+           implementing plugin class)</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the Tracker instance whose class has the given ID.</dd>
+</dl>
+</li>
+</ul>
 <a name="getContentSources--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>getContentSources</h4>
-<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/util/ContentSource.html" title="interface in com.faltro.houdoku.util">ContentSource</a>&gt;&nbsp;getContentSources()</pre>
+<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/plugins/content/ContentSource.html" title="interface in com.faltro.houdoku.plugins.content">ContentSource</a>&gt;&nbsp;getContentSources()</pre>
+</li>
+</ul>
+<a name="getTrackers--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTrackers</h4>
+<pre>public&nbsp;java.util.ArrayList&lt;<a href="../../../../com/faltro/houdoku/plugins/tracker/Tracker.html" title="interface in com.faltro.houdoku.plugins.tracker">Tracker</a>&gt;&nbsp;getTrackers()</pre>
 </li>
 </ul>
 <a name="getInfoSource--">
@@ -310,7 +381,7 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>getInfoSource</h4>
-<pre>public&nbsp;<a href="../../../../com/faltro/houdoku/util/InfoSource.html" title="interface in com.faltro.houdoku.util">InfoSource</a>&nbsp;getInfoSource()</pre>
+<pre>public&nbsp;<a href="../../../../com/faltro/houdoku/plugins/info/InfoSource.html" title="interface in com.faltro.houdoku.plugins.info">InfoSource</a>&nbsp;getInfoSource()</pre>
 </li>
 </ul>
 </li>

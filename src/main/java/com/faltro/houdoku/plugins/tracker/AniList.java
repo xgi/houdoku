@@ -61,6 +61,41 @@ public class AniList extends GenericTrackerOAuth {
         }
     }
 
+    @Override
+    public String authenticatedUserName() throws IOException, NotAuthenticatedException {
+        return authenticatedUser().get("name").getAsString();
+    }
+
+    @Override
+    public void updateChaptersRead(String id, int num) throws IOException,
+            NotAuthenticatedException {
+        if (!this.authenticated) {
+            throw new NotAuthenticatedException();
+        }
+
+        String user_id = authenticatedUser().get("id").getAsString();
+        JsonObject series = seriesInList(user_id, id);
+
+        // check whether the current progress is greater than the desired -- for
+        // safety, we never decrement progress
+        int cur_progress = Integer.parseInt(series.get("progress").getAsString());
+        if (cur_progress > num) {
+            return;
+        }
+
+        final String body = "" +
+                "mutation UpdateManga($listId: Int, $progress: Int) {\n" +
+                "  SaveMediaListEntry (id: $listId, progress: $progress) {" +
+                "    id\n" +
+                "    progress\n" +
+                "  }\n" +
+                "}";
+
+        JsonObject response = post(body,
+                new String[]{"listId", series.get("id").getAsString()},
+                new String[]{"progress", Integer.toString(num)});
+    }
+
     /**
      * Make an HTTP POST request to the tracker's API.
      *
@@ -90,6 +125,13 @@ public class AniList extends GenericTrackerOAuth {
         return json_response.get("data").getAsJsonObject();
     }
 
+    /**
+     * Retrieve a user object for the authenticated user.
+     *
+     * @return a JsonObject with the authenticated user's information
+     * @throws IOException               an IOException occurred when retrieving
+     * @throws NotAuthenticatedException the user is not authenticated
+     */
     private JsonObject authenticatedUser() throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
@@ -115,10 +157,6 @@ public class AniList extends GenericTrackerOAuth {
         }
 
         return viewer.getAsJsonObject();
-    }
-
-    public String authenticatedUserName() throws IOException, NotAuthenticatedException {
-        return authenticatedUser().get("name").getAsString();
     }
 
     /**
@@ -163,35 +201,6 @@ public class AniList extends GenericTrackerOAuth {
                     page.getAsJsonObject().get("mediaList").getAsJsonArray();
             return results.get(0).getAsJsonObject();
         }
-    }
-
-    public void updateChaptersRead(String id, int num) throws IOException,
-            NotAuthenticatedException {
-        if (!this.authenticated) {
-            throw new NotAuthenticatedException();
-        }
-
-        String user_id = authenticatedUser().get("id").getAsString();
-        JsonObject series = seriesInList(user_id, id);
-
-        // check whether the current progress is greater than the desired -- for
-        // safety, we never decrement progress
-        int cur_progress = Integer.parseInt(series.get("progress").getAsString());
-        if (cur_progress > num) {
-            return;
-        }
-
-        final String body = "" +
-                "mutation UpdateManga($listId: Int, $progress: Int) {\n" +
-                "  SaveMediaListEntry (id: $listId, progress: $progress) {" +
-                "    id\n" +
-                "    progress\n" +
-                "  }\n" +
-                "}";
-
-        JsonObject response = post(body,
-                new String[]{"listId", series.get("id").getAsString()},
-                new String[]{"progress", Integer.toString(num)});
     }
 
     private void setAccessToken(String token) {

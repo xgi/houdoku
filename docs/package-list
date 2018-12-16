@@ -6,5 +6,6 @@ com.faltro.houdoku.model
 com.faltro.houdoku.net
 com.faltro.houdoku.plugins.content
 com.faltro.houdoku.plugins.info
+com.faltro.houdoku.plugins.tracker
 com.faltro.houdoku.util
 com.faltro.houdoku.util.runnable
