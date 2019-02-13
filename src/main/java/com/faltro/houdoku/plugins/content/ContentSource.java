@@ -80,8 +80,12 @@ public interface ContentSource {
      *                                 series page
      * @throws NotImplementedException the operation has not yet been
      *                                 implemented for this content source
+     * @throws ContentUnavailableException the retrieval of the chapters was
+     *                                     blocked by the ContentSource's
+     *                                     website itself
      */
-    ArrayList<Chapter> chapters(Series series) throws IOException, NotImplementedException;
+    ArrayList<Chapter> chapters(Series series) throws IOException, NotImplementedException,
+            ContentUnavailableException;
 
     /**
      * Parse all of the chapters on the given Document.
@@ -92,10 +96,14 @@ public interface ContentSource {
      * @param series   the series that the chapters are from
      * @param document the document to find chapters on
      * @return an ArrayList of Chapter's using data from the provided document
-     * @throws NotImplementedException the operation has not yet been
-     *                                 implemented for this content source
+     * @throws NotImplementedException     the operation has not yet been
+     *                                     implemented for this content source
+     * @throws ContentUnavailableException the retrieval of the chapters was
+     *                                     blocked by the ContentSource's
+     *                                     website itself
      */
-    ArrayList<Chapter> chapters(Series series, Document document) throws NotImplementedException;
+    ArrayList<Chapter> chapters(Series series, Document document) throws NotImplementedException,
+            ContentUnavailableException;
 
     /**
      * Parses the given source as a Series.
@@ -110,7 +118,8 @@ public interface ContentSource {
      *               which ensures that only one total HTTP request is made, but
      *               does not guarantee that all chapters are loaded
      * @return a Series using the data on the series page
-     * @throws IOException                 an IOException occurred when loading the series page
+     * @throws IOException                 an IOException occurred when loading
+     *                                     the series page
      * @throws NotImplementedException     the operation has not yet been
      *                                     implemented for this content source
      * @throws ContentUnavailableException the retrieval of the series was

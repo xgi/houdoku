@@ -35,13 +35,13 @@ public class GenericContentSource implements ContentSource {
 
     @Override
     public ArrayList<Chapter> chapters(Series series) throws IOException,
-            NotImplementedException {
+            NotImplementedException, ContentUnavailableException {
         throw new NotImplementedException();
     }
 
     @Override
     public ArrayList<Chapter> chapters(Series series, Document seriesDocument) throws
-            NotImplementedException {
+            NotImplementedException, ContentUnavailableException {
         throw new NotImplementedException();
     }
 

@@ -45,7 +45,8 @@ public class MangaDex extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + "/?page=search&title=" + query));
+        Document document = parse(GET(client,
+                PROTOCOL + "://" + DOMAIN + "/?page=search&title=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
         Elements links = document.select("a[class*=manga_title]");
@@ -55,7 +56,7 @@ public class MangaDex extends GenericContentSource {
             String title = link.text();
             Element parentDiv = link.parent().parent();
             String coverSrc = parentDiv.selectFirst("img").attr("src");
-            String rating = parentDiv.selectFirst("span[title=Rating]").parent()
+            String rating = parentDiv.selectFirst("span[title*=votes]").parent()
                     .select("span").get(2).ownText();
             String follows = parentDiv.selectFirst("span[title=Follows]").parent().ownText();
             String views = parentDiv.selectFirst("span[title=Views]").parent().ownText();
@@ -125,8 +126,7 @@ public class MangaDex extends GenericContentSource {
 
         Element contentContainer = seriesDocument.selectFirst("div[class=card-body p-0]");
         String imageSource = contentContainer.selectFirst("img[class=rounded]").attr("src");
-        Image cover = imageFromURL(client, PROTOCOL + "://" + DOMAIN + imageSource,
-                ParseHelpers.COVER_MAX_WIDTH);
+        Image cover = imageFromURL(client, imageSource, ParseHelpers.COVER_MAX_WIDTH);
 
         Element metadataContainer = contentContainer.selectFirst(
                 "div[class=col-xl-9 col-lg-8 col-md-7]");
@@ -137,7 +137,7 @@ public class MangaDex extends GenericContentSource {
         Element rowArtist = metadataContainer.selectFirst(
                 "div:containsOwn(Artist)").parent().select("div").get(2);
         Element rowGenres = metadataContainer.selectFirst(
-                "div:containsOwn(Genres)").parent().select("div").get(2);
+                "div:containsOwn(Genre)").parent().select("div").get(2);
         Element rowRating = metadataContainer.selectFirst(
                 "div:containsOwn(Rating)").parent().select("div").get(2);
         Element rowStatus = metadataContainer.selectFirst(
@@ -152,7 +152,7 @@ public class MangaDex extends GenericContentSource {
         String artist = rowArtist.selectFirst("a").text();
         String[] genres = ParseHelpers.htmlListToStringArray(rowGenres, "span");
         double rating = ParseHelpers.parseDouble(
-                rowRating.selectFirst("span[title=Rating]").parent().text());
+                rowRating.selectFirst("span[title=Bayesian rating]").parent().text());
         int ratings = ParseHelpers.parseInt(
                 rowRating.selectFirst("span[title=Users]").parent().text());
         String status = rowStatus.text();

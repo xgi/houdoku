@@ -38,21 +38,33 @@ public class MangaHere extends GenericContentSource {
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query) throws IOException {
-        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + "/search.php?name=" + query));
+        Document document = parse(GET(client,
+                PROTOCOL + "://" + DOMAIN + "/search?title=" + query));
 
         ArrayList<HashMap<String, Object>> data_arr = new ArrayList<>();
-        Elements rows = document.select("div[class=result_search]").select("dl");
-        for (Element row : rows) {
-            Element link = row.selectFirst("a[class*=manga_info]");
-            String source = link.attr("href").substring(2 + DOMAIN.length());
-            String title = link.text();
-            String latest_release = row.selectFirst("a[class=name_two]").text();
+        Elements results = document.selectFirst("ul[class=manga-list-4-list line]").select("li");
+        for (Element result : results) {
+            Element link = result.selectFirst("a");
+            String source = link.attr("href");
+            String cover_src = link.select("img").attr("src");
+            String title = link.attr("title");
+            String status = result.select("p").get(1).selectFirst("a").ownText();
+            Element author_container = result.select("p").get(2).selectFirst("a");
+            String author = author_container == null ? "???" : author_container.attr("title");
+            Element latest_container = result.select("p").get(3).selectFirst("a");
+            String latest = latest_container == null ? "???" : latest_container.ownText();
 
-            String details = title + "\nLatest release: " + latest_release;
+            String details = String.format("%s\nAuthor: %s\nStatus: %s\nLatest: %s",
+                    title,
+                    author,
+                    status,
+                    latest
+            );
 
             HashMap<String, Object> content = new HashMap<>();
             content.put("contentSourceId", ID);
             content.put("source", source);
+            content.put("coverSrc", cover_src);
             content.put("title", title);
             content.put("details", details);
 
@@ -62,22 +74,27 @@ public class MangaHere extends GenericContentSource {
     }
 
     @Override
-    public ArrayList<Chapter> chapters(Series series, Document seriesDocument) {
-        Elements rows = seriesDocument.selectFirst("div[class=detail_list]").selectFirst("ul")
-                .select("li");
+    public ArrayList<Chapter> chapters(Series series, Document seriesDocument) throws
+            ContentUnavailableException {
+        if (seriesDocument.selectFirst("p[class=detail-block-content]") != null) {
+            throw new ContentUnavailableException("This content is restricted and could not be " +
+                    "accessed on " + NAME + ".");
+        }
+
+        Elements rows = seriesDocument.selectFirst("ul[class=detail-main-list]").select("li");
 
         ArrayList<Chapter> chapters = new ArrayList<>();
         for (Element row : rows) {
-            String title = row.selectFirst("span[class=left]").ownText();
             Element link = row.selectFirst("a");
-            String source = link.attr("href").substring(2 + DOMAIN.length());
-            String chapterNumExtended = link.text();
+            String title = link.attr("title");
+            String source_extended = link.attr("href");
+            String source = source_extended.substring(0, source_extended.lastIndexOf("/") + 1);
             double chapterNum = ParseHelpers.parseDouble(
-                    chapterNumExtended.substring(chapterNumExtended.lastIndexOf(" ") + 1)
+                    title.substring(title.indexOf("Ch.") + 3)
             );
-            String dateString = row.selectFirst("span[class=right]").text();
+            String dateString = link.selectFirst("p[class=title2]").text();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
-                    "MMM d, yyyy", Locale.ENGLISH
+                    "MMM d,yyyy", Locale.ENGLISH
             );
             LocalDateTime localDateTime = ParseHelpers.potentiallyRelativeDate(
                     dateString, dateTimeFormatter);
@@ -93,37 +110,28 @@ public class MangaHere extends GenericContentSource {
     }
 
     @Override
-    public Series series(String source, boolean quick) throws IOException {
+    public Series series(String source, boolean quick) throws IOException,
+            ContentUnavailableException {
         Document seriesDocument = parse(GET(client, PROTOCOL + "://" + DOMAIN + source));
 
-        String titleExtended = seriesDocument.selectFirst("h2").text();
-        String title = titleExtended.substring(0, titleExtended.length() - 6);
+        Element detail_container = seriesDocument.selectFirst("div[class=detail-info]");
+        String image_source = detail_container.selectFirst("img").attr("src");
+        String title = detail_container.selectFirst("img").attr("alt");
+        Image cover = imageFromURL(client, image_source, ParseHelpers.COVER_MAX_WIDTH);
 
-        Element detailContainer = seriesDocument.selectFirst("div[class=manga_detail]");
-        String imageSource = detailContainer.selectFirst("img").attr("src");
-        Image cover = imageFromURL(client, imageSource, ParseHelpers.COVER_MAX_WIDTH);
-        double rating = ParseHelpers.parseDouble(detailContainer.selectFirst("span#current_rating")
-                .text());
-        String ratingsExtended = detailContainer.selectFirst("span[class=ml5]").text();
-        int ratings = ParseHelpers.parseInt(ratingsExtended.substring(1, ratingsExtended.indexOf
-                (" ")));
-
-        Elements detailRows = detailContainer.selectFirst("ul[class=detail_topText]").select("li");
-        String[] altNames = detailRows.get(2).ownText().split("; ");
-        String[] genres = detailRows.get(3).ownText().split("; ");
-        String author = detailRows.get(4).selectFirst("a").text();
-        String artist = detailRows.get(5).selectFirst("a").text();
-        String status = ParseHelpers.firstWord(detailRows.get(6).ownText());
-        String description = detailRows.get(8).selectFirst("p#show").ownText();
+        Element right_container = detail_container.selectFirst("div[class=detail-info-right]");
+        String status = right_container.select("p").get(0).select("span").get(1).ownText();
+        String author = right_container.select("p").get(1).selectFirst("a").ownText();
+        String[] genres = ParseHelpers.htmlListToStringArray(
+                right_container.select("p").get(2), "a");
+        String description = right_container.selectFirst("p[class=fullcontent]").ownText();
 
         HashMap<String, Object> metadata = new HashMap<>();
         metadata.put("author", author);
-        metadata.put("artist", artist);
+        metadata.put("artist", author);
+        metadata.put("altNames", new String[]{});
         metadata.put("status", status);
-        metadata.put("altNames", altNames);
         metadata.put("description", description);
-        metadata.put("rating", rating);
-        metadata.put("ratings", ratings);
         metadata.put("genres", genres);
 
         Series series = new Series(title, source, cover, ID, metadata);
@@ -145,7 +153,7 @@ public class MangaHere extends GenericContentSource {
     @Override
     public Image image(Chapter chapter, int page) throws IOException, ContentUnavailableException {
         Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + chapter.getSource() +
-                (page == 1 ? "" : Integer.toString(page) + ".html")));
+                (Integer.toString(page)) + ".html"));
 
         Elements errors = document.select("div[class=mangaread_error]");
         if (errors.size() > 0) {
@@ -157,8 +165,9 @@ public class MangaHere extends GenericContentSource {
 
         // we may not have determined the number of pages yet, so do that here
         if (chapter.images.length == 1) {
-            Elements page_options = document.selectFirst("select[class=wid60]").select("option");
-            int num_pages = page_options.size() - 1;
+            Elements page_links = document.select("div[class=pager-list-left]").last().select("a");
+            Element last_link = page_links.get(page_links.size() - 3);
+            int num_pages = ParseHelpers.parseInt(last_link.ownText());
 
             chapter.images = new Image[num_pages];
         }
