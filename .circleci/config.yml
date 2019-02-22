@@ -27,4 +27,4 @@ jobs:
       - run: mvn package
 
       - store_artifacts:
-        path: out/artifacts/houdoku
+          path: out/artifacts/houdoku
