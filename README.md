@@ -1,7 +1,7 @@
 ![Houdoku Header](/res/houdoku_header.png)
 
 [![GitHub release](https://img.shields.io/github/release/xgi/houdoku.svg)](https://github.com/xgi/houdoku/releases) 
-[![Build Status](https://travis-ci.org/xgi/houdoku.svg?branch=master)](https://travis-ci.org/xgi/houdoku)
+[![CircleCI](https://circleci.com/gh/xgi/houdoku/tree/master.svg?style=svg)](https://circleci.com/gh/xgi/houdoku/tree/master)
 
 Houdoku is a manga reader and library manager for the desktop.
 
@@ -25,12 +25,13 @@ Houdoku is a manga reader and library manager for the desktop.
 
 Download Houdoku from [the releases page](https://github.com/xgi/houdoku/releases).
 
-Windows users are encouraged to download the provided .exe, whereas users on other operating 
-systems should download the .jar. Both options require a sufficient Java installation with JRE 
+Windows users are encouraged to download the provided .exe, whereas users on other operating
+systems should download the .jar. Both options require a sufficient Java installation with JRE
 version 8 or later.
 
-The client can typically be run by simply double clicking the file. Alternatively, you may start 
+The client can typically be run by simply double clicking the file. Alternatively, you may start
 the client via the command line:
+
 ```bash
 $ java -jar houdoku-x.y.z.jar
 ```
@@ -50,6 +51,23 @@ The project makes use of the following 3rd-party libraries, which are bundled wi
 * Mockito 2.19.1 -- Mocks for unit testing
 
 Libraries are downloaded from the Maven Central Repository -- see this project's [pom.xml](https://github.com/xgi/houdoku/blob/master/pom.xml).
+
+# Testing
+
+This project uses Maven for building and testing. Running unit tests is easy:
+
+```bash
+$ mvn test
+```
+
+To compile the executable JAR, use `mvn package`. The Houdoku artifact will be in
+`./out/artifacts`. Here is a useful command for building & running the client (note the
+optional `skipTests`):
+
+```bash
+$ mvn package [-DskipTests] && \
+    java -jar ./out/artifacts/houdoku/Houdoku-*.jar
+```
 
 # License
 
