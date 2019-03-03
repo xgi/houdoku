@@ -49,6 +49,15 @@
                                     </VBox>
                                 </VBox>
                             </VBox>
+                            <VBox VBox.vgrow="NEVER">
+                                <Text styleClass="bareTextAlt" text="Language"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <CheckBox fx:id="languageFilterCheck"
+                                              text="%language_filter_check"
+                                              styleClass="bareTextAlt"/>
+                                    <ComboBox fx:id="languageFilterBox"/>
+                                </VBox>
+                            </VBox>
                         </VBox>
                     </Tab>
                 </TabPane>

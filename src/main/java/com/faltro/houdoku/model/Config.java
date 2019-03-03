@@ -72,6 +72,14 @@ public class Config {
          */
         QUICK_RELOAD_SERIES("quick_reload_series", true),
         /**
+         * Whether to filter all releases to a specific language.
+         */
+        LANGUAGE_FILTER_ENABLED("language_filter_enabled", true),
+        /**
+         * The language to filter to, if the language filter is enabled.
+         */
+        LANGUAGE_FILTER_LANGUAGE("language_filter_language", "English"),
+        /**
          * Whether to apply page filters only when night mode is enabled.
          */
         PAGE_FILTER_NIGHT_MODE_ONLY("page_filter_night_mode_only", true),

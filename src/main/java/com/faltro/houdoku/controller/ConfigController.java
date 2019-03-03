@@ -3,6 +3,8 @@ package com.faltro.houdoku.controller;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Config;
+import com.faltro.houdoku.model.Languages;
+import com.faltro.houdoku.model.Languages.Language;
 import com.faltro.houdoku.plugins.tracker.AniList;
 import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
@@ -25,6 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -63,6 +66,10 @@ public class ConfigController extends Controller {
     private CheckBox nightModeReaderCheck;
     @FXML
     private CheckBox quickReloadCheck;
+    @FXML
+    private CheckBox languageFilterCheck;
+    @FXML
+    private ComboBox<Language> languageFilterBox;
     @FXML
     private CheckBox effectNightModeOnlyCheck;
     @FXML
@@ -169,6 +176,8 @@ public class ConfigController extends Controller {
 
         // add bindings for miscellaneous properties
         nightModeReaderCheck.disableProperty().bind(nightModeCheck.selectedProperty().not());
+        languageFilterBox.disableProperty().bind(
+            languageFilterCheck.selectedProperty().not());
         preloadingAmountBox.disableProperty().bind(
                 restrictPreloadingCheck.selectedProperty().not());
 
@@ -180,6 +189,11 @@ public class ConfigController extends Controller {
                 }
             }
         });
+
+        // set available language filters
+        ObservableList<Language> languages = FXCollections.observableArrayList(
+            Arrays.asList(Languages.Language.values()));
+        languageFilterBox.setItems(languages);
 
         // manually fill auth url fields for trackers
         TrackerOAuth anilist =
@@ -232,6 +246,10 @@ public class ConfigController extends Controller {
                 (boolean) config.getValue(Config.Field.NIGHT_MODE_READER_ONLY));
         quickReloadCheck.setSelected(
                 (boolean) config.getValue(Config.Field.QUICK_RELOAD_SERIES));
+        languageFilterCheck.setSelected(
+            (boolean) config.getValue(Config.Field.LANGUAGE_FILTER_ENABLED));
+        languageFilterBox.getSelectionModel().select(
+            Languages.get((String) config.getValue(Config.Field.LANGUAGE_FILTER_LANGUAGE)));
         effectNightModeOnlyCheck.setSelected(
                 (boolean) config.getValue(Config.Field.PAGE_FILTER_NIGHT_MODE_ONLY));
         effectColorCheck.setSelected(
@@ -344,6 +362,10 @@ public class ConfigController extends Controller {
                 nightModeReaderCheck.isSelected());
         config.replaceValue(Config.Field.QUICK_RELOAD_SERIES,
                 quickReloadCheck.isSelected());
+        config.replaceValue(Config.Field.LANGUAGE_FILTER_ENABLED,
+                languageFilterCheck.isSelected());
+        config.replaceValue(Config.Field.LANGUAGE_FILTER_LANGUAGE,
+                languageFilterBox.getSelectionModel().getSelectedItem().name());
         config.replaceValue(Config.Field.PAGE_FILTER_NIGHT_MODE_ONLY,
                 effectNightModeOnlyCheck.isSelected());
         config.replaceValue(Config.Field.PAGE_FILTER_COLOR_ENABLED,
@@ -382,7 +404,7 @@ public class ConfigController extends Controller {
         config.replaceValue(Config.Field.TRACKER_ANILIST_AUTHENTICATED,
                 anilist.isAuthenticated());
         config.replaceValue(Config.Field.TRACKER_ANILIST_TOKEN,
-                anilist.getToken());
+                anilist.getToken() == null ? "" : anilist.getToken());
 
         sceneManager.saveConfig();
 
