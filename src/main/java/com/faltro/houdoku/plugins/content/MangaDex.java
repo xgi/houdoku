@@ -122,11 +122,11 @@ public class MangaDex extends GenericContentSource {
 
         Element titlePanel = seriesDocument.selectFirst("h6");
         String title = titlePanel.ownText();
-        Language language = Languages.get(titlePanel.selectFirst("img").attr("title"));
+        Language language = Languages.get(titlePanel.selectFirst("span[class*=flag]").attr("title"));
 
         Element contentContainer = seriesDocument.selectFirst("div[class=card-body p-0]");
         String imageSource = contentContainer.selectFirst("img[class=rounded]").attr("src");
-        Image cover = imageFromURL(client, imageSource, ParseHelpers.COVER_MAX_WIDTH);
+        Image cover = imageFromURL(client, PROTOCOL + "://" + DOMAIN + imageSource, ParseHelpers.COVER_MAX_WIDTH);
 
         Element metadataContainer = contentContainer.selectFirst(
                 "div[class=col-xl-9 col-lg-8 col-md-7]");
