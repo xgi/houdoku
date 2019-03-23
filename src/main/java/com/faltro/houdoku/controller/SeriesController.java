@@ -18,7 +18,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -40,7 +39,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
 
-import java.awt.event.ActionEvent;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +53,6 @@ import java.util.List;
  */
 public class SeriesController extends Controller {
     public static final int ID = 1;
-    private static final double INFO_WIDTH = 0.7;
     private static final double[] COL_WIDTHS = { 0.30, // title
             0.07, // volume
             0.07, // chapter

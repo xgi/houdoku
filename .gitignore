@@ -3,3 +3,6 @@ target/
 tools/
 .idea/
 .vscode
+.settings
+.project
+.classpath

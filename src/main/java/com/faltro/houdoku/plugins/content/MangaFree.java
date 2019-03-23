@@ -1,7 +1,6 @@
 package com.faltro.houdoku.plugins.content;
 
 import com.faltro.houdoku.exception.ContentUnavailableException;
-import com.faltro.houdoku.exception.LicensedContentException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ParseHelpers;
@@ -11,11 +10,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
 import static com.faltro.houdoku.net.Requests.*;
 

@@ -44,7 +44,7 @@ public class SearchSeriesController extends Controller {
     public static final int ID = 3;
     private static final double COL_COVER_WIDTH = 0.15;
     private static final double COL_TITLE_WIDTH = 0.85;
-    private static final double FLOW_RESULTS_ROWS = 5;
+    
     public final ObservableList<HashMap<String, Object>> results;
     @FXML
     public ProgressIndicator searchProgressIndicator;
