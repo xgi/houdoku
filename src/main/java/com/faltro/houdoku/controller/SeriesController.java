@@ -412,11 +412,12 @@ public class SeriesController extends Controller {
         bannerImageView.setImage(series.getBanner() == null ? BANNER_PLACEHOLDER : series.getBanner());
         updateBannerSize();
         textTitle.setText(OutputHelpers.truncate(series.getTitle(), TITLE_MAX_CHARS));
-        textAltNames.setText(String.join(", ", series.altNames));
+        // Note: altNames field unset because of some rendering issues with Unicode text,
+        // including some Japanese glyphs. See: https://github.com/javafxports/openjdk-jfx/issues/287
+        // textAltNames.setText(String.join(", ", series.altNames));
         textAuthor.setText(series.author);
         textArtist.setText(series.artist);
-        textRating
-                .setText(Double.toString(series.rating) + " (" + OutputHelpers.intToString(series.ratings) + " users)");
+        textRating.setText(Double.toString(series.rating) + " (" + OutputHelpers.intToString(series.ratings) + " users)");
         textViews.setText(OutputHelpers.intToString(series.views));
         textFollows.setText(OutputHelpers.intToString(series.follows));
         textGenres.setText(String.join(", ", series.genres));
