@@ -92,15 +92,15 @@ public class SceneManager {
      * @param stage the stage of the main application window
      */
     public SceneManager(Stage stage) {
+        Config loaded_config = Data.loadConfig();
+        this.config = loaded_config == null ? new Config() : loaded_config;
+
         this.stage = stage;
         this.stage_config = new Stage();
         this.roots = new HashMap<>();
         this.controllers = new HashMap<>();
-        this.pluginManager = new PluginManager();
+        this.pluginManager = new PluginManager(this.config);
         this.contentLoader = new ContentLoader();
-
-        Config loaded_config = Data.loadConfig();
-        this.config = loaded_config == null ? new Config() : loaded_config;
 
         // add icon to the window bar
         Image window_icon = new Image(getClass().getResourceAsStream(

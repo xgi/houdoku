@@ -42,6 +42,14 @@ public class AniList extends GenericTrackerOAuth {
     private final OkHttpClient client =
             new OkHttpClient().newBuilder().addInterceptor(interceptor).build();
 
+    public AniList() {
+    }
+
+    public AniList(String access_token) {
+        this.authenticated = true;
+        this.setAccessToken(access_token);
+    }
+
     @Override
     public void generateToken(String code) throws IOException {
         FormBody.Builder body = new FormBody.Builder();
@@ -107,9 +115,9 @@ public class AniList extends GenericTrackerOAuth {
      */
     private JsonObject post(String body, String[]... variables) throws IOException,
             NotAuthenticatedException {
-        if (!this.authenticated) {
-            throw new NotAuthenticatedException();
-        }
+        // if (!this.authenticated) {
+        //     throw new NotAuthenticatedException();
+        // }
 
         JsonObject json_root = new JsonObject();
         JsonObject json_variables = new JsonObject();
@@ -133,9 +141,9 @@ public class AniList extends GenericTrackerOAuth {
      * @throws NotAuthenticatedException the user is not authenticated
      */
     private JsonObject authenticatedUser() throws IOException, NotAuthenticatedException {
-        if (!this.authenticated) {
-            throw new NotAuthenticatedException();
-        }
+        // if (!this.authenticated) {
+        //     throw new NotAuthenticatedException();
+        // }
 
         final String body = "" +
                 "query User {\n" +

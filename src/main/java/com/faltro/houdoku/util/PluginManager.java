@@ -1,5 +1,6 @@
 package com.faltro.houdoku.util;
 
+import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.plugins.content.*;
 import com.faltro.houdoku.plugins.info.AniList;
 import com.faltro.houdoku.plugins.info.InfoSource;
@@ -24,8 +25,10 @@ public class PluginManager {
      * <p>
      * This constructor creates instances of the available plugins, which are
      * manually defined here.
+     * 
+     * @param config the user Config to load initial plugin settings (not stored)
      */
-    public PluginManager() {
+    public PluginManager(Config config) {
         contentSources = new ArrayList<>();
         contentSources.addAll(Arrays.asList(
                 new MangaDex(),
@@ -37,9 +40,15 @@ public class PluginManager {
                 // add other content sources here
         ));
         infoSource = new AniList(); // change to desired InfoSource
+
+        boolean anilist_authenticated = (boolean) config.getValue(Config.Field.TRACKER_ANILIST_AUTHENTICATED);
+        String anilist_token = (String) config.getValue(Config.Field.TRACKER_ANILIST_TOKEN);
+
         trackers = new ArrayList<>();
         trackers.addAll(Arrays.asList(
-                new com.faltro.houdoku.plugins.tracker.AniList()
+                anilist_authenticated ?
+                    new com.faltro.houdoku.plugins.tracker.AniList(anilist_token) :
+                    new com.faltro.houdoku.plugins.tracker.AniList()
                 // add other trackers here
         ));
     }
