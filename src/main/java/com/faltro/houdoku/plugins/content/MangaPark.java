@@ -3,6 +3,11 @@ package com.faltro.houdoku.plugins.content;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.ParseHelpers;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import javafx.scene.image.Image;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -71,7 +76,7 @@ public class MangaPark extends GenericContentSource {
 
     @Override
     public ArrayList<Chapter> chapters(Series series, Document document) {
-        Element container = document.selectFirst("div[class=stream]");
+        Element container = document.selectFirst("div[class=book-list-1]");
 
         ArrayList<Chapter> chapters = new ArrayList<>();
         for (Element item : container.select("li")) {
@@ -81,27 +86,12 @@ public class MangaPark extends GenericContentSource {
             String source_extended = link.attr("href");
             String source = source_extended.substring(0, source_extended.lastIndexOf("/"));
 
-            double chapterNum = ParseHelpers.parseDouble(link.text().split("ch.")[1]);
-            String[] volume_extended = link.parent().parent().parent().parent()
-                    .selectFirst("h4").attr("id").split("-");
-            int volumeNum = volume_extended.length < 3 ? 0 :
-                    volume_extended[2].equals("tbd") ? 0 :
-                            ParseHelpers.parseInt(volume_extended[2]);
-
-            String date_string_extended = item.selectFirst("i").text();
-            String date_string = date_string_extended.substring(0,
-                    date_string_extended.lastIndexOf(" "));
-            DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
-                    .parseCaseInsensitive()
-                    .appendPattern("MMM d, yyyy, HH:mm")
-                    .toFormatter(Locale.ENGLISH);
-            LocalDateTime localDateTime = item.className().equals("new") ? null :
-                    LocalDateTime.parse(date_string, dateTimeFormatter);
+            String[] chapter_cont = link.text().split("ch.");
+            double chapterNum = chapter_cont.length > 1 ? ParseHelpers.parseDouble(chapter_cont[1]) : 0;
 
             HashMap<String, Object> metadata = new HashMap<>();
             metadata.put("chapterNum", chapterNum);
-            metadata.put("volumeNum", volumeNum);
-            metadata.put("localDateTime", localDateTime);
+            metadata.put("localDateTime", null);
 
             chapters.add(new Chapter(series, title, source, metadata));
         }
@@ -113,8 +103,7 @@ public class MangaPark extends GenericContentSource {
     public Series series(String source, boolean quick) throws IOException {
         Document seriesDocument = parse(GET(client, PROTOCOL + "://" + DOMAIN + source));
 
-        Element container = seriesDocument.selectFirst("table[class=outer]");
-
+        Element container = seriesDocument.selectFirst("section[class=manga]");
         String image_source = container.selectFirst("img").attr("src");
         Image cover = imageFromURL(client, PROTOCOL + ":" + image_source,
                 ParseHelpers.COVER_MAX_WIDTH);
@@ -129,16 +118,14 @@ public class MangaPark extends GenericContentSource {
         Element rowGenres = ParseHelpers.tdWithHeader(tbody, "Genre(s)");
         Element rowRating = ParseHelpers.tdWithHeader(tbody, "Rating");
         Element rowStatus = ParseHelpers.tdWithHeader(tbody, "Status");
-        Element rowRank = ParseHelpers.tdWithHeader(tbody, "Rank");
 
         String[] altNames = rowAltNames.selectFirst("td").text().split(" ; ");
         String author = rowAuthor.selectFirst("td").selectFirst("a").text();
         String artist = rowArtist.selectFirst("td").selectFirst("a").text();
-        String[] genres = rowGenres.selectFirst("td").text().split(" ; ");
+        String[] genres = ParseHelpers.htmlListToStringArray(rowGenres.selectFirst("td"), "a");
         double rating = ParseHelpers.parseDouble(rowRating.selectFirst("td").text().split(" ")[1]);
         int ratings = ParseHelpers.parseInt(rowRating.selectFirst("td").text().split(" ")[6]);
         String status = rowStatus.selectFirst("td").text();
-        int views = ParseHelpers.parseInt(rowRank.selectFirst("td").text().split(" ")[3]);
 
         HashMap<String, Object> metadata = new HashMap<>();
         metadata.put("author", author);
@@ -146,7 +133,6 @@ public class MangaPark extends GenericContentSource {
         metadata.put("status", status);
         metadata.put("altNames", altNames);
         metadata.put("description", description);
-        metadata.put("views", views);
         metadata.put("rating", rating);
         metadata.put("ratings", ratings);
         metadata.put("genres", genres);
@@ -158,18 +144,26 @@ public class MangaPark extends GenericContentSource {
 
     @Override
     public Image image(Chapter chapter, int page) throws IOException {
-        Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + chapter.getSource() + "/" +
-                Integer.toString(page)));
+        if (chapter.imageUrls == null) {
+            Document document = parse(GET(client, PROTOCOL + "://" + DOMAIN + chapter.getSource()));
+            String pages_text = document.toString().split("var _load_pages = ")[1].split(";")[0];
+            JsonArray json_pages = new JsonParser().parse(pages_text).getAsJsonArray();
 
-        // we may not have determined the number of pages yet, so do that here
-        if (chapter.images.length == 1) {
-            Element num_link = document.selectFirst("a[class=img-num]");
-            int num_pages = ParseHelpers.parseInt(num_link.text().split(" / ")[1]);
-            chapter.images = new Image[num_pages];
+            String[] urls = new String[json_pages.size()];
+
+            for (JsonElement json_page : json_pages) {
+                JsonObject json_page_o = (JsonObject) json_page;
+                int num = json_page_o.get("n").getAsInt();
+                urls[num - 1] = json_page_o.get("u").getAsString();
+            }
+
+            chapter.images = new Image[urls.length];
+            chapter.imageUrls = urls;
+            
+            // rerun the method, but we should now match chapter.imageUrls != null
+            return image(chapter, page);
+        } else {
+            return imageFromURL(client, chapter.imageUrls[page - 1]);
         }
-
-        String img_src = document.selectFirst("img#img-1").attr("src");
-        return imageFromURL(client,
-                img_src.startsWith(PROTOCOL) ? img_src : PROTOCOL + ":" + img_src);
     }
 }
