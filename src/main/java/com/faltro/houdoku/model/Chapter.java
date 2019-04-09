@@ -32,6 +32,7 @@ public class Chapter {
         this.source = source;
         this.images = new Image[1];
         this.currentPageNum = 0;
+        this.language = Languages.Language.UNKNOWN;
     }
 
     public Chapter(Series series, String title, String source, HashMap<String, Object> metadata) {

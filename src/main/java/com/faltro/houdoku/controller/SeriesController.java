@@ -260,20 +260,22 @@ public class SeriesController extends Controller {
                 // group, language, or chapterNum
                 String[] filters = filterTextField.getText().toLowerCase().split(",");
                 boolean matches_all = true;
-                for (String filter : filters) {
-                    boolean titleMatches = chapter.getTitle()
-                            .toLowerCase().contains(filter);
-                    boolean groupMatches = chapter.group != null &&
-                            chapter.group.toLowerCase().contains(filter);
-                    boolean languageMatches = chapter.language != null &&
-                            chapter.language.toString().toLowerCase().contains(filter);
-                    boolean chapterNumMatches = Double.toString(chapter.chapterNum)
-                            .toLowerCase().contains(filter);
+                if (filters.length > 0) {
+                    for (String filter : filters) {
+                        boolean titleMatches = chapter.getTitle()
+                                .toLowerCase().contains(filter);
+                        boolean groupMatches = chapter.group != null &&
+                                chapter.group.toLowerCase().contains(filter);
+                        boolean languageMatches = chapter.language != null &&
+                                chapter.language.toString().toLowerCase().contains(filter);
+                        boolean chapterNumMatches = Double.toString(chapter.chapterNum)
+                                .toLowerCase().contains(filter);
 
-                    matches_all = matches_all && (
-                            titleMatches || groupMatches ||
-                                    languageMatches || chapterNumMatches
-                    );
+                        matches_all = matches_all && (
+                                titleMatches || groupMatches ||
+                                        languageMatches || chapterNumMatches
+                        );
+                    }
                 }
 
                 // There are some config-level filters as well, which must all
@@ -285,7 +287,8 @@ public class SeriesController extends Controller {
                     Languages.get((String) config.getValue(Config.Field.LANGUAGE_FILTER_LANGUAGE)) ==
                     chapter.language : true;
 
-                return matches_all && config_lang_matches;
+                return matches_all &&
+                    (config_lang_matches || chapter.language == Languages.Language.UNKNOWN);
             });
         filterTextField.textProperty().addListener(this.filterListener);
 
