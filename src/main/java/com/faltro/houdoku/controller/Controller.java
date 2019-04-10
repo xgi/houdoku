@@ -8,8 +8,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * This class contains method declarations and/or implementations for operations
- * that are generic between most of the client's controllers.
+ * This class contains method declarations and/or implementations for operations that are generic
+ * between most of the client's controllers.
  */
 abstract public class Controller {
     /**
@@ -41,14 +41,12 @@ abstract public class Controller {
     }
 
     /**
-     * Function that will be called by the scene manager when this controller
-     * is made active.
+     * Function that will be called by the scene manager when this controller is made active.
      */
     abstract public void onMadeActive();
 
     /**
-     * Function that will be called by the scene manager when this controller
-     * is made inactive.
+     * Function that will be called by the scene manager when this controller is made inactive.
      */
     abstract public void onMadeInactive();
 
@@ -57,17 +55,13 @@ abstract public class Controller {
      */
     @FXML
     void initialize() {
-        container.prefWidthProperty().bind(
-                stage.widthProperty()
-        );
-        container.prefHeightProperty().bind(
-                stage.heightProperty()
-        );
+        container.prefWidthProperty().bind(stage.widthProperty());
+        container.prefHeightProperty().bind(stage.heightProperty());
     }
 
     /**
-     * Reload/"restart" the page. Primarily expected to be run after changes
-     * have been made to the @{@link com.faltro.houdoku.model.Config}.
+     * Reload/"restart" the page. Primarily expected to be run after changes have been made to
+     * the @{@link com.faltro.houdoku.model.Config}.
      */
     void reload() {
         onMadeInactive();

@@ -1,15 +1,13 @@
 package com.faltro.houdoku.model;
 
 import com.faltro.houdoku.data.Data;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * A user-specific library of Series'.
  * <p>
- * This class also defines the root category, "All Series", which cannot be
- * altered or removed.
+ * This class also defines the root category, "All Series", which cannot be altered or removed.
  */
 public class Library {
     private final ArrayList<Series> serieses;
@@ -37,9 +35,9 @@ public class Library {
         fantasy.addSubcategory(new Category("Magic", fantasy));
         scifi.addSubcategory(new Category("Mecha", scifi));
 
-        ArrayList<Category> subcategories = new ArrayList<>(Arrays.asList(
-                action, adventure, comedy, drama, fantasy, historical, mystery, psychological,
-                romance, scifi, sliceoflife, supernatural));
+        ArrayList<Category> subcategories =
+                new ArrayList<>(Arrays.asList(action, adventure, comedy, drama, fantasy, historical,
+                        mystery, psychological, romance, scifi, sliceoflife, supernatural));
         rootCategory.setSubcategories(subcategories);
 
     }
@@ -69,13 +67,12 @@ public class Library {
         // The maximum height of the tree is strictly set to 3, including the
         // required "All Series" root
         for (Category c1 : rootCategory.getSubcategories()) {
-            c1.setOccurrences((int) found_categories.stream().filter(category ->
-                    category.getName().toLowerCase().equals(c1.getName().toLowerCase())
-            ).count());
+            c1.setOccurrences((int) found_categories.stream().filter(
+                    category -> category.getName().toLowerCase().equals(c1.getName().toLowerCase()))
+                    .count());
             for (Category c2 : c1.getSubcategories()) {
-                c2.setOccurrences((int) found_categories.stream().filter(category ->
-                        category.getName().toLowerCase().equals(c2.getName().toLowerCase())
-                ).count());
+                c2.setOccurrences((int) found_categories.stream().filter(category -> category
+                        .getName().toLowerCase().equals(c2.getName().toLowerCase())).count());
             }
         }
     }
@@ -83,8 +80,7 @@ public class Library {
     /**
      * Add a Series to the library.
      * <p>
-     * This method does not check whether the series already exists in the
-     * library.
+     * This method does not check whether the series already exists in the library.
      *
      * @param series the Series to add
      */
@@ -109,19 +105,17 @@ public class Library {
     /**
      * Try to find a series in the library matching the given title.
      * <p>
-     * This check is case-insensitive, and also checks the altNames of the
-     * series' in the library.
+     * This check is case-insensitive, and also checks the altNames of the series' in the library.
      *
      * @param title the title of the series to check
      * @return the (first) matching series, or null
      */
     public Series find(String title) {
-        return serieses.stream().filter(series ->
-                series.getTitle().toLowerCase().equals(title.toLowerCase()) ||
-                        Arrays.stream(series.altNames).anyMatch(name ->
-                                name.toLowerCase().equals(title.toLowerCase())
-                        )
-        ).findFirst().orElse(null);
+        return serieses.stream()
+                .filter(series -> series.getTitle().toLowerCase().equals(title.toLowerCase())
+                        || Arrays.stream(series.altNames)
+                                .anyMatch(name -> name.toLowerCase().equals(title.toLowerCase())))
+                .findFirst().orElse(null);
     }
 
     public ArrayList<Series> getSerieses() {

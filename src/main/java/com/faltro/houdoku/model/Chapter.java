@@ -2,15 +2,14 @@ package com.faltro.houdoku.model;
 
 import com.faltro.houdoku.model.Languages.Language;
 import javafx.scene.image.Image;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 
 /**
  * An individual release of a chapter for a Series.
  * <p>
- * A series can have multiple chapters with the same number, since the content
- * source may provide multiple groups' scanlations for the chapter.
+ * A series can have multiple chapters with the same number, since the content source may provide
+ * multiple groups' scanlations for the chapter.
  */
 public class Chapter {
     public double chapterNum;
@@ -44,8 +43,8 @@ public class Chapter {
     /**
      * Ensures that currentPageNum is valid.
      * <p>
-     * Checks that the currentPageNum is neither less than 0 nor greater
-     * than the total number of pages.
+     * Checks that the currentPageNum is neither less than 0 nor greater than the total number of
+     * pages.
      */
     private void sanitizePageNumber() {
         if (currentPageNum < 0) {
@@ -68,8 +67,8 @@ public class Chapter {
      * <li>localDateTime (LocalDateTime)</li>
      * </ul>
      *
-     * @param metadata a HashMap where keys are the field names listed above
-     *                 as Strings and values of the matching type
+     * @param metadata a HashMap where keys are the field names listed above as Strings and values
+     *                 of the matching type
      */
     private void setMetadata(HashMap<String, Object> metadata) {
         for (String key : metadata.keySet()) {
@@ -123,9 +122,8 @@ public class Chapter {
     /**
      * Clears the array of images.
      * <p>
-     * Expected to be called when the user is not expected to continue viewing
-     * the images, in order to free up memory when the image data is cleared
-     * from memory by the garbage collector.
+     * Expected to be called when the user is not expected to continue viewing the images, in order
+     * to free up memory when the image data is cleared from memory by the garbage collector.
      */
     public void clearImages() {
         images = new Image[1];
@@ -165,9 +163,7 @@ public class Chapter {
     }
 
     public String toString() {
-        return String.format("%s - %s",
-                series.getTitle(),
-                title.equals("") ? String.valueOf(chapterNum) : title
-        );
+        return String.format("%s - %s", series.getTitle(),
+                title.equals("") ? String.valueOf(chapterNum) : title);
     }
 }

@@ -8,7 +8,6 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.ContentLoader;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -25,16 +24,14 @@ public class ReloadSeriesRunnable extends LoaderRunnable {
      * @param contentLoader    the ContentLoader which created this instance
      * @param contentSource    the ContentSource to load from
      * @param series           the series to reload
-     * @param quick            whether the list of chapters should be "quickly"
-     *                         reloaded, which ensures that only one total HTTP
-     *                         request is made, but does not guarantee that all
-     *                         chapters are loaded
-     * @param seriesController the SeriesController to update before/after the
-     *                         series is reloaded
+     * @param quick            whether the list of chapters should be "quickly" reloaded, which
+     *                         ensures that only one total HTTP request is made, but does not
+     *                         guarantee that all chapters are loaded
+     * @param seriesController the SeriesController to update before/after the series is reloaded
      */
     public ReloadSeriesRunnable(String name, ContentLoader contentLoader,
-                                ContentSource contentSource, Series series, boolean quick,
-                                SeriesController seriesController) {
+            ContentSource contentSource, Series series, boolean quick,
+            SeriesController seriesController) {
         super(name, contentLoader);
         this.contentSource = contentSource;
         this.series = series;
@@ -83,7 +80,7 @@ public class ReloadSeriesRunnable extends LoaderRunnable {
                         if (new_chapter.chapterNum == old_chapter.chapterNum
                                 && (new_chapter.language == old_chapter.language)
                                 && ((new_chapter.group == null && old_chapter.group == null)
-                                || new_chapter.group.equalsIgnoreCase(old_chapter.group))) {
+                                        || new_chapter.group.equalsIgnoreCase(old_chapter.group))) {
                             old_chapter.setTitle(new_chapter.getTitle());
                             old_chapter.setSource(new_chapter.getSource());
                             old_chapter.chapterNum = new_chapter.chapterNum;

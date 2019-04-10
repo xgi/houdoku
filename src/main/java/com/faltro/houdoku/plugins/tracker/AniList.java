@@ -10,18 +10,15 @@ import com.google.gson.JsonParser;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
-
 import java.io.IOException;
-
 import static com.faltro.houdoku.net.Requests.POST;
 
 /**
- * This class contains implementation details for processing data from a
- * specific "tracker" - a website for users to track their reading.
+ * This class contains implementation details for processing data from a specific "tracker" - a
+ * website for users to track their reading.
  * <p>
- * For method and field documentation, please see the Tracker/TrackerOAuth
- * classes. Additionally, the implementation of some common methods is done in
- * the GenericTrackerOAuth class.
+ * For method and field documentation, please see the Tracker/TrackerOAuth classes. Additionally,
+ * the implementation of some common methods is done in the GenericTrackerOAuth class.
  *
  * @see GenericTrackerOAuth
  * @see TrackerOAuth
@@ -60,8 +57,7 @@ public class AniList extends GenericTrackerOAuth {
         body.add("code", code);
         Response response = POST(client, PROTOCOL + "://" + DOMAIN + TOKEN_URL, body.build());
 
-        JsonObject json_data = new JsonParser().parse(response.body().string())
-                .getAsJsonObject();
+        JsonObject json_data = new JsonParser().parse(response.body().string()).getAsJsonObject();
         JsonElement json_access_token = json_data.get("access_token");
         if (json_access_token != null) {
             this.setAccessToken(json_access_token.getAsString());
@@ -75,8 +71,8 @@ public class AniList extends GenericTrackerOAuth {
     }
 
     @Override
-    public void updateChaptersRead(String id, int num) throws IOException,
-            NotAuthenticatedException {
+    public void updateChaptersRead(String id, int num)
+            throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
         }
@@ -91,6 +87,7 @@ public class AniList extends GenericTrackerOAuth {
             return;
         }
 
+        // @formatter:off
         final String body = "" +
                 "mutation UpdateManga($listId: Int, $progress: Int) {\n" +
                 "  SaveMediaListEntry (id: $listId, progress: $progress) {" +
@@ -98,10 +95,10 @@ public class AniList extends GenericTrackerOAuth {
                 "    progress\n" +
                 "  }\n" +
                 "}";
+        // @formatter:on
 
-        JsonObject response = post(body,
-                new String[]{"listId", series.get("id").getAsString()},
-                new String[]{"progress", Integer.toString(num)});
+        JsonObject response = post(body, new String[] {"listId", series.get("id").getAsString()},
+                new String[] {"progress", Integer.toString(num)});
     }
 
     /**
@@ -113,10 +110,10 @@ public class AniList extends GenericTrackerOAuth {
      * @throws IOException               an IOException occurred when making the request
      * @throws NotAuthenticatedException the user is not authenticated
      */
-    private JsonObject post(String body, String[]... variables) throws IOException,
-            NotAuthenticatedException {
+    private JsonObject post(String body, String[]... variables)
+            throws IOException, NotAuthenticatedException {
         // if (!this.authenticated) {
-        //     throw new NotAuthenticatedException();
+        // throw new NotAuthenticatedException();
         // }
 
         JsonObject json_root = new JsonObject();
@@ -128,8 +125,8 @@ public class AniList extends GenericTrackerOAuth {
         json_root.add("variables", json_variables);
 
         Response response = POST(client, PROTOCOL + "://graphql." + DOMAIN, json_root.toString());
-        JsonObject json_response = new JsonParser().parse(response.body().string())
-                .getAsJsonObject();
+        JsonObject json_response =
+                new JsonParser().parse(response.body().string()).getAsJsonObject();
         return json_response.get("data").getAsJsonObject();
     }
 
@@ -142,9 +139,10 @@ public class AniList extends GenericTrackerOAuth {
      */
     private JsonObject authenticatedUser() throws IOException, NotAuthenticatedException {
         // if (!this.authenticated) {
-        //     throw new NotAuthenticatedException();
+        // throw new NotAuthenticatedException();
         // }
 
+        // @formatter:off
         final String body = "" +
                 "query User {\n" +
                 "  Viewer {" +
@@ -155,6 +153,7 @@ public class AniList extends GenericTrackerOAuth {
                 "    }\n" +
                 "  }\n" +
                 "}";
+        // @formatter:on
 
         JsonObject response = post(body);
         JsonElement viewer = response.get("Viewer");
@@ -176,8 +175,9 @@ public class AniList extends GenericTrackerOAuth {
      * @throws IOException               an IOException occurred when retrieving
      * @throws NotAuthenticatedException the user is not authenticated
      */
-    private JsonObject seriesInList(String user_id, String manga_id) throws IOException,
-            NotAuthenticatedException {
+    private JsonObject seriesInList(String user_id, String manga_id)
+            throws IOException, NotAuthenticatedException {
+        // @formatter:off
         final String body = "" +
                 "query ($id: Int!, $manga_id: Int!) {\n" +
                 "  Page {" +
@@ -196,17 +196,16 @@ public class AniList extends GenericTrackerOAuth {
                 "    }\n" +
                 "  }\n" +
                 "}";
+        // @formatter:on
 
-        JsonObject response = post(body,
-                new String[]{"id", user_id},
-                new String[]{"manga_id", manga_id});
+        JsonObject response =
+                post(body, new String[] {"id", user_id}, new String[] {"manga_id", manga_id});
 
         JsonElement page = response.get("Page");
         if (page.isJsonNull()) {
             return null;
         } else {
-            JsonArray results =
-                    page.getAsJsonObject().get("mediaList").getAsJsonArray();
+            JsonArray results = page.getAsJsonObject().get("mediaList").getAsJsonArray();
             return results.get(0).getAsJsonObject();
         }
     }

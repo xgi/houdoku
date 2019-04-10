@@ -8,7 +8,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -33,13 +32,13 @@ public class Data {
     /**
      * The Path for storing library data.
      */
-    private static final Path PATH_LIBRARY = Paths.get(
-            USER_DATA_DIR + File.separator + "library.json.gzip");
+    private static final Path PATH_LIBRARY =
+            Paths.get(USER_DATA_DIR + File.separator + "library.json.gzip");
     /**
      * The Path for storing config data.
      */
-    private static final Path PATH_CONFIG = Paths.get(
-            USER_DATA_DIR + File.separator + "config.json.gzip");
+    private static final Path PATH_CONFIG =
+            Paths.get(USER_DATA_DIR + File.separator + "config.json.gzip");
     /**
      * The Path for storing series cover images.
      */
@@ -177,8 +176,8 @@ public class Data {
 
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
         // convert to BufferedImage.TYPE_INT_RGB
-        BufferedImage convertedImg = new BufferedImage(bufferedImage.getWidth(), bufferedImage
-                .getHeight(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage convertedImg = new BufferedImage(bufferedImage.getWidth(),
+                bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
         convertedImg.getGraphics().drawImage(bufferedImage, 0, 0, null);
         ImageIO.write(convertedImg, "jpg", path.toFile());
     }

@@ -4,7 +4,6 @@ import com.faltro.houdoku.controller.*;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Properties;
 

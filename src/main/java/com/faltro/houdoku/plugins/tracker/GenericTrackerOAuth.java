@@ -3,12 +3,11 @@ package com.faltro.houdoku.plugins.tracker;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import okhttp3.OkHttpClient;
-
 import java.io.IOException;
 
 /**
- * This class contains implementations for some methods from TrackerOAuth that
- * are expected to be common between most OAuth-based tracker plugins.
+ * This class contains implementations for some methods from TrackerOAuth that are expected to be
+ * common between most OAuth-based tracker plugins.
  * <p>
  * For method and field documentation, please see the TrackerOAuth class.
  *
@@ -40,13 +39,7 @@ public class GenericTrackerOAuth implements TrackerOAuth {
             String redirect_uri = this.getClass().getField("REDIRECT_URI").get(null).toString();
             String response_type = this.getClass().getField("RESPONSE_TYPE").get(null).toString();
             return String.format("%s://%s%s?client_id=%s&redirect_uri=%s&response_type=%s",
-                    protocol,
-                    domain,
-                    auth_url,
-                    client_id,
-                    redirect_uri,
-                    response_type
-            );
+                    protocol, domain, auth_url, client_id, redirect_uri, response_type);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
@@ -59,8 +52,8 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public String authenticatedUserName() throws NotImplementedException, NotAuthenticatedException,
-            IOException {
+    public String authenticatedUserName()
+            throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }
 
@@ -85,8 +78,8 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public void updateChaptersRead(String id, int num) throws NotImplementedException,
-            NotAuthenticatedException, IOException {
+    public void updateChaptersRead(String id, int num)
+            throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }
 

@@ -61,7 +61,7 @@ $ mvn test
 ```
 
 To compile the executable JAR, use `mvn package`. The Houdoku artifact will be in
-`./out/artifacts`. Here is a useful command for building & running the client (note the
+`./out/artifacts`. This command may be useful for building & running the client (note the
 optional `skipTests`):
 
 ```bash
@@ -71,4 +71,4 @@ $ mvn package [-DskipTests] && \
 
 # License
 
-[MIT License](https://github.com/xgi/houdoku/blob/master/LICENSE.txt)
+[MIT License](https://github.com/xgi/houdoku/blob/master/LICENSE)

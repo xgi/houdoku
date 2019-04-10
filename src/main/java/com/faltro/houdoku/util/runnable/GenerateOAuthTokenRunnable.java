@@ -5,7 +5,6 @@ import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.ContentLoader;
-
 import java.io.IOException;
 
 public class GenerateOAuthTokenRunnable extends LoaderRunnable {
@@ -20,12 +19,10 @@ public class GenerateOAuthTokenRunnable extends LoaderRunnable {
      * @param contentLoader    the ContentLoader which created this instance
      * @param tracker          the TrackerOAuth to load from
      * @param code             a verification code given by the user after authorization
-     * @param configController the ConfigController to update after the token
-     *                         is generated
+     * @param configController the ConfigController to update after the token is generated
      */
     public GenerateOAuthTokenRunnable(String name, ContentLoader contentLoader,
-                                      TrackerOAuth tracker, String code,
-                                      ConfigController configController) {
+            TrackerOAuth tracker, String code, ConfigController configController) {
         super(name, contentLoader);
         this.tracker = tracker;
         this.code = code;
@@ -40,10 +37,9 @@ public class GenerateOAuthTokenRunnable extends LoaderRunnable {
             // update the displayed authentication status
             try {
                 String text = String.format("You are authenticated as: %s",
-                        tracker.authenticatedUserName()
-                );
-                configController.updateTrackerStatus(
-                        tracker.getClass().getField("ID").getInt(null), true, text);
+                        tracker.authenticatedUserName());
+                configController.updateTrackerStatus(tracker.getClass().getField("ID").getInt(null),
+                        true, text);
             } catch (NoSuchFieldException | IllegalAccessException | NotAuthenticatedException e) {
                 e.printStackTrace();
             }

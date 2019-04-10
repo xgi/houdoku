@@ -38,7 +38,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Callback;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +52,7 @@ import java.util.List;
  */
 public class SeriesController extends Controller {
     public static final int ID = 1;
-    private static final double[] COL_WIDTHS = { 0.30, // title
+    private static final double[] COL_WIDTHS = {0.30, // title
             0.07, // volume
             0.07, // chapter
             0.10, // language
@@ -92,8 +91,8 @@ public class SeriesController extends Controller {
     /**
      * Placeholder banner image.
      */
-    private static final Image BANNER_PLACEHOLDER = new Image(
-            SeriesController.class.getResource("/img/blank_banner.png").toString());
+    private static final Image BANNER_PLACEHOLDER =
+            new Image(SeriesController.class.getResource("/img/blank_banner.png").toString());
     @FXML
     public ProgressIndicator reloadProgressIndicator;
     @FXML
@@ -169,9 +168,9 @@ public class SeriesController extends Controller {
     /**
      * Initialize the components of the controller's view.
      * <p>
-     * This method binds the size of components as appropriate using this class'
-     * static variables. It creates and sets the cell factory and cell value
-     * factory for the columns in the chapters table.
+     * This method binds the size of components as appropriate using this class' static variables.
+     * It creates and sets the cell factory and cell value factory for the columns in the chapters
+     * table.
      *
      * @see Controller#initialize()
      */
@@ -180,30 +179,24 @@ public class SeriesController extends Controller {
     public void initialize() {
         super.initialize();
 
-        metadataContainer.maxWidthProperty().bind(
-                metadataScrollPane.widthProperty()
-                        .subtract(new SimpleIntegerProperty(SceneManager.VSCROLLBAR_WIDTH))
-                        .subtract(new SimpleDoubleProperty(metadataScrollPane.getPadding().getLeft()))
-                        .subtract(new SimpleDoubleProperty(metadataScrollPane.getPadding().getRight()))
-        );
+        metadataContainer.maxWidthProperty().bind(metadataScrollPane.widthProperty()
+                .subtract(new SimpleIntegerProperty(SceneManager.VSCROLLBAR_WIDTH))
+                .subtract(new SimpleDoubleProperty(metadataScrollPane.getPadding().getLeft()))
+                .subtract(new SimpleDoubleProperty(metadataScrollPane.getPadding().getRight())));
 
         // create an array of the columns for easier bulk operations
-        List<TableColumn<Chapter, String>> columns = Arrays.asList(
-                titleColumn, volumeColumn, chapterColumn, languageColumn,
-                groupColumn, viewsColumn, dateColumn
-        );
-        assert COL_WIDTHS.length == columns.size() : "Number of specified " +
-                "chapter table columns does not match number of specified " +
-                "column widths (implementation error)";
+        List<TableColumn<Chapter, String>> columns = Arrays.asList(titleColumn, volumeColumn,
+                chapterColumn, languageColumn, groupColumn, viewsColumn, dateColumn);
+        assert COL_WIDTHS.length == columns.size() : "Number of specified "
+                + "chapter table columns does not match number of specified "
+                + "column widths (implementation error)";
 
         // perform operations common to each column
         for (TableColumn<Chapter, String> column : columns) {
             // bind column widths to a percentage of the table width
             // manually resizing columns (by user) is disabled in the fxml
-            column.prefWidthProperty().bind(
-                    tableView.widthProperty()
-                            .multiply(COL_WIDTHS[columns.indexOf(column)])
-            );
+            column.prefWidthProperty()
+                    .bind(tableView.widthProperty().multiply(COL_WIDTHS[columns.indexOf(column)]));
 
             // create column cell factories which simply display strings as
             // Text objects in each cell
@@ -211,11 +204,8 @@ public class SeriesController extends Controller {
         }
 
         // set the last column's width to subtract the scrollbar width
-        columns.get(columns.size() - 1).prefWidthProperty().bind(
-                tableView.widthProperty()
-                        .multiply(COL_WIDTHS[columns.size() - 1])
-                        .subtract(SceneManager.VSCROLLBAR_WIDTH)
-        );
+        columns.get(columns.size() - 1).prefWidthProperty().bind(tableView.widthProperty()
+                .multiply(COL_WIDTHS[columns.size() - 1]).subtract(SceneManager.VSCROLLBAR_WIDTH));
 
         // create column cell value factories with appropriate field
         titleColumn.setCellValueFactory(p -> {
@@ -224,8 +214,7 @@ public class SeriesController extends Controller {
         });
         volumeColumn.setCellValueFactory(p -> {
             int volumeNum = p.getValue().volumeNum;
-            return new SimpleStringProperty(volumeNum == 0 ? "?" :
-                    Integer.toString(volumeNum));
+            return new SimpleStringProperty(volumeNum == 0 ? "?" : Integer.toString(volumeNum));
         });
         chapterColumn.setCellValueFactory(p -> {
             double chapterNum = p.getValue().chapterNum;
@@ -241,64 +230,61 @@ public class SeriesController extends Controller {
         });
         viewsColumn.setCellValueFactory(p -> {
             int views = p.getValue().views;
-            return new SimpleStringProperty(views == 0 ? "?" :
-                    Integer.toString(views));
+            return new SimpleStringProperty(views == 0 ? "?" : Integer.toString(views));
         });
         dateColumn.setCellValueFactory(p -> {
             LocalDateTime localDateTime = p.getValue().localDateTime;
-            return new SimpleStringProperty(localDateTime == null ? "?" :
-                    localDateTime.format(OutputHelpers.dateTimeFormatter));
+            return new SimpleStringProperty(localDateTime == null ? "?"
+                    : localDateTime.format(OutputHelpers.dateTimeFormatter));
         });
 
         // create blank FilteredList with predicate based on filterTextField
         this.filteredData = new FilteredList<>(FXCollections.emptyObservableList());
-        this.filterListener = (observable, oldValue, newValue) ->
-            this.filteredData.setPredicate(chapter -> {
-                // We allow the user to specify multiple filter strings,
-                // separated by a comma. For a series to match the filter, ALL
-                // sections must be present in at least one of the title,
-                // group, language, or chapterNum
-                String[] filters = filterTextField.getText().toLowerCase().split(",");
-                boolean matches_all = true;
-                if (filters.length > 0) {
-                    for (String filter : filters) {
-                        boolean titleMatches = chapter.getTitle()
-                                .toLowerCase().contains(filter);
-                        boolean groupMatches = chapter.group != null &&
-                                chapter.group.toLowerCase().contains(filter);
-                        boolean languageMatches = chapter.language != null &&
-                                chapter.language.toString().toLowerCase().contains(filter);
-                        boolean chapterNumMatches = Double.toString(chapter.chapterNum)
-                                .toLowerCase().contains(filter);
+        this.filterListener =
+                (observable, oldValue, newValue) -> this.filteredData.setPredicate(chapter -> {
+                    // We allow the user to specify multiple filter strings,
+                    // separated by a comma. For a series to match the filter, ALL
+                    // sections must be present in at least one of the title,
+                    // group, language, or chapterNum
+                    String[] filters = filterTextField.getText().toLowerCase().split(",");
+                    boolean matches_all = true;
+                    if (filters.length > 0) {
+                        for (String filter : filters) {
+                            boolean titleMatches =
+                                    chapter.getTitle().toLowerCase().contains(filter);
+                            boolean groupMatches = chapter.group != null
+                                    && chapter.group.toLowerCase().contains(filter);
+                            boolean languageMatches = chapter.language != null
+                                    && chapter.language.toString().toLowerCase().contains(filter);
+                            boolean chapterNumMatches = Double.toString(chapter.chapterNum)
+                                    .toLowerCase().contains(filter);
 
-                        matches_all = matches_all && (
-                                titleMatches || groupMatches ||
-                                        languageMatches || chapterNumMatches
-                        );
+                            matches_all = matches_all && (titleMatches || groupMatches
+                                    || languageMatches || chapterNumMatches);
+                        }
                     }
-                }
 
-                // There are some config-level filters as well, which must all
-                // be matched.
-                Config config = sceneManager.getConfig();
-                boolean lang_filter_enabled =
-                    (boolean) config.getValue(Config.Field.LANGUAGE_FILTER_ENABLED);
-                boolean config_lang_matches = lang_filter_enabled ?
-                    Languages.get((String) config.getValue(Config.Field.LANGUAGE_FILTER_LANGUAGE)) ==
-                    chapter.language : true;
+                    // There are some config-level filters as well, which must all
+                    // be matched.
+                    Config config = sceneManager.getConfig();
+                    boolean lang_filter_enabled =
+                            (boolean) config.getValue(Config.Field.LANGUAGE_FILTER_ENABLED);
+                    boolean config_lang_matches = lang_filter_enabled
+                            ? Languages.get((String) config.getValue(
+                                    Config.Field.LANGUAGE_FILTER_LANGUAGE)) == chapter.language
+                            : true;
 
-                return matches_all &&
-                    (config_lang_matches || chapter.language == Languages.Language.UNKNOWN);
-            });
+                    return matches_all && (config_lang_matches
+                            || chapter.language == Languages.Language.UNKNOWN);
+                });
         filterTextField.textProperty().addListener(this.filterListener);
 
         // apply adjustments to the banner and its contents
         bannerContainer.setMinHeight(BANNER_HEIGHT + COVER_OFFSET_Y);
 
         bannerImageView.setEffect(LayoutHelpers.BANNER_ADJUST);
-        container.widthProperty().addListener((observableValue, oldValue, newValue) ->
-                updateBannerSize()
-        );
+        container.widthProperty()
+                .addListener((observableValue, oldValue, newValue) -> updateBannerSize());
 
         coverImageView.setFitHeight(COVER_HEIGHT);
         coverImageView.setTranslateX(COVER_OFFSET_X);
@@ -332,10 +318,10 @@ public class SeriesController extends Controller {
 
         // trigger filter since the config may have changed
         this.filterListener.changed(new SimpleStringProperty(""), "", "");
-        
+
         // update page with known series information
         refreshContent();
-        
+
         // reload the series to check for updates
         reloadSeries();
     }
@@ -350,15 +336,17 @@ public class SeriesController extends Controller {
     /**
      * Reload the series and necessary media from the content source.
      * <p>
-     * This method will call {@link #refreshContent()} after reloading the series,
-     * and it will update the banner after that is loaded as well.
+     * This method will call {@link #refreshContent()} after reloading the series, and it will
+     * update the banner after that is loaded as well.
      */
     @FXML
     private void reloadSeries() {
         // reload the series from the content source
-        ContentSource contentSource = sceneManager.getPluginManager().getSource(series.getContentSourceId());
+        ContentSource contentSource =
+                sceneManager.getPluginManager().getSource(series.getContentSourceId());
         sceneManager.getContentLoader().reloadSeries(contentSource, series,
-                (boolean) sceneManager.getConfig().getValue(Config.Field.QUICK_RELOAD_SERIES), this);
+                (boolean) sceneManager.getConfig().getValue(Config.Field.QUICK_RELOAD_SERIES),
+                this);
 
         // load the banner for the series
         InfoSource infoSource = sceneManager.getPluginManager().getInfoSource();
@@ -409,22 +397,26 @@ public class SeriesController extends Controller {
     public void refreshContent() {
         // set metadata/info fields using series info
         coverImageView.setImage(series.getCover());
-        bannerImageView.setImage(series.getBanner() == null ? BANNER_PLACEHOLDER : series.getBanner());
+        bannerImageView
+                .setImage(series.getBanner() == null ? BANNER_PLACEHOLDER : series.getBanner());
         updateBannerSize();
         textTitle.setText(OutputHelpers.truncate(series.getTitle(), TITLE_MAX_CHARS));
         // Note: altNames field unset because of some rendering issues with Unicode text,
-        // including some Japanese glyphs. See: https://github.com/javafxports/openjdk-jfx/issues/287
+        // including some Japanese glyphs. See:
+        // https://github.com/javafxports/openjdk-jfx/issues/287
         // textAltNames.setText(String.join(", ", series.altNames));
         textAuthor.setText(series.author);
         textArtist.setText(series.artist);
-        textRating.setText(Double.toString(series.rating) + " (" + OutputHelpers.intToString(series.ratings) + " users)");
+        textRating.setText(Double.toString(series.rating) + " ("
+                + OutputHelpers.intToString(series.ratings) + " users)");
         textViews.setText(OutputHelpers.intToString(series.views));
         textFollows.setText(OutputHelpers.intToString(series.follows));
         textGenres.setText(String.join(", ", series.genres));
         textStatus.setText(series.status);
         textNumChapters.setText(OutputHelpers.intToString(series.getNumHighestChapter()) + " ("
                 + OutputHelpers.intToString(series.getNumChapters()) + " releases)");
-        textContentSource.setText(sceneManager.getPluginManager().getSource(series.getContentSourceId()).toString());
+        textContentSource.setText(
+                sceneManager.getPluginManager().getSource(series.getContentSourceId()).toString());
         textDescription.setText(series.description);
 
         // hide metadata field rows if the field is unset
@@ -437,8 +429,8 @@ public class SeriesController extends Controller {
         textGenres.getParent().getParent().setVisible(series.genres.length > 0);
         textStatus.getParent().getParent().setVisible(!series.status.equals(""));
 
-        for (Text text : Arrays.asList(textAltNames, textAuthor, textArtist, textRating, textViews, textFollows,
-                textGenres, textStatus)) {
+        for (Text text : Arrays.asList(textAltNames, textAuthor, textArtist, textRating, textViews,
+                textFollows, textGenres, textStatus)) {
             Parent row = text.getParent().getParent();
             row.setManaged(row.isVisible());
         }
@@ -459,9 +451,8 @@ public class SeriesController extends Controller {
     /**
      * Creates a standard MouseEvent "click handler" for a table cell.
      * <p>
-     * The event checks for a double left click. When it happens, it identifies the
-     * chapter of the selected row and changes the scene to the reader with the
-     * specified chapter.
+     * The event checks for a double left click. When it happens, it identifies the chapter of the
+     * selected row and changes the scene to the reader with the specified chapter.
      *
      * @return a standard MouseEvent EventHandler for a table cell
      */
@@ -479,9 +470,8 @@ public class SeriesController extends Controller {
     /**
      * Creates a Callback of a standard cell factory for a table cell.
      * <p>
-     * The cell factory represents the String content as a JavaFX Text object using
-     * the "tableText" style class. The cell is given a click handler from
-     * newCellClickHandler().
+     * The cell factory represents the String content as a JavaFX Text object using the "tableText"
+     * style class. The cell is given a click handler from newCellClickHandler().
      *
      * @param widthProperty the widthProperty of this cell's column
      * @return a Callback of a standard cell factory for a table cell
@@ -525,7 +515,8 @@ public class SeriesController extends Controller {
         // reader handles next/previous chapters
         sceneManager.getContentLoader().stopThreads(ContentLoader.PREFIX_RELOAD_SERIES);
 
-        ReaderController readerController = (ReaderController) sceneManager.getController(ReaderController.ID);
+        ReaderController readerController =
+                (ReaderController) sceneManager.getController(ReaderController.ID);
         readerController.setChapter(chapter);
         sceneManager.changeToRoot(ReaderController.ID);
     }

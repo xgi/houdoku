@@ -32,7 +32,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-
 import java.util.ArrayList;
 
 /**
@@ -99,10 +98,10 @@ public class LibraryController extends Controller {
     /**
      * Initialize the components of the controller's view.
      * <p>
-     * This method binds the size of components as appropriate using this class'
-     * static variables. It creates and sets the cell factory and cell value
-     * factory for the columns in the series table. It also creates the items
-     * in the category tree using the root category from the library.
+     * This method binds the size of components as appropriate using this class' static variables.
+     * It creates and sets the cell factory and cell value factory for the columns in the series
+     * table. It also creates the items in the category tree using the root category from the
+     * library.
      *
      * @see Controller#initialize()
      */
@@ -115,49 +114,38 @@ public class LibraryController extends Controller {
 
         // bind column widths to a percentage of the table width
         // manually resizing columns (by user) is disabled in the fxml
-        coverColumn.prefWidthProperty().bind(
-                tableView.widthProperty()
-                        .multiply(COL_COVER_WIDTH)
-        );
-        titleColumn.prefWidthProperty().bind(
-                tableView.widthProperty()
-                        .multiply(COL_TITLE_WIDTH)
-        );
-        numChaptersColumn.prefWidthProperty().bind(
-                tableView.widthProperty()
-                        .multiply(COL_NUMCHAPTERS_WIDTH)
-                        .subtract(SceneManager.VSCROLLBAR_WIDTH) // to account for scrollbar
+        coverColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(COL_COVER_WIDTH));
+        titleColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(COL_TITLE_WIDTH));
+        numChaptersColumn.prefWidthProperty().bind(tableView.widthProperty()
+                .multiply(COL_NUMCHAPTERS_WIDTH).subtract(SceneManager.VSCROLLBAR_WIDTH) // to
+                                                                                         // account
+                                                                                         // for
+                                                                                         // scrollbar
         );
 
         // create a right-click context menu for all table cells
         // onAction events are set by newCellClickHandler()
         ContextMenu cellContextMenu = new ContextMenu();
-        cellContextMenu.getItems().addAll(
-                new MenuItem("View series"),
-                new MenuItem("Edit categories"),
-                new MenuItem("Remove series")
-        );
+        cellContextMenu.getItems().addAll(new MenuItem("View series"),
+                new MenuItem("Edit categories"), new MenuItem("Remove series"));
 
         // create a right-click context menu for categories
         // onAction events are set by newCategoryClickHandler()
         ContextMenu categoryContextMenu = new ContextMenu();
-        categoryContextMenu.getItems().addAll(
-                new MenuItem("Add category"),
-                new MenuItem("Edit category"),
-                new MenuItem("Remove category")
-        );
+        categoryContextMenu.getItems().addAll(new MenuItem("Add category"),
+                new MenuItem("Edit category"), new MenuItem("Remove category"));
 
         // Create factories for table cells for each column.
         // All cell nodes use the tableCell class
         // Cover column:
-        //   Cell graphics are an ImageView with a width equal to the width of
-        //   the column.
+        // Cell graphics are an ImageView with a width equal to the width of
+        // the column.
         // Title column:
-        //   Cell graphics are a Text node using the tableText class, which
-        //   centers it.
+        // Cell graphics are a Text node using the tableText class, which
+        // centers it.
         // Num chapters column:
-        //   Cell graphics are a Text node using the tableText class, which
-        //   centers it.
+        // Cell graphics are a Text node using the tableText class, which
+        // centers it.
         coverColumn.setCellFactory(tc -> {
             TableCell<Series, Image> cell = new TableCell<>();
             cell.getStyleClass().add("tableCell");
@@ -207,15 +195,13 @@ public class LibraryController extends Controller {
                 // is the same as the artist, we simply show the name once.
                 // If compact mode is enabled, we also opt to only show the
                 // title of the series.
-                layoutCompactButton.isSelected() ? p.getValue().getTitle() :
-                        p.getValue().author.equals(p.getValue().artist) ?
-                                p.getValue().getTitle() + "\n" + p.getValue().author :
-                                p.getValue().getTitle() + "\n" + p.getValue().author + "/" +
-                                        p.getValue().artist
-        ));
+                layoutCompactButton.isSelected() ? p.getValue().getTitle()
+                        : p.getValue().author.equals(p.getValue().artist)
+                                ? p.getValue().getTitle() + "\n" + p.getValue().author
+                                : p.getValue().getTitle() + "\n" + p.getValue().author + "/"
+                                        + p.getValue().artist));
         numChaptersColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                Integer.toString(p.getValue().getNumHighestChapter())
-        ));
+                Integer.toString(p.getValue().getNumHighestChapter())));
 
         // add KeyEvent handlers for navigation
         tableView.setOnKeyPressed(keyEvent -> {
@@ -235,9 +221,8 @@ public class LibraryController extends Controller {
             cell.setOnMouseClicked(newCategoryClickHandler(categoryContextMenu));
             return cell;
         });
-        categoriesColumn.setCellValueFactory(p ->
-                new SimpleStringProperty(p.getValue().getValue().toString())
-        );
+        categoriesColumn.setCellValueFactory(
+                p -> new SimpleStringProperty(p.getValue().getValue().toString()));
 
         // add listeners to update tree/table content
         filterTextField.setOnKeyPressed(keyEvent -> {
@@ -247,10 +232,8 @@ public class LibraryController extends Controller {
                 }
             }
         });
-        treeView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) ->
-                        updateContent()
-        );
+        treeView.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> updateContent());
     }
 
     /**
@@ -274,24 +257,23 @@ public class LibraryController extends Controller {
     /**
      * Populates the tableView and treeView with series from the library.
      * <p>
-     * This function should be run whenever there is a possibility that a series
-     * has been added or removed from the library. It does not need to be run
-     * whenever the properties of a series changes, since the cell factories
-     * will handle that properly with just tableView.refresh().
+     * This function should be run whenever there is a possibility that a series has been added or
+     * removed from the library. It does not need to be run whenever the properties of a series
+     * changes, since the cell factories will handle that properly with just tableView.refresh().
      */
     public void updateContent() {
         // Use filterTextField to filter series in table by title
         // Filter code/method derived from
-        //   http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering
+        // http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering
         // with minor changes.
         // 1. Wrap the ObservableList in a FilteredList (initially display
-        //    all data).
+        // all data).
         // 2. Set the filter Predicate whenever the filter changes.
         // 3. Wrap the FilteredList in a SortedList.
         // 4. Bind the SortedList comparator to the TableView comparator.
         // 5. Add sorted (and filtered) data to the table.
-        ObservableList<Series> master_data = FXCollections.observableArrayList(
-                library.getSerieses());
+        ObservableList<Series> master_data =
+                FXCollections.observableArrayList(library.getSerieses());
         FilteredList<Series> filtered_data = new FilteredList<>(master_data, p -> true);
         setCombinedPredicate(filtered_data);
         SortedList<Series> sorted_data = new SortedList<>(filtered_data);
@@ -306,8 +288,8 @@ public class LibraryController extends Controller {
                 cover.setImage(series.getCover());
 
                 // create the result container
-                StackPane result_pane = LayoutHelpers.createCoverContainer(
-                        flowPane, series.getTitle(), cover);
+                StackPane result_pane =
+                        LayoutHelpers.createCoverContainer(flowPane, series.getTitle(), cover);
 
                 // create buttons shown on hover
                 VBox button_container = new VBox();
@@ -369,11 +351,11 @@ public class LibraryController extends Controller {
     /**
      * Set the predicate of the series table's FilteredList.
      * <p>
-     * This method filters the given list based on the contents of the
-     * filterTextField and on the selected category.
+     * This method filters the given list based on the contents of the filterTextField and on the
+     * selected category.
      * <p>
-     * This method needs to be called whenever actions which could change the
-     * predicate are performed - i.e., clicking a category.
+     * This method needs to be called whenever actions which could change the predicate are
+     * performed - i.e., clicking a category.
      *
      * @param filteredData the FilteredList of series to set the predicate of
      */
@@ -383,17 +365,18 @@ public class LibraryController extends Controller {
             // text filter
             String filter = filterTextField.getText().toLowerCase();
             boolean title_matches = series.getTitle().toLowerCase().contains(filter);
-            boolean creator_matches = series.author.toLowerCase().contains(filter) ||
-                    series.artist.toLowerCase().contains(filter);
+            boolean creator_matches = series.author.toLowerCase().contains(filter)
+                    || series.artist.toLowerCase().contains(filter);
 
             // check that the series has the selected category
             boolean category_matches = false;
             if (treeView.getSelectionModel().getSelectedItem() != null) {
-                TreeItem<Category> selectedTreeCell = treeView.getSelectionModel().getSelectedItem();
+                TreeItem<Category> selectedTreeCell =
+                        treeView.getSelectionModel().getSelectedItem();
                 Category category = selectedTreeCell.getValue();
-                category_matches = series.getStringCategories().stream().anyMatch(
-                        stringCategory -> stringCategory.equals(category.getName())
-                ) || category.equals(library.getRootCategory());
+                category_matches = series.getStringCategories().stream()
+                        .anyMatch(stringCategory -> stringCategory.equals(category.getName()))
+                        || category.equals(library.getRootCategory());
             }
 
             return (title_matches || creator_matches) && category_matches;
@@ -403,9 +386,8 @@ public class LibraryController extends Controller {
     /**
      * Creates a MouseEvent handler for a cell in the series table.
      * <p>
-     * This handler handles double clicking to go to a series' page, as well as
-     * handling the actions of the given context menu if a series is right
-     * clicked.
+     * This handler handles double clicking to go to a series' page, as well as handling the actions
+     * of the given context menu if a series is right clicked.
      *
      * @param contextMenu the context menu shown when right clicking
      * @return a complete MouseEvent EventHandler for a cell in the series table
@@ -452,10 +434,9 @@ public class LibraryController extends Controller {
     /**
      * Creates a MouseEvent handler for a category in the categories tree.
      * <p>
-     * The handler does not trigger a filter of the series table's data when
-     * a category is clicked. That is done by adding a listener to the tree's
-     * selection property. Instead, this handler primarily handles the actions
-     * of the given context menu when a category is right clicked.
+     * The handler does not trigger a filter of the series table's data when a category is clicked.
+     * That is done by adding a listener to the tree's selection property. Instead, this handler
+     * primarily handles the actions of the given context menu when a category is right clicked.
      *
      * @param contextMenu the context menu shown when right clicking
      * @return a complete MouseEvent EventHandler for a category in the tree
@@ -507,14 +488,13 @@ public class LibraryController extends Controller {
     /**
      * Prompts the user to add a category as a child of the given category.
      *
-     * @param category the category which will be the parent of the new
-     *                 category, if one is successfully created
+     * @param category the category which will be the parent of the new category, if one is
+     *                 successfully created
      */
     private void promptAddCategory(Category category) {
         // disallow adding categories greater than a certain depth
         if (treeView.getTreeItemLevel(getTreeItemByCategory(category)) < 2) {
-            Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK,
-                    ButtonType.CANCEL);
+            Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK, ButtonType.CANCEL);
 
             // create ui elements of alert container
             Label invalid_label = new Label("The category name is not valid.");
@@ -535,8 +515,8 @@ public class LibraryController extends Controller {
             final Button btn_ok = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
             btn_ok.addEventFilter(ActionEvent.ACTION, event -> {
                 String name = name_field.getText();
-                if (!Category.nameIsValid(name) || library.getRootCategory()
-                        .recursiveFindSubcategory(name) != null) {
+                if (!Category.nameIsValid(name)
+                        || library.getRootCategory().recursiveFindSubcategory(name) != null) {
                     // input is invalid -- tell the user and consume the event
                     invalid_label.setVisible(true);
                     event.consume();
@@ -567,9 +547,8 @@ public class LibraryController extends Controller {
     /**
      * Prompts the user to edit the given category.
      * <p>
-     * The dialog is identical to that from promptAddCategory, but we
-     * will keep them separate in case we want them to have somewhat different
-     * functionality in the future.
+     * The dialog is identical to that from promptAddCategory, but we will keep them separate in
+     * case we want them to have somewhat different functionality in the future.
      *
      * @param category the category to edit
      */
@@ -583,8 +562,7 @@ public class LibraryController extends Controller {
             return;
         }
 
-        Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK,
-                ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK, ButtonType.CANCEL);
 
         // create ui elements of alert container
         Label invalid_label = new Label("The category name is not valid.");
@@ -606,8 +584,8 @@ public class LibraryController extends Controller {
         final Button btn_ok = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
         btn_ok.addEventFilter(ActionEvent.ACTION, event -> {
             String name = name_field.getText();
-            if (!Category.nameIsValid(name) || library.getRootCategory()
-                    .recursiveFindSubcategory(name) != null) {
+            if (!Category.nameIsValid(name)
+                    || library.getRootCategory().recursiveFindSubcategory(name) != null) {
                 // nameIsValid will be false if the name is unchanged, since
                 // creating a category with an existing name is not allowed.
                 // In this case, we simply want to ignore that scenario.
@@ -648,8 +626,8 @@ public class LibraryController extends Controller {
             return;
         }
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES,
-                ButtonType.NO, ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO,
+                ButtonType.CANCEL);
         Label label = new Label("Remove the \"" + category.getName() + "\" category?");
         label.setWrapText(true);
         alert.getDialogPane().setContent(label);
@@ -671,8 +649,7 @@ public class LibraryController extends Controller {
      * @param series the series to edit
      */
     private void promptEditCategories(Series series) {
-        Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK,
-                ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK, ButtonType.CANCEL);
 
         // create ui elements of alert container
         Label categories_label = new Label("Choose the categories for this series:");
@@ -682,14 +659,12 @@ public class LibraryController extends Controller {
         for (Category category1 : library.getRootCategory().getSubcategories()) {
             CheckBox checkbox1 = new CheckBox(category1.getName());
             checkbox1.setSelected(series.getStringCategories().stream().anyMatch(
-                    name -> name.toLowerCase().equals(category1.getName().toLowerCase())
-            ));
+                    name -> name.toLowerCase().equals(category1.getName().toLowerCase())));
             categories_boxes.add(checkbox1);
             for (Category category2 : category1.getSubcategories()) {
                 CheckBox checkbox2 = new CheckBox(category2.getName());
                 checkbox2.setSelected(series.getStringCategories().stream().anyMatch(
-                        name -> name.toLowerCase().equals(category2.getName().toLowerCase())
-                ));
+                        name -> name.toLowerCase().equals(category2.getName().toLowerCase())));
                 categories_boxes.add(checkbox2);
             }
         }
@@ -729,11 +704,11 @@ public class LibraryController extends Controller {
      * @param series the series to be removed
      */
     private void promptRemoveSeries(Series series) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES,
-                ButtonType.CANCEL);
+        Alert alert =
+                new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.CANCEL);
 
-        Label label = new Label("Are you sure you want to remove this series from your " +
-                "library?\n\n\"" + series.getTitle() + "\"");
+        Label label = new Label("Are you sure you want to remove this series from your "
+                + "library?\n\n\"" + series.getTitle() + "\"");
         label.setWrapText(true);
 
         VBox alert_container = new VBox();
@@ -765,21 +740,19 @@ public class LibraryController extends Controller {
     /**
      * Set whether the compact view is enabled.
      * <p>
-     * Enabling the compact view removes the cover column of the series table,
-     * making the height of each row much smaller.
+     * Enabling the compact view removes the cover column of the series table, making the height of
+     * each row much smaller.
      *
      * @param compact whether the compact view is enabled
      */
     private void setCompact(boolean compact) {
         coverColumn.setVisible(!compact);
         if (compact) {
-            titleColumn.prefWidthProperty().bind(
-                    tableView.widthProperty()
-                            .multiply(COL_TITLE_WIDTH + COL_COVER_WIDTH));
+            titleColumn.prefWidthProperty()
+                    .bind(tableView.widthProperty().multiply(COL_TITLE_WIDTH + COL_COVER_WIDTH));
         } else {
-            titleColumn.prefWidthProperty().bind(
-                    tableView.widthProperty()
-                            .multiply(COL_TITLE_WIDTH));
+            titleColumn.prefWidthProperty()
+                    .bind(tableView.widthProperty().multiply(COL_TITLE_WIDTH));
         }
     }
 
@@ -834,8 +807,8 @@ public class LibraryController extends Controller {
     /**
      * Toggles whether the action bar is visible.
      * <p>
-     * The action bar is the bar above the tree and table with buttons for
-     * common actions, i.e. "Add Series", "Remove Series".
+     * The action bar is the bar above the tree and table with buttons for common actions, i.e. "Add
+     * Series", "Remove Series".
      */
     @FXML
     private void toggleActionBar() {

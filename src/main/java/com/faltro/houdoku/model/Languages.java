@@ -3,15 +3,15 @@ package com.faltro.houdoku.model;
 /**
  * Contains language definitions.
  * <p>
- * This class was made to unify content sources which may represent languages in
- * a variety of formats or with different language codes.
+ * This class was made to unify content sources which may represent languages in a variety of
+ * formats or with different language codes.
  */
 public class Languages {
     /**
      * Retrieve a Language using a language code or String.
      * <p>
-     * For example, calling this method with "gb" or "english" or "English"
-     * will return Language.ENGLISH.
+     * For example, calling this method with "gb" or "english" or "English" will return
+     * Language.ENGLISH.
      *
      * @param code the case-insensitive language code to lookup
      * @return the matching Language, or Language.UNKNOWN if none match
@@ -33,6 +33,7 @@ public class Languages {
     }
 
     public enum Language {
+        // @formatter:off
         ARABIC("Arabic", "sa"),
         CHINESE("Chinese", "zh", "cn"),
         ENGLISH("English", "gb", "en"),
@@ -50,6 +51,7 @@ public class Languages {
         THAI("Thai", "th"),
         UNKNOWN("[unknown]"),
         VIETNAMESE("Vietnamese", "vn");
+        // @formatter:on
 
         private final String name;
         private final String[] codes;

@@ -85,9 +85,8 @@ public class ReaderController extends Controller {
     /**
      * Initialize the components of the controller's view.
      * <p>
-     * This method binds the size and position of components as appropriate,
-     * relative to the stage. It also initializes keyEventHandler which is
-     * enabled when the page is made active.
+     * This method binds the size and position of components as appropriate, relative to the stage.
+     * It also initializes keyEventHandler which is enabled when the page is made active.
      *
      * @see Controller#initialize()
      */
@@ -98,11 +97,15 @@ public class ReaderController extends Controller {
 
         // Position imageView in the center of imageScrollPane
         // Ideally, we would set the imageView's x position like so:
+        // @formatter:off
+        //
         //   imageView.translateXProperty().bind(
         //     imageScrollPane.widthProperty()
         //       .subtract(imageView.fitWidthProperty())
         //       .divide(2)
         //   );
+        //
+        // @formatter:on
         // However, since the image width is set automatically with
         // preserveAspectRatio, the imageView width is always 0.
         //
@@ -115,9 +118,8 @@ public class ReaderController extends Controller {
         // Instead, we add a listener to the imageScrollPane's width property
         // (which is the container of imageView) which "manually" sets the
         // imageView position to the proper ratio.
-        imageScrollPane.boundsInParentProperty().addListener((o, oldVal, newVal) ->
-                centerImageView()
-        );
+        imageScrollPane.boundsInParentProperty()
+                .addListener((o, oldVal, newVal) -> centerImageView());
 
         // fit the imageScrollPane width to the width of the stage
         imageScrollPane.minWidthProperty().bind(stage.widthProperty());
@@ -128,8 +130,7 @@ public class ReaderController extends Controller {
     }
 
     /**
-     * This method enables the keyEventHandler and begins loading the first page
-     * of the set chapter.
+     * This method enables the keyEventHandler and begins loading the first page of the set chapter.
      *
      * @see Controller#onMadeActive()
      */
@@ -162,28 +163,27 @@ public class ReaderController extends Controller {
     /**
      * Create a new KeyEvent EventHandler for controlling the page.
      * <p>
-     * Normally it would be sufficient to simply create the handler in
-     * initialize(), but the config with key bindings may change before the
-     * client is restarted, so we instead make a new event handler at every
-     * onMadeActive() using the current config.
+     * Normally it would be sufficient to simply create the handler in initialize(), but the config
+     * with key bindings may change before the client is restarted, so we instead make a new event
+     * handler at every onMadeActive() using the current config.
      * <p>
-     * We also could have put Config.getValue's in the event itself, but that
-     * would be very inefficient.
+     * We also could have put Config.getValue's in the event itself, but that would be very
+     * inefficient.
      *
      * @return a complete KeyEvent EventHandler for the reader page
      */
     private EventHandler<KeyEvent> newKeyEventHandler() {
         Config config = sceneManager.getConfig();
-        KeyCode keyPrevPage = KeyCode.valueOf(
-                (String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
-        KeyCode keyNextPage = KeyCode.valueOf(
-                (String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
-        KeyCode keyFirstPage = KeyCode.valueOf(
-                (String) config.getValue(Config.Field.READER_KEY_FIRST_PAGE));
-        KeyCode keyLastPage = KeyCode.valueOf(
-                (String) config.getValue(Config.Field.READER_KEY_LAST_PAGE));
-        KeyCode keyToSeries = KeyCode.valueOf(
-                (String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
+        KeyCode keyPrevPage =
+                KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
+        KeyCode keyNextPage =
+                KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
+        KeyCode keyFirstPage =
+                KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_FIRST_PAGE));
+        KeyCode keyLastPage =
+                KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_LAST_PAGE));
+        KeyCode keyToSeries =
+                KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
 
         return event -> {
             // only handle KeyEvent.KEY_RELEASE -- not ideal, since this may
@@ -199,8 +199,8 @@ public class ReaderController extends Controller {
                             previousPage();
                         }
                     } else if (event.getCode() == keyNextPage) {
-                        if (chapter.getCurrentPageNum() >= chapter.getTotalPages() - 1 &&
-                                !nextChapterButton.isDisabled()) {
+                        if (chapter.getCurrentPageNum() >= chapter.getTotalPages() - 1
+                                && !nextChapterButton.isDisabled()) {
                             nextChapter();
                         } else {
                             nextPage();
@@ -230,8 +230,8 @@ public class ReaderController extends Controller {
     /**
      * Begin loading the image for the current page.
      *
-     * @see com.faltro.houdoku.util.ContentLoader#loadPage(ContentSource,
-     * Chapter, int, ReaderController, boolean, int)
+     * @see com.faltro.houdoku.util.ContentLoader#loadPage(ContentSource, Chapter, int,
+     *      ReaderController, boolean, int)
      */
     private void loadCurrentPage() {
         // clear current page and show progress indicator so the user
@@ -247,23 +247,22 @@ public class ReaderController extends Controller {
         Config config = sceneManager.getConfig();
         boolean restrict_preload_pages =
                 (boolean) config.getValue(Config.Field.RESTRICT_PRELOAD_PAGES);
-        int preloading_amount = restrict_preload_pages ?
-                (int) config.getValue(Config.Field.PRELOAD_PAGES_AMOUNT) : -1;
+        int preloading_amount =
+                restrict_preload_pages ? (int) config.getValue(Config.Field.PRELOAD_PAGES_AMOUNT)
+                        : -1;
 
         // start the thread to load the page, which will subsequently begin
         // preloading pages if necessary
-        ContentSource contentSource = sceneManager.getPluginManager().getSource(
-                chapter.getSeries().getContentSourceId()
-        );
-        sceneManager.getContentLoader().loadPage(
-                contentSource, chapter, currentPageNum, this, false, preloading_amount);
+        ContentSource contentSource =
+                sceneManager.getPluginManager().getSource(chapter.getSeries().getContentSourceId());
+        sceneManager.getContentLoader().loadPage(contentSource, chapter, currentPageNum, this,
+                false, preloading_amount);
     }
 
     /**
      * Set the image of the reader's ImageView.
      * <p>
-     * This method ensures that the image is set when the FX thread is
-     * available.
+     * This method ensures that the image is set when the FX thread is available.
      *
      * @param image the Image to display in the ImageView
      * @see #imageView
@@ -294,8 +293,7 @@ public class ReaderController extends Controller {
      */
     private void centerImageView() {
         imageView.setTranslateX(
-                (imageScrollPane.getWidth() - imageView.getBoundsInParent().getWidth()) / 2
-        );
+                (imageScrollPane.getWidth() - imageView.getBoundsInParent().getWidth()) / 2);
         if (imageView.getTranslateX() < 0 || fitWidthRadio.isSelected()) {
             imageView.setTranslateX(0);
         }
@@ -351,8 +349,8 @@ public class ReaderController extends Controller {
     /**
      * Go to the previous chapter and load the first page.
      * <p>
-     * This function does not validate whether a previous chapter is actually
-     * available - that should be enforced by disabling the prev chapter button.
+     * This function does not validate whether a previous chapter is actually available - that
+     * should be enforced by disabling the prev chapter button.
      */
     @FXML
     private void previousChapter() {
@@ -380,9 +378,9 @@ public class ReaderController extends Controller {
     /**
      * Toggle whether the navigation bar is visible.
      * <p>
-     * The navigation bar is the top bar which contains the page number display
-     * and forward/back buttons. Users who hide the bar can still navigate
-     * the display using the key shortcuts defined in keyEventHandler.
+     * The navigation bar is the top bar which contains the page number display and forward/back
+     * buttons. Users who hide the bar can still navigate the display using the key shortcuts
+     * defined in keyEventHandler.
      *
      * @see #showNavBarItem
      * @see #navContainer
@@ -418,8 +416,7 @@ public class ReaderController extends Controller {
             filter_adjust = new ColorAdjust();
             // apply color filter
             if ((boolean) config.getValue(Config.Field.PAGE_FILTER_COLOR_ENABLED)) {
-                filter_adjust.setHue(
-                        (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_HUE));
+                filter_adjust.setHue((double) config.getValue(Config.Field.PAGE_FILTER_COLOR_HUE));
                 filter_adjust.setSaturation(
                         (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_SATURATION));
             }
@@ -448,16 +445,12 @@ public class ReaderController extends Controller {
             imageViewListener = (o, oldValue, newValue) -> {
                 imageView.fitWidthProperty().unbind();
                 imageView.fitHeightProperty().unbind();
-                imageView.fitHeightProperty().bind(
-                        container.heightProperty()
-                                .subtract(menuBar.heightProperty())
-                                .subtract(navContainer.minHeightProperty())
-                );
+                imageView.fitHeightProperty()
+                        .bind(container.heightProperty().subtract(menuBar.heightProperty())
+                                .subtract(navContainer.minHeightProperty()));
                 if (imageView.getBoundsInParent().getWidth() > container.getWidth()) {
                     imageView.fitHeightProperty().unbind();
-                    imageView.fitWidthProperty().bind(
-                            container.widthProperty()
-                    );
+                    imageView.fitWidthProperty().bind(container.widthProperty());
                 }
 
                 centerImageView();
@@ -466,11 +459,9 @@ public class ReaderController extends Controller {
             imageViewListener = (o, oldValue, newValue) -> {
                 imageView.fitWidthProperty().unbind();
                 imageView.setFitWidth(-1);
-                imageView.fitHeightProperty().bind(
-                        container.heightProperty()
-                                .subtract(menuBar.heightProperty())
-                                .subtract(navContainer.minHeightProperty())
-                );
+                imageView.fitHeightProperty()
+                        .bind(container.heightProperty().subtract(menuBar.heightProperty())
+                                .subtract(navContainer.minHeightProperty()));
 
                 centerImageView();
             };
@@ -480,18 +471,16 @@ public class ReaderController extends Controller {
                 imageView.setPreserveRatio(false);
                 imageView.setFitHeight(-1);
                 imageView.setPreserveRatio(true);
-                imageView.fitWidthProperty().bind(
-                        container.widthProperty()
-                                .subtract(SceneManager.VSCROLLBAR_WIDTH)
-                );
+                imageView.fitWidthProperty()
+                        .bind(container.widthProperty().subtract(SceneManager.VSCROLLBAR_WIDTH));
             };
         } else if (actualSizeRadio.isSelected()) {
             imageViewListener = (o, oldValue, newValue) -> {
                 imageView.fitHeightProperty().unbind();
                 imageView.fitWidthProperty().unbind();
                 imageView.setFitHeight(-1);
-                imageView.fitWidthProperty().bind(
-                        imageView.getImage() == null ? new SimpleDoubleProperty(0)
+                imageView.fitWidthProperty()
+                        .bind(imageView.getImage() == null ? new SimpleDoubleProperty(0)
                                 : imageView.getImage().widthProperty());
 
                 centerImageView();
@@ -512,11 +501,10 @@ public class ReaderController extends Controller {
     /**
      * Go to the series page.
      * <p>
-     * This method does not explicitly ensure that the series page contains the
-     * information for the expected series (that is, the series which contains
-     * the current chapter). It is expected that the components of the series
-     * page are not cleared when the reader is opened, and also that the series
-     * page has been loaded prior to opening the reader.
+     * This method does not explicitly ensure that the series page contains the information for the
+     * expected series (that is, the series which contains the current chapter). It is expected that
+     * the components of the series page are not cleared when the reader is opened, and also that
+     * the series page has been loaded prior to opening the reader.
      *
      * @see SeriesController
      */

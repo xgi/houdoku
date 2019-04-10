@@ -8,7 +8,6 @@ import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.ContentLoader;
-
 import java.io.IOException;
 
 public class LoadSeriesRunnable extends LoaderRunnable {
@@ -21,19 +20,16 @@ public class LoadSeriesRunnable extends LoaderRunnable {
      * Runnable for loading a series.
      *
      * @param name                   the name of the thread
-     * @param contentLoader          the ContentLoader which created this
-     *                               instance
+     * @param contentLoader          the ContentLoader which created this instance
      * @param contentSource          the ContentSource to load from
-     * @param source                 the source for the series, relative to the
-     *                               ContentSource domain
-     * @param searchSeriesController the SearchSeriesController to report errors
-     *                               to
-     * @param libraryController      the LibraryController to update
-     *                               before/after the series is loaded
+     * @param source                 the source for the series, relative to the ContentSource domain
+     * @param searchSeriesController the SearchSeriesController to report errors to
+     * @param libraryController      the LibraryController to update before/after the series is
+     *                               loaded
      */
     public LoadSeriesRunnable(String name, ContentLoader contentLoader, ContentSource contentSource,
-                              String source, SearchSeriesController searchSeriesController,
-                              LibraryController libraryController) {
+            String source, SearchSeriesController searchSeriesController,
+            LibraryController libraryController) {
         super(name, contentLoader);
         this.contentSource = contentSource;
         this.source = source;
@@ -49,8 +45,8 @@ public class LoadSeriesRunnable extends LoaderRunnable {
         try {
             series = contentSource.series(source, false);
         } catch (ContentUnavailableException e) {
-            searchSeriesController.promptError(
-                    "An error occurred while adding the series:\n\n" + e.getMessage());
+            searchSeriesController
+                    .promptError("An error occurred while adding the series:\n\n" + e.getMessage());
         } catch (IOException | NotImplementedException e) {
             e.printStackTrace();
         }

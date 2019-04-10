@@ -9,7 +9,6 @@ import com.faltro.houdoku.util.ParseHelpers;
 import javafx.collections.FXCollections;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,15 +22,14 @@ public class SearchRunnable extends LoaderRunnable {
      * Start a thread for searching for series'.
      *
      * @param name                   the name of the thread
-     * @param contentLoader          the ContentLoader which created this
-     *                               instance
+     * @param contentLoader          the ContentLoader which created this instance
      * @param contentSource          the ContentSource to load from
      * @param query                  the text to search for
-     * @param searchSeriesController the SearchSeriesController to update
-     *                               before/after the results are loaded
+     * @param searchSeriesController the SearchSeriesController to update before/after the results
+     *                               are loaded
      */
     public SearchRunnable(String name, ContentLoader contentLoader, ContentSource contentSource,
-                          String query, SearchSeriesController searchSeriesController) {
+            String query, SearchSeriesController searchSeriesController) {
         super(name, contentLoader);
         this.contentSource = contentSource;
         this.query = query;
@@ -57,8 +55,8 @@ public class SearchRunnable extends LoaderRunnable {
 
             // temporarily set the image property of all series to a
             // blank placeholder
-            Image blank_cover_image = new Image(
-                    ContentLoader.class.getResource("/img/blank_cover.png").toString());
+            Image blank_cover_image =
+                    new Image(ContentLoader.class.getResource("/img/blank_cover.png").toString());
             for (HashMap<String, Object> item : items) {
                 ImageView imageView = new ImageView();
                 imageView.setImage(blank_cover_image);

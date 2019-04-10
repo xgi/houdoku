@@ -14,8 +14,8 @@ import javafx.scene.paint.Color;
 
 public class LayoutHelpers {
     /**
-     * ColorAdjust for the banner on the
-     * {@link com.faltro.houdoku.controller.SeriesController} page.
+     * ColorAdjust for the banner on the {@link com.faltro.houdoku.controller.SeriesController}
+     * page.
      */
     public static final ColorAdjust BANNER_ADJUST = new ColorAdjust(0, 0, -0.5, 0);
     /**
@@ -37,24 +37,21 @@ public class LayoutHelpers {
     }
 
     /**
-     * Create the container for displaying a series cover, for use in FlowPane
-     * layouts where covers are shown in a somewhat grid-like fashion.
+     * Create the container for displaying a series cover, for use in FlowPane layouts where covers
+     * are shown in a somewhat grid-like fashion.
      *
      * @param container the parent FlowPane container
      * @param title     the title of the series being represented
-     * @param cover     the cover of the series being represented; this ImageView is
-     *                  not modified, a copy is made to be used in the new container
-     * @return a StackPane which displays the provided title and cover and can
-     * be added to the FlowPane
+     * @param cover     the cover of the series being represented; this ImageView is not modified, a
+     *                  copy is made to be used in the new container
+     * @return a StackPane which displays the provided title and cover and can be added to the
+     *         FlowPane
      */
     public static StackPane createCoverContainer(FlowPane container, String title,
-                                                 ImageView cover) {
+            ImageView cover) {
         StackPane result_pane = new StackPane();
-        result_pane.prefWidthProperty().bind(
-                container.widthProperty()
-                        .divide(6)
-                        .subtract(container.getHgap())
-        );
+        result_pane.prefWidthProperty()
+                .bind(container.widthProperty().divide(6).subtract(container.getHgap()));
         result_pane.setAlignment(Pos.BOTTOM_LEFT);
 
         // create the label for showing the series title
@@ -70,9 +67,7 @@ public class LayoutHelpers {
         ImageView image_view = new ImageView();
         image_view.setPreserveRatio(true);
         image_view.imageProperty().bind(cover.imageProperty());
-        image_view.fitWidthProperty().bind(
-                result_pane.prefWidthProperty()
-        );
+        image_view.fitWidthProperty().bind(result_pane.prefWidthProperty());
         image_view.setEffect(COVER_ADJUST_DEFAULT);
         image_view.getStyleClass().add("coverImage");
 

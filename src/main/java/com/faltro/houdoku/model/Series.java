@@ -2,7 +2,6 @@ package com.faltro.houdoku.model;
 
 import com.faltro.houdoku.model.Languages.Language;
 import javafx.scene.image.Image;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,8 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * A series from a ContentSource, which contains an array of Chapter's that the
- * user can read from.
+ * A series from a ContentSource, which contains an array of Chapter's that the user can read from.
  */
 public class Series {
     private final String title;
@@ -46,8 +44,8 @@ public class Series {
         this.contentSourceId = contentSourceId;
     }
 
-    public Series(String title, String source, Image cover,
-                  int contentSourceId, HashMap<String, Object> metadata) {
+    public Series(String title, String source, Image cover, int contentSourceId,
+            HashMap<String, Object> metadata) {
         this(title, source, cover, contentSourceId);
         setMetadata(metadata);
     }
@@ -70,8 +68,8 @@ public class Series {
      * <li>genres (String[])</li>
      * </ul>
      *
-     * @param metadata a HashMap where keys are the field names listed above
-     *                 as Strings and values of the matching type
+     * @param metadata a HashMap where keys are the field names listed above as Strings and values
+     *                 of the matching type
      */
     private void setMetadata(HashMap<String, Object> metadata) {
         for (String key : metadata.keySet()) {
@@ -121,9 +119,9 @@ public class Series {
      * @return the ideal next chapter, or null
      */
     public Chapter smartNextChapter(Chapter chapter) {
-        ArrayList<Chapter> possible = chapters.stream().filter(
-                c -> c.language == null || c.language.equals(chapter.language)
-        ).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Chapter> possible = chapters.stream()
+                .filter(c -> c.language == null || c.language.equals(chapter.language))
+                .collect(Collectors.toCollection(ArrayList::new));
 
         int chapter_index = possible.indexOf(chapter);
         return (chapter_index == 0 || chapter_index == -1) ? null : possible.get(chapter_index - 1);
@@ -136,9 +134,9 @@ public class Series {
      * @return the ideal previous chapter, or null
      */
     public Chapter smartPreviousChapter(Chapter chapter) {
-        ArrayList<Chapter> possible = chapters.stream().filter(
-                c -> c.language == null || c.language.equals(chapter.language)
-        ).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Chapter> possible = chapters.stream()
+                .filter(c -> c.language == null || c.language.equals(chapter.language))
+                .collect(Collectors.toCollection(ArrayList::new));
 
         int chapter_index = possible.indexOf(chapter);
         return chapter_index == possible.size() - 1 ? null : possible.get(chapter_index + 1);
@@ -148,7 +146,7 @@ public class Series {
      * Update or add a tracker's series id.
      *
      * @param tracker_id the ID field of the Tracker class being used
-     * @param series_id the series' id on the Tracker website
+     * @param series_id  the series' id on the Tracker website
      */
     public void updateTrackerId(int tracker_id, String series_id) {
         if (this.trackerIds.containsKey(tracker_id)) {
@@ -205,17 +203,15 @@ public class Series {
     /**
      * Sets the chapters field using a provided ArrayList.
      * <p>
-     * Since many series have multiple scanlations, the number of chapters in
-     * the ArrayList will often exceed the number of "actual" chapters that
-     * a series has. This is because a Chapter object is used for each
-     * individual release, even if multiple may actually refer to the same
+     * Since many series have multiple scanlations, the number of chapters in the ArrayList will
+     * often exceed the number of "actual" chapters that a series has. This is because a Chapter
+     * object is used for each individual release, even if multiple may actually refer to the same
      * "real chapter."
      * <p>
-     * The ArrayList is sorted by descending chapter number. This function will
-     * also set numHighestChapter (effectively the predicted "most recent
-     * real chapter") by getting the chapterNum of the first chapter in the
-     * sorted list. If this series does not have any chapters,
-     * numHighestChapter is simply set to 0.
+     * The ArrayList is sorted by descending chapter number. This function will also set
+     * numHighestChapter (effectively the predicted "most recent real chapter") by getting the
+     * chapterNum of the first chapter in the sorted list. If this series does not have any
+     * chapters, numHighestChapter is simply set to 0.
      *
      * @param chapters an ArrayList of Chapter's
      */

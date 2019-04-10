@@ -7,7 +7,6 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.ContentLoader;
 import javafx.scene.image.Image;
-
 import java.io.IOException;
 
 public class LoadPageRunnable extends LoaderRunnable {
@@ -26,16 +25,14 @@ public class LoadPageRunnable extends LoaderRunnable {
      * @param contentSource     the ContentSource to load from
      * @param chapter           the Chapter the page is from
      * @param page              the 0-indexed page number
-     * @param readerController  the ReaderController to update before/after
-     *                          the page is loaded
-     * @param preloading        whether the page is being preloaded or not
-     *                          (loaded before the user gets to the page)
-     * @param preloading_amount the number of subsequent pages to preload, or
-     *                          -1 for infinite
+     * @param readerController  the ReaderController to update before/after the page is loaded
+     * @param preloading        whether the page is being preloaded or not (loaded before the user
+     *                          gets to the page)
+     * @param preloading_amount the number of subsequent pages to preload, or -1 for infinite
      */
     public LoadPageRunnable(String name, ContentLoader contentLoader, ContentSource contentSource,
-                            Chapter chapter, int page, ReaderController readerController,
-                            boolean preloading, int preloading_amount) {
+            Chapter chapter, int page, ReaderController readerController, boolean preloading,
+            int preloading_amount) {
         super(name, contentLoader);
         this.contentSource = contentSource;
         this.chapter = chapter;
@@ -58,8 +55,8 @@ public class LoadPageRunnable extends LoaderRunnable {
                     readerController.imageProgressIndicator.setVisible(false);
                     readerController.errorText.getParent().setVisible(true);
                     readerController.errorText.getParent().setManaged(true);
-                    readerController.errorText.setText(e.getMessage() +
-                            "\n\n(" + e.getClass().getSimpleName() + ")");
+                    readerController.errorText
+                            .setText(e.getMessage() + "\n\n(" + e.getClass().getSimpleName() + ")");
                 }
 
                 // ensure that our chapter is still the active one in the reader
@@ -85,8 +82,7 @@ public class LoadPageRunnable extends LoaderRunnable {
 
             // preload additional pages
             if (running && (preloading_amount > 0 || preloading_amount == -1)) {
-                contentLoader.loadPage(
-                        contentSource, chapter, page + 1, readerController, true,
+                contentLoader.loadPage(contentSource, chapter, page + 1, readerController, true,
                         preloading_amount == -1 ? -1 : preloading_amount - 1);
             }
         }

@@ -4,12 +4,11 @@ import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Series;
 import javafx.scene.image.Image;
 import okhttp3.OkHttpClient;
-
 import java.io.IOException;
 
 /**
- * This class contains implementations for some methods from InfoSource that
- * are expected to be common between most info source plugins.
+ * This class contains implementations for some methods from InfoSource that are expected to be
+ * common between most info source plugins.
  * <p>
  * For method and field documentation, please see the InfoSource class.
  *

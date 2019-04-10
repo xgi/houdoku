@@ -3,7 +3,6 @@ package com.faltro.houdoku.net;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-
 import java.io.IOException;
 
 public class AniListInterceptor implements Interceptor {
@@ -14,9 +13,8 @@ public class AniListInterceptor implements Interceptor {
         Request original_request = chain.request();
 
         String authorization = "Bearer " + this.token;
-        Request request = original_request.newBuilder()
-                .addHeader("Authorization", authorization)
-                .build();
+        Request request =
+                original_request.newBuilder().addHeader("Authorization", authorization).build();
 
         return chain.proceed(request);
     }

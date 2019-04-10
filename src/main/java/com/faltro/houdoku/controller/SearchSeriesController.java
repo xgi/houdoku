@@ -27,13 +27,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * The controller for the search series page, where users search for and add
- * series' to their library from content sources.
+ * The controller for the search series page, where users search for and add series' to their
+ * library from content sources.
  * <p>
  * The FXML file for this view is at resources/fxml/searchseries.fxml
  *
@@ -44,7 +43,7 @@ public class SearchSeriesController extends Controller {
     public static final int ID = 3;
     private static final double COL_COVER_WIDTH = 0.15;
     private static final double COL_TITLE_WIDTH = 0.85;
-    
+
     public final ObservableList<HashMap<String, Object>> results;
     @FXML
     public ProgressIndicator searchProgressIndicator;
@@ -82,23 +81,17 @@ public class SearchSeriesController extends Controller {
     /**
      * Initialize the components of the controller's view.
      * <p>
-     * This method binds the size of components as appropriate using this class'
-     * static variables. It creates and sets the cell factory and cell value
-     * factory for the columns in the results table.
+     * This method binds the size of components as appropriate using this class' static variables.
+     * It creates and sets the cell factory and cell value factory for the columns in the results
+     * table.
      *
      * @see Controller#initialize()
      */
     @FXML
     public void initialize() {
-        coverColumn.prefWidthProperty().bind(
-                tableView.widthProperty()
-                        .multiply(COL_COVER_WIDTH)
-        );
-        titleColumn.prefWidthProperty().bind(
-                tableView.widthProperty()
-                        .multiply(COL_TITLE_WIDTH)
-                        .subtract(SceneManager.VSCROLLBAR_WIDTH)
-        );
+        coverColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(COL_COVER_WIDTH));
+        titleColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(COL_TITLE_WIDTH)
+                .subtract(SceneManager.VSCROLLBAR_WIDTH));
 
         // create a right-click context menu for results
         // onAction events are set by newCellClickHandler()
@@ -135,9 +128,8 @@ public class SearchSeriesController extends Controller {
             ImageView imageView = (ImageView) p.getValue().get("cover");
             return imageView.imageProperty();
         });
-        titleColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                (String) p.getValue().get("details")
-        ));
+        titleColumn.setCellValueFactory(
+                p -> new SimpleStringProperty((String) p.getValue().get("details")));
 
         // search with a blank query when changing content sources in order
         // to populate the window
@@ -162,8 +154,8 @@ public class SearchSeriesController extends Controller {
     }
 
     /**
-     * This method updates the size of the page and updates the list of
-     * available content sources from the plugin manager.
+     * This method updates the size of the page and updates the list of available content sources
+     * from the plugin manager.
      *
      * @see Controller#onMadeActive()
      * @see com.faltro.houdoku.util.PluginManager
@@ -173,8 +165,8 @@ public class SearchSeriesController extends Controller {
         stage.setTitle(Houdoku.getName() + " - Search");
 
         // check available content sources
-        ObservableList<ContentSource> contentSources = FXCollections.observableArrayList(
-                sceneManager.getPluginManager().getContentSources());
+        ObservableList<ContentSource> contentSources = FXCollections
+                .observableArrayList(sceneManager.getPluginManager().getContentSources());
         contentSourcesBox.setItems(contentSources);
         contentSourcesBox.getSelectionModel().select(0);
     }
@@ -247,9 +239,8 @@ public class SearchSeriesController extends Controller {
     /**
      * Create a MouseEvent handler for a cell in the results table.
      * <p>
-     * This handler handles double clicking to prompt for adding a series, as
-     * well as handling the actions of the given context menu if a series is
-     * right clicked.
+     * This handler handles double clicking to prompt for adding a series, as well as handling the
+     * actions of the given context menu if a series is right clicked.
      *
      * @param contextMenu the context menu shown when right clicking
      * @return a complete MouseEvent EventHandler for a cell in the table
@@ -277,8 +268,8 @@ public class SearchSeriesController extends Controller {
      * <p>
      * This handler handles double clicking to prompt for adding a series.
      *
-     * @param item a HashMap containing the fields described in
-     *             the documentation for {@link #addSeriesFromItem(HashMap)}
+     * @param item a HashMap containing the fields described in the documentation for
+     *             {@link #addSeriesFromItem(HashMap)}
      * @return a complete MouseEvent EventHandler for a cover result
      */
     private EventHandler<MouseEvent> newCoverClickHandler(HashMap<String, Object> item) {
@@ -295,14 +286,13 @@ public class SearchSeriesController extends Controller {
     /**
      * Prompt the user to add a series to the library from an item HashMap.
      * <p>
-     * See {@link #addSeriesFromItem(HashMap)} for details what the HashMap
-     * should contain.
+     * See {@link #addSeriesFromItem(HashMap)} for details what the HashMap should contain.
      *
      * @param item a HashMap representing a series result
      */
     private void promptAddSeries(HashMap<String, Object> item) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES,
-                ButtonType.NO, ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "", ButtonType.YES, ButtonType.NO,
+                ButtonType.CANCEL);
         Label label = new Label("Add \"" + item.get("title") + "\" to your library?");
         label.setWrapText(true);
         alert.getDialogPane().setContent(label);
@@ -333,25 +323,24 @@ public class SearchSeriesController extends Controller {
     /**
      * Adds a series to the library from an item HashMap.
      * <p>
-     * Since the data retrieved from content source search pages can vary, this
-     * method does not rely heavily on the contents of the given HashMap. The
-     * only fields used from the given item are "contentSourceId" and "source",
-     * the URL for the series.
+     * Since the data retrieved from content source search pages can vary, this method does not rely
+     * heavily on the contents of the given HashMap. The only fields used from the given item are
+     * "contentSourceId" and "source", the URL for the series.
      * <p>
-     * This method simply loads the series manually using the content loader,
-     * and then hides this stage since we don't need it anymore.
+     * This method simply loads the series manually using the content loader, and then hides this
+     * stage since we don't need it anymore.
      *
      * @param item a HashMap containing the fields described above
      * @see com.faltro.houdoku.util.ContentLoader#loadSeries(ContentSource, String,
-     * SearchSeriesController, LibraryController)
+     *      SearchSeriesController, LibraryController)
      */
     private void addSeriesFromItem(HashMap<String, Object> item) {
         // load full series details and add to library
-        ContentSource contentSource = sceneManager.getPluginManager().getSource
-                ((int) item.get("contentSourceId"));
+        ContentSource contentSource =
+                sceneManager.getPluginManager().getSource((int) item.get("contentSourceId"));
         String source = (String) item.get("source");
-        LibraryController libraryController = (LibraryController) sceneManager
-                .getController(LibraryController.ID);
+        LibraryController libraryController =
+                (LibraryController) sceneManager.getController(LibraryController.ID);
         sceneManager.getContentLoader().loadSeries(contentSource, source, this, libraryController);
         goToLibrary();
     }

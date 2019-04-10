@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -21,17 +20,16 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Manager and container for scene-related class instances. The instance of this
- * class is the primary resource for controllers to interact with each other and
- * access instances of non-controller-specific classes.
+ * Manager and container for scene-related class instances. The instance of this class is the
+ * primary resource for controllers to interact with each other and access instances of
+ * non-controller-specific classes.
  *
  * @see PluginManager
  * @see ContentLoader
  */
 public class SceneManager {
     /**
-     * The width of all vertical scrollbars. Changes to this must also be
-     * changed in /style/main.css
+     * The width of all vertical scrollbars. Changes to this must also be changed in /style/main.css
      */
     public static final int VSCROLLBAR_WIDTH = 20;
     /**
@@ -86,8 +84,7 @@ public class SceneManager {
     /**
      * Create the SceneManager.
      * <p>
-     * This constructor creates instances of the non-controller-specific classes
-     * used by ths class.
+     * This constructor creates instances of the non-controller-specific classes used by ths class.
      *
      * @param stage the stage of the main application window
      */
@@ -103,8 +100,7 @@ public class SceneManager {
         this.contentLoader = new ContentLoader();
 
         // add icon to the window bar
-        Image window_icon = new Image(getClass().getResourceAsStream(
-                "/img/window_icon.png"));
+        Image window_icon = new Image(getClass().getResourceAsStream("/img/window_icon.png"));
         stage.getIcons().add(window_icon);
         stage_config.getIcons().add(window_icon);
     }
@@ -112,12 +108,10 @@ public class SceneManager {
     /**
      * Initialize the root (a Parent node) for a scene.
      * <p>
-     * The root is usually an individual page, i.e. the library page or the
-     * reader page. Technically, it can be anything with an FXML source and a
-     * controller.
+     * The root is usually an individual page, i.e. the library page or the reader page.
+     * Technically, it can be anything with an FXML source and a controller.
      *
-     * @param id         the unique id to give this root; probably the controller's
-     *                   unique id
+     * @param id         the unique id to give this root; probably the controller's unique id
      * @param controller the controller for the root
      * @param source     the FXML file for the root
      * @throws IOException an IOException occurred when loading the FXML file
@@ -135,9 +129,8 @@ public class SceneManager {
     /**
      * Prepare the initialized roots with preliminary operations.
      * <p>
-     * This method should be executed only once: after all roots have been
-     * initialized, and before changeToRoot/changeStageRoot has been called for
-     * the first time.
+     * This method should be executed only once: after all roots have been initialized, and before
+     * changeToRoot/changeStageRoot has been called for the first time.
      */
     public void prepare() {
         sizeStage(stage);
@@ -150,8 +143,7 @@ public class SceneManager {
     /**
      * Change to the root with the given id.
      * <p>
-     * The root should have already been initialized with
-     * {@link #initRoot(int, Controller, URL)}.
+     * The root should have already been initialized with {@link #initRoot(int, Controller, URL)}.
      *
      * @param id the id of the root to change to
      */
@@ -203,8 +195,8 @@ public class SceneManager {
 
             // if reader_only is selected, we want to only change the stylesheet for the reader
             // page, but we still need to update the nightModeItem for every controller
-            if (pre_night_mode_enabled || !reader_only || controllers.get(root).getClass() ==
-                    ReaderController.class) {
+            if (pre_night_mode_enabled || !reader_only
+                    || controllers.get(root).getClass() == ReaderController.class) {
                 // toggle the color stylesheet for the root
                 if (pre_night_mode_enabled) {
                     stylesheets.remove(STYLESHEET_NIGHT);
@@ -254,10 +246,12 @@ public class SceneManager {
     private void sizeStage(Stage stg, double width_multiplier, double height_multiplier) {
         double screen_width = Screen.getPrimary().getBounds().getWidth();
         double screen_height = Screen.getPrimary().getBounds().getHeight();
-        double desired_width = screen_width * DEFAULT_WIDTH >= MIN_DEFAULT_WIDTH ?
-                (int) (screen_width * DEFAULT_WIDTH) : MIN_DEFAULT_WIDTH;
-        double desired_height = screen_height * DEFAULT_HEIGHT >= MIN_DEFAULT_HEIGHT ?
-                (int) (screen_height * DEFAULT_HEIGHT) : MIN_DEFAULT_HEIGHT;
+        double desired_width = screen_width * DEFAULT_WIDTH >= MIN_DEFAULT_WIDTH
+                ? (int) (screen_width * DEFAULT_WIDTH)
+                : MIN_DEFAULT_WIDTH;
+        double desired_height = screen_height * DEFAULT_HEIGHT >= MIN_DEFAULT_HEIGHT
+                ? (int) (screen_height * DEFAULT_HEIGHT)
+                : MIN_DEFAULT_HEIGHT;
         stg.setWidth(desired_width * width_multiplier);
         stg.setHeight(desired_height * height_multiplier);
     }

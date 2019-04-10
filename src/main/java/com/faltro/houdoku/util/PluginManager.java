@@ -5,15 +5,13 @@ import com.faltro.houdoku.plugins.content.*;
 import com.faltro.houdoku.plugins.info.AniList;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.plugins.tracker.Tracker;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Manager and container for client plugins, which currently solely consists
- * of content sources. Generally, the instance of this class primarily exists
- * to hold and provide access to instances of the available plugins so that
- * multiple plugin instances are not necessary.
+ * Manager and container for client plugins, which currently solely consists of content sources.
+ * Generally, the instance of this class primarily exists to hold and provide access to instances of
+ * the available plugins so that multiple plugin instances are not necessary.
  */
 public class PluginManager {
     private final ArrayList<ContentSource> contentSources;
@@ -23,34 +21,36 @@ public class PluginManager {
     /**
      * Create the PluginManager.
      * <p>
-     * This constructor creates instances of the available plugins, which are
-     * manually defined here.
+     * This constructor creates instances of the available plugins, which are manually defined here.
      * 
      * @param config the user Config to load initial plugin settings (not stored)
      */
     public PluginManager(Config config) {
+        // @formatter:off
         contentSources = new ArrayList<>();
         contentSources.addAll(Arrays.asList(
-                new MangaDex(),
-                new MangaHere(),
-                new MangaSee(),
-                new MangaTown(),
-                new MangaPark(),
-                new MangaFree()
-                // add other content sources here
+            new MangaDex(),
+            new MangaHere(),
+            new MangaSee(),
+            new MangaTown(),
+            new MangaPark(),
+            new MangaFree()
+            // add other content sources here
         ));
         infoSource = new AniList(); // change to desired InfoSource
 
-        boolean anilist_authenticated = (boolean) config.getValue(Config.Field.TRACKER_ANILIST_AUTHENTICATED);
+        boolean anilist_authenticated =
+                (boolean) config.getValue(Config.Field.TRACKER_ANILIST_AUTHENTICATED);
         String anilist_token = (String) config.getValue(Config.Field.TRACKER_ANILIST_TOKEN);
 
         trackers = new ArrayList<>();
         trackers.addAll(Arrays.asList(
-                anilist_authenticated ?
-                    new com.faltro.houdoku.plugins.tracker.AniList(anilist_token) :
-                    new com.faltro.houdoku.plugins.tracker.AniList()
-                // add other trackers here
+            anilist_authenticated
+                ? new com.faltro.houdoku.plugins.tracker.AniList(anilist_token)
+                : new com.faltro.houdoku.plugins.tracker.AniList()
+            // add other trackers here
         ));
+        // @formatter:on
     }
 
     /**
@@ -72,14 +72,12 @@ public class PluginManager {
     /**
      * Gets the ContentSource instance whose class has the given ID.
      *
-     * @param id the ContentSource ID (the static ID field of the
-     *           implementing plugin class)
+     * @param id the ContentSource ID (the static ID field of the implementing plugin class)
      * @return the ContentSource instance whose class has the given ID.
      */
     public ContentSource getSource(int id) {
-        return contentSources.stream().filter(
-                contentSource -> getSourceId(contentSource) == id
-        ).findFirst().orElse(null);
+        return contentSources.stream().filter(contentSource -> getSourceId(contentSource) == id)
+                .findFirst().orElse(null);
     }
 
     /**
@@ -101,14 +99,12 @@ public class PluginManager {
     /**
      * Gets the Tracker instance whose class has the given ID.
      *
-     * @param id the Tracker ID (the static ID field of the
-     *           implementing plugin class)
+     * @param id the Tracker ID (the static ID field of the implementing plugin class)
      * @return the Tracker instance whose class has the given ID.
      */
     public Tracker getTracker(int id) {
-        return trackers.stream().filter(
-                tracker -> getTrackerId(tracker) == id
-        ).findFirst().orElse(null);
+        return trackers.stream().filter(tracker -> getTrackerId(tracker) == id).findFirst()
+                .orElse(null);
     }
 
     public ArrayList<ContentSource> getContentSources() {

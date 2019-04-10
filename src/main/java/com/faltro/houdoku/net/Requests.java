@@ -5,15 +5,14 @@ import javafx.scene.image.Image;
 import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-
 import java.io.IOException;
 
 public class Requests {
     /**
      * The generic User-Agent to use when making HTTP requests.
      */
-    private static final String USER_AGENT = String.format("%s %s",
-            Houdoku.getName(), Houdoku.getVersion());
+    private static final String USER_AGENT =
+            String.format("%s %s", Houdoku.getName(), Houdoku.getVersion());
 
     /**
      * Executes an HTTP GET request on the given URL.
@@ -23,10 +22,8 @@ public class Requests {
      * @throws IOException an IOException occurred when making the request
      */
     public static Response GET(OkHttpClient client, String url) throws IOException {
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("User-Agent", USER_AGENT)
-                .build();
+        Request request =
+                new Request.Builder().url(url).addHeader("User-Agent", USER_AGENT).build();
         return client.newCall(request).execute();
     }
 
@@ -38,13 +35,10 @@ public class Requests {
      * @return the Response of the request
      * @throws IOException an IOException occurred when making the request
      */
-    public static Response POST(OkHttpClient client, String url, RequestBody body) throws
-            IOException {
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .addHeader("User-Agent", USER_AGENT)
-                .build();
+    public static Response POST(OkHttpClient client, String url, RequestBody body)
+            throws IOException {
+        Request request = new Request.Builder().url(url).post(body)
+                .addHeader("User-Agent", USER_AGENT).build();
         return client.newCall(request).execute();
     }
 
@@ -58,14 +52,10 @@ public class Requests {
      * @throws IOException an IOException occurred when making the request
      */
     public static Response POST(OkHttpClient client, String url, RequestBody body,
-                                String authorization) throws
-            IOException {
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .addHeader("User-Agent", USER_AGENT)
-                .addHeader("Authorization", authorization)
-                .build();
+            String authorization) throws IOException {
+        Request request =
+                new Request.Builder().url(url).post(body).addHeader("User-Agent", USER_AGENT)
+                        .addHeader("Authorization", authorization).build();
         return client.newCall(request).execute();
     }
 
@@ -77,17 +67,14 @@ public class Requests {
      * @return the Response of the request
      * @throws IOException an IOException occurred when making the request
      */
-    public static Response POST(OkHttpClient client, String url, String json)
-            throws IOException {
-        RequestBody body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"),
-                json);
+    public static Response POST(OkHttpClient client, String url, String json) throws IOException {
+        RequestBody body =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         return POST(client, url, body);
     }
 
     /**
-     * Executes an HTTP POST request on the given URL with a JSON body with
-     * authorization.
+     * Executes an HTTP POST request on the given URL with a JSON body with authorization.
      *
      * @param url           the URL to request
      * @param json          the json-formatted body of the request
@@ -97,9 +84,8 @@ public class Requests {
      */
     public static Response POST(OkHttpClient client, String url, String json, String authorization)
             throws IOException {
-        RequestBody body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"),
-                json);
+        RequestBody body =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         return POST(client, url, body, authorization);
     }
 
@@ -139,7 +125,7 @@ public class Requests {
     public static Image imageFromURL(OkHttpClient client, String url, int width)
             throws IOException {
         Response response = GET(client, url);
-        return response.body() == null ? null :
-                new Image(response.body().byteStream(), width, 0, true, false);
+        return response.body() == null ? null
+                : new Image(response.body().byteStream(), width, 0, true, false);
     }
 }

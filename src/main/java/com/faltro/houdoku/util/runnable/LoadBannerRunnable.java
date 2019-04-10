@@ -6,7 +6,6 @@ import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.util.ContentLoader;
 import javafx.scene.image.Image;
-
 import java.io.IOException;
 
 public class LoadBannerRunnable extends LoaderRunnable {
@@ -21,11 +20,10 @@ public class LoadBannerRunnable extends LoaderRunnable {
      * @param contentLoader    the ContentLoader which created this instance
      * @param infoSource       the InfoSource to load from
      * @param series           the Series the banner is from
-     * @param seriesController the SeriesController to update after the banner
-     *                         is loaded
+     * @param seriesController the SeriesController to update after the banner is loaded
      */
     public LoadBannerRunnable(String name, ContentLoader contentLoader, InfoSource infoSource,
-                              Series series, SeriesController seriesController) {
+            Series series, SeriesController seriesController) {
         super(name, contentLoader);
         this.infoSource = infoSource;
         this.series = series;

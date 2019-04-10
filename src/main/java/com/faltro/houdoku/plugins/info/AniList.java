@@ -7,20 +7,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.scene.image.Image;
 import okhttp3.Response;
-
 import java.io.IOException;
-
 import static com.faltro.houdoku.net.Requests.POST;
 import static com.faltro.houdoku.net.Requests.imageFromURL;
 
 /**
- * This class contains implementation details for processing data from a
- * specific "info source" - a website which contains generic series information
- * and media.
+ * This class contains implementation details for processing data from a specific "info source" - a
+ * website which contains generic series information and media.
  * <p>
- * For method and field documentation, please see the InfoSource class.
- * Additionally, the implementation of some common methods is done in the
- * GenericInfoSource class.
+ * For method and field documentation, please see the InfoSource class. Additionally, the
+ * implementation of some common methods is done in the GenericInfoSource class.
  *
  * @see GenericInfoSource
  * @see InfoSource
@@ -33,12 +29,14 @@ public class AniList extends GenericInfoSource {
 
     @Override
     public Image banner(Series series) throws IOException {
+        // @formatter:off
         final String banner_request_body = "query ($q: String) {\n" +
                 "  Media (search: $q, type: MANGA, format_not_in: [NOVEL]) {\n" +
                 "    id\n" +
                 "    bannerImage\n" +
                 "  }\n" +
                 "}";
+        // @formatter:on
 
         JsonObject json_root = new JsonObject();
         JsonObject json_variables = new JsonObject();
@@ -47,8 +45,8 @@ public class AniList extends GenericInfoSource {
         json_root.add("variables", json_variables);
 
         Response response = POST(client, PROTOCOL + "://graphql." + DOMAIN, json_root.toString());
-        JsonObject json_response = new JsonParser().parse(response.body().string())
-                .getAsJsonObject();
+        JsonObject json_response =
+                new JsonParser().parse(response.body().string()).getAsJsonObject();
         JsonObject json_data = json_response.get("data").getAsJsonObject();
 
         Image result = null;

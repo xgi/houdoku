@@ -6,23 +6,19 @@ import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.PluginManager;
 import javafx.scene.image.Image;
 import okhttp3.OkHttpClient;
-
 import java.io.IOException;
 
 /**
- * An info source is a website which contains generic series information and
- * media. This type differs from {@link ContentSource} in that instances of this
- * class are used to retrieve information and media which is not specific to
- * an individual ContentSource.
+ * An info source is a website which contains generic series information and media. This type
+ * differs from {@link ContentSource} in that instances of this class are used to retrieve
+ * information and media which is not specific to an individual ContentSource.
  * <p>
- * Currently, instances of this class are not heavily utilized, since most
- * ContentSource's provide adequate series information. In the future, we may
- * want to utilize instances of this class to "fill in" for missing data
- * from ContentSource's.
+ * Currently, instances of this class are not heavily utilized, since most ContentSource's provide
+ * adequate series information. In the future, we may want to utilize instances of this class to
+ * "fill in" for missing data from ContentSource's.
  * <p>
- * The client maintains only one InfoSource at a time, which is hardcoded in
- * {@link PluginManager}. In the future, we may allow the user to switch the
- * current InfoSource in their settings.
+ * The client maintains only one InfoSource at a time, which is hardcoded in {@link PluginManager}.
+ * In the future, we may allow the user to switch the current InfoSource in their settings.
  *
  * @see com.faltro.houdoku.plugins.info
  */
@@ -49,16 +45,15 @@ public interface InfoSource {
      *
      * @param series the Series to retrieve the banner of
      * @return an Image which is a banner for the series, or null
-     * @throws IOException             an IOException occurred when finding the
-     *                                 Image
-     * @throws NotImplementedException the operation has not yet been
-     *                                 implemented for this info source
+     * @throws IOException             an IOException occurred when finding the Image
+     * @throws NotImplementedException the operation has not yet been implemented for this info
+     *                                 source
      */
     Image banner(Series series) throws IOException, NotImplementedException;
 
     /**
-     * Retrieve the client for making HTTP requests, which may be built with
-     * applicable interceptors.
+     * Retrieve the client for making HTTP requests, which may be built with applicable
+     * interceptors.
      *
      * @return an OkHttpClient for making requests to this InfoSource
      */

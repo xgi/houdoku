@@ -1,7 +1,6 @@
 package com.faltro.houdoku.model;
 
 import javafx.scene.input.KeyCode;
-
 import java.util.HashMap;
 
 /**
@@ -67,8 +66,8 @@ public class Config {
          */
         NIGHT_MODE_READER_ONLY("night_mode_reader_only", false),
         /**
-         * Quickly reload series information by only making one HTTP request, at
-         * the expense of potentially not retrieving all of a series' chapters.
+         * Quickly reload series information by only making one HTTP request, at the expense of
+         * potentially not retrieving all of a series' chapters.
          */
         QUICK_RELOAD_SERIES("quick_reload_series", true),
         /**
@@ -88,13 +87,13 @@ public class Config {
          */
         PAGE_FILTER_COLOR_ENABLED("page_filter_color_enabled", true),
         /**
-         * The hue modifier to use on the reader page when effects are active
-         * and the page filter is set to "color".
+         * The hue modifier to use on the reader page when effects are active and the page filter is
+         * set to "color".
          */
         PAGE_FILTER_COLOR_HUE("page_filter_color_hue", 0.25),
         /**
-         * The saturation modifier to use on the reader page when effects are
-         * active and the page filter is set to "color".
+         * The saturation modifier to use on the reader page when effects are active and the page
+         * filter is set to "color".
          */
         PAGE_FILTER_COLOR_SATURATION("page_filter_color_saturation", 0.33),
         /**
@@ -102,14 +101,13 @@ public class Config {
          */
         PAGE_FILTER_BRIGHTNESS_ENABLED("page_filter_brightness_enabled", false),
         /**
-         * The brightness modifier to use on the reader page when effects are
-         * active and the page filter is set to "brightness".
+         * The brightness modifier to use on the reader page when effects are active and the page
+         * filter is set to "brightness".
          */
         PAGE_FILTER_BRIGHTNESS("page_filter_brightness", 0.50),
         /**
-         * Whether to restrict the preloading of pages in the reader. If the
-         * value is false, the reader will preload the entire chapter even if
-         * the user stays on the first page.
+         * Whether to restrict the preloading of pages in the reader. If the value is false, the
+         * reader will preload the entire chapter even if the user stays on the first page.
          */
         RESTRICT_PRELOAD_PAGES("restrict_preload_pages", false),
         /**

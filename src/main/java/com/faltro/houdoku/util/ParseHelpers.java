@@ -2,7 +2,6 @@ package com.faltro.houdoku.util;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -11,8 +10,8 @@ import java.time.format.DateTimeFormatter;
 
 public class ParseHelpers {
     /**
-     * The maximum width of covers retrieved from content sources. Cover images
-     * should be enforced to this limit after being downloaded.
+     * The maximum width of covers retrieved from content sources. Cover images should be enforced
+     * to this limit after being downloaded.
      */
     public static final int COVER_MAX_WIDTH = 320;
 
@@ -37,8 +36,8 @@ public class ParseHelpers {
      * Retrieves the td element corresponding to the th with the given header.
      *
      * @param parent the parent element, which is probably a tbody
-     * @param header the header text used to find a matching th; the first
-     *               header which contains this text will be used
+     * @param header the header text used to find a matching th; the first header which contains
+     *               this text will be used
      * @return the td element corresponding to the th with the given header
      */
     public static Element tdWithHeader(Element parent, String header) {
@@ -48,9 +47,8 @@ public class ParseHelpers {
     /**
      * Isolates the first word in the given string.
      * <p>
-     * This function is built to handle two cases: the input string solely
-     * contains a single word, and the input string contains a sequence of
-     * words, separated by spaces.
+     * This function is built to handle two cases: the input string solely contains a single word,
+     * and the input string contains a sequence of words, separated by spaces.
      *
      * @param string the source string
      * @return the first word in the given string
@@ -66,8 +64,8 @@ public class ParseHelpers {
     /**
      * Safely parses an int from the given string.
      * <p>
-     * This method can parse integers from text which uses US-style formatting,
-     * particularly including comma separated digits.
+     * This method can parse integers from text which uses US-style formatting, particularly
+     * including comma separated digits.
      * <p>
      * If the given text is blank, this method will return 0.
      *
@@ -91,8 +89,8 @@ public class ParseHelpers {
     /**
      * Safely parses a long from the given string.
      * <p>
-     * This method can parse longs from text which uses US-style formatting,
-     * particularly including comma separated digits.
+     * This method can parse longs from text which uses US-style formatting, particularly including
+     * comma separated digits.
      * <p>
      * If the given text is blank, this method will return 0.
      *
@@ -105,7 +103,8 @@ public class ParseHelpers {
         long result = 0;
         if (!text.equals("")) {
             try {
-                result = NumberFormat.getNumberInstance(java.util.Locale.US).parse(text).longValue();
+                result = NumberFormat.getNumberInstance(java.util.Locale.US).parse(text)
+                        .longValue();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -128,17 +127,15 @@ public class ParseHelpers {
     }
 
     /**
-     * Parses a dateString using the given dateTimeFormatter, but first checks
-     * whether the dateString is a relative date, and calculates the appropriate
-     * LocalDateTime for either case.
+     * Parses a dateString using the given dateTimeFormatter, but first checks whether the
+     * dateString is a relative date, and calculates the appropriate LocalDateTime for either case.
      *
      * @param dateString        the source date text
-     * @param dateTimeFormatter the DateTimeFormatter for processing the
-     *                          dateString
+     * @param dateTimeFormatter the DateTimeFormatter for processing the dateString
      * @return a LocalDateTime corresponding to the given dateString
      */
-    public static LocalDateTime potentiallyRelativeDate(String dateString, DateTimeFormatter
-            dateTimeFormatter) {
+    public static LocalDateTime potentiallyRelativeDate(String dateString,
+            DateTimeFormatter dateTimeFormatter) {
         LocalDateTime localDateTime;
         switch (dateString) {
             case "Today":

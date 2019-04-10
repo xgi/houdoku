@@ -25,7 +25,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -132,9 +131,7 @@ public class ConfigController extends Controller {
         super.initialize();
 
         // set the width of the topic listView
-        listView.prefWidthProperty().bind(
-                container.widthProperty()
-                        .multiply(TOPIC_LIST_WIDTH));
+        listView.prefWidthProperty().bind(container.widthProperty().multiply(TOPIC_LIST_WIDTH));
 
         // populate the listView with topics
         ObservableList<HBox> items = FXCollections.observableArrayList();
@@ -152,9 +149,8 @@ public class ConfigController extends Controller {
         listView.setItems(items);
 
         // add listener to update the content panel when items are selected
-        listView.getSelectionModel().selectedItemProperty().addListener(
-                (observableValue, hBox, t1) -> updateContent()
-        );
+        listView.getSelectionModel().selectedItemProperty()
+                .addListener((observableValue, hBox, t1) -> updateContent());
 
         // Bind the disable property of checkboxes with sub-boxes with the
         // matching sub-box. We would have liked to do this in the FXML file,
@@ -164,22 +160,18 @@ public class ConfigController extends Controller {
         effectBrightnessBox.disableProperty().bind(effectBrightnessCheck.selectedProperty().not());
 
         // add bindings for page color/brightness filter previews
-        filterHueSlider.valueProperty().addListener(
-                (observableValue, oldValue, newValue) -> updateEffectPreview()
-        );
-        filterSaturationSlider.valueProperty().addListener(
-                (observableValue, oldValue, newValue) -> updateEffectPreview()
-        );
-        filterBrightnessSlider.valueProperty().addListener(
-                (observableValue, oldValue, newValue) -> updateEffectPreview()
-        );
+        filterHueSlider.valueProperty()
+                .addListener((observableValue, oldValue, newValue) -> updateEffectPreview());
+        filterSaturationSlider.valueProperty()
+                .addListener((observableValue, oldValue, newValue) -> updateEffectPreview());
+        filterBrightnessSlider.valueProperty()
+                .addListener((observableValue, oldValue, newValue) -> updateEffectPreview());
 
         // add bindings for miscellaneous properties
         nightModeReaderCheck.disableProperty().bind(nightModeCheck.selectedProperty().not());
-        languageFilterBox.disableProperty().bind(
-            languageFilterCheck.selectedProperty().not());
-        preloadingAmountBox.disableProperty().bind(
-                restrictPreloadingCheck.selectedProperty().not());
+        languageFilterBox.disableProperty().bind(languageFilterCheck.selectedProperty().not());
+        preloadingAmountBox.disableProperty()
+                .bind(restrictPreloadingCheck.selectedProperty().not());
 
         // add KeyEvent handlers for navigation
         container.setOnKeyPressed(keyEvent -> {
@@ -191,8 +183,8 @@ public class ConfigController extends Controller {
         });
 
         // set available language filters
-        ObservableList<Language> languages = FXCollections.observableArrayList(
-            Arrays.asList(Languages.Language.values()));
+        ObservableList<Language> languages =
+                FXCollections.observableArrayList(Arrays.asList(Languages.Language.values()));
         languageFilterBox.setItems(languages);
 
         // manually fill auth url fields for trackers
@@ -240,6 +232,7 @@ public class ConfigController extends Controller {
 
         // update controls with current values
         Config config = sceneManager.getConfig();
+        // @formatter:off
         nightModeCheck.setSelected(
                 (boolean) config.getValue(Config.Field.NIGHT_MODE_ENABLED));
         nightModeReaderCheck.setSelected(
@@ -276,6 +269,7 @@ public class ConfigController extends Controller {
                 (String) config.getValue(Config.Field.READER_KEY_LAST_PAGE));
         readerKeyToSeries.setText(
                 (String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
+        // @formatter:on
 
         // update tracker authentication statuses
         for (Tracker tracker : sceneManager.getPluginManager().getTrackers()) {
@@ -288,12 +282,10 @@ public class ConfigController extends Controller {
             if (tracker.isAuthenticated()) {
                 try {
                     String text = String.format("You are authenticated as: %s",
-                            tracker.authenticatedUserName()
-                    );
-                    updateTrackerStatus(tracker.getClass().getField("ID").getInt(null), true,
-                            text);
-                } catch (NotImplementedException | NotAuthenticatedException |
-                        IOException | NoSuchFieldException | IllegalAccessException e) {
+                            tracker.authenticatedUserName());
+                    updateTrackerStatus(tracker.getClass().getField("ID").getInt(null), true, text);
+                } catch (NotImplementedException | NotAuthenticatedException | IOException
+                        | NoSuchFieldException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
@@ -356,6 +348,7 @@ public class ConfigController extends Controller {
     @FXML
     private void confirm() {
         Config config = sceneManager.getConfig();
+        // @formatter:off
         config.replaceValue(Config.Field.NIGHT_MODE_ENABLED,
                 nightModeCheck.isSelected());
         config.replaceValue(Config.Field.NIGHT_MODE_READER_ONLY,
@@ -393,18 +386,16 @@ public class ConfigController extends Controller {
         config.replaceValue(Config.Field.READER_KEY_TO_SERIES,
                 readerKeyToSeries.getText());
 
-        /*
-            TODO: it's strange that the field in the tracker object is separate
-            from the value we store here. In the future, we will want the Config
-            object to be the only store for these values. However, doing so can
-            pose questions of when saveConfig should be run.
-         */
+        /* TODO: it's strange that the field in the tracker object is separate from the value we
+         * store here. In the future, we will want the Config object to be the only store for these
+         * values. However, doing so can pose questions of when saveConfig should be run. */
         TrackerOAuth anilist =
                 (TrackerOAuth) sceneManager.getPluginManager().getTracker(AniList.ID);
         config.replaceValue(Config.Field.TRACKER_ANILIST_AUTHENTICATED,
                 anilist.isAuthenticated());
         config.replaceValue(Config.Field.TRACKER_ANILIST_TOKEN,
                 anilist.getToken() == null ? "" : anilist.getToken());
+        // @formatter:on
 
         sceneManager.saveConfig();
 
@@ -428,11 +419,10 @@ public class ConfigController extends Controller {
      */
     @FXML
     private void promptRestoreDefaults() {
-        Alert alert = new Alert(Alert.AlertType.WARNING, "", ButtonType.YES,
-                ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.WARNING, "", ButtonType.YES, ButtonType.CANCEL);
 
-        Label label = new Label("Are you sure you want to restore the default " +
-                "configuration?\nThis will erase your current settings.");
+        Label label = new Label("Are you sure you want to restore the default "
+                + "configuration?\nThis will erase your current settings.");
         label.setWrapText(true);
 
         VBox alert_container = new VBox();
@@ -452,8 +442,8 @@ public class ConfigController extends Controller {
     private void promptKeyBinding(ActionEvent event) {
         Button caller_button = (Button) event.getSource();
 
-        Alert alert = new Alert(Alert.AlertType.NONE,
-                "Press the key to bind to this operation.", ButtonType.CANCEL);
+        Alert alert = new Alert(Alert.AlertType.NONE, "Press the key to bind to this operation.",
+                ButtonType.CANCEL);
         Button cancel_button = (Button) alert.getDialogPane().lookupButton(ButtonType.CANCEL);
         cancel_button.setOnKeyPressed(keyEvent -> {
             caller_button.setText(keyEvent.getCode().toString());
@@ -470,6 +460,7 @@ public class ConfigController extends Controller {
     @FXML
     private void resetPageEffects() {
         Config config = sceneManager.getConfig();
+        // @formatter:off
         filterHueSlider.setValue(
                 (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_HUE));
         filterSaturationSlider.setValue(
@@ -481,6 +472,7 @@ public class ConfigController extends Controller {
                 (boolean) config.getValue(Config.Field.PAGE_FILTER_COLOR_ENABLED));
         effectBrightnessCheck.setSelected(
                 (boolean) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS_ENABLED));
+        // @formatter:on
     }
 
     /**
