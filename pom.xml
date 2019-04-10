@@ -7,6 +7,12 @@
     <description>Houdoku is a manga reader and library manager for the desktop.</description>
     <url>https://github.com/xgi/houdoku</url>
     <version>1.0.0</version>
+    <distributionManagement>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </distributionManagement>
     <licenses>
         <license>
             <name>The MIT License</name>
