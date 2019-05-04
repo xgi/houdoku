@@ -24,7 +24,7 @@ public class GenericContentSource implements ContentSource {
     public static final String NAME = "GenericContentSource";
     public static final String DOMAIN = "example.com";
     public static final String PROTOCOL = "https";
-    final OkHttpClient client = new OkHttpClient();
+    public final OkHttpClient client = new OkHttpClient();
 
     @Override
     public ArrayList<HashMap<String, Object>> search(String query)

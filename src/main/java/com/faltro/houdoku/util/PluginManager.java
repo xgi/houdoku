@@ -1,10 +1,15 @@
 package com.faltro.houdoku.util;
 
+import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.plugins.content.*;
 import com.faltro.houdoku.plugins.info.AniList;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.plugins.tracker.Tracker;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -14,9 +19,20 @@ import java.util.Arrays;
  * the available plugins so that multiple plugin instances are not necessary.
  */
 public class PluginManager {
+    private static ClassLoader CLASSLOADER;
     private final ArrayList<ContentSource> contentSources;
     private final InfoSource infoSource;
     private final ArrayList<Tracker> trackers;
+
+    static {
+        try {
+            URL url = Data.PATH_PLUGINS.toFile().toURI().toURL();
+            URL[] urls = new URL[] {url};
+            CLASSLOADER = new URLClassLoader(urls);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } ;
+    }
 
     /**
      * Create the PluginManager.
@@ -26,23 +42,38 @@ public class PluginManager {
      * @param config the user Config to load initial plugin settings (not stored)
      */
     public PluginManager(Config config) {
-        // @formatter:off
         contentSources = new ArrayList<>();
-        contentSources.addAll(Arrays.asList(
-            new MangaDex(),
-            new MangaHere(),
-            new MangaSee(),
-            new MangaTown(),
-            new MangaPark(),
-            new MangaFree()
-            // add other content sources here
-        ));
-        infoSource = new AniList(); // change to desired InfoSource
+        File contentDir = Data.PATH_PLUGINS_CONTENT.toFile();
+        if (contentDir.exists()) {
+            File[] contentFiles = contentDir.listFiles();
+            if (contentFiles != null) {
+                for (File file : contentFiles) {
+                    if (file.isFile()) {
+                        String[] fname_parts = file.getName().split("\\.(?=[^\\.]+$)");
+                        if (fname_parts.length > 0) {
+                            String basename = fname_parts[0];
+                            try {
+                                Class cls = CLASSLOADER.loadClass(
+                                        "com.faltro.houdoku.plugins.content." + basename);
+                                contentSources.add((ContentSource) cls.newInstance());
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (InstantiationException | IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        infoSource = new AniList();
 
         boolean anilist_authenticated =
                 (boolean) config.getValue(Config.Field.TRACKER_ANILIST_AUTHENTICATED);
         String anilist_token = (String) config.getValue(Config.Field.TRACKER_ANILIST_TOKEN);
 
+        // @formatter:off
         trackers = new ArrayList<>();
         trackers.addAll(Arrays.asList(
             anilist_authenticated

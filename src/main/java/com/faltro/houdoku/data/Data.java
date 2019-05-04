@@ -43,6 +43,16 @@ public class Data {
      * The Path for storing series cover images.
      */
     private static final Path PATH_COVERS = Paths.get(USER_DATA_DIR + File.separator + "covers");
+    /**
+     * The Path for storing plugins.
+     */
+    public static final Path PATH_PLUGINS = Paths.get(USER_DATA_DIR + File.separator + "plugins");
+    /**
+     * The Path for storing ContentSource plugins.
+     */
+    public static final Path PATH_PLUGINS_CONTENT = Paths.get(USER_DATA_DIR + File.separator
+            + "plugins" + File.separator + "com" + File.separator + "faltro" + File.separator
+            + "houdoku" + File.separator + "plugins" + File.separator + "content");
 
     /**
      * Save the given Library to the filesystem.
