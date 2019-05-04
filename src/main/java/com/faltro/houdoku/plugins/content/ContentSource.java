@@ -37,6 +37,10 @@ public interface ContentSource {
      * The protocol for the ContentSource, which is likely either http or https.
      */
     String PROTOCOL = "https";
+    /**
+     * The revision (effectively "version") of the plugin.
+     */
+    int REVISION = 1;
 
     /**
      * Searches the source using a provided query.
@@ -170,6 +174,13 @@ public interface ContentSource {
      * @return an OkHttpClient for making requests to this ContentSource
      */
     OkHttpClient getClient();
+
+    /**
+     * Represents this ContentSource as a string.
+     *
+     * @return the user-friendly representation of this ContentSource
+     */
+    int revision();
 
     /**
      * Represents this ContentSource as a string.

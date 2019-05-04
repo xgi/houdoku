@@ -193,6 +193,25 @@
                 </TabPane>
             </VBox>
             <VBox styleClass="topicContainer" spacing="15" VBox.vgrow="ALWAYS"
+                  alignment="CENTER_LEFT" userData="Plugins">
+                <HBox styleClass="topicHeaderBar">
+                    <Text text="%plugins"/>
+                </HBox>
+                <TabPane styleClass="configTabPane" VBox.vgrow="ALWAYS">
+                    <Tab text="%content_sources" closable="false">
+                        <VBox VBox.vgrow="ALWAYS" spacing="15">
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="%installed_plugins"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <Button text="%update_install_plugins" onAction="#promptUpdatePlugins"/>
+                                    <ListView fx:id="contentSourcesList"/>
+                                </VBox>
+                            </VBox>
+                        </VBox>
+                    </Tab>
+                </TabPane>
+            </VBox>
+            <VBox styleClass="topicContainer" spacing="15" VBox.vgrow="ALWAYS"
                   alignment="CENTER_LEFT" userData="Trackers">
                 <HBox styleClass="topicHeaderBar">
                     <Text text="%trackers"/>

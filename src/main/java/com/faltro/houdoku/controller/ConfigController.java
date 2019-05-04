@@ -1,14 +1,21 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Languages;
 import com.faltro.houdoku.model.Languages.Language;
+import com.faltro.houdoku.net.Requests;
+import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.tracker.AniList;
 import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.SceneManager;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,7 +32,14 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -46,10 +60,15 @@ public class ConfigController extends Controller {
      * A mapping of topic names and the string to their matching icon file.
      */
     private static final HashMap<String, String> ICON_MAP = new HashMap<>();
+    /**
+     * URL for plugin index file.
+     */
+    private static final String PLUGINS_BASE_URL = "https://storage.googleapis.com/houdoku-plugins";
 
     static {
         ICON_MAP.put("General", "/img/icon_settings.png");
         ICON_MAP.put("Reader", "/img/icon_reader.png");
+        ICON_MAP.put("Plugins", "/img/icon_settings.png");
         ICON_MAP.put("Trackers", "/img/icon_settings.png");
     }
 
@@ -109,6 +128,8 @@ public class ConfigController extends Controller {
     private Button readerKeyLastPage;
     @FXML
     private Button readerKeyToSeries;
+    @FXML
+    private ListView<HBox> contentSourcesList;
     @FXML
     private TextField authUrlFieldAniList;
     @FXML
@@ -290,6 +311,8 @@ public class ConfigController extends Controller {
                 }
             }
         }
+
+        this.reloadPlugins();
     }
 
     /**
@@ -454,6 +477,73 @@ public class ConfigController extends Controller {
         alert.showAndWait();
     }
 
+    @FXML
+    private void promptUpdatePlugins() {
+        OkHttpClient client = new OkHttpClient();
+
+        Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK, ButtonType.CANCEL);
+
+        // create ui elements of alert container
+        Label categories_label = new Label("Select plugins to install/update:");
+        categories_label.setWrapText(true);
+
+        // add content to alert container
+        VBox alert_container = new VBox();
+        alert_container.setSpacing(10);
+        ScrollPane categories_scrollpane = new ScrollPane();
+        categories_scrollpane.setMaxHeight(300);
+        VBox categories_container = new VBox();
+        categories_container.setSpacing(10);
+        categories_container.getChildren().addAll(categories_label);
+        categories_scrollpane.setContent(categories_container);
+        alert_container.getChildren().addAll(categories_label, categories_scrollpane);
+
+        // fetch list of plugins
+        try {
+            Response response = Requests.GET(client, PLUGINS_BASE_URL + "/index.json");
+            JsonArray json_plugins =
+                    new JsonParser().parse(response.body().string()).getAsJsonArray();
+
+            ArrayList<CheckBox> plugin_boxes = new ArrayList<>();
+            for (JsonElement json_plugin_ele : json_plugins) {
+                JsonObject json_plugin = json_plugin_ele.getAsJsonObject();
+                String name = json_plugin.get("name").getAsString();
+                String domain = json_plugin.get("domain").getAsString();
+                int revision = json_plugin.get("revision").getAsInt();
+                CheckBox checkbox =
+                        new CheckBox(String.format("%s <%s> (rev=%d)", name, domain, revision));
+                checkbox.setUserData(json_plugin);
+                checkbox.selectedProperty().set(true);
+                plugin_boxes.add(checkbox);
+            }
+
+            categories_container.getChildren().addAll(plugin_boxes);
+            alert.getDialogPane().setContent(alert_container);
+            alert.setTitle(stage.getTitle());
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.OK) {
+                for (CheckBox checkbox : plugin_boxes) {
+                    if (checkbox.isSelected()) {
+                        JsonObject json_plugin = (JsonObject) checkbox.getUserData();
+                        String name = json_plugin.get("name").getAsString();
+
+                        response = Requests.GET(client,
+                                PLUGINS_BASE_URL + "/content/" + name + ".class");
+                        Path output_path = Paths
+                                .get(Data.PATH_PLUGINS_CONTENT + File.separator + name + ".class");
+                        Files.write(output_path, response.body().bytes());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            // TODO: show an error alert instead
+            e.printStackTrace();
+        }
+
+        this.reloadPlugins();
+    }
+
     /**
      * Reset the page effect sliders/checks to their initial values.
      */
@@ -473,6 +563,23 @@ public class ConfigController extends Controller {
         effectBrightnessCheck.setSelected(
                 (boolean) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS_ENABLED));
         // @formatter:on
+    }
+
+    private void reloadPlugins() {
+        this.sceneManager.getPluginManager().reloadContentSources();
+
+        // populate the contentSourcesList with plugins
+        ObservableList<HBox> items = FXCollections.observableArrayList();
+        for (ContentSource contentSource : sceneManager.getPluginManager().getContentSources()) {
+            HBox item_container = new HBox();
+            item_container.getStyleClass().add("listItem");
+            Text item_name = new Text(contentSource.toString());
+            Text item_rev = new Text(" (rev=" + String.valueOf(contentSource.revision()) + ")");
+            item_container.getChildren().add(item_name);
+            item_container.getChildren().add(item_rev);
+            items.add(item_container);
+        }
+        contentSourcesList.setItems(items);
     }
 
     /**

@@ -42,30 +42,8 @@ public class PluginManager {
      * @param config the user Config to load initial plugin settings (not stored)
      */
     public PluginManager(Config config) {
-        contentSources = new ArrayList<>();
-        File contentDir = Data.PATH_PLUGINS_CONTENT.toFile();
-        if (contentDir.exists()) {
-            File[] contentFiles = contentDir.listFiles();
-            if (contentFiles != null) {
-                for (File file : contentFiles) {
-                    if (file.isFile()) {
-                        String[] fname_parts = file.getName().split("\\.(?=[^\\.]+$)");
-                        if (fname_parts.length > 0) {
-                            String basename = fname_parts[0];
-                            try {
-                                Class cls = CLASSLOADER.loadClass(
-                                        "com.faltro.houdoku.plugins.content." + basename);
-                                contentSources.add((ContentSource) cls.newInstance());
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (InstantiationException | IllegalAccessException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        contentSources = new ArrayList<ContentSource>();
+        this.reloadContentSources();
 
         infoSource = new AniList();
 
@@ -125,6 +103,33 @@ public class PluginManager {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public void reloadContentSources() {
+        contentSources.clear();
+        File contentDir = Data.PATH_PLUGINS_CONTENT.toFile();
+        if (contentDir.exists()) {
+            File[] contentFiles = contentDir.listFiles();
+            if (contentFiles != null) {
+                for (File file : contentFiles) {
+                    if (file.isFile()) {
+                        String[] fname_parts = file.getName().split("\\.(?=[^\\.]+$)");
+                        if (fname_parts.length > 0) {
+                            String basename = fname_parts[0];
+                            try {
+                                Class cls = CLASSLOADER.loadClass(
+                                        "com.faltro.houdoku.plugins.content." + basename);
+                                contentSources.add((ContentSource) cls.newInstance());
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                            } catch (InstantiationException | IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**

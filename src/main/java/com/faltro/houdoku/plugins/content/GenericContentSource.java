@@ -67,6 +67,11 @@ public class GenericContentSource implements ContentSource {
     }
 
     @Override
+    public int revision() {
+        return REVISION;
+    }
+
+    @Override
     public String toString() {
         String result = NAME + " <" + DOMAIN + ">";
         try {
