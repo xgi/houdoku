@@ -64,6 +64,8 @@ public class SearchSeriesController extends Controller {
     @FXML
     private ComboBox<ContentSource> contentSourcesBox;
     @FXML
+    private Text noPluginWarning;
+    @FXML
     private HBox searchSeriesHeader;
     @FXML
     private TextField searchTextField;
@@ -169,6 +171,10 @@ public class SearchSeriesController extends Controller {
                 .observableArrayList(sceneManager.getPluginManager().getContentSources());
         contentSourcesBox.setItems(contentSources);
         contentSourcesBox.getSelectionModel().select(0);
+
+        // display noPluginWarning if there are no available content sources
+        noPluginWarning.setVisible(contentSources.size() == 0);
+        noPluginWarning.setManaged(noPluginWarning.isVisible());
     }
 
     /**

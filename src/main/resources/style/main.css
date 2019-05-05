@@ -429,6 +429,10 @@ Generic ListView styles
     -fx-font-size: 1.4em;
 }
 
+#noPluginWarning {
+    -fx-font-size: 1.4em;
+}
+
 /****************************************
  * Reader page styles
  ****************************************/

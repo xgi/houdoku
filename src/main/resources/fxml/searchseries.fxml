@@ -64,6 +64,9 @@
         </HBox>
     </VBox>
 
+    <Text fx:id="noPluginWarning" text="%no_installed_plugins" wrappingWidth="600" visible="false"
+        managed="false" styleClass="bareText"/>
+
     <StackPane fx:id="resultsContainer" VBox.vgrow="ALWAYS">
         <TableView fx:id="tableView" visible="false" managed="false">
             <placeholder>

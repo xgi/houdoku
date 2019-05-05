@@ -203,7 +203,7 @@
                             <VBox>
                                 <Text styleClass="bareTextAlt" text="%installed_plugins"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
-                                    <Button text="%update_install_plugins" onAction="#promptUpdatePlugins"/>
+                                    <Button text="%install_update_plugins" onAction="#promptUpdatePlugins"/>
                                     <ListView fx:id="contentSourcesList"/>
                                 </VBox>
                             </VBox>
