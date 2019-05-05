@@ -529,6 +529,36 @@ Generic ListView styles
     -fx-padding: 5;
 }
 
+#contentSourcesList {
+    -fx-font-size: 1.2em;
+    -fx-border-width: 0 1 0 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-color: -color-foreground;
+}
+
+#contentSourcesList .list-cell .listItem {
+    -fx-alignment: center-left;
+    -fx-spacing: 2;
+    -fx-padding: 2 0 2 1;
+}
+
+#contentSourcesList .list-cell {
+    -fx-background-color: -color-background-alt;
+}
+
+#contentSourcesList .list-cell:selected {
+    -fx-background-color: -color-foreground-alt;
+}
+
+#contentSourcesList .list-cell .listItem > * {
+    -fx-fill: -color-foreground;
+}
+
+#contentSourcesList .list-cell:selected .listItem > * {
+    -fx-fill: -color-background-alt;
+}
+
 /*
 Custom tab container/elements
  */
