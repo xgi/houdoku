@@ -234,15 +234,14 @@
                                         <Label fx:id="statusAniList" visible="false"
                                                managed="false"/>
                                     </HBox>
-
                                 </VBox>
                             </VBox>
                         </VBox>
                     </Tab>
-                    <Tab text="MyAnimeList" closable="false">
+                    <!-- <Tab text="MyAnimeList" closable="false">
                         <VBox VBox.vgrow="ALWAYS" spacing="15">
                         </VBox>
-                    </Tab>
+                    </Tab> -->
                 </TabPane>
             </VBox>
         </VBox>

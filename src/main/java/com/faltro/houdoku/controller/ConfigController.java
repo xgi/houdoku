@@ -68,8 +68,8 @@ public class ConfigController extends Controller {
     static {
         ICON_MAP.put("General", "/img/icon_settings.png");
         ICON_MAP.put("Reader", "/img/icon_reader.png");
-        ICON_MAP.put("Plugins", "/img/icon_settings.png");
-        ICON_MAP.put("Trackers", "/img/icon_settings.png");
+        ICON_MAP.put("Plugins", "/img/icon_plugins.png");
+        ICON_MAP.put("Trackers", "/img/icon_trackers.png");
     }
 
     @FXML
