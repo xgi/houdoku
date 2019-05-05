@@ -574,7 +574,13 @@ public class ConfigController extends Controller {
             HBox item_container = new HBox();
             item_container.getStyleClass().add("listItem");
             Text item_name = new Text(contentSource.toString());
-            Text item_rev = new Text(" (rev=" + String.valueOf(contentSource.revision()) + ")");
+            int revision = -1;
+            try {
+                revision = contentSource.getClass().getField("REVISION").getInt(null);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            Text item_rev = new Text(" (rev=" + String.valueOf(revision) + ")");
             item_container.getChildren().add(item_name);
             item_container.getChildren().add(item_rev);
             items.add(item_container);

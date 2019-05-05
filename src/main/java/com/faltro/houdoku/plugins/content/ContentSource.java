@@ -180,12 +180,5 @@ public interface ContentSource {
      *
      * @return the user-friendly representation of this ContentSource
      */
-    int revision();
-
-    /**
-     * Represents this ContentSource as a string.
-     *
-     * @return the user-friendly representation of this ContentSource
-     */
     String toString();
 }
