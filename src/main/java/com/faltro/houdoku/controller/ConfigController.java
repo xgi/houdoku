@@ -507,14 +507,29 @@ public class ConfigController extends Controller {
             ArrayList<CheckBox> plugin_boxes = new ArrayList<>();
             for (JsonElement json_plugin_ele : json_plugins) {
                 JsonObject json_plugin = json_plugin_ele.getAsJsonObject();
+                int id = json_plugin.get("id").getAsInt();
                 String name = json_plugin.get("name").getAsString();
                 String domain = json_plugin.get("domain").getAsString();
                 int revision = json_plugin.get("revision").getAsInt();
-                CheckBox checkbox =
-                        new CheckBox(String.format("%s <%s> (rev=%d)", name, domain, revision));
-                checkbox.setUserData(json_plugin);
-                checkbox.selectedProperty().set(true);
-                plugin_boxes.add(checkbox);
+
+                // don't add plugin to the list if it's already loaded and at the latest revision
+                boolean display = true;
+                ContentSource existing = sceneManager.getPluginManager().getSource(id);
+                if (existing != null) {
+                    try {
+                        display = existing.getClass().getField("REVISION").getInt(null) < revision;
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                if (display) {
+                    CheckBox checkbox =
+                            new CheckBox(String.format("%s <%s> (rev=%d)", name, domain, revision));
+                    checkbox.setUserData(json_plugin);
+                    checkbox.selectedProperty().set(true);
+                    plugin_boxes.add(checkbox);
+                }
             }
 
             categories_container.getChildren().addAll(plugin_boxes);
