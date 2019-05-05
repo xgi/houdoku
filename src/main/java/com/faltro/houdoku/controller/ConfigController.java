@@ -547,6 +547,7 @@ public class ConfigController extends Controller {
                                 PLUGINS_BASE_URL + "/content/" + name + ".class");
                         Path output_path = Paths
                                 .get(Data.PATH_PLUGINS_CONTENT + File.separator + name + ".class");
+                        Files.createDirectories(output_path.getParent());
                         Files.write(output_path, response.body().bytes());
                     }
                 }
