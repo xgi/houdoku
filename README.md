@@ -9,10 +9,11 @@ Houdoku is a manga reader and library manager for the desktop.
 
 # Features
 
-* Supports popular manga aggregators, including MangaDex, MangaHere, MangaSee, and more
-([see full list](https://github.com/xgi/houdoku/blob/master/supported_sources.txt)).
+* Supports popular manga aggregators, including MangaDex, MangaHere, and more
+(see [houdoku-plugins](https://github.com/xgi/houdoku-plugins)).
 * Customizable reader interface with optional dark/night mode.
-* Browse and manage your library with tagging and filtering support.
+* Tagging and filtering support to easily browse and manage large libraries.
+* Cross-platform!
 
 ---
 
@@ -25,9 +26,8 @@ Houdoku is a manga reader and library manager for the desktop.
 
 Download Houdoku from [the releases page](https://github.com/xgi/houdoku/releases).
 
-Windows users are encouraged to download the provided .exe, whereas users on other operating
-systems should download the .jar. Both options require a sufficient Java installation with JRE
-version 8 or later.
+For Windows users, a native .exe is provided. Users on other operating systems should download the
+.jar. Both options require a sufficient Java installation with JRE version 8 or later.
 
 The client can typically be run by simply double clicking the file. Alternatively, you may start
 the client via the command line:
@@ -35,6 +35,14 @@ the client via the command line:
 ```bash
 $ java -jar houdoku-x.y.z.jar
 ```
+
+# Plugins
+
+Support for 3rd party content sources (manga aggregators) is available via a plugin interface. You
+may install and update plugins by going to File->Settings->Plugins in the client.
+
+For more information, and for an index of available plugins, see the
+[houdoku-plugins repository](https://github.com/xgi/houdoku-plugins).
 
 # Dependencies
 
