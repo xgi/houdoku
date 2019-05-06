@@ -476,7 +476,6 @@ public class ConfigController extends Controller {
 
     @FXML
     private void promptUpdatePlugins() {
-        OkHttpClient client = new OkHttpClient();
         PluginManager pluginManager = sceneManager.getPluginManager();
 
         Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK, ButtonType.CANCEL);
@@ -497,57 +496,64 @@ public class ConfigController extends Controller {
         alert_container.getChildren().addAll(categories_label, categories_scrollpane);
 
         // fetch list of plugins
+        JsonArray json_plugins;
         try {
-            JsonArray json_plugins = pluginManager.downloadPluginIndex();
-
-            // create list of checkboxes for the user to select which plugins to install
-            ArrayList<CheckBox> plugin_boxes = new ArrayList<>();
-            for (JsonElement json_plugin_ele : json_plugins) {
-                JsonObject json_plugin = json_plugin_ele.getAsJsonObject();
-                int id = json_plugin.get("id").getAsInt();
-                String name = json_plugin.get("name").getAsString();
-                String domain = json_plugin.get("domain").getAsString();
-                int revision = json_plugin.get("revision").getAsInt();
-
-                // don't add plugin to the list if it's already loaded and at the latest revision
-                boolean should_display = true;
-                ContentSource existing = pluginManager.getSource(id);
-                if (existing != null) {
-                    try {
-                        should_display =
-                                existing.getClass().getField("REVISION").getInt(null) < revision;
-                    } catch (NoSuchFieldException | IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                if (should_display) {
-                    CheckBox checkbox =
-                            new CheckBox(String.format("%s <%s> (rev=%d)", name, domain, revision));
-                    checkbox.setUserData(json_plugin);
-                    checkbox.selectedProperty().set(true);
-                    plugin_boxes.add(checkbox);
-                }
-            }
-
-            categories_container.getChildren().addAll(plugin_boxes);
-            alert.getDialogPane().setContent(alert_container);
-            alert.setTitle(stage.getTitle());
-            alert.showAndWait();
-
-            if (alert.getResult() == ButtonType.OK) {
-                // download all the selected plugins
-                for (CheckBox checkbox : plugin_boxes) {
-                    if (checkbox.isSelected()) {
-                        JsonObject json_plugin = (JsonObject) checkbox.getUserData();
-                        String name = json_plugin.get("name").getAsString();
-                        pluginManager.downloadPlugin(name);
-                    }
-                }
-            }
+            json_plugins = pluginManager.downloadPluginIndex();
         } catch (IOException e) {
-            // TODO: show an error alert instead
-            e.printStackTrace();
+            promptError(
+                    "An error occurred when downloading the list of plugins:\n\n" + e.getMessage());
+            return;
+        }
+
+        // create list of checkboxes for the user to select which plugins to install
+        ArrayList<CheckBox> plugin_boxes = new ArrayList<>();
+        for (JsonElement json_plugin_ele : json_plugins) {
+            JsonObject json_plugin = json_plugin_ele.getAsJsonObject();
+            int id = json_plugin.get("id").getAsInt();
+            String name = json_plugin.get("name").getAsString();
+            String domain = json_plugin.get("domain").getAsString();
+            int revision = json_plugin.get("revision").getAsInt();
+
+            // don't add plugin to the list if it's already loaded and at the latest revision
+            boolean should_display = true;
+            ContentSource existing = pluginManager.getSource(id);
+            if (existing != null) {
+                try {
+                    should_display =
+                            existing.getClass().getField("REVISION").getInt(null) < revision;
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (should_display) {
+                CheckBox checkbox =
+                        new CheckBox(String.format("%s <%s> (rev=%d)", name, domain, revision));
+                checkbox.setUserData(json_plugin);
+                checkbox.selectedProperty().set(true);
+                plugin_boxes.add(checkbox);
+            }
+        }
+
+        categories_container.getChildren().addAll(plugin_boxes);
+        alert.getDialogPane().setContent(alert_container);
+        alert.setTitle(stage.getTitle());
+        alert.showAndWait();
+
+        if (alert.getResult() == ButtonType.OK) {
+            // download all the selected plugins
+            for (CheckBox checkbox : plugin_boxes) {
+                if (checkbox.isSelected()) {
+                    JsonObject json_plugin = (JsonObject) checkbox.getUserData();
+                    String name = json_plugin.get("name").getAsString();
+                    try {
+                        pluginManager.downloadPlugin(name);
+                    } catch (IOException e) {
+                        promptError("An error occurred when downloading the \"" + name
+                                + "\" plugin:\n\n" + e.getMessage());
+                    }
+                }
+            }
         }
 
         this.reloadPlugins();

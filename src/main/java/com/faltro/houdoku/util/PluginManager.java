@@ -149,18 +149,29 @@ public class PluginManager {
     }
 
     public JsonArray downloadPluginIndex() throws IOException {
-        Response response = Requests.GET(new OkHttpClient(), PLUGINS_BASE_URL + "/index.json");
-        String text = response.body().string();
-        return new JsonParser().parse(text).getAsJsonArray();
+        String url = PLUGINS_BASE_URL + "/index.json";
+
+        Response response = Requests.GET(new OkHttpClient(), url);
+        if (response.isSuccessful()) {
+            String text = response.body().string();
+            return new JsonParser().parse(text).getAsJsonArray();
+        } else {
+            throw new IOException(String.valueOf(response.code()) + " " + response.message());
+        }
     }
 
     public void downloadPlugin(String name) throws IOException {
         String url = PLUGINS_BASE_URL + "/content/" + name + ".class";
-        
+
         Response response = Requests.GET(new OkHttpClient(), url);
-        Path output_path = Paths.get(Data.PATH_PLUGINS_CONTENT + File.separator + name + ".class");
-        Files.createDirectories(output_path.getParent());
-        Files.write(output_path, response.body().bytes());
+        if (response.isSuccessful()) {
+            Path output_path =
+                    Paths.get(Data.PATH_PLUGINS_CONTENT + File.separator + name + ".class");
+            Files.createDirectories(output_path.getParent());
+            Files.write(output_path, response.body().bytes());
+        } else {
+            throw new IOException(String.valueOf(response.code()) + " " + response.message());
+        }
     }
 
     /**

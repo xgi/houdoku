@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 /**
@@ -81,6 +82,22 @@ abstract public class Controller {
      */
     public void toggleNightMode() {
         sceneManager.toggleTheme();
+    }
+
+    /**
+     * Display an error as an alert.
+     *
+     * @param text the error text to display
+     */
+    public void promptError(String text) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+            Label label = new Label(text);
+            label.setWrapText(true);
+            alert.getDialogPane().setContent(label);
+            alert.setTitle(stage.getTitle());
+            alert.showAndWait();
+        });
     }
 
     /**

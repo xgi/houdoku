@@ -311,22 +311,6 @@ public class SearchSeriesController extends Controller {
     }
 
     /**
-     * Display an error as an alert.
-     *
-     * @param text the error text to display
-     */
-    public void promptError(String text) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
-            Label label = new Label(text);
-            label.setWrapText(true);
-            alert.getDialogPane().setContent(label);
-            alert.setTitle(stage.getTitle());
-            alert.showAndWait();
-        });
-    }
-
-    /**
      * Adds a series to the library from an item HashMap.
      * <p>
      * Since the data retrieved from content source search pages can vary, this method does not rely
