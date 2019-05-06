@@ -2,14 +2,23 @@ package com.faltro.houdoku.util;
 
 import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.model.Config;
+import com.faltro.houdoku.net.Requests;
 import com.faltro.houdoku.plugins.content.*;
 import com.faltro.houdoku.plugins.info.AniList;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.plugins.tracker.Tracker;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,7 +28,14 @@ import java.util.Arrays;
  * the available plugins so that multiple plugin instances are not necessary.
  */
 public class PluginManager {
+    /**
+     * ClassLoader for loading plugin classes from the filesystem.
+     */
     private static ClassLoader CLASSLOADER;
+    /**
+     * Remote URL for the plugin index file.
+     */
+    private static final String PLUGINS_BASE_URL = "https://storage.googleapis.com/houdoku-plugins";
     private final ArrayList<ContentSource> contentSources;
     private final InfoSource infoSource;
     private final ArrayList<Tracker> trackers;
@@ -130,6 +146,21 @@ public class PluginManager {
                 }
             }
         }
+    }
+
+    public JsonArray downloadPluginIndex() throws IOException {
+        Response response = Requests.GET(new OkHttpClient(), PLUGINS_BASE_URL + "/index.json");
+        String text = response.body().string();
+        return new JsonParser().parse(text).getAsJsonArray();
+    }
+
+    public void downloadPlugin(String name) throws IOException {
+        String url = PLUGINS_BASE_URL + "/content/" + name + ".class";
+        
+        Response response = Requests.GET(new OkHttpClient(), url);
+        Path output_path = Paths.get(Data.PATH_PLUGINS_CONTENT + File.separator + name + ".class");
+        Files.createDirectories(output_path.getParent());
+        Files.write(output_path, response.body().bytes());
     }
 
     /**

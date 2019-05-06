@@ -11,6 +11,7 @@ import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.tracker.AniList;
 import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
+import com.faltro.houdoku.util.PluginManager;
 import com.faltro.houdoku.util.SceneManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -60,10 +61,6 @@ public class ConfigController extends Controller {
      * A mapping of topic names and the string to their matching icon file.
      */
     private static final HashMap<String, String> ICON_MAP = new HashMap<>();
-    /**
-     * URL for plugin index file.
-     */
-    private static final String PLUGINS_BASE_URL = "https://storage.googleapis.com/houdoku-plugins";
 
     static {
         ICON_MAP.put("General", "/img/icon_settings.png");
@@ -480,6 +477,7 @@ public class ConfigController extends Controller {
     @FXML
     private void promptUpdatePlugins() {
         OkHttpClient client = new OkHttpClient();
+        PluginManager pluginManager = sceneManager.getPluginManager();
 
         Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK, ButtonType.CANCEL);
 
@@ -500,10 +498,9 @@ public class ConfigController extends Controller {
 
         // fetch list of plugins
         try {
-            Response response = Requests.GET(client, PLUGINS_BASE_URL + "/index.json");
-            JsonArray json_plugins =
-                    new JsonParser().parse(response.body().string()).getAsJsonArray();
+            JsonArray json_plugins = pluginManager.downloadPluginIndex();
 
+            // create list of checkboxes for the user to select which plugins to install
             ArrayList<CheckBox> plugin_boxes = new ArrayList<>();
             for (JsonElement json_plugin_ele : json_plugins) {
                 JsonObject json_plugin = json_plugin_ele.getAsJsonObject();
@@ -513,17 +510,18 @@ public class ConfigController extends Controller {
                 int revision = json_plugin.get("revision").getAsInt();
 
                 // don't add plugin to the list if it's already loaded and at the latest revision
-                boolean display = true;
-                ContentSource existing = sceneManager.getPluginManager().getSource(id);
+                boolean should_display = true;
+                ContentSource existing = pluginManager.getSource(id);
                 if (existing != null) {
                     try {
-                        display = existing.getClass().getField("REVISION").getInt(null) < revision;
+                        should_display =
+                                existing.getClass().getField("REVISION").getInt(null) < revision;
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
 
-                if (display) {
+                if (should_display) {
                     CheckBox checkbox =
                             new CheckBox(String.format("%s <%s> (rev=%d)", name, domain, revision));
                     checkbox.setUserData(json_plugin);
@@ -538,17 +536,12 @@ public class ConfigController extends Controller {
             alert.showAndWait();
 
             if (alert.getResult() == ButtonType.OK) {
+                // download all the selected plugins
                 for (CheckBox checkbox : plugin_boxes) {
                     if (checkbox.isSelected()) {
                         JsonObject json_plugin = (JsonObject) checkbox.getUserData();
                         String name = json_plugin.get("name").getAsString();
-
-                        response = Requests.GET(client,
-                                PLUGINS_BASE_URL + "/content/" + name + ".class");
-                        Path output_path = Paths
-                                .get(Data.PATH_PLUGINS_CONTENT + File.separator + name + ".class");
-                        Files.createDirectories(output_path.getParent());
-                        Files.write(output_path, response.body().bytes());
+                        pluginManager.downloadPlugin(name);
                     }
                 }
             }
