@@ -174,6 +174,11 @@ public class PluginManager {
         }
     }
 
+    public void deletePlugin(String name) throws IOException {
+        Path path = Paths.get(Data.PATH_PLUGINS_CONTENT + File.separator + name + ".class");
+        Files.deleteIfExists(path);
+    }
+
     /**
      * Gets the Tracker instance whose class has the given ID.
      *

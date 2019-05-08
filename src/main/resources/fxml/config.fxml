@@ -205,6 +205,10 @@
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <Button text="%install_update_plugins" onAction="#promptUpdatePlugins"/>
                                     <ListView fx:id="contentSourcesList"/>
+                                    <HBox alignment="CENTER">
+                                        <Label fx:id="statusPlugins" visible="false" wrapText="true"
+                                               managed="false" styleClass="failText"/>
+                                    </HBox>
                                 </VBox>
                             </VBox>
                         </VBox>

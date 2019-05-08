@@ -31,6 +31,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import okhttp3.OkHttpClient;
@@ -133,6 +134,8 @@ public class ConfigController extends Controller {
     private TextField tokenFieldAniList;
     @FXML
     private Label statusAniList;
+    @FXML
+    private Label statusPlugins;
 
     public ConfigController(SceneManager sceneManager) {
         super(sceneManager);
@@ -308,6 +311,10 @@ public class ConfigController extends Controller {
                 }
             }
         }
+
+        // hide statusPlugins message in case it was visible since the config was opened
+        statusPlugins.setVisible(false);
+        statusPlugins.setManaged(false);
 
         this.reloadPlugins();
     }
@@ -581,23 +588,44 @@ public class ConfigController extends Controller {
     }
 
     private void reloadPlugins() {
-        this.sceneManager.getPluginManager().reloadContentSources();
+        PluginManager pluginManager = this.sceneManager.getPluginManager();
+        pluginManager.reloadContentSources();
 
         // populate the contentSourcesList with plugins
         ObservableList<HBox> items = FXCollections.observableArrayList();
-        for (ContentSource contentSource : sceneManager.getPluginManager().getContentSources()) {
-            HBox item_container = new HBox();
-            item_container.getStyleClass().add("listItem");
-            Text item_name = new Text(contentSource.toString());
+        for (ContentSource contentSource : pluginManager.getContentSources()) {
+            // get properties of the plugin class
+            String name_temp = "";
             int revision = -1;
             try {
+                name_temp = contentSource.getClass().getField("NAME").get(null).toString();
                 revision = contentSource.getClass().getField("REVISION").getInt(null);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }
+            final String name = name_temp; // hack since name needs to be final for button event
+
+            // create list item
+            HBox item_container = new HBox();
+            item_container.getStyleClass().add("listItem");
+            Text item_name = new Text(contentSource.toString());
             Text item_rev = new Text(" (rev=" + String.valueOf(revision) + ")");
-            item_container.getChildren().add(item_name);
-            item_container.getChildren().add(item_rev);
+            Button btn_remove = new Button("Remove");
+            btn_remove.setOnAction((event) -> {
+                try {
+                    pluginManager.deletePlugin(name);
+                } catch (IOException e) {
+                    promptError("An error occurred when deleting the \"" + name + "\" plugin:\n\n"
+                            + e.getMessage());
+                }
+                statusPlugins.setText(
+                        "Warning: plugins may not be completely removed until the client is restarted.");
+                statusPlugins.setVisible(true);
+                statusPlugins.setManaged(true);
+                this.reloadPlugins();
+            });
+
+            item_container.getChildren().addAll(item_name, item_rev, btn_remove);
             items.add(item_container);
         }
         contentSourcesList.setItems(items);
