@@ -22,6 +22,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -489,6 +491,7 @@ public class ConfigController extends Controller {
 
         // create ui elements of alert container
         Label categories_label = new Label("Select plugins to install/update:");
+        categories_label.getStyleClass().add("bareText");
         categories_label.setWrapText(true);
 
         // add content to alert container
@@ -608,8 +611,11 @@ public class ConfigController extends Controller {
             // create list item
             HBox item_container = new HBox();
             item_container.getStyleClass().add("listItem");
-            Text item_name = new Text(contentSource.toString());
-            Text item_rev = new Text(" (rev=" + String.valueOf(revision) + ")");
+
+            Label item_name = new Label(contentSource.toString());
+            Label item_rev = new Label("v=" + String.valueOf(revision));
+            item_rev.setPadding(new Insets(0, 10, 0, 0));
+
             Button btn_remove = new Button("Remove");
             btn_remove.setOnAction((event) -> {
                 try {
@@ -625,7 +631,12 @@ public class ConfigController extends Controller {
                 this.reloadPlugins();
             });
 
-            item_container.getChildren().addAll(item_name, item_rev, btn_remove);
+            HBox left_container = new HBox();
+            HBox.setHgrow(left_container, Priority.ALWAYS);
+            left_container.setAlignment(Pos.CENTER_LEFT);
+
+            left_container.getChildren().addAll(item_name);
+            item_container.getChildren().addAll(left_container, item_rev, btn_remove);
             items.add(item_container);
         }
         contentSourcesList.setItems(items);

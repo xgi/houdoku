@@ -535,7 +535,7 @@ Generic ListView styles
 
 #contentSourcesList {
     -fx-font-size: 1.2em;
-    -fx-border-width: 0 1 0 0;
+    -fx-border-width: 0;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-border-color: -color-foreground;
