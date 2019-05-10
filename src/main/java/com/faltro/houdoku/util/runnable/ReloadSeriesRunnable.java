@@ -52,9 +52,8 @@ public class ReloadSeriesRunnable extends LoaderRunnable {
 
         if (new_series != null && running) {
             // overwrite specific fields of original series object
-            // Maybe better to make function in Series class to handle
-            // this better? Especially since theses fields are hardcoded
-            // here in a rather obtuse location.
+            // Maybe better to make function in Series class to handle this better? Especially since
+            // these fields are hardcoded here in a rather obtuse location.
             series.setCover(new_series.getCover());
             series.language = new_series.language;
             series.author = new_series.author;

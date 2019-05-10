@@ -25,6 +25,7 @@ public class Chapter {
     private String source;
     private transient Series series;
     private int currentPageNum;
+    private boolean read;
 
     public Chapter(Series series, String title, String source) {
         this.series = series;
@@ -33,6 +34,7 @@ public class Chapter {
         this.images = new Image[1];
         this.currentPageNum = 0;
         this.language = Languages.Language.UNKNOWN;
+        this.read = false;
     }
 
     public Chapter(Series series, String title, String source, HashMap<String, Object> metadata) {
@@ -160,6 +162,14 @@ public class Chapter {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public boolean getRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public String toString() {

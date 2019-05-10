@@ -1,5 +1,6 @@
 package com.faltro.houdoku.controller;
 
+import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -74,6 +75,11 @@ abstract public class Controller {
      */
     @FXML
     private void exit() {
+        // save library before exiting
+        LibraryController libraryController =
+                (LibraryController) sceneManager.getController(LibraryController.ID);
+        Data.saveLibrary(libraryController.getLibrary());
+
         Platform.exit();
     }
 

@@ -133,11 +133,12 @@
                                promptText="%filter_chapters_prompt"/>
                 </HBox>
             </HBox>
-            <TableView fx:id="tableView" VBox.vgrow="ALWAYS">
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS" editable="true">
                 <placeholder>
                     <Label styleClass="placeholderLabel" text="%no_chapters_found"/>
                 </placeholder>
                 <columns>
+                    <TableColumn fx:id="readColumn" resizable="false" text="%read"/>
                     <TableColumn fx:id="titleColumn" resizable="false" text="%title"/>
                     <TableColumn fx:id="volumeColumn" resizable="false" text="%volume_short"/>
                     <TableColumn fx:id="chapterColumn" resizable="false" text="%chapter_short"/>

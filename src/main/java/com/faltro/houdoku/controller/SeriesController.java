@@ -17,6 +17,7 @@ import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -37,6 +38,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -52,13 +55,14 @@ import java.util.List;
  */
 public class SeriesController extends Controller {
     public static final int ID = 1;
-    private static final double[] COL_WIDTHS = {0.30, // title
+    private static final double[] COL_WIDTHS = {0.05, // read
+            0.30, // title
             0.07, // volume
             0.07, // chapter
             0.10, // language
             0.16, // group
-            0.10, // views
-            0.20, // date
+            0.08, // views
+            0.17, // date
     };
     /**
      * The height of the banner image.
@@ -138,6 +142,8 @@ public class SeriesController extends Controller {
     @FXML
     private TableView<Chapter> tableView;
     @FXML
+    private TableColumn<Chapter, Boolean> readColumn;
+    @FXML
     private TableColumn<Chapter, String> titleColumn;
     @FXML
     private TableColumn<Chapter, String> volumeColumn;
@@ -185,58 +191,74 @@ public class SeriesController extends Controller {
                 .subtract(new SimpleDoubleProperty(metadataScrollPane.getPadding().getRight())));
 
         // create an array of the columns for easier bulk operations
-        List<TableColumn<Chapter, String>> columns = Arrays.asList(titleColumn, volumeColumn,
+        List<TableColumn<Chapter, ?>> columns = Arrays.asList(readColumn, titleColumn, volumeColumn,
                 chapterColumn, languageColumn, groupColumn, viewsColumn, dateColumn);
         assert COL_WIDTHS.length == columns.size() : "Number of specified "
                 + "chapter table columns does not match number of specified "
                 + "column widths (implementation error)";
 
-        // perform operations common to each column
-        for (TableColumn<Chapter, String> column : columns) {
-            // bind column widths to a percentage of the table width
-            // manually resizing columns (by user) is disabled in the fxml
+        // bind all column widths from COL_WIDTHS
+        // manually resizing columns (by user) is disabled in the fxml
+        for (TableColumn<Chapter, ?> column : columns) {
             column.prefWidthProperty()
                     .bind(tableView.widthProperty().multiply(COL_WIDTHS[columns.indexOf(column)]));
-
-            // create column cell factories which simply display strings as
-            // Text objects in each cell
-            column.setCellFactory(newStringCellFactory(column.widthProperty()));
         }
 
         // set the last column's width to subtract the scrollbar width
         columns.get(columns.size() - 1).prefWidthProperty().bind(tableView.widthProperty()
                 .multiply(COL_WIDTHS[columns.size() - 1]).subtract(SceneManager.VSCROLLBAR_WIDTH));
 
-        // create column cell value factories with appropriate field
+        // create column cell and value factories with appropriate field
+        readColumn.setCellValueFactory(p -> {
+            Chapter chapter = p.getValue();
+            SimpleBooleanProperty prop = new SimpleBooleanProperty(chapter.getRead());
+            prop.addListener((observableValue, oldValue, newValue) -> chapter.setRead(newValue));
+            return prop;
+        });
+        readColumn.setCellFactory(tc -> new CheckBoxTableCell<>());
+
         titleColumn.setCellValueFactory(p -> {
             String title = p.getValue().getTitle();
             return new SimpleStringProperty(title);
         });
+        titleColumn.setCellFactory(newStringCellFactory(titleColumn.widthProperty()));
+
         volumeColumn.setCellValueFactory(p -> {
             int volumeNum = p.getValue().volumeNum;
             return new SimpleStringProperty(volumeNum == 0 ? "?" : Integer.toString(volumeNum));
         });
+        volumeColumn.setCellFactory(newStringCellFactory(volumeColumn.widthProperty()));
+
         chapterColumn.setCellValueFactory(p -> {
             double chapterNum = p.getValue().chapterNum;
             return new SimpleStringProperty(OutputHelpers.doubleToString(chapterNum));
         });
+        chapterColumn.setCellFactory(newStringCellFactory(chapterColumn.widthProperty()));
+
         languageColumn.setCellValueFactory(p -> {
             Language language = p.getValue().language;
             return new SimpleStringProperty(language == null ? "?" : language.toString());
         });
+        languageColumn.setCellFactory(newStringCellFactory(languageColumn.widthProperty()));
+
         groupColumn.setCellValueFactory(p -> {
             String group = p.getValue().group;
             return new SimpleStringProperty(group == null ? "?" : group);
         });
+        groupColumn.setCellFactory(newStringCellFactory(groupColumn.widthProperty()));
+
         viewsColumn.setCellValueFactory(p -> {
             int views = p.getValue().views;
             return new SimpleStringProperty(views == 0 ? "?" : Integer.toString(views));
         });
+        viewsColumn.setCellFactory(newStringCellFactory(viewsColumn.widthProperty()));
+
         dateColumn.setCellValueFactory(p -> {
             LocalDateTime localDateTime = p.getValue().localDateTime;
             return new SimpleStringProperty(localDateTime == null ? "?"
                     : localDateTime.format(OutputHelpers.dateTimeFormatter));
         });
+        dateColumn.setCellFactory(newStringCellFactory(dateColumn.widthProperty()));
 
         // create blank FilteredList with predicate based on filterTextField
         this.filteredData = new FilteredList<>(FXCollections.emptyObservableList());
@@ -514,6 +536,10 @@ public class SeriesController extends Controller {
         // stop any active reload threads since they may interfere with how the
         // reader handles next/previous chapters
         sceneManager.getContentLoader().stopThreads(ContentLoader.PREFIX_RELOAD_SERIES);
+
+        // set read status of chapter. In the future we may want to instead put this in the
+        // ReaderController after reaching the last page
+        chapter.setRead(true);
 
         ReaderController readerController =
                 (ReaderController) sceneManager.getController(ReaderController.ID);
