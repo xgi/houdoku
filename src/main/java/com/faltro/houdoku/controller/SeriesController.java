@@ -9,6 +9,9 @@ import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
+import com.faltro.houdoku.plugins.tracker.AniList;
+import com.faltro.houdoku.plugins.tracker.Tracker;
+import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.OutputHelpers;
@@ -161,6 +164,8 @@ public class SeriesController extends Controller {
     private HBox filterBar;
     @FXML
     private TextField filterTextField;
+    @FXML
+    private Tab anilistTab;
 
     private Series series;
     private Library library;
@@ -468,6 +473,10 @@ public class SeriesController extends Controller {
 
         // reset scrollbar to top position
         metadataScrollPane.setVvalue(0);
+
+        // display tracker tabs if authenticated
+        Tracker anilist = sceneManager.getPluginManager().getTracker(AniList.ID);
+        anilistTab.setDisable(!anilist.isAuthenticated());
     }
 
     /**

@@ -117,6 +117,13 @@
                         </VBox>
                     </ScrollPane>
                 </Tab>
+                <Tab text="AniList" fx:id="anilistTab" closable="false" disable="true">
+                    <ScrollPane styleClass="pluginScrollPane">
+                        <VBox styleClass="plugsinContainer" spacing="8" alignment="CENTER"
+                            VBox.vgrow="ALWAYS">
+                        </VBox>
+                    </ScrollPane>
+                </Tab>
             </TabPane>
             <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
         </StackPane>

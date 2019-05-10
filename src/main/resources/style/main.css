@@ -486,16 +486,19 @@ Generic CheckBox styles.
     -fx-effect: dropshadow(one-pass-box, #333, 9, 0, 2, 1);
 }
 
-#metadataContainer {
+#metadataContainer,
+.pluginContainer {
     -fx-padding: 10 15 10 15;
-}
-
-#metadataScrollPane, #metadataScrollPane .viewport, #metadataContainer {
-    -fx-background-color: -color-background;
-}
-
-#metadataContainer {
     -fx-font-size: 1.4em;
+}
+
+#metadataContainer,
+#metadataScrollPane,
+#metadataScrollPane .viewport,
+.pluginContainer,
+.pluginScrollPane,
+.pluginScrollPane .viewport {
+    -fx-background-color: -color-background;
 }
 
 .metadataLabel {
