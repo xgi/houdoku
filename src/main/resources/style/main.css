@@ -382,6 +382,23 @@ Generic ListView styles
     -fx-fill: -color-background-alt;
 }
 
+/*
+Generic CheckBox styles.
+*/
+.check-box > .box,
+.check-box:focused > .box,
+.check-box:armed > .box,
+.check-box:hover > .box,
+.check-box-table-cell > .check-box > .box  {
+    -fx-background-color: -color-foreground, -color-background;
+    -fx-background-insets: -1 -1 -1 -1, 0, 1;
+    -fx-background-radius: 0;
+}
+
+.check-box-table-cell > .check-box:selected > .box > .mark {
+    -fx-background-color: -color-foreground;
+}
+
 /****************************************
  * Library page styles
  ****************************************/

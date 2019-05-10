@@ -55,14 +55,14 @@ import java.util.List;
  */
 public class SeriesController extends Controller {
     public static final int ID = 1;
-    private static final double[] COL_WIDTHS = {0.05, // read
-            0.30, // title
-            0.07, // volume
-            0.07, // chapter
+    private static final double[] COL_WIDTHS = {0.04, // read
+            0.32, // title
+            0.06, // volume
+            0.06, // chapter
             0.10, // language
             0.16, // group
             0.08, // views
-            0.17, // date
+            0.18, // date
     };
     /**
      * The height of the banner image.
