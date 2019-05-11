@@ -577,10 +577,6 @@ public class SeriesController extends Controller {
         // reader handles next/previous chapters
         sceneManager.getContentLoader().stopThreads(ContentLoader.PREFIX_RELOAD_SERIES);
 
-        // set read status of chapter. In the future we may want to instead put this in the
-        // ReaderController after reaching the last page
-        chapter.setRead(true);
-
         ReaderController readerController =
                 (ReaderController) sceneManager.getController(ReaderController.ID);
         readerController.setChapter(chapter);

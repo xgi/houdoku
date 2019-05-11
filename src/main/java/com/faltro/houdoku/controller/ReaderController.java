@@ -530,6 +530,9 @@ public class ReaderController extends Controller {
         nextChapterButton.setDisable(series.smartNextChapter(chapter) == null);
         prevChapterButton.setDisable(series.smartPreviousChapter(chapter) == null);
 
+        // update read status of new chapter
+        chapter.setRead(true);
+
         stage.setTitle(Houdoku.getName() + " - " + chapter.toString());
     }
 }
