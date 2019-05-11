@@ -71,6 +71,30 @@ public interface Tracker {
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**
+     * Search for a series and retrieve the first result.
+     *
+     * @param query the search query
+     * @return the series_id of the first series result, or null if none found
+     * @throws NotImplementedException   the operation has not yet been implemented for this tracker
+     * @throws NotAuthenticatedException the user is not authenticated
+     * @throws IOException               an IOException occurred when updating
+     */
+    String search(String query)
+            throws NotImplementedException, NotAuthenticatedException, IOException;
+
+    /**
+     * Retrieve the number of chapters read for a series.
+     *
+     * @param id the series id
+     * @return the number of chapters read
+     * @throws NotImplementedException   the operation has not yet been implemented for this tracker
+     * @throws NotAuthenticatedException the user is not authenticated
+     * @throws IOException               an IOException occurred when updating
+     */
+    int getChaptersRead(String id)
+            throws NotImplementedException, NotAuthenticatedException, IOException;
+
+    /**
      * Safely update the number of chapters read for a series.
      * <p>
      * If the user's number read is greater than the given value, the number on the tracker is not

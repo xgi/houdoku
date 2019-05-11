@@ -1,6 +1,8 @@
 package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.Houdoku;
+import com.faltro.houdoku.exception.NotAuthenticatedException;
+import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Languages;
@@ -44,6 +46,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -166,6 +169,8 @@ public class SeriesController extends Controller {
     private TextField filterTextField;
     @FXML
     private Tab anilistTab;
+    @FXML
+    private TextField anilistReadAmount;
 
     private Series series;
     private Library library;
@@ -335,6 +340,13 @@ public class SeriesController extends Controller {
                 }
             }
         });
+
+        // force "chapter read amount" text fields for plugins to be strictly numeric
+        anilistReadAmount.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                anilistReadAmount.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
     }
 
     /**
@@ -474,9 +486,18 @@ public class SeriesController extends Controller {
         // reset scrollbar to top position
         metadataScrollPane.setVvalue(0);
 
-        // display tracker tabs if authenticated
+        // display and update tracker tabs if authenticated
         Tracker anilist = sceneManager.getPluginManager().getTracker(AniList.ID);
         anilistTab.setDisable(!anilist.isAuthenticated());
+        if (anilist.isAuthenticated()) {
+            try {
+                String series_id = anilist.search(series.getTitle());
+                int read_chapters = anilist.getChaptersRead(series_id);
+                anilistReadAmount.setText(Integer.toString(read_chapters));
+            } catch (NotImplementedException | NotAuthenticatedException | IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

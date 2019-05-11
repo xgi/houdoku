@@ -71,6 +71,42 @@ public class AniList extends GenericTrackerOAuth {
     }
 
     @Override
+    public String search(String query) throws IOException, NotAuthenticatedException {
+        // @formatter:off
+        final String body = "" +
+                "query ($search: String) {\n" +
+                "  Media (search: $search, type: MANGA) {" +
+                "    id\n" +
+                "    title {\n" +
+                "      romaji\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        // @formatter:on
+
+        JsonObject response = post(body, new String[] {"search", query});
+
+        JsonElement media = response.get("Media");
+        if (media.isJsonNull()) {
+            return null;
+        } else {
+            return media.getAsJsonObject().get("id").getAsString();
+        }
+    }
+
+    @Override
+    public int getChaptersRead(String id) throws IOException, NotAuthenticatedException {
+        if (!this.authenticated) {
+            throw new NotAuthenticatedException();
+        }
+
+        String user_id = authenticatedUser().get("id").getAsString();
+        JsonObject series = seriesInList(user_id, id);
+
+        return series.get("progress").getAsInt();
+    }
+
+    @Override
     public void updateChaptersRead(String id, int num)
             throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
@@ -112,9 +148,9 @@ public class AniList extends GenericTrackerOAuth {
      */
     private JsonObject post(String body, String[]... variables)
             throws IOException, NotAuthenticatedException {
-        // if (!this.authenticated) {
-        // throw new NotAuthenticatedException();
-        // }
+        if (!this.authenticated) {
+            throw new NotAuthenticatedException();
+        }
 
         JsonObject json_root = new JsonObject();
         JsonObject json_variables = new JsonObject();
@@ -138,10 +174,6 @@ public class AniList extends GenericTrackerOAuth {
      * @throws NotAuthenticatedException the user is not authenticated
      */
     private JsonObject authenticatedUser() throws IOException, NotAuthenticatedException {
-        // if (!this.authenticated) {
-        // throw new NotAuthenticatedException();
-        // }
-
         // @formatter:off
         final String body = "" +
                 "query User {\n" +

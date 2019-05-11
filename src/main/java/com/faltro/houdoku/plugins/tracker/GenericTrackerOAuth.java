@@ -78,6 +78,18 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
+    public String search(String query)
+            throws NotImplementedException, NotAuthenticatedException, IOException {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public int getChaptersRead(String id)
+            throws NotImplementedException, NotAuthenticatedException, IOException {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public void updateChaptersRead(String id, int num)
             throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
