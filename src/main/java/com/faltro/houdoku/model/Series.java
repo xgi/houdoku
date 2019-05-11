@@ -42,6 +42,7 @@ public class Series {
         this.stringCategories = new ArrayList<>();
         this.chapters = new ArrayList<>();
         this.contentSourceId = contentSourceId;
+        this.trackerIds = new HashMap<Integer, String>();
     }
 
     public Series(String title, String source, Image cover, int contentSourceId,
@@ -154,6 +155,17 @@ public class Series {
         } else {
             this.trackerIds.put(tracker_id, series_id);
         }
+    }
+
+    /**
+     * Retrieve the series id for this series on a tracker.
+     *
+     * @param tracker_id the ID field of the Tracker class being used
+     * @return this series' id if it has been set, else null
+     */
+    public String getTrackerId(int tracker_id) {
+        // get() defaults to null if not contained
+        return this.trackerIds.get(tracker_id);
     }
 
     public String getTitle() {

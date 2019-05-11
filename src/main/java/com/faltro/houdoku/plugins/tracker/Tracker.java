@@ -95,18 +95,19 @@ public interface Tracker {
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**
-     * Safely update the number of chapters read for a series.
-     * <p>
-     * If the user's number read is greater than the given value, the number on the tracker is not
-     * changed.
+     * Update the number of chapters read for a series.
+     * 
+     * If "safe" is true: If the user's number read is greater than the given value, the number on
+     * the tracker is not changed.
      *
      * @param id  the series id
      * @param num the number of chapters read
+     * @param safe whether to avoid decreasing number from the tracker (see above description)
      * @throws NotImplementedException   the operation has not yet been implemented for this tracker
      * @throws NotAuthenticatedException the user is not authenticated
      * @throws IOException               an IOException occurred when updating
      */
-    void updateChaptersRead(String id, int num)
+    void updateChaptersRead(String id, int num, boolean safe)
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**

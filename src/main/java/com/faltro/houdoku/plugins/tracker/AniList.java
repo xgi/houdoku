@@ -107,7 +107,7 @@ public class AniList extends GenericTrackerOAuth {
     }
 
     @Override
-    public void updateChaptersRead(String id, int num)
+    public void updateChaptersRead(String id, int num, boolean safe)
             throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
@@ -116,11 +116,12 @@ public class AniList extends GenericTrackerOAuth {
         String user_id = authenticatedUser().get("id").getAsString();
         JsonObject series = seriesInList(user_id, id);
 
-        // check whether the current progress is greater than the desired -- for
-        // safety, we never decrement progress
-        int cur_progress = Integer.parseInt(series.get("progress").getAsString());
-        if (cur_progress > num) {
-            return;
+        // if safe mode enabled, check whether the current progress is greater than the desired
+        if (safe) {
+            int cur_progress = Integer.parseInt(series.get("progress").getAsString());
+            if (cur_progress > num) {
+                return;
+            }
         }
 
         // @formatter:off

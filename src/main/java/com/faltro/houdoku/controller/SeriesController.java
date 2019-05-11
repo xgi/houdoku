@@ -347,6 +347,15 @@ public class SeriesController extends Controller {
                 anilistReadAmount.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
+
+        // add KeyEvent handlers for plugin input fields
+        anilistReadAmount.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    anilistUpdate();
+                }
+            }
+        });
     }
 
     /**
@@ -492,6 +501,7 @@ public class SeriesController extends Controller {
         if (anilist.isAuthenticated()) {
             try {
                 String series_id = anilist.search(series.getTitle());
+                series.updateTrackerId(AniList.ID, series_id);
                 int read_chapters = anilist.getChaptersRead(series_id);
                 anilistReadAmount.setText(Integer.toString(read_chapters));
             } catch (NotImplementedException | NotAuthenticatedException | IOException e) {
@@ -587,6 +597,18 @@ public class SeriesController extends Controller {
         Chapter chapter = tableView.getSelectionModel().getSelectedItem();
         if (series != null) {
             goToReader(chapter);
+        }
+    }
+
+    @FXML
+    private void anilistUpdate() {
+        int chapters_read = Integer.parseInt(anilistReadAmount.getText());
+        String series_id = series.getTrackerId(AniList.ID);
+        try {
+            sceneManager.getPluginManager().getTracker(AniList.ID).updateChaptersRead(series_id,
+                    chapters_read, false);
+        } catch (NotImplementedException | NotAuthenticatedException | IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -90,7 +90,7 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public void updateChaptersRead(String id, int num)
+    public void updateChaptersRead(String id, int num, boolean safe)
             throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }
