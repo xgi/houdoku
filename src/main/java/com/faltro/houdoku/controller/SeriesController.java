@@ -18,6 +18,7 @@ import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.OutputHelpers;
 import com.faltro.houdoku.util.SceneManager;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -399,6 +400,14 @@ public class SeriesController extends Controller {
         // load the banner for the series
         InfoSource infoSource = sceneManager.getPluginManager().getInfoSource();
         sceneManager.getContentLoader().loadBanner(infoSource, series, this);
+
+        // display and update tracker tabs if authenticated
+        Tracker anilist = sceneManager.getPluginManager().getTracker(AniList.ID);
+
+        anilistTab.setDisable(!anilist.isAuthenticated());
+        if (anilist.isAuthenticated()) {
+            sceneManager.getContentLoader().loadChapersRead(anilist, series, this);
+        }
     }
 
     /**
@@ -494,20 +503,6 @@ public class SeriesController extends Controller {
 
         // reset scrollbar to top position
         metadataScrollPane.setVvalue(0);
-
-        // display and update tracker tabs if authenticated
-        Tracker anilist = sceneManager.getPluginManager().getTracker(AniList.ID);
-        anilistTab.setDisable(!anilist.isAuthenticated());
-        if (anilist.isAuthenticated()) {
-            try {
-                String series_id = anilist.search(series.getTitle());
-                series.updateTrackerId(AniList.ID, series_id);
-                int read_chapters = anilist.getChaptersRead(series_id);
-                anilistReadAmount.setText(Integer.toString(read_chapters));
-            } catch (NotImplementedException | NotAuthenticatedException | IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     /**
@@ -594,6 +589,21 @@ public class SeriesController extends Controller {
         if (series != null) {
             goToReader(chapter);
         }
+    }
+
+    /**
+     * Update details for the series from the given tracker.
+     *
+     * @param id            the id of the tracker to update
+     * @param read_chapters the number of chapters read for the series on the tracker
+     */
+    public void reloadTrackerDetails(int id, int read_chapters) {
+        // update when FX app thread is available
+        Platform.runLater(() -> {
+            if (id == AniList.ID) {
+                anilistReadAmount.setText(Integer.toString(read_chapters));
+            }
+        });
     }
 
     @FXML

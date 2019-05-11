@@ -19,6 +19,7 @@ public class ContentLoader {
     private static final String PREFIX_LOAD_BANNER = "loadBanner_";
     private static final String PREFIX_GENERATE_OAUTH_TOKEN = "generateOAuthToken_";
     private static final String PREFIX_UPDATE_CHAPTERS_READ = "updateChapersRead_";
+    private static final String PREFIX_LOAD_CHAPTERS_READ = "loadChapersRead_";
     private final ArrayList<LoaderRunnable> runnables;
 
     public ContentLoader() {
@@ -139,8 +140,6 @@ public class ContentLoader {
     /**
      * Update the number of chapters read on a tracker.
      *
-     * @param name          the name of the thread
-     * @param contentLoader the ContentLoader which created this instance
      * @param tracker       the Tracker to update
      * @param id            the series id
      * @param num           the number of chapters read
@@ -150,6 +149,20 @@ public class ContentLoader {
         String name = PREFIX_UPDATE_CHAPTERS_READ + tracker.toString() + "_" + id;
         LoaderRunnable runnable =
                 new UpdateChaptersReadRunnable(name, this, tracker, id, num, safe);
+        startThreadSafely(name, runnable);
+    }
+
+    /**
+     * Load the number of chapters read on a tracker.
+     * 
+     * @param tracker          the Tracker to load from
+     * @param series           the Series to get data for
+     * @param seriesController the SeriesController to update after loading tracker data
+     */
+    public void loadChapersRead(Tracker tracker, Series series, SeriesController seriesController) {
+        String name = PREFIX_LOAD_CHAPTERS_READ + tracker.toString() + "_" + series.getTitle();
+        LoaderRunnable runnable =
+                new LoadChaptersReadRunnable(name, this, tracker, series, seriesController);
         startThreadSafely(name, runnable);
     }
 
