@@ -5,6 +5,7 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
+import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.runnable.*;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class ContentLoader {
     private static final String PREFIX_LOAD_SERIES = "loadSeries_";
     private static final String PREFIX_LOAD_BANNER = "loadBanner_";
     private static final String PREFIX_GENERATE_OAUTH_TOKEN = "generateOAuthToken_";
+    private static final String PREFIX_UPDATE_CHAPTERS_READ = "updateChapersRead_";
     private final ArrayList<LoaderRunnable> runnables;
 
     public ContentLoader() {
@@ -124,13 +126,30 @@ public class ContentLoader {
      * @param tracker          the TrackerOAuth to load from
      * @param code             a verification code given by the user after authorization
      * @param configController the ConfigController to update after the token is generated
-     * @see LoadBannerRunnable
+     * @see GenerateOAuthTokenRunnable
      */
     public void generateOAuthToken(TrackerOAuth tracker, String code,
             ConfigController configController) {
         String name = PREFIX_GENERATE_OAUTH_TOKEN + tracker.toString() + "_" + code;
         LoaderRunnable runnable =
                 new GenerateOAuthTokenRunnable(name, this, tracker, code, configController);
+        startThreadSafely(name, runnable);
+    }
+
+    /**
+     * Update the number of chapters read on a tracker.
+     *
+     * @param name          the name of the thread
+     * @param contentLoader the ContentLoader which created this instance
+     * @param tracker       the Tracker to update
+     * @param id            the series id
+     * @param num           the number of chapters read
+     * @param safe          whether to avoid decreasing number from the tracker
+     */
+    public void updateChapersRead(Tracker tracker, String id, int num, boolean safe) {
+        String name = PREFIX_UPDATE_CHAPTERS_READ + tracker.toString() + "_" + id;
+        LoaderRunnable runnable =
+                new UpdateChaptersReadRunnable(name, this, tracker, id, num, safe);
         startThreadSafely(name, runnable);
     }
 

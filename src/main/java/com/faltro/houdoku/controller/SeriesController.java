@@ -600,12 +600,8 @@ public class SeriesController extends Controller {
     private void anilistUpdate() {
         int chapters_read = Integer.parseInt(anilistReadAmount.getText());
         String series_id = series.getTrackerId(AniList.ID);
-        try {
-            sceneManager.getPluginManager().getTracker(AniList.ID).updateChaptersRead(series_id,
-                    chapters_read, false);
-        } catch (NotImplementedException | NotAuthenticatedException | IOException e) {
-            e.printStackTrace();
-        }
+        Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
+        sceneManager.getContentLoader().updateChapersRead(tracker, series_id, chapters_read, false);
     }
 
     public Library getLibrary() {

@@ -13,7 +13,7 @@ public class GenerateOAuthTokenRunnable extends LoaderRunnable {
     private final ConfigController configController;
 
     /**
-     * Runnable for loading a chapter page.
+     * Runnable for generating an OAuth token using a verification code.
      *
      * @param name             the name of the thread
      * @param contentLoader    the ContentLoader which created this instance
