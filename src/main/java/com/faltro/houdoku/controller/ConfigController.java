@@ -137,6 +137,8 @@ public class ConfigController extends Controller {
     @FXML
     private Label statusAniList;
     @FXML
+    private CheckBox updateAutoCheckAniList;
+    @FXML
     private Label statusPlugins;
 
     public ConfigController(SceneManager sceneManager) {
@@ -292,6 +294,8 @@ public class ConfigController extends Controller {
                 (String) config.getValue(Config.Field.READER_KEY_LAST_PAGE));
         readerKeyToSeries.setText(
                 (String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
+        updateAutoCheckAniList.setSelected(
+            (boolean) config.getValue(Config.Field.TRACKER_ANILIST_UPDATE_AUTO));
         // @formatter:on
 
         // update tracker authentication statuses
@@ -424,6 +428,8 @@ public class ConfigController extends Controller {
                 anilist.isAuthenticated());
         config.replaceValue(Config.Field.TRACKER_ANILIST_TOKEN,
                 anilist.getToken() == null ? "" : anilist.getToken());
+        config.replaceValue(Config.Field.TRACKER_ANILIST_UPDATE_AUTO,
+                updateAutoCheckAniList.isSelected());
         // @formatter:on
 
         sceneManager.saveConfig();

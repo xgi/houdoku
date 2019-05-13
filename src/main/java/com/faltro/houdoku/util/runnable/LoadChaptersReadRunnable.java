@@ -37,7 +37,13 @@ public class LoadChaptersReadRunnable extends LoaderRunnable {
     public void run() {
         try {
             String series_id = tracker.search(series.getTitle());
-            series.updateTrackerId(Tracker.ID, series_id);
+
+            try {
+                int tracker_id = tracker.getClass().getField("ID").getInt(null);
+                series.updateTrackerId(tracker_id, series_id);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
             int read_chapters = tracker.getChaptersRead(series_id);
             seriesController.reloadTrackerDetails(AniList.ID, read_chapters);

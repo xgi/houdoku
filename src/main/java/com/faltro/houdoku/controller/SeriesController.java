@@ -592,7 +592,7 @@ public class SeriesController extends Controller {
     }
 
     /**
-     * Update details for the series from the given tracker.
+     * Reload details for the series from the given tracker.
      *
      * @param id            the id of the tracker to update
      * @param read_chapters the number of chapters read for the series on the tracker
@@ -608,6 +608,7 @@ public class SeriesController extends Controller {
 
     @FXML
     private void anilistUpdate() {
+        // update chapters read
         int chapters_read = Integer.parseInt(anilistReadAmount.getText());
         String series_id = series.getTrackerId(AniList.ID);
         Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);

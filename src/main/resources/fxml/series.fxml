@@ -126,10 +126,6 @@
                                 <TextField fx:id="anilistReadAmount" styleClass="bareTextAlt"
                                     maxWidth="70" alignment="CENTER_RIGHT"/>
                             </HBox>
-                            <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Text styleClass="metadataLabel" text="Update automatically on read:"/>
-                                <CheckBox fx:id="anilistUpdateAutoCheck"/>
-                            </HBox>
                             <HBox alignment="CENTER_LEFT">
                                 <Button text="Update Details" onAction="#anilistUpdate"/>
                             </HBox>

@@ -141,7 +141,11 @@ public class Config {
         /**
          * The user's AniList authentication token (only makes sense when authenticated).
          */
-        TRACKER_ANILIST_TOKEN("tracker_anilist_token", "");
+        TRACKER_ANILIST_TOKEN("tracker_anilist_token", ""),
+        /**
+         * Whether to automatically update the number of chapters read on AniList.
+         */
+        TRACKER_ANILIST_UPDATE_AUTO("tracker_anilist_update_auto", false);
 
         private final String name;
         private final Object defaultValue;

@@ -240,6 +240,13 @@
                                     </HBox>
                                 </VBox>
                             </VBox>
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="Settings"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <CheckBox fx:id="updateAutoCheckAniList"
+                                        text="%auto_update_chapters" styleClass="bareTextAlt"/>
+                                </VBox>
+                            </VBox>
                         </VBox>
                     </Tab>
                     <!-- <Tab text="MyAnimeList" closable="false">
