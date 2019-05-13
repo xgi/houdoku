@@ -75,6 +75,9 @@ public class SearchRunnable extends LoaderRunnable {
                             // load cover using direct image source
                             cover = Requests.imageFromURL(contentSource.getClient(),
                                     (String) item.get("coverSrc"), ParseHelpers.COVER_MAX_WIDTH);
+                        } else if (item.containsKey("coverImg")) {
+                            // load cover using already downloaded Image
+                            cover = (Image) item.get("coverImg");
                         } else {
                             // load cover by passing series url and finding the
                             // image url on that page, then loading the image
