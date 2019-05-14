@@ -95,6 +95,30 @@ public class AniList extends GenericTrackerOAuth {
     }
 
     @Override
+    public String getTitle(String id) throws IOException, NotAuthenticatedException {
+        // @formatter:off
+        final String body = "" +
+            "query ($id: Int) {\n" +
+            "  Media (id: $id, type: MANGA) {" +
+            "    title {\n" +
+            "      romaji\n" +
+            "    }\n" +
+            "  }\n" +
+            "}";
+        // @formatter:on
+
+        JsonObject response = post(body, new String[] {"id", id});
+
+        JsonElement media = response.get("Media");
+        if (media.isJsonNull()) {
+            return "";
+        } else {
+            return media.getAsJsonObject().get("title").getAsJsonObject().get("romaji")
+                    .getAsString();
+        }
+    }
+
+    @Override
     public int getChaptersRead(String id) throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();

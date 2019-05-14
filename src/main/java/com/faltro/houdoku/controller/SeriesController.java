@@ -172,6 +172,8 @@ public class SeriesController extends Controller {
     private Tab anilistTab;
     @FXML
     private TextField anilistReadAmount;
+    @FXML
+    private Text anilistTitle;
 
     private Series series;
     private Library library;
@@ -642,13 +644,17 @@ public class SeriesController extends Controller {
     /**
      * Reload details for the series from the given tracker.
      *
-     * @param id            the id of the tracker to update
+     * @param tracker_id    the id of the tracker to update
+     * @param series_id     the id of the series on the tracker
+     * @param title         the title of the series on the tracker
      * @param read_chapters the number of chapters read for the series on the tracker
      */
-    public void reloadTrackerDetails(int id, int read_chapters) {
+    public void reloadTrackerDetails(int tracker_id, String series_id, String title,
+            int read_chapters) {
         // update when FX app thread is available
         Platform.runLater(() -> {
-            if (id == AniList.ID) {
+            if (tracker_id == AniList.ID) {
+                anilistTitle.setText(String.format("%s (id=%s)", title, series_id));
                 anilistReadAmount.setText(Integer.toString(read_chapters));
             }
         });

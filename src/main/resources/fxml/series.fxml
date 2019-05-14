@@ -121,6 +121,12 @@
                     <ScrollPane styleClass="pluginScrollPane">
                         <VBox styleClass="pluginContainer" spacing="8" alignment="CENTER"
                             VBox.vgrow="ALWAYS">
+                            <HBox spacing="5" alignment="CENTER_LEFT">
+                                <Text styleClass="metadataLabel" text="Title:"/>
+                                <TextFlow styleClass="metadataTextFlow">
+                                    <Text fx:id="anilistTitle"/>
+                                </TextFlow>
+                            </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Text styleClass="metadataLabel" text="Chapters read:"/>
                                 <TextField fx:id="anilistReadAmount" styleClass="bareTextAlt"

@@ -45,8 +45,10 @@ public class LoadChaptersReadRunnable extends LoaderRunnable {
                 e.printStackTrace();
             }
 
+            String title = tracker.getTitle(series_id);
             int read_chapters = tracker.getChaptersRead(series_id);
-            seriesController.reloadTrackerDetails(AniList.ID, read_chapters);
+
+            seriesController.reloadTrackerDetails(AniList.ID, series_id, title, read_chapters);
         } catch (IOException | NotAuthenticatedException | NotImplementedException e) {
             e.printStackTrace();
         }

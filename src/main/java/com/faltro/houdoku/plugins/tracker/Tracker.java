@@ -83,6 +83,18 @@ public interface Tracker {
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**
+     * Retrieve the title for a series.
+     *
+     * @param id the series id
+     * @return the title of the series
+     * @throws NotImplementedException   the operation has not yet been implemented for this tracker
+     * @throws NotAuthenticatedException the user is not authenticated
+     * @throws IOException               an IOException occurred when updating
+     */
+    String getTitle(String id)
+            throws NotImplementedException, NotAuthenticatedException, IOException;
+
+    /**
      * Retrieve the number of chapters read for a series.
      *
      * @param id the series id
