@@ -177,6 +177,7 @@ public class SeriesController extends Controller {
     private Library library;
     private FilteredList<Chapter> filteredData;
     private ChangeListener<String> filterListener;
+    private ContextMenu chapterContextMenu;
 
     public SeriesController(SceneManager sceneManager) {
         super(sceneManager);
@@ -219,6 +220,13 @@ public class SeriesController extends Controller {
         columns.get(columns.size() - 1).prefWidthProperty().bind(tableView.widthProperty()
                 .multiply(COL_WIDTHS[columns.size() - 1]).subtract(SceneManager.VSCROLLBAR_WIDTH));
 
+        // create a right-click context menu for chapters
+        // onAction events are set by newCellClickHandler()
+        chapterContextMenu = new ContextMenu();
+        chapterContextMenu.getItems().add(new MenuItem("Toggle Read"));
+        chapterContextMenu.getItems().add(new MenuItem("Mark Previous as Read"));
+        chapterContextMenu.getItems().add(new MenuItem("Mark Previous as Unread"));
+
         // create column cell and value factories with appropriate field
         readColumn.setCellValueFactory(p -> {
             Chapter chapter = p.getValue();
@@ -232,44 +240,51 @@ public class SeriesController extends Controller {
             String title = p.getValue().getTitle();
             return new SimpleStringProperty(title);
         });
-        titleColumn.setCellFactory(newStringCellFactory(titleColumn.widthProperty()));
+        titleColumn.setCellFactory(
+                newStringCellFactory(titleColumn.widthProperty(), chapterContextMenu));
 
         volumeColumn.setCellValueFactory(p -> {
             int volumeNum = p.getValue().volumeNum;
             return new SimpleStringProperty(volumeNum == 0 ? "?" : Integer.toString(volumeNum));
         });
-        volumeColumn.setCellFactory(newStringCellFactory(volumeColumn.widthProperty()));
+        volumeColumn.setCellFactory(
+                newStringCellFactory(volumeColumn.widthProperty(), chapterContextMenu));
 
         chapterColumn.setCellValueFactory(p -> {
             double chapterNum = p.getValue().chapterNum;
             return new SimpleStringProperty(OutputHelpers.doubleToString(chapterNum));
         });
-        chapterColumn.setCellFactory(newStringCellFactory(chapterColumn.widthProperty()));
+        chapterColumn.setCellFactory(
+                newStringCellFactory(chapterColumn.widthProperty(), chapterContextMenu));
 
         languageColumn.setCellValueFactory(p -> {
             Language language = p.getValue().language;
             return new SimpleStringProperty(language == null ? "?" : language.toString());
         });
-        languageColumn.setCellFactory(newStringCellFactory(languageColumn.widthProperty()));
+        languageColumn.setCellFactory(
+                newStringCellFactory(languageColumn.widthProperty(), chapterContextMenu));
 
         groupColumn.setCellValueFactory(p -> {
             String group = p.getValue().group;
             return new SimpleStringProperty(group == null ? "?" : group);
         });
-        groupColumn.setCellFactory(newStringCellFactory(groupColumn.widthProperty()));
+        groupColumn.setCellFactory(
+                newStringCellFactory(groupColumn.widthProperty(), chapterContextMenu));
 
         viewsColumn.setCellValueFactory(p -> {
             int views = p.getValue().views;
             return new SimpleStringProperty(views == 0 ? "?" : Integer.toString(views));
         });
-        viewsColumn.setCellFactory(newStringCellFactory(viewsColumn.widthProperty()));
+        viewsColumn.setCellFactory(
+                newStringCellFactory(viewsColumn.widthProperty(), chapterContextMenu));
 
         dateColumn.setCellValueFactory(p -> {
             LocalDateTime localDateTime = p.getValue().localDateTime;
             return new SimpleStringProperty(localDateTime == null ? "?"
                     : localDateTime.format(OutputHelpers.dateTimeFormatter));
         });
-        dateColumn.setCellFactory(newStringCellFactory(dateColumn.widthProperty()));
+        dateColumn.setCellFactory(
+                newStringCellFactory(dateColumn.widthProperty(), chapterContextMenu));
 
         // create blank FilteredList with predicate based on filterTextField
         this.filteredData = new FilteredList<>(FXCollections.emptyObservableList());
@@ -511,15 +526,47 @@ public class SeriesController extends Controller {
      * The event checks for a double left click. When it happens, it identifies the chapter of the
      * selected row and changes the scene to the reader with the specified chapter.
      *
+     * @param contextMenu the context menu shown when right clicking
      * @return a standard MouseEvent EventHandler for a table cell
      */
-    private EventHandler<MouseEvent> newCellClickHandler() {
+    private EventHandler<MouseEvent> newCellClickHandler(ContextMenu contextMenu) {
         return mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                 if (mouseEvent.getClickCount() == 2) {
                     Chapter chapter = tableView.getSelectionModel().getSelectedItem();
                     goToReader(chapter);
+                } else {
+                    contextMenu.hide();
                 }
+            } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                Chapter chapter = tableView.getSelectionModel().getSelectedItem();
+                contextMenu.getItems().get(0).setOnAction(e -> {
+                    chapter.setRead(!chapter.getRead());
+                    refreshContent();
+                });
+                contextMenu.getItems().get(1).setOnAction(e -> {
+                    boolean apply = false;
+                    for (Chapter c : tableView.getItems()) {
+                        if (c == chapter) {
+                            apply = true;
+                        } else if (apply) {
+                            c.setRead(true);
+                        }
+                    }
+                    refreshContent();
+                });
+                contextMenu.getItems().get(2).setOnAction(e -> {
+                    boolean apply = false;
+                    for (Chapter c : tableView.getItems()) {
+                        if (c == chapter) {
+                            apply = true;
+                        } else if (apply) {
+                            c.setRead(false);
+                        }
+                    }
+                    refreshContent();
+                });
+                contextMenu.show(tableView, mouseEvent.getScreenX(), mouseEvent.getScreenY());
             }
         };
     }
@@ -531,10 +578,11 @@ public class SeriesController extends Controller {
      * style class. The cell is given a click handler from newCellClickHandler().
      *
      * @param widthProperty the widthProperty of this cell's column
+     * @param contextMenu   the context menu shown when right clicking
      * @return a Callback of a standard cell factory for a table cell
      */
     private Callback<TableColumn<Chapter, String>, TableCell<Chapter, String>> newStringCellFactory(
-            ReadOnlyDoubleProperty widthProperty) {
+            ReadOnlyDoubleProperty widthProperty, ContextMenu contextMenu) {
         return tc -> {
             TableCell<Chapter, String> cell = new TableCell<>();
             cell.getStyleClass().add("tableCell");
@@ -544,7 +592,7 @@ public class SeriesController extends Controller {
             cell.setGraphic(text);
             text.wrappingWidthProperty().bind(widthProperty);
             text.textProperty().bind(cell.itemProperty());
-            cell.setOnMouseClicked(newCellClickHandler());
+            cell.setOnMouseClicked(newCellClickHandler(contextMenu));
             return cell;
         };
     }

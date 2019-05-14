@@ -98,8 +98,7 @@ public class SearchSeriesController extends Controller {
         // create a right-click context menu for results
         // onAction events are set by newCellClickHandler()
         resultContextMenu = new ContextMenu();
-        MenuItem itemAddSeries = new MenuItem("Add Series");
-        resultContextMenu.getItems().add(itemAddSeries);
+        resultContextMenu.getItems().add(new MenuItem("Add Series"));
 
         coverColumn.setCellFactory(tc -> {
             TableCell<HashMap<String, Object>, Image> cell = new TableCell<>();
