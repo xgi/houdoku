@@ -2,6 +2,7 @@ package com.faltro.houdoku.plugins.tracker;
 
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
+import com.faltro.houdoku.model.Statuses.Status;
 import okhttp3.OkHttpClient;
 import java.io.IOException;
 import java.util.HashMap;
@@ -133,19 +134,14 @@ public interface Tracker {
 
     /**
      * Update the user's status for a series.
-     *
-     * The status can be, case-insensitive: reading, planning, completed, dropped, paused,
-     * rereading. Individual tracker plugins may need to convert these terms to those understood on
-     * their service.
      * 
      * @param id     the series id
-     * @param status the status to set, which should be one of those listed above
-     * @param safe   whether to avoid decreasing number from the tracker (see above description)
+     * @param status the Status to set
      * @throws NotImplementedException   the operation has not yet been implemented for this tracker
      * @throws NotAuthenticatedException the user is not authenticated
      * @throws IOException               an IOException occurred when updating
      */
-    void updateStatus(String id, String status)
+    void updateStatus(String id, Status status)
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**

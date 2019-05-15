@@ -2,6 +2,7 @@ package com.faltro.houdoku.plugins.tracker;
 
 import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
+import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.net.AniListInterceptor;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -39,6 +40,17 @@ public class AniList extends GenericTrackerOAuth {
     private final AniListInterceptor interceptor = new AniListInterceptor();
     private final OkHttpClient client =
             new OkHttpClient().newBuilder().addInterceptor(interceptor).build();
+    private final HashMap<Status, String> statuses = new HashMap<Status, String>() {
+        private static final long serialVersionUID = 1L;
+        {
+            put(Status.READING, "CURRENT");
+            put(Status.PLANNING, "PLANNING");
+            put(Status.COMPLETED, "COMPLETED");
+            put(Status.DROPPED, "DROPPED");
+            put(Status.PAUSED, "PAUSED");
+            put(Status.REREADING, "REPEATING");
+        }
+    };
 
     public AniList() {
     }
@@ -173,25 +185,11 @@ public class AniList extends GenericTrackerOAuth {
     }
 
     @Override
-    public void updateStatus(String id, String status)
+    public void updateStatus(String id, Status status)
             throws IOException, NotAuthenticatedException {
-        final HashMap<String, String> statuses = new HashMap<String, String>() {
-            private static final long serialVersionUID = 1L;
-            {
-                put("reading", "CURRENT");
-                put("planning", "PLANNING");
-                put("completed", "COMPLETED");
-                put("dropped", "DROPPED");
-                put("paused", "PAUSED");
-                put("rereading", "REPEATING");
-            }
-        };
-
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
         }
-
-        String status_code = statuses.get(status.toLowerCase());
 
         String user_id = authenticatedUser().get("id").getAsString();
         JsonObject series = seriesInList(user_id, id);
@@ -207,7 +205,7 @@ public class AniList extends GenericTrackerOAuth {
         // @formatter:on
 
         JsonObject response = post(body, new String[] {"listId", series.get("id").getAsString()},
-                new String[] {"status", status_code});
+                new String[] {"status", statuses.get(status)});
     }
 
     /**
