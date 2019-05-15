@@ -5,6 +5,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <VBox xmlns:fx="http://javafx.com/fxml"
       xmlns="http://javafx.com/javafx"
       fx:id="container"
@@ -131,6 +133,21 @@
                                 <Text styleClass="metadataLabel" text="Chapters read:"/>
                                 <TextField fx:id="anilistReadAmount" styleClass="bareTextAlt"
                                     maxWidth="70" alignment="CENTER_RIGHT"/>
+                            </HBox>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Text styleClass="metadataLabel" text="Status:"/>
+                                <ComboBox fx:id="anilistStatus">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="Reading"/>
+                                            <String fx:value="Planning"/>
+                                            <String fx:value="Completed"/>
+                                            <String fx:value="Rereading"/>
+                                            <String fx:value="Paused"/>
+                                            <String fx:value="Dropped"/>
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
                             </HBox>
                             <HBox alignment="CENTER_LEFT">
                                 <Button text="Update Details" onAction="#anilistUpdate"/>

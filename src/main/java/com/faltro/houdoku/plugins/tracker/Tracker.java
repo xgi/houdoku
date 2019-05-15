@@ -95,7 +95,7 @@ public interface Tracker {
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**
-     * Retrieve the number of chapters read for a series.
+     * Retrieve the user's number of chapters read for a series.
      *
      * @param id the series id
      * @return the number of chapters read
@@ -107,19 +107,36 @@ public interface Tracker {
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**
-     * Update the number of chapters read for a series.
+     * Update the user's number of chapters read for a series.
      * 
      * If "safe" is true: If the user's number read is greater than the given value, the number on
      * the tracker is not changed.
      *
-     * @param id  the series id
-     * @param num the number of chapters read
+     * @param id   the series id
+     * @param num  the number of chapters read
      * @param safe whether to avoid decreasing number from the tracker (see above description)
      * @throws NotImplementedException   the operation has not yet been implemented for this tracker
      * @throws NotAuthenticatedException the user is not authenticated
      * @throws IOException               an IOException occurred when updating
      */
     void updateChaptersRead(String id, int num, boolean safe)
+            throws NotImplementedException, NotAuthenticatedException, IOException;
+
+    /**
+     * Update the user's status for a series.
+     *
+     * The status can be, case-insensitive: reading, planning, completed, dropped, paused,
+     * rereading. Individual tracker plugins may need to convert these terms to those understood on
+     * their service.
+     * 
+     * @param id     the series id
+     * @param status the status to set, which should be one of those listed above
+     * @param safe   whether to avoid decreasing number from the tracker (see above description)
+     * @throws NotImplementedException   the operation has not yet been implemented for this tracker
+     * @throws NotAuthenticatedException the user is not authenticated
+     * @throws IOException               an IOException occurred when updating
+     */
+    void updateStatus(String id, String status)
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**

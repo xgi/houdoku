@@ -11,6 +11,7 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import java.io.IOException;
+import java.util.HashMap;
 import static com.faltro.houdoku.net.Requests.POST;
 
 /**
@@ -160,6 +161,44 @@ public class AniList extends GenericTrackerOAuth {
 
         JsonObject response = post(body, new String[] {"listId", series.get("id").getAsString()},
                 new String[] {"progress", Integer.toString(num)});
+    }
+
+    @Override
+    public void updateStatus(String id, String status)
+            throws IOException, NotAuthenticatedException {
+        final HashMap<String, String> statuses = new HashMap<String, String>() {
+            private static final long serialVersionUID = 1L;
+            {
+                put("reading", "CURRENT");
+                put("planning", "PLANNING");
+                put("completed", "COMPLETED");
+                put("dropped", "DROPPED");
+                put("paused", "PAUSED");
+                put("rereading", "REPEATING");
+            }
+        };
+
+        if (!this.authenticated) {
+            throw new NotAuthenticatedException();
+        }
+
+        String status_code = statuses.get(status.toLowerCase());
+
+        String user_id = authenticatedUser().get("id").getAsString();
+        JsonObject series = seriesInList(user_id, id);
+
+        // @formatter:off
+        final String body = "" +
+                "mutation UpdateManga($listId: Int, $status: MediaListStatus) {\n" +
+                "  SaveMediaListEntry (id: $listId, status: $status) {" +
+                "    id\n" +
+                "    progress\n" +
+                "  }\n" +
+                "}";
+        // @formatter:on
+
+        JsonObject response = post(body, new String[] {"listId", series.get("id").getAsString()},
+                new String[] {"status", status_code});
     }
 
     /**

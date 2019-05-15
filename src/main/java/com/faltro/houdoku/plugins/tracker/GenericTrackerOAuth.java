@@ -102,6 +102,12 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
+    public void updateStatus(String id, String status)
+            throws NotImplementedException, NotAuthenticatedException, IOException {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public OkHttpClient getClient() {
         return client;
     }
