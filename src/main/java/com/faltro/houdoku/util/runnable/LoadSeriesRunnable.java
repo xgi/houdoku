@@ -17,7 +17,7 @@ public class LoadSeriesRunnable extends LoaderRunnable {
     private final LibraryController libraryController;
 
     /**
-     * Runnable for loading a series.
+     * Runnable for loading a series from a content source.
      *
      * @param name                   the name of the thread
      * @param contentLoader          the ContentLoader which created this instance

@@ -4,6 +4,7 @@ import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import okhttp3.OkHttpClient;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * This class contains implementations for some methods from TrackerOAuth that are expected to be
@@ -90,7 +91,7 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public int getChaptersRead(String id)
+    public HashMap<String, Object> getSeriesInList(String id)
             throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }

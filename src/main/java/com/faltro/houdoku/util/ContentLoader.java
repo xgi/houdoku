@@ -19,7 +19,7 @@ public class ContentLoader {
     private static final String PREFIX_LOAD_BANNER = "loadBanner_";
     private static final String PREFIX_GENERATE_OAUTH_TOKEN = "generateOAuthToken_";
     private static final String PREFIX_UPDATE_CHAPTERS_READ = "updateChapersRead_";
-    private static final String PREFIX_LOAD_CHAPTERS_READ = "loadChapersRead_";
+    private static final String PREFIX_LOAD_SERIES_TRACKER = "loadSeriesTracker_";
     private final ArrayList<LoaderRunnable> runnables;
 
     public ContentLoader() {
@@ -140,10 +140,10 @@ public class ContentLoader {
     /**
      * Update the number of chapters read on a tracker.
      *
-     * @param tracker       the Tracker to update
-     * @param id            the series id
-     * @param num           the number of chapters read
-     * @param safe          whether to avoid decreasing number from the tracker
+     * @param tracker the Tracker to update
+     * @param id      the series id
+     * @param num     the number of chapters read
+     * @param safe    whether to avoid decreasing number from the tracker
      */
     public void updateChapersRead(Tracker tracker, String id, int num, boolean safe) {
         String name = PREFIX_UPDATE_CHAPTERS_READ + tracker.toString() + "_" + id;
@@ -153,16 +153,17 @@ public class ContentLoader {
     }
 
     /**
-     * Load the number of chapters read on a tracker.
+     * Load details from a series in the user's list on a tracker.
      * 
      * @param tracker          the Tracker to load from
      * @param series           the Series to get data for
-     * @param seriesController the SeriesController to update after loading tracker data
+     * @param seriesController the SeriesController to update after loading details on tracker
      */
-    public void loadChapersRead(Tracker tracker, Series series, SeriesController seriesController) {
-        String name = PREFIX_LOAD_CHAPTERS_READ + tracker.toString() + "_" + series.getTitle();
+    public void loadSeriesTracker(Tracker tracker, Series series,
+            SeriesController seriesController) {
+        String name = PREFIX_LOAD_SERIES_TRACKER + tracker.toString() + "_" + series.getTitle();
         LoaderRunnable runnable =
-                new LoadChaptersReadRunnable(name, this, tracker, series, seriesController);
+                new LoadSeriesTrackerRunnable(name, this, tracker, series, seriesController);
         startThreadSafely(name, runnable);
     }
 

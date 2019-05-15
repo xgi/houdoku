@@ -4,6 +4,7 @@ import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import okhttp3.OkHttpClient;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * A tracker is a website for users to individually track their manga/comic lists. These websites
@@ -83,7 +84,7 @@ public interface Tracker {
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**
-     * Retrieve the title for a series.
+     * Retrieve the title for a series on the tracker.
      *
      * @param id the series id
      * @return the title of the series
@@ -95,15 +96,23 @@ public interface Tracker {
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**
-     * Retrieve the user's number of chapters read for a series.
+     * Retrieve details about a series in the user's list.
+     * <p>
+     * The following fields are retrieved:
+     * <ul>
+     * <li>title (String)</li>
+     * <li>progress (int)</li>
+     * <li>status (String)</li>
+     * </ul>
      *
      * @param id the series id
-     * @return the number of chapters read
+     * @return a HashMap where keys are the field names listed above as Strings and values of the
+     *         matching type
      * @throws NotImplementedException   the operation has not yet been implemented for this tracker
      * @throws NotAuthenticatedException the user is not authenticated
      * @throws IOException               an IOException occurred when updating
      */
-    int getChaptersRead(String id)
+    HashMap<String, Object> getSeriesInList(String id)
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**

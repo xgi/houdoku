@@ -9,15 +9,16 @@ import com.faltro.houdoku.plugins.info.AniList;
 import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.faltro.houdoku.util.ContentLoader;
 import java.io.IOException;
+import java.util.HashMap;
 
-public class LoadChaptersReadRunnable extends LoaderRunnable {
+public class LoadSeriesTrackerRunnable extends LoaderRunnable {
     private final Tracker tracker;
     private final Series series;
     private final SeriesController seriesController;
 
 
     /**
-     * Runnable for loading the number of chapters read on a tracker.
+     * Runnable for loading details from a series in the user's list on a tracker.
      *
      * @param name             the name of the thread
      * @param contentLoader    the ContentLoader which created this instance
@@ -25,7 +26,7 @@ public class LoadChaptersReadRunnable extends LoaderRunnable {
      * @param series           the Series to get data for
      * @param seriesController the SeriesController to update after loading tracker data
      */
-    public LoadChaptersReadRunnable(String name, ContentLoader contentLoader, Tracker tracker,
+    public LoadSeriesTrackerRunnable(String name, ContentLoader contentLoader, Tracker tracker,
             Series series, SeriesController seriesController) {
         super(name, contentLoader);
         this.tracker = tracker;
@@ -45,10 +46,10 @@ public class LoadChaptersReadRunnable extends LoaderRunnable {
                 e.printStackTrace();
             }
 
-            String title = tracker.getTitle(series_id);
-            int read_chapters = tracker.getChaptersRead(series_id);
+            HashMap<String, Object> details = tracker.getSeriesInList(series_id);
 
-            seriesController.reloadTrackerDetails(AniList.ID, series_id, title, read_chapters);
+            seriesController.reloadTrackerDetails(AniList.ID, series_id,
+                    (String) details.get("title"), (int) details.get("progress"));
         } catch (IOException | NotAuthenticatedException | NotImplementedException e) {
             e.printStackTrace();
         }

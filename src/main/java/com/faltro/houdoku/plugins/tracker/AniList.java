@@ -120,7 +120,8 @@ public class AniList extends GenericTrackerOAuth {
     }
 
     @Override
-    public int getChaptersRead(String id) throws IOException, NotAuthenticatedException {
+    public HashMap<String, Object> getSeriesInList(String id)
+            throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
         }
@@ -128,7 +129,15 @@ public class AniList extends GenericTrackerOAuth {
         String user_id = authenticatedUser().get("id").getAsString();
         JsonObject series = seriesInList(user_id, id);
 
-        return series.get("progress").getAsInt();
+        return new HashMap<String, Object>() {
+            private static final long serialVersionUID = 1L;
+            {
+                put("title", series.get("media").getAsJsonObject().get("title").getAsJsonObject()
+                        .get("romaji").getAsString());
+                put("progress", series.get("progress").getAsInt());
+                put("status", series.get("status").getAsString());
+            }
+        };
     }
 
     @Override
@@ -288,7 +297,6 @@ public class AniList extends GenericTrackerOAuth {
                 "          romaji\n" +
                 "        }\n" +
                 "      }\n" +
-                "      status\n" +
                 "    }\n" +
                 "  }\n" +
                 "}";

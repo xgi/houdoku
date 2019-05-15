@@ -423,7 +423,7 @@ public class SeriesController extends Controller {
 
         anilistTab.setDisable(!anilist.isAuthenticated());
         if (anilist.isAuthenticated()) {
-            sceneManager.getContentLoader().loadChapersRead(anilist, series, this);
+            sceneManager.getContentLoader().loadSeriesTracker(anilist, series, this);
         }
     }
 
