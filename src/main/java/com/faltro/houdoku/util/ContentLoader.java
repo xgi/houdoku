@@ -3,6 +3,7 @@ package com.faltro.houdoku.util;
 import com.faltro.houdoku.controller.*;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.plugins.tracker.Tracker;
@@ -19,6 +20,7 @@ public class ContentLoader {
     private static final String PREFIX_LOAD_BANNER = "loadBanner_";
     private static final String PREFIX_GENERATE_OAUTH_TOKEN = "generateOAuthToken_";
     private static final String PREFIX_UPDATE_CHAPTERS_READ = "updateChapersRead_";
+    private static final String PREFIX_UPDATE_STATUS = "updateStatus_";
     private static final String PREFIX_LOAD_SERIES_TRACKER = "loadSeriesTracker_";
     private final ArrayList<LoaderRunnable> runnables;
 
@@ -149,6 +151,19 @@ public class ContentLoader {
         String name = PREFIX_UPDATE_CHAPTERS_READ + tracker.toString() + "_" + id;
         LoaderRunnable runnable =
                 new UpdateChaptersReadRunnable(name, this, tracker, id, num, safe);
+        startThreadSafely(name, runnable);
+    }
+
+    /**
+     * Update the status of a series on a tracker.
+     *
+     * @param tracker the Tracker to update
+     * @param id      the series id
+     * @param status  the status of the series
+     */
+    public void updateStatus(Tracker tracker, String id, Status status) {
+        String name = PREFIX_UPDATE_STATUS + tracker.toString() + "_" + id;
+        LoaderRunnable runnable = new UpdateStatusRunnable(name, this, tracker, id, status);
         startThreadSafely(name, runnable);
     }
 
