@@ -642,7 +642,10 @@ public class SeriesController extends Controller {
     }
 
     /**
-     * Reload details for the series from the given tracker.
+     * Reload details for the series.
+     * 
+     * This method is usually called after downloading info from the tracker (i.e. in
+     * LoadSeriesTrackerRunnable).
      *
      * @param tracker_id    the id of the tracker to update
      * @param series_id     the id of the series on the tracker
@@ -660,9 +663,11 @@ public class SeriesController extends Controller {
         });
     }
 
+    /**
+     * Send details in the AniList tab to the tracker.
+     */
     @FXML
     private void anilistUpdate() {
-        // update chapters read
         int chapters_read = Integer.parseInt(anilistReadAmount.getText());
         String series_id = series.getTrackerId(AniList.ID);
         Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
