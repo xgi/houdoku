@@ -136,7 +136,7 @@
                             </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Text styleClass="metadataLabel" text="Status:"/>
-                                <ComboBox fx:id="anilistStatus">
+                                <ComboBox fx:id="anilistStatuses">
                                     <items>
                                         <FXCollections fx:factory="observableArrayList">
                                             <String fx:value="Reading"/>

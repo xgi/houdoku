@@ -7,8 +7,10 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Languages;
 import com.faltro.houdoku.model.Languages.Language;
+import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.model.Statuses;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.plugins.tracker.AniList;
@@ -174,6 +176,8 @@ public class SeriesController extends Controller {
     private TextField anilistReadAmount;
     @FXML
     private Text anilistTitle;
+    @FXML
+    private ComboBox<String> anilistStatuses;
 
     private Series series;
     private Library library;
@@ -650,15 +654,23 @@ public class SeriesController extends Controller {
      * @param tracker_id    the id of the tracker to update
      * @param series_id     the id of the series on the tracker
      * @param title         the title of the series on the tracker
-     * @param read_chapters the number of chapters read for the series on the tracker
+     * @param read_chapters the user's number of chapters read for the series on the tracker
+     * @param status        the user's status of the series on the tracker
      */
     public void reloadTrackerDetails(int tracker_id, String series_id, String title,
-            int read_chapters) {
+            int read_chapters, Status status) {
         // update when FX app thread is available
         Platform.runLater(() -> {
             if (tracker_id == AniList.ID) {
                 anilistTitle.setText(String.format("%s (id=%s)", title, series_id));
                 anilistReadAmount.setText(Integer.toString(read_chapters));
+
+                // find matching item in status comboxbox to update
+                for (String str : anilistStatuses.getItems()) {
+                    if (Statuses.get(str) == status) {
+                        anilistStatuses.getSelectionModel().select(str);
+                    }
+                }
             }
         });
     }
@@ -669,9 +681,13 @@ public class SeriesController extends Controller {
     @FXML
     private void anilistUpdate() {
         int chapters_read = Integer.parseInt(anilistReadAmount.getText());
+        Status status = Statuses.get(anilistStatuses.getSelectionModel().getSelectedItem());
+
         String series_id = series.getTrackerId(AniList.ID);
         Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
+
         sceneManager.getContentLoader().updateChapersRead(tracker, series_id, chapters_read, false);
+        sceneManager.getContentLoader().updateStatus(tracker, series_id, status);
     }
 
     public Library getLibrary() {

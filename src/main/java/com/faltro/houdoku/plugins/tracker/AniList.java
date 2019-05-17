@@ -2,6 +2,7 @@ package com.faltro.houdoku.plugins.tracker;
 
 import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
+import com.faltro.houdoku.model.Statuses;
 import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.net.AniListInterceptor;
 import com.google.gson.JsonArray;
@@ -147,7 +148,7 @@ public class AniList extends GenericTrackerOAuth {
                 put("title", series.get("media").getAsJsonObject().get("title").getAsJsonObject()
                         .get("romaji").getAsString());
                 put("progress", series.get("progress").getAsInt());
-                put("status", series.get("status").getAsString());
+                put("status", Statuses.get(series.get("status").getAsString()));
             }
         };
     }

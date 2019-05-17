@@ -103,7 +103,7 @@ public interface Tracker {
      * <ul>
      * <li>title (String)</li>
      * <li>progress (int)</li>
-     * <li>status (String)</li>
+     * <li>status (Status)</li>
      * </ul>
      *
      * @param id the series id
