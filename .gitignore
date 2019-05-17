@@ -1,6 +1,7 @@
 out/
 target/
 tools/
+docs/
 .idea/
 .vscode
 .settings
