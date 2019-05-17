@@ -49,9 +49,15 @@ public class LoadSeriesTrackerRunnable extends LoaderRunnable {
 
             HashMap<String, Object> details = tracker.getSeriesInList(series_id);
 
-            seriesController.reloadTrackerDetails(AniList.ID, series_id,
-                    (String) details.get("title"), (int) details.get("progress"),
-                    (Status) details.get("status"));
+            if (details == null) {
+                String title = tracker.getTitle(series_id);
+                seriesController.reloadTrackerDetails(AniList.ID, series_id,
+                    title, 0, Status.PLANNING);
+            } else {
+                seriesController.reloadTrackerDetails(AniList.ID, series_id,
+                        (String) details.get("title"), (int) details.get("progress"),
+                        (Status) details.get("status"));
+            }
         } catch (IOException | NotAuthenticatedException | NotImplementedException e) {
             e.printStackTrace();
         }

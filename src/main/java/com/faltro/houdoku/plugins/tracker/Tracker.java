@@ -108,7 +108,7 @@ public interface Tracker {
      *
      * @param id the series id
      * @return a HashMap where keys are the field names listed above as Strings and values of the
-     *         matching type
+     *         matching type, or null if the series is not in the user's list
      * @throws NotImplementedException   the operation has not yet been implemented for this tracker
      * @throws NotAuthenticatedException the user is not authenticated
      * @throws IOException               an IOException occurred when updating

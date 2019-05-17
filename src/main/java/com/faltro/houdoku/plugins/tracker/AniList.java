@@ -142,15 +142,19 @@ public class AniList extends GenericTrackerOAuth {
         String user_id = authenticatedUser().get("id").getAsString();
         JsonObject series = seriesInList(user_id, id);
 
-        return new HashMap<String, Object>() {
-            private static final long serialVersionUID = 1L;
-            {
-                put("title", series.get("media").getAsJsonObject().get("title").getAsJsonObject()
-                        .get("romaji").getAsString());
-                put("progress", series.get("progress").getAsInt());
-                put("status", Statuses.get(series.get("status").getAsString()));
-            }
-        };
+        if (series == null) {
+            return null;
+        } else {
+            return new HashMap<String, Object>() {
+                private static final long serialVersionUID = 1L;
+                {
+                    put("title", series.get("media").getAsJsonObject().get("title").getAsJsonObject()
+                            .get("romaji").getAsString());
+                    put("progress", series.get("progress").getAsInt());
+                    put("status", Statuses.get(series.get("status").getAsString()));
+                }
+            };
+        }
     }
 
     @Override
@@ -309,7 +313,7 @@ public class AniList extends GenericTrackerOAuth {
             return null;
         } else {
             JsonArray results = page.getAsJsonObject().get("mediaList").getAsJsonArray();
-            return results.get(0).getAsJsonObject();
+            return results.size() == 0 ? null : results.get(0).getAsJsonObject();
         }
     }
 
