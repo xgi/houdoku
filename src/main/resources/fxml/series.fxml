@@ -130,12 +130,12 @@
                                 </TextFlow>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Text styleClass="metadataLabel" text="Chapters read:"/>
+                                <Text styleClass="metadataLabel" text="%chapters_read"/>
                                 <TextField fx:id="anilistReadAmount" styleClass="bareTextAlt"
                                     maxWidth="70" alignment="CENTER_RIGHT"/>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Text styleClass="metadataLabel" text="Status:"/>
+                                <Text styleClass="metadataLabel" text="%status"/>
                                 <ComboBox fx:id="anilistStatuses">
                                     <items>
                                         <FXCollections fx:factory="observableArrayList">
@@ -150,7 +150,7 @@
                                 </ComboBox>
                             </HBox>
                             <HBox alignment="CENTER_LEFT">
-                                <Button text="Update Details" onAction="#anilistUpdate"/>
+                                <Button text="%update_details" onAction="#anilistUpdate"/>
                             </HBox>
                         </VBox>
                     </ScrollPane>
