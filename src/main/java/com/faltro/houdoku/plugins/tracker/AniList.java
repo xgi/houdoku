@@ -148,8 +148,8 @@ public class AniList extends GenericTrackerOAuth {
             return new HashMap<String, Object>() {
                 private static final long serialVersionUID = 1L;
                 {
-                    put("title", series.get("media").getAsJsonObject().get("title").getAsJsonObject()
-                            .get("romaji").getAsString());
+                    put("title", series.get("media").getAsJsonObject().get("title")
+                            .getAsJsonObject().get("romaji").getAsString());
                     put("progress", series.get("progress").getAsInt());
                     put("status", Statuses.get(series.get("status").getAsString()));
                 }
@@ -167,26 +167,39 @@ public class AniList extends GenericTrackerOAuth {
         String user_id = authenticatedUser().get("id").getAsString();
         JsonObject series = seriesInList(user_id, id);
 
-        // if safe mode enabled, check whether the current progress is greater than the desired
-        if (safe) {
-            int cur_progress = Integer.parseInt(series.get("progress").getAsString());
-            if (cur_progress > num) {
-                return;
+        if (series != null) { // updating a series in list
+            // if safe mode enabled, check whether the current progress is greater than the desired
+            if (safe) {
+                int cur_progress = Integer.parseInt(series.get("progress").getAsString());
+                if (cur_progress > num) {
+                    return;
+                }
             }
+
+            // @formatter:off
+            final String body = "" +
+                    "mutation UpdateManga($listId: Int, $progress: Int) {\n" +
+                    "  SaveMediaListEntry (id: $listId, progress: $progress) {" +
+                    "    id\n" +
+                    "    progress\n" +
+                    "  }\n" +
+                    "}";
+            // @formatter:on
+
+            post(body, new String[] {"listId", series.get("id").getAsString()},
+                    new String[] {"progress", Integer.toString(num)});
+        } else { // adding a series to list
+            // @formatter:off
+            final String body = "" +
+                    "mutation AddManga($mediaId: Int) {\n" +
+                    "  SaveMediaListEntry (mediaId: $mediaId) {" +
+                    "    mediaId\n" +
+                    "  }\n" +
+                    "}";
+            // @formatter:on
+
+            post(body, new String[] {"mediaId", id});
         }
-
-        // @formatter:off
-        final String body = "" +
-                "mutation UpdateManga($listId: Int, $progress: Int) {\n" +
-                "  SaveMediaListEntry (id: $listId, progress: $progress) {" +
-                "    id\n" +
-                "    progress\n" +
-                "  }\n" +
-                "}";
-        // @formatter:on
-
-        JsonObject response = post(body, new String[] {"listId", series.get("id").getAsString()},
-                new String[] {"progress", Integer.toString(num)});
     }
 
     @Override
@@ -199,18 +212,31 @@ public class AniList extends GenericTrackerOAuth {
         String user_id = authenticatedUser().get("id").getAsString();
         JsonObject series = seriesInList(user_id, id);
 
-        // @formatter:off
-        final String body = "" +
-                "mutation UpdateManga($listId: Int, $status: MediaListStatus) {\n" +
-                "  SaveMediaListEntry (id: $listId, status: $status) {" +
-                "    id\n" +
-                "    progress\n" +
-                "  }\n" +
-                "}";
-        // @formatter:on
+        if (series != null) { // updating a series in list
+            // @formatter:off
+            final String body = "" +
+                    "mutation UpdateManga($listId: Int, $status: MediaListStatus) {\n" +
+                    "  SaveMediaListEntry (id: $listId, status: $status) {" +
+                    "    id\n" +
+                    "    progress\n" +
+                    "  }\n" +
+                    "}";
+            // @formatter:on
 
-        JsonObject response = post(body, new String[] {"listId", series.get("id").getAsString()},
-                new String[] {"status", statuses.get(status)});
+            post(body, new String[] {"listId", series.get("id").getAsString()},
+                    new String[] {"status", statuses.get(status)});
+        } else {
+            // @formatter:off
+            final String body = "" +
+                    "mutation AddManga($mediaId: Int) {\n" +
+                    "  SaveMediaListEntry (mediaId: $mediaId) {" +
+                    "    mediaId\n" +
+                    "  }\n" +
+                    "}";
+            // @formatter:on
+
+            post(body, new String[] {"mediaId", id});
+        }
     }
 
     /**
