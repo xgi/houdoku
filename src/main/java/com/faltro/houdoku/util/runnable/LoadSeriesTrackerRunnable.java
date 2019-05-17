@@ -5,6 +5,7 @@ import com.faltro.houdoku.controller.SeriesController;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.plugins.info.AniList;
 import com.faltro.houdoku.plugins.tracker.Tracker;
@@ -47,16 +48,15 @@ public class LoadSeriesTrackerRunnable extends LoaderRunnable {
                 e.printStackTrace();
             }
 
-            HashMap<String, Object> details = tracker.getSeriesInList(series_id);
+            Track track = tracker.getSeriesInList(series_id);
 
-            if (details == null) {
+            if (track == null) {
                 String title = tracker.getTitle(series_id);
-                seriesController.reloadTrackerDetails(AniList.ID, series_id,
-                    title, 0, Status.PLANNING);
+                seriesController.reloadTrackerDetails(AniList.ID, series_id, title, 0,
+                        Status.PLANNING);
             } else {
-                seriesController.reloadTrackerDetails(AniList.ID, series_id,
-                        (String) details.get("title"), (int) details.get("progress"),
-                        (Status) details.get("status"));
+                seriesController.reloadTrackerDetails(AniList.ID, series_id, track.getTitle(),
+                        track.getProgress(), track.getStatus());
             }
         } catch (IOException | NotAuthenticatedException | NotImplementedException e) {
             e.printStackTrace();

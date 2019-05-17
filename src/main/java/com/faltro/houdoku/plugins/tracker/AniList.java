@@ -3,6 +3,7 @@ package com.faltro.houdoku.plugins.tracker;
 import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.model.Statuses;
+import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.net.AniListInterceptor;
 import com.google.gson.JsonArray;
@@ -14,6 +15,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 import static com.faltro.houdoku.net.Requests.POST;
 
 /**
@@ -133,8 +135,7 @@ public class AniList extends GenericTrackerOAuth {
     }
 
     @Override
-    public HashMap<String, Object> getSeriesInList(String id)
-            throws IOException, NotAuthenticatedException {
+    public Track getSeriesInList(String id) throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
         }
@@ -145,98 +146,58 @@ public class AniList extends GenericTrackerOAuth {
         if (series == null) {
             return null;
         } else {
-            return new HashMap<String, Object>() {
-                private static final long serialVersionUID = 1L;
-                {
-                    put("title", series.get("media").getAsJsonObject().get("title")
-                            .getAsJsonObject().get("romaji").getAsString());
-                    put("progress", series.get("progress").getAsInt());
-                    put("status", Statuses.get(series.get("status").getAsString()));
-                }
-            };
+            JsonObject json_media = series.get("media").getAsJsonObject();
+            String mediaId = json_media.get("id").getAsString();
+            String title = json_media.get("title").getAsJsonObject()
+                    .get("romaji").getAsString();
+            String listId = series.get("id").getAsString();
+            int progress = series.get("progress").getAsInt();
+            Status status = Statuses.get(series.get("status").getAsString());
+
+            return new Track(mediaId, listId, title, progress, status);
         }
     }
 
     @Override
-    public void updateChaptersRead(String id, int num, boolean safe)
+    public void update(String id, Track track, boolean safe)
             throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
         }
 
-        String user_id = authenticatedUser().get("id").getAsString();
-        JsonObject series = seriesInList(user_id, id);
+        Track track_old = getSeriesInList(id);
 
-        if (series != null) { // updating a series in list
-            // if safe mode enabled, check whether the current progress is greater than the desired
-            if (safe) {
-                int cur_progress = Integer.parseInt(series.get("progress").getAsString());
-                if (cur_progress > num) {
-                    return;
+        if (track_old == null) {
+            // TODO: add series to list
+        }
+
+        Status status = track.getStatus() == null ? track_old.getStatus() : track.getStatus();
+        int progress = track.getProgress() == null ? track_old.getProgress() : track.getProgress();
+
+        // in safe mode, only update progress if current progress is greater than the desired
+        if (safe) {
+            Integer progress_old = track_old.getProgress();
+            Integer progress_new = track.getProgress();
+            if (progress_old != null && progress_new != null) {
+                if (progress_old > progress_new) {
+                    progress = progress_old;
                 }
             }
-
-            // @formatter:off
-            final String body = "" +
-                    "mutation UpdateManga($listId: Int, $progress: Int) {\n" +
-                    "  SaveMediaListEntry (id: $listId, progress: $progress) {" +
-                    "    id\n" +
-                    "    progress\n" +
-                    "  }\n" +
-                    "}";
-            // @formatter:on
-
-            post(body, new String[] {"listId", series.get("id").getAsString()},
-                    new String[] {"progress", Integer.toString(num)});
-        } else { // adding a series to list
-            // @formatter:off
-            final String body = "" +
-                    "mutation AddManga($mediaId: Int) {\n" +
-                    "  SaveMediaListEntry (mediaId: $mediaId) {" +
-                    "    mediaId\n" +
-                    "  }\n" +
-                    "}";
-            // @formatter:on
-
-            post(body, new String[] {"mediaId", id});
-        }
-    }
-
-    @Override
-    public void updateStatus(String id, Status status)
-            throws IOException, NotAuthenticatedException {
-        if (!this.authenticated) {
-            throw new NotAuthenticatedException();
         }
 
-        String user_id = authenticatedUser().get("id").getAsString();
-        JsonObject series = seriesInList(user_id, id);
+        // @formatter:off
+        final String body = "" +
+                "mutation UpdateManga($listId: Int, $progress: Int, $status: MediaListStatus) {\n" +
+                "  SaveMediaListEntry (id: $listId, progress: $progress, status: $status) {" +
+                "    id\n" +
+                "    progress\n" +
+                "  }\n" +
+                "}";
+        // @formatter:on
 
-        if (series != null) { // updating a series in list
-            // @formatter:off
-            final String body = "" +
-                    "mutation UpdateManga($listId: Int, $status: MediaListStatus) {\n" +
-                    "  SaveMediaListEntry (id: $listId, status: $status) {" +
-                    "    id\n" +
-                    "    progress\n" +
-                    "  }\n" +
-                    "}";
-            // @formatter:on
-
-            post(body, new String[] {"listId", series.get("id").getAsString()},
-                    new String[] {"status", statuses.get(status)});
-        } else {
-            // @formatter:off
-            final String body = "" +
-                    "mutation AddManga($mediaId: Int) {\n" +
-                    "  SaveMediaListEntry (mediaId: $mediaId) {" +
-                    "    mediaId\n" +
-                    "  }\n" +
-                    "}";
-            // @formatter:on
-
-            post(body, new String[] {"mediaId", id});
-        }
+        post(body, new String[] {"listId", track_old.getListId()},
+                new String[] {"progress", String.valueOf(progress)},
+                new String[] {"status", statuses.get(status)});
     }
 
     /**

@@ -3,6 +3,7 @@ package com.faltro.houdoku.util;
 import com.faltro.houdoku.controller.*;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
+import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
@@ -19,8 +20,7 @@ public class ContentLoader {
     private static final String PREFIX_LOAD_SERIES = "loadSeries_";
     private static final String PREFIX_LOAD_BANNER = "loadBanner_";
     private static final String PREFIX_GENERATE_OAUTH_TOKEN = "generateOAuthToken_";
-    private static final String PREFIX_UPDATE_CHAPTERS_READ = "updateChapersRead_";
-    private static final String PREFIX_UPDATE_STATUS = "updateStatus_";
+    private static final String PREFIX_UPDATE_SERIES_TRACKER = "updateSeriesTracker_";
     private static final String PREFIX_LOAD_SERIES_TRACKER = "loadSeriesTracker_";
     private final ArrayList<LoaderRunnable> runnables;
 
@@ -142,28 +142,15 @@ public class ContentLoader {
     /**
      * Update the number of chapters read on a tracker.
      *
-     * @param tracker the Tracker to update
-     * @param id      the series id
-     * @param num     the number of chapters read
-     * @param safe    whether to avoid decreasing number from the tracker
+     * @param tracker       the Tracker to update
+     * @param id            the series id
+     * @param track         a Track instance with the desired fields to modify
+     * @param safe          whether to avoid decreasing number from the tracker
      */
-    public void updateChapersRead(Tracker tracker, String id, int num, boolean safe) {
-        String name = PREFIX_UPDATE_CHAPTERS_READ + tracker.toString() + "_" + id;
+    public void updateSeriesTracker(Tracker tracker, String id, Track track, boolean safe) {
+        String name = PREFIX_UPDATE_SERIES_TRACKER + tracker.toString() + "_" + id;
         LoaderRunnable runnable =
-                new UpdateChaptersReadRunnable(name, this, tracker, id, num, safe);
-        startThreadSafely(name, runnable);
-    }
-
-    /**
-     * Update the status of a series on a tracker.
-     *
-     * @param tracker the Tracker to update
-     * @param id      the series id
-     * @param status  the status of the series
-     */
-    public void updateStatus(Tracker tracker, String id, Status status) {
-        String name = PREFIX_UPDATE_STATUS + tracker.toString() + "_" + id;
-        LoaderRunnable runnable = new UpdateStatusRunnable(name, this, tracker, id, status);
+                new UpdateSeriesTrackerRunnable(name, this, tracker, id, track, safe);
         startThreadSafely(name, runnable);
     }
 

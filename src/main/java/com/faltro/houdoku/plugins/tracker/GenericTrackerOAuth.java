@@ -2,6 +2,7 @@ package com.faltro.houdoku.plugins.tracker;
 
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
+import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.model.Statuses.Status;
 import okhttp3.OkHttpClient;
 import java.io.IOException;
@@ -92,19 +93,13 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public HashMap<String, Object> getSeriesInList(String id)
+    public Track getSeriesInList(String id)
             throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }
 
     @Override
-    public void updateChaptersRead(String id, int num, boolean safe)
-            throws NotImplementedException, NotAuthenticatedException, IOException {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void updateStatus(String id, Status status)
+    public void update(String id, Track track, boolean safe)
             throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }

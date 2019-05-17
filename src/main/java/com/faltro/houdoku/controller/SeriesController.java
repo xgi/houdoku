@@ -11,6 +11,7 @@ import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.model.Statuses;
+import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.plugins.tracker.AniList;
@@ -686,8 +687,8 @@ public class SeriesController extends Controller {
         String series_id = series.getTrackerId(AniList.ID);
         Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
 
-        sceneManager.getContentLoader().updateChapersRead(tracker, series_id, chapters_read, false);
-        sceneManager.getContentLoader().updateStatus(tracker, series_id, status);
+        Track track = new Track(series_id, null, null, chapters_read, status);
+        sceneManager.getContentLoader().updateSeriesTracker(tracker, series_id, track, false);
     }
 
     public Library getLibrary() {

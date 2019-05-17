@@ -2,6 +2,7 @@ package com.faltro.houdoku.plugins.tracker;
 
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
+import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.model.Statuses.Status;
 import okhttp3.OkHttpClient;
 import java.io.IOException;
@@ -98,50 +99,30 @@ public interface Tracker {
 
     /**
      * Retrieve details about a series in the user's list.
-     * <p>
-     * The following fields are retrieved:
-     * <ul>
-     * <li>title (String)</li>
-     * <li>progress (int)</li>
-     * <li>status (Status)</li>
-     * </ul>
      *
      * @param id the series id
-     * @return a HashMap where keys are the field names listed above as Strings and values of the
-     *         matching type, or null if the series is not in the user's list
+     * @return a Track instance for the series in the user's list if it is within, else null
      * @throws NotImplementedException   the operation has not yet been implemented for this tracker
      * @throws NotAuthenticatedException the user is not authenticated
      * @throws IOException               an IOException occurred when updating
      */
-    HashMap<String, Object> getSeriesInList(String id)
+    Track getSeriesInList(String id)
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**
-     * Update the user's number of chapters read for a series.
+     * Add or update an entry for a series in the user's list.
      * 
      * If "safe" is true: If the user's number read is greater than the given value, the number on
      * the tracker is not changed.
      *
-     * @param id   the series id
-     * @param num  the number of chapters read
-     * @param safe whether to avoid decreasing number from the tracker (see above description)
+     * @param id    the series id
+     * @param track a Track instance with the desired fields to modify
+     * @param safe  whether to avoid decreasing number from the tracker (see above description)
      * @throws NotImplementedException   the operation has not yet been implemented for this tracker
      * @throws NotAuthenticatedException the user is not authenticated
      * @throws IOException               an IOException occurred when updating
      */
-    void updateChaptersRead(String id, int num, boolean safe)
-            throws NotImplementedException, NotAuthenticatedException, IOException;
-
-    /**
-     * Update the user's status for a series.
-     * 
-     * @param id     the series id
-     * @param status the Status to set
-     * @throws NotImplementedException   the operation has not yet been implemented for this tracker
-     * @throws NotAuthenticatedException the user is not authenticated
-     * @throws IOException               an IOException occurred when updating
-     */
-    void updateStatus(String id, Status status)
+    void update(String id, Track track, boolean safe)
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**

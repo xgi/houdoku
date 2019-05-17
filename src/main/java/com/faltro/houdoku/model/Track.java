@@ -1,5 +1,6 @@
 package com.faltro.houdoku.model;
 
+import java.util.Optional;
 import com.faltro.houdoku.model.Statuses.Status;
 
 /**
@@ -8,6 +9,10 @@ import com.faltro.houdoku.model.Statuses.Status;
  * Track instances should not be passed between different Tracker implementations. The fields each
  * implementation provides the Track instance, and the ones it expects, can vary significantly.
  * 
+ * The Track instance does not necessarily have to reflect an existing entry in the Tracker. A
+ * Track instance is generally created using "desired" information which can be passed to Tracker
+ * methods to add or update the entry.
+ * 
  * This class is primarily a utility class to replace the use of HashMap's -- it does not by itself
  * offer much functionality.
  */
@@ -15,10 +20,10 @@ public class Track {
     private final String mediaId;
     private final String listId;
     private final String title;
-    private final int progress;
+    private final Integer progress;
     private final Status status;
 
-    public Track(String mediaId, String listId, String title, int progress, Status status) {
+    public Track(String mediaId, String listId, String title, Integer progress, Status status) {
         this.mediaId = mediaId;
         this.listId = listId;
         this.title = title;
@@ -38,7 +43,7 @@ public class Track {
         return status;
     }
 
-    public int getProgress() {
+    public Integer getProgress() {
         return progress;
     }
 
