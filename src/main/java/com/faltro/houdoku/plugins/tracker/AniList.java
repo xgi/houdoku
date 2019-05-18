@@ -148,8 +148,7 @@ public class AniList extends GenericTrackerOAuth {
         } else {
             JsonObject json_media = series.get("media").getAsJsonObject();
             String mediaId = json_media.get("id").getAsString();
-            String title = json_media.get("title").getAsJsonObject()
-                    .get("romaji").getAsString();
+            String title = json_media.get("title").getAsJsonObject().get("romaji").getAsString();
             String listId = series.get("id").getAsString();
             int progress = series.get("progress").getAsInt();
             Status status = Statuses.get(series.get("status").getAsString());
@@ -168,7 +167,10 @@ public class AniList extends GenericTrackerOAuth {
         Track track_old = getSeriesInList(id);
 
         if (track_old == null) {
-            // TODO: add series to list
+            // The series doesn't exist in the list, so add it. That method doesn't set any
+            // properties (i.e. progress or status), so we'll continue with this method to do an
+            // update request as well
+            track_old = add(id);
         }
 
         Status status = track.getStatus() == null ? track_old.getStatus() : track.getStatus();
@@ -259,6 +261,31 @@ public class AniList extends GenericTrackerOAuth {
         }
 
         return viewer.getAsJsonObject();
+    }
+
+    /**
+     * Add an entry for a series to the user's list.
+     * 
+     * This method should only be run if the series is known to not exist in the user's list.
+     *
+     * @param id the series id
+     * @return a Track instance for the series in the user's list
+     * @throws NotImplementedException   the operation has not yet been implemented for this tracker
+     * @throws NotAuthenticatedException the user is not authenticated
+     * @throws IOException               an IOException occurred when updating
+     */
+    private Track add(String id) throws NotAuthenticatedException, IOException {
+        // @formatter:off
+        final String body = "" +
+                "mutation AddManga($mediaId: Int) {\n" +
+                "  SaveMediaListEntry (mediaId: $mediaId) {" +
+                "    mediaId\n" +
+                "  }\n" +
+                "}";
+        // @formatter:on
+
+        post(body, new String[] {"mediaId", id});
+        return getSeriesInList(id); // not ideal to have an extra page request here
     }
 
     /**
