@@ -47,7 +47,7 @@
         </padding>
         <StackPane>
             <TabPane fx:id="seriesTabPane" VBox.vgrow="ALWAYS">
-                <Tab text="Series Information" closable="false">
+                <Tab text="%series_information" closable="false">
                     <ScrollPane fx:id="metadataScrollPane">
                         <VBox fx:id="metadataContainer" spacing="8"
                               alignment="CENTER"
@@ -119,12 +119,12 @@
                         </VBox>
                     </ScrollPane>
                 </Tab>
-                <Tab text="AniList" fx:id="anilistTab" closable="false" disable="true">
+                <Tab text="%anilist" fx:id="anilistTab" closable="false" disable="true">
                     <ScrollPane styleClass="pluginScrollPane">
                         <VBox styleClass="pluginContainer" spacing="8" alignment="CENTER"
                             VBox.vgrow="ALWAYS">
                             <HBox spacing="5" alignment="CENTER_LEFT">
-                                <Text styleClass="metadataLabel" text="Title:"/>
+                                <Text styleClass="metadataLabel" text="%title2"/>
                                 <TextFlow styleClass="metadataTextFlow">
                                     <Text fx:id="anilistTitle"/>
                                 </TextFlow>

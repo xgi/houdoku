@@ -16,11 +16,11 @@
             <SeparatorMenuItem/>
             <MenuItem id="exitButton" text="%exit" onAction="#exit"/>
         </Menu>
-        <Menu text="View">
+        <Menu text="%view">
             <CheckMenuItem fx:id="nightModeItem" text="%night_mode" onAction="#toggleNightMode"/>
             <CheckMenuItem fx:id="showNavBarItem" text="%show_navigation_bar" selected="true"
                            onAction="#toggleNavBar"/>
-            <Menu text="Zoom">
+            <Menu text="%zoom">
                 <fx:define>
                     <ToggleGroup fx:id="zoomTypeGroup"/>
                 </fx:define>
