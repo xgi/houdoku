@@ -168,6 +168,8 @@ public class SeriesController extends Controller {
     @FXML
     private TableColumn<Chapter, String> dateColumn;
     @FXML
+    private TabPane seriesTabPane;
+    @FXML
     private HBox filterBar;
     @FXML
     private TextField filterTextField;
@@ -389,6 +391,9 @@ public class SeriesController extends Controller {
 
         // trigger filter since the config may have changed
         this.filterListener.changed(new SimpleStringProperty(""), "", "");
+        
+        // reset selected tab to the first one (with metadata info)
+        seriesTabPane.getSelectionModel().select(0);
 
         // update page with known series information
         refreshContent();
