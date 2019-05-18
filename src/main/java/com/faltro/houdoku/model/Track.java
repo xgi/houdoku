@@ -1,6 +1,5 @@
 package com.faltro.houdoku.model;
 
-import java.util.Optional;
 import com.faltro.houdoku.model.Statuses.Status;
 
 /**
@@ -9,9 +8,9 @@ import com.faltro.houdoku.model.Statuses.Status;
  * Track instances should not be passed between different Tracker implementations. The fields each
  * implementation provides the Track instance, and the ones it expects, can vary significantly.
  * 
- * The Track instance does not necessarily have to reflect an existing entry in the Tracker. A
- * Track instance is generally created using "desired" information which can be passed to Tracker
- * methods to add or update the entry.
+ * The Track instance does not necessarily have to reflect an existing entry in the Tracker. A Track
+ * instance is generally created using "desired" information which can be passed to Tracker methods
+ * to add or update the entry.
  * 
  * This class is primarily a utility class to replace the use of HashMap's -- it does not by itself
  * offer much functionality.
@@ -24,7 +23,22 @@ public class Track {
     private final Status status;
     private final Integer score;
 
-    public Track(String mediaId, String listId, String title, Integer progress, Status status, Integer score) {
+    /**
+     * Default constructor.
+     * 
+     * All fields are nullable.
+     * 
+     * @param mediaId  the id of the series on the tracker. If the tracker only provides one ID, use
+     *                 this field
+     * @param listId   the id of the entry for the series in the user's list
+     * @param title    the user-friendly title of the series on the tracker. Don't use CJK
+     *                 characters; romanized form is preferred
+     * @param progress the number of chapters the user has read of the series
+     * @param status   the user's reading Status for the series
+     * @param score    the user's 0-100 score of the series
+     */
+    public Track(String mediaId, String listId, String title, Integer progress, Status status,
+            Integer score) {
         this.mediaId = mediaId;
         this.listId = listId;
         this.title = title;
@@ -36,7 +50,7 @@ public class Track {
     public String getMediaId() {
         return mediaId;
     }
-    
+
     public String getListId() {
         return listId;
     }
