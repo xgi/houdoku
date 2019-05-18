@@ -181,6 +181,8 @@ public class SeriesController extends Controller {
     private Text anilistTitle;
     @FXML
     private ComboBox<String> anilistStatuses;
+    @FXML
+    private ComboBox<Integer> anilistScores;
 
     private Series series;
     private Library library;
@@ -391,7 +393,7 @@ public class SeriesController extends Controller {
 
         // trigger filter since the config may have changed
         this.filterListener.changed(new SimpleStringProperty(""), "", "");
-        
+
         // reset selected tab to the first one (with metadata info)
         seriesTabPane.getSelectionModel().select(0);
 
@@ -662,14 +664,16 @@ public class SeriesController extends Controller {
      * @param title         the title of the series on the tracker
      * @param read_chapters the user's number of chapters read for the series on the tracker
      * @param status        the user's status of the series on the tracker
+     * @param score         the user's score of the series on the tracker, out of 100
      */
     public void reloadTrackerDetails(int tracker_id, String series_id, String title,
-            int read_chapters, Status status) {
+            int read_chapters, Status status, int score) {
         // update when FX app thread is available
         Platform.runLater(() -> {
             if (tracker_id == AniList.ID) {
                 anilistTitle.setText(String.format("%s (id=%s)", title, series_id));
                 anilistReadAmount.setText(Integer.toString(read_chapters));
+                anilistScores.getSelectionModel().select(Math.round(score / 10));;
 
                 // find matching item in status comboxbox to update
                 for (String str : anilistStatuses.getItems()) {
@@ -677,6 +681,7 @@ public class SeriesController extends Controller {
                         anilistStatuses.getSelectionModel().select(str);
                     }
                 }
+
             }
         });
     }
@@ -688,11 +693,12 @@ public class SeriesController extends Controller {
     private void anilistUpdate() {
         int chapters_read = Integer.parseInt(anilistReadAmount.getText());
         Status status = Statuses.get(anilistStatuses.getSelectionModel().getSelectedItem());
+        int score = anilistScores.getSelectionModel().getSelectedItem() * 10;
 
         String series_id = series.getTrackerId(AniList.ID);
         Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
 
-        Track track = new Track(series_id, null, null, chapters_read, status);
+        Track track = new Track(series_id, null, null, chapters_read, status, score);
         sceneManager.getContentLoader().updateSeriesTracker(tracker, series_id, track, false);
     }
 

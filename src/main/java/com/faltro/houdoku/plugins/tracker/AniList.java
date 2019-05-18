@@ -152,8 +152,9 @@ public class AniList extends GenericTrackerOAuth {
             String listId = series.get("id").getAsString();
             int progress = series.get("progress").getAsInt();
             Status status = Statuses.get(series.get("status").getAsString());
+            int score = series.get("scoreRaw").getAsInt();
 
-            return new Track(mediaId, listId, title, progress, status);
+            return new Track(mediaId, listId, title, progress, status, score);
         }
     }
 
@@ -175,6 +176,7 @@ public class AniList extends GenericTrackerOAuth {
 
         Status status = track.getStatus() == null ? track_old.getStatus() : track.getStatus();
         int progress = track.getProgress() == null ? track_old.getProgress() : track.getProgress();
+        int score = track.getScore() == null ? track_old.getScore() : track.getScore();
 
         // in safe mode, only update progress if current progress is greater than the desired
         if (safe) {
@@ -189,8 +191,8 @@ public class AniList extends GenericTrackerOAuth {
 
         // @formatter:off
         final String body = "" +
-                "mutation UpdateManga($listId: Int, $progress: Int, $status: MediaListStatus) {\n" +
-                "  SaveMediaListEntry (id: $listId, progress: $progress, status: $status) {" +
+                "mutation UpdateManga($listId: Int, $progress: Int, $status: MediaListStatus, $scoreRaw: Int) {\n" +
+                "  SaveMediaListEntry (id: $listId, progress: $progress, status: $status, scoreRaw: $scoreRaw) {" +
                 "    id\n" +
                 "    progress\n" +
                 "  }\n" +
@@ -199,7 +201,8 @@ public class AniList extends GenericTrackerOAuth {
 
         post(body, new String[] {"listId", track_old.getListId()},
                 new String[] {"progress", String.valueOf(progress)},
-                new String[] {"status", statuses.get(status)});
+                new String[] {"status", statuses.get(status)},
+                new String[] {"scoreRaw", String.valueOf(score)});
     }
 
     /**
@@ -228,6 +231,7 @@ public class AniList extends GenericTrackerOAuth {
         Response response = POST(client, PROTOCOL + "://graphql." + DOMAIN, json_root.toString());
         JsonObject json_response =
                 new JsonParser().parse(response.body().string()).getAsJsonObject();
+        System.out.println(json_response);
         return json_response.get("data").getAsJsonObject();
     }
 

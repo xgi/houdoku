@@ -53,10 +53,10 @@ public class LoadSeriesTrackerRunnable extends LoaderRunnable {
             if (track == null) {
                 String title = tracker.getTitle(series_id);
                 seriesController.reloadTrackerDetails(AniList.ID, series_id, title, 0,
-                        Status.PLANNING);
+                        Status.PLANNING, 0);
             } else {
                 seriesController.reloadTrackerDetails(AniList.ID, series_id, track.getTitle(),
-                        track.getProgress(), track.getStatus());
+                        track.getProgress(), track.getStatus(), track.getScore());
             }
         } catch (IOException | NotAuthenticatedException | NotImplementedException e) {
             e.printStackTrace();

@@ -22,32 +22,38 @@ public class Track {
     private final String title;
     private final Integer progress;
     private final Status status;
+    private final Integer score;
 
-    public Track(String mediaId, String listId, String title, Integer progress, Status status) {
+    public Track(String mediaId, String listId, String title, Integer progress, Status status, Integer score) {
         this.mediaId = mediaId;
         this.listId = listId;
         this.title = title;
         this.progress = progress;
         this.status = status;
-    }
-
-    public String getListId() {
-        return listId;
+        this.score = score;
     }
 
     public String getMediaId() {
         return mediaId;
     }
+    
+    public String getListId() {
+        return listId;
+    }
 
-    public Status getStatus() {
-        return status;
+    public String getTitle() {
+        return title;
     }
 
     public Integer getProgress() {
         return progress;
     }
 
-    public String getTitle() {
-        return title;
+    public Status getStatus() {
+        return status;
+    }
+
+    public Integer getScore() {
+        return score;
     }
 }

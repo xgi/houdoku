@@ -543,7 +543,7 @@ public class ReaderController extends Controller {
         if ((boolean) config.getValue(Config.Field.TRACKER_ANILIST_UPDATE_AUTO)) {
             Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
 
-            Track track = new Track(series_id, null, null, chapter_num, null);
+            Track track = new Track(series_id, null, null, chapter_num, null, null);
             sceneManager.getContentLoader().updateSeriesTracker(tracker, series_id, track, true);
         }
 
