@@ -115,7 +115,7 @@
         <padding>
             <Insets bottom="5" top="5" right="15"/>
         </padding>
-        <Text text="%layout" styleClass="bareText"/>
+        <Text text="%layout_prompt" styleClass="bareText"/>
         <fx:define>
             <ToggleGroup fx:id="selectLayoutGroup"/>
         </fx:define>

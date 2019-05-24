@@ -54,40 +54,40 @@
                               alignment="CENTER"
                               VBox.vgrow="ALWAYS">
                             <HBox spacing="5">
-                                <Text styleClass="metadataLabel" text="%alt_names"/>
+                                <Text styleClass="metadataLabel" text="%alt_names_prompt"/>
                                 <TextFlow styleClass="metadataTextFlow">
                                     <Text fx:id="textAltNames"/>
                                 </TextFlow>
                             </HBox>
                             <HBox spacing="5">
-                                <Text styleClass="metadataLabel" text="%author"/>
+                                <Text styleClass="metadataLabel" text="%author_prompt"/>
                                 <TextFlow styleClass="metadataTextFlow">
                                     <Text fx:id="textAuthor"/>
                                 </TextFlow>
                                 <Text styleClass="metadataLabel" text="  /  "/>
-                                <Text styleClass="metadataLabel" text="%artist"/>
+                                <Text styleClass="metadataLabel" text="%artist_prompt"/>
                                 <TextFlow styleClass="metadataTextFlow">
                                     <Text fx:id="textArtist"/>
                                 </TextFlow>
                             </HBox>
                             <HBox spacing="5">
-                                <Text styleClass="metadataLabel" text="%rating"/>
+                                <Text styleClass="metadataLabel" text="%rating_prompt"/>
                                 <TextFlow styleClass="metadataTextFlow">
                                     <Text fx:id="textRating"/>
                                 </TextFlow>
                                 <Text styleClass="metadataLabel" text="  /  "/>
-                                <Text styleClass="metadataLabel" text="%views2"/>
+                                <Text styleClass="metadataLabel" text="%views_prompt"/>
                                 <TextFlow styleClass="metadataTextFlow">
                                     <Text fx:id="textViews"/>
                                 </TextFlow>
                                 <Text styleClass="metadataLabel" text="  /  "/>
-                                <Text styleClass="metadataLabel" text="%follows"/>
+                                <Text styleClass="metadataLabel" text="%follows_prompt"/>
                                 <TextFlow styleClass="metadataTextFlow">
                                     <Text fx:id="textFollows"/>
                                 </TextFlow>
                             </HBox>
                             <HBox spacing="5">
-                                <Text styleClass="metadataLabel" text="%genres"/>
+                                <Text styleClass="metadataLabel" text="%genres_prompt"/>
                                 <TextFlow styleClass="metadataTextFlow">
                                     <Text fx:id="textGenres"/>
                                 </TextFlow>
@@ -98,7 +98,7 @@
                                     <Text fx:id="textNumChapters"/>
                                 </TextFlow>
                                 <Text styleClass="metadataLabel" text="  /  "/>
-                                <Text styleClass="metadataLabel" text="%status"/>
+                                <Text styleClass="metadataLabel" text="%status_prompt"/>
                                 <TextFlow styleClass="metadataTextFlow">
                                     <Text fx:id="textStatus"/>
                                 </TextFlow>
@@ -125,10 +125,10 @@
                         <VBox styleClass="pluginContainer" spacing="8" alignment="CENTER"
                             VBox.vgrow="ALWAYS">
                             <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Text styleClass="metadataLabel" text="%title2"/>
+                                <Text styleClass="metadataLabel" text="%title_prompt"/>
                                 <Text styleClass="bareTextAlt" fx:id="anilistTitle"/>
                                 <Text styleClass="metadataLabel" text="  /  "/>
-                                <Text styleClass="metadataLabel" text="ID:"/>
+                                <Text styleClass="metadataLabel" text="%id_prompt"/>
                                 <TextField fx:id="anilistId" styleClass="bareTextAlt"
                                     maxWidth="90"/>
                             </HBox>
@@ -138,7 +138,7 @@
                                     maxWidth="70" alignment="CENTER_RIGHT"/>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
-                                <Text styleClass="metadataLabel" text="%status"/>
+                                <Text styleClass="metadataLabel" text="%status_prompt"/>
                                 <ComboBox fx:id="anilistStatuses">
                                     <items>
                                         <FXCollections fx:factory="observableArrayList">

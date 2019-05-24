@@ -90,10 +90,10 @@
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <HBox spacing="20">
                                         <VBox alignment="CENTER_RIGHT" spacing="16">
-                                            <Label text="%previous_page" styleClass="bareTextAlt"/>
-                                            <Label text="%next_page" styleClass="bareTextAlt"/>
-                                            <Label text="%first_page" styleClass="bareTextAlt"/>
-                                            <Label text="%last_page" styleClass="bareTextAlt"/>
+                                            <Label text="%previous_page_prompt" styleClass="bareTextAlt"/>
+                                            <Label text="%next_page_prompt" styleClass="bareTextAlt"/>
+                                            <Label text="%first_page_prompt" styleClass="bareTextAlt"/>
+                                            <Label text="%last_page_prompt" styleClass="bareTextAlt"/>
                                             <Label text="%back_to_series" styleClass="bareTextAlt"/>
                                         </VBox>
                                         <VBox alignment="CENTER" spacing="6">
@@ -131,7 +131,7 @@
                                     <VBox fx:id="effectColorBox" styleClass="controlSubBox">
                                         <HBox spacing="20">
                                             <VBox alignment="CENTER_RIGHT" spacing="18">
-                                                <Label text="%hue" styleClass="bareTextAlt"/>
+                                                <Label text="%hue_prompt" styleClass="bareTextAlt"/>
                                                 <Label text="%saturation" styleClass="bareTextAlt"/>
                                             </VBox>
                                             <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
@@ -157,7 +157,7 @@
                                     <VBox fx:id="effectBrightnessBox" styleClass="controlSubBox">
                                         <HBox spacing="20">
                                             <VBox alignment="CENTER_RIGHT">
-                                                <Label text="%brightness" styleClass="bareTextAlt"/>
+                                                <Label text="%brightness_prompt" styleClass="bareTextAlt"/>
                                             </VBox>
                                             <VBox alignment="CENTER" HBox.hgrow="ALWAYS"
                                                   maxWidth="300">
