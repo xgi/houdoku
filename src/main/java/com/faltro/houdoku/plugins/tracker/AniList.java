@@ -140,22 +140,50 @@ public class AniList extends GenericTrackerOAuth {
             throw new NotAuthenticatedException();
         }
 
+        // @formatter:off
+        final String body = "" +
+                "query ($id: Int!, $manga_id: Int!) {\n" +
+                "  Page {" +
+                "    mediaList(userId: $id, type: MANGA, mediaId: $manga_id) {\n" +
+                "      id\n" +
+                "      status\n" +
+                "      scoreRaw: score(format: POINT_100)\n" +
+                "      progress\n" +
+                "      media {\n" +
+                "        id\n" +
+                "        title {\n" +
+                "          romaji\n" +
+                "        }\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        // @formatter:on
+
         String user_id = authenticatedUser().get("id").getAsString();
-        JsonObject series = seriesInList(user_id, id);
+        JsonObject response =
+                post(body, new String[] {"id", user_id}, new String[] {"manga_id", id});
 
-        if (series == null) {
-            return null;
-        } else {
-            JsonObject json_media = series.get("media").getAsJsonObject();
-            String mediaId = json_media.get("id").getAsString();
-            String title = json_media.get("title").getAsJsonObject().get("romaji").getAsString();
-            String listId = series.get("id").getAsString();
-            int progress = series.get("progress").getAsInt();
-            Status status = Statuses.get(series.get("status").getAsString());
-            int score = series.get("scoreRaw").getAsInt();
+        JsonElement page = response.get("Page");
+        if (!page.isJsonNull()) {
+            JsonArray results = page.getAsJsonObject().get("mediaList").getAsJsonArray();
+            if (results.size() > 0) {
+                JsonObject json_series = results.get(0).getAsJsonObject();
+                JsonObject json_media = json_series.get("media").getAsJsonObject();
+                String mediaId = json_media.get("id").getAsString();
+                String title =
+                        json_media.get("title").getAsJsonObject().get("romaji").getAsString();
+                String listId = json_series.get("id").getAsString();
+                int progress = json_series.get("progress").getAsInt();
+                Status status = Statuses.get(json_series.get("status").getAsString());
+                int score = json_series.get("scoreRaw").getAsInt();
 
-            return new Track(mediaId, listId, title, progress, status, score);
+                return new Track(mediaId, listId, title, progress, status, score);
+            }
         }
+
+        // page was either null (usually means an error occurred) or contained no results
+        return null;
     }
 
     @Override
@@ -231,7 +259,6 @@ public class AniList extends GenericTrackerOAuth {
         Response response = POST(client, PROTOCOL + "://graphql." + DOMAIN, json_root.toString());
         JsonObject json_response =
                 new JsonParser().parse(response.body().string()).getAsJsonObject();
-        System.out.println(json_response);
         return json_response.get("data").getAsJsonObject();
     }
 
@@ -290,49 +317,6 @@ public class AniList extends GenericTrackerOAuth {
 
         post(body, new String[] {"mediaId", id});
         return getSeriesInList(id); // not ideal to have an extra page request here
-    }
-
-    /**
-     * Retrieve a user-specific series in the authenticated user's list.
-     *
-     * @param user_id  the user's id
-     * @param manga_id the series id
-     * @return the series in the user's list if it is within, else null
-     * @throws IOException               an IOException occurred when retrieving
-     * @throws NotAuthenticatedException the user is not authenticated
-     */
-    private JsonObject seriesInList(String user_id, String manga_id)
-            throws IOException, NotAuthenticatedException {
-        // @formatter:off
-        final String body = "" +
-                "query ($id: Int!, $manga_id: Int!) {\n" +
-                "  Page {" +
-                "    mediaList(userId: $id, type: MANGA, mediaId: $manga_id) {\n" +
-                "      id\n" +
-                "      status\n" +
-                "      scoreRaw: score(format: POINT_100)\n" +
-                "      progress\n" +
-                "      media {\n" +
-                "        id\n" +
-                "        title {\n" +
-                "          romaji\n" +
-                "        }\n" +
-                "      }\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
-        // @formatter:on
-
-        JsonObject response =
-                post(body, new String[] {"id", user_id}, new String[] {"manga_id", manga_id});
-
-        JsonElement page = response.get("Page");
-        if (page.isJsonNull()) {
-            return null;
-        } else {
-            JsonArray results = page.getAsJsonObject().get("mediaList").getAsJsonArray();
-            return results.size() == 0 ? null : results.get(0).getAsJsonObject();
-        }
     }
 
     private void setAccessToken(String token) {
