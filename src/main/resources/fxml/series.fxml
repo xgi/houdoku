@@ -136,8 +136,7 @@
                                 <Text styleClass="metadataLabel" text="%chapters_read"/>
                                 <TextField fx:id="anilistReadAmount" styleClass="bareTextAlt"
                                     maxWidth="70" alignment="CENTER_RIGHT"/>
-                            </HBox>
-                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Text styleClass="metadataLabel" text="  /  "/>
                                 <Text styleClass="metadataLabel" text="%status_prompt"/>
                                 <ComboBox fx:id="anilistStatuses">
                                     <items>
