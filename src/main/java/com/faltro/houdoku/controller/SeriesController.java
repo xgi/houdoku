@@ -180,6 +180,8 @@ public class SeriesController extends Controller {
     @FXML
     private Text anilistTitle;
     @FXML
+    private TextField anilistId;
+    @FXML
     private ComboBox<String> anilistStatuses;
     @FXML
     private ComboBox<Integer> anilistScores;
@@ -671,7 +673,8 @@ public class SeriesController extends Controller {
         // update when FX app thread is available
         Platform.runLater(() -> {
             if (tracker_id == AniList.ID) {
-                anilistTitle.setText(String.format("%s (id=%s)", title, series_id));
+                anilistTitle.setText(title);
+                anilistId.setText(series_id);
                 anilistReadAmount.setText(Integer.toString(read_chapters));
                 anilistScores.getSelectionModel().select(Math.round(score / 10));;
 
@@ -691,11 +694,12 @@ public class SeriesController extends Controller {
      */
     @FXML
     private void anilistUpdate() {
+        String series_id = anilistId.getText();
         int chapters_read = Integer.parseInt(anilistReadAmount.getText());
         Status status = Statuses.get(anilistStatuses.getSelectionModel().getSelectedItem());
         int score = anilistScores.getSelectionModel().getSelectedItem() * 10;
 
-        String series_id = series.getTrackerId(AniList.ID);
+        series.updateTrackerId(AniList.ID, series_id);
         Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
 
         Track track = new Track(series_id, null, null, chapters_read, status, score);

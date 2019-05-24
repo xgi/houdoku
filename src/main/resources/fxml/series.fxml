@@ -124,11 +124,13 @@
                     <ScrollPane styleClass="pluginScrollPane">
                         <VBox styleClass="pluginContainer" spacing="8" alignment="CENTER"
                             VBox.vgrow="ALWAYS">
-                            <HBox spacing="5" alignment="CENTER_LEFT">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Text styleClass="metadataLabel" text="%title2"/>
-                                <TextFlow styleClass="metadataTextFlow">
-                                    <Text fx:id="anilistTitle"/>
-                                </TextFlow>
+                                <Text styleClass="bareTextAlt" fx:id="anilistTitle"/>
+                                <Text styleClass="metadataLabel" text="  /  "/>
+                                <Text styleClass="metadataLabel" text="ID:"/>
+                                <TextField fx:id="anilistId" styleClass="bareTextAlt"
+                                    maxWidth="90"/>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Text styleClass="metadataLabel" text="%chapters_read"/>

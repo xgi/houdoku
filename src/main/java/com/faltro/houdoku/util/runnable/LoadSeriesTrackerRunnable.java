@@ -39,13 +39,14 @@ public class LoadSeriesTrackerRunnable extends LoaderRunnable {
     @Override
     public void run() {
         try {
-            String series_id = tracker.search(series.getTitle());
-
-            try {
-                int tracker_id = tracker.getClass().getField("ID").getInt(null);
+            int tracker_id = tracker.getClass().getField("ID").getInt(null);
+            // if series.getTrackerId is set/non-null, we honor it. Otherwise, search for the
+            // series on the tracker using its name
+            String series_id = series.getTrackerId(tracker_id);
+            if (series_id == null) {
+                series_id = tracker.search(series.getTitle());
+                // we had to search, so update the series id for next time
                 series.updateTrackerId(tracker_id, series_id);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
             }
 
             Track track = tracker.getSeriesInList(series_id);
@@ -59,6 +60,8 @@ public class LoadSeriesTrackerRunnable extends LoaderRunnable {
                         track.getProgress(), track.getStatus(), track.getScore());
             }
         } catch (IOException | NotAuthenticatedException | NotImplementedException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
 
