@@ -126,7 +126,6 @@ public class ReaderController extends Controller {
 
         // fit the imageScrollPane width to the width of the stage
         imageScrollPane.minWidthProperty().bind(stage.widthProperty());
-        imageScrollPane.minHeightProperty().bind(stage.heightProperty());
 
         // properly size the ImageView based on default fit setting
         updateImageViewFit();
