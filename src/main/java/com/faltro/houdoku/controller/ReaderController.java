@@ -127,6 +127,15 @@ public class ReaderController extends Controller {
         // fit the imageScrollPane width to the width of the stage
         imageScrollPane.minWidthProperty().bind(stage.widthProperty());
 
+        // increase scroll distance on image
+        imageView.setOnScroll(e -> {
+            // adapted from https://stackoverflow.com/a/40993755
+            double deltaY = e.getDeltaY();
+            double width = imageScrollPane.getContent().getBoundsInLocal().getWidth();
+            double vvalue = imageScrollPane.getVvalue();
+            imageScrollPane.setVvalue(vvalue + -deltaY / width);
+        });
+
         // properly size the ImageView based on default fit setting
         updateImageViewFit();
     }
