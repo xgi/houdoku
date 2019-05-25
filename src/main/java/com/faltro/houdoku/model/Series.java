@@ -158,6 +158,16 @@ public class Series {
     }
 
     /**
+     * Remove the series id for this series on a tracker.
+     *
+     * @param tracker_id the ID field of the Tracker class being used
+     * @return the series' id if it had been set, else null
+     */
+    public void removeTrackerId(int tracker_id) {
+        this.trackerIds.remove(tracker_id);
+    }
+
+    /**
      * Retrieve the series id for this series on a tracker.
      *
      * @param tracker_id the ID field of the Tracker class being used

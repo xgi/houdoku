@@ -171,8 +171,10 @@
                                     </items>
                                 </ComboBox>
                             </HBox>
-                            <HBox alignment="CENTER_LEFT">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <padding><Insets top="15"/></padding>
                                 <Button text="%update_details" onAction="#anilistUpdate"/>
+                                <Button text="%reload_details" onAction="#anilistReload"/>
                             </HBox>
                         </VBox>
                     </ScrollPane>

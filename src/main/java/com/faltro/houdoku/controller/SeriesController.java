@@ -706,6 +706,18 @@ public class SeriesController extends Controller {
         sceneManager.getContentLoader().updateSeriesTracker(tracker, series_id, track, false);
     }
 
+    /**
+     * Reload details in the AniList tab from the tracker.
+     */
+    @FXML
+    private void anilistReload() {
+        // remove given id of the series in the tracker
+        series.removeTrackerId(AniList.ID);
+
+        Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
+        sceneManager.getContentLoader().loadSeriesTracker(tracker, series, this);
+    }
+
     public Library getLibrary() {
         return library;
     }
