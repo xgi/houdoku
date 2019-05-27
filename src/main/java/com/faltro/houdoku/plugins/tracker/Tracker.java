@@ -3,10 +3,8 @@ package com.faltro.houdoku.plugins.tracker;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Track;
-import com.faltro.houdoku.model.Statuses.Status;
 import okhttp3.OkHttpClient;
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * A tracker is a website for users to individually track their manga/comic lists. These websites

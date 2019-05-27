@@ -4,7 +4,6 @@ import com.faltro.houdoku.controller.*;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.model.Track;
-import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.plugins.tracker.Tracker;

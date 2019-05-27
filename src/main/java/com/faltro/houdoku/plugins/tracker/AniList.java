@@ -15,7 +15,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Optional;
 import static com.faltro.houdoku.net.Requests.POST;
 
 /**

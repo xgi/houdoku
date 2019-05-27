@@ -1,8 +1,6 @@
 package com.faltro.houdoku.controller;
 
 import com.faltro.houdoku.Houdoku;
-import com.faltro.houdoku.exception.NotAuthenticatedException;
-import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Languages;
@@ -16,7 +14,6 @@ import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.plugins.tracker.AniList;
 import com.faltro.houdoku.plugins.tracker.Tracker;
-import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.OutputHelpers;
@@ -47,10 +44,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;

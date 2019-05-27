@@ -1,6 +1,5 @@
 package com.faltro.houdoku.util.runnable;
 
-import com.faltro.houdoku.controller.ConfigController;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Track;
