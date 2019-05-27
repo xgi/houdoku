@@ -6,12 +6,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<VBox xmlns:fx="http://javafx.com/fxml"
-      xmlns="http://javafx.com/javafx"
-      fx:id="container"
-      stylesheets="/style/main.css,/style/light.css"
-      alignment="TOP_CENTER"
-      prefHeight="700" prefWidth="500">
+<VBox xmlns:fx="http://javafx.com/fxml" 
+    xmlns="http://javafx.com/javafx" fx:id="container" stylesheets="/style/main.css,/style/light.css" alignment="TOP_CENTER" prefHeight="700" prefWidth="500">
     <MenuBar fx:id="menuBar">
         <Menu text="%file">
             <MenuItem text="%settings" onAction="#showConfigStage"/>
@@ -43,9 +39,7 @@
                 <Insets top="10" bottom="10" left="15" right="15"/>
             </padding>
             <ComboBox fx:id="contentSourcesBox"/>
-            <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS"
-                       promptText="%search_for_series_prompt"
-                       onAction="#search"/>
+            <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" promptText="%search_for_series_prompt" onAction="#search"/>
             <Button text="%search" onAction="#search"/>
         </HBox>
 
@@ -57,15 +51,12 @@
             <fx:define>
                 <ToggleGroup fx:id="selectLayoutGroup"/>
             </fx:define>
-            <RadioButton fx:id="layoutTableButton" text="%table" styleClass="bareText"
-                         toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
-            <RadioButton fx:id="layoutCoversButton" text="%covers" styleClass="bareText"
-                         toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutTableButton" text="%table" styleClass="bareText" toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutCoversButton" text="%covers" styleClass="bareText" toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
         </HBox>
     </VBox>
 
-    <Text fx:id="noPluginWarning" text="%no_installed_plugins" wrappingWidth="600" visible="false"
-        managed="false" styleClass="bareText"/>
+    <Text fx:id="noPluginWarning" text="%no_installed_plugins" wrappingWidth="600" visible="false" managed="false" styleClass="bareText"/>
 
     <StackPane fx:id="resultsContainer" VBox.vgrow="ALWAYS">
         <TableView fx:id="tableView" visible="false" managed="false">

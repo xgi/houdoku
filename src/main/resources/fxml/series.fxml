@@ -8,11 +8,8 @@
 <?import java.lang.String?>
 <?import java.lang.Integer?>
 <?import javafx.collections.FXCollections?>
-<VBox xmlns:fx="http://javafx.com/fxml"
-      xmlns="http://javafx.com/javafx"
-      fx:id="container"
-      stylesheets="/style/main.css,/style/light.css"
-      alignment="TOP_CENTER">
+<VBox xmlns:fx="http://javafx.com/fxml" 
+    xmlns="http://javafx.com/javafx" fx:id="container" stylesheets="/style/main.css,/style/light.css" alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar">
         <Menu text="%file">
             <MenuItem text="%settings" onAction="#showConfigStage"/>
@@ -38,8 +35,7 @@
             <padding>
                 <Insets top="5" left="5"/>
             </padding>
-            <Button fx:id="toLibraryButton" text="%back_to_library"
-                    onAction="#goToLibrary"/>
+            <Button fx:id="toLibraryButton" text="%back_to_library" onAction="#goToLibrary"/>
         </HBox>
     </StackPane>
     <VBox styleClass="containerAlt" spacing="15" VBox.vgrow="ALWAYS">
@@ -50,9 +46,7 @@
             <TabPane fx:id="seriesTabPane" VBox.vgrow="ALWAYS">
                 <Tab text="%series_information" closable="false">
                     <ScrollPane fx:id="metadataScrollPane">
-                        <VBox fx:id="metadataContainer" spacing="8"
-                              alignment="CENTER"
-                              VBox.vgrow="ALWAYS">
+                        <VBox fx:id="metadataContainer" spacing="8" alignment="CENTER" VBox.vgrow="ALWAYS">
                             <HBox spacing="5">
                                 <Text styleClass="metadataLabel" text="%alt_names_prompt"/>
                                 <TextFlow styleClass="metadataTextFlow">
@@ -122,20 +116,17 @@
                 </Tab>
                 <Tab text="%anilist" fx:id="anilistTab" closable="false" disable="true">
                     <ScrollPane styleClass="pluginScrollPane">
-                        <VBox styleClass="pluginContainer" spacing="8" alignment="CENTER"
-                            VBox.vgrow="ALWAYS">
+                        <VBox styleClass="pluginContainer" spacing="8" alignment="CENTER" VBox.vgrow="ALWAYS">
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Text styleClass="metadataLabel" text="%title_prompt"/>
                                 <Text styleClass="bareTextAlt" fx:id="anilistTitle"/>
                                 <Text styleClass="metadataLabel" text="  /  "/>
                                 <Text styleClass="metadataLabel" text="%id_prompt"/>
-                                <TextField fx:id="anilistId" styleClass="bareTextAlt"
-                                    maxWidth="90"/>
+                                <TextField fx:id="anilistId" styleClass="bareTextAlt" maxWidth="90"/>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
                                 <Text styleClass="metadataLabel" text="%chapters_read"/>
-                                <TextField fx:id="anilistReadAmount" styleClass="bareTextAlt"
-                                    maxWidth="70" alignment="CENTER_RIGHT"/>
+                                <TextField fx:id="anilistReadAmount" styleClass="bareTextAlt" maxWidth="70" alignment="CENTER_RIGHT"/>
                                 <Text styleClass="metadataLabel" text="  /  "/>
                                 <Text styleClass="metadataLabel" text="%status_prompt"/>
                                 <ComboBox fx:id="anilistStatuses">
@@ -172,7 +163,9 @@
                                 </ComboBox>
                             </HBox>
                             <HBox spacing="10" alignment="CENTER_LEFT">
-                                <padding><Insets top="15"/></padding>
+                                <padding>
+                                    <Insets top="15"/>
+                                </padding>
                                 <Button text="%update_details" onAction="#anilistUpdate"/>
                                 <Button text="%reload_details" onAction="#anilistReload"/>
                             </HBox>
@@ -191,8 +184,7 @@
                     <Button text="%refresh_chapters" onAction="#reloadSeries"/>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT">
-                    <TextField fx:id="filterTextField" prefWidth="280"
-                               promptText="%filter_chapters_prompt"/>
+                    <TextField fx:id="filterTextField" prefWidth="280" promptText="%filter_chapters_prompt"/>
                 </HBox>
             </HBox>
             <TableView fx:id="tableView" VBox.vgrow="ALWAYS" editable="true">

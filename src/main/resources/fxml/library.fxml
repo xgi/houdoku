@@ -5,11 +5,8 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
-<VBox xmlns:fx="http://javafx.com/fxml"
-      xmlns="http://javafx.com/javafx"
-      fx:id="container"
-      stylesheets="/style/main.css,/style/light.css"
-      alignment="TOP_CENTER">
+<VBox xmlns:fx="http://javafx.com/fxml" 
+    xmlns="http://javafx.com/javafx" fx:id="container" stylesheets="/style/main.css,/style/light.css" alignment="TOP_CENTER">
     <MenuBar fx:id="menuBar">
         <Menu text="%file">
             <MenuItem text="%settings" onAction="#showConfigStage"/>
@@ -23,34 +20,29 @@
         </Menu>
         <Menu text="%view">
             <CheckMenuItem fx:id="nightModeItem" text="%night_mode" onAction="#toggleNightMode"/>
-            <CheckMenuItem fx:id="showActionBarItem" text="%show_action_bar" selected="true"
-                           onAction="#toggleActionBar"/>
+            <CheckMenuItem fx:id="showActionBarItem" text="%show_action_bar" selected="true" onAction="#toggleActionBar"/>
         </Menu>
     </MenuBar>
 
-    <HBox fx:id="actionBar" alignment="CENTER_LEFT" spacing="10" prefHeight="50"
-          styleClass="container">
+    <HBox fx:id="actionBar" alignment="CENTER_LEFT" spacing="10" prefHeight="50" styleClass="container">
         <padding>
             <Insets bottom="5" top="5" left="15" right="15"/>
         </padding>
-        <Button text="%add_series" prefHeight="${actionContainer.prefHeight}"
-                onAction="#goToSearchSeries">
+        <Button text="%add_series" prefHeight="${actionContainer.prefHeight}" onAction="#goToSearchSeries">
             <graphic>
                 <ImageView>
                     <Image url="/img/icon_add.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Button text="%remove_series" prefHeight="${actionContainer.prefHeight}"
-                onAction="#promptRemoveSelectedSeries">
+        <Button text="%remove_series" prefHeight="${actionContainer.prefHeight}" onAction="#promptRemoveSelectedSeries">
             <graphic>
                 <ImageView>
                     <Image url="/img/icon_remove.png"/>
                 </ImageView>
             </graphic>
         </Button>
-        <Button text="%view_series" prefHeight="${actionContainer.prefHeight}"
-                onAction="#goToSelectedSeries">
+        <Button text="%view_series" prefHeight="${actionContainer.prefHeight}" onAction="#goToSelectedSeries">
             <graphic>
                 <ImageView>
                     <Image url="/img/icon_view.png"/>
@@ -58,8 +50,7 @@
             </graphic>
         </Button>
         <Separator orientation="VERTICAL"/>
-        <Button text="%settings" prefHeight="${actionContainer.prefHeight}"
-                onAction="#showConfigStage">
+        <Button text="%settings" prefHeight="${actionContainer.prefHeight}" onAction="#showConfigStage">
             <graphic>
                 <ImageView>
                     <Image url="/img/icon_settings.png"/>
@@ -68,8 +59,7 @@
         </Button>
         <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="15">
             <Separator orientation="VERTICAL"/>
-            <TextField fx:id="filterTextField" prefWidth="240"
-                       promptText="%filter_library_prompt"/>
+            <TextField fx:id="filterTextField" prefWidth="240" promptText="%filter_library_prompt"/>
         </HBox>
     </HBox>
 
@@ -80,8 +70,7 @@
                     <Label styleClass="placeholderLabel" text="%no_series_found"/>
                 </placeholder>
                 <columns>
-                    <TreeTableColumn fx:id="categoriesColumn" prefWidth="${treeView.width}"
-                                     resizable="false" text="%categories"/>
+                    <TreeTableColumn fx:id="categoriesColumn" prefWidth="${treeView.width}" resizable="false" text="%categories"/>
                 </columns>
             </TreeTableView>
             <StackPane>
@@ -106,8 +95,7 @@
             </StackPane>
         </SplitPane>
         <HBox alignment="CENTER" mouseTransparent="true">
-            <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"
-                               mouseTransparent="true"/>
+            <ProgressIndicator fx:id="reloadProgressIndicator" visible="false" mouseTransparent="true"/>
         </HBox>
     </StackPane>
 
@@ -119,11 +107,8 @@
         <fx:define>
             <ToggleGroup fx:id="selectLayoutGroup"/>
         </fx:define>
-        <RadioButton fx:id="layoutTableButton" text="%table" styleClass="bareText"
-                     toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
-        <RadioButton fx:id="layoutCoversButton" text="%covers" styleClass="bareText"
-                     toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
-        <RadioButton fx:id="layoutCompactButton" text="%compact" styleClass="bareText"
-                     toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
+        <RadioButton fx:id="layoutTableButton" text="%table" styleClass="bareText" toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
+        <RadioButton fx:id="layoutCoversButton" text="%covers" styleClass="bareText" toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
+        <RadioButton fx:id="layoutCompactButton" text="%compact" styleClass="bareText" toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
     </HBox>
 </VBox>
