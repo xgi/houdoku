@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ParseHelpers {
     /**
@@ -73,12 +75,15 @@ public class ParseHelpers {
      * @return the int which is represented by the given text
      */
     public static int parseInt(String text) {
+        final Pattern pattern = Pattern.compile("\\d*\\.?\\d+");
+
         text = text.replaceAll(",", "");
-        text = text.split("\\s+|-+")[0];
+        Matcher matcher = pattern.matcher(text);
         int result = 0;
-        if (!text.equals("")) {
+        if (matcher.find()) {
             try {
-                result = NumberFormat.getNumberInstance(java.util.Locale.US).parse(text).intValue();
+                result = NumberFormat.getNumberInstance(java.util.Locale.US).parse(matcher.group())
+                        .intValue();
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -98,12 +103,14 @@ public class ParseHelpers {
      * @return the int which is represented by the given text
      */
     public static long parseLong(String text) {
+        final Pattern pattern = Pattern.compile("\\d*\\.?\\d+");
+
         text = text.replaceAll(",", "");
-        text = text.split("\\s+|-|:+")[0];
+        Matcher matcher = pattern.matcher(text);
         long result = 0;
-        if (!text.equals("")) {
+        if (matcher.find()) {
             try {
-                result = NumberFormat.getNumberInstance(java.util.Locale.US).parse(text)
+                result = NumberFormat.getNumberInstance(java.util.Locale.US).parse(matcher.group())
                         .longValue();
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -121,9 +128,11 @@ public class ParseHelpers {
      * @return the double which is represented by the given text
      */
     public static double parseDouble(String text) {
+        final Pattern pattern = Pattern.compile("\\d*\\.?\\d+");
+
         text = text.replaceAll(",", "");
-        text = text.split("\\s+|-|:+")[0];
-        return text.length() > 0 ? Double.parseDouble(text) : 0;
+        Matcher matcher = pattern.matcher(text);
+        return matcher.find() ? Double.parseDouble(matcher.group()) : 0;
     }
 
     /**
