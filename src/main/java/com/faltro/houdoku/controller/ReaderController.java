@@ -552,7 +552,8 @@ public class ReaderController extends Controller {
             Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
 
             Track track = new Track(series_id, null, null, chapter_num, null, null);
-            sceneManager.getContentLoader().updateSeriesTracker(tracker, series_id, track, true);
+            sceneManager.getContentLoader().updateSeriesTracker(tracker, series_id, track, true,
+                    false);
         }
 
         stage.setTitle(Houdoku.getName() + " - " + chapter.toString());

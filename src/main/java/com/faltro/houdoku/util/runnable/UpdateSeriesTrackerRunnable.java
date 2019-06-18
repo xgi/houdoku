@@ -12,6 +12,7 @@ public class UpdateSeriesTrackerRunnable extends LoaderRunnable {
     private final String id;
     private final Track track;
     private final boolean safe;
+    private final boolean can_add;
 
 
     /**
@@ -23,20 +24,22 @@ public class UpdateSeriesTrackerRunnable extends LoaderRunnable {
      * @param id            the series id
      * @param track         a Track instance with the desired fields to modify
      * @param safe          whether to avoid decreasing number from the tracker
+     * @param can_add       whether to add the series to the user's list if not already in it
      */
     public UpdateSeriesTrackerRunnable(String name, ContentLoader contentLoader, Tracker tracker,
-            String id, Track track, boolean safe) {
+            String id, Track track, boolean safe, boolean can_add) {
         super(name, contentLoader);
         this.tracker = tracker;
         this.id = id;
         this.track = track;
         this.safe = safe;
+        this.can_add = can_add;
     }
 
     @Override
     public void run() {
         try {
-            tracker.update(id, track, safe);
+            tracker.update(id, track, safe, can_add);
         } catch (IOException | NotAuthenticatedException | NotImplementedException e) {
             e.printStackTrace();
         }

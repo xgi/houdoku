@@ -141,15 +141,17 @@ public class ContentLoader {
     /**
      * Update the number of chapters read on a tracker.
      *
-     * @param tracker       the Tracker to update
-     * @param id            the series id
-     * @param track         a Track instance with the desired fields to modify
-     * @param safe          whether to avoid decreasing number from the tracker
+     * @param tracker the Tracker to update
+     * @param id      the series id
+     * @param track   a Track instance with the desired fields to modify
+     * @param safe    whether to avoid decreasing number from the tracker
+     * @param can_add whether to add the series to the user's list if not already in it
      */
-    public void updateSeriesTracker(Tracker tracker, String id, Track track, boolean safe) {
+    public void updateSeriesTracker(Tracker tracker, String id, Track track, boolean safe,
+            boolean can_add) {
         String name = PREFIX_UPDATE_SERIES_TRACKER + tracker.toString() + "_" + id;
         LoaderRunnable runnable =
-                new UpdateSeriesTrackerRunnable(name, this, tracker, id, track, safe);
+                new UpdateSeriesTrackerRunnable(name, this, tracker, id, track, safe, can_add);
         startThreadSafely(name, runnable);
     }
 

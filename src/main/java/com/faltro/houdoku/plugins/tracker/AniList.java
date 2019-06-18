@@ -186,7 +186,7 @@ public class AniList extends GenericTrackerOAuth {
     }
 
     @Override
-    public void update(String id, Track track, boolean safe)
+    public void update(String id, Track track, boolean safe, boolean can_add)
             throws IOException, NotAuthenticatedException {
         if (!this.authenticated) {
             throw new NotAuthenticatedException();
@@ -195,6 +195,10 @@ public class AniList extends GenericTrackerOAuth {
         Track track_old = getSeriesInList(id);
 
         if (track_old == null) {
+            if (!can_add) {
+                // series isn't in the user's list and we aren't allowed to add it, so do nothing
+                return;
+            }
             // The series doesn't exist in the list, so add it. That method doesn't set any
             // properties (i.e. progress or status), so we'll continue with this method to do an
             // update request as well

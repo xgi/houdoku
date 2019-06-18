@@ -698,7 +698,7 @@ public class SeriesController extends Controller {
         Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
 
         Track track = new Track(series_id, null, null, chapters_read, status, score);
-        sceneManager.getContentLoader().updateSeriesTracker(tracker, series_id, track, false);
+        sceneManager.getContentLoader().updateSeriesTracker(tracker, series_id, track, false, true);
     }
 
     /**

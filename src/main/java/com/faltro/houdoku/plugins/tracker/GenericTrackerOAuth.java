@@ -97,7 +97,7 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public void update(String id, Track track, boolean safe)
+    public void update(String id, Track track, boolean safe, boolean can_add)
             throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }

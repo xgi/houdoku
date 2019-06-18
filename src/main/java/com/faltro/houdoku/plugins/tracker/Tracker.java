@@ -113,14 +113,15 @@ public interface Tracker {
      * If "safe" is true: If the user's number read is greater than the given value, the number on
      * the tracker is not changed.
      *
-     * @param id    the series id
-     * @param track a Track instance with the desired fields to modify
-     * @param safe  whether to avoid decreasing number from the tracker (see above description)
+     * @param id      the series id
+     * @param track   a Track instance with the desired fields to modify
+     * @param safe    whether to avoid decreasing number from the tracker (see above description)
+     * @param can_add whether to add the series to the user's list if not already in it
      * @throws NotImplementedException   the operation has not yet been implemented for this tracker
      * @throws NotAuthenticatedException the user is not authenticated
      * @throws IOException               an IOException occurred when updating
      */
-    void update(String id, Track track, boolean safe)
+    void update(String id, Track track, boolean safe, boolean can_add)
             throws NotImplementedException, NotAuthenticatedException, IOException;
 
     /**
