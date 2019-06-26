@@ -2,6 +2,7 @@ out/
 target/
 tools/
 docs/
+src/main/resources/secret.properties
 .idea/
 .vscode
 .settings

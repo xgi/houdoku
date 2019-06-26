@@ -77,6 +77,18 @@ $ mvn package [-DskipTests] && \
     java -jar ./out/artifacts/houdoku/Houdoku-*.jar
 ```
 
+## Connecting to external clients
+
+**This section is only for developers**. Application credentials for external services are bundled
+in the downloads provided.
+
+Support for some services, such as accessing the AniList API, requires registering external clients.
+Houdoku can run without enabling these services, but functionality may be limited.
+
+Credentials are stored in a properties file. See the
+[secret.properties template](https://github.com/xgi/houdoku/blob/master/src/main/resources/secret.properties.template) for instructions on
+creating credentials for each external client.
+
 # License
 
 [MIT License](https://github.com/xgi/houdoku/blob/master/LICENSE)
