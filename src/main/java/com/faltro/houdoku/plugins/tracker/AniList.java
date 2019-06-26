@@ -1,5 +1,6 @@
 package com.faltro.houdoku.plugins.tracker;
 
+import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.model.Statuses;
@@ -35,8 +36,8 @@ public class AniList extends GenericTrackerOAuth {
     public static final String PROTOCOL = "https";
     public static final String AUTH_URL = "/api/v2/oauth/authorize";
     public static final String TOKEN_URL = "/api/v2/oauth/token";
-    public static final String CLIENT_ID = "1320";
-    public static final String CLIENT_SECRET = "CiUjj1Q0YkcIZZkEcWLCgzgNJTGolgOtVMnxGOjd";
+    public static final String CLIENT_ID = Houdoku.getAniListId();
+    public static final String CLIENT_SECRET = Houdoku.getAniListSecret();
     public static final String REDIRECT_URI = "https://anilist.co/api/v2/oauth/pin";
     public static final String RESPONSE_TYPE = "code";
     private final AniListInterceptor interceptor = new AniListInterceptor();

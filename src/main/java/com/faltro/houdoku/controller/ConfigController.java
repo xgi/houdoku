@@ -122,6 +122,8 @@ public class ConfigController extends Controller {
     @FXML
     private ListView<HBox> contentSourcesList;
     @FXML
+    private VBox anilistErrorBox;
+    @FXML
     private TextField authUrlFieldAniList;
     @FXML
     private TextField tokenFieldAniList;
@@ -204,10 +206,14 @@ public class ConfigController extends Controller {
         languageFilterBox.setItems(languages);
 
         // manually fill auth url fields for trackers
-        TrackerOAuth anilist =
+        TrackerOAuth aniList =
                 (TrackerOAuth) sceneManager.getPluginManager().getTracker(AniList.ID);
-        authUrlFieldAniList.setText(anilist.fullAuthUrl());
-
+        if (aniList.isSupported()) {
+            authUrlFieldAniList.setText(aniList.fullAuthUrl());
+        } else {
+            anilistErrorBox.setVisible(true);
+            anilistErrorBox.setManaged(true);
+        }
     }
 
     /**

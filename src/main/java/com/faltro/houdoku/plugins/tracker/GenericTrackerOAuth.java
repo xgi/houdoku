@@ -31,6 +31,18 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     String access_token = null;
 
     @Override
+    public boolean isSupported() {
+        try {
+            Object client_id = this.getClass().getField("CLIENT_ID").get(null);
+            Object client_secret = this.getClass().getField("CLIENT_SECRET").get(null);
+            return client_id != null && client_secret != null;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
     public String fullAuthUrl() {
         try {
             String protocol = this.getClass().getField("PROTOCOL").get(null).toString();

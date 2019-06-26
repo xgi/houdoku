@@ -5,10 +5,34 @@ import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Houdoku extends Application {
-    private static final Properties properties = new Properties();
+    public static Properties PROJECT_PROPERTIES;
+    public static Properties SECRET_PROPERTIES;
+
+    static {
+        // load properties files
+        try {
+            InputStream project_stream =
+                    Houdoku.class.getClassLoader().getResourceAsStream("project.properties");
+            InputStream secret_stream =
+                    Houdoku.class.getClassLoader().getResourceAsStream("secret.properties");
+
+            PROJECT_PROPERTIES = new Properties();
+            PROJECT_PROPERTIES.load(project_stream);
+
+            // secret.properties file is not required
+            if (secret_stream != null) {
+                SECRET_PROPERTIES = new Properties();
+                SECRET_PROPERTIES.load(secret_stream);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private SceneManager sceneManager;
 
     public static void main(String[] args) {
@@ -16,21 +40,23 @@ public class Houdoku extends Application {
     }
 
     public static String getName() {
-        return properties.getProperty("name");
+        return PROJECT_PROPERTIES.getProperty("name");
     }
 
     public static String getVersion() {
-        return properties.getProperty("version");
+        return PROJECT_PROPERTIES.getProperty("version");
+    }
+
+    public static String getAniListId() {
+        return SECRET_PROPERTIES == null ? null : SECRET_PROPERTIES.getProperty("aniListId");
+    }
+
+    public static String getAniListSecret() {
+        return SECRET_PROPERTIES == null ? null : SECRET_PROPERTIES.getProperty("aniListSecret");
     }
 
     @Override
     public void start(Stage primary_stage) throws Exception {
-        // load project properties
-        try {
-            properties.load(getClass().getClassLoader().getResourceAsStream("project.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         sceneManager = new SceneManager(primary_stage);
 

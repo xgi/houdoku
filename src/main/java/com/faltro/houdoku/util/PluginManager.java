@@ -42,12 +42,17 @@ public class PluginManager {
 
     static {
         try {
+            // ensure plugins path exists before depending on it
+            Files.createDirectories(Data.PATH_PLUGINS);
+            
             URL url = Data.PATH_PLUGINS.toFile().toURI().toURL();
             URL[] urls = new URL[] {url};
             CLASSLOADER = new URLClassLoader(urls);
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        } ;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

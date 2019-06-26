@@ -40,6 +40,13 @@ public interface Tracker {
     String PROTOCOL = "https";
 
     /**
+     * Determine whether the tracker is currently supported, since client can run without API creds.
+     * 
+     * @return whether or not the tracker is supported
+     */
+    boolean isSupported();
+
+    /**
      * @return whether or not the user is authenticated
      */
     boolean isAuthenticated();

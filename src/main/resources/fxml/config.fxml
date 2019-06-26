@@ -178,6 +178,9 @@
                     <Tab text="%anilist" closable="false">
                         <VBox VBox.vgrow="ALWAYS" spacing="15">
                             <VBox>
+                                <VBox fx:id="anilistErrorBox" VBox.vgrow="NEVER" visible="false" managed="false">
+                                    <Label maxWidth="${anilistErrorBox.width}" text="%tracker_no_support" styleClass="failText" wrapText="true"/>
+                                </VBox>
                                 <Text styleClass="bareTextAlt" text="%authentication"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <Label text="%anilist_auth_step_1" styleClass="bareTextAlt"/>
