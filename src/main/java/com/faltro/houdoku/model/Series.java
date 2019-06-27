@@ -261,11 +261,18 @@ public class Series {
         this.infoSourceId = infoSourceId;
     }
 
+    /**
+     * Returns the number of chapters that have been marked as read in the series
+     * <p>
+     * The stream 'count' method returns a long, I have to use Math.toIntExact() to parse it as an int.
+     * </p>
+     * @return amount of read chapters as an int
+     */
     public int getNumReadChapters(){
         long read_chapters = chapters.stream()
                 .filter(Chapter::getRead)
                 .count();
-        
+
         return Math.toIntExact(read_chapters);
     }
 }
