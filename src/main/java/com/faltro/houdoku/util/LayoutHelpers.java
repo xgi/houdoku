@@ -86,7 +86,7 @@ public class LayoutHelpers {
     }
 
     public static StackPane createCoverContainer(FlowPane container, String title,
-            ImageView cover, Boolean with_badge, int numReadChapters)
+            ImageView cover, int numReadChapters)
     {
         StackPane pane = createCoverContainer(container, title, cover);
 
