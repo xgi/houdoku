@@ -44,13 +44,10 @@ public class LayoutHelpers {
      * @param title     the title of the series being represented
      * @param cover     the cover of the series being represented; this ImageView is not modified, a
      *                  copy is made to be used in the new container
-     * @param with_badge signifies whether an 'amount of chapters read' badge should be displayed in
-     *                   the bottom right corner.
      * @return a StackPane which displays the provided title and cover and can be added to the
      *         FlowPane
      */
-    public static StackPane createCoverContainer(FlowPane container, String title, Boolean with_badge,
-            ImageView cover) {
+    public static StackPane createCoverContainer(FlowPane container, String title, ImageView cover) {
         StackPane result_pane = new StackPane();
         result_pane.prefWidthProperty()
                 .bind(container.widthProperty().divide(6).subtract(container.getHgap()));
@@ -86,6 +83,24 @@ public class LayoutHelpers {
         result_pane.getChildren().addAll(image_view, label);
 
         return result_pane;
+    }
+
+    public static StackPane createCoverContainer(FlowPane container, String title,
+            ImageView cover, Boolean with_badge, int numReadChapters)
+    {
+        StackPane pane = createCoverContainer(container, title, cover);
+
+        // create the label for showing the series title
+        Label label = new Label();
+        label.setText(title);
+        label.getStyleClass().add("coverLabel");
+        label.setWrapText(true);
+
+        StackPane.setAlignment(label, Pos.BOTTOM_RIGHT);
+
+        pane.getChildren().add(label);
+
+        return pane;
     }
 
     /**
