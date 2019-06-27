@@ -260,4 +260,12 @@ public class Series {
     public void setInfoSourceId(String infoSourceId) {
         this.infoSourceId = infoSourceId;
     }
+
+    public int getNumReadChapters(){
+        long read_chapters = chapters.stream()
+                .filter(Chapter::getRead)
+                .count();
+        
+        return Math.toIntExact(read_chapters);
+    }
 }
