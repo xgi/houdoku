@@ -44,10 +44,12 @@ public class LayoutHelpers {
      * @param title     the title of the series being represented
      * @param cover     the cover of the series being represented; this ImageView is not modified, a
      *                  copy is made to be used in the new container
+     * @param with_badge signifies whether an 'amount of chapters read' badge should be displayed in
+     *                   the bottom right corner.
      * @return a StackPane which displays the provided title and cover and can be added to the
      *         FlowPane
      */
-    public static StackPane createCoverContainer(FlowPane container, String title,
+    public static StackPane createCoverContainer(FlowPane container, String title, Boolean with_badge,
             ImageView cover) {
         StackPane result_pane = new StackPane();
         result_pane.prefWidthProperty()
