@@ -290,7 +290,7 @@ public class LibraryController extends Controller {
                 // create the result container
                 StackPane result_pane =
                         LayoutHelpers.createCoverContainer(flowPane, series.getTitle(), cover,
-                                series.getNumReadChapters());
+                                series.getNumUnreadChapters());
 
                 // create buttons shown on hover
                 VBox button_container = new VBox();

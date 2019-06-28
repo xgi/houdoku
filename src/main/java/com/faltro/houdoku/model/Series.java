@@ -262,15 +262,15 @@ public class Series {
     }
 
     /**
-     * Returns the number of chapters that have been marked as read in the series
+     * Returns the number of chapters that have been marked as unread in the series
      * <p>
      * The stream 'count' method returns a long, I have to use Math.toIntExact() to parse it as an int.
      * </p>
-     * @return amount of read chapters as an int
+     * @return amount of unread chapters as an int
      */
-    public int getNumReadChapters(){
+    public int getNumUnreadChapters(){
         long read_chapters = chapters.stream()
-                .filter(Chapter::getRead)
+                .filter(chapter -> !chapter.getRead())
                 .count();
 
         return Math.toIntExact(read_chapters);

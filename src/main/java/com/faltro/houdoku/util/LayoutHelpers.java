@@ -94,14 +94,14 @@ public class LayoutHelpers {
      * @param title     the title of the series being represented
      * @param cover     the cover of the series being represented; this ImageView is not modified, a
      *                  copy is made to be used in the new container
-     * @param numReadChapters the amount of Chapters that have been marked as read
+     * @param numUnreadChapters the amount of Chapters that have been marked as unread
      * @return a StackPane which displays the provided title and cover and can be added to the
      *         FlowPane
      */
     public static StackPane createCoverContainer(FlowPane container, String title,
-            ImageView cover, int numReadChapters)
+            ImageView cover, int numUnreadChapters)
     {
-        String amountOfReadChapters = String.valueOf(numReadChapters);
+        String amountOfReadChapters = String.valueOf(numUnreadChapters);
 
         //We call the other createCoverContainer method to provide a filled stackpane with the title
         //and cover
