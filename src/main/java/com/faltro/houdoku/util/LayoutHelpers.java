@@ -1,6 +1,7 @@
 package com.faltro.houdoku.util;
 
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -30,6 +31,10 @@ public class LayoutHelpers {
      * ColorAdjust for hovered cover images.
      */
     private static final ColorAdjust COVER_ADJUST_HOVER = new ColorAdjust(0, 0, -0.5, 0);
+    /**
+     * The height/width ratio of displayed cover images.
+     */
+    private static final double COVER_RATIO = 1.5;
 
     static {
         COVER_ADJUST_DEFAULT.setInput(COVER_DROPSHADOW);
@@ -59,14 +64,24 @@ public class LayoutHelpers {
         label.getStyleClass().add("coverLabel");
         label.setWrapText(true);
 
-        // We create a new ImageView for the cell instead of using the
-        // result's cover ImageView since we may not want to mess with
-        // the sizing of the result's cover -- particularly if we want
-        // to have additional result layouts.
+        // We create a new ImageView for the cell instead of using the result's cover ImageView
+        // since we may not want to mess with the sizing of the result's cover -- particularly if we
+        // want to have additional result layouts.
         ImageView image_view = new ImageView();
         image_view.setPreserveRatio(true);
-        image_view.imageProperty().bind(cover.imageProperty());
         image_view.fitWidthProperty().bind(result_pane.prefWidthProperty());
+        image_view.imageProperty().addListener((observableValue, oldValue, image) -> {
+            double ih = image.getHeight();
+            double iw = image.getWidth();
+            double image_ratio = ih / iw;
+            if (image_ratio < COVER_RATIO) {
+                image_view.setViewport(new Rectangle2D(0, 0, ih / COVER_RATIO, ih));
+            } else {
+                image_view.setViewport(new Rectangle2D(0, 0, iw, iw * COVER_RATIO));
+            }
+        });
+        image_view.imageProperty().bind(cover.imageProperty());
+
         image_view.setEffect(COVER_ADJUST_DEFAULT);
         image_view.getStyleClass().add("coverImage");
 

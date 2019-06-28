@@ -58,7 +58,7 @@
 
     <Text fx:id="noPluginWarning" text="%no_installed_plugins" wrappingWidth="600" visible="false" managed="false" styleClass="bareText"/>
 
-    <StackPane fx:id="resultsContainer" VBox.vgrow="ALWAYS">
+    <StackPane>
         <TableView fx:id="tableView" visible="false" managed="false">
             <placeholder>
                 <Label styleClass="bareText,placeholderLabel" text="%no_series_found"/>
@@ -69,11 +69,11 @@
             </columns>
         </TableView>
         <ScrollPane fx:id="coversContainer" fitToWidth="true" styleClass="container">
-            <StackPane alignment="TOP_CENTER">
+            <StackPane alignment="TOP_CENTER" styleClass="container">
                 <padding>
                     <Insets bottom="10" top="10" left="10" right="10"/>
                 </padding>
-                <FlowPane fx:id="flowPane" hgap="10" vgap="10"/>
+                <FlowPane fx:id="flowPane" hgap="10" vgap="10" styleClass="container"/>
             </StackPane>
         </ScrollPane>
         <ProgressIndicator fx:id="searchProgressIndicator" visible="false"/>
