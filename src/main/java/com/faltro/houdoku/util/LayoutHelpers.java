@@ -88,7 +88,7 @@ public class LayoutHelpers {
     /**
      * Create the container for displaying a series cover, for use in FlowPane layouts where covers
      * are shown in a somewhat grid-like fashion.  However this includes a count of the amount of
-     * chapters that have been marked as read.
+     * chapters that have been marked as read.  The count is displayed in the top right corner.
      *
      * @param container the parent FlowPane container
      * @param title     the title of the series being represented
@@ -113,8 +113,8 @@ public class LayoutHelpers {
         label.getStyleClass().add("coverLabel");
         label.setWrapText(true);
 
-        //this label will be situated in the bottom right as the title is located in the bottom left
-        StackPane.setAlignment(label, Pos.BOTTOM_RIGHT);
+        //this label will be situated in the top right as the title is located in the bottom left
+        StackPane.setAlignment(label, Pos.TOP_RIGHT);
 
         pane.getChildren().add(label);
 
