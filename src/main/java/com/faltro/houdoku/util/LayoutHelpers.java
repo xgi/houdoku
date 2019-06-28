@@ -42,6 +42,30 @@ public class LayoutHelpers {
     }
 
     /**
+     * Apply the correct aspect ratio for covers to the given ImageView.
+     * 
+     * This method does not specify a width for the ImageView itself.
+     * 
+     * The ImageView's image should be set AFTER this method is called, but the aspect ratio will be
+     * applied whenever the image is changed.
+     * 
+     * @param image_view the ImageView for a cover to apply the aspect ratio to
+     */
+    public static void applyCoverSizing(ImageView image_view) {
+        image_view.setPreserveRatio(true);
+        image_view.imageProperty().addListener((observableValue, oldValue, image) -> {
+            double ih = image.getHeight();
+            double iw = image.getWidth();
+            double image_ratio = ih / iw;
+            double vp_width = image_ratio < COVER_RATIO ? ih / COVER_RATIO : iw;
+            double vp_height = image_ratio < COVER_RATIO ? ih : iw * COVER_RATIO;
+            double offset_x = (iw - vp_width) / 2;
+            double offset_y = (ih - vp_height) / 2;
+            image_view.setViewport(new Rectangle2D(offset_x, offset_y, vp_width, vp_height));
+        });
+    }
+
+    /**
      * Create the container for displaying a series cover, for use in FlowPane layouts where covers
      * are shown in a somewhat grid-like fashion.
      *
@@ -69,18 +93,8 @@ public class LayoutHelpers {
         // since we may not want to mess with the sizing of the result's cover -- particularly if we
         // want to have additional result layouts.
         ImageView image_view = new ImageView();
-        image_view.setPreserveRatio(true);
+        applyCoverSizing(image_view);
         image_view.fitWidthProperty().bind(result_pane.prefWidthProperty());
-        image_view.imageProperty().addListener((observableValue, oldValue, image) -> {
-            double ih = image.getHeight();
-            double iw = image.getWidth();
-            double image_ratio = ih / iw;
-            double vp_width = image_ratio < COVER_RATIO ? ih / COVER_RATIO : iw;
-            double vp_height = image_ratio < COVER_RATIO ? ih : iw * COVER_RATIO;
-            double offset_x = (iw - vp_width) / 2;
-            double offset_y = (ih - vp_height) / 2;
-            image_view.setViewport(new Rectangle2D(offset_x, offset_y, vp_width, vp_height));
-        });
         image_view.imageProperty().bind(cover.imageProperty());
 
         image_view.setEffect(COVER_ADJUST_DEFAULT);
