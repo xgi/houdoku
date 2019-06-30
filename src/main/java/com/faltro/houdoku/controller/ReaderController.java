@@ -180,21 +180,31 @@ public class ReaderController extends Controller {
      * <p>
      * We also could have put Config.getValue's in the event itself, but that would be very
      * inefficient.
+     * We also take account for the invert reading style checkbox user config, if it has been ticked
+     * we invert the keys for keyprevious and keynext.
      *
      * @return a complete KeyEvent EventHandler for the reader page
      */
     private EventHandler<KeyEvent> newKeyEventHandler() {
         Config config = sceneManager.getConfig();
-        KeyCode keyPrevPage =
-                KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
-        KeyCode keyNextPage =
-                KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
+
+        //We account for whether the invert reading style checkbox has been checked by the user
+        boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
+
+        KeyCode keyPrevPage = invertReadingStyle
+                ? KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE))
+                : KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
+        KeyCode keyNextPage = invertReadingStyle
+                ? KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_PREV_PAGE))
+                : KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
         KeyCode keyFirstPage =
                 KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_FIRST_PAGE));
         KeyCode keyLastPage =
                 KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_LAST_PAGE));
         KeyCode keyToSeries =
                 KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
+
+
 
         return event -> {
             // only handle KeyEvent.KEY_RELEASE -- not ideal, since this may
