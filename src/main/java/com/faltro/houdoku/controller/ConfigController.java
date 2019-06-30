@@ -279,6 +279,8 @@ public class ConfigController extends Controller {
                 (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_SATURATION));
         filterBrightnessSlider.setValue(
                 (double) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS));
+        invertReadingCheckbox.setSelected(
+                (boolean) config.getValue(Config.Field.INVERT_READING_STYLE));
         restrictPreloadingCheck.setSelected(
                 (boolean) config.getValue(Config.Field.RESTRICT_PRELOAD_PAGES));
         preloadingAmountSpinner.getValueFactory().setValue(
