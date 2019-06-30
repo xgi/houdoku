@@ -71,6 +71,12 @@ public class Config {
          */
         QUICK_RELOAD_SERIES("quick_reload_series", true),
         /**
+         * Inverts the reading keys, this is to simulate a more traditional reading style
+         * where on pressing the left key, it goes to the next page
+         * and on pressing the right key, it goes to the previous page
+         */
+        INVERT_READING_STYLE("invert_reading_style", false),
+        /**
          * Whether to filter all releases to a specific language.
          */
         LANGUAGE_FILTER_ENABLED("language_filter_enabled", true),
