@@ -342,12 +342,13 @@ public class SeriesController extends Controller {
         container.widthProperty()
                 .addListener((observableValue, oldValue, newValue) -> updateBannerSize());
 
+        LayoutHelpers.applyCoverSizing(coverImageView);
         coverImageView.setFitHeight(COVER_HEIGHT);
         coverImageView.setTranslateX(COVER_OFFSET_X);
+        coverImageView.setEffect(LayoutHelpers.COVER_ADJUST_DEFAULT);
+
         textTitle.setTranslateX(TITLE_OFFSET_X);
         textTitle.setTranslateY(-COVER_OFFSET_Y + TITLE_OFFSET_Y);
-
-        coverImageView.setEffect(LayoutHelpers.COVER_ADJUST_DEFAULT);
 
         // add KeyEvent handlers for navigation
         container.setOnKeyPressed(keyEvent -> {
