@@ -298,40 +298,18 @@ public class SeriesController extends Controller {
         this.filteredData = new FilteredList<>(FXCollections.emptyObservableList());
         this.filterListener =
                 (observable, oldValue, newValue) -> this.filteredData.setPredicate(chapter -> {
-                    // We allow the user to specify multiple filter strings,
-                    // separated by a comma. For a series to match the filter, ALL
-                    // sections must be present in at least one of the title,
-                    // group, language, or chapterNum
                     String[] filters = filterTextField.getText().toLowerCase().split(",");
-                    boolean matches_all = true;
-                    if (filters.length > 0) {
-                        for (String filter : filters) {
-                            boolean titleMatches =
-                                    chapter.getTitle().toLowerCase().contains(filter);
-                            boolean groupMatches = chapter.group != null
-                                    && chapter.group.toLowerCase().contains(filter);
-                            boolean languageMatches = chapter.language != null
-                                    && chapter.language.toString().toLowerCase().contains(filter);
-                            boolean chapterNumMatches = Double.toString(chapter.chapterNum)
-                                    .toLowerCase().contains(filter);
-
-                            matches_all = matches_all && (titleMatches || groupMatches
-                                    || languageMatches || chapterNumMatches);
-                        }
-                    }
-
-                    // There are some config-level filters as well, which must all
-                    // be matched.
                     Config config = sceneManager.getConfig();
                     boolean lang_filter_enabled =
                             (boolean) config.getValue(Config.Field.LANGUAGE_FILTER_ENABLED);
-                    boolean config_lang_matches = lang_filter_enabled
-                            ? Languages.get((String) config.getValue(
-                                    Config.Field.LANGUAGE_FILTER_LANGUAGE)) == chapter.language
-                            : true;
 
-                    return matches_all && (config_lang_matches
-                            || chapter.language == Languages.Language.UNKNOWN);
+                    if (lang_filter_enabled) {
+                        Language language = Languages.get(
+                                (String) config.getValue(Config.Field.LANGUAGE_FILTER_LANGUAGE));
+                        return chapter.matchesFilters(filters) && chapter.matchesLanguage(language);
+                    } else {
+                        return chapter.matchesFilters(filters);
+                    }
                 });
         filterTextField.textProperty().addListener(this.filterListener);
 

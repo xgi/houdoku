@@ -122,6 +122,45 @@ public class Chapter {
     }
 
     /**
+     * Determine whether the chapter matches a list of text filters.
+     * 
+     * @param filters an array of String's which all must be present in the chapter's fields
+     * @return whether all filters are present
+     */
+    public boolean matchesFilters(String[] filters) {
+        // We allow the user to specify multiple filter strings, separated by a comma. For a series
+        // to match the filter, ALL sections must be present in at least one of the title,
+        // group, language, or chapterNum
+        boolean matches_all = true;
+        if (filters.length > 0) {
+            for (String filter : filters) {
+                boolean titleMatches = this.getTitle().toLowerCase().contains(filter);
+                boolean groupMatches =
+                        this.group != null && this.group.toLowerCase().contains(filter);
+                boolean languageMatches = this.language != null
+                        && this.language.toString().toLowerCase().contains(filter);
+                boolean chapterNumMatches =
+                        Double.toString(this.chapterNum).toLowerCase().contains(filter);
+
+                matches_all = matches_all
+                        && (titleMatches || groupMatches || languageMatches || chapterNumMatches);
+            }
+        }
+
+        return matches_all;
+    }
+
+    /**
+     * Determine whether the chapter is in the given language.
+     * 
+     * @param language the Language to compare
+     * @return whether the languages match, or this chapter's language is UNKNOWN
+     */
+    public boolean matchesLanguage(Languages.Language language) {
+        return this.language == language || this.language == Languages.Language.UNKNOWN;
+    }
+
+    /**
      * Clears the array of images.
      * <p>
      * Expected to be called when the user is not expected to continue viewing the images, in order
