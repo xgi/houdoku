@@ -389,6 +389,8 @@ public class ConfigController extends Controller {
                 nightModeReaderCheck.isSelected());
         config.replaceValue(Config.Field.QUICK_RELOAD_SERIES,
                 quickReloadCheck.isSelected());
+        config.replaceValue(Config.Field.INVERT_READING_STYLE,
+                invertReadingCheckbox.isSelected());
         config.replaceValue(Config.Field.LANGUAGE_FILTER_ENABLED,
                 languageFilterCheck.isSelected());
         config.replaceValue(Config.Field.LANGUAGE_FILTER_LANGUAGE,
