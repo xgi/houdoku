@@ -108,6 +108,8 @@ public class ConfigController extends Controller {
     @FXML
     private HBox preloadingAmountBox;
     @FXML
+    private CheckBox invertReadingCheckbox;
+    @FXML
     private Spinner<Integer> preloadingAmountSpinner;
     @FXML
     private Button readerKeyPrevPage;
