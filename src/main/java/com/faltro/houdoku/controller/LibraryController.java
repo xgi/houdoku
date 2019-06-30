@@ -3,6 +3,8 @@ package com.faltro.houdoku.controller;
 import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.model.Category;
+import com.faltro.houdoku.model.Config;
+import com.faltro.houdoku.model.Languages;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.LayoutHelpers;
@@ -287,10 +289,18 @@ public class LibraryController extends Controller {
                 ImageView cover = new ImageView();
                 cover.setImage(series.getCover());
 
+                // determine the number of unread chapters for displaying badge on cover
+                Config config = sceneManager.getConfig();
+                boolean lang_filter_enabled =
+                        (boolean) config.getValue(Config.Field.LANGUAGE_FILTER_ENABLED);
+                int unread_chapters = lang_filter_enabled
+                        ? series.getNumUnreadChapters(Languages.get(
+                                (String) config.getValue(Config.Field.LANGUAGE_FILTER_LANGUAGE)))
+                        : series.getNumUnreadChapters();
+
                 // create the result container
-                StackPane result_pane =
-                        LayoutHelpers.createCoverContainer(flowPane, series.getTitle(), cover,
-                                series.getNumUnreadChapters());
+                StackPane result_pane = LayoutHelpers.createCoverContainer(flowPane,
+                        series.getTitle(), cover, unread_chapters);
 
                 // create buttons shown on hover
                 VBox button_container = new VBox();

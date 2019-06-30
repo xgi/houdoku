@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A series from a ContentSource, which contains an array of Chapter's that the user can read from.
@@ -261,18 +262,29 @@ public class Series {
         this.infoSourceId = infoSourceId;
     }
 
+    private Stream<Chapter> getUnreadChapters() {
+        return chapters.stream().filter(chapter -> !chapter.getRead());
+    }
+
     /**
-     * Returns the number of chapters that have been marked as unread in the series
-     * <p>
-     * The stream 'count' method returns a long, I have to use Math.toIntExact() to parse it as an int.
-     * </p>
+     * Determine the number of unread chapters in the series.
+     * 
+     * @return amount of unread chapters
+     */
+    public int getNumUnreadChapters() {
+        long count = getUnreadChapters().count();
+        return Math.toIntExact(count);
+    }
+
+    /**
+     * Determine the number of unread chapters in the series in the given language.
+     * 
+     * @param language the Language to filter chapters by
      * @return amount of unread chapters as an int
      */
-    public int getNumUnreadChapters(){
-        long read_chapters = chapters.stream()
-                .filter(chapter -> !chapter.getRead())
-                .count();
-
-        return Math.toIntExact(read_chapters);
+    public int getNumUnreadChapters(Language language) {
+        long count =
+                getUnreadChapters().filter(chapter -> chapter.matchesLanguage(language)).count();
+        return Math.toIntExact(count);
     }
 }
