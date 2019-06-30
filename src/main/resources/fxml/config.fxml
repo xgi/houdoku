@@ -68,7 +68,7 @@
                             <VBox>
                                 <Text styleClass="bareTextAlt" text="%readingstyle"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
-                                    <CheckBox fx:id="restrictPreloadingCheck2" text="%restrict_preloading_check" styleClass="bareTextAlt"/>
+                                    <CheckBox fx:id="invertReadingCheckbox" text="%invert_reading_style" styleClass="bareTextAlt"/>
                                 </VBox>
                             </VBox>
                             <VBox>
