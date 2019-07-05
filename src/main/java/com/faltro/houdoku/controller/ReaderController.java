@@ -484,6 +484,8 @@ public class ReaderController extends Controller {
                 imageView.setPreserveRatio(true);
                 imageView.fitWidthProperty()
                         .bind(container.widthProperty().subtract(SceneManager.VSCROLLBAR_WIDTH));
+
+                centerImageView();
             };
         } else if (actualSizeRadio.isSelected()) {
             imageViewListener = (o, oldValue, newValue) -> {
