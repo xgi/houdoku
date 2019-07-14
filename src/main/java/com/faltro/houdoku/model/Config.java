@@ -75,7 +75,7 @@ public class Config {
          * where on pressing the left key, it goes to the next page
          * and on pressing the right key, it goes to the previous page
          */
-        INVERT_READING_STYLE("read_pages_right_to_left", false),
+        INVERT_READING_STYLE("invert_reading_style", false),
         /**
          * Whether to filter all releases to a specific language.
          */
