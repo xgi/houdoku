@@ -217,14 +217,14 @@ public class ReaderController extends Controller {
                         if (chapter.getCurrentPageNum() == 0 && !prevChapterButton.isDisabled()) {
                             previousChapter();
                         } else {
-                            previousPage();
+                            leftPage();
                         }
                     } else if (event.getCode() == keyNextPage) {
                         if (chapter.getCurrentPageNum() >= chapter.getTotalPages() - 1
                                 && !nextChapterButton.isDisabled()) {
                             nextChapter();
                         } else {
-                            nextPage();
+                            rightPage();
                         }
                     } else if (event.getCode() == keyFirstPage) {
                         firstPage();
