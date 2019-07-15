@@ -359,6 +359,47 @@ public class ReaderController extends Controller {
     }
 
     /**
+     * The left page function is called by the previous page button on the UI.
+     * Default action is to go to the previous page however if the invert reading style is active,
+     * then it will go to the next page.
+     */
+    @FXML
+    private void leftPage(){
+        //Get the current configuration settings
+        Config config = sceneManager.getConfig();
+
+        //We account for whether the invert reading style checkbox has been checked by the user
+        boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
+
+        //If invert reading style setting is active instead of previous page we go to the next page
+        if(invertReadingStyle)
+            nextPage();
+        else
+            previousPage();
+    }
+
+    /**
+     * The right page function is called by the next page button on the UI.
+     * Default action is to go to the next page however if the invert reading style is active,
+     * then it will go to the previous page.
+     */
+    @FXML
+    private void rightPage(){
+        //Get the current configuration settings
+        Config config = sceneManager.getConfig();
+
+        //We account for whether the invert reading style checkbox has been checked by the user
+        boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
+
+        //If invert reading style setting is active instead of next page we go to previous page
+        if(invertReadingStyle)
+            previousPage();
+        else
+            nextPage();
+    }
+
+
+    /**
      * Go to, and load, the last page.
      */
     @FXML
