@@ -290,13 +290,35 @@ public class ReaderController extends Controller {
 
     /**
      * Update components using fields from the set chapter.
+     * Taking account of whether invert reading style setting is active.
      */
     public void refreshPage() {
         int page_num = chapter.getCurrentPageNum();
         // enable/disable appropriate navigation buttons
-        prevPageButton.setDisable(page_num < 1);
+
+        Config config = sceneManager.getConfig();
+
+        //We account for whether the invert reading style checkbox has been checked by the user
+        boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
+
+        //When invert reading style setting is active, user reads from left to right.
+        //Meaning left/prev would go to the next page
+        //And right/next would go to the previous page
+        if(invertReadingStyle)
+        {
+            //Previous page button is treated as next page button
+            prevPageButton.setDisable(page_num+1 >= chapter.getTotalPages());
+            //Next page button is treated as previous page button
+            nextPageButton.setDisable(page_num<1);
+        }
+        else
+        {
+            //Previous page button is treated as next page button
+            prevPageButton.setDisable(page_num<1);
+            //Next page button is treated as previous page button
+            nextPageButton.setDisable(page_num+1 >= chapter.getTotalPages());
+        }
         firstPageButton.setDisable(prevPageButton.isDisable());
-        nextPageButton.setDisable(page_num + 1 >= chapter.getTotalPages());
         lastPageButton.setDisable(nextPageButton.isDisable());
 
         // update the number of total pages
