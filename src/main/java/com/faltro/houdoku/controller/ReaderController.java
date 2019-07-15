@@ -191,12 +191,8 @@ public class ReaderController extends Controller {
         //We account for whether the invert reading style checkbox has been checked by the user
         boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
 
-        KeyCode keyPrevPage = invertReadingStyle
-                ? KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE))
-                : KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
-        KeyCode keyNextPage = invertReadingStyle
-                ? KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_PREV_PAGE))
-                : KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
+        KeyCode keyPrevPage = KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
+        KeyCode keyNextPage = KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
         KeyCode keyFirstPage =
                 KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_FIRST_PAGE));
         KeyCode keyLastPage =
