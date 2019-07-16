@@ -168,6 +168,8 @@ public class Chapter {
      */
     public void clearImages() {
         images = new Image[1];
+        imageUrls = null;
+        imageUrlTemplate = null;
         currentPageNum = 0;
     }
 
