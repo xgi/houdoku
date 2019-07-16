@@ -208,19 +208,29 @@ public class ReaderController extends Controller {
             // keys are not picked up by KEY_PRESSED
             if (event.getEventType() == KeyEvent.KEY_RELEASED) {
                 // only perform actions if the user is not in the page num textfield
+
                 if (!pageNumField.isFocused()) {
-                    if (event.getCode() == keyPrevPage) {
+
+                    KeyCode keyPrev = keyPrevPage;
+                    KeyCode keyNext = keyNextPage;
+                    //Check if invert reading style setting is active.
+                    if(invertReadingStyle){
+                        keyPrev = keyNextPage;
+                        keyNext = keyPrevPage;
+                    }
+
+                    if (event.getCode() == keyPrev) {
                         if (chapter.getCurrentPageNum() == 0 && !prevChapterButton.isDisabled()) {
-                            previousChapter();
+                                previousChapter();
                         } else {
-                            leftPage();
+                            previousPage();
                         }
-                    } else if (event.getCode() == keyNextPage) {
+                    } else if (event.getCode() == keyNext) {
                         if (chapter.getCurrentPageNum() >= chapter.getTotalPages() - 1
                                 && !nextChapterButton.isDisabled()) {
-                            nextChapter();
+                                nextChapter();
                         } else {
-                            rightPage();
+                            nextPage();
                         }
                     } else if (event.getCode() == keyFirstPage) {
                         firstPage();
