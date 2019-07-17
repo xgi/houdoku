@@ -108,6 +108,8 @@ public class ConfigController extends Controller {
     @FXML
     private HBox preloadingAmountBox;
     @FXML
+    private CheckBox invertReadingCheckbox;
+    @FXML
     private Spinner<Integer> preloadingAmountSpinner;
     @FXML
     private Button readerKeyPrevPage;
@@ -277,6 +279,8 @@ public class ConfigController extends Controller {
                 (double) config.getValue(Config.Field.PAGE_FILTER_COLOR_SATURATION));
         filterBrightnessSlider.setValue(
                 (double) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS));
+        invertReadingCheckbox.setSelected(
+                (boolean) config.getValue(Config.Field.INVERT_READING_STYLE));
         restrictPreloadingCheck.setSelected(
                 (boolean) config.getValue(Config.Field.RESTRICT_PRELOAD_PAGES));
         preloadingAmountSpinner.getValueFactory().setValue(
@@ -385,6 +389,8 @@ public class ConfigController extends Controller {
                 nightModeReaderCheck.isSelected());
         config.replaceValue(Config.Field.QUICK_RELOAD_SERIES,
                 quickReloadCheck.isSelected());
+        config.replaceValue(Config.Field.INVERT_READING_STYLE,
+                invertReadingCheckbox.isSelected());
         config.replaceValue(Config.Field.LANGUAGE_FILTER_ENABLED,
                 languageFilterCheck.isSelected());
         config.replaceValue(Config.Field.LANGUAGE_FILTER_LANGUAGE,

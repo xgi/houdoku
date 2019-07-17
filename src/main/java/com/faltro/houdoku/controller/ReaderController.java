@@ -180,15 +180,19 @@ public class ReaderController extends Controller {
      * <p>
      * We also could have put Config.getValue's in the event itself, but that would be very
      * inefficient.
+     * We also take account for the invert reading style checkbox user config, if it has been ticked
+     * we invert the keys for keyprevious and keynext.
      *
      * @return a complete KeyEvent EventHandler for the reader page
      */
     private EventHandler<KeyEvent> newKeyEventHandler() {
         Config config = sceneManager.getConfig();
-        KeyCode keyPrevPage =
-                KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
-        KeyCode keyNextPage =
-                KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
+
+        //We account for whether the invert reading style checkbox has been checked by the user
+        boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
+
+        KeyCode keyPrevPage = KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_PREV_PAGE));
+        KeyCode keyNextPage = KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_NEXT_PAGE));
         KeyCode keyFirstPage =
                 KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_FIRST_PAGE));
         KeyCode keyLastPage =
@@ -196,23 +200,35 @@ public class ReaderController extends Controller {
         KeyCode keyToSeries =
                 KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
 
+
+
         return event -> {
             // only handle KeyEvent.KEY_RELEASE -- not ideal, since this may
             // make the client appear slower to respond, but most non-letter
             // keys are not picked up by KEY_PRESSED
             if (event.getEventType() == KeyEvent.KEY_RELEASED) {
                 // only perform actions if the user is not in the page num textfield
+
                 if (!pageNumField.isFocused()) {
-                    if (event.getCode() == keyPrevPage) {
+
+                    KeyCode keyPrev = keyPrevPage;
+                    KeyCode keyNext = keyNextPage;
+                    //Check if invert reading style setting is active.
+                    if(invertReadingStyle){
+                        keyPrev = keyNextPage;
+                        keyNext = keyPrevPage;
+                    }
+
+                    if (event.getCode() == keyPrev) {
                         if (chapter.getCurrentPageNum() == 0 && !prevChapterButton.isDisabled()) {
-                            previousChapter();
+                                previousChapter();
                         } else {
                             previousPage();
                         }
-                    } else if (event.getCode() == keyNextPage) {
+                    } else if (event.getCode() == keyNext) {
                         if (chapter.getCurrentPageNum() >= chapter.getTotalPages() - 1
                                 && !nextChapterButton.isDisabled()) {
-                            nextChapter();
+                                nextChapter();
                         } else {
                             nextPage();
                         }
@@ -284,13 +300,35 @@ public class ReaderController extends Controller {
 
     /**
      * Update components using fields from the set chapter.
+     * Taking account of whether invert reading style setting is active.
      */
     public void refreshPage() {
         int page_num = chapter.getCurrentPageNum();
         // enable/disable appropriate navigation buttons
-        prevPageButton.setDisable(page_num < 1);
+
+        Config config = sceneManager.getConfig();
+
+        //We account for whether the invert reading style checkbox has been checked by the user
+        boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
+
+        //When invert reading style setting is active, user reads from left to right.
+        //Meaning left/prev would go to the next page
+        //And right/next would go to the previous page
+        if(invertReadingStyle)
+        {
+            //Previous page button is treated as next page button
+            prevPageButton.setDisable(page_num+1 >= chapter.getTotalPages());
+            //Next page button is treated as previous page button
+            nextPageButton.setDisable(page_num<1);
+        }
+        else
+        {
+            //Previous page button is treated as next page button
+            prevPageButton.setDisable(page_num<1);
+            //Next page button is treated as previous page button
+            nextPageButton.setDisable(page_num+1 >= chapter.getTotalPages());
+        }
         firstPageButton.setDisable(prevPageButton.isDisable());
-        nextPageButton.setDisable(page_num + 1 >= chapter.getTotalPages());
         lastPageButton.setDisable(nextPageButton.isDisable());
 
         // update the number of total pages
@@ -347,6 +385,47 @@ public class ReaderController extends Controller {
         chapter.deltaPage(-1);
         loadCurrentPage();
     }
+
+    /**
+     * The left page function is called by the previous page button on the UI.
+     * Default action is to go to the previous page however if the invert reading style is active,
+     * then it will go to the next page.
+     */
+    @FXML
+    private void leftPage(){
+        //Get the current configuration settings
+        Config config = sceneManager.getConfig();
+
+        //We account for whether the invert reading style checkbox has been checked by the user
+        boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
+
+        //If invert reading style setting is active instead of previous page we go to the next page
+        if(invertReadingStyle)
+            nextPage();
+        else
+            previousPage();
+    }
+
+    /**
+     * The right page function is called by the next page button on the UI.
+     * Default action is to go to the next page however if the invert reading style is active,
+     * then it will go to the previous page.
+     */
+    @FXML
+    private void rightPage(){
+        //Get the current configuration settings
+        Config config = sceneManager.getConfig();
+
+        //We account for whether the invert reading style checkbox has been checked by the user
+        boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
+
+        //If invert reading style setting is active instead of next page we go to previous page
+        if(invertReadingStyle)
+            previousPage();
+        else
+            nextPage();
+    }
+
 
     /**
      * Go to, and load, the last page.

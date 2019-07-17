@@ -66,6 +66,12 @@
                                 </VBox>
                             </VBox>
                             <VBox>
+                                <Text styleClass="bareTextAlt" text="%readingstyle"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <CheckBox fx:id="invertReadingCheckbox" text="%read_pages_right_to_left" styleClass="bareTextAlt"/>
+                                </VBox>
+                            </VBox>
+                            <VBox>
                                 <Text styleClass="bareTextAlt" text="%key_bindings"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
                                     <HBox spacing="20">
