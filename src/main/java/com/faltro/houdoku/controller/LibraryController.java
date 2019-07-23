@@ -89,6 +89,10 @@ public class LibraryController extends Controller {
     private TextField filterTextField;
     @FXML
     private CheckMenuItem showActionBarItem;
+    @FXML
+    private Slider columnNumSlider;
+    @FXML
+    private HBox columnNumSliderContainer;
 
     public LibraryController(SceneManager sceneManager) {
         super(sceneManager);
@@ -119,10 +123,7 @@ public class LibraryController extends Controller {
         coverColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(COL_COVER_WIDTH));
         titleColumn.prefWidthProperty().bind(tableView.widthProperty().multiply(COL_TITLE_WIDTH));
         numChaptersColumn.prefWidthProperty().bind(tableView.widthProperty()
-                .multiply(COL_NUMCHAPTERS_WIDTH).subtract(SceneManager.VSCROLLBAR_WIDTH) // to
-                                                                                         // account
-                                                                                         // for
-                                                                                         // scrollbar
+                .multiply(COL_NUMCHAPTERS_WIDTH).subtract(SceneManager.VSCROLLBAR_WIDTH)
         );
 
         // create a right-click context menu for all table cells
@@ -140,14 +141,11 @@ public class LibraryController extends Controller {
         // Create factories for table cells for each column.
         // All cell nodes use the tableCell class
         // Cover column:
-        // Cell graphics are an ImageView with a width equal to the width of
-        // the column.
+        // Cell graphics are an ImageView with a width equal to the width of the column.
         // Title column:
-        // Cell graphics are a Text node using the tableText class, which
-        // centers it.
+        // Cell graphics are a Text node using the tableText class, which centers it.
         // Num chapters column:
-        // Cell graphics are a Text node using the tableText class, which
-        // centers it.
+        // Cell graphics are a Text node using the tableText class, which centers it.
         coverColumn.setCellFactory(tc -> {
             TableCell<Series, Image> cell = new TableCell<>();
             cell.getStyleClass().add("tableCell");
@@ -188,15 +186,13 @@ public class LibraryController extends Controller {
             return cell;
         });
 
-        // create table cell value factories for each column which simply get
-        // the appropriate value from the series object
+        // create table cell value factories for each column which simply get the appropriate value
+        // from the series object
         coverColumn.setCellValueFactory(p -> new SimpleObjectProperty<>(p.getValue().getCover()));
         titleColumn.setCellValueFactory(p -> new SimpleStringProperty(
-                // This column actually shows the series title, followed by
-                // artist and author on the following line. If the author
-                // is the same as the artist, we simply show the name once.
-                // If compact mode is enabled, we also opt to only show the
-                // title of the series.
+                // This column actually shows the series title, followed by artist and author on the
+                // following line. If the author is the same as the artist, we simply show the name
+                // once. If compact mode is enabled, we also only show the title of the series.
                 layoutCompactButton.isSelected() ? p.getValue().getTitle()
                         : p.getValue().author.equals(p.getValue().artist)
                                 ? p.getValue().getTitle() + "\n" + p.getValue().author
@@ -236,6 +232,19 @@ public class LibraryController extends Controller {
         });
         treeView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> updateContent());
+        columnNumSlider.valueProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    columnNumSlider.setValue(Math.round(newValue.doubleValue()));
+                    if (!columnNumSlider.isValueChanging()) {
+                        updateContent();
+                    }
+                });
+        columnNumSlider.valueChangingProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue == false) {
+                        updateContent();
+                    }
+                });
     }
 
     /**
@@ -268,8 +277,7 @@ public class LibraryController extends Controller {
         // Filter code/method derived from
         // http://code.makery.ch/blog/javafx-8-tableview-sorting-filtering
         // with minor changes.
-        // 1. Wrap the ObservableList in a FilteredList (initially display
-        // all data).
+        // 1. Wrap the ObservableList in a FilteredList (initially display all data).
         // 2. Set the filter Predicate whenever the filter changes.
         // 3. Wrap the FilteredList in a SortedList.
         // 4. Bind the SortedList comparator to the TableView comparator.
@@ -281,6 +289,8 @@ public class LibraryController extends Controller {
         SortedList<Series> sorted_data = new SortedList<>(filtered_data);
         sorted_data.setComparator((s1, s2) -> s1.getTitle().compareToIgnoreCase(s2.getTitle()));
         tableView.setItems(sorted_data);
+
+        int num_columns = (int) columnNumSlider.getValue();
 
         // update gridPane when FX app thread is available
         Platform.runLater(() -> {
@@ -301,6 +311,8 @@ public class LibraryController extends Controller {
                 // create the result container
                 StackPane result_pane = LayoutHelpers.createCoverContainer(flowPane,
                         series.getTitle(), cover, unread_chapters);
+                result_pane.prefWidthProperty().bind(
+                    flowPane.widthProperty().divide(num_columns).subtract(flowPane.getHgap()));
 
                 // create buttons shown on hover
                 VBox button_container = new VBox();
@@ -338,9 +350,8 @@ public class LibraryController extends Controller {
         // recalculate category occurrences for display in the treeView
         library.calculateCategoryOccurrences();
 
-        // Create TreeItem's and set them as children of each other, where
-        // appropriate. The maximum height of the tree is 3 (including the
-        // required "All Series" root).
+        // Create TreeItem's and set them as children of each other, where appropriate. The maximum
+        // height of the tree is 3 (including the required "All Series" root).
         treeView.setRoot(null);
         Category root_category = library.getRootCategory();
         TreeItem<Category> root_item = new TreeItem<>(root_category);
@@ -787,11 +798,13 @@ public class LibraryController extends Controller {
     private void updateLayout() {
         tableView.setVisible(layoutTableButton.isSelected() || layoutCompactButton.isSelected());
         coversContainer.setVisible(layoutCoversButton.isSelected());
+        columnNumSliderContainer.setVisible(layoutCoversButton.isSelected());
 
         setCompact(layoutCompactButton.isSelected());
 
         tableView.setManaged(tableView.isVisible());
         coversContainer.setManaged(coversContainer.isVisible());
+        columnNumSliderContainer.setManaged(columnNumSliderContainer.isVisible());
     }
 
     /**

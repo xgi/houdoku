@@ -216,6 +216,8 @@ public class SearchSeriesController extends Controller {
 
                 // create the result container
                 StackPane result_pane = LayoutHelpers.createCoverContainer(flowPane, title, cover);
+                result_pane.prefWidthProperty().bind(
+                    flowPane.widthProperty().divide(6).subtract(flowPane.getHgap()));
 
                 // create the button shown when the cover is hovered to add the
                 // series to the library, or to go to the series if it is

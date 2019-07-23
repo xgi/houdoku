@@ -79,8 +79,6 @@ public class LayoutHelpers {
     public static StackPane createCoverContainer(FlowPane container, String title,
             ImageView cover) {
         StackPane result_pane = new StackPane();
-        result_pane.prefWidthProperty()
-                .bind(container.widthProperty().divide(6).subtract(container.getHgap()));
         result_pane.setAlignment(Pos.BOTTOM_LEFT);
 
         // create the label for showing the series title

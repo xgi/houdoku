@@ -99,16 +99,22 @@
         </HBox>
     </StackPane>
 
-    <HBox fx:id="layoutBar" alignment="CENTER_RIGHT" spacing="10" styleClass="container">
+    <HBox fx:id="layoutBar" styleClass="container" alignment="CENTER_RIGHT" spacing="80">
         <padding>
             <Insets bottom="5" top="5" right="15"/>
         </padding>
-        <Text text="%layout_prompt" styleClass="bareText"/>
-        <fx:define>
-            <ToggleGroup fx:id="selectLayoutGroup"/>
-        </fx:define>
-        <RadioButton fx:id="layoutTableButton" text="%table" styleClass="bareText" toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
-        <RadioButton fx:id="layoutCoversButton" text="%covers" styleClass="bareText" toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
-        <RadioButton fx:id="layoutCompactButton" text="%compact" styleClass="bareText" toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
+        <HBox fx:id="columnNumSliderContainer" alignment="CENTER_RIGHT" spacing="10">
+            <Label text="%cover_scale_prompt" styleClass="bareText"/>
+            <Slider fx:id="columnNumSlider" minWidth="250" showTickMarks="true" snapToTicks="true" majorTickUnit="1" minorTickCount="0" min="4" max="8" value="6"/>
+        </HBox>
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Label text="%layout_prompt" styleClass="bareText"/>
+            <fx:define>
+                <ToggleGroup fx:id="selectLayoutGroup"/>
+            </fx:define>
+            <RadioButton fx:id="layoutTableButton" text="%table" styleClass="bareText" toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutCoversButton" text="%covers" styleClass="bareText" toggleGroup="$selectLayoutGroup" selected="true" onAction="#updateLayout"/>
+            <RadioButton fx:id="layoutCompactButton" text="%compact" styleClass="bareText" toggleGroup="$selectLayoutGroup" onAction="#updateLayout"/>
+        </HBox>
     </HBox>
 </VBox>
