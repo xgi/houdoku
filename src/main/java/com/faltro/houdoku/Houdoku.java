@@ -1,6 +1,7 @@
 package com.faltro.houdoku;
 
 import com.faltro.houdoku.controller.*;
+import com.faltro.houdoku.plugins.tracker.Kitsu;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -53,6 +54,14 @@ public class Houdoku extends Application {
 
     public static String getAniListSecret() {
         return SECRET_PROPERTIES == null ? null : SECRET_PROPERTIES.getProperty("aniListSecret");
+    }
+
+    public static String getKitsuId() {
+        return SECRET_PROPERTIES == null ? null : SECRET_PROPERTIES.getProperty("kitsuId");
+    }
+
+    public static String getKitsuSecret() {
+        return SECRET_PROPERTIES == null ? null : SECRET_PROPERTIES.getProperty("kitsuSecret");
     }
 
     @Override

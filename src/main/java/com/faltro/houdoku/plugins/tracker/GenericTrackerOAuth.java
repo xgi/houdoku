@@ -65,6 +65,12 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
+    public void generateToken(String username, String password) throws NotImplementedException,
+            IOException {
+        throw new NotImplementedException();
+    }
+
+    @Override
     public String authenticatedUserName()
             throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();

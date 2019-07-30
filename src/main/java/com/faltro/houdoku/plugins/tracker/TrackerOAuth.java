@@ -43,7 +43,7 @@ public interface TrackerOAuth extends Tracker {
     String fullAuthUrl();
 
     /**
-     * Generate the user's access token.
+     * Generate the user's access token using a code.
      * <p>
      * If this method successfully retrieves a valid token, {@link #isAuthenticated()} will be true.
      *
@@ -52,6 +52,18 @@ public interface TrackerOAuth extends Tracker {
      * @throws IOException             an IOException occurred when generating
      */
     void generateToken(String code) throws NotImplementedException, IOException;
+
+    /**
+     * Generate the user's access token using a username/password.
+     * <p>
+     * If this method successfully retrieves a valid token, {@link #isAuthenticated()} will be true.
+     *
+     * @param username the user's username
+     * @param password the user's password
+     * @throws NotImplementedException the operation has not yet been implemented for this tracker
+     * @throws IOException             an IOException occurred when generating
+     */
+    void generateToken(String username, String password) throws NotImplementedException, IOException;
 
     /**
      * Get the user's access token.
