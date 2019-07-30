@@ -12,10 +12,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import okhttp3.FormBody;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+
+import static com.faltro.houdoku.net.Requests.GET;
 import static com.faltro.houdoku.net.Requests.POST;
 
 /**
@@ -66,6 +71,29 @@ public class Kitsu extends GenericTrackerOAuth {
             this.setAccessToken(json_access_token.getAsString());
             this.authenticated = true;
         }
+    }
+
+    @Override
+    public String authenticatedUserName() throws IOException, NotAuthenticatedException {
+        return authenticatedUser().get("attributes").getAsJsonObject().get("name").getAsString();
+    }
+
+    /**
+     * Retrieve a user object for the authenticated user.
+     *
+     * @return a JsonObject with the authenticated user's information
+     * @throws IOException               an IOException occurred when retrieving
+     * @throws NotAuthenticatedException the user is not authenticated
+     */
+    private JsonObject authenticatedUser() throws IOException, NotAuthenticatedException {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("filter[self]", "true");
+        Response response = GET(client, PROTOCOL + "://" + DOMAIN + "/api/edge/users", params);
+        JsonObject json_response =
+                new JsonParser().parse(response.body().string()).getAsJsonObject();
+
+        JsonArray data = json_response.get("data").getAsJsonArray();
+        return data.get(0).getAsJsonObject();
     }
 
     private void setAccessToken(String token) {
