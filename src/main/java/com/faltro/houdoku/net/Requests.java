@@ -6,6 +6,7 @@ import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
+import java.util.Map;
 
 public class Requests {
     /**
@@ -24,6 +25,26 @@ public class Requests {
     public static Response GET(OkHttpClient client, String url) throws IOException {
         Request request =
                 new Request.Builder().url(url).addHeader("User-Agent", USER_AGENT).build();
+        return client.newCall(request).execute();
+    }
+
+    /**
+     * Executes an HTTP GET request on the given URL with query parameters.
+     *
+     * @param url the URL to request
+     * @param params the query parameters to supply
+     * @return the Response of the request
+     * @throws IOException an IOException occurred when making the request
+     */
+    public static Response GET(OkHttpClient client, String url, Map<String,String> params) throws
+            IOException {
+        HttpUrl.Builder httpBuilder = HttpUrl.parse(url).newBuilder();
+        if (params != null) {
+            for (Map.Entry<String, String> param : params.entrySet()) {
+                httpBuilder.addQueryParameter(param.getKey(),param.getValue());
+            }
+        }
+        Request request = new Request.Builder().url(httpBuilder.build()).build();
         return client.newCall(request).execute();
     }
 
