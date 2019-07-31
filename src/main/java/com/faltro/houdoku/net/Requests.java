@@ -64,6 +64,27 @@ public class Requests {
     }
 
     /**
+     * Executes an HTTP POST request on the given URL with custom headers.
+     *
+     * @param url  the URL to request
+     * @param body the body content of the POST request
+     * @param headers a map of key-value headers to add to the request
+     * @return the Response of the request
+     * @throws IOException an IOException occurred when making the request
+     */
+    public static Response POST(OkHttpClient client, String url, RequestBody body, Map<String, String> headers)
+            throws IOException {
+        Request.Builder request_builder = new Request.Builder().url(url).post(body)
+                .addHeader("User-Agent", USER_AGENT);
+
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            request_builder.addHeader(entry.getKey(), entry.getValue());
+        }
+
+        return client.newCall(request_builder.build()).execute();
+    }
+
+    /**
      * Executes an HTTP POST request on the given URL with authorization.
      *
      * @param url           the URL to request
@@ -108,6 +129,22 @@ public class Requests {
         RequestBody body =
                 RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         return POST(client, url, body, authorization);
+    }
+
+    /**
+     * Executes an HTTP POST request on the given URL with a JSON body with custom headers.
+     *
+     * @param url           the URL to request
+     * @param json          the json-formatted body of the request
+     * @param headers a map of key-value headers to add to the request
+     * @return the Response of the request
+     * @throws IOException an IOException occurred when making the request
+     */
+    public static Response POST(OkHttpClient client, String url, String json, Map<String, String> headers)
+            throws IOException {
+        RequestBody body =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        return POST(client, url, body, headers);
     }
 
     /**

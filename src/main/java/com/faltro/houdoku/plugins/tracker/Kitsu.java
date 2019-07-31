@@ -11,11 +11,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +38,9 @@ public class Kitsu extends GenericTrackerOAuth {
     public static final String TOKEN_URL = "/api/oauth/token";
     public static final String CLIENT_ID = Houdoku.getKitsuId();
     public static final String CLIENT_SECRET = Houdoku.getKitsuSecret();
+    private static final String ALGOLIA_URL = "https://AWQO5J657S-dsn.algolia.net/1/indexes/production_media/query";
+    private static final String ALGOLIA_APP_ID = "AWQO5J657S";
+    private static final String ALGOLIA_FILTER = "&facetFilters=%5B%22kind%3Amanga%22%5D&attributesToRetrieve=%5B%22synopsis%22%2C%22canonicalTitle%22%2C%22chapterCount%22%2C%22posterImage%22%2C%22startDate%22%2C%22subtype%22%2C%22endDate%22%2C%20%22id%22%5D";
     private final KitsuInterceptor interceptor = new KitsuInterceptor();
     private final OkHttpClient client =
             new OkHttpClient().newBuilder().addInterceptor(interceptor).build();
@@ -78,6 +77,37 @@ public class Kitsu extends GenericTrackerOAuth {
         return authenticatedUser().get("attributes").getAsJsonObject().get("name").getAsString();
     }
 
+    @Override
+    public String search(String query) throws IOException, NotAuthenticatedException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("X-Algolia-Application-Id", ALGOLIA_APP_ID);
+        headers.put("X-Algolia-API-Key", algoliaKey());
+
+        JsonObject json = new JsonObject();
+        json.addProperty("params", "query=" + query + ALGOLIA_FILTER);
+
+        Response response = POST(client, ALGOLIA_URL, json.toString(), headers);
+        JsonObject json_response =
+                new JsonParser().parse(response.body().string()).getAsJsonObject();
+
+        JsonObject first = json_response.get("hits").getAsJsonArray().get(0).getAsJsonObject();
+        return first.get("id").getAsString();
+    }
+
+    /**
+     * Retrieve the tracker's Algolia key for performing queries.
+     *
+     * @return the Algolia API key
+     * @throws IOException               an IOException occurred when retrieving
+     * @throws NotAuthenticatedException the user is not authenticated
+     */
+    private String algoliaKey() throws IOException, NotAuthenticatedException {
+        Response response = GET(client, PROTOCOL + "://" + DOMAIN + "/api/edge/algolia-keys/media");
+        JsonObject json_response =
+                new JsonParser().parse(response.body().string()).getAsJsonObject();
+        return json_response.get("media").getAsJsonObject().get("key").getAsString();
+    }
+    
     /**
      * Retrieve a user object for the authenticated user.
      *
