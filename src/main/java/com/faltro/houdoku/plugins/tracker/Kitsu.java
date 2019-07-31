@@ -94,6 +94,20 @@ public class Kitsu extends GenericTrackerOAuth {
         return first.get("id").getAsString();
     }
 
+    @Override
+    public String getTitle(String id) throws IOException, NotAuthenticatedException {
+        Response response = GET(client, PROTOCOL + "://" + DOMAIN + "/api/edge/manga/" + id);
+        JsonObject json_response =
+                new JsonParser().parse(response.body().string()).getAsJsonObject();
+
+        if (!json_response.has("errors")) {
+            return json_response.get("data").getAsJsonObject().get("attributes")
+                .getAsJsonObject().get("titles").getAsJsonObject().get("en").getAsString();
+        }
+
+        return "";
+    }
+
     /**
      * Retrieve the tracker's Algolia key for performing queries.
      *
