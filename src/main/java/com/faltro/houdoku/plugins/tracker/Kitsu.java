@@ -18,6 +18,7 @@ import java.util.Map;
 
 import static com.faltro.houdoku.net.Requests.GET;
 import static com.faltro.houdoku.net.Requests.POST;
+import static com.faltro.houdoku.net.Requests.PATCH;
 
 /**
  * This class contains implementation details for processing data from a specific "tracker" - a
@@ -44,6 +45,17 @@ public class Kitsu extends GenericTrackerOAuth {
     private final KitsuInterceptor interceptor = new KitsuInterceptor();
     private final OkHttpClient client =
             new OkHttpClient().newBuilder().addInterceptor(interceptor).build();
+    private final HashMap<Status, String> statuses = new HashMap<Status, String>() {
+        private static final long serialVersionUID = 1L;
+        {
+            put(Status.READING, "current");
+            put(Status.PLANNING, "planned");
+            put(Status.COMPLETED, "completed");
+            put(Status.DROPPED, "dropped");
+            put(Status.PAUSED, "on_hold");
+            put(Status.REREADING, "current");
+        }
+    };
 
     public Kitsu() {
     }
@@ -138,10 +150,61 @@ public class Kitsu extends GenericTrackerOAuth {
                 entry.get("attributes").getAsJsonObject().get("status").getAsString());
             int score = entry.get("attributes").getAsJsonObject().get("ratingTwenty").getAsInt();
 
-            return new Track(id, listId, title, progress, status, score);
+            return new Track(id, listId, title, progress, status, score * 5);
         }
 
         return null;
+    }
+
+    @Override
+    public void update(String id, Track track, boolean safe, boolean can_add)
+            throws IOException, NotAuthenticatedException {
+        if (!this.authenticated) {
+            throw new NotAuthenticatedException();
+        }
+
+        Track track_old = getSeriesInList(id);
+
+        if (track_old == null) {
+            if (!can_add) {
+                // series isn't in the user's list and we aren't allowed to add it, so do nothing
+                return;
+            }
+        }
+
+        Status status = track.getStatus() == null ? track_old.getStatus() : track.getStatus();
+        int progress = track.getProgress() == null ? track_old.getProgress() : track.getProgress();
+        int score = track.getScore() == null ? track_old.getScore() : track.getScore();
+
+        // in safe mode, only update progress if current progress is greater than the desired
+        if (safe) {
+            Integer progress_old = track_old.getProgress();
+            Integer progress_new = track.getProgress();
+            if (progress_old != null && progress_new != null) {
+                if (progress_old > progress_new) {
+                    progress = progress_old;
+                }
+            }
+        }
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/vnd.api+json");
+
+        JsonObject json_attributes = new JsonObject();
+        json_attributes.addProperty("status", statuses.get(status));
+        json_attributes.addProperty("progress", progress);
+        json_attributes.addProperty("ratingTwenty", score / 5);
+
+        JsonObject json_content = new JsonObject();
+        json_content.addProperty("type", "libraryEntries");
+        json_content.addProperty("id", track_old.getListId());
+        json_content.add("attributes", json_attributes);
+
+        JsonObject json = new JsonObject();
+        json.add("data", json_content);
+
+        PATCH(client, PROTOCOL + "://" + DOMAIN + "/api/edge/library-entries/"
+                + track_old.getListId(), json.toString(), headers);
     }
 
     /**
