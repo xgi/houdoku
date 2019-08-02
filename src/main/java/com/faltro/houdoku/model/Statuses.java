@@ -37,8 +37,8 @@ public class Statuses {
         // @formatter:off
         COMPLETED("Completed"),
         DROPPED("Dropped"),
-        PAUSED("Paused"),
-        PLANNING("Planning", "plan to read"),
+        PAUSED("Paused", "on_hold"),
+        PLANNING("Planning", "plan to read", "planned"),
         READING("Reading", "current"),
         REREADING("Rereading", "repeating"),
         UNKNOWN("[unknown]");

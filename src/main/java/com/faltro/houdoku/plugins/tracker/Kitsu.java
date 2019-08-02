@@ -108,6 +108,42 @@ public class Kitsu extends GenericTrackerOAuth {
         return "";
     }
 
+    @Override
+    public Track getSeriesInList(String id) throws IOException, NotAuthenticatedException {
+        if (!this.authenticated) {
+            throw new NotAuthenticatedException();
+        }
+
+        String user_id = authenticatedUser().get("id").getAsString();
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("filter[manga_id]", id);
+        params.put("filter[user_id]", user_id);
+        params.put("include", "manga");
+        Response response = GET(client, PROTOCOL + "://" + DOMAIN + "/api/edge/library-entries",
+                params);
+        JsonObject json_response =
+                new JsonParser().parse(response.body().string()).getAsJsonObject();
+
+        JsonArray data = json_response.get("data").getAsJsonArray();
+        if (data.size() > 0) {
+            JsonObject entry = data.get(0).getAsJsonObject();
+            JsonObject included = 
+                    json_response.get("included").getAsJsonArray().get(0).getAsJsonObject();
+            String listId = entry.get("id").getAsString();
+            String title = included.get("attributes").getAsJsonObject().get("titles")
+                    .getAsJsonObject().get("en").getAsString();
+            int progress = entry.get("attributes").getAsJsonObject().get("progress").getAsInt();
+            Status status = Statuses.get(
+                entry.get("attributes").getAsJsonObject().get("status").getAsString());
+            int score = entry.get("attributes").getAsJsonObject().get("ratingTwenty").getAsInt();
+
+            return new Track(id, listId, title, progress, status, score);
+        }
+
+        return null;
+    }
+
     /**
      * Retrieve the tracker's Algolia key for performing queries.
      *
