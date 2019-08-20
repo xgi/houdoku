@@ -151,7 +151,19 @@ public class Config {
         /**
          * Whether to automatically update the number of chapters read on AniList.
          */
-        TRACKER_ANILIST_UPDATE_AUTO("tracker_anilist_update_auto", false);
+        TRACKER_ANILIST_UPDATE_AUTO("tracker_anilist_update_auto", false),
+        /**
+         * Whether the user is currently authenticated with Kitsu.
+         */
+        TRACKER_KITSU_AUTHENTICATED("tracker_kitsu_authenticated", false),
+        /**
+         * The user's Kitsu authentication token (only makes sense when authenticated).
+         */
+        TRACKER_KITSU_TOKEN("tracker_kitsu_token", ""),
+        /**
+         * Whether to automatically update the number of chapters read on Kitsu.
+         */
+        TRACKER_KITSU_UPDATE_AUTO("tracker_kitsu_update_auto", false);
 
         private final String name;
         private final Object defaultValue;

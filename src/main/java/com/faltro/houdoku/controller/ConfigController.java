@@ -312,7 +312,9 @@ public class ConfigController extends Controller {
         readerKeyToSeries.setText(
                 (String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
         updateAutoCheckAniList.setSelected(
-            (boolean) config.getValue(Config.Field.TRACKER_ANILIST_UPDATE_AUTO));
+                (boolean) config.getValue(Config.Field.TRACKER_ANILIST_UPDATE_AUTO));
+        updateAutoCheckKitsu.setSelected(
+                (boolean) config.getValue(Config.Field.TRACKER_KITSU_UPDATE_AUTO));
         // @formatter:on
 
         // update tracker authentication statuses
@@ -451,6 +453,15 @@ public class ConfigController extends Controller {
                 anilist.getToken() == null ? "" : anilist.getToken());
         config.replaceValue(Config.Field.TRACKER_ANILIST_UPDATE_AUTO,
                 updateAutoCheckAniList.isSelected());
+
+        TrackerOAuth kitsu =
+                (TrackerOAuth) sceneManager.getPluginManager().getTracker(Kitsu.ID);
+        config.replaceValue(Config.Field.TRACKER_KITSU_AUTHENTICATED,
+                kitsu.isAuthenticated());
+        config.replaceValue(Config.Field.TRACKER_KITSU_TOKEN,
+                kitsu.getToken() == null ? "" : kitsu.getToken());
+        config.replaceValue(Config.Field.TRACKER_KITSU_UPDATE_AUTO,
+                updateAutoCheckKitsu.isSelected());
         // @formatter:on
 
         sceneManager.saveConfig();

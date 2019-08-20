@@ -72,6 +72,9 @@ public class PluginManager {
         boolean anilist_authenticated =
                 (boolean) config.getValue(Config.Field.TRACKER_ANILIST_AUTHENTICATED);
         String anilist_token = (String) config.getValue(Config.Field.TRACKER_ANILIST_TOKEN);
+        boolean kitsu_authenticated =
+                (boolean) config.getValue(Config.Field.TRACKER_KITSU_AUTHENTICATED);
+        String kitsu_token = (String) config.getValue(Config.Field.TRACKER_KITSU_TOKEN);
 
         // @formatter:off
         trackers = new ArrayList<>();
@@ -79,7 +82,9 @@ public class PluginManager {
             anilist_authenticated
                 ? new com.faltro.houdoku.plugins.tracker.AniList(anilist_token)
                 : new com.faltro.houdoku.plugins.tracker.AniList(),
-            new Kitsu()
+            kitsu_authenticated
+                ? new Kitsu(kitsu_token)
+                : new Kitsu()
             // add other trackers here
         ));
         // @formatter:on

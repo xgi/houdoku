@@ -207,6 +207,32 @@
                             </VBox>
                         </VBox>
                     </Tab>
+                    <Tab text="Kitsu" closable="false">
+                        <VBox VBox.vgrow="ALWAYS" spacing="15">
+                            <VBox>
+                                <VBox fx:id="kitsuErrorBox" VBox.vgrow="NEVER" visible="false" managed="false">
+                                    <Label maxWidth="${kitsuErrorBox.width}" text="%tracker_no_support" styleClass="failText" wrapText="true"/>
+                                </VBox>
+                                <Text styleClass="bareTextAlt" text="%authentication"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <Label text="Username:" styleClass="bareTextAlt"/>
+                                    <TextField fx:id="usernameFieldKitsu" styleClass="bareTextAlt"/>
+                                    <Label text="Password:" styleClass="bareTextAlt"/>
+                                    <TextField fx:id="passwordFieldKitsu" styleClass="bareTextAlt"/>
+                                    <Button text="%authenticate" onAction="#kitsuGenerateToken"/>
+                                    <HBox alignment="CENTER">
+                                        <Label fx:id="statusKitsu" visible="false" managed="false"/>
+                                    </HBox>
+                                </VBox>
+                            </VBox>
+                            <VBox>
+                                <Text styleClass="bareTextAlt" text="%settings"/>
+                                <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
+                                    <CheckBox fx:id="updateAutoCheckKitsu" text="%auto_update_chapters" styleClass="bareTextAlt"/>
+                                </VBox>
+                            </VBox>
+                        </VBox>
+                    </Tab>
                 </TabPane>
             </VBox>
         </VBox>
