@@ -229,6 +229,10 @@ public class Kitsu extends GenericTrackerOAuth {
      * @throws NotAuthenticatedException the user is not authenticated
      */
     private JsonObject authenticatedUser() throws IOException, NotAuthenticatedException {
+        if (!this.authenticated) {
+            throw new NotAuthenticatedException();
+        }
+        
         HashMap<String, String> params = new HashMap<>();
         params.put("filter[self]", "true");
         Response response = GET(client, PROTOCOL + "://" + DOMAIN + "/api/edge/users", params);

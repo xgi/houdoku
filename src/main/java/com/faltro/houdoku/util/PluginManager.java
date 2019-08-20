@@ -6,6 +6,7 @@ import com.faltro.houdoku.net.Requests;
 import com.faltro.houdoku.plugins.content.*;
 import com.faltro.houdoku.plugins.info.AniList;
 import com.faltro.houdoku.plugins.info.InfoSource;
+import com.faltro.houdoku.plugins.tracker.Kitsu;
 import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
@@ -77,7 +78,8 @@ public class PluginManager {
         trackers.addAll(Arrays.asList(
             anilist_authenticated
                 ? new com.faltro.houdoku.plugins.tracker.AniList(anilist_token)
-                : new com.faltro.houdoku.plugins.tracker.AniList()
+                : new com.faltro.houdoku.plugins.tracker.AniList(),
+            new Kitsu()
             // add other trackers here
         ));
         // @formatter:on

@@ -10,6 +10,8 @@ import java.io.IOException;
 public class GenerateOAuthTokenRunnable extends LoaderRunnable {
     private final TrackerOAuth tracker;
     private final String code;
+    private final String username;
+    private final String password;
     private final ConfigController configController;
 
     /**
@@ -26,13 +28,40 @@ public class GenerateOAuthTokenRunnable extends LoaderRunnable {
         super(name, contentLoader);
         this.tracker = tracker;
         this.code = code;
+        this.username = null;
+        this.password = null;
+        this.configController = configController;
+    }
+
+    /**
+     * Runnable for generating an OAuth token using a username and password.
+     *
+     * @param name             the name of the thread
+     * @param contentLoader    the ContentLoader which created this instance
+     * @param tracker          the TrackerOAuth to load from
+     * @param username         the username given by the user
+     * @param password         the password given by the user
+     * @param configController the ConfigController to update after the token is generated
+     */
+    public GenerateOAuthTokenRunnable(String name, ContentLoader contentLoader,
+            TrackerOAuth tracker, String username, String password,
+            ConfigController configController) {
+        super(name, contentLoader);
+        this.tracker = tracker;
+        this.code = null;
+        this.username = username;
+        this.password = password;
         this.configController = configController;
     }
 
     @Override
     public void run() {
         try {
-            tracker.generateToken(code);
+            if (code != null) {
+                tracker.generateToken(code);
+            } else {
+                tracker.generateToken(username, password);
+            }
 
             // update the displayed authentication status
             try {

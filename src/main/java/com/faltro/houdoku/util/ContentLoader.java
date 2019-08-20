@@ -139,6 +139,23 @@ public class ContentLoader {
     }
 
     /**
+     * Generate an OAuth token using a username and password.
+     *
+     * @param tracker          the TrackerOAuth to load from
+     * @param username         the username given by the user
+     * @param password         the password given by the user
+     * @param configController the ConfigController to update after the token is generated
+     * @see GenerateOAuthTokenRunnable
+     */
+    public void generateOAuthToken(TrackerOAuth tracker, String username, String password,
+            ConfigController configController) {
+        String name = PREFIX_GENERATE_OAUTH_TOKEN + tracker.toString() + "_" + username;
+        LoaderRunnable runnable = new GenerateOAuthTokenRunnable(name, this, tracker, username,
+                password, configController);
+        startThreadSafely(name, runnable);
+    }
+
+    /**
      * Update the number of chapters read on a tracker.
      *
      * @param tracker the Tracker to update

@@ -7,6 +7,7 @@ import com.faltro.houdoku.model.Languages;
 import com.faltro.houdoku.model.Languages.Language;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.tracker.AniList;
+import com.faltro.houdoku.plugins.tracker.Kitsu;
 import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.faltro.houdoku.plugins.tracker.TrackerOAuth;
 import com.faltro.houdoku.util.PluginManager;
@@ -134,6 +135,16 @@ public class ConfigController extends Controller {
     @FXML
     private CheckBox updateAutoCheckAniList;
     @FXML
+    private VBox kitsuErrorBox;
+    @FXML
+    private TextField usernameFieldKitsu;
+    @FXML
+    private TextField passwordFieldKitsu;
+    @FXML
+    private Label statusKitsu;
+    @FXML
+    private CheckBox updateAutoCheckKitsu;
+    @FXML
     private Label statusPlugins;
 
     public ConfigController(SceneManager sceneManager) {
@@ -215,6 +226,11 @@ public class ConfigController extends Controller {
         } else {
             anilistErrorBox.setVisible(true);
             anilistErrorBox.setManaged(true);
+        }
+        TrackerOAuth kitsu = (TrackerOAuth) sceneManager.getPluginManager().getTracker(Kitsu.ID);
+        if (!kitsu.isSupported()) {
+            kitsuErrorBox.setVisible(true);
+            kitsuErrorBox.setManaged(true);
         }
     }
 
@@ -351,6 +367,8 @@ public class ConfigController extends Controller {
             Label label = null;
             if (id == AniList.ID) {
                 label = statusAniList;
+            } else if (id == Kitsu.ID) {
+                label = statusKitsu;
             }
 
             if (label != null) {
@@ -662,5 +680,19 @@ public class ConfigController extends Controller {
                 (TrackerOAuth) sceneManager.getPluginManager().getTracker(AniList.ID);
         String code = tokenFieldAniList.getText();
         sceneManager.getContentLoader().generateOAuthToken(anilist, code, this);
+    }
+
+    /**
+     * Generate the user's access token for the Kitsu tracker.
+     *
+     * @see Kitsu
+     */
+    @FXML
+    private void kitsuGenerateToken() {
+        TrackerOAuth kitsu =
+                (TrackerOAuth) sceneManager.getPluginManager().getTracker(Kitsu.ID);
+        String username = usernameFieldKitsu.getText();
+        String password = passwordFieldKitsu.getText();
+        sceneManager.getContentLoader().generateOAuthToken(kitsu, username, password, this);
     }
 }
