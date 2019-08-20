@@ -207,7 +207,7 @@
                             </VBox>
                         </VBox>
                     </Tab>
-                    <Tab text="Kitsu" closable="false">
+                    <Tab text="%kitsu" closable="false">
                         <VBox VBox.vgrow="ALWAYS" spacing="15">
                             <VBox>
                                 <VBox fx:id="kitsuErrorBox" VBox.vgrow="NEVER" visible="false" managed="false">
@@ -215,9 +215,9 @@
                                 </VBox>
                                 <Text styleClass="bareTextAlt" text="%authentication"/>
                                 <VBox styleClass="configTabWell" VBox.vgrow="NEVER">
-                                    <Label text="Username:" styleClass="bareTextAlt"/>
+                                    <Label text="%username_prompt" styleClass="bareTextAlt"/>
                                     <TextField fx:id="usernameFieldKitsu" styleClass="bareTextAlt"/>
-                                    <Label text="Password:" styleClass="bareTextAlt"/>
+                                    <Label text="%password_prompt" styleClass="bareTextAlt"/>
                                     <TextField fx:id="passwordFieldKitsu" styleClass="bareTextAlt"/>
                                     <Button text="%authenticate" onAction="#kitsuGenerateToken"/>
                                     <HBox alignment="CENTER">
