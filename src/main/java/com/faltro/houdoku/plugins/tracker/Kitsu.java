@@ -114,7 +114,7 @@ public class Kitsu extends GenericTrackerOAuth {
 
         if (!json_response.has("errors")) {
             return json_response.get("data").getAsJsonObject().get("attributes")
-                .getAsJsonObject().get("titles").getAsJsonObject().get("en").getAsString();
+                .getAsJsonObject().get("canonicalTitle").getAsString();
         }
 
         return "";
