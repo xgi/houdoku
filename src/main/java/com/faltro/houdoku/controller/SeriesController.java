@@ -13,6 +13,7 @@ import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.plugins.tracker.AniList;
+import com.faltro.houdoku.plugins.tracker.Kitsu;
 import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.LayoutHelpers;
@@ -180,6 +181,18 @@ public class SeriesController extends Controller {
     private ComboBox<String> anilistStatuses;
     @FXML
     private ComboBox<Integer> anilistScores;
+    @FXML
+    private Tab kitsuTab;
+    @FXML
+    private TextField kitsuReadAmount;
+    @FXML
+    private Text kitsuTitle;
+    @FXML
+    private TextField kitsuId;
+    @FXML
+    private ComboBox<String> kitsuStatuses;
+    @FXML
+    private ComboBox<Integer> kitsuScores;
 
     private Series series;
     private Library library;
@@ -350,12 +363,24 @@ public class SeriesController extends Controller {
                 anilistReadAmount.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
+        kitsuReadAmount.textProperty().addListener((observableValue, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                kitsuReadAmount.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
 
         // add KeyEvent handlers for plugin input fields
         anilistReadAmount.setOnKeyPressed(keyEvent -> {
             if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
                 if (keyEvent.getCode() == KeyCode.ENTER) {
                     anilistUpdate();
+                }
+            }
+        });
+        kitsuReadAmount.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED) {
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    kitsuUpdate();
                 }
             }
         });
@@ -408,10 +433,16 @@ public class SeriesController extends Controller {
 
         // display and update tracker tabs if authenticated
         Tracker anilist = sceneManager.getPluginManager().getTracker(AniList.ID);
+        Tracker kitsu = sceneManager.getPluginManager().getTracker(Kitsu.ID);
 
         anilistTab.setDisable(!anilist.isAuthenticated());
         if (anilist.isAuthenticated()) {
             sceneManager.getContentLoader().loadSeriesTracker(anilist, series, this);
+        }
+
+        kitsuTab.setDisable(!kitsu.isAuthenticated());
+        if (kitsu.isAuthenticated()) {
+            sceneManager.getContentLoader().loadSeriesTracker(kitsu, series, this);
         }
     }
 
@@ -658,7 +689,18 @@ public class SeriesController extends Controller {
                         anilistStatuses.getSelectionModel().select(str);
                     }
                 }
+            } else if (tracker_id == Kitsu.ID) {
+                kitsuTitle.setText(title);
+                kitsuId.setText(series_id);
+                kitsuReadAmount.setText(Integer.toString(read_chapters));
+                kitsuScores.getSelectionModel().select(Math.round(score / 10));;
 
+                // find matching item in status comboxbox to update
+                for (String str : kitsuStatuses.getItems()) {
+                    if (Statuses.get(str) == status) {
+                        kitsuStatuses.getSelectionModel().select(str);
+                    }
+                }
             }
         });
     }
@@ -681,6 +723,23 @@ public class SeriesController extends Controller {
     }
 
     /**
+     * Send details in the Kitsu tab to the tracker.
+     */
+    @FXML
+    private void kitsuUpdate() {
+        String series_id = kitsuId.getText();
+        int chapters_read = Integer.parseInt(kitsuReadAmount.getText());
+        Status status = Statuses.get(kitsuStatuses.getSelectionModel().getSelectedItem());
+        int score = kitsuScores.getSelectionModel().getSelectedItem() * 10;
+
+        series.updateTrackerId(Kitsu.ID, series_id);
+        Tracker tracker = sceneManager.getPluginManager().getTracker(Kitsu.ID);
+
+        Track track = new Track(series_id, null, null, chapters_read, status, score);
+        sceneManager.getContentLoader().updateSeriesTracker(tracker, series_id, track, false, true);
+    }
+
+    /**
      * Reload details in the AniList tab from the tracker.
      */
     @FXML
@@ -689,6 +748,18 @@ public class SeriesController extends Controller {
         series.removeTrackerId(AniList.ID);
 
         Tracker tracker = sceneManager.getPluginManager().getTracker(AniList.ID);
+        sceneManager.getContentLoader().loadSeriesTracker(tracker, series, this);
+    }
+
+    /**
+     * Reload details in the Kitsu tab from the tracker.
+     */
+    @FXML
+    private void kitsuReload() {
+        // remove given id of the series in the tracker
+        series.removeTrackerId(Kitsu.ID);
+
+        Tracker tracker = sceneManager.getPluginManager().getTracker(Kitsu.ID);
         sceneManager.getContentLoader().loadSeriesTracker(tracker, series, this);
     }
 

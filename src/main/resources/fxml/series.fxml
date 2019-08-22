@@ -172,6 +172,63 @@
                         </VBox>
                     </ScrollPane>
                 </Tab>
+                <Tab text="%kitsu" fx:id="kitsuTab" closable="false" disable="true">
+                    <ScrollPane styleClass="pluginScrollPane">
+                        <VBox styleClass="pluginContainer" spacing="8" alignment="CENTER" VBox.vgrow="ALWAYS">
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Text styleClass="metadataLabel" text="%title_prompt"/>
+                                <Text styleClass="bareTextAlt" fx:id="kitsuTitle"/>
+                                <Text styleClass="metadataLabel" text="  /  "/>
+                                <Text styleClass="metadataLabel" text="%id_prompt"/>
+                                <TextField fx:id="kitsuId" styleClass="bareTextAlt" maxWidth="90"/>
+                            </HBox>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Text styleClass="metadataLabel" text="%chapters_read"/>
+                                <TextField fx:id="kitsuReadAmount" styleClass="bareTextAlt" maxWidth="70" alignment="CENTER_RIGHT"/>
+                                <Text styleClass="metadataLabel" text="  /  "/>
+                                <Text styleClass="metadataLabel" text="%status_prompt"/>
+                                <ComboBox fx:id="kitsuStatuses">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="Reading"/>
+                                            <String fx:value="Planning"/>
+                                            <String fx:value="Completed"/>
+                                            <String fx:value="Paused"/>
+                                            <String fx:value="Dropped"/>
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
+                            </HBox>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <Text styleClass="metadataLabel" text="%score"/>
+                                <ComboBox fx:id="kitsuScores">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <Integer fx:value="0"/>
+                                            <Integer fx:value="1"/>
+                                            <Integer fx:value="2"/>
+                                            <Integer fx:value="3"/>
+                                            <Integer fx:value="4"/>
+                                            <Integer fx:value="5"/>
+                                            <Integer fx:value="6"/>
+                                            <Integer fx:value="7"/>
+                                            <Integer fx:value="8"/>
+                                            <Integer fx:value="9"/>
+                                            <Integer fx:value="10"/>
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
+                            </HBox>
+                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                <padding>
+                                    <Insets top="15"/>
+                                </padding>
+                                <Button text="%update_details" onAction="#kitsuUpdate"/>
+                                <Button text="%reload_details" onAction="#kitsuReload"/>
+                            </HBox>
+                        </VBox>
+                    </ScrollPane>
+                </Tab>
             </TabPane>
             <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
         </StackPane>
