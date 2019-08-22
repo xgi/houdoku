@@ -126,11 +126,9 @@ public class Kitsu extends GenericTrackerOAuth {
             throw new NotAuthenticatedException();
         }
 
-        String user_id = authenticatedUser().get("id").getAsString();
-
         HashMap<String, String> params = new HashMap<>();
         params.put("filter[manga_id]", id);
-        params.put("filter[user_id]", user_id);
+        params.put("filter[user_id]", authenticatedUser().get("id").getAsString());
         params.put("include", "manga");
         Response response = GET(client, PROTOCOL + "://" + DOMAIN + "/api/edge/library-entries",
                 params);
@@ -143,14 +141,15 @@ public class Kitsu extends GenericTrackerOAuth {
             JsonObject included = 
                     json_response.get("included").getAsJsonArray().get(0).getAsJsonObject();
             String listId = entry.get("id").getAsString();
-            String title = included.get("attributes").getAsJsonObject().get("titles")
-                    .getAsJsonObject().get("en").getAsString();
+            String title = included.get("attributes").getAsJsonObject()
+                    .get("canonicalTitle").getAsString();
             int progress = entry.get("attributes").getAsJsonObject().get("progress").getAsInt();
             Status status = Statuses.get(
                 entry.get("attributes").getAsJsonObject().get("status").getAsString());
-            int score = entry.get("attributes").getAsJsonObject().get("ratingTwenty").getAsInt();
+            JsonElement rating = entry.get("attributes").getAsJsonObject().get("ratingTwenty");
+            int score = rating.isJsonNull() ? 0 : rating.getAsInt() * 5;
 
-            return new Track(id, listId, title, progress, status, score * 5);
+            return new Track(id, listId, title, progress, status, score);
         }
 
         return null;
@@ -170,6 +169,10 @@ public class Kitsu extends GenericTrackerOAuth {
                 // series isn't in the user's list and we aren't allowed to add it, so do nothing
                 return;
             }
+            // The series doesn't exist in the list, so add it. That method doesn't set any
+            // properties (i.e. progress or status), so we'll continue with this method to do an
+            // update request as well
+            track_old = add(id);
         }
 
         Status status = track.getStatus() == null ? track_old.getStatus() : track.getStatus();
@@ -241,6 +244,54 @@ public class Kitsu extends GenericTrackerOAuth {
 
         JsonArray data = json_response.get("data").getAsJsonArray();
         return data.get(0).getAsJsonObject();
+    }
+
+    /**
+     * Add an entry for a series to the user's list.
+     * 
+     * This method should only be run if the series is known to not exist in the user's list.
+     *
+     * @param id the series id
+     * @return a Track instance for the series in the user's list
+     * @throws NotImplementedException   the operation has not yet been implemented for this tracker
+     * @throws NotAuthenticatedException the user is not authenticated
+     * @throws IOException               an IOException occurred when updating
+     */
+    private Track add(String id) throws NotAuthenticatedException, IOException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/vnd.api+json");
+
+        JsonObject json_user_data = new JsonObject();
+        json_user_data.addProperty("id", authenticatedUser().get("id").getAsString());
+        json_user_data.addProperty("type", "users");
+        JsonObject json_user = new JsonObject();
+        json_user.add("data", json_user_data);
+
+        JsonObject json_media_data = new JsonObject();
+        json_media_data.addProperty("id", id);
+        json_media_data.addProperty("type", "manga");
+        JsonObject json_media = new JsonObject();
+        json_media.add("data", json_media_data);
+
+        JsonObject json_attributes = new JsonObject();
+        json_attributes.addProperty("status", statuses.get(Statuses.Status.PLANNING));
+        json_attributes.addProperty("progress", 0);
+
+        JsonObject json_relationships = new JsonObject();
+        json_relationships.add("user", json_user);
+        json_relationships.add("media", json_media);
+
+        JsonObject json_content = new JsonObject();
+        json_content.addProperty("type", "libraryEntries");
+        json_content.add("attributes", json_attributes);
+        json_content.add("relationships", json_relationships);
+
+        JsonObject json = new JsonObject();
+        json.add("data", json_content);
+
+        POST(client, PROTOCOL + "://" + DOMAIN + "/api/edge/library-entries", json.toString(),
+                headers, MediaType.parse("application/vnd.api+json; charset=utf-8"));
+        return getSeriesInList(id);
     }
 
     private void setAccessToken(String token) {
