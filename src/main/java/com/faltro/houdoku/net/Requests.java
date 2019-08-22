@@ -103,14 +103,31 @@ public class Requests {
      *
      * @param url           the URL to request
      * @param json          the json-formatted body of the request
-     * @param headers a map of key-value headers to add to the request
+     * @param headers       a map of key-value headers to add to the request
      * @return the Response of the request
      * @throws IOException an IOException occurred when making the request
      */
-    public static Response POST(OkHttpClient client, String url, String json, Map<String, String> headers)
-            throws IOException {
+    public static Response POST(OkHttpClient client, String url, String json,
+            Map<String, String> headers) throws IOException {
         RequestBody body =
                 RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        return POST(client, url, body, headers);
+    }
+
+    /**
+     * Executes an HTTP POST request on the given URL with a JSON body with custom headers.
+     *
+     * @param url           the URL to request
+     * @param json          the json-formatted body of the request
+     * @param headers       a map of key-value headers to add to the request
+     * @param mediaType     the media type of the content; probably made with MediaType.parse
+     * @return the Response of the request
+     * @throws IOException an IOException occurred when making the request
+     */
+    public static Response POST(OkHttpClient client, String url, String json,
+            Map<String, String> headers, MediaType mediaType) throws IOException {
+        RequestBody body =
+                RequestBody.create(mediaType, json);
         return POST(client, url, body, headers);
     }
 
