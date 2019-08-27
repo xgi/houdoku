@@ -169,6 +169,23 @@ public class Requests {
     }
 
     /**
+     * Executes an HTTP PATCH request on the given URL with a JSON body with custom headers.
+     *
+     * @param url           the URL to request
+     * @param json          the json-formatted body of the request
+     * @param headers       a map of key-value headers to add to the request
+     * @param mediaType     the media type of the content; probably made with MediaType.parse
+     * @return the Response of the request
+     * @throws IOException an IOException occurred when making the request
+     */
+    public static Response PATCH(OkHttpClient client, String url, String json,
+            Map<String, String> headers, MediaType mediaType) throws IOException {
+        RequestBody body =
+                RequestBody.create(mediaType, json);
+        return PATCH(client, url, body, headers);
+    }
+
+    /**
      * Parse the given okhttp3.Response as a Jsoup.Document.
      *
      * @param response the Response to parse

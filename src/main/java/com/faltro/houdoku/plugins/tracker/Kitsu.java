@@ -207,7 +207,8 @@ public class Kitsu extends GenericTrackerOAuth {
         json.add("data", json_content);
 
         PATCH(client, PROTOCOL + "://" + DOMAIN + "/api/edge/library-entries/"
-                + track_old.getListId(), json.toString(), headers);
+                + track_old.getListId(), json.toString(), headers,
+                MediaType.parse("application/vnd.api+json; charset=utf-8"));
     }
 
     /**
