@@ -5,7 +5,7 @@
     <name>Houdoku</name>
     <description>Houdoku is a manga reader and library manager for the desktop.</description>
     <url>https://github.com/xgi/houdoku</url>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <distributionManagement>
         <repository>
             <id>jitpack.io</id>
