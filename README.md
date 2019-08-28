@@ -79,11 +79,9 @@ $ mvn package [-DskipTests] && \
 
 ## Connecting to external clients
 
-**This section is only for developers**. Application credentials for external services are bundled
-in the downloads provided.
-
-Support for some services, such as accessing the AniList API, requires registering external clients.
-Houdoku can run without enabling these services, but functionality may be limited.
+Developers who want to test support for some 3rd-party services, such as the AniList API, will need
+to register external clients. Houdoku can run without enabling these services, but functionality
+may be limited.
 
 Credentials are stored in a properties file. See the
 [secret.properties template](https://github.com/xgi/houdoku/blob/master/src/main/resources/secret.properties.template) for instructions on
