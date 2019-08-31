@@ -264,7 +264,7 @@
                 </VBox>
             </VBox>
         </VBox>
-        <HBox fx:id="coverLargeContainer" alignment="CENTER">
+        <HBox fx:id="coverLargeContainer" alignment="CENTER" visible="false" managed="false">
             <ImageView fx:id="coverLargeImageView" preserveRatio="true"/>
         </HBox>
     </StackPane>

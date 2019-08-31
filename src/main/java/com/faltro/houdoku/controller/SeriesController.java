@@ -344,9 +344,18 @@ public class SeriesController extends Controller {
         coverImageView.setTranslateX(COVER_OFFSET_X);
         coverImageView.setEffect(LayoutHelpers.COVER_ADJUST_DEFAULT);
 
-        // apply adjustments to the large cover preview
+        // apply adjustments and add actions to the large cover preview
         coverLargeImageView.imageProperty().bind(coverImageView.imageProperty());
-        contentContainer.setEffect(LayoutHelpers.BACKGROUND_ADJUST);
+        bannerContainer.setOnMousePressed(event -> {
+            contentContainer.setEffect(LayoutHelpers.BACKGROUND_ADJUST);
+            coverLargeContainer.setVisible(true);
+            coverLargeContainer.setManaged(true);
+        });
+        coverLargeContainer.setOnMousePressed(event -> {
+            contentContainer.setEffect(null);
+            coverLargeContainer.setVisible(false);
+            coverLargeContainer.setManaged(false);
+        });
 
         textTitle.setTranslateX(TITLE_OFFSET_X);
         textTitle.setTranslateY(-COVER_OFFSET_Y + TITLE_OFFSET_Y);
