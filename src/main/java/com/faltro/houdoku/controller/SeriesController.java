@@ -120,6 +120,12 @@ public class SeriesController extends Controller {
     @FXML
     private ImageView coverImageView;
     @FXML
+    private ImageView coverLargeImageView;
+    @FXML
+    private VBox contentContainer;
+    @FXML
+    private HBox coverLargeContainer;
+    @FXML
     private Button toLibraryButton;
     @FXML
     private Text textTitle;
@@ -337,6 +343,10 @@ public class SeriesController extends Controller {
         coverImageView.setFitHeight(COVER_HEIGHT);
         coverImageView.setTranslateX(COVER_OFFSET_X);
         coverImageView.setEffect(LayoutHelpers.COVER_ADJUST_DEFAULT);
+
+        // apply adjustments to the large cover preview
+        coverLargeImageView.imageProperty().bind(coverImageView.imageProperty());
+        contentContainer.setEffect(LayoutHelpers.BACKGROUND_ADJUST);
 
         textTitle.setTranslateX(TITLE_OFFSET_X);
         textTitle.setTranslateY(-COVER_OFFSET_Y + TITLE_OFFSET_Y);

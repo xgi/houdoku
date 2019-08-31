@@ -21,8 +21,8 @@
         </Menu>
     </MenuBar>
 
-    <StackPane fx:id="contentContainer">
-        <VBox alignment="TOP_CENTER">
+    <StackPane>
+        <VBox fx:id="contentContainer" alignment="TOP_CENTER">
             <StackPane fx:id="bannerContainer" styleClass="containerAlt">
                 <HBox alignment="TOP_CENTER">
                     <ImageView fx:id="bannerImageView" preserveRatio="true"/>
@@ -264,8 +264,8 @@
                 </VBox>
             </VBox>
         </VBox>
-        <VBox managed="false" visible="false">
-            <Button text=""/>
-        </VBox>
+        <HBox fx:id="coverLargeContainer" alignment="CENTER">
+            <ImageView fx:id="coverLargeImageView" preserveRatio="true"/>
+        </HBox>
     </StackPane>
 </VBox>

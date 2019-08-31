@@ -20,6 +20,10 @@ public class LayoutHelpers {
      */
     public static final ColorAdjust BANNER_ADJUST = new ColorAdjust(0, 0, -0.5, 0);
     /**
+     * ColorAdjust for stacked content in the background.
+     */
+    public static final ColorAdjust BACKGROUND_ADJUST = new ColorAdjust(0, 0, -0.75, 0);
+    /**
      * ColorAdjust for non-hovered cover images.
      */
     public static final ColorAdjust COVER_ADJUST_DEFAULT = new ColorAdjust(0, 0, -0.2, 0);
