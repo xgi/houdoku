@@ -52,7 +52,9 @@
 
     <StackPane>
         <ScrollPane fx:id="imageScrollPane" styleClass="container">
-            <ImageView fx:id="imageViewSingle" preserveRatio="true"/>
+            <StackPane fx:id="contentContainer">
+                <ImageView fx:id="imageViewSingle" preserveRatio="true"/>
+            </StackPane>
         </ScrollPane>
         <ProgressIndicator fx:id="imageProgressIndicator" visible="false"/>
         <HBox alignment="CENTER" visible="false" managed="false">
