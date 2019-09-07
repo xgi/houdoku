@@ -39,7 +39,7 @@ public class ReaderController extends Controller {
     @FXML
     public Text errorText;
     @FXML
-    private ImageView imageView;
+    private ImageView imageViewSingle;
     @FXML
     private VBox container;
     @FXML
@@ -102,7 +102,7 @@ public class ReaderController extends Controller {
         // Ideally, we would set the imageView's x position like so:
         // @formatter:off
         //
-        //   imageView.translateXProperty().bind(
+        //   imageViewSingle.translateXProperty().bind(
         //     imageScrollPane.widthProperty()
         //       .subtract(imageView.fitWidthProperty())
         //       .divide(2)
@@ -114,7 +114,7 @@ public class ReaderController extends Controller {
         //
         // To get around this, I first considered getting the imageView's
         // boundsInParent. This allowed me to get the "real" width of the
-        // imageView. However, since imageView.boundsInParentProperty is a
+        // imageView. However, since imageViewSingle.boundsInParentProperty is a
         // <Bounds> property and not a <Double> property, I could not bind it
         // to the imageView's translateX property.
         //
@@ -128,7 +128,7 @@ public class ReaderController extends Controller {
         imageScrollPane.minWidthProperty().bind(stage.widthProperty());
 
         // increase scroll distance on image
-        imageView.setOnScroll(e -> {
+        imageViewSingle.setOnScroll(e -> {
             // adapted from https://stackoverflow.com/a/40993755
             double deltaY = e.getDeltaY();
             double width = imageScrollPane.getContent().getBoundsInLocal().getWidth();
@@ -149,7 +149,7 @@ public class ReaderController extends Controller {
         keyEventHandler = newKeyEventHandler();
         sceneManager.getStage().getScene().addEventHandler(KeyEvent.ANY, keyEventHandler);
         applyImageFilter();
-        imageView.requestFocus();
+        imageViewSingle.requestFocus();
         loadCurrentPage();
     }
 
@@ -296,7 +296,7 @@ public class ReaderController extends Controller {
      * @see #imageView
      */
     public void setImage(Image image) {
-        Platform.runLater(() -> imageView.setImage(image));
+        Platform.runLater(() -> imageViewSingle.setImage(image));
     }
 
     /**
@@ -335,10 +335,10 @@ public class ReaderController extends Controller {
      * Center the imageView on the stage.
      */
     private void centerImageView() {
-        imageView.setTranslateX(
-                (imageScrollPane.getWidth() - imageView.getBoundsInParent().getWidth()) / 2);
-        if (imageView.getTranslateX() < 0 || fitWidthRadio.isSelected()) {
-            imageView.setTranslateX(0);
+        imageViewSingle.setTranslateX(
+                (imageScrollPane.getWidth() - imageViewSingle.getBoundsInParent().getWidth()) / 2);
+        if (imageViewSingle.getTranslateX() < 0 || fitWidthRadio.isSelected()) {
+            imageViewSingle.setTranslateX(0);
         }
     }
 
@@ -511,11 +511,11 @@ public class ReaderController extends Controller {
                         (double) config.getValue(Config.Field.PAGE_FILTER_BRIGHTNESS));
             }
         }
-        imageView.setEffect(filter_adjust);
+        imageViewSingle.setEffect(filter_adjust);
     }
 
     /**
-     * Update the imageView fit properties corresponding to the selected style.
+     * Update the imageViewSingle fit properties corresponding to the selected style.
      *
      * @see #imageView
      * @see #fitAutoRadio
@@ -527,23 +527,23 @@ public class ReaderController extends Controller {
     private void updateImageViewFit() {
         if (fitAutoRadio.isSelected()) {
             imageViewListener = (o, oldValue, newValue) -> {
-                imageView.fitWidthProperty().unbind();
-                imageView.fitHeightProperty().unbind();
-                imageView.fitHeightProperty()
+                imageViewSingle.fitWidthProperty().unbind();
+                imageViewSingle.fitHeightProperty().unbind();
+                imageViewSingle.fitHeightProperty()
                         .bind(container.heightProperty().subtract(menuBar.heightProperty())
                                 .subtract(navContainer.minHeightProperty()));
-                if (imageView.getBoundsInParent().getWidth() > container.getWidth()) {
-                    imageView.fitHeightProperty().unbind();
-                    imageView.fitWidthProperty().bind(container.widthProperty());
+                if (imageViewSingle.getBoundsInParent().getWidth() > container.getWidth()) {
+                    imageViewSingle.fitHeightProperty().unbind();
+                    imageViewSingle.fitWidthProperty().bind(container.widthProperty());
                 }
 
                 centerImageView();
             };
         } else if (fitHeightRadio.isSelected()) {
             imageViewListener = (o, oldValue, newValue) -> {
-                imageView.fitWidthProperty().unbind();
-                imageView.setFitWidth(-1);
-                imageView.fitHeightProperty()
+                imageViewSingle.fitWidthProperty().unbind();
+                imageViewSingle.setFitWidth(-1);
+                imageViewSingle.fitHeightProperty()
                         .bind(container.heightProperty().subtract(menuBar.heightProperty())
                                 .subtract(navContainer.minHeightProperty()));
 
@@ -551,23 +551,23 @@ public class ReaderController extends Controller {
             };
         } else if (fitWidthRadio.isSelected()) {
             imageViewListener = (o, oldValue, newValue) -> {
-                imageView.fitHeightProperty().unbind();
-                imageView.setPreserveRatio(false);
-                imageView.setFitHeight(-1);
-                imageView.setPreserveRatio(true);
-                imageView.fitWidthProperty()
+                imageViewSingle.fitHeightProperty().unbind();
+                imageViewSingle.setPreserveRatio(false);
+                imageViewSingle.setFitHeight(-1);
+                imageViewSingle.setPreserveRatio(true);
+                imageViewSingle.fitWidthProperty()
                         .bind(container.widthProperty().subtract(SceneManager.VSCROLLBAR_WIDTH));
 
                 centerImageView();
             };
         } else if (actualSizeRadio.isSelected()) {
             imageViewListener = (o, oldValue, newValue) -> {
-                imageView.fitHeightProperty().unbind();
-                imageView.fitWidthProperty().unbind();
-                imageView.setFitHeight(-1);
-                imageView.fitWidthProperty()
-                        .bind(imageView.getImage() == null ? new SimpleDoubleProperty(0)
-                                : imageView.getImage().widthProperty());
+                imageViewSingle.fitHeightProperty().unbind();
+                imageViewSingle.fitWidthProperty().unbind();
+                imageViewSingle.setFitHeight(-1);
+                imageViewSingle.fitWidthProperty()
+                        .bind(imageViewSingle.getImage() == null ? new SimpleDoubleProperty(0)
+                                : imageViewSingle.getImage().widthProperty());
 
                 centerImageView();
             };
@@ -577,7 +577,7 @@ public class ReaderController extends Controller {
         // passed arguments don't matter
         container.heightProperty().addListener(imageViewListener);
         container.widthProperty().addListener(imageViewListener);
-        imageView.imageProperty().addListener(imageViewListener);
+        imageViewSingle.imageProperty().addListener(imageViewListener);
         // hack to force listener operation to run
         // we wouldn't be able to do this if the listener function depended
         // on the given arguments
