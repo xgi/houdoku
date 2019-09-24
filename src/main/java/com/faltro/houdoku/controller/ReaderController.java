@@ -69,6 +69,8 @@ public class ReaderController extends Controller {
     @FXML
     private CheckMenuItem nightModeItem;
     @FXML
+    private CheckMenuItem fullscreenItem;
+    @FXML
     private RadioMenuItem fitAutoRadio;
     @FXML
     private RadioMenuItem fitHeightRadio;
@@ -201,8 +203,6 @@ public class ReaderController extends Controller {
         KeyCode keyToSeries =
                 KeyCode.valueOf((String) config.getValue(Config.Field.READER_KEY_TO_SERIES));
 
-
-
         return event -> {
             // only handle KeyEvent.KEY_RELEASE -- not ideal, since this may
             // make the client appear slower to respond, but most non-letter
@@ -239,6 +239,8 @@ public class ReaderController extends Controller {
                         lastPage();
                     } else if (event.getCode() == keyToSeries) {
                         goToSeries();
+                    } else if (event.getCode() == KeyCode.ESCAPE) {
+                        setFullscreen(false);
                     }
                 }
                 event.consume();
@@ -483,6 +485,27 @@ public class ReaderController extends Controller {
 
         // ensure the page image is sized appropriately
         updateImageViewFit();
+    }
+
+    /**
+     * Toggle whether the stage is set as fullscreen.
+     */
+    @FXML
+    private void toggleFullscreen() {
+        boolean was_fullscreen = sceneManager.getStage().isFullScreen();
+        setFullscreen(!was_fullscreen);
+    }
+
+    /**
+     * Set the fullscreen state.
+     * 
+     * @param fullscreen whether fullscreen should be enabled
+     */
+    private void setFullscreen(boolean fullscreen) {
+        fullscreenItem.setSelected(fullscreen);
+        sceneManager.getStage().setFullScreen(fullscreen);
+        menuBar.setVisible(!fullscreen);
+        menuBar.setManaged(!fullscreen);
     }
 
     /**

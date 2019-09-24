@@ -25,6 +25,7 @@
                 <RadioMenuItem fx:id="fitWidthRadio" text="%fit_width" toggleGroup="$zoomTypeGroup" onAction="#updateImageViewFit"/>
                 <RadioMenuItem fx:id="actualSizeRadio" text="%actual_size" toggleGroup="$zoomTypeGroup" onAction="#updateImageViewFit"/>
             </Menu>
+            <CheckMenuItem fx:id="fullscreenItem" text="%fullscreen" onAction="#toggleFullscreen"/>
         </Menu>
     </MenuBar>
 
