@@ -377,7 +377,7 @@ public class ConfigController extends Controller {
                 label.setText(text);
                 label.setVisible(true);
                 label.setManaged(true);
-                label.getStyleClass().removeAll();
+                label.getStyleClass().clear();
                 label.getStyleClass().add(success ? "successText" : "failText");
             }
         });

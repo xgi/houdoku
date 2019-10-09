@@ -65,10 +65,16 @@ public class GenerateOAuthTokenRunnable extends LoaderRunnable {
 
             // update the displayed authentication status
             try {
-                String text = String.format("You are authenticated as: %s",
-                        tracker.authenticatedUserName());
-                configController.updateTrackerStatus(tracker.getClass().getField("ID").getInt(null),
-                        true, text);
+                if (tracker.isAuthenticated()) {
+                    String text = String.format("You are authenticated as: %s",
+                            tracker.authenticatedUserName());
+                    configController.updateTrackerStatus(
+                        tracker.getClass().getField("ID").getInt(null), true, text);
+                } else {
+                    configController.updateTrackerStatus(
+                        tracker.getClass().getField("ID").getInt(null), false,
+                        "Failed to authenticate.");
+                }
             } catch (NoSuchFieldException | IllegalAccessException | NotAuthenticatedException e) {
                 e.printStackTrace();
             }
