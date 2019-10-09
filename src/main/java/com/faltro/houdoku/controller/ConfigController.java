@@ -689,6 +689,11 @@ public class ConfigController extends Controller {
     private void anilistGenerateToken() {
         TrackerOAuth anilist =
                 (TrackerOAuth) sceneManager.getPluginManager().getTracker(AniList.ID);
+        try {
+            anilist.deauthenticate();
+        } catch (NotImplementedException e) {
+            e.printStackTrace();
+        }
         String code = tokenFieldAniList.getText();
         sceneManager.getContentLoader().generateOAuthToken(anilist, code, this);
     }
@@ -702,6 +707,11 @@ public class ConfigController extends Controller {
     private void kitsuGenerateToken() {
         TrackerOAuth kitsu =
                 (TrackerOAuth) sceneManager.getPluginManager().getTracker(Kitsu.ID);
+        try {
+            kitsu.deauthenticate();
+        } catch (NotImplementedException e) {
+            e.printStackTrace();
+        }
         String username = usernameFieldKitsu.getText();
         String password = passwordFieldKitsu.getText();
         sceneManager.getContentLoader().generateOAuthToken(kitsu, username, password, this);

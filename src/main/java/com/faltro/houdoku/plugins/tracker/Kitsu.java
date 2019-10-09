@@ -211,6 +211,12 @@ public class Kitsu extends GenericTrackerOAuth {
                 MediaType.parse("application/vnd.api+json; charset=utf-8"));
     }
 
+    @Override
+    public void deauthenticate() {
+        this.authenticated = false;
+        this.setAccessToken(null);
+    }
+
     /**
      * Retrieve the tracker's Algolia key for performing queries.
      *

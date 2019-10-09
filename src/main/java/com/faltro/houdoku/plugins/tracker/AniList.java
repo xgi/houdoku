@@ -3,6 +3,7 @@ package com.faltro.houdoku.plugins.tracker;
 import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
+import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Statuses;
 import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.model.Statuses.Status;
@@ -235,6 +236,12 @@ public class AniList extends GenericTrackerOAuth {
                 new String[] {"progress", String.valueOf(progress)},
                 new String[] {"status", statuses.get(status)},
                 new String[] {"scoreRaw", String.valueOf(score)});
+    }
+
+    @Override
+    public void deauthenticate() {
+        this.authenticated = false;
+        this.setAccessToken(null);
     }
 
     /**
