@@ -139,7 +139,7 @@ public class ConfigController extends Controller {
     @FXML
     private TextField usernameFieldKitsu;
     @FXML
-    private TextField passwordFieldKitsu;
+    private PasswordField passwordFieldKitsu;
     @FXML
     private Label statusKitsu;
     @FXML
