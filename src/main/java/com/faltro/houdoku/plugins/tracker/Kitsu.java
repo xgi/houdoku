@@ -242,9 +242,14 @@ public class Kitsu extends GenericTrackerOAuth {
         Response response = GET(client, PROTOCOL + "://" + DOMAIN + "/api/edge/users", params);
         JsonObject json_response =
                 new JsonParser().parse(response.body().string()).getAsJsonObject();
+        JsonElement data = json_response.get("data");
 
-        JsonArray data = json_response.get("data").getAsJsonArray();
-        return data.get(0).getAsJsonObject();
+        if (data == null) {
+            this.authenticated = false;
+            throw new NotAuthenticatedException();
+        }
+        
+        return data.getAsJsonArray().get(0).getAsJsonObject();
     }
 
     /**
