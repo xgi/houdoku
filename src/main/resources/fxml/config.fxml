@@ -218,7 +218,7 @@
                                     <Label text="%username_prompt" styleClass="bareTextAlt"/>
                                     <TextField fx:id="usernameFieldKitsu" styleClass="bareTextAlt"/>
                                     <Label text="%password_prompt" styleClass="bareTextAlt"/>
-                                    <TextField fx:id="passwordFieldKitsu" styleClass="bareTextAlt"/>
+                                    <PasswordField fx:id="passwordFieldKitsu" styleClass="bareTextAlt"/>
                                     <Button text="%authenticate" onAction="#kitsuGenerateToken"/>
                                     <HBox alignment="CENTER">
                                         <Label fx:id="statusKitsu" visible="false" managed="false"/>

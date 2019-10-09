@@ -75,6 +75,15 @@ public interface TrackerOAuth extends Tracker {
     String getToken();
 
     /**
+     * Revoke the authentication status.
+     * <p>
+     * Sets user to "unauthenticated" and clears the access token.
+     * 
+     * @throws NotImplementedException the operation has not yet been implemented for this tracker
+     */
+    void deauthenticate() throws NotImplementedException;
+
+    /**
      * Represents this Tracker as a string.
      *
      * @return the user-friendly representation of this Tracker
