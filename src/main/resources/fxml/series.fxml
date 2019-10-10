@@ -21,7 +21,7 @@
         </Menu>
     </MenuBar>
 
-    <StackPane>
+    <StackPane VBox.vgrow="ALWAYS">
         <VBox fx:id="contentContainer" alignment="TOP_CENTER">
             <StackPane fx:id="bannerContainer" styleClass="containerAlt">
                 <HBox alignment="TOP_CENTER">
@@ -234,7 +234,7 @@
                     </TabPane>
                     <ProgressIndicator fx:id="reloadProgressIndicator" visible="false"/>
                 </StackPane>
-                <VBox fx:id="chaptersContainer">
+                <VBox fx:id="chaptersContainer" VBox.vgrow="ALWAYS">
                     <HBox fx:id="filterBar" maxWidth="Infinity" styleClass="container">
                         <padding>
                             <Insets top="5" bottom="5" left="10" right="10"/>
