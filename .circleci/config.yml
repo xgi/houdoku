@@ -12,6 +12,8 @@ jobs:
     steps:
       - checkout
 
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends openjfx && sudo rm -rf /var/lib/apt/lists/*
+
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "pom.xml" }}
