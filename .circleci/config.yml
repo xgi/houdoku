@@ -12,7 +12,7 @@ jobs:
     steps:
       - checkout
 
-      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends openjfx && sudo rm -rf /var/lib/apt/lists/*
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends openjdk-8-jdk
 
       - restore_cache:
           keys:
@@ -26,7 +26,9 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
-      - run: mvn package
+      - run:
+          name: create package
+          command: export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 && mvn package
 
       - store_artifacts:
           path: out/artifacts/houdoku
