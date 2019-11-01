@@ -39,9 +39,9 @@
         <HBox fx:id="navCenterContainer" spacing="5" alignment="CENTER" HBox.hgrow="ALWAYS">
             <Button fx:id="firstPageButton" text="⇤" minHeight="40" minWidth="40" onAction="#firstPage"/>
             <Button fx:id="prevPageButton" text="←" minHeight="40" minWidth="40" onAction="#leftPage"/>
-            <TextField fx:id="pageNumField" text="1" maxWidth="40" alignment="CENTER" onAction="#specificPage"/>
+            <TextField fx:id="pageNumField" text="1" prefColumnCount="2" alignment="CENTER" onAction="#specificPage"/>
             <Text text="/"/>
-            <TextField fx:id="totalPagesField" text="??" maxWidth="40" alignment="CENTER" disable="true"/>
+            <TextField fx:id="totalPagesField" text="??" prefColumnCount="2" alignment="CENTER" disable="true"/>
             <Button fx:id="nextPageButton" text="→" minHeight="40" minWidth="40" onAction="#rightPage"/>
             <Button fx:id="lastPageButton" text="⇥" minHeight="40" minWidth="40" onAction="#lastPage"/>
         </HBox>

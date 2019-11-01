@@ -13,6 +13,7 @@ import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -136,6 +137,19 @@ public class ReaderController extends Controller {
             double width = imageScrollPane.getContent().getBoundsInLocal().getWidth();
             double vvalue = imageScrollPane.getVvalue();
             imageScrollPane.setVvalue(vvalue + -deltaY / width);
+        });
+        // make pageNumField and totalPagesField grow if the number of pages grows
+        totalPagesField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ob, String o, String n) {
+                totalPagesField.setPrefColumnCount(totalPagesField.getText().length());
+            }
+        });
+        pageNumField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> ob, String o, String n) {
+                pageNumField.setPrefColumnCount(pageNumField.getText().length() +1);
+            }
         });
 
         // properly size the ImageView based on default fit setting
