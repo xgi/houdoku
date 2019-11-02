@@ -148,7 +148,7 @@ public class ReaderController extends Controller {
         pageNumField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> ob, String o, String n) {
-                pageNumField.setPrefColumnCount(pageNumField.getText().length() +1);
+                pageNumField.setPrefColumnCount(pageNumField.getText().length());
             }
         });
 
