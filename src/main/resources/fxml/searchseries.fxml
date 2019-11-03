@@ -58,7 +58,7 @@
 
     <Text fx:id="noPluginWarning" text="%no_installed_plugins" wrappingWidth="600" visible="false" managed="false" styleClass="bareText"/>
 
-    <StackPane>
+    <StackPane VBox.vgrow="ALWAYS">
         <TableView fx:id="tableView" visible="false" managed="false">
             <placeholder>
                 <Label styleClass="bareText,placeholderLabel" text="%no_series_found"/>
