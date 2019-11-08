@@ -112,10 +112,11 @@ public class Library {
      */
     public Series find(String title) {
         return serieses.stream()
-                .filter(series -> series.getTitle().toLowerCase().equals(title.toLowerCase())
-                        || Arrays.stream(series.altNames)
-                                .anyMatch(name -> name.toLowerCase().equals(title.toLowerCase())))
-                .findFirst().orElse(null);
+                .filter(series -> (series.getTitle() != null && series.getTitle().toLowerCase().equals(title.toLowerCase())))
+                .filter(series -> series.altNames != null && Arrays.stream(series.altNames)
+                      .anyMatch(name -> name.toLowerCase().equals(title.toLowerCase())))
+                .findFirst()
+                .orElse(null);
     }
 
     public ArrayList<Series> getSerieses() {

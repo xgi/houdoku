@@ -387,8 +387,8 @@ public class LibraryController extends Controller {
             // text filter
             String filter = filterTextField.getText().toLowerCase();
             boolean title_matches = series.getTitle().toLowerCase().contains(filter);
-            boolean creator_matches = series.author.toLowerCase().contains(filter)
-                    || series.artist.toLowerCase().contains(filter);
+            boolean creator_matches = (series.author != null && series.author.toLowerCase().contains(filter))
+                                   || (series.artist!= null && series.artist.toLowerCase().contains(filter));
 
             // check that the series has the selected category
             boolean category_matches = false;
