@@ -83,6 +83,11 @@ public class ReaderController extends Controller {
     private Chapter chapter;
     private EventHandler<KeyEvent> keyEventHandler;
     private ChangeListener imageViewListener;
+    
+    private Double previousScreenPercentage = null;
+    private static final int MIN_PIXELS = 10;
+    
+    private ChangeListener<Image> imageViewChangeListener = null;
 
     public ReaderController(SceneManager sceneManager) {
         super(sceneManager);
@@ -151,9 +156,64 @@ public class ReaderController extends Controller {
                 pageNumField.setPrefColumnCount(pageNumField.getText().length());
             }
         });
-
-        // properly size the ImageView based on default fit setting
-        updateImageViewFit();
+        imageViewChangeListener = new ChangeListener<Image>() {
+            @Override
+            public void changed(ObservableValue<? extends Image> observable,
+                    Image oldValue, Image newValue) {
+                // we're not in the case 
+                // where setImage(null) was called, in that case newValue is null
+                if (newValue != null) {
+                    // first time we get an image, compute everything
+                    if (previousScreenPercentage == null) {
+                        // get real image dimensions
+                        double realWidth = newValue.getWidth();
+                        double realHeight = newValue.getHeight();
+                        imageViewSingle.setPreserveRatio(true);
+                        // at first, make the image fit entirely on screen
+                        imageViewSingle.fitHeightProperty().bind(container
+                                .heightProperty()
+                                .subtract(menuBar.heightProperty())
+                                .subtract(navContainer.minHeightProperty()));
+                        // find how much the image has been downscaled to fit on screen
+                        double ratio = imageViewSingle.getFitHeight()
+                                / realHeight;
+                        // compute the actual width, because since we use preserveAspectRatio getWidth returns 0.0
+                        double currentWidth = realWidth * ratio;
+                        // finc currently the percentage of screen width covered by the image
+                        // will be used by newKeyEventHandler()
+                        double percentOfScreenWidth = currentWidth
+                                / stage.getWidth();
+                        previousScreenPercentage = percentOfScreenWidth;
+                        centerImageView();
+                        updateImageViewFit();
+                    }
+                    // if previousScreenPercentage is not null,
+                    // when loading next page keep the same zoom
+                    else {
+                        if (fitAutoRadio.isSelected()) {
+                            fitAutoRadio.setSelected(false);
+                        }
+                        imageViewSingle.fitHeightProperty().unbind();
+                        imageViewSingle.fitWidthProperty().unbind();
+                        imageViewSingle.setPreserveRatio(false);
+                        imageViewSingle.setFitHeight(-1);
+                        imageViewSingle.setPreserveRatio(true);
+                        imageViewSingle.fitWidthProperty()
+                                .bind(stage.widthProperty()
+                                        .multiply(previousScreenPercentage));
+                        centerImageView();
+                    }
+                }
+                // is setImage(null) was called : reset the listener
+                else {
+                    imageViewSingle.imageProperty().removeListener(imageViewChangeListener);
+                    if (imageViewListener != null) {
+                        imageViewSingle.imageProperty().removeListener(imageViewListener);
+                    }
+                }
+            }
+        };
+        imageViewSingle.imageProperty().addListener(imageViewChangeListener);
     }
 
     /**
@@ -228,6 +288,9 @@ public class ReaderController extends Controller {
 
                     KeyCode keyPrev = keyPrevPage;
                     KeyCode keyNext = keyNextPage;
+                    // plus and minus keys for zooming
+                    KeyCode keyZoomIn = KeyCode.ADD;
+                    KeyCode keyZoomOut = KeyCode.SUBTRACT;
                     // Check if invert reading style setting is active.
                     if (invertReadingStyle) {
                         keyPrev = keyNextPage;
@@ -255,6 +318,40 @@ public class ReaderController extends Controller {
                         goToSeries();
                     } else if (event.getCode() == KeyCode.ESCAPE) {
                         setFullscreen(false);
+                    }
+                    else if (event.getCode() == keyZoomIn || event.getCode() == keyZoomOut) {
+                        fitWidthRadio.setSelected(false);
+                        fitAutoRadio.setSelected(false);
+                        fitHeightRadio.setSelected(false);
+                        actualSizeRadio.setSelected(false);
+                        if (imageViewListener != null) {
+                            imageViewSingle.imageProperty().removeListener(imageViewListener);
+                        }
+                        imageViewSingle.fitHeightProperty().unbind();
+                        imageViewSingle.fitWidthProperty().unbind();
+                        imageViewSingle.setPreserveRatio(false);
+                        imageViewSingle.setFitHeight(-1);
+                        double newScreenWidthPercentage = previousScreenPercentage;
+                        // each key press will increase/decrease percentage by 0.05
+                        if (event.getCode() == keyZoomIn) {
+                            newScreenWidthPercentage = previousScreenPercentage  + 0.05;
+                            // do not zoom more than screen width
+                            if (newScreenWidthPercentage > 1) {
+                                newScreenWidthPercentage = 1;
+                            }
+                        }
+                        else {
+                            newScreenWidthPercentage = previousScreenPercentage  - 0.05;
+                            // make sure we're not too small
+                            if (newScreenWidthPercentage < 0.1) {
+                                newScreenWidthPercentage = 0.1;
+                            }
+                        }
+                        previousScreenPercentage = newScreenWidthPercentage;
+                        imageViewSingle.setPreserveRatio(true);
+                        // bind the width to the percentage
+                        imageViewSingle.fitWidthProperty().bind(stage.widthProperty().multiply(newScreenWidthPercentage));
+                        centerImageView();
                     }
                 }
                 event.consume();
