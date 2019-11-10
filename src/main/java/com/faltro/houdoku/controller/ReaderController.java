@@ -85,9 +85,10 @@ public class ReaderController extends Controller {
     private ChangeListener imageViewListener;
     
     private Double previousScreenPercentage = null;
-    private static final int MIN_PIXELS = 10;
     
     private ChangeListener<Image> imageViewChangeListener = null;
+    
+    private ChangeListener<Boolean> radioSelectedListener = null;
 
     public ReaderController(SceneManager sceneManager) {
         super(sceneManager);
@@ -156,6 +157,22 @@ public class ReaderController extends Controller {
                 pageNumField.setPrefColumnCount(pageNumField.getText().length());
             }
         });
+        // listener that resets the previousScreenPercentage
+        // each time a radio menu is selected, to avoid
+        // big zoom transitions
+        radioSelectedListener = new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable,
+                    Boolean oldValue, Boolean newValue) {
+                if (newValue != null && newValue) {
+                    previousScreenPercentage = null;
+                }
+            }
+        };
+        fitAutoRadio.selectedProperty().addListener(radioSelectedListener);
+        fitHeightRadio.selectedProperty().addListener(radioSelectedListener);
+        fitWidthRadio.selectedProperty().addListener(radioSelectedListener);
+        actualSizeRadio.selectedProperty().addListener(radioSelectedListener);
         imageViewChangeListener = new ChangeListener<Image>() {
             @Override
             public void changed(ObservableValue<? extends Image> observable,
@@ -179,7 +196,7 @@ public class ReaderController extends Controller {
                                 / realHeight;
                         // compute the actual width, because since we use preserveAspectRatio getWidth returns 0.0
                         double currentWidth = realWidth * ratio;
-                        // finc currently the percentage of screen width covered by the image
+                        // find the percentage of screen width currently covered by the image
                         // will be used by newKeyEventHandler()
                         double percentOfScreenWidth = currentWidth
                                 / stage.getWidth();
@@ -204,7 +221,7 @@ public class ReaderController extends Controller {
                         centerImageView();
                     }
                 }
-                // is setImage(null) was called : reset the listener
+                // if setImage(null) was called : reset the listener
                 else {
                     imageViewSingle.imageProperty().removeListener(imageViewChangeListener);
                     if (imageViewListener != null) {
@@ -214,6 +231,43 @@ public class ReaderController extends Controller {
             }
         };
         imageViewSingle.imageProperty().addListener(imageViewChangeListener);
+    }
+    
+    /**
+     * Tries to compute the actual screen percentage
+     * occupied by the image in imageViewSingle.
+     * Used in the keyEventHandler in cases
+     * when the previousScreenPercentage was reset to null
+     * by a radioMenu being selected.
+     */
+    public void computeScreenPercentage() {
+        Image image = imageViewSingle.getImage();
+        if (image != null) {
+            double realWidth = image.getWidth();
+            double realHeight = image.getHeight();
+            imageViewSingle.setPreserveRatio(true);
+            // set sane default
+            double ratio = 1;
+            // depending on whether the fitWidth, 
+            // fitHeight or another radio menu was selected
+            // one of fitWidth or fitHeight can equals 0 or -1
+            // so we try to guess the right ratio
+            if (imageViewSingle.getFitHeight() > 0) {
+                ratio = imageViewSingle.getFitHeight()
+                        / realHeight;
+            }
+            else if (imageViewSingle.getFitWidth() > 0) {
+                ratio = imageViewSingle.getFitWidth()
+                        / realWidth;
+            }
+            // compute the actual width, because since we use preserveAspectRatio getWidth returns 0.0
+            double currentWidth = realWidth * ratio;
+            // finc currently the percentage of screen width covered by the image
+            // will be used by newKeyEventHandler()
+            double percentOfScreenWidth = currentWidth
+                    / stage.getWidth();
+            previousScreenPercentage = percentOfScreenWidth;
+        }
     }
 
     /**
@@ -289,8 +343,10 @@ public class ReaderController extends Controller {
                     KeyCode keyPrev = keyPrevPage;
                     KeyCode keyNext = keyNextPage;
                     // plus and minus keys for zooming
-                    KeyCode keyZoomIn = KeyCode.ADD;
-                    KeyCode keyZoomOut = KeyCode.SUBTRACT;
+                    KeyCode keyZoomIn1 = KeyCode.ADD;
+                    KeyCode keyZoomIn2 = KeyCode.EQUALS;
+                    KeyCode keyZoomOut1 = KeyCode.SUBTRACT;
+                    KeyCode keyZoomOut2 = KeyCode.MINUS;
                     // Check if invert reading style setting is active.
                     if (invertReadingStyle) {
                         keyPrev = keyNextPage;
@@ -319,7 +375,8 @@ public class ReaderController extends Controller {
                     } else if (event.getCode() == KeyCode.ESCAPE) {
                         setFullscreen(false);
                     }
-                    else if (event.getCode() == keyZoomIn || event.getCode() == keyZoomOut) {
+                    else if (event.getCode() == keyZoomIn1 || event.getCode() == keyZoomIn2 
+                            || event.getCode() == keyZoomOut1 || event.getCode() == keyZoomOut2) {
                         fitWidthRadio.setSelected(false);
                         fitAutoRadio.setSelected(false);
                         fitHeightRadio.setSelected(false);
@@ -327,13 +384,18 @@ public class ReaderController extends Controller {
                         if (imageViewListener != null) {
                             imageViewSingle.imageProperty().removeListener(imageViewListener);
                         }
+                        // if the percentage was reset by a radioMenu being selected
+                        // compute a fresh value
+                        if (previousScreenPercentage == null) {
+                            computeScreenPercentage();
+                        }
                         imageViewSingle.fitHeightProperty().unbind();
                         imageViewSingle.fitWidthProperty().unbind();
                         imageViewSingle.setPreserveRatio(false);
                         imageViewSingle.setFitHeight(-1);
                         double newScreenWidthPercentage = previousScreenPercentage;
                         // each key press will increase/decrease percentage by 0.05
-                        if (event.getCode() == keyZoomIn) {
+                        if (event.getCode() == keyZoomIn1 || event.getCode() == keyZoomIn2) {
                             newScreenWidthPercentage = previousScreenPercentage  + 0.05;
                             // do not zoom more than screen width
                             if (newScreenWidthPercentage > 1) {
@@ -358,7 +420,7 @@ public class ReaderController extends Controller {
             }
         };
     }
-
+    
     /**
      * @see Controller#toggleNightMode()
      */
@@ -670,7 +732,6 @@ public class ReaderController extends Controller {
                     imageViewSingle.fitHeightProperty().unbind();
                     imageViewSingle.fitWidthProperty().bind(container.widthProperty());
                 }
-
                 centerImageView();
             };
         } else if (fitHeightRadio.isSelected()) {
@@ -680,7 +741,6 @@ public class ReaderController extends Controller {
                 imageViewSingle.fitHeightProperty()
                         .bind(container.heightProperty().subtract(menuBar.heightProperty())
                                 .subtract(navContainer.minHeightProperty()));
-
                 centerImageView();
             };
         } else if (fitWidthRadio.isSelected()) {
@@ -691,7 +751,6 @@ public class ReaderController extends Controller {
                 imageViewSingle.setPreserveRatio(true);
                 imageViewSingle.fitWidthProperty()
                         .bind(container.widthProperty().subtract(SceneManager.VSCROLLBAR_WIDTH));
-
                 centerImageView();
             };
         } else if (actualSizeRadio.isSelected()) {
@@ -702,7 +761,6 @@ public class ReaderController extends Controller {
                 imageViewSingle.fitWidthProperty()
                         .bind(imageViewSingle.getImage() == null ? new SimpleDoubleProperty(0)
                                 : imageViewSingle.getImage().widthProperty());
-
                 centerImageView();
             };
         }
