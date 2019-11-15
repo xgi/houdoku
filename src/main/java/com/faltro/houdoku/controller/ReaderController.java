@@ -82,7 +82,6 @@ public class ReaderController extends Controller {
 
     private Chapter chapter;
     private EventHandler<KeyEvent> keyEventHandler;
-    private ChangeListener imageViewListener;
     
     private Double previousScreenPercentage = null;
     
@@ -185,9 +184,6 @@ public class ReaderController extends Controller {
                     // we recompute everything
                     if (previousScreenPercentage == null) {
                         resetRadioMenus();
-                        if (imageViewListener != null) {
-                            imageViewSingle.imageProperty().removeListener(imageViewListener);
-                        }
                         // get real image dimensions
                         double realWidth = newValue.getWidth();
                         double realHeight = newValue.getHeight();
@@ -226,9 +222,6 @@ public class ReaderController extends Controller {
                 // if setImage(null) was called : reset the listener
                 else {
                     imageViewSingle.imageProperty().removeListener(imageViewChangeListener);
-                    if (imageViewListener != null) {
-                        imageViewSingle.imageProperty().removeListener(imageViewListener);
-                    }
                 }
             }
         };
@@ -243,6 +236,17 @@ public class ReaderController extends Controller {
      * by a radioMenu being selected.
      */
     public void computeScreenPercentage() {
+        Double currentWidth = computeImageCurrentWidth();
+        if (currentWidth != null) {
+            // find currently the percentage of screen width covered by the image
+            // will be used by newKeyEventHandler()
+            double percentOfScreenWidth = currentWidth
+                    / stage.getWidth();
+            previousScreenPercentage = percentOfScreenWidth;
+        }
+    }
+    
+    private Double computeImageCurrentWidth() {
         Image image = imageViewSingle.getImage();
         if (image != null) {
             double realWidth = image.getWidth();
@@ -264,12 +268,9 @@ public class ReaderController extends Controller {
             }
             // compute the actual width, because since we use preserveAspectRatio getWidth returns 0.0
             double currentWidth = realWidth * ratio;
-            // find currently the percentage of screen width covered by the image
-            // will be used by newKeyEventHandler()
-            double percentOfScreenWidth = currentWidth
-                    / stage.getWidth();
-            previousScreenPercentage = percentOfScreenWidth;
+            return currentWidth;
         }
+        return null;
     }
 
     /**
@@ -380,9 +381,6 @@ public class ReaderController extends Controller {
                     else if (event.getCode() == keyZoomIn1 || event.getCode() == keyZoomIn2 
                             || event.getCode() == keyZoomOut1 || event.getCode() == keyZoomOut2) {
                         resetRadioMenus();
-                        if (imageViewListener != null) {
-                            imageViewSingle.imageProperty().removeListener(imageViewListener);
-                        }
                         // if the percentage was reset by a radioMenu being selected
                         // compute a fresh value
                         if (previousScreenPercentage == null) {
@@ -516,10 +514,12 @@ public class ReaderController extends Controller {
      * Center the imageView on the stage.
      */
     private void centerImageView() {
-        imageViewSingle.setTranslateX(
-                (imageScrollPane.getWidth() - imageViewSingle.getBoundsInParent().getWidth()) / 2);
-        if (imageViewSingle.getTranslateX() < 0 || fitWidthRadio.isSelected()) {
-            imageViewSingle.setTranslateX(0);
+        // current implementation uses the image current width instead of 
+        // imageViewSingle.getBoundsInParent().getWidth() which sometimes returned
+        // the value 0.0 and broke the alignment
+        Double currentImageWidth = computeImageCurrentWidth();
+        if (currentImageWidth != null) {
+            imageViewSingle.setTranslateX((imageScrollPane.getWidth() - currentImageWidth) / 2);
         }
     }
 
@@ -728,59 +728,55 @@ public class ReaderController extends Controller {
     @FXML
     private void updateImageViewFit() {
         if (fitAutoRadio.isSelected()) {
-            imageViewListener = (o, oldValue, newValue) -> {
-                imageViewSingle.fitWidthProperty().unbind();
-                imageViewSingle.setFitWidth(-1);
+            removeImageListener();
+            imageViewSingle.fitWidthProperty().unbind();
+            imageViewSingle.setPreserveRatio(false);
+            imageViewSingle.setFitWidth(-1);
+            imageViewSingle.fitHeightProperty().unbind();
+            imageViewSingle.setPreserveRatio(true);
+            imageViewSingle.fitHeightProperty()
+            .bind(container.heightProperty().subtract(menuBar.heightProperty())
+                    .subtract(navContainer.minHeightProperty()));
+            if (imageViewSingle.getBoundsInParent().getWidth() > container.getWidth()) {
                 imageViewSingle.fitHeightProperty().unbind();
-                imageViewSingle.fitHeightProperty()
-                        .bind(container.heightProperty().subtract(menuBar.heightProperty())
-                                .subtract(navContainer.minHeightProperty()));
-                if (imageViewSingle.getBoundsInParent().getWidth() > container.getWidth()) {
-                    imageViewSingle.fitHeightProperty().unbind();
-                    imageViewSingle.fitWidthProperty().bind(container.widthProperty());
-                }
-                centerImageView();
-            };
+                imageViewSingle.fitWidthProperty().bind(container.widthProperty());
+            }
+            centerImageView();
         } else if (fitHeightRadio.isSelected()) {
-            imageViewListener = (o, oldValue, newValue) -> {
-                imageViewSingle.fitWidthProperty().unbind();
-                imageViewSingle.setFitWidth(-1);
-                imageViewSingle.fitHeightProperty()
-                        .bind(container.heightProperty().subtract(menuBar.heightProperty())
-                                .subtract(navContainer.minHeightProperty()));
-                centerImageView();
-            };
+            removeImageListener();
+            imageViewSingle.fitWidthProperty().unbind();
+            imageViewSingle.setFitWidth(-1);
+            imageViewSingle.setPreserveRatio(true);
+            imageViewSingle.fitHeightProperty()
+            .bind(container.heightProperty().subtract(menuBar.heightProperty())
+                    .subtract(navContainer.minHeightProperty()));
+            centerImageView();
         } else if (fitWidthRadio.isSelected()) {
-            imageViewListener = (o, oldValue, newValue) -> {
-                imageViewSingle.fitHeightProperty().unbind();
-                imageViewSingle.setPreserveRatio(false);
-                imageViewSingle.setFitHeight(-1);
-                imageViewSingle.setPreserveRatio(true);
-                imageViewSingle.fitWidthProperty()
-                        .bind(container.widthProperty().subtract(SceneManager.VSCROLLBAR_WIDTH));
-                centerImageView();
-            };
+            removeImageListener();
+            imageViewSingle.fitHeightProperty().unbind();
+            imageViewSingle.setPreserveRatio(false);
+            imageViewSingle.setFitHeight(-1);
+            imageViewSingle.setPreserveRatio(true);
+            imageViewSingle.fitWidthProperty()
+            .bind(container.widthProperty().subtract(SceneManager.VSCROLLBAR_WIDTH));
+            centerImageView();
         } else if (actualSizeRadio.isSelected()) {
-            imageViewListener = (o, oldValue, newValue) -> {
-                imageViewSingle.fitHeightProperty().unbind();
-                imageViewSingle.fitWidthProperty().unbind();
-                imageViewSingle.setFitHeight(-1);
-                imageViewSingle.fitWidthProperty()
-                        .bind(imageViewSingle.getImage() == null ? new SimpleDoubleProperty(0)
-                                : imageViewSingle.getImage().widthProperty());
-                centerImageView();
-            };
+            removeImageListener();
+            imageViewSingle.fitHeightProperty().unbind();
+            imageViewSingle.fitWidthProperty().unbind();
+            imageViewSingle.setFitHeight(-1);
+            imageViewSingle.setPreserveRatio(true);
+            imageViewSingle.fitWidthProperty()
+            .bind(imageViewSingle.getImage() == null ? new SimpleDoubleProperty(0)
+                    : imageViewSingle.getImage().widthProperty());
+            centerImageView();
         }
-
-        // add the listener to all meaningful properties -- the value of the
-        // passed arguments don't matter
-        container.heightProperty().addListener(imageViewListener);
-        container.widthProperty().addListener(imageViewListener);
-        imageViewSingle.imageProperty().addListener(imageViewListener);
-        // hack to force listener operation to run
-        // we wouldn't be able to do this if the listener function depended
-        // on the given arguments
-        imageViewListener.changed(new SimpleDoubleProperty(0), 0, 0);
+    }
+    
+    private void removeImageListener() {
+        if (imageViewChangeListener != null) {
+            imageViewSingle.imageProperty().removeListener(imageViewChangeListener);
+        }
     }
 
     /**
