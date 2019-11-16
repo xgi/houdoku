@@ -523,7 +523,7 @@ public class SeriesController extends Controller {
                 + OutputHelpers.intToString(series.ratings) + " users)");
         textViews.setText(OutputHelpers.intToString(series.views));
         textFollows.setText(OutputHelpers.intToString(series.follows));
-        textGenres.setText(String.join(", ", series.genres));
+        textGenres.setText(series.genres == null ? "" : String.join(", ", series.genres));
         textStatus.setText(series.status);
         textNumChapters.setText(OutputHelpers.intToString(series.getNumHighestChapter()) + " ("
                 + OutputHelpers.intToString(series.getNumChapters()) + " releases)");
@@ -532,14 +532,14 @@ public class SeriesController extends Controller {
         textDescription.setText(series.description);
 
         // hide metadata field rows if the field is unset
-        textAltNames.getParent().getParent().setVisible(series.altNames.length > 0);
-        textAuthor.getParent().getParent().setVisible(!series.author.equals(""));
-        textArtist.getParent().getParent().setVisible(!series.artist.equals(""));
+        textAltNames.getParent().getParent().setVisible(series.altNames != null && series.altNames.length > 0);
+        textAuthor.getParent().getParent().setVisible(series.author != null && !series.author.equals(""));
+        textArtist.getParent().getParent().setVisible(series.artist != null && !series.artist.equals(""));
         textRating.getParent().getParent().setVisible(series.rating != 0);
         textViews.getParent().getParent().setVisible(series.views != 0);
         textFollows.getParent().getParent().setVisible(series.follows != 0);
-        textGenres.getParent().getParent().setVisible(series.genres.length > 0);
-        textStatus.getParent().getParent().setVisible(!series.status.equals(""));
+        textGenres.getParent().getParent().setVisible(series.genres != null && series.genres.length > 0);
+        textStatus.getParent().getParent().setVisible(series.status != null && !series.status.equals(""));
 
         for (Text text : Arrays.asList(textAltNames, textAuthor, textArtist, textRating, textViews,
                 textFollows, textGenres, textStatus)) {
