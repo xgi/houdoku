@@ -6,12 +6,12 @@ import com.faltro.houdoku.net.Requests;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.ParseHelpers;
-import javafx.collections.FXCollections;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.collections.FXCollections;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class SearchRunnable extends LoaderRunnable {
     private final ContentSource contentSource;

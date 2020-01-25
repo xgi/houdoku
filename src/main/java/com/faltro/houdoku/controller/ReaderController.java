@@ -28,8 +28,8 @@ import javafx.scene.text.Text;
 
 /**
  * The controller for the reader page.
- * <p>
- * The FXML file for this view is at resources/fxml/reader.fxml
+ * 
+ * <p>The FXML file for this view is at resources/fxml/reader.fxml
  *
  * @see Controller
  */
@@ -95,9 +95,9 @@ public class ReaderController extends Controller {
 
     /**
      * Initialize the components of the controller's view.
-     * <p>
-     * This method binds the size and position of components as appropriate, relative to the stage.
-     * It also initializes keyEventHandler which is enabled when the page is made active.
+     * 
+     * <p>This method binds the size and position of components as appropriate, relative to the
+     * stage. It also initializes keyEventHandler which is enabled when the page is made active.
      *
      * @see Controller#initialize()
      */
@@ -196,7 +196,8 @@ public class ReaderController extends Controller {
                         // find how much the image has been downscaled to fit on screen
                         double ratio = imageViewSingle.getFitHeight()
                                 / realHeight;
-                        // compute the actual width, because since we use preserveAspectRatio getWidth returns 0.0
+                        // compute the actual width, because since we use preserveAspectRatio
+                        // getWidth returns 0.0
                         double currentWidth = realWidth * ratio;
                         // find the percentage of screen width currently covered by the image
                         // will be used by newKeyEventHandler()
@@ -266,7 +267,7 @@ public class ReaderController extends Controller {
                 ratio = imageViewSingle.getFitWidth()
                         / realWidth;
             }
-            // compute the actual width, because since we use preserveAspectRatio getWidth returns 0.0
+            // compute the actual width, because since we use preserveAspectRatio getWidth returns 0
             double currentWidth = realWidth * ratio;
             return currentWidth;
         }
@@ -306,12 +307,12 @@ public class ReaderController extends Controller {
 
     /**
      * Create a new KeyEvent EventHandler for controlling the page.
-     * <p>
-     * Normally it would be sufficient to simply create the handler in initialize(), but the config
-     * with key bindings may change before the client is restarted, so we instead make a new event
-     * handler at every onMadeActive() using the current config.
-     * <p>
-     * We also could have put Config.getValue's in the event itself, but that would be very
+     * 
+     * <p>Normally it would be sufficient to simply create the handler in initialize(), but the
+     * config with key bindings may change before the client is restarted, so we instead make a new
+     * event handler at every onMadeActive() using the current config.
+     * 
+     * <p>We also could have put Config.getValue's in the event itself, but that would be very
      * inefficient. We also take account for the invert reading style checkbox user config, if it
      * has been ticked we invert the keys for keyprevious and keynext.
      *
@@ -409,7 +410,8 @@ public class ReaderController extends Controller {
                         previousScreenPercentage = newScreenWidthPercentage;
                         imageViewSingle.setPreserveRatio(true);
                         // bind the width to the percentage
-                        imageViewSingle.fitWidthProperty().bind(stage.widthProperty().multiply(newScreenWidthPercentage));
+                        imageViewSingle.fitWidthProperty().bind(
+                            stage.widthProperty().multiply(newScreenWidthPercentage));
                         centerImageView();
                     }
                 }
@@ -468,8 +470,8 @@ public class ReaderController extends Controller {
 
     /**
      * Set the image of the reader's ImageView.
-     * <p>
-     * This method ensures that the image is set when the FX thread is available.
+     * 
+     * <p>This method ensures that the image is set when the FX thread is available.
      *
      * @param image the Image to display in the ImageView
      * @see #imageView
@@ -575,10 +577,11 @@ public class ReaderController extends Controller {
         boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
 
         // If invert reading style setting is active instead of previous page we go to the next page
-        if (invertReadingStyle)
+        if (invertReadingStyle) {
             nextPage();
-        else
+        } else {
             previousPage();
+        }
     }
 
     /**
@@ -595,10 +598,11 @@ public class ReaderController extends Controller {
         boolean invertReadingStyle = (boolean) config.getValue(Config.Field.INVERT_READING_STYLE);
 
         // If invert reading style setting is active instead of next page we go to previous page
-        if (invertReadingStyle)
+        if (invertReadingStyle) {
             previousPage();
-        else
+        } else {
             nextPage();
+        }
     }
 
 
@@ -613,8 +617,8 @@ public class ReaderController extends Controller {
 
     /**
      * Go to the previous chapter and load the first page.
-     * <p>
-     * This function does not validate whether a previous chapter is actually available - that
+     * 
+     * <p>This function does not validate whether a previous chapter is actually available - that
      * should be enforced by disabling the prev chapter button.
      */
     @FXML
@@ -642,8 +646,8 @@ public class ReaderController extends Controller {
 
     /**
      * Toggle whether the navigation bar is visible.
-     * <p>
-     * The navigation bar is the top bar which contains the page number display and forward/back
+     * 
+     * <p>The navigation bar is the top bar which contains the page number display and forward/back
      * buttons. Users who hide the bar can still navigate the display using the key shortcuts
      * defined in keyEventHandler.
      *
@@ -735,8 +739,8 @@ public class ReaderController extends Controller {
             imageViewSingle.fitHeightProperty().unbind();
             imageViewSingle.setPreserveRatio(true);
             imageViewSingle.fitHeightProperty()
-            .bind(container.heightProperty().subtract(menuBar.heightProperty())
-                    .subtract(navContainer.minHeightProperty()));
+                .bind(container.heightProperty().subtract(menuBar.heightProperty())
+                .subtract(navContainer.minHeightProperty()));
             if (imageViewSingle.getBoundsInParent().getWidth() > container.getWidth()) {
                 imageViewSingle.fitHeightProperty().unbind();
                 imageViewSingle.fitWidthProperty().bind(container.widthProperty());
@@ -748,8 +752,8 @@ public class ReaderController extends Controller {
             imageViewSingle.setFitWidth(-1);
             imageViewSingle.setPreserveRatio(true);
             imageViewSingle.fitHeightProperty()
-            .bind(container.heightProperty().subtract(menuBar.heightProperty())
-                    .subtract(navContainer.minHeightProperty()));
+                .bind(container.heightProperty().subtract(menuBar.heightProperty())
+                .subtract(navContainer.minHeightProperty()));
             centerImageView();
         } else if (fitWidthRadio.isSelected()) {
             removeImageListener();
@@ -758,7 +762,7 @@ public class ReaderController extends Controller {
             imageViewSingle.setFitHeight(-1);
             imageViewSingle.setPreserveRatio(true);
             imageViewSingle.fitWidthProperty()
-            .bind(container.widthProperty().subtract(SceneManager.VSCROLLBAR_WIDTH));
+                .bind(container.widthProperty().subtract(SceneManager.VSCROLLBAR_WIDTH));
             centerImageView();
         } else if (actualSizeRadio.isSelected()) {
             removeImageListener();
@@ -767,7 +771,7 @@ public class ReaderController extends Controller {
             imageViewSingle.setFitHeight(-1);
             imageViewSingle.setPreserveRatio(true);
             imageViewSingle.fitWidthProperty()
-            .bind(imageViewSingle.getImage() == null ? new SimpleDoubleProperty(0)
+                .bind(imageViewSingle.getImage() == null ? new SimpleDoubleProperty(0)
                     : imageViewSingle.getImage().widthProperty());
             centerImageView();
         }
@@ -781,8 +785,8 @@ public class ReaderController extends Controller {
 
     /**
      * Go to the series page.
-     * <p>
-     * This method does not explicitly ensure that the series page contains the information for the
+     * 
+     * <p>This method does not explicitly ensure the series page contains the information for the
      * expected series (that is, the series which contains the current chapter). It is expected that
      * the components of the series page are not cleared when the reader is opened, and also that
      * the series page has been loaded prior to opening the reader.

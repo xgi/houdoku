@@ -15,6 +15,10 @@ import com.faltro.houdoku.util.SceneManager;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,15 +38,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * The controller for the config page.
- * <p>
- * The FXML file for this view is at resources/fxml/config.fxml
+ * 
+ * <p>The FXML file for this view is at resources/fxml/config.fxml
  *
  * @see Controller
  */
@@ -181,7 +181,7 @@ public class ConfigController extends Controller {
 
         // add listener to update the content panel when items are selected
         listView.getSelectionModel().selectedItemProperty()
-                .addListener((observableValue, hBox, t1) -> updateContent());
+                .addListener((observableValue, hbox, t1) -> updateContent());
 
         // Bind the disable property of checkboxes with sub-boxes with the
         // matching sub-box. We would have liked to do this in the FXML file,
@@ -236,8 +236,8 @@ public class ConfigController extends Controller {
 
     /**
      * Update the page effect/filter preview using the slider values.
-     * <p>
-     * This method also updates the labels next to each slider.
+     * 
+     * <p>This method also updates the labels next to each slider.
      */
     @FXML
     private void updateEffectPreview() {
@@ -525,8 +525,6 @@ public class ConfigController extends Controller {
     private void promptUpdatePlugins() {
         PluginManager pluginManager = sceneManager.getPluginManager();
 
-        Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK, ButtonType.CANCEL);
-
         // create ui elements of alert container
         Label categories_label = new Label("Select plugins to install/update:");
         categories_label.getStyleClass().add("bareText");
@@ -584,6 +582,7 @@ public class ConfigController extends Controller {
         }
 
         categories_container.getChildren().addAll(plugin_boxes);
+        Alert alert = new Alert(Alert.AlertType.NONE, "", ButtonType.OK, ButtonType.CANCEL);
         alert.getDialogPane().setContent(alert_container);
         alert.setTitle(stage.getTitle());
         alert.showAndWait();
@@ -650,9 +649,9 @@ public class ConfigController extends Controller {
             HBox item_container = new HBox();
             item_container.getStyleClass().add("listItem");
 
-            Label item_name = new Label(contentSource.toString());
             Label item_rev = new Label("v=" + String.valueOf(revision));
             item_rev.setPadding(new Insets(0, 10, 0, 0));
+            Label item_name = new Label(contentSource.toString());
 
             Button btn_remove = new Button("Remove");
             btn_remove.setOnAction((event) -> {
@@ -663,7 +662,8 @@ public class ConfigController extends Controller {
                             + e.getMessage());
                 }
                 statusPlugins.setText(
-                        "Warning: plugins may not be completely removed until the client is restarted.");
+                    "Warning: plugins may not be completely removed until the client is restarted."
+                );
                 statusPlugins.setVisible(true);
                 statusPlugins.setManaged(true);
                 this.reloadPlugins();

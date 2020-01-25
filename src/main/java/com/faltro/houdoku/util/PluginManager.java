@@ -10,8 +10,6 @@ import com.faltro.houdoku.plugins.tracker.Kitsu;
 import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import okhttp3.OkHttpClient;
-import okhttp3.Response;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -22,6 +20,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 
 /**
  * Manager and container for client plugins, which currently solely consists of content sources.
@@ -58,8 +58,9 @@ public class PluginManager {
 
     /**
      * Create the PluginManager.
-     * <p>
-     * This constructor creates instances of the available plugins, which are manually defined here.
+     * 
+     * <p>This constructor creates instances of the available plugins, which are manually defined
+     * here.
      * 
      * @param config the user Config to load initial plugin settings (not stored)
      */
@@ -85,7 +86,7 @@ public class PluginManager {
             kitsu_authenticated
                 ? new Kitsu(kitsu_token)
                 : new Kitsu()
-            // add other trackers here
+        // add other trackers here
         ));
         // @formatter:on
     }

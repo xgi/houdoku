@@ -1,14 +1,14 @@
 package com.faltro.houdoku.model;
 
 import com.faltro.houdoku.model.Languages.Language;
-import javafx.scene.image.Image;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import javafx.scene.image.Image;
 
 /**
  * An individual release of a chapter for a Series.
- * <p>
- * A series can have multiple chapters with the same number, since the content source may provide
+ * 
+ * <p>A series can have multiple chapters with the same number, since the content source may provide
  * multiple groups' scanlations for the chapter.
  */
 public class Chapter {
@@ -44,8 +44,8 @@ public class Chapter {
 
     /**
      * Ensures that currentPageNum is valid.
-     * <p>
-     * Checks that the currentPageNum is neither less than 0 nor greater than the total number of
+     * 
+     * <p>Checks that the currentPageNum is neither less than 0 nor greater than the total number of
      * pages.
      */
     private void sanitizePageNumber() {
@@ -58,8 +58,8 @@ public class Chapter {
 
     /**
      * Sets the "metadata" content of this object.
-     * <p>
-     * The following fields are stored:
+     * 
+     * <p>The following fields are stored:
      * <ul>
      * <li>chapterNum (double)</li>
      * <li>volumeNum (int)</li>
@@ -93,14 +93,16 @@ public class Chapter {
                 case "localDateTime":
                     localDateTime = (LocalDateTime) metadata.get(key);
                     break;
+                default:
+                    break;
             }
         }
     }
 
     /**
      * Changes currentPageNum to the requested page.
-     * <p>
-     * This method by itself does not load the image on the new page.
+     * 
+     * <p>This method by itself does not load the image on the new page.
      *
      * @param pageNum the page to change to, where 1 is the first page
      */
@@ -111,8 +113,8 @@ public class Chapter {
 
     /**
      * Changes currentPageNum by a specified delta.
-     * <p>
-     * This method by itself does not load the image on the new page.
+     * 
+     * <p>This method by itself does not load the image on the new page.
      *
      * @param delta the (positive or negative) number of pages to change by
      */
@@ -162,9 +164,9 @@ public class Chapter {
 
     /**
      * Clears the array of images.
-     * <p>
-     * Expected to be called when the user is not expected to continue viewing the images, in order
-     * to free up memory when the image data is cleared from memory by the garbage collector.
+     * 
+     * <p>Expected to be called when the user is not expected to continue viewing the images, in
+     * order to free up memory when the image data is cleared from memory by the garbage collector.
      */
     public void clearImages() {
         images = new Image[1];

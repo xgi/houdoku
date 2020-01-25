@@ -4,18 +4,18 @@ import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
-import javafx.scene.image.Image;
-import okhttp3.OkHttpClient;
-import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.scene.image.Image;
+import okhttp3.OkHttpClient;
+import org.jsoup.nodes.Document;
 
 /**
  * This class contains implementations for some methods from ContentSource that are expected to be
  * common between most content source plugins.
- * <p>
- * For method and field documentation, please see the ContentSource class.
+ * 
+ * <p>For method and field documentation, please see the ContentSource class.
  *
  * @see ContentSource
  */

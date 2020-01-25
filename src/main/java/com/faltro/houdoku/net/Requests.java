@@ -1,12 +1,12 @@
 package com.faltro.houdoku.net;
 
 import com.faltro.houdoku.Houdoku;
+import java.io.IOException;
+import java.util.Map;
 import javafx.scene.image.Image;
 import okhttp3.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import java.io.IOException;
-import java.util.Map;
 
 public class Requests {
     /**
@@ -164,7 +164,7 @@ public class Requests {
     public static Response PATCH(OkHttpClient client, String url, String json, Map<String, String> headers)
             throws IOException {
         RequestBody body =
-                RequestBody.create(MediaType.parse("application/vnd.api+json; charset=utf-8"), json);
+            RequestBody.create(MediaType.parse("application/vnd.api+json; charset=utf-8"), json);
         return PATCH(client, url, body, headers);
     }
 
@@ -210,8 +210,8 @@ public class Requests {
 
     /**
      * Retrieves an Image from the given URL with a strict width.
-     * <p>
-     * The aspect ratio of the original image is maintained.
+     * 
+     * <p>The aspect ratio of the original image is maintained.
      *
      * @param url   the URL for an image file
      * @param width the width of the retrieved image

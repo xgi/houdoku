@@ -2,15 +2,15 @@ package com.faltro.houdoku.model;
 
 /**
  * Contains language definitions.
- * <p>
- * This class was made to unify content sources which may represent languages in a variety of
+ * 
+ * <p>This class was made to unify content sources which may represent languages in a variety of
  * formats or with different language codes.
  */
 public class Languages {
     /**
      * Retrieve a Language using a language code or String.
-     * <p>
-     * For example, calling this method with "gb" or "english" or "English" will return
+     * 
+     * <p>For example, calling this method with "gb" or "english" or "English" will return
      * Language.ENGLISH.
      *
      * @param code the case-insensitive language code to lookup

@@ -6,8 +6,8 @@ import java.util.List;
 /**
  * Category's are effectively "tags" for Series' in the Library. Series' can be assigned an array of
  * categories (handled as an array of strings) which are then matched with instances of this class.
- * <p>
- * Instances of categories are unique -- the name of categories can not overlap.
+ * 
+ * <p>Instances of categories are unique -- the name of categories can not overlap.
  */
 public class Category {
     private ArrayList<Category> subcategories;
@@ -24,9 +24,9 @@ public class Category {
 
     /**
      * Determine whether a category name is valid.
-     * <p>
-     * This method does not determine whether the name overlaps with an existing category -- it only
-     * checks that the given name string is not inherently invalid.
+     * 
+     * <p>This method does not determine whether the name overlaps with an existing category -- it
+     * only checks that the given name string is not inherently invalid.
      *
      * @param name the name to check
      * @return whether the given string is a valid category name

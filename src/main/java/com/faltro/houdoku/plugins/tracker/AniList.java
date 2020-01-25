@@ -1,29 +1,30 @@
 package com.faltro.houdoku.plugins.tracker;
 
+import static com.faltro.houdoku.net.Requests.POST;
+
 import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Statuses;
-import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.model.Statuses.Status;
+import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.net.AniListInterceptor;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.IOException;
+import java.util.HashMap;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
-import java.io.IOException;
-import java.util.HashMap;
-import static com.faltro.houdoku.net.Requests.POST;
 
 /**
  * This class contains implementation details for processing data from a specific "tracker" - a
  * website for users to track their reading.
- * <p>
- * For method and field documentation, please see the Tracker/TrackerOAuth classes. Additionally,
+ * 
+ * <p>For method and field documentation, please see the Tracker/TrackerOAuth classes. Additionally,
  * the implementation of some common methods is done in the GenericTrackerOAuth class.
  *
  * @see GenericTrackerOAuth
@@ -59,9 +60,9 @@ public class AniList extends GenericTrackerOAuth {
     public AniList() {
     }
 
-    public AniList(String access_token) {
+    public AniList(String accessToken) {
         this.authenticated = true;
-        this.setAccessToken(access_token);
+        this.setAccessToken(accessToken);
     }
 
     @Override
@@ -90,15 +91,15 @@ public class AniList extends GenericTrackerOAuth {
     @Override
     public String search(String query) throws IOException, NotAuthenticatedException {
         // @formatter:off
-        final String body = "" +
-                "query ($search: String) {\n" +
-                "  Media (search: $search, type: MANGA) {" +
-                "    id\n" +
-                "    title {\n" +
-                "      romaji\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        final String body = ""
+            + "query ($search: String) {\n"
+            + "  Media (search: $search, type: MANGA) {"
+            + "    id\n"
+            + "    title {\n"
+            + "      romaji\n"
+            + "    }\n"
+            + "  }\n"
+            + "}";
         // @formatter:on
 
         JsonObject response = post(body, new String[] {"search", query});
@@ -114,14 +115,14 @@ public class AniList extends GenericTrackerOAuth {
     @Override
     public String getTitle(String id) throws IOException, NotAuthenticatedException {
         // @formatter:off
-        final String body = "" +
-            "query ($id: Int) {\n" +
-            "  Media (id: $id, type: MANGA) {" +
-            "    title {\n" +
-            "      romaji\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
+        final String body = ""
+            + "query ($id: Int) {\n"
+            + "  Media (id: $id, type: MANGA) {"
+            + "    title {\n"
+            + "      romaji\n"
+            + "    }\n"
+            + "  }\n"
+            + "}";
         // @formatter:on
 
         JsonObject response = post(body, new String[] {"id", id});
@@ -142,23 +143,23 @@ public class AniList extends GenericTrackerOAuth {
         }
 
         // @formatter:off
-        final String body = "" +
-                "query ($id: Int!, $manga_id: Int!) {\n" +
-                "  Page {" +
-                "    mediaList(userId: $id, type: MANGA, mediaId: $manga_id) {\n" +
-                "      id\n" +
-                "      status\n" +
-                "      scoreRaw: score(format: POINT_100)\n" +
-                "      progress\n" +
-                "      media {\n" +
-                "        id\n" +
-                "        title {\n" +
-                "          romaji\n" +
-                "        }\n" +
-                "      }\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        final String body = ""
+            + "query ($id: Int!, $manga_id: Int!) {\n"
+            + "  Page {"
+            + "    mediaList(userId: $id, type: MANGA, mediaId: $manga_id) {\n"
+            + "      id\n"
+            + "      status\n"
+            + "      scoreRaw: score(format: POINT_100)\n"
+            + "      progress\n"
+            + "      media {\n"
+            + "        id\n"
+            + "        title {\n"
+            + "          romaji\n"
+            + "        }\n"
+            + "      }\n"
+            + "    }\n"
+            + "  }\n"
+            + "}";
         // @formatter:on
 
         String user_id = authenticatedUser().get("id").getAsString();
@@ -223,13 +224,13 @@ public class AniList extends GenericTrackerOAuth {
         }
 
         // @formatter:off
-        final String body = "" +
-                "mutation UpdateManga($listId: Int, $progress: Int, $status: MediaListStatus, $scoreRaw: Int) {\n" +
-                "  SaveMediaListEntry (id: $listId, progress: $progress, status: $status, scoreRaw: $scoreRaw) {" +
-                "    id\n" +
-                "    progress\n" +
-                "  }\n" +
-                "}";
+        final String body = ""
+            + "mutation UpdateManga($listId: Int, $progress: Int, $status: MediaListStatus, $scoreRaw: Int) {\n"
+            + "  SaveMediaListEntry (id: $listId, progress: $progress, status: $status, scoreRaw: $scoreRaw) {"
+            + "    id\n"
+            + "    progress\n"
+            + "  }\n"
+            + "}";
         // @formatter:on
 
         post(body, new String[] {"listId", track_old.getListId()},
@@ -282,16 +283,16 @@ public class AniList extends GenericTrackerOAuth {
      */
     private JsonObject authenticatedUser() throws IOException, NotAuthenticatedException {
         // @formatter:off
-        final String body = "" +
-                "query User {\n" +
-                "  Viewer {" +
-                "    id\n" +
-                "    name\n" +
-                "    mediaListOptions {\n" +
-                "      scoreFormat\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
+        final String body = ""
+            + "query User {\n"
+            + "  Viewer {"
+            + "    id\n"
+            + "    name\n"
+            + "    mediaListOptions {\n"
+            + "      scoreFormat\n"
+            + "    }\n"
+            + "  }\n"
+            + "}";
         // @formatter:on
 
         JsonObject response = post(body);
@@ -308,7 +309,7 @@ public class AniList extends GenericTrackerOAuth {
     /**
      * Add an entry for a series to the user's list.
      * 
-     * This method should only be run if the series is known to not exist in the user's list.
+     * <p>This method should only be run if the series is known to not exist in the user's list.
      *
      * @param id the series id
      * @return a Track instance for the series in the user's list
@@ -318,12 +319,12 @@ public class AniList extends GenericTrackerOAuth {
      */
     private Track add(String id) throws NotAuthenticatedException, IOException {
         // @formatter:off
-        final String body = "" +
-                "mutation AddManga($mediaId: Int) {\n" +
-                "  SaveMediaListEntry (mediaId: $mediaId) {" +
-                "    mediaId\n" +
-                "  }\n" +
-                "}";
+        final String body = ""
+            + "mutation AddManga($mediaId: Int) {\n"
+            + "  SaveMediaListEntry (mediaId: $mediaId) {"
+            + "    mediaId\n"
+            + "  }\n"
+            + "}";
         // @formatter:on
 
         post(body, new String[] {"mediaId", id});
@@ -331,7 +332,7 @@ public class AniList extends GenericTrackerOAuth {
     }
 
     private void setAccessToken(String token) {
-        this.access_token = token;
+        this.accessToken = token;
         interceptor.setToken(token);
     }
 }

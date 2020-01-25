@@ -6,6 +6,8 @@ import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.SceneManager;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -27,14 +29,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * The controller for the search series page, where users search for and add series' to their
  * library from content sources.
- * <p>
- * The FXML file for this view is at resources/fxml/searchseries.fxml
+ * 
+ * <p>The FXML file for this view is at resources/fxml/searchseries.fxml
  *
  * @see Controller
  * @see ContentSource
@@ -82,8 +82,8 @@ public class SearchSeriesController extends Controller {
 
     /**
      * Initialize the components of the controller's view.
-     * <p>
-     * This method binds the size of components as appropriate using this class' static variables.
+     * 
+     * <p>This method binds the size of components as appropriate using this class' static vars.
      * It creates and sets the cell factory and cell value factory for the columns in the results
      * table.
      *
@@ -130,7 +130,7 @@ public class SearchSeriesController extends Controller {
             return imageView.imageProperty();
         });
         titleColumn.setCellValueFactory(
-                p -> new SimpleStringProperty((String) p.getValue().get("details")));
+            p -> new SimpleStringProperty((String) p.getValue().get("details")));
 
         // search with a blank query when changing content sources in order
         // to populate the window
@@ -245,9 +245,9 @@ public class SearchSeriesController extends Controller {
 
     /**
      * Create a MouseEvent handler for a cell in the results table.
-     * <p>
-     * This handler handles double clicking to prompt for adding a series, as well as handling the
-     * actions of the given context menu if a series is right clicked.
+     * 
+     * <p>This handler handles double clicking to prompt for adding a series, as well as handling
+     * the actions of the given context menu if a series is right clicked.
      *
      * @param contextMenu the context menu shown when right clicking
      * @return a complete MouseEvent EventHandler for a cell in the table
@@ -272,8 +272,8 @@ public class SearchSeriesController extends Controller {
 
     /**
      * Create a MouseEvent handler for a cover in the results FlowPane.
-     * <p>
-     * This handler handles double clicking to prompt for adding a series.
+     * 
+     * <p>This handler handles double clicking to prompt for adding a series.
      *
      * @param item a HashMap containing the fields described in the documentation for
      *             {@link #addSeriesFromItem(HashMap)}
@@ -292,8 +292,8 @@ public class SearchSeriesController extends Controller {
 
     /**
      * Prompt the user to add a series to the library from an item HashMap.
-     * <p>
-     * See {@link #addSeriesFromItem(HashMap)} for details what the HashMap should contain.
+     * 
+     * <p>See {@link #addSeriesFromItem(HashMap)} for details what the HashMap should contain.
      *
      * @param item a HashMap representing a series result
      */
@@ -313,12 +313,12 @@ public class SearchSeriesController extends Controller {
 
     /**
      * Adds a series to the library from an item HashMap.
-     * <p>
-     * Since the data retrieved from content source search pages can vary, this method does not rely
+     * 
+     * <p>Since the data retrieved from content source search pages varies, this method doesn't rely
      * heavily on the contents of the given HashMap. The only fields used from the given item are
      * "contentSourceId" and "source", the URL for the series.
-     * <p>
-     * This method simply loads the series manually using the content loader, and then hides this
+     * 
+     * <p>This method simply loads the series manually using the content loader, and then hides this
      * stage since we don't need it anymore.
      *
      * @param item a HashMap containing the fields described above
@@ -338,8 +338,8 @@ public class SearchSeriesController extends Controller {
 
     /**
      * Searches from the selected content source using the searchTextField.
-     * <p>
-     * The table of results is updated by the ContentLoader after loading.
+     * 
+     * <p>The table of results is updated by the ContentLoader after loading.
      *
      * @see com.faltro.houdoku.util.ContentLoader
      * @see ContentSource

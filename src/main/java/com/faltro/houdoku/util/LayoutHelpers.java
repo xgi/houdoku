@@ -48,16 +48,16 @@ public class LayoutHelpers {
     /**
      * Apply the correct aspect ratio for covers to the given ImageView.
      * 
-     * This method does not specify a width for the ImageView itself.
+     * <p>This method does not specify a width for the ImageView itself.
      * 
-     * The ImageView's image should be set AFTER this method is called, but the aspect ratio will be
-     * applied whenever the image is changed.
+     * <p>The ImageView's image should be set AFTER this method is called, but the aspect ratio will
+     * be applied whenever the image is changed.
      * 
-     * @param image_view the ImageView for a cover to apply the aspect ratio to
+     * @param imageView the ImageView for a cover to apply the aspect ratio to
      */
-    public static void applyCoverSizing(ImageView image_view) {
-        image_view.setPreserveRatio(true);
-        image_view.imageProperty().addListener((observableValue, oldValue, image) -> {
+    public static void applyCoverSizing(ImageView imageView) {
+        imageView.setPreserveRatio(true);
+        imageView.imageProperty().addListener((observableValue, oldValue, image) -> {
             double ih = image.getHeight();
             double iw = image.getWidth();
             double image_ratio = ih / iw;
@@ -65,7 +65,7 @@ public class LayoutHelpers {
             double vp_height = image_ratio < COVER_RATIO ? ih : iw * COVER_RATIO;
             double offset_x = (iw - vp_width) / 2;
             double offset_y = (ih - vp_height) / 2;
-            image_view.setViewport(new Rectangle2D(offset_x, offset_y, vp_width, vp_height));
+            imageView.setViewport(new Rectangle2D(offset_x, offset_y, vp_width, vp_height));
         });
     }
 
@@ -133,20 +133,19 @@ public class LayoutHelpers {
     public static StackPane createCoverContainer(FlowPane container, String title, ImageView cover,
             int numUnreadChapters) {
         String amountOfReadChapters = String.valueOf(numUnreadChapters);
-
-        // We call the other createCoverContainer method to provide a filled stackpane with the
-        // title and cover
-        StackPane pane = createCoverContainer(container, title, cover);
-
+        
         // create the label for showing the amount of chapters marked as read
         Label label = new Label();
         label.setText(amountOfReadChapters);
         label.getStyleClass().add("coverLabel");
         label.setWrapText(true);
-
+        
         // this label will be situated in the top right as the title is located in the bottom left
         StackPane.setAlignment(label, Pos.TOP_RIGHT);
-
+        
+        // We call the other createCoverContainer method to provide a filled stackpane with the
+        // title and cover
+        StackPane pane = createCoverContainer(container, title, cover);
         pane.getChildren().add(label);
 
         return pane;

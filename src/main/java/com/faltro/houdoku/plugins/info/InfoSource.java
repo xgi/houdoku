@@ -3,21 +3,20 @@ package com.faltro.houdoku.plugins.info;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.plugins.content.ContentSource;
-import com.faltro.houdoku.util.PluginManager;
+import java.io.IOException;
 import javafx.scene.image.Image;
 import okhttp3.OkHttpClient;
-import java.io.IOException;
 
 /**
  * An info source is a website which contains generic series information and media. This type
  * differs from {@link ContentSource} in that instances of this class are used to retrieve
  * information and media which is not specific to an individual ContentSource.
- * <p>
- * Currently, instances of this class are not heavily utilized, since most ContentSource's provide
+ * 
+ * <p>Currently, instances of this class aren't heavily utilized, since most ContentSource's provide
  * adequate series information. In the future, we may want to utilize instances of this class to
  * "fill in" for missing data from ContentSource's.
- * <p>
- * The client maintains only one InfoSource at a time, which is hardcoded in {@link PluginManager}.
+ * 
+ * <p>The client maintains only one InfoSource at a time, which is hardcoded in PluginManager.
  * In the future, we may allow the user to switch the current InfoSource in their settings.
  *
  * @see com.faltro.houdoku.plugins.info

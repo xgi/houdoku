@@ -3,14 +3,14 @@ package com.faltro.houdoku.plugins.tracker;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Track;
-import okhttp3.OkHttpClient;
 import java.io.IOException;
+import okhttp3.OkHttpClient;
 
 /**
  * This class contains implementations for some methods from TrackerOAuth that are expected to be
  * common between most OAuth-based tracker plugins.
- * <p>
- * For method and field documentation, please see the TrackerOAuth class.
+ * 
+ * <p>For method and field documentation, please see the TrackerOAuth class.
  *
  * @see TrackerOAuth
  */
@@ -28,7 +28,7 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     final OkHttpClient client = new OkHttpClient();
 
     boolean authenticated = false;
-    String access_token = null;
+    String accessToken = null;
 
     @Override
     public boolean isSupported() {
@@ -93,7 +93,7 @@ public class GenericTrackerOAuth implements TrackerOAuth {
 
     @Override
     public String getToken() {
-        return access_token;
+        return accessToken;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class GenericTrackerOAuth implements TrackerOAuth {
     }
 
     @Override
-    public void update(String id, Track track, boolean safe, boolean can_add)
+    public void update(String id, Track track, boolean safe, boolean canAdd)
             throws NotImplementedException, NotAuthenticatedException, IOException {
         throw new NotImplementedException();
     }

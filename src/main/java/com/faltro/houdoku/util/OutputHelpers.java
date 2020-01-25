@@ -31,8 +31,8 @@ public class OutputHelpers {
 
     /**
      * Represents a double as a String.
-     * <p>
-     * The resulting string will only contain a decimal if the double cannot be equivalently
+     * 
+     * <p>The resulting string will only contain a decimal if the double cannot be equivalently
      * represented without it.
      *
      * @param dbl the source Double

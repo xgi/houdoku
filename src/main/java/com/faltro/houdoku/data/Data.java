@@ -4,17 +4,17 @@ import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.util.OutputHelpers;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.Image;
-import net.harawata.appdirs.AppDirs;
-import net.harawata.appdirs.AppDirsFactory;
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
+import javax.imageio.ImageIO;
+import net.harawata.appdirs.AppDirs;
+import net.harawata.appdirs.AppDirsFactory;
 
 public class Data {
     /**

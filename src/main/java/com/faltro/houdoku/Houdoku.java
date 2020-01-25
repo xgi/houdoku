@@ -1,13 +1,12 @@
 package com.faltro.houdoku;
 
 import com.faltro.houdoku.controller.*;
-import com.faltro.houdoku.plugins.tracker.Kitsu;
 import com.faltro.houdoku.util.SceneManager;
-import javafx.application.Application;
-import javafx.stage.Stage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 public class Houdoku extends Application {
     public static Properties PROJECT_PROPERTIES;
@@ -65,9 +64,9 @@ public class Houdoku extends Application {
     }
 
     @Override
-    public void start(Stage primary_stage) throws Exception {
+    public void start(Stage primaryStage) throws Exception {
 
-        sceneManager = new SceneManager(primary_stage);
+        sceneManager = new SceneManager(primaryStage);
 
         LibraryController library_controller = new LibraryController(sceneManager);
         SeriesController series_controller = new SeriesController(sceneManager);
@@ -89,8 +88,8 @@ public class Houdoku extends Application {
         sceneManager.prepare();
         sceneManager.changeToRoot(LibraryController.ID);
 
-        primary_stage.setTitle("Houdoku");
-        primary_stage.show();
+        primaryStage.setTitle("Houdoku");
+        primaryStage.show();
     }
 
     @Override

@@ -5,13 +5,11 @@ import com.faltro.houdoku.controller.SeriesController;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Series;
-import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.model.Statuses.Status;
-import com.faltro.houdoku.plugins.info.AniList;
+import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.plugins.tracker.Tracker;
 import com.faltro.houdoku.util.ContentLoader;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class LoadSeriesTrackerRunnable extends LoaderRunnable {
     private final Tracker tracker;

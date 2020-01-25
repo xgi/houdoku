@@ -207,8 +207,8 @@ public class ContentLoader {
 
     /**
      * Request threads with names starting with the given prefix to stop.
-     * <p>
-     * This method does not guarantee the threads to immediately stop -- it simply calls
+     * 
+     * <p>This method does not guarantee the threads to immediately stop -- it simply calls
      * requestStop() on all matching running LoaderRunnable's.
      *
      * @param prefix the prefix of the thread names to stop
@@ -225,8 +225,8 @@ public class ContentLoader {
 
     /**
      * Request all threads to stop.
-     * <p>
-     * This method does not guarantee the threads to immediately stop -- it simply calls
+     * 
+     * <p>This method does not guarantee the threads to immediately stop -- it simply calls
      * requestStop() on all matching running LoaderRunnable's.
      */
     public void stopAllThreads() {

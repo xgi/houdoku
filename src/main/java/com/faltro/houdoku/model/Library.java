@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 /**
  * A user-specific library of Series'.
- * <p>
- * This class also defines the root category, "All Series", which cannot be altered or removed.
+ * 
+ * <p>This class also defines the root category, "All Series", which cannot be altered or removed.
  */
 public class Library {
     private final ArrayList<Series> serieses;
@@ -68,19 +68,19 @@ public class Library {
         // required "All Series" root
         for (Category c1 : rootCategory.getSubcategories()) {
             c1.setOccurrences((int) found_categories.stream().filter(
-                    category -> category.getName().toLowerCase().equals(c1.getName().toLowerCase()))
-                    .count());
+                category -> category.getName().toLowerCase().equals(c1.getName().toLowerCase())
+            ).count());
             for (Category c2 : c1.getSubcategories()) {
                 c2.setOccurrences((int) found_categories.stream().filter(category -> category
-                        .getName().toLowerCase().equals(c2.getName().toLowerCase())).count());
+                    .getName().toLowerCase().equals(c2.getName().toLowerCase())).count());
             }
         }
     }
 
     /**
      * Add a Series to the library.
-     * <p>
-     * This method does not check whether the series already exists in the library.
+     * 
+     * <p>This method does not check whether the series already exists in the library.
      *
      * @param series the Series to add
      */
@@ -91,8 +91,8 @@ public class Library {
 
     /**
      * Remove a Series from the library.
-     * <p>
-     * This method also deletes the cached series cover from the filesystem.
+     * 
+     * <p>This method also deletes the cached series cover from the filesystem.
      *
      * @param series the Series to remove
      */
@@ -104,19 +104,20 @@ public class Library {
 
     /**
      * Try to find a series in the library matching the given title.
-     * <p>
-     * This check is case-insensitive, and also checks the altNames of the series' in the library.
+     * 
+     * <p>This check is case-insensitive, and also checks the altNames of series' in the library.
      *
      * @param title the title of the series to check
      * @return the (first) matching series, or null
      */
     public Series find(String title) {
         return serieses.stream()
-                .filter(series -> (series.getTitle() != null && series.getTitle().toLowerCase().equals(title.toLowerCase())))
-                .filter(series -> series.altNames != null && Arrays.stream(series.altNames)
-                      .anyMatch(name -> name.toLowerCase().equals(title.toLowerCase())))
-                .findFirst()
-                .orElse(null);
+            .filter(series -> (series.getTitle() != null
+                && series.getTitle().toLowerCase().equals(title.toLowerCase())))
+            .filter(series -> series.altNames != null && Arrays.stream(series.altNames)
+                .anyMatch(name -> name.toLowerCase().equals(title.toLowerCase())))
+            .findFirst()
+            .orElse(null);
     }
 
     public ArrayList<Series> getSerieses() {

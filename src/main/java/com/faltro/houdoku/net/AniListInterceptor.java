@@ -1,9 +1,9 @@
 package com.faltro.houdoku.net;
 
+import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-import java.io.IOException;
 
 public class AniListInterceptor implements Interceptor {
     private String token = null;

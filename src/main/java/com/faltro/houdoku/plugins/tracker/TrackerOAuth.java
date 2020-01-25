@@ -44,8 +44,9 @@ public interface TrackerOAuth extends Tracker {
 
     /**
      * Generate the user's access token using a code.
-     * <p>
-     * If this method successfully retrieves a valid token, {@link #isAuthenticated()} will be true.
+     * 
+     * <p>If this method successfully retrieves a valid token, {@link #isAuthenticated()} will be
+     * true.
      *
      * @param code a verification code given by the user after authorization
      * @throws NotImplementedException the operation has not yet been implemented for this tracker
@@ -55,20 +56,22 @@ public interface TrackerOAuth extends Tracker {
 
     /**
      * Generate the user's access token using a username/password.
-     * <p>
-     * If this method successfully retrieves a valid token, {@link #isAuthenticated()} will be true.
+     * 
+     * <p>If this method successfully retrieves a valid token, {@link #isAuthenticated()} will be
+     * true.
      *
      * @param username the user's username
      * @param password the user's password
      * @throws NotImplementedException the operation has not yet been implemented for this tracker
      * @throws IOException             an IOException occurred when generating
      */
-    void generateToken(String username, String password) throws NotImplementedException, IOException;
+    void generateToken(String username, String password) throws NotImplementedException,
+        IOException;
 
     /**
      * Get the user's access token.
-     * <p>
-     * Returns null if the user is not authenticated.
+     * 
+     * <p>Returns null if the user is not authenticated.
      *
      * @return the user's access token, or null
      */
@@ -76,8 +79,8 @@ public interface TrackerOAuth extends Tracker {
 
     /**
      * Revoke the authentication status.
-     * <p>
-     * Sets user to "unauthenticated" and clears the access token.
+     * 
+     * <p>Sets user to "unauthenticated" and clears the access token.
      * 
      * @throws NotImplementedException the operation has not yet been implemented for this tracker
      */

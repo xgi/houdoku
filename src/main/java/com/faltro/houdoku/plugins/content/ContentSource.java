@@ -4,18 +4,18 @@ import com.faltro.houdoku.exception.ContentUnavailableException;
 import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Series;
-import javafx.scene.image.Image;
-import okhttp3.OkHttpClient;
-import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.scene.image.Image;
+import okhttp3.OkHttpClient;
+import org.jsoup.nodes.Document;
 
 /**
  * A content source is a website which contains series information and provides a list of chapters
  * for series', from which pages can be downloaded as images.
- * <p>
- * The client maintains numerous ContentSource's, and the user can choose to use a different
+ * 
+ * <p>The client maintains numerous ContentSource's, and the user can choose to use a different
  * ContentSource for each series in their library.
  *
  * @see com.faltro.houdoku.plugins.content
@@ -44,9 +44,9 @@ public interface ContentSource {
 
     /**
      * Searches the source using a provided query.
-     * <p>
-     * This method does NOT load Series objects, since the amount of series information provided by
-     * the search page is often limited. Instead, the following data about each result is retrieved:
+     * 
+     * <p>This method does NOT load Series objects, since the amount of series information provided
+     * by search page is often limited. Instead, the following data about each result is retrieved:
      * <ul>
      * <li>contentSourceId (int) - the ContentSource's ID field</li>
      * <li>source (String) - the URL to the series page</li>
@@ -68,8 +68,8 @@ public interface ContentSource {
 
     /**
      * Parse all of the chapters of the given series.
-     * <p>
-     * This method may choose to call chapters(Series, Document) if the list of
+     * 
+     * <p>This method may choose to call chapters(Series, Document) if the list of
      * chapters includes a pager that can only be navigated by loading multiple documents.
      *
      * @param series the series that the chapters are from
@@ -85,8 +85,8 @@ public interface ContentSource {
 
     /**
      * Parse all of the chapters on the given Document.
-     * <p>
-     * This method is NOT guaranteed to return all chapters of a given series -- use
+     * 
+     * <p>This method is NOT guaranteed to return all chapters of a given series -- use
      * chapters(Series) for that.
      *
      * @param series   the series that the chapters are from
@@ -102,8 +102,8 @@ public interface ContentSource {
 
     /**
      * Parses the given source as a Series.
-     * <p>
-     * The given source is generally a URL fragment relative to the domain, but this is not
+     * 
+     * <p>The given source is generally a URL fragment relative to the domain, but this is not
      * explicitly required. The fragment also generally contains a preceding forward slash, but
      * including one is not explicitly required and may depend the source URL's retrieved from
      * search results.
@@ -124,11 +124,11 @@ public interface ContentSource {
 
     /**
      * Retrieves a series' cover image from the given URL.
-     * <p>
-     * This method does not always need to be implemented. It is primarily used when the
+     * 
+     * <p>This method does not always need to be implemented. It is primarily used when the
      * ContentSource's search results page does not present series covers.
-     * <p>
-     * This method generally goes to the given source, which is probably a series page, and finds
+     * 
+     * <p>This method generally goes to the given source, which is probably a series page, and finds
      * the cover image on that page.
      *
      * @param source the source of the page which contains the cover image
@@ -141,15 +141,15 @@ public interface ContentSource {
 
     /**
      * Retrieves an Image of a chapter page.
-     * <p>
-     * This method generally uses the source property of the given Chapter (via
+     * 
+     * <p>This method generally uses the source property of the given Chapter (via
      * chapter.getSource()), which is almost certainly a "reader" page, where specific pages can
      * often be loaded by appending a page number to the URL in some fashion.
-     * <p>
-     * This method almost certainly has to make two requests: one to load the proper page of the
+     * 
+     * <p>This method almost certainly has to make two requests: one to load the proper page of the
      * reader, and another to load the direct image URL by processing the reader page's contents.
-     * <p>
-     * When this method is called, chapter.images may not be initialized, since sources almost never
+     * 
+     * <p>When this method is called, chapter.images may not be initialized, since sources rarely
      * provide the number of pages in a chapter before going to the reader itself (which is only
      * loaded by this method). Thus, this method should check whether chapter.images is initialized
      * and, if it is not, this method should determine the number of pages in the chapter and

@@ -1,7 +1,7 @@
 package com.faltro.houdoku.model;
 
-import javafx.scene.input.KeyCode;
 import java.util.HashMap;
+import javafx.scene.input.KeyCode;
 
 /**
  * Stores user-specific config information for the client.
@@ -71,9 +71,7 @@ public class Config {
          */
         QUICK_RELOAD_SERIES("quick_reload_series", true),
         /**
-         * Inverts the reading keys, this is to simulate a more traditional reading style
-         * where on pressing the left key, it goes to the next page
-         * and on pressing the right key, it goes to the previous page
+         * Inverts the reading keys for a right-to-left reading style.
          */
         INVERT_READING_STYLE("invert_reading_style", false),
         /**
@@ -168,9 +166,9 @@ public class Config {
         private final String name;
         private final Object defaultValue;
 
-        Field(String name, Object default_value) {
+        Field(String name, Object defaultValue) {
             this.name = name;
-            this.defaultValue = default_value;
+            this.defaultValue = defaultValue;
         }
 
         String getName() {

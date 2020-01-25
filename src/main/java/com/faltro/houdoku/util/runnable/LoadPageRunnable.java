@@ -6,8 +6,8 @@ import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.util.ContentLoader;
-import javafx.scene.image.Image;
 import java.io.IOException;
+import javafx.scene.image.Image;
 
 public class LoadPageRunnable extends LoaderRunnable {
     private final ContentSource contentSource;

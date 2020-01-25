@@ -5,10 +5,10 @@ import com.faltro.houdoku.model.Chapter;
 import com.faltro.houdoku.model.Config;
 import com.faltro.houdoku.model.Languages;
 import com.faltro.houdoku.model.Languages.Language;
-import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.model.Library;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.model.Statuses;
+import com.faltro.houdoku.model.Statuses.Status;
 import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.plugins.content.ContentSource;
 import com.faltro.houdoku.plugins.info.InfoSource;
@@ -19,12 +19,15 @@ import com.faltro.houdoku.util.ContentLoader;
 import com.faltro.houdoku.util.LayoutHelpers;
 import com.faltro.houdoku.util.OutputHelpers;
 import com.faltro.houdoku.util.SceneManager;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
@@ -34,6 +37,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -45,30 +49,26 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Callback;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
  * The controller for the series page.
- * <p>
- * The FXML file for this view is at resources/fxml/series.fxml
+ * 
+ * <p>The FXML file for this view is at resources/fxml/series.fxml
  *
  * @see Controller
  */
 public class SeriesController extends Controller {
     public static final int ID = 1;
     private static final double[] COL_WIDTHS = {0.04, // read
-            0.32, // title
-            0.06, // volume
-            0.06, // chapter
-            0.10, // language
-            0.16, // group
-            0.08, // views
-            0.18, // date
+        0.32, // title
+        0.06, // volume
+        0.06, // chapter
+        0.10, // language
+        0.16, // group
+        0.08, // views
+        0.18, // date
     };
     /**
      * The height of the banner image.
@@ -212,8 +212,8 @@ public class SeriesController extends Controller {
 
     /**
      * Initialize the components of the controller's view.
-     * <p>
-     * This method binds the size of components as appropriate using this class' static variables.
+     * 
+     * <p>This method binds the size of components as appropriate using this class' static vars.
      * It creates and sets the cell factory and cell value factory for the columns in the chapters
      * table.
      *
@@ -316,20 +316,20 @@ public class SeriesController extends Controller {
         // create blank FilteredList with predicate based on filterTextField
         this.filteredData = new FilteredList<>(FXCollections.emptyObservableList());
         this.filterListener =
-                (observable, oldValue, newValue) -> this.filteredData.setPredicate(chapter -> {
-                    String[] filters = filterTextField.getText().toLowerCase().split(",");
-                    Config config = sceneManager.getConfig();
-                    boolean lang_filter_enabled =
-                            (boolean) config.getValue(Config.Field.LANGUAGE_FILTER_ENABLED);
+            (observable, oldValue, newValue) -> this.filteredData.setPredicate(chapter -> {
+                String[] filters = filterTextField.getText().toLowerCase().split(",");
+                Config config = sceneManager.getConfig();
+                boolean lang_filter_enabled =
+                        (boolean) config.getValue(Config.Field.LANGUAGE_FILTER_ENABLED);
 
-                    if (lang_filter_enabled) {
-                        Language language = Languages.get(
-                                (String) config.getValue(Config.Field.LANGUAGE_FILTER_LANGUAGE));
-                        return chapter.matchesFilters(filters) && chapter.matchesLanguage(language);
-                    } else {
-                        return chapter.matchesFilters(filters);
-                    }
-                });
+                if (lang_filter_enabled) {
+                    Language language = Languages.get(
+                            (String) config.getValue(Config.Field.LANGUAGE_FILTER_LANGUAGE));
+                    return chapter.matchesFilters(filters) && chapter.matchesLanguage(language);
+                } else {
+                    return chapter.matchesFilters(filters);
+                }
+            });
         filterTextField.textProperty().addListener(this.filterListener);
 
         // apply adjustments to the banner and its contents
@@ -433,8 +433,8 @@ public class SeriesController extends Controller {
 
     /**
      * Reload the series and necessary media from the content source.
-     * <p>
-     * This method will call {@link #refreshContent()} after reloading the series, and it will
+     * 
+     * <p>This method will call {@link #refreshContent()} after reloading the series, and it will
      * update the banner after that is loaded as well.
      */
     @FXML
@@ -532,14 +532,19 @@ public class SeriesController extends Controller {
         textDescription.setText(series.description);
 
         // hide metadata field rows if the field is unset
-        textAltNames.getParent().getParent().setVisible(series.altNames != null && series.altNames.length > 0);
-        textAuthor.getParent().getParent().setVisible(series.author != null && !series.author.equals(""));
-        textArtist.getParent().getParent().setVisible(series.artist != null && !series.artist.equals(""));
+        textAltNames.getParent().getParent().setVisible(
+            series.altNames != null && series.altNames.length > 0);
+        textAuthor.getParent().getParent().setVisible(
+            series.author != null && !series.author.equals(""));
+        textArtist.getParent().getParent().setVisible(
+            series.artist != null && !series.artist.equals(""));
         textRating.getParent().getParent().setVisible(series.rating != 0);
         textViews.getParent().getParent().setVisible(series.views != 0);
         textFollows.getParent().getParent().setVisible(series.follows != 0);
-        textGenres.getParent().getParent().setVisible(series.genres != null && series.genres.length > 0);
-        textStatus.getParent().getParent().setVisible(series.status != null && !series.status.equals(""));
+        textGenres.getParent().getParent().setVisible(
+            series.genres != null && series.genres.length > 0);
+        textStatus.getParent().getParent().setVisible(
+            series.status != null && !series.status.equals(""));
 
         for (Text text : Arrays.asList(textAltNames, textAuthor, textArtist, textRating, textViews,
                 textFollows, textGenres, textStatus)) {
@@ -562,9 +567,9 @@ public class SeriesController extends Controller {
 
     /**
      * Creates a standard MouseEvent "click handler" for a table cell.
-     * <p>
-     * The event checks for a double left click. When it happens, it identifies the chapter of the
-     * selected row and changes the scene to the reader with the specified chapter.
+     * 
+     * <p>The event checks for a double left click. When it happens, it identifies the chapter of
+     * the selected row and changes the scene to the reader with the specified chapter.
      *
      * @param contextMenu the context menu shown when right clicking
      * @return a standard MouseEvent EventHandler for a table cell
@@ -613,9 +618,9 @@ public class SeriesController extends Controller {
 
     /**
      * Creates a Callback of a standard cell factory for a table cell.
-     * <p>
-     * The cell factory represents the String content as a JavaFX Text object using the "tableText"
-     * style class. The cell is given a click handler from newCellClickHandler().
+     * 
+     * <p>The cell factory represents the String content as a JavaFX Text object using the
+     * "tableText" style class. The cell is given a click handler from newCellClickHandler().
      *
      * @param widthProperty the widthProperty of this cell's column
      * @param contextMenu   the context menu shown when right clicking
@@ -639,8 +644,8 @@ public class SeriesController extends Controller {
 
     /**
      * Change to the library page.
-     * <p>
-     * Called exclusively by toLibraryButton
+     * 
+     * <p>Called exclusively by toLibraryButton
      *
      * @see LibraryController
      * @see #toLibraryButton
@@ -668,8 +673,8 @@ public class SeriesController extends Controller {
 
     /**
      * Change to the reader page with the selected chapter.
-     * <p>
-     * If no chapter is selected, this function does nothing.
+     * 
+     * <p>If no chapter is selected, this function does nothing.
      */
     @FXML
     private void goToSelectedChapter() {
@@ -682,7 +687,7 @@ public class SeriesController extends Controller {
     /**
      * Reload details for the series.
      * 
-     * This method is usually called after downloading info from the tracker (i.e. in
+     * <p>This method is usually called after downloading info from the tracker (i.e. in
      * LoadSeriesTrackerRunnable).
      *
      * @param tracker_id    the id of the tracker to update

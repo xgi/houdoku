@@ -26,9 +26,9 @@ public class LoaderRunnable implements Runnable {
 
     /**
      * Safely stop the runnable.
-     * <p>
-     * The {@link #run()} method must make use of the {@link #running} parameter for this method to
-     * be useful. If it doesn't, the runnable might not be meaningful enough to stop, anyway.
+     * 
+     * <p>The {@link #run()} method must make use of the {@link #running} parameter for this method
+     * to be useful. If it doesn't, the runnable might not be meaningful enough to stop, anyway.
      */
     public void requestStop() {
         this.running = false;

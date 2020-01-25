@@ -4,16 +4,15 @@ import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.util.SceneManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckMenuItem;
-import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
  * This class contains method declarations and/or implementations for operations that are generic
  * between most of the client's controllers.
  */
-abstract public class Controller {
+public abstract class Controller {
     /**
      * The unique identifier for the Controller.
      */
@@ -45,12 +44,12 @@ abstract public class Controller {
     /**
      * Function that will be called by the scene manager when this controller is made active.
      */
-    abstract public void onMadeActive();
+    public abstract void onMadeActive();
 
     /**
      * Function that will be called by the scene manager when this controller is made inactive.
      */
-    abstract public void onMadeInactive();
+    public abstract void onMadeInactive();
 
     /**
      * Initialize the components of the controller's view.

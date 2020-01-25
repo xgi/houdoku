@@ -5,8 +5,8 @@ import com.faltro.houdoku.exception.NotImplementedException;
 import com.faltro.houdoku.model.Series;
 import com.faltro.houdoku.plugins.info.InfoSource;
 import com.faltro.houdoku.util.ContentLoader;
-import javafx.scene.image.Image;
 import java.io.IOException;
+import javafx.scene.image.Image;
 
 public class LoadBannerRunnable extends LoaderRunnable {
     private final InfoSource infoSource;

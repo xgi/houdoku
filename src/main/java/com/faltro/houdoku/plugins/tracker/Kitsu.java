@@ -1,30 +1,30 @@
 package com.faltro.houdoku.plugins.tracker;
 
+import static com.faltro.houdoku.net.Requests.GET;
+import static com.faltro.houdoku.net.Requests.POST;
+import static com.faltro.houdoku.net.Requests.PATCH;
+
 import com.faltro.houdoku.Houdoku;
 import com.faltro.houdoku.data.Serializer;
 import com.faltro.houdoku.exception.NotAuthenticatedException;
 import com.faltro.houdoku.model.Statuses;
-import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.model.Statuses.Status;
+import com.faltro.houdoku.model.Track;
 import com.faltro.houdoku.net.KitsuInterceptor;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import okhttp3.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.faltro.houdoku.net.Requests.GET;
-import static com.faltro.houdoku.net.Requests.POST;
-import static com.faltro.houdoku.net.Requests.PATCH;
+import okhttp3.*;
 
 /**
  * This class contains implementation details for processing data from a specific "tracker" - a
  * website for users to track their reading.
- * <p>
- * For method and field documentation, please see the Tracker/TrackerOAuth classes. Additionally,
+ * 
+ * <p>For method and field documentation, please see the Tracker/TrackerOAuth classes. Additionally,
  * the implementation of some common methods is done in the GenericTrackerOAuth class.
  *
  * @see GenericTrackerOAuth
@@ -261,7 +261,7 @@ public class Kitsu extends GenericTrackerOAuth {
     /**
      * Add an entry for a series to the user's list.
      * 
-     * This method should only be run if the series is known to not exist in the user's list.
+     * <p>This method should only be run if the series is known to not exist in the user's list.
      *
      * @param id the series id
      * @return a Track instance for the series in the user's list
@@ -307,7 +307,7 @@ public class Kitsu extends GenericTrackerOAuth {
     }
 
     private void setAccessToken(String token) {
-        this.access_token = token;
+        this.accessToken = token;
         interceptor.setToken(token);
     }
 }

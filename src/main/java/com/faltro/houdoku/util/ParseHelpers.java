@@ -1,7 +1,5 @@
 package com.faltro.houdoku.util;
 
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -9,6 +7,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class ParseHelpers {
     /**
@@ -48,9 +48,9 @@ public class ParseHelpers {
 
     /**
      * Isolates the first word in the given string.
-     * <p>
-     * This function is built to handle two cases: the input string solely contains a single word,
-     * and the input string contains a sequence of words, separated by spaces.
+     * 
+     * <p>This function is built to handle two cases: the input string solely contains a single
+     * word, and the input string contains a sequence of words, separated by spaces.
      *
      * @param string the source string
      * @return the first word in the given string
@@ -65,11 +65,11 @@ public class ParseHelpers {
 
     /**
      * Safely parses an int from the given string.
-     * <p>
-     * This method can parse integers from text which uses US-style formatting, particularly
+     * 
+     * <p>This method can parse integers from text which uses US-style formatting, particularly
      * including comma separated digits.
-     * <p>
-     * If the given text is blank, this method will return 0.
+     * 
+     * <p>If the given text is blank, this method will return 0.
      *
      * @param text a string which can reasonably be represented as an integer
      * @return the int which is represented by the given text
@@ -93,11 +93,11 @@ public class ParseHelpers {
 
     /**
      * Safely parses a long from the given string.
-     * <p>
-     * This method can parse longs from text which uses US-style formatting, particularly including
-     * comma separated digits.
-     * <p>
-     * If the given text is blank, this method will return 0.
+     * 
+     * <p>This method can parse longs from text which uses US-style formatting, particularly
+     * including comma separated digits.
+     * 
+     * <p>If the given text is blank, this method will return 0.
      *
      * @param text a string which can reasonably be represented as an integer
      * @return the int which is represented by the given text
@@ -121,8 +121,8 @@ public class ParseHelpers {
 
     /**
      * Safely parses a double from the given string.
-     * <p>
-     * If the given text is blank, this method will return 0.
+     * 
+     * <p>If the given text is blank, this method will return 0.
      *
      * @param text a string which can reasonably be represented as a double
      * @return the double which is represented by the given text

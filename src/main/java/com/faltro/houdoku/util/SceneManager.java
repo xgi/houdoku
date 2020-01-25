@@ -6,6 +6,11 @@ import com.faltro.houdoku.controller.Controller;
 import com.faltro.houdoku.controller.ReaderController;
 import com.faltro.houdoku.data.Data;
 import com.faltro.houdoku.model.Config;
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,11 +18,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * Manager and container for scene-related class instances. The instance of this class is the
@@ -66,7 +66,7 @@ public class SceneManager {
     private static final double DEFAULT_CONFIG_HEIGHT_MULTIPLIER = 0.85;
 
     private final Stage stage;
-    private final Stage stage_config;
+    private final Stage stageConfig;
     private final HashMap<Integer, Parent> roots;
     private final HashMap<Parent, Controller> controllers;
     private final PluginManager pluginManager;
@@ -75,8 +75,9 @@ public class SceneManager {
 
     /**
      * Create the SceneManager.
-     * <p>
-     * This constructor creates instances of the non-controller-specific classes used by ths class.
+     * 
+     * <p>This constructor creates instances of the non-controller-specific classes used by this
+     * class.
      *
      * @param stage the stage of the main application window
      */
@@ -85,7 +86,7 @@ public class SceneManager {
         this.config = loaded_config == null ? new Config() : loaded_config;
 
         this.stage = stage;
-        this.stage_config = new Stage();
+        this.stageConfig = new Stage();
         this.roots = new HashMap<>();
         this.controllers = new HashMap<>();
         this.pluginManager = new PluginManager(this.config);
@@ -94,13 +95,13 @@ public class SceneManager {
         // add icon to the window bar
         Image window_icon = new Image(getClass().getResourceAsStream("/img/window_icon.png"));
         stage.getIcons().add(window_icon);
-        stage_config.getIcons().add(window_icon);
+        stageConfig.getIcons().add(window_icon);
     }
 
     /**
      * Initialize the root (a Parent node) for a scene.
-     * <p>
-     * The root is usually an individual page, i.e. the library page or the reader page.
+     * 
+     * <p>The root is usually an individual page, i.e. the library page or the reader page.
      * Technically, it can be anything with an FXML source and a controller.
      *
      * @param id         the unique id to give this root; probably the controller's unique id
@@ -120,8 +121,8 @@ public class SceneManager {
 
     /**
      * Prepare the initialized roots with preliminary operations.
-     * <p>
-     * This method should be executed only once: after all roots have been initialized, and before
+     * 
+     * <p>This method should be executed once: after all roots have been initialized, and before
      * changeToRoot/changeStageRoot has been called for the first time.
      */
     public void prepare() {
@@ -134,8 +135,8 @@ public class SceneManager {
 
     /**
      * Change to the root with the given id.
-     * <p>
-     * The root should have already been initialized with {@link #initRoot(int, Controller, URL)}.
+     * 
+     * <p>The root should have been initialized with {@link #initRoot(int, Controller, URL)}.
      *
      * @param id the id of the root to change to
      */
@@ -148,11 +149,11 @@ public class SceneManager {
      */
     public void showConfigStage() {
         Parent root = roots.get(ConfigController.ID);
-        changeStageRoot(stage_config, root);
-        stage_config.setTitle(Houdoku.getName() + " - Settings");
-        getController(root).setStage(stage_config);
-        stage_config.show();
-        sizeStage(stage_config, DEFAULT_CONFIG_WIDTH_MULTIPLIER, DEFAULT_CONFIG_HEIGHT_MULTIPLIER);
+        changeStageRoot(stageConfig, root);
+        stageConfig.setTitle(Houdoku.getName() + " - Settings");
+        getController(root).setStage(stageConfig);
+        stageConfig.show();
+        sizeStage(stageConfig, DEFAULT_CONFIG_WIDTH_MULTIPLIER, DEFAULT_CONFIG_HEIGHT_MULTIPLIER);
     }
 
     /**
@@ -228,14 +229,14 @@ public class SceneManager {
      * Set the size of a stage to the default variables times a multiplier.
      *
      * @param stg               the stage to size
-     * @param width_multiplier  the width multiplier of the default values
-     * @param height_multiplier the height multiplier of the default values
+     * @param widthMultiplier  the width multiplier of the default values
+     * @param heightMultiplier the height multiplier of the default values
      * @see #DEFAULT_WIDTH
      * @see #DEFAULT_HEIGHT
      * @see #MIN_DEFAULT_WIDTH
      * @see #MIN_DEFAULT_HEIGHT
      */
-    private void sizeStage(Stage stg, double width_multiplier, double height_multiplier) {
+    private void sizeStage(Stage stg, double widthMultiplier, double heightMultiplier) {
         double screen_width = Screen.getPrimary().getBounds().getWidth();
         double screen_height = Screen.getPrimary().getBounds().getHeight();
         double desired_width = screen_width * DEFAULT_WIDTH >= MIN_DEFAULT_WIDTH
@@ -244,8 +245,8 @@ public class SceneManager {
         double desired_height = screen_height * DEFAULT_HEIGHT >= MIN_DEFAULT_HEIGHT
                 ? (int) (screen_height * DEFAULT_HEIGHT)
                 : MIN_DEFAULT_HEIGHT;
-        stg.setWidth(desired_width * width_multiplier);
-        stg.setHeight(desired_height * height_multiplier);
+        stg.setWidth(desired_width * widthMultiplier);
+        stg.setHeight(desired_height * heightMultiplier);
     }
 
     /**

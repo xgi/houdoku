@@ -1,13 +1,13 @@
 package com.faltro.houdoku.model;
 
 import com.faltro.houdoku.model.Languages.Language;
-import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javafx.scene.image.Image;
 
 /**
  * A series from a ContentSource, which contains an array of Chapter's that the user can read from.
@@ -54,8 +54,8 @@ public class Series {
 
     /**
      * Sets the "metadata" content of this object.
-     * <p>
-     * The following fields are stored:
+     * 
+     * <p>The following fields are stored:
      * <ul>
      * <li>language (Language)</li>
      * <li>author (String)</li>
@@ -110,6 +110,8 @@ public class Series {
                     genres = (String[]) metadata.get(key);
                     stringCategories.addAll(Arrays.asList(genres));
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -147,36 +149,35 @@ public class Series {
     /**
      * Update or add a tracker's series id.
      *
-     * @param tracker_id the ID field of the Tracker class being used
-     * @param series_id  the series' id on the Tracker website
+     * @param trackerId the ID field of the Tracker class being used
+     * @param seriesId  the series' id on the Tracker website
      */
-    public void updateTrackerId(int tracker_id, String series_id) {
-        if (this.trackerIds.containsKey(tracker_id)) {
-            this.trackerIds.replace(tracker_id, series_id);
+    public void updateTrackerId(int trackerId, String seriesId) {
+        if (this.trackerIds.containsKey(trackerId)) {
+            this.trackerIds.replace(trackerId, seriesId);
         } else {
-            this.trackerIds.put(tracker_id, series_id);
+            this.trackerIds.put(trackerId, seriesId);
         }
     }
 
     /**
      * Remove the series id for this series on a tracker.
      *
-     * @param tracker_id the ID field of the Tracker class being used
-     * @return the series' id if it had been set, else null
+     * @param trackerId the ID field of the Tracker class being used
      */
-    public void removeTrackerId(int tracker_id) {
-        this.trackerIds.remove(tracker_id);
+    public void removeTrackerId(int trackerId) {
+        this.trackerIds.remove(trackerId);
     }
 
     /**
      * Retrieve the series id for this series on a tracker.
      *
-     * @param tracker_id the ID field of the Tracker class being used
+     * @param trackerId the ID field of the Tracker class being used
      * @return this series' id if it has been set, else null
      */
-    public String getTrackerId(int tracker_id) {
+    public String getTrackerId(int trackerId) {
         // get() defaults to null if not contained
-        return this.trackerIds.get(tracker_id);
+        return this.trackerIds.get(trackerId);
     }
 
     public String getTitle() {
@@ -225,13 +226,13 @@ public class Series {
 
     /**
      * Sets the chapters field using a provided ArrayList.
-     * <p>
-     * Since many series have multiple scanlations, the number of chapters in the ArrayList will
+     * 
+     * <p>Since many series have multiple scanlations, the number of chapters in the ArrayList will
      * often exceed the number of "actual" chapters that a series has. This is because a Chapter
      * object is used for each individual release, even if multiple may actually refer to the same
      * "real chapter."
-     * <p>
-     * The ArrayList is sorted by descending chapter number. This function will also set
+     * 
+     * <p>The ArrayList is sorted by descending chapter number. This function will also set
      * numHighestChapter (effectively the predicted "most recent real chapter") by getting the
      * chapterNum of the first chapter in the sorted list. If this series does not have any
      * chapters, numHighestChapter is simply set to 0.
@@ -242,9 +243,11 @@ public class Series {
         this.chapters = chapters;
 
         this.chapters.sort((o1, o2) -> {
-            if (o1.chapterNum == o2.chapterNum)
+            if (o1.chapterNum == o2.chapterNum) {
                 return 0;
-            return o1.chapterNum > o2.chapterNum ? -1 : 1;
+            } else {
+                return o1.chapterNum > o2.chapterNum ? -1 : 1;
+            }
         });
         numHighestChapter = chapters.size() > 0 ? (int) chapters.get(0).chapterNum : 0;
         numChapters = chapters.size();

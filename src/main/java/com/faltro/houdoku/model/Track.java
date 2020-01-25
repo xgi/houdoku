@@ -5,15 +5,15 @@ import com.faltro.houdoku.model.Statuses.Status;
 /**
  * An entry for a series in the user's list on a Tracker.
  * 
- * Track instances should not be passed between different Tracker implementations. The fields each
- * implementation provides the Track instance, and the ones it expects, can vary significantly.
+ * <p>Track instances should not be passed between different Tracker implementations. The fields
+ * each implementation provides the Track instance, and the ones it expects, can vary significantly.
  * 
- * The Track instance does not necessarily have to reflect an existing entry in the Tracker. A Track
- * instance is generally created using "desired" information which can be passed to Tracker methods
- * to add or update the entry.
+ * <p>The Track instance does not necessarily have to reflect an existing entry in the Tracker. A
+ * Track instance is generally created using "desired" information which can be passed to Tracker
+ * methods to add or update the entry.
  * 
- * This class is primarily a utility class to replace the use of HashMap's -- it does not by itself
- * offer much functionality.
+ * <p>This class is primarily a utility class to replace the use of HashMap's -- it does not by
+ * itself offer much functionality.
  */
 public class Track {
     private final String mediaId;
@@ -26,7 +26,7 @@ public class Track {
     /**
      * Default constructor.
      * 
-     * All fields are nullable.
+     * <p>All fields are nullable.
      * 
      * @param mediaId  the id of the series on the tracker. If the tracker only provides one ID, use
      *                 this field

@@ -2,9 +2,9 @@ package com.faltro.houdoku.data;
 
 import com.faltro.houdoku.model.*;
 import com.google.gson.*;
+import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
 
 public class Serializer {
     public static final Gson gson = new Gson();
@@ -84,8 +84,8 @@ public class Serializer {
 
     /**
      * Recursively parse a category from the given JSON tree.
-     * <p>
-     * The given JsonObject should contain the following fields: name, which is a string; color,
+     * 
+     * <p>The given JsonObject should contain the following fields: name, which is a string; color,
      * which can be parsed as a Color; subcategories, which is an array of other categories.
      *
      * @param json_categories a JsonObject matching the details described above
@@ -108,8 +108,8 @@ public class Serializer {
 
     /**
      * Parse a Color from the given JSON object.
-     * <p>
-     * The given JsonObject should contain the following fields: red; blue; green; opacity, which
+     * 
+     * <p>The given JsonObject should contain the following fields: red; blue; green; opacity, which
      * are all doubles. The platformPaint field, which may exist, is simply ignored.
      *
      * @param json_color a JsonObject matching the details described above
