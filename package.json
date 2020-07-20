@@ -1,0 +1,23 @@
+{
+  "name": "houdoku",
+  "version": "1.0.0",
+  "description": "Manga reader and library manager for the desktop",
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^9.1.0"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xgi/houdoku.git"
+  },
+  "author": "Jake Robertson <jake@faltro.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xgi/houdoku/issues"
+  },
+  "homepage": "https://github.com/xgi/houdoku"
+}

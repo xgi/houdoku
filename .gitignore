@@ -1,11 +1,3 @@
-out/
-target/
-tools/
-docs/
-src/main/resources/secret.properties
-.idea/
-.vscode
-.settings
-.project
-.classpath
-.gradle
+.vscode/settings.json
+node_modules
+package-lock.json
