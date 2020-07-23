@@ -1,0 +1,16 @@
+.container {
+  /* position: absolute;
+  top: 30%;
+  left: 10px;
+  text-align: center; */
+}
+
+.coverContainer {
+  display: grid;
+  grid-gap: 10px;
+}
+
+.coverContainer > div {
+  background-color: magenta;
+  width: 50px;
+}
