@@ -2,9 +2,9 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import routes from './constants/routes.json';
-import App from './components/App';
-import LibraryPage from './components/LibraryPage';
-import SeriesPage from './components/SeriesPage';
+import App from './containers/App';
+import LibraryPage from './containers/LibraryPage';
+import SeriesPage from './containers/SeriesPage';
 
 export default function Routes() {
   return (
