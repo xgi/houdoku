@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
-import routes from '../constants/routes.json';
+// import { Link } from 'react-router-dom';
+// import routes from '../constants/routes.json';
 import { RootState } from '../store';
 // import styles from './LibraryPage.css';
 // import blankCover from '../img/blank_cover.png';
