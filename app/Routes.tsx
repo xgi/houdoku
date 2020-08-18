@@ -3,14 +3,12 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import routes from './constants/routes.json';
 import App from './containers/App';
-import LibraryPage from './containers/LibraryPage';
-import SeriesPage from './containers/SeriesPage';
+import LibraryPage from './components/LibraryPage';
 
 export default function Routes() {
   return (
     <App>
       <Switch>
-        <Route path={routes.SERIES} component={SeriesPage} />
         <Route path={routes.LIBRARY} component={LibraryPage} />
       </Switch>
     </App>
