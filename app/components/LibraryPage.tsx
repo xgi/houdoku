@@ -6,11 +6,17 @@ import Button from '@material-ui/core/Button';
 import { RootState } from '../store';
 // import styles from './LibraryPage.css';
 // import blankCover from '../img/blank_cover.png';
-import CustomGrid from './CustomGrid';
-import { updateSeriesList, changeNumColumns } from '../actions/libraryActions';
+import LibraryGrid from './LibraryGrid';
+import {
+  updateSeriesList,
+  changeNumColumns,
+  saveLibrary,
+  readLibrary,
+  deleteLibrary,
+} from '../actions/libraryActions';
 
 const mapState = (state: RootState) => ({
-  seriesListUpdated: state.library.seriesListUpdated,
+  library: state.library.library,
   columns: state.library.columns,
 });
 
@@ -18,6 +24,9 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (dispatch: any) => ({
   updateSeriesList: () => dispatch(updateSeriesList()),
   changeNumColumns: (columns: number) => dispatch(changeNumColumns(columns)),
+  saveLibrary: () => dispatch(saveLibrary()),
+  readLibrary: () => dispatch(readLibrary()),
+  deleteLibrary: () => dispatch(deleteLibrary()),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -29,15 +38,20 @@ type LibraryProps = PropsFromRedux & {
 
 const LibraryPage = (props: LibraryProps) => (
   <div>
-    <p>
-      series list is:
-      {props.seriesListUpdated}
-    </p>
+    <p>this is the top of the page.</p>
     <Button onClick={props.updateSeriesList}>update the series list</Button>
     <Button onClick={() => props.changeNumColumns(8)}>
       update num columns
     </Button>
-    <CustomGrid columns={props.columns} />
+    <Button onClick={() => props.saveLibrary()}>save library</Button>
+    <Button onClick={() => props.readLibrary()}>read library</Button>
+    <Button onClick={() => props.deleteLibrary()}>delete library</Button>
+    {props.library != null && (
+      <LibraryGrid
+        columns={props.columns}
+        seriesList={props.library.seriesList}
+      />
+    )}
     {/* <Link to={routes.SERIES}>to Series</Link> */}
   </div>
 );

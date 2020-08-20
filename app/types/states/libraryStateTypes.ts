@@ -1,4 +1,6 @@
+import Library from '../../models/library';
+
 export interface LibraryState {
-  seriesListUpdated: string;
+  library: Library;
   columns: number;
 }
