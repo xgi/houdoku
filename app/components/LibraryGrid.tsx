@@ -1,7 +1,5 @@
 import React from 'react';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
+import { Row, Col } from 'antd';
 import blankCover from '../img/blank_cover.png';
 import Series from '../models/series';
 
@@ -15,20 +13,20 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
 
   return (
     <div>
-      <GridList cols={columns} cellHeight={300}>
+      <Row gutter={[16, 16]}>
         {seriesList.map((series: Series) => {
           return (
-            <GridListTile key={series.uuid}>
+            <Col span={24 / columns} key={series.uuid}>
               <img
                 src={blankCover}
                 alt={series.toString()}
                 title={series.name}
+                style={{ width: '100%' }}
               />
-              <GridListTileBar title={series.name} subtitle={series.author} />
-            </GridListTile>
+            </Col>
           );
         })}
-      </GridList>
+      </Row>
     </div>
   );
 };

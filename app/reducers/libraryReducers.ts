@@ -20,9 +20,12 @@ function saveLibrary() {
     'Kaguya-sama wa Kokurasetai: Tensai-tachi no Renai Zunousen',
     'Akasaka Aka'
   );
-  const series2 = new Series('series2title', 'series2author');
   myLibrary.addSeries(series1);
-  myLibrary.addSeries(series2);
+
+  for (let i = 2; i < 200; i += 1) {
+    const series = new Series(`seriestitle${i}`, `seriesauthor${i}`);
+    myLibrary.addSeries(series);
+  }
 
   const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
   if (!fs.existsSync(thumbnailsDir)) {
