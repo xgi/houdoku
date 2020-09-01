@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Layout, Menu, Breadcrumb, Button, Row, Typography } from 'antd';
+import { Layout, Menu, Breadcrumb, Button } from 'antd';
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -22,10 +22,12 @@ import {
   deleteLibrary,
   showHideSeriesDetails,
 } from '../actions/libraryActions';
+import { setStatusText } from '../actions/statusActions';
 import Series from '../models/series';
 import SeriesDetails from './SeriesDetails';
+import StatusBar from './StatusBar';
 
-const { Content, Sider, Footer } = Layout;
+const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const mapState = (state: RootState) => ({
@@ -43,14 +45,14 @@ const mapDispatch = (dispatch: any) => ({
   deleteLibrary: () => dispatch(deleteLibrary()),
   showHideSeriesDetails: (series?: Series) =>
     dispatch(showHideSeriesDetails(series)),
+  setStatusText: (text?: string) => dispatch(setStatusText(text)),
 });
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type Props = PropsFromRedux & {
-  something: string;
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = PropsFromRedux & {};
 
 const LibraryPage: React.FC<Props> = (props: Props) => {
   const renderMainContent = () => {
@@ -131,23 +133,14 @@ const LibraryPage: React.FC<Props> = (props: Props) => {
             <Button onClick={() => props.deleteLibrary()}>
               delete library
             </Button>
+            <Button onClick={() => props.setStatusText('new status')}>
+              set status
+            </Button>
             {renderMainContent()}
           </div>
         </Content>
       </Layout>
-      <Footer
-        style={{
-          textAlign: 'center',
-          backgroundColor: 'lightgrey',
-          position: 'fixed',
-          width: '100%',
-          bottom: 0,
-          height: '32px',
-          padding: '5px 50px',
-        }}
-      >
-        <p style={{ marginBottom: 0 }}>Reloading library (13/24)</p>
-      </Footer>
+      <StatusBar />
     </Layout>
   );
 };
