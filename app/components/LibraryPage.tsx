@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Layout, Menu, Breadcrumb, Button } from 'antd';
+import { Layout, Menu, Breadcrumb, Button, Row, Typography } from 'antd';
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -20,14 +20,18 @@ import {
   saveLibrary,
   readLibrary,
   deleteLibrary,
+  showHideSeriesDetails,
 } from '../actions/libraryActions';
+import Series from '../models/series';
+import SeriesDetails from './SeriesDetails';
 
-const { Content, Sider } = Layout;
+const { Content, Sider, Footer } = Layout;
 const { SubMenu } = Menu;
 
 const mapState = (state: RootState) => ({
   library: state.library.library,
   columns: state.library.columns,
+  showingSeries: state.library.showingSeries,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,6 +41,8 @@ const mapDispatch = (dispatch: any) => ({
   saveLibrary: () => dispatch(saveLibrary()),
   readLibrary: () => dispatch(readLibrary()),
   deleteLibrary: () => dispatch(deleteLibrary()),
+  showHideSeriesDetails: (series?: Series) =>
+    dispatch(showHideSeriesDetails(series)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -47,6 +53,29 @@ type Props = PropsFromRedux & {
 };
 
 const LibraryPage: React.FC<Props> = (props: Props) => {
+  const renderMainContent = () => {
+    if (props.showingSeries) {
+      return (
+        <SeriesDetails
+          series={props.showingSeries}
+          seriesDetailsCallback={props.showHideSeriesDetails}
+        />
+      );
+    }
+
+    if (props.library != null) {
+      return (
+        <LibraryGrid
+          columns={props.columns}
+          seriesList={props.library.seriesList}
+          seriesDetailsCallback={props.showHideSeriesDetails}
+        />
+      );
+    }
+
+    return <p>test</p>;
+  };
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider
@@ -77,7 +106,14 @@ const LibraryPage: React.FC<Props> = (props: Props) => {
           <Menu.Item key="9" icon={<FileOutlined />} />
         </Menu>
       </Sider>
-      <Layout className="site-layout" style={{ marginLeft: 200 }}>
+      <Layout
+        className="site-layout"
+        style={{
+          marginLeft: 200,
+          height: 'calc(100vh - 32px)',
+          borderBottom: '1px solid grey',
+        }}
+      >
         <Content style={{ margin: '0px 16px 0', overflow: 'initial' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>Houdoku</Breadcrumb.Item>
@@ -95,15 +131,23 @@ const LibraryPage: React.FC<Props> = (props: Props) => {
             <Button onClick={() => props.deleteLibrary()}>
               delete library
             </Button>
-            {props.library != null && (
-              <LibraryGrid
-                columns={props.columns}
-                seriesList={props.library.seriesList}
-              />
-            )}
+            {renderMainContent()}
           </div>
         </Content>
       </Layout>
+      <Footer
+        style={{
+          textAlign: 'center',
+          backgroundColor: 'lightgrey',
+          position: 'fixed',
+          width: '100%',
+          bottom: 0,
+          height: '32px',
+          padding: '5px 50px',
+        }}
+      >
+        <p style={{ marginBottom: 0 }}>Reloading library (13/24)</p>
+      </Footer>
     </Layout>
   );
 };

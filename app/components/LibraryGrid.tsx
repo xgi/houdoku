@@ -1,28 +1,30 @@
 import React from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Button } from 'antd';
 import blankCover from '../img/blank_cover.png';
 import Series from '../models/series';
 
 type Props = {
   columns: number;
   seriesList: Series[];
+  seriesDetailsCallback: (series?: Series) => void;
 };
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
-  const { columns, seriesList } = props;
-
   return (
     <div>
       <Row gutter={[16, 16]}>
-        {seriesList.map((series: Series) => {
+        {props.seriesList.map((series: Series) => {
           return (
-            <Col span={24 / columns} key={series.uuid}>
+            <Col span={24 / props.columns} key={series.uuid}>
               <img
                 src={blankCover}
                 alt={series.toString()}
-                title={series.name}
+                title={series.title}
                 style={{ width: '100%' }}
               />
+              <Button onClick={() => props.seriesDetailsCallback(series)}>
+                details
+              </Button>
             </Col>
           );
         })}

@@ -5,7 +5,9 @@ import {
   READ_LIBRARY,
   SAVE_LIBRARY,
   DELETE_LIBRARY,
+  SHOW_HIDE_SERIES_DETAILS,
 } from '../types/actions/libraryActionTypes';
+import Series from '../models/series';
 
 export function updateSeriesList(): LibraryAction {
   return {
@@ -36,6 +38,15 @@ export function changeNumColumns(columns: number): LibraryAction {
     type: CHANGE_NUM_COLUMNS,
     payload: {
       columns,
+    },
+  };
+}
+
+export function showHideSeriesDetails(series?: Series): LibraryAction {
+  return {
+    type: SHOW_HIDE_SERIES_DETAILS,
+    payload: {
+      series,
     },
   };
 }

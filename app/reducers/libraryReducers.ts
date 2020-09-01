@@ -7,6 +7,7 @@ import {
   READ_LIBRARY,
   DELETE_LIBRARY,
   CHANGE_NUM_COLUMNS,
+  SHOW_HIDE_SERIES_DETAILS,
 } from '../types/actions/libraryActionTypes';
 import persistantStore from '../utils/persistantStore';
 import Library from '../models/library';
@@ -58,6 +59,7 @@ function deleteLibrary() {
 const initialState: LibraryState = {
   library: readLibrary(),
   columns: 4,
+  showingSeries: undefined,
 };
 
 export default function library(
@@ -78,6 +80,8 @@ export default function library(
       return state;
     case CHANGE_NUM_COLUMNS:
       return { ...state, columns: action.payload.columns };
+    case SHOW_HIDE_SERIES_DETAILS:
+      return { ...state, showingSeries: action.payload.series };
     default:
       return state;
   }
