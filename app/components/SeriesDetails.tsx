@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Button, Descriptions } from 'antd';
+import { Typography, Button, Descriptions, Affix } from 'antd';
 import Series from '../models/series';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
@@ -14,6 +14,11 @@ type Props = {
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   return (
     <div>
+      <Affix style={{ position: 'absolute', top: 5 }}>
+        <Button onClick={() => props.seriesDetailsCallback()}>
+          ◀ Back to library
+        </Button>
+      </Affix>
       <div
         style={{
           width: 'auto',
@@ -62,9 +67,36 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
         </Descriptions.Item>
       </Descriptions>
-      <Button onClick={() => props.seriesDetailsCallback()}>
-        back to library
-      </Button>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
+      <Typography>laksdjalksjd</Typography>
     </div>
   );
 };

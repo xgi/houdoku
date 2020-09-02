@@ -11,6 +11,9 @@ body {
   /* overflow-y: hidden; */
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   font-size: 14px;
+}
+
+.ant-layout {
   background-color: rgba(11, 22, 34, 1);
 }
 
