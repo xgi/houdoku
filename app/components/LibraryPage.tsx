@@ -11,7 +11,6 @@ import {
 // import { Link } from 'react-router-dom';
 // import routes from '../constants/routes.json';
 import { RootState } from '../store';
-// import styles from './LibraryPage.css';
 // import blankCover from '../img/blank_cover.png';
 import LibraryGrid from './LibraryGrid';
 import {
@@ -65,17 +64,35 @@ const LibraryPage: React.FC<Props> = (props: Props) => {
       );
     }
 
+    const baseControls = (
+      <>
+        <Button onClick={props.updateSeriesList}>update the series list</Button>
+        <Button onClick={() => props.changeNumColumns(8)}>
+          update num columns
+        </Button>
+        <Button onClick={() => props.saveLibrary()}>save library</Button>
+        <Button onClick={() => props.readLibrary()}>read library</Button>
+        <Button onClick={() => props.deleteLibrary()}>delete library</Button>
+        <Button onClick={() => props.setStatusText('new status')}>
+          set status
+        </Button>
+      </>
+    );
+
     if (props.library != null) {
       return (
-        <LibraryGrid
-          columns={props.columns}
-          seriesList={props.library.seriesList}
-          seriesDetailsCallback={props.showHideSeriesDetails}
-        />
+        <>
+          {baseControls}
+          <LibraryGrid
+            columns={props.columns}
+            seriesList={props.library.seriesList}
+            seriesDetailsCallback={props.showHideSeriesDetails}
+          />
+        </>
       );
     }
 
-    return <p>test</p>;
+    return baseControls;
   };
 
   return (
@@ -117,27 +134,7 @@ const LibraryPage: React.FC<Props> = (props: Props) => {
         }}
       >
         <Content style={{ margin: '0px 16px 0', overflow: 'initial' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Houdoku</Breadcrumb.Item>
-            <Breadcrumb.Item>Library</Breadcrumb.Item>
-          </Breadcrumb>
-          <div style={{ padding: 8 }}>
-            <Button onClick={props.updateSeriesList}>
-              update the series list
-            </Button>
-            <Button onClick={() => props.changeNumColumns(8)}>
-              update num columns
-            </Button>
-            <Button onClick={() => props.saveLibrary()}>save library</Button>
-            <Button onClick={() => props.readLibrary()}>read library</Button>
-            <Button onClick={() => props.deleteLibrary()}>
-              delete library
-            </Button>
-            <Button onClick={() => props.setStatusText('new status')}>
-              set status
-            </Button>
-            {renderMainContent()}
-          </div>
+          <div>{renderMainContent()}</div>
         </Content>
       </Layout>
       <StatusBar />

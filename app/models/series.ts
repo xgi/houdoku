@@ -5,11 +5,14 @@ export default class Series {
 
   author: string;
 
+  description: string;
+
   uuid: string;
 
-  constructor(title: string, author: string) {
+  constructor(title: string, author: string, description: string) {
     this.title = title;
     this.author = author;
+    this.description = description;
     this.uuid = uuidv4();
   }
 }

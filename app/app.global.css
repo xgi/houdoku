@@ -3,13 +3,31 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
- @import '~antd/dist/antd.css';
-/* @import '~@fortawesome/fontawesome-free/css/all.css'; */
+@import '~antd/dist/antd.dark.css';
 
 body {
   /* height: 100vh; */
 
   /* overflow-y: hidden; */
   font-family: Arial, Helvetica, Helvetica Neue, serif;
-  font-size: 16px;
+  font-size: 14px;
+  background-color: rgba(11, 22, 34, 1);
+}
+
+.ant-layout-sider,
+.ant-menu.ant-menu-dark {
+  background-color: rgba(21, 31, 46, 1);
+}
+
+.ant-menu-dark:not(.ant-menu-horizontal).ant-menu-dark .ant-menu-item-selected {
+  background-color: rgba(11, 22, 34, 1);
+}
+
+.ant-typography {
+  color: rgba(159, 173, 189, 0.8);
+}
+
+h4.ant-typography {
+  font-size: 18px;
+  color: rgba(159, 173, 189, 1);
 }
