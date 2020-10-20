@@ -6,7 +6,7 @@ import {
   SAVE_LIBRARY,
   DELETE_LIBRARY,
   SHOW_HIDE_SERIES_DETAILS,
-} from '../types/actions/libraryActionTypes';
+} from './types';
 import Series from '../models/series';
 
 export function updateSeriesList(): LibraryAction {

@@ -1,14 +1,14 @@
 import fs from 'fs';
 import path from 'path';
-import { LibraryState } from '../types/states/libraryStateTypes';
 import {
+  LibraryState,
   UPDATE_SERIES_LIST,
   SAVE_LIBRARY,
   READ_LIBRARY,
   DELETE_LIBRARY,
   CHANGE_NUM_COLUMNS,
   SHOW_HIDE_SERIES_DETAILS,
-} from '../types/actions/libraryActionTypes';
+} from './types';
 import persistantStore from '../utils/persistantStore';
 import Library from '../models/library';
 import Series from '../models/Series';

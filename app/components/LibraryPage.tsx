@@ -20,8 +20,8 @@ import {
   readLibrary,
   deleteLibrary,
   showHideSeriesDetails,
-} from '../actions/libraryActions';
-import { setStatusText } from '../actions/statusActions';
+} from '../library/actions';
+import { setStatusText } from '../statusbar/actions';
 import Series from '../models/series';
 import SeriesDetails from './SeriesDetails';
 import StatusBar from './StatusBar';

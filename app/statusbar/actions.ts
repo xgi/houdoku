@@ -1,7 +1,4 @@
-import {
-  SET_STATUS_TEXT,
-  StatusAction,
-} from '../types/actions/statusActionTypes';
+import { SET_STATUS_TEXT, StatusAction } from './types';
 
 // eslint-disable-next-line import/prefer-default-export
 export function setStatusText(text?: string): StatusAction {

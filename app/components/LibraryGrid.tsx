@@ -22,7 +22,12 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                 title={series.title}
                 style={{ width: '100%' }}
               />
-              <Button onClick={() => props.seriesDetailsCallback(series)}>
+              <Button
+                onClick={() => {
+                  props.seriesDetailsCallback(series);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 details
               </Button>
             </Col>

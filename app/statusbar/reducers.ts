@@ -1,5 +1,4 @@
-import { StatusState } from '../types/states/statusStateTypes';
-import { SET_STATUS_TEXT } from '../types/actions/statusActionTypes';
+import { StatusState, SET_STATUS_TEXT } from './types';
 
 const initialState: StatusState = {
   text: 'No status set...',
