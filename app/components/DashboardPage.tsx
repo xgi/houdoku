@@ -53,7 +53,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = PropsFromRedux & {};
 
-const LibraryPage: React.FC<Props> = (props: Props) => {
+const DashboardPage: React.FC<Props> = (props: Props) => {
   const renderMainContent = () => {
     if (props.showingSeries) {
       return (
@@ -142,4 +142,4 @@ const LibraryPage: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(LibraryPage);
+export default connector(DashboardPage);
