@@ -1,4 +1,5 @@
 {
-  "DASHBOARD": "/",
-  "SERIES": "/series"
+  "LIBRARY": "/",
+  "SERIES": "/series",
+  "SEARCH": "/search"
 }

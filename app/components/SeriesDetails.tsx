@@ -20,7 +20,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
 
   return (
     <div>
-      <Link to={routes.DASHBOARD}>
+      <Link to={routes.LIBRARY}>
         <Affix className={styles.backButtonAffix}>
           <Button>◀ Back to library</Button>
         </Affix>
@@ -82,7 +82,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       <Typography>laksdjalksjd</Typography>
       <Typography>laksdjalksjd</Typography>
       <Typography>laksdjalksjd</Typography>
-      <Link to={routes.DASHBOARD}>templink</Link>
+      <Link to={routes.LIBRARY}>templink</Link>
     </div>
   );
 };

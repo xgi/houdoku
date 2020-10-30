@@ -9,7 +9,7 @@ export default function Routes() {
   return (
     <App>
       <Switch>
-        <Route path={routes.DASHBOARD} component={DashboardPage} />
+        <Route path={routes.LIBRARY} component={DashboardPage} />
         <Route path={routes.SERIES} component={DashboardPage} />
       </Switch>
     </App>

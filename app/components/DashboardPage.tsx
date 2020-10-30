@@ -25,8 +25,10 @@ import {
 import { setStatusText } from '../statusbar/actions';
 import Series from '../models/series';
 import SeriesDetails from './SeriesDetails';
+import Search from './Search';
 import StatusBar from './StatusBar';
 import styles from './DashboardPage.css';
+import routes from '../constants/routes.json';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -62,10 +64,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1" icon={<PieChartOutlined />}>
-            Option 1
+            <Link to={routes.LIBRARY}>Library</Link>
           </Menu.Item>
           <Menu.Item key="2" icon={<DesktopOutlined />}>
-            Option 2
+            <Link to={routes.SEARCH}>Search</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
             <Menu.Item key="3">Tom</Menu.Item>
@@ -110,6 +112,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
             </Route>
             <Route path="/series/:uuid" exact>
               <SeriesDetails library={props.library} />
+            </Route>
+            <Route path="/search" exact>
+              <Search library={props.library} />
             </Route>
           </Switch>
         </Content>
