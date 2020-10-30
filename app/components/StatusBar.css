@@ -1,0 +1,10 @@
+.statusBar {
+  text-align: center;
+  background-color: lightgray;
+  color: black;
+  position: fixed;
+  width: 100%;
+  height: 32px;
+  bottom: 0;
+  padding: 5px 50px;
+}

@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Layout } from 'antd';
 import { RootState } from '../store';
 import { setStatusText } from '../statusbar/actions';
+import styles from './StatusBar.css';
 
 const { Footer } = Layout;
 
@@ -23,17 +24,7 @@ type Props = PropsFromRedux & {};
 
 const StatusBar: React.FC<Props> = (props: Props) => {
   return (
-    <Footer
-      style={{
-        textAlign: 'center',
-        backgroundColor: 'lightgrey',
-        position: 'fixed',
-        width: '100%',
-        bottom: 0,
-        height: '32px',
-        padding: '5px 50px',
-      }}
-    >
+    <Footer className={styles.statusBar}>
       <p style={{ marginBottom: 0 }}>{props.text}</p>
     </Footer>
   );

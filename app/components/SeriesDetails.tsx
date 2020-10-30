@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Button, Descriptions, Affix } from 'antd';
 import Series from '../models/series';
+import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
 
@@ -14,44 +15,23 @@ type Props = {
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   return (
     <div>
-      <Affix style={{ position: 'absolute', top: 5 }}>
+      <Affix className={styles.backButtonAffix}>
         <Button onClick={() => props.seriesDetailsCallback()}>
           ◀ Back to library
         </Button>
       </Affix>
-      <div
-        style={{
-          width: 'auto',
-          height: 180,
-          overflow: 'hidden',
-          margin: '0 -16px 0 -16px',
-        }}
-      >
-        <img
-          src={exampleBackground}
-          alt={props.series.title}
-          style={{
-            objectFit: 'cover',
-            height: '100%',
-            width: '100%',
-          }}
-        />
+      <div className={styles.imageContainer}>
+        <img src={exampleBackground} alt={props.series.title} />
       </div>
-      <div
-        style={{
-          display: 'grid',
-          gridColumnGap: 16,
-          gridTemplateColumns: '150px auto',
-        }}
-      >
+      <div className={styles.headerContainer}>
         <div>
           <img
+            className={styles.coverImage}
             src={blankCover}
             alt={props.series.title}
-            style={{ marginTop: -70, width: '100%' }}
           />
         </div>
-        <div style={{ paddingTop: 15 }}>
+        <div className={styles.headerDetailsContainer}>
           <Title level={4}>{props.series.title}</Title>
           <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
             {props.series.description}

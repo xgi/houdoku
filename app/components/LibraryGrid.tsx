@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Col, Button } from 'antd';
 import blankCover from '../img/blank_cover.png';
 import Series from '../models/series';
+import styles from './LibraryGrid.css';
 
 type Props = {
   columns: number;
@@ -20,7 +21,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                 src={blankCover}
                 alt={series.toString()}
                 title={series.title}
-                style={{ width: '100%' }}
+                className={styles.coverImage}
               />
               <Button
                 onClick={() => {

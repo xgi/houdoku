@@ -1,0 +1,21 @@
+.pageLayout {
+  min-height: 100vh;
+}
+
+.contentLayout {
+  margin-left: 200px;
+  height: calc(100vh - 32px);
+  border-bottom: 1px solid gray;
+}
+
+.sider {
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+}
+
+.content {
+  margin: 0px 16px 0;
+  overflow: initial;
+}

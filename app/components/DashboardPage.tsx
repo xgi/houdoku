@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Layout, Menu, Breadcrumb, Button } from 'antd';
+import { Layout, Menu, Button } from 'antd';
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -25,6 +25,7 @@ import { setStatusText } from '../statusbar/actions';
 import Series from '../models/series';
 import SeriesDetails from './SeriesDetails';
 import StatusBar from './StatusBar';
+import styles from './DashboardPage.css';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -96,15 +97,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider
-        style={{
-          overflow: 'auto',
-          height: '100vh',
-          position: 'fixed',
-          left: 0,
-        }}
-      >
+    <Layout className={styles.pageLayout}>
+      <Sider className={styles.sider}>
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1" icon={<PieChartOutlined />}>
@@ -125,15 +119,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           <Menu.Item key="9" icon={<FileOutlined />} />
         </Menu>
       </Sider>
-      <Layout
-        className="site-layout"
-        style={{
-          marginLeft: 200,
-          height: 'calc(100vh - 32px)',
-          borderBottom: '1px solid grey',
-        }}
-      >
-        <Content style={{ margin: '0px 16px 0', overflow: 'initial' }}>
+      <Layout className={`site-layout ${styles.contentLayout}`}>
+        <Content className={styles.content}>
           <div>{renderMainContent()}</div>
         </Content>
       </Layout>
