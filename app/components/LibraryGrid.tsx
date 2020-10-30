@@ -1,13 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Row, Col, Button } from 'antd';
 import blankCover from '../img/blank_cover.png';
 import Series from '../models/series';
 import styles from './LibraryGrid.css';
+import routes from '../constants/routes.json';
 
 type Props = {
   columns: number;
   seriesList: Series[];
-  seriesDetailsCallback: (series?: Series) => void;
 };
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
@@ -23,14 +24,9 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                 title={series.title}
                 className={styles.coverImage}
               />
-              <Button
-                onClick={() => {
-                  props.seriesDetailsCallback(series);
-                  window.scrollTo(0, 0);
-                }}
-              >
-                details
-              </Button>
+              <Link to={`${routes.SERIES}/${series.uuid}`}>
+                <Button>details</Button>
+              </Link>
             </Col>
           );
         })}

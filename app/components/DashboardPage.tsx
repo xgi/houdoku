@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
+import { Link, Switch, Route } from 'react-router-dom';
 import { Layout, Menu, Button } from 'antd';
 import {
   DesktopOutlined,
@@ -55,47 +56,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
-  const renderMainContent = () => {
-    if (props.showingSeries) {
-      return (
-        <SeriesDetails
-          series={props.showingSeries}
-          seriesDetailsCallback={props.showHideSeriesDetails}
-        />
-      );
-    }
-
-    const baseControls = (
-      <>
-        <Button onClick={props.updateSeriesList}>update the series list</Button>
-        <Button onClick={() => props.changeNumColumns(8)}>
-          update num columns
-        </Button>
-        <Button onClick={() => props.saveLibrary()}>save library</Button>
-        <Button onClick={() => props.readLibrary()}>read library</Button>
-        <Button onClick={() => props.deleteLibrary()}>delete library</Button>
-        <Button onClick={() => props.setStatusText('new status')}>
-          set status
-        </Button>
-      </>
-    );
-
-    if (props.library != null) {
-      return (
-        <>
-          {baseControls}
-          <LibraryGrid
-            columns={props.columns}
-            seriesList={props.library.seriesList}
-            seriesDetailsCallback={props.showHideSeriesDetails}
-          />
-        </>
-      );
-    }
-
-    return baseControls;
-  };
-
   return (
     <Layout className={styles.pageLayout}>
       <Sider className={styles.sider}>
@@ -121,7 +81,37 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       </Sider>
       <Layout className={`site-layout ${styles.contentLayout}`}>
         <Content className={styles.content}>
-          <div>{renderMainContent()}</div>
+          <Switch>
+            <Route path="/" exact>
+              <>
+                <Button onClick={props.updateSeriesList}>
+                  update the series list
+                </Button>
+                <Button onClick={() => props.changeNumColumns(8)}>
+                  update num columns
+                </Button>
+                <Button onClick={() => props.saveLibrary()}>
+                  save library
+                </Button>
+                <Button onClick={() => props.readLibrary()}>
+                  read library
+                </Button>
+                <Button onClick={() => props.deleteLibrary()}>
+                  delete library
+                </Button>
+                <Button onClick={() => props.setStatusText('new status')}>
+                  set status
+                </Button>
+              </>
+              <LibraryGrid
+                columns={props.columns}
+                seriesList={props.library.seriesList}
+              />
+            </Route>
+            <Route path="/series/:uuid" exact>
+              <SeriesDetails library={props.library} />
+            </Route>
+          </Switch>
         </Content>
       </Layout>
       <StatusBar />

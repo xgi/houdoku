@@ -11,12 +11,20 @@ type Props = {
   history: History;
 };
 
-const Root = ({ store, history }: Props) => (
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <Routes />
-    </ConnectedRouter>
-  </Provider>
-);
+const Root = ({ store, history }: Props) => {
+  history.listen((location, action) => {
+    setTimeout(function () {
+      window.scrollTo(0, 0);
+    }, 1000);
+  });
+
+  return (
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <Routes />
+      </ConnectedRouter>
+    </Provider>
+  );
+};
 
 export default hot(Root);
