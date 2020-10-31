@@ -12,6 +12,7 @@ import {
 import persistantStore from '../utils/persistantStore';
 import Library from '../models/library';
 import Series from '../models/Series';
+import Chapter from '../models/Chapter';
 
 const { app } = require('electron').remote;
 
@@ -46,6 +47,12 @@ function saveLibrary() {
       `seriesauthor${i}`,
       dummyDescription
     );
+
+    for (let c = 1; c < 15; c += 1) {
+      const chapter = new Chapter(`chaptertitle${c}`, 1, c);
+      series.addChapter(chapter);
+    }
+
     myLibrary.addSeries(series);
   }
 

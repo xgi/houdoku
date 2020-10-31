@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix } from 'antd';
+import ChapterTable from './ChapterTable';
 import Library from '../models/Library';
 import Series from '../models/series';
 import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
 import routes from '../constants/routes.json';
+import Chapter from '../models/chapter';
 
 const { Title, Paragraph } = Typography;
 
@@ -52,36 +54,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
         </Descriptions.Item>
       </Descriptions>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
-      <Typography>laksdjalksjd</Typography>
+      <ChapterTable chapterList={series.chapterList} />
       <Link to={routes.LIBRARY}>templink</Link>
     </div>
   );
