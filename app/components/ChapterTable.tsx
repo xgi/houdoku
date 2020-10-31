@@ -27,17 +27,25 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       title: 'Volume',
       dataIndex: 'volumeNumber',
       key: 'volumeNumber',
+      defaultSortOrder: 'descend',
       width: '20%',
       align: 'center',
-      sorter: (a: any, b: any) => a.volumeNumber - b.volumeNumber,
+      sorter: {
+        compare: (a: any, b: any) => a.volumeNumber - b.volumeNumber,
+        multiple: 2,
+      },
     },
     {
       title: 'Chapter',
       dataIndex: 'chapterNumber',
       key: 'chapterNumber',
+      defaultSortOrder: 'descend',
       width: '20%',
       align: 'center',
-      sorter: (a: any, b: any) => a.chapterNumber - b.chapterNumber,
+      sorter: {
+        compare: (a: any, b: any) => a.chapterNumber - b.chapterNumber,
+        multiple: 1,
+      },
     },
     {
       title: '',
