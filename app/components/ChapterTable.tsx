@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from 'antd';
+import { Table, Space, Button } from 'antd';
 import Series from '../models/series';
 import Chapter from '../models/chapter';
 
@@ -20,29 +20,37 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       title: 'Chapter Title',
       dataIndex: 'title',
       key: 'title',
-      width: '50%',
+      width: '45%',
+      ellipsis: true,
     },
     {
       title: 'Volume',
-      colSpan: 1,
       dataIndex: 'volumeNumber',
       key: 'volumeNumber',
-      width: '25%',
+      width: '20%',
       align: 'center',
       sorter: (a: any, b: any) => a.volumeNumber - b.volumeNumber,
     },
     {
       title: 'Chapter',
-      colSpan: 1,
       dataIndex: 'chapterNumber',
       key: 'chapterNumber',
-      width: '25%',
+      width: '20%',
       align: 'center',
       sorter: (a: any, b: any) => a.chapterNumber - b.chapterNumber,
     },
+    {
+      title: '',
+      key: 'readButton',
+      width: '15%',
+      align: 'center',
+      render: function render(text: any, record: any) {
+        return <Button>Read</Button>;
+      },
+    },
   ];
 
-  return <Table dataSource={dataSource} columns={columns} />;
+  return <Table dataSource={dataSource} columns={columns} size="small" />;
 };
 
 export default ChapterTable;

@@ -48,7 +48,7 @@ function saveLibrary() {
       dummyDescription
     );
 
-    for (let c = 1; c < 15; c += 1) {
+    for (let c = 1; c < 250; c += 1) {
       const chapter = new Chapter(`chaptertitle${c}`, 1, c);
       series.addChapter(chapter);
     }
