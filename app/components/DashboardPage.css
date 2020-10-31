@@ -3,7 +3,7 @@
 }
 
 .contentLayout {
-  margin-left: 200px;
+  margin-left: 180px;
   height: calc(100vh - 32px);
   border-bottom: 1px solid gray;
 }
@@ -13,6 +13,13 @@
   height: 100vh;
   position: fixed;
   left: 0;
+  
+  /* overrides since sider itself does not support sider prop
+     https://github.com/ant-design/ant-design/issues/9719 */
+  flex: 0 0 180px !important;
+  max-width: 180px !important;
+  min-width: 180px !important;
+  width: 180px !important;
 }
 
 .content {
