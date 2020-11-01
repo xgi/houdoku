@@ -24,6 +24,8 @@
 
   --color-link: var(--color-4);
   --color-link-highlight: var(--color-12);
+
+  --color-exit: var(--color-1);
 }
 
 .ant-layout {
@@ -123,4 +125,11 @@ td.ant-table-column-sort {
 
 .ant-pagination-item-link:hover {
   color: var(--color-link) !important;
+}
+
+#window-controls .button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+#close-button:hover {
+  background: var(--color-exit) !important;
 }

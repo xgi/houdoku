@@ -5,11 +5,12 @@
 
 @import '~antd/dist/antd.dark.css';
 @import 'colors.css';
+@import 'titlebar.css';
 
 body {
   /* height: 100vh; */
 
-  /* overflow-y: hidden; */
+  overflow-y: hidden;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   font-size: 14px;
 }
@@ -21,4 +22,10 @@ h4.ant-typography {
 .ant-table-thead > tr > th {
   font-weight: bold;
   user-select: none;
+}
+
+#root {
+  height: calc(100%-24px);
+  margin-top: 24px;
+  overflow-y: auto;
 }
