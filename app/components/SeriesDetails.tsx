@@ -45,17 +45,17 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           </Paragraph>
         </div>
       </div>
-      <Descriptions>
-        <Descriptions.Item label="UserName">Zhou Maomao</Descriptions.Item>
-        <Descriptions.Item label="Telephone">1810000000</Descriptions.Item>
-        <Descriptions.Item label="Live">Hangzhou, Zhejiang</Descriptions.Item>
-        <Descriptions.Item label="Remark">empty</Descriptions.Item>
-        <Descriptions.Item label="Address">
-          No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China
+      <Descriptions column={4}>
+        <Descriptions.Item label="Author">Arakawa Naoshi</Descriptions.Item>
+        <Descriptions.Item label="Artist">Arakawa Naoshi</Descriptions.Item>
+        <Descriptions.Item label="Status">Completed</Descriptions.Item>
+        <Descriptions.Item label="Chapters">44</Descriptions.Item>
+        <Descriptions.Item label="Genres">
+          Award Winning, Comedy, Drama, Music, Romance, School Life, Slice of
+          Life, Tragedy
         </Descriptions.Item>
       </Descriptions>
       <ChapterTable chapterList={series.chapterList} />
-      <Link to={routes.LIBRARY}>templink</Link>
     </div>
   );
 };

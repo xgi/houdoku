@@ -43,15 +43,22 @@
   color: var(--color-foreground);
 }
 
-h4.ant-typography {
+h4.ant-typography,
+.ant-descriptions-item-label {
   color: var(--color-foreground-header);
 }
 
-a.ant-typography, .ant-typography a {
+.ant-descriptions-item-content {
+  color: var(--color-foreground);
+}
+
+a.ant-typography,
+.ant-typography a {
   color: var(--color-link);
 }
 
-a.ant-typography:hover, .ant-typography a:hover {
+a.ant-typography:hover,
+.ant-typography a:hover {
   color: var(--color-link-highlight);
 }
 
@@ -79,7 +86,8 @@ td.ant-table-column-sort {
   background-color: var(--color-background-alt) !important;
 }
 
-.ant-table-column-sorter-up.active, .ant-table-column-sorter-down.active {
+.ant-table-column-sorter-up.active,
+.ant-table-column-sorter-down.active {
   color: var(--color-link);
 }
 
