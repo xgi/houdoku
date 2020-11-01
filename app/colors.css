@@ -1,0 +1,118 @@
+:root {
+  --color-background: rgba(29, 31, 33, 1);
+  --color-foreground: rgba(197, 200, 198, 0.8);
+  --color-0: rgba(40, 42, 46, 1); /* black */
+  --color-8: rgba(55, 59, 65, 1); /* light black (dark gray) */
+  --color-1: rgba(165, 66, 66, 1); /* red */
+  --color-9: rgba(204, 102, 102, 1); /* light red */
+  --color-2: rgba(140, 148, 64, 1); /* green */
+  --color-10: rgba(181, 189, 104, 1); /* light green */
+  --color-3: rgba(222, 147, 95, 1); /* yellow */
+  --color-11: rgba(240, 198, 116, 1); /* light yellow */
+  --color-4: rgba(95, 129, 157, 1); /* blue */
+  --color-12: rgba(129, 162, 190, 1); /* light blue */
+  --color-5: rgba(133, 103, 143, 1); /* purple */
+  --color-13: rgba(178, 148, 187, 1); /* light purple */
+  --color-6: rgba(94, 141, 135, 1); /* teal */
+  --color-14: rgba(138, 190, 183, 1); /* light teal */
+  --color-7: rgba(112, 120, 128, 1); /* light gray */
+  --color-15: rgba(197, 200, 198, 1); /* white */
+
+  --color-background-alt: var(--color-0);
+  --color-foreground-alt: var(--color-8);
+  --color-foreground-header: var(--color-15);
+
+  --color-link: var(--color-4);
+  --color-link-highlight: var(--color-12);
+}
+
+.ant-layout {
+  background-color: var(--color-background);
+}
+
+.ant-layout-sider,
+.ant-menu.ant-menu-dark {
+  background-color: var(--color-background-alt);
+}
+
+.ant-menu-dark:not(.ant-menu-horizontal).ant-menu-dark .ant-menu-item-selected {
+  background-color: var(--color-background);
+}
+
+.ant-typography {
+  color: var(--color-foreground);
+}
+
+h4.ant-typography {
+  color: var(--color-foreground-header);
+}
+
+a.ant-typography, .ant-typography a {
+  color: var(--color-link);
+}
+
+a.ant-typography:hover, .ant-typography a:hover {
+  color: var(--color-link-highlight);
+}
+
+.ant-btn:hover,
+.ant-btn:focus {
+  border-color: var(--color-link);
+  color: var(--color-link);
+}
+
+.ant-table {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+.ant-table-thead > tr > th {
+  background-color: var(--color-background-alt) !important;
+  color: var(--color-foreground-header) !important;
+}
+
+td.ant-table-column-sort {
+  background-color: var(--color-background) !important;
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background-color: var(--color-background-alt) !important;
+}
+
+.ant-table-column-sorter-up.active, .ant-table-column-sorter-down.active {
+  color: var(--color-link);
+}
+
+.ant-pagination-item a {
+  color: var(--color-foreground);
+}
+
+.ant-pagination-item a:hover {
+  color: var(--color-link);
+}
+
+.ant-pagination-item-active,
+.ant-pagination-item-active a {
+  color: var(--color-link);
+  border-color: var(--color-link);
+}
+
+.ant-pagination-item-active:hover,
+.ant-pagination-item-active:hover a,
+.ant-pagination-item-active:focus a,
+.ant-pagination-item-active:active a {
+  color: var(--color-link-highlight);
+  border-color: var(--color-link-highlight);
+}
+
+.ant-pagination-item-container .ant-pagination-item-link-icon {
+  color: var(--color-link) !important;
+}
+
+.ant-pagination-item-link {
+  color: var(--color-foreground) !important;
+}
+
+.ant-pagination-item-link:hover {
+  color: var(--color-link) !important;
+}

@@ -17,11 +17,10 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
 
   const columns = [
     {
-      title: 'Chapter Title',
+      title: 'Title',
       dataIndex: 'title',
       key: 'title',
       width: '45%',
-      ellipsis: true,
     },
     {
       title: 'Volume',

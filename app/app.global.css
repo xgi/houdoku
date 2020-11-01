@@ -4,6 +4,7 @@
  */
 
 @import '~antd/dist/antd.dark.css';
+@import 'colors.css';
 
 body {
   /* height: 100vh; */
@@ -13,24 +14,11 @@ body {
   font-size: 14px;
 }
 
-.ant-layout {
-  background-color: rgba(11, 22, 34, 1);
-}
-
-.ant-layout-sider,
-.ant-menu.ant-menu-dark {
-  background-color: rgba(21, 31, 46, 1);
-}
-
-.ant-menu-dark:not(.ant-menu-horizontal).ant-menu-dark .ant-menu-item-selected {
-  background-color: rgba(11, 22, 34, 1);
-}
-
-.ant-typography {
-  color: rgba(159, 173, 189, 0.8);
-}
-
 h4.ant-typography {
   font-size: 18px;
-  color: rgba(159, 173, 189, 1);
+}
+
+.ant-table-thead > tr > th {
+  font-weight: bold;
+  user-select: none;
 }
