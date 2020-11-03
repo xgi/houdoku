@@ -7,7 +7,7 @@ import {
   READ_LIBRARY,
   DELETE_LIBRARY,
   CHANGE_NUM_COLUMNS,
-  SHOW_HIDE_SERIES_DETAILS,
+  SET_CHAPTER_READ,
 } from './types';
 import persistantStore from '../utils/persistantStore';
 import Library from '../models/library';
@@ -49,7 +49,13 @@ function saveLibrary() {
     );
 
     for (let c = 1; c < 250; c += 1) {
-      const chapter = new Chapter(`chaptertitle${c}`, 1, c);
+      const chapter = new Chapter(
+        `chaptertitle${c}`,
+        1,
+        c,
+        'groupname',
+        'english'
+      );
       series.addChapter(chapter);
     }
 
@@ -84,10 +90,14 @@ function deleteLibrary() {
   persistantStore.write('library', null);
 }
 
+function setChapterRead(chapter: Chapter, read: boolean, _library: Library) {
+  console.log(chapter);
+  chapter.read = read;
+}
+
 const initialState: LibraryState = {
-  library: readLibrary(),
+  seriesList: [],
   columns: 6,
-  showingSeries: undefined,
 };
 
 export default function library(
@@ -108,8 +118,14 @@ export default function library(
       return state;
     case CHANGE_NUM_COLUMNS:
       return { ...state, columns: action.payload.columns };
-    case SHOW_HIDE_SERIES_DETAILS:
-      return { ...state, showingSeries: action.payload.series };
+    case SET_CHAPTER_READ:
+      alert('second');
+      setChapterRead(
+        action.payload.chapter,
+        action.payload.read,
+        state.library
+      );
+      return { ...state, library: state.library };
     default:
       return state;
   }

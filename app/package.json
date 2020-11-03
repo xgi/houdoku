@@ -13,5 +13,7 @@
     "postinstall": "yarn electron-rebuild"
   },
   "license": "MIT",
-  "dependencies": {}
+  "devDependencies": {
+    "@types/lovefield": "^2.1.3"
+  }
 }

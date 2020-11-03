@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Row, Col, Button } from 'antd';
 import blankCover from '../img/blank_cover.png';
-import Series from '../models/series';
+import { Series } from '../models/types';
 import styles from './LibraryGrid.css';
 import routes from '../constants/routes.json';
 
@@ -17,14 +17,14 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
       <Row gutter={[16, 16]}>
         {props.seriesList.map((series: Series) => {
           return (
-            <Col span={24 / props.columns} key={series.uuid}>
+            <Col span={24 / props.columns} key={series.id}>
               <img
                 src={blankCover}
                 alt={series.toString()}
                 title={series.title}
                 className={styles.coverImage}
               />
-              <Link to={`${routes.SERIES}/${series.uuid}`}>
+              <Link to={`${routes.SERIES}/${series.id}`}>
                 <Button>details</Button>
               </Link>
             </Col>

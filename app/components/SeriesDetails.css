@@ -28,5 +28,6 @@
 
 .backButtonAffix {
   position: absolute;
-  top: 5px;
+  top: 29px;
+  z-index: 100;
 }

@@ -5,9 +5,11 @@ import {
   READ_LIBRARY,
   SAVE_LIBRARY,
   DELETE_LIBRARY,
-  SHOW_HIDE_SERIES_DETAILS,
+  SET_CHAPTER_READ,
+  GET_SERIES,
 } from './types';
 import Series from '../models/series';
+import Chapter from '../models/chapter';
 
 export function updateSeriesList(): LibraryAction {
   return {
@@ -42,11 +44,21 @@ export function changeNumColumns(columns: number): LibraryAction {
   };
 }
 
-export function showHideSeriesDetails(series?: Series): LibraryAction {
+export function getSeries(uuid: string): LibraryAction {
   return {
-    type: SHOW_HIDE_SERIES_DETAILS,
+    type: GET_SERIES,
     payload: {
-      series,
+      uuid,
+    },
+  };
+}
+
+export function setChapterRead(chapter: Chapter, read: boolean): LibraryAction {
+  return {
+    type: SET_CHAPTER_READ,
+    payload: {
+      chapter,
+      read,
     },
   };
 }

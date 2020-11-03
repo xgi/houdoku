@@ -1,3 +1,4 @@
+import Chapter from '../models/chapter';
 import Library from '../models/library';
 import Series from '../models/series';
 
@@ -6,12 +7,12 @@ export const CHANGE_NUM_COLUMNS = 'CHANGE_NUM_COLUMNS';
 export const SAVE_LIBRARY = 'SAVE_LIBRARY';
 export const READ_LIBRARY = 'READ_LIBRARY';
 export const DELETE_LIBRARY = 'DELETE_LIBRARY';
-export const SHOW_HIDE_SERIES_DETAILS = 'SHOW_HIDE_SERIES_DETAILS';
+export const GET_SERIES = 'GET_SERIES';
+export const SET_CHAPTER_READ = 'SET_CHAPTER_READ';
 
 export interface LibraryState {
-  library: Library;
+  seriesList: string[];
   columns: number;
-  showingSeries?: Series;
 }
 
 interface UpdateSeriesListAction {
@@ -37,10 +38,18 @@ interface ChangeNumColumnsAction {
   };
 }
 
-interface ShowHideSeriesDetails {
-  type: typeof SHOW_HIDE_SERIES_DETAILS;
+interface GetSeriesAction {
+  type: typeof GET_SERIES;
   payload: {
-    series?: Series;
+    uuid: string;
+  };
+}
+
+interface SetChapterReadAction {
+  type: typeof SET_CHAPTER_READ;
+  payload: {
+    chapter: Chapter;
+    read: boolean;
   };
 }
 
@@ -50,4 +59,5 @@ export type LibraryAction =
   | SaveLibraryAction
   | ReadLibraryAction
   | DeleteLibraryAction
-  | ShowHideSeriesDetails;
+  | GetSeriesAction
+  | SetChapterReadAction;

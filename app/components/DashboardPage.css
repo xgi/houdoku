@@ -4,7 +4,7 @@
 
 .contentLayout {
   margin-left: 180px;
-  height: calc(100vh - 32px);
+  height: calc(100vh - 32px - 23px);
   border-bottom: 1px solid gray;
 }
 

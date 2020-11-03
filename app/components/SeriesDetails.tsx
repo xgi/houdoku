@@ -1,24 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix } from 'antd';
 import ChapterTable from './ChapterTable';
-import Library from '../models/Library';
-import Series from '../models/series';
+import { Series } from '../models/types';
 import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
 import routes from '../constants/routes.json';
-import Chapter from '../models/chapter';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 type Props = {
-  library: Library;
+  series: Series | undefined;
+  fetchSeries: (id: number) => void;
 };
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
-  const { uuid } = useParams();
-  const series: Series = props.library.seriesList.find((s) => s.uuid === uuid);
+  const { id } = useParams();
+
+  useEffect(() => {
+    console.log('running');
+    props.fetchSeries(id);
+  }, []);
+
+  if (props.series === undefined) {
+    return (
+      <div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -28,21 +39,21 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </Affix>
       </Link>
       <div className={styles.imageContainer}>
-        <img src={exampleBackground} alt={series.title} />
+        <img src={exampleBackground} alt={props.series.title} />
       </div>
       <div className={styles.headerContainer}>
         <div>
           <img
             className={styles.coverImage}
             src={blankCover}
-            alt={series.title}
+            alt={props.series.title}
           />
         </div>
         <div className={styles.headerDetailsContainer}>
-          <Title level={4}>{series.title}</Title>
-          <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
+          <Title level={4}>{props.series.title}</Title>
+          {/* <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
             {series.description}
-          </Paragraph>
+          </Paragraph> */}
         </div>
       </div>
       <Descriptions column={4}>
@@ -55,7 +66,10 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           Life, Tragedy
         </Descriptions.Item>
       </Descriptions>
-      <ChapterTable chapterList={series.chapterList} />
+      {/* <ChapterTable
+        chapterList={series.chapterList}
+        setChapterRead={props.setChapterRead}
+      /> */}
     </div>
   );
 };

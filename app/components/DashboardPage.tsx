@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route } from 'react-router-dom';
 import { Layout, Menu, Button } from 'antd';
@@ -9,10 +9,7 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-// import { Link } from 'react-router-dom';
-// import routes from '../constants/routes.json';
 import { RootState } from '../store';
-// import blankCover from '../img/blank_cover.png';
 import LibraryGrid from './LibraryGrid';
 import {
   updateSeriesList,
@@ -20,23 +17,33 @@ import {
   saveLibrary,
   readLibrary,
   deleteLibrary,
-  showHideSeriesDetails,
+  setChapterRead,
 } from '../library/actions';
 import { setStatusText } from '../statusbar/actions';
-import Series from '../models/series';
 import SeriesDetails from './SeriesDetails';
 import Search from './Search';
 import StatusBar from './StatusBar';
 import styles from './DashboardPage.css';
 import routes from '../constants/routes.json';
+import Chapter from '../models/chapter';
+import db from '../services/db';
+import {
+  beforeLoadSeries,
+  beforeLoadSeriesList,
+  afterLoadSeries,
+  afterLoadSeriesList,
+} from '../datastore/actions';
+import * as database from '../db';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const mapState = (state: RootState) => ({
-  library: state.library.library,
+  seriesList: state.datastore.seriesList,
+  fetchingSeriesList: state.datastore.fetchingSeriesList,
+  fetchingSeries: state.datastore.fetchingSeries,
+  series: state.datastore.series,
   columns: state.library.columns,
-  showingSeries: state.library.showingSeries,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,9 +53,23 @@ const mapDispatch = (dispatch: any) => ({
   saveLibrary: () => dispatch(saveLibrary()),
   readLibrary: () => dispatch(readLibrary()),
   deleteLibrary: () => dispatch(deleteLibrary()),
-  showHideSeriesDetails: (series?: Series) =>
-    dispatch(showHideSeriesDetails(series)),
+  setChapterRead: (chapter: Chapter, read: boolean) =>
+    dispatch(setChapterRead(chapter, read)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
+  fetchSeriesList: () => {
+    dispatch(beforeLoadSeriesList());
+    // eslint-disable-next-line promise/catch-or-return
+    db.fetchSerieses().then((response) =>
+      dispatch(afterLoadSeriesList(response))
+    );
+  },
+  fetchSeries: (id: number) => {
+    dispatch(beforeLoadSeries());
+    // eslint-disable-next-line promise/catch-or-return
+    db.fetchSeries(id).then((response) =>
+      dispatch(afterLoadSeries(response[0]))
+    );
+  },
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -58,6 +79,12 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
+  useEffect(() => {
+    database.init().then(() => {
+      props.fetchSeriesList();
+    });
+  }, []);
+
   return (
     <Layout className={styles.pageLayout}>
       <Sider className={styles.sider}>
@@ -86,6 +113,22 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           <Switch>
             <Route path="/" exact>
               <>
+                <Button onClick={() => db.addSeries()}>add series</Button>
+                <Button onClick={() => props.fetchSeriesList()}>
+                  fetch series list
+                </Button>
+                <Button onClick={() => console.log(props.seriesList)}>
+                  seriesList
+                </Button>
+                <Button onClick={() => console.log(props.fetchingSeriesList)}>
+                  fetchingSeriesList
+                </Button>
+                <Button onClick={() => props.fetchSeries(1)}>
+                  fetchSeries
+                </Button>
+                <Button onClick={() => console.log(props.series)}>
+                  series
+                </Button>
                 <Button onClick={props.updateSeriesList}>
                   update the series list
                 </Button>
@@ -107,11 +150,14 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               </>
               <LibraryGrid
                 columns={props.columns}
-                seriesList={props.library.seriesList}
+                seriesList={props.seriesList}
               />
             </Route>
-            <Route path="/series/:uuid" exact>
-              <SeriesDetails library={props.library} />
+            <Route path="/series/:id" exact>
+              <SeriesDetails
+                series={props.series}
+                fetchSeries={props.fetchSeries}
+              />
             </Route>
             <Route path="/search" exact>
               <Search library={props.library} />
