@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix } from 'antd';
 import ChapterTable from './ChapterTable';
-import { Series } from '../models/types';
+import { Chapter, Series } from '../models/types';
 import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
@@ -12,15 +12,17 @@ const { Title } = Typography;
 
 type Props = {
   series: Series | undefined;
+  chapterList: Chapter[];
   fetchSeries: (id: number) => void;
+  fetchChapterList: (seriesId: number) => void;
 };
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams();
 
   useEffect(() => {
-    console.log('running');
     props.fetchSeries(id);
+    props.fetchChapterList(id);
   }, []);
 
   if (props.series === undefined) {
@@ -66,10 +68,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           Life, Tragedy
         </Descriptions.Item>
       </Descriptions>
-      {/* <ChapterTable
-        chapterList={series.chapterList}
-        setChapterRead={props.setChapterRead}
-      /> */}
+      <ChapterTable chapterList={props.chapterList} />
     </div>
   );
 };

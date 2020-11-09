@@ -1,12 +1,9 @@
 import React from 'react';
 import { Table, Checkbox, Button } from 'antd';
-import Series from '../models/series';
-import Chapter from '../models/chapter';
-import { setChapterRead } from '../library/actions';
+import { Chapter } from '../models/types';
 
 type Props = {
   chapterList: Chapter[];
-  setChapterRead: (chapter: Chapter, read: boolean) => void;
 };
 
 const ChapterTable: React.FC<Props> = (props: Props) => {
@@ -22,17 +19,6 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   //   }));
   // };
 
-  const updateChapterRead = (key: string) => {
-    const chapter: Chapter | undefined = props.chapterList.find(
-      (c) => c.uuid === key
-    );
-    if (chapter) {
-      console.log(props.setChapterRead);
-      props.setChapterRead(chapter, true);
-    }
-    // reloadDataSource();
-  };
-
   const columns = [
     {
       title: 'Read',
@@ -40,12 +26,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       key: 'read',
       width: '5%',
       render: function render(text: any, record: any) {
-        return (
-          <Checkbox
-            checked={record.read}
-            onChange={() => updateChapterRead(record.uuid)}
-          />
-        );
+        return <Checkbox checked={false} />;
       },
     },
     {
@@ -91,7 +72,12 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
 
   // reloadDataSource();
   return (
-    <Table dataSource={props.chapterList} columns={columns} size="small" />
+    <Table
+      dataSource={props.chapterList}
+      columns={columns}
+      rowKey="id"
+      size="small"
+    />
   );
 };
 

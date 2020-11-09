@@ -4,13 +4,17 @@ import {
   AFTER_LOAD_SERIES_LIST,
   BEFORE_LOAD_SERIES,
   AFTER_LOAD_SERIES,
+  AFTER_LOAD_CHAPTER_LIST,
+  BEFORE_LOAD_CHAPTER_LIST,
 } from './types';
 
 const initialState: DatabaseState = {
   fetchingSeriesList: false,
   fetchingSeries: false,
+  fetchingChapterList: false,
   seriesList: [],
   series: undefined,
+  chapterList: [],
 };
 
 export default function datastore(
@@ -34,6 +38,14 @@ export default function datastore(
         ...state,
         fetchingSeries: false,
         series: action.payload.series,
+      };
+    case BEFORE_LOAD_CHAPTER_LIST:
+      return { ...state, fetchingChapterList: true };
+    case AFTER_LOAD_CHAPTER_LIST:
+      return {
+        ...state,
+        fetchingChapterList: false,
+        chapterList: action.payload.response,
       };
     default:
       return state;

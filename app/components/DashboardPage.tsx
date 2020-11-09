@@ -32,6 +32,8 @@ import {
   beforeLoadSeriesList,
   afterLoadSeries,
   afterLoadSeriesList,
+  beforeLoadChapterList,
+  afterLoadChapterList,
 } from '../datastore/actions';
 import * as database from '../db';
 
@@ -42,7 +44,9 @@ const mapState = (state: RootState) => ({
   seriesList: state.datastore.seriesList,
   fetchingSeriesList: state.datastore.fetchingSeriesList,
   fetchingSeries: state.datastore.fetchingSeries,
+  fetchingChapterList: state.datastore.fetchingChapterList,
   series: state.datastore.series,
+  chapterList: state.datastore.chapterList,
   columns: state.library.columns,
 });
 
@@ -68,6 +72,13 @@ const mapDispatch = (dispatch: any) => ({
     // eslint-disable-next-line promise/catch-or-return
     db.fetchSeries(id).then((response) =>
       dispatch(afterLoadSeries(response[0]))
+    );
+  },
+  fetchChapterList: (seriesId: number) => {
+    dispatch(beforeLoadChapterList());
+    // eslint-disable-next-line promise/catch-or-return
+    db.fetchChapters(seriesId).then((response) =>
+      dispatch(afterLoadChapterList(response))
     );
   },
 });
@@ -114,23 +125,18 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
             <Route path="/" exact>
               <>
                 <Button onClick={() => db.addSeries()}>add series</Button>
+                <Button onClick={() => db.deleteAllSeries()}>
+                  delete all series
+                </Button>
                 <Button onClick={() => props.fetchSeriesList()}>
                   fetch series list
                 </Button>
-                <Button onClick={() => console.log(props.seriesList)}>
-                  seriesList
-                </Button>
-                <Button onClick={() => console.log(props.fetchingSeriesList)}>
-                  fetchingSeriesList
-                </Button>
-                <Button onClick={() => props.fetchSeries(1)}>
-                  fetchSeries
-                </Button>
-                <Button onClick={() => console.log(props.series)}>
-                  series
-                </Button>
+                <Button onClick={() => db.addChapters(6)}>add chapters</Button>
                 <Button onClick={props.updateSeriesList}>
                   update the series list
+                </Button>
+                <Button onClick={() => props.fetchChapterList(1)}>
+                  fetch chapter list
                 </Button>
                 <Button onClick={() => props.changeNumColumns(8)}>
                   update num columns
@@ -156,7 +162,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
             <Route path="/series/:id" exact>
               <SeriesDetails
                 series={props.series}
+                chapterList={props.chapterList}
                 fetchSeries={props.fetchSeries}
+                fetchChapterList={props.fetchChapterList}
               />
             </Route>
             <Route path="/search" exact>
