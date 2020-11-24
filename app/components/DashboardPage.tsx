@@ -1,3 +1,4 @@
+/* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route } from 'react-router-dom';
@@ -34,8 +35,13 @@ import {
   afterLoadSeriesList,
   beforeLoadChapterList,
   afterLoadChapterList,
+  beforeAddSeries,
+  afterAddSeries,
 } from '../datastore/actions';
+import mangadex from '../extension/util/mangadex';
 import * as database from '../db';
+import { beforeGetSeries, afterGetSeries } from '../extension/actions';
+import { Series } from '../models/types';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -48,6 +54,7 @@ const mapState = (state: RootState) => ({
   series: state.datastore.series,
   chapterList: state.datastore.chapterList,
   columns: state.library.columns,
+  extensionSeries: state.extension.series,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -62,23 +69,34 @@ const mapDispatch = (dispatch: any) => ({
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   fetchSeriesList: () => {
     dispatch(beforeLoadSeriesList());
-    // eslint-disable-next-line promise/catch-or-return
     db.fetchSerieses().then((response) =>
       dispatch(afterLoadSeriesList(response))
     );
   },
   fetchSeries: (id: number) => {
     dispatch(beforeLoadSeries());
-    // eslint-disable-next-line promise/catch-or-return
     db.fetchSeries(id).then((response) =>
       dispatch(afterLoadSeries(response[0]))
     );
   },
   fetchChapterList: (seriesId: number) => {
     dispatch(beforeLoadChapterList());
-    // eslint-disable-next-line promise/catch-or-return
     db.fetchChapters(seriesId).then((response) =>
       dispatch(afterLoadChapterList(response))
+    );
+  },
+  getSeries: (id: string) => {
+    dispatch(beforeGetSeries(id));
+    mangadex
+      .fetchSeries(id)
+      .then((response) => response.json())
+      .then((data) => dispatch(afterGetSeries(mangadex.parseSeries(data))));
+  },
+  addSeries: (series: Series) => {
+    const seriesCopy = { ...series };
+    dispatch(beforeAddSeries());
+    db.addSeries(seriesCopy).then((response) =>
+      dispatch(afterAddSeries(response[0]))
     );
   },
 });
@@ -124,7 +142,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           <Switch>
             <Route path="/" exact>
               <>
-                <Button onClick={() => db.addSeries()}>add series</Button>
                 <Button onClick={() => db.deleteAllSeries()}>
                   delete all series
                 </Button>
@@ -152,6 +169,20 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 </Button>
                 <Button onClick={() => props.setStatusText('new status')}>
                   set status
+                </Button>
+                <Button onClick={() => props.getSeries('429')}>
+                  get mangadex series
+                </Button>
+                <Button
+                  onClick={() => {
+                    if (props.extensionSeries !== undefined)
+                      props.addSeries(props.extensionSeries);
+                  }}
+                >
+                  add extension series
+                </Button>
+                <Button onClick={() => console.log(props.extensionSeries)}>
+                  log extension series
                 </Button>
               </>
               <LibraryGrid

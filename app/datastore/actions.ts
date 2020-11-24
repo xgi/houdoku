@@ -7,6 +7,8 @@ import {
   AFTER_LOAD_SERIES_LIST,
   AFTER_LOAD_CHAPTER_LIST,
   BEFORE_LOAD_CHAPTER_LIST,
+  AFTER_ADD_SERIES,
+  BEFORE_ADD_SERIES,
 } from './types';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -59,6 +61,24 @@ export function afterLoadChapterList(response: any): DatabaseAction {
     type: AFTER_LOAD_CHAPTER_LIST,
     payload: {
       response,
+    },
+  };
+}
+
+// eslint-disable-next-line import/prefer-default-export
+export function beforeAddSeries(): DatabaseAction {
+  return {
+    type: BEFORE_ADD_SERIES,
+    payload: {},
+  };
+}
+
+// eslint-disable-next-line import/prefer-default-export
+export function afterAddSeries(addedSeries: Series): DatabaseAction {
+  return {
+    type: AFTER_ADD_SERIES,
+    payload: {
+      addedSeries,
     },
   };
 }

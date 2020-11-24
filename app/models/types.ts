@@ -1,8 +1,10 @@
 export type Series = {
-  id: number;
+  id?: number;
+  source_id: string;
   title: string;
   author: string;
   artist: string;
+  remoteCoverUrl: string;
 };
 
 export type Chapter = {

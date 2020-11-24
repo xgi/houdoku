@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-cycle
 import * as db from '../db';
+import { Series } from '../models/types';
 
 export default {
   fetchSerieses() {
@@ -19,17 +20,11 @@ export default {
       .where(db.seriesTable.id.eq(id))
       .exec();
   },
-  addSeries() {
-    const data = {
-      title: 'seriestitle1',
-      author: 'author1',
-      artist: 'artist1',
-    };
-
+  addSeries(series: Series) {
     return db.database
       .insertOrReplace()
       .into(db.seriesTable)
-      .values([db.seriesTable.createRow(data)])
+      .values([db.seriesTable.createRow(series)])
       .exec();
   },
   addChapters(seriesId: number) {
