@@ -5,6 +5,7 @@ import { History } from 'history';
 import library from './library/reducers';
 import status from './statusbar/reducers';
 import datastore from './datastore/reducers';
+import extension from './extension/reducers';
 
 export default function createRootReducer(history: History) {
   return combineReducers({
@@ -12,5 +13,6 @@ export default function createRootReducer(history: History) {
     library,
     status,
     datastore,
+    extension,
   });
 }
