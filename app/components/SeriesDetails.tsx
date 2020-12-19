@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix } from 'antd';
@@ -8,7 +10,13 @@ import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
 import routes from '../constants/routes.json';
 
+const { app } = require('electron').remote;
 const { Title } = Typography;
+
+const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
+if (!fs.existsSync(thumbnailsDir)) {
+  fs.mkdirSync(thumbnailsDir);
+}
 
 type Props = {
   series: Series | undefined;
@@ -33,6 +41,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     );
   }
 
+  const getThumbnailPath = (seriesId?: number) => {
+    const thumbnailPath = path.join(thumbnailsDir, `${id}.jpg`);
+    return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
+  };
+
   return (
     <div>
       <Link to={routes.LIBRARY}>
@@ -47,7 +60,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         <div>
           <img
             className={styles.coverImage}
-            src={blankCover}
+            src={getThumbnailPath(props.series.id)}
             alt={props.series.title}
           />
         </div>
