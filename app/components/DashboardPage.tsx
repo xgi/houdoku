@@ -29,19 +29,14 @@ import routes from '../constants/routes.json';
 import Chapter from '../models/chapter';
 import db from '../services/db';
 import {
-  beforeLoadSeries,
-  beforeLoadSeriesList,
-  afterLoadSeries,
-  afterLoadSeriesList,
-  beforeLoadChapterList,
-  afterLoadChapterList,
-  beforeAddSeries,
-  afterAddSeries,
-} from '../datastore/actions';
-import mangadex from '../extension/util/mangadex';
+  addSeries,
+  loadChapterList,
+  loadSeries,
+  loadSeriesList,
+} from '../datastore/utils';
 import * as database from '../db';
-import { beforeGetSeries, afterGetSeries } from '../extension/actions';
 import { Series } from '../models/types';
+import { getSeries } from '../extension/utils';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -67,38 +62,11 @@ const mapDispatch = (dispatch: any) => ({
   setChapterRead: (chapter: Chapter, read: boolean) =>
     dispatch(setChapterRead(chapter, read)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
-  fetchSeriesList: () => {
-    dispatch(beforeLoadSeriesList());
-    db.fetchSerieses().then((response) =>
-      dispatch(afterLoadSeriesList(response))
-    );
-  },
-  fetchSeries: (id: number) => {
-    dispatch(beforeLoadSeries());
-    db.fetchSeries(id).then((response) =>
-      dispatch(afterLoadSeries(response[0]))
-    );
-  },
-  fetchChapterList: (seriesId: number) => {
-    dispatch(beforeLoadChapterList());
-    db.fetchChapters(seriesId).then((response) =>
-      dispatch(afterLoadChapterList(response))
-    );
-  },
-  getSeries: (id: string) => {
-    dispatch(beforeGetSeries(id));
-    mangadex
-      .fetchSeries(id)
-      .then((response) => response.json())
-      .then((data) => dispatch(afterGetSeries(mangadex.parseSeries(data))));
-  },
-  addSeries: (series: Series) => {
-    const seriesCopy = { ...series };
-    dispatch(beforeAddSeries());
-    db.addSeries(seriesCopy).then((response) =>
-      dispatch(afterAddSeries(response[0]))
-    );
-  },
+  fetchSeriesList: () => loadSeriesList(dispatch),
+  fetchSeries: (id: number) => loadSeries(dispatch, id),
+  fetchChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  getSeries: (id: string) => getSeries(dispatch, id),
+  addSeries: (series: Series) => addSeries(dispatch, series),
 });
 
 const connector = connect(mapState, mapDispatch);

@@ -11,7 +11,6 @@ import {
   BEFORE_ADD_SERIES,
 } from './types';
 
-// eslint-disable-next-line import/prefer-default-export
 export function beforeLoadSeriesList(): DatabaseAction {
   return {
     type: BEFORE_LOAD_SERIES_LIST,
@@ -19,7 +18,6 @@ export function beforeLoadSeriesList(): DatabaseAction {
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function afterLoadSeriesList(response: any): DatabaseAction {
   return {
     type: AFTER_LOAD_SERIES_LIST,
@@ -29,7 +27,6 @@ export function afterLoadSeriesList(response: any): DatabaseAction {
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function beforeLoadSeries(): DatabaseAction {
   return {
     type: BEFORE_LOAD_SERIES,
@@ -37,7 +34,6 @@ export function beforeLoadSeries(): DatabaseAction {
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function afterLoadSeries(series: Series): DatabaseAction {
   return {
     type: AFTER_LOAD_SERIES,
@@ -47,7 +43,6 @@ export function afterLoadSeries(series: Series): DatabaseAction {
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function beforeLoadChapterList(): DatabaseAction {
   return {
     type: BEFORE_LOAD_CHAPTER_LIST,
@@ -55,7 +50,6 @@ export function beforeLoadChapterList(): DatabaseAction {
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function afterLoadChapterList(response: any): DatabaseAction {
   return {
     type: AFTER_LOAD_CHAPTER_LIST,
@@ -65,7 +59,6 @@ export function afterLoadChapterList(response: any): DatabaseAction {
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function beforeAddSeries(): DatabaseAction {
   return {
     type: BEFORE_ADD_SERIES,
@@ -73,7 +66,6 @@ export function beforeAddSeries(): DatabaseAction {
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export function afterAddSeries(addedSeries: Series): DatabaseAction {
   return {
     type: AFTER_ADD_SERIES,
