@@ -14,3 +14,9 @@ export type Chapter = {
   volumeNumber: number;
   series_id: number;
 };
+
+export enum PageFit {
+  Auto,
+  Width,
+  Height,
+}
