@@ -38,7 +38,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         <Button onClick={() => props.togglePageFit()}>change fit</Button>
       </Sider>
       <Layout className={`site-layout ${styles.contentLayout}`}>
-        <Content className={styles.content}>
+        <Content
+          className={`
+              ${props.pageFit === PageFit.Width ? styles.fitWidth : ''}
+              ${props.pageFit === PageFit.Height ? styles.fitHeight : ''}
+            `}
+        >
           <img className={styles.pageImage} src={samplePage} alt="page" />
         </Content>
       </Layout>

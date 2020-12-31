@@ -10,11 +10,12 @@
   justify-content: center;
   align-items: center;
   height: calc(100vh - 24px);
+  overflow-y: auto;
   /* margin-left: var(--sider-width); */
 }
 
 .sider {
-  overflow: auto;
+  /* overflow: auto; */
   height: 100vh;
   position: fixed;
   left: 0;
@@ -27,17 +28,17 @@
   width: var(--sider-width) !important;
 }
 
-/* fit height */
-/* .pageImage { 
-  object-fit: contain;
-  min-width: 0;
-  height: 100%;
-} */
-
-/* fit width */
-.pageImage { 
+.pageImage {
   min-width: 0;
   width: 100%;
+}
+
+.fitHeight .pageImage {
+  object-fit: contain;
+  height: 100%;
+}
+
+.fitWidth .pageImage {
   max-width: unset;
   flex-grow: 1;
 }

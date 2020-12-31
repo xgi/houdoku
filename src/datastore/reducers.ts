@@ -76,7 +76,6 @@ export default function datastore(
     case BEFORE_LOAD_CHAPTER_LIST:
       return { ...state, fetchingChapterList: true };
     case AFTER_LOAD_CHAPTER_LIST:
-      console.log(action.payload.response);
       return {
         ...state,
         fetchingChapterList: false,
