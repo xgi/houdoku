@@ -1,4 +1,4 @@
-import { Series } from '../models/types';
+import { Chapter, Series } from '../models/types';
 import {
   DatabaseAction,
   BEFORE_LOAD_SERIES_LIST,
@@ -9,6 +9,8 @@ import {
   BEFORE_LOAD_CHAPTER_LIST,
   AFTER_ADD_SERIES,
   BEFORE_ADD_SERIES,
+  AFTER_LOAD_CHAPTER,
+  BEFORE_LOAD_CHAPTER,
 } from './types';
 
 export function beforeLoadSeriesList(): DatabaseAction {
@@ -39,6 +41,22 @@ export function afterLoadSeries(series: Series): DatabaseAction {
     type: AFTER_LOAD_SERIES,
     payload: {
       series,
+    },
+  };
+}
+
+export function beforeLoadChapter(): DatabaseAction {
+  return {
+    type: BEFORE_LOAD_CHAPTER,
+    payload: {},
+  };
+}
+
+export function afterLoadChapter(chapter: Chapter): DatabaseAction {
+  return {
+    type: AFTER_LOAD_CHAPTER,
+    payload: {
+      chapter,
     },
   };
 }

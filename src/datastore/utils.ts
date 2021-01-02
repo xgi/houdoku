@@ -8,8 +8,11 @@ import {
   afterLoadChapterList,
   beforeAddSeries,
   afterAddSeries,
+  afterLoadChapter,
+  beforeLoadChapter,
 } from './actions';
 import db from '../services/db';
+import Series from '../models/series';
 
 export function loadSeriesList(dispatch: any) {
   dispatch(beforeLoadSeriesList());
@@ -21,6 +24,13 @@ export function loadSeriesList(dispatch: any) {
 export function loadSeries(dispatch: any, id: number) {
   dispatch(beforeLoadSeries());
   db.fetchSeries(id).then((response) => dispatch(afterLoadSeries(response[0])));
+}
+
+export function loadChapter(dispatch: any, id: number) {
+  dispatch(beforeLoadChapter());
+  db.fetchChapter(id).then((response) =>
+    dispatch(afterLoadChapter(response[0]))
+  );
 }
 
 export function loadChapterList(dispatch: any, seriesId: number) {

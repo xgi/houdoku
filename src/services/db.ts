@@ -20,6 +20,13 @@ export default {
       .where(db.seriesTable.id.eq(id))
       .exec();
   },
+  fetchChapter(id: number) {
+    return db.database
+      .select()
+      .from(db.chapterTable)
+      .where(db.chapterTable.id.eq(id))
+      .exec();
+  },
   addSeries(series: Series) {
     return db.database
       .insertOrReplace()

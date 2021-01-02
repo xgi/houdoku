@@ -1,7 +1,14 @@
 import { PageFit } from '../models/types';
-import { ReaderState, SET_PAGE_FIT, TOGGLE_PAGE_FIT } from './types';
+import {
+  ReaderState,
+  SET_PAGE_FIT,
+  SET_SOURCE,
+  TOGGLE_PAGE_FIT,
+} from './types';
 
 const initialState: ReaderState = {
+  series: undefined,
+  chapter: undefined,
   pageFit: PageFit.Width,
 };
 
@@ -21,6 +28,12 @@ export default function status(
   action: any
 ): ReaderState {
   switch (action.type) {
+    case SET_SOURCE:
+      return {
+        ...state,
+        series: action.payload.series,
+        chapter: action.payload.chapter,
+      };
     case SET_PAGE_FIT:
       return { ...state, pageFit: action.payload.pageFit };
     case TOGGLE_PAGE_FIT:

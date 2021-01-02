@@ -1,6 +1,8 @@
 import React from 'react';
 import { Table, Checkbox, Button } from 'antd';
+import { Link } from 'react-router-dom';
 import { Chapter } from '../models/types';
+import routes from '../constants/routes.json';
 
 type Props = {
   chapterList: Chapter[];
@@ -65,7 +67,11 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       width: '15%',
       align: 'center',
       render: function render(text: any, record: any) {
-        return <Button>Read</Button>;
+        return (
+          <Link to={`${routes.READER}/${record.id}`}>
+            <Button>Read</Button>
+          </Link>
+        );
       },
     },
   ];

@@ -1,5 +1,20 @@
-import { PageFit } from '../models/types';
-import { SET_PAGE_FIT, TOGGLE_PAGE_FIT, ReaderAction } from './types';
+import { Series, Chapter, PageFit } from '../models/types';
+import {
+  SET_PAGE_FIT,
+  TOGGLE_PAGE_FIT,
+  ReaderAction,
+  SET_SOURCE,
+} from './types';
+
+export function setSource(series: Series, chapter: Chapter): ReaderAction {
+  return {
+    type: SET_SOURCE,
+    payload: {
+      series,
+      chapter,
+    },
+  };
+}
 
 export function setPageFit(pageFit: PageFit): ReaderAction {
   return {

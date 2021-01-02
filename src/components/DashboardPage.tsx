@@ -18,7 +18,6 @@ import {
   saveLibrary,
   readLibrary,
   deleteLibrary,
-  setChapterRead,
 } from '../library/actions';
 import { setStatusText } from '../statusbar/actions';
 import SeriesDetails from './SeriesDetails';
@@ -26,17 +25,18 @@ import Search from './Search';
 import StatusBar from './StatusBar';
 import styles from './DashboardPage.css';
 import routes from '../constants/routes.json';
-import Chapter from '../models/chapter';
 import db from '../services/db';
 import {
   addSeries,
+  loadChapter,
   loadChapterList,
   loadSeries,
   loadSeriesList,
 } from '../datastore/utils';
 import * as database from '../db';
-import { Series } from '../models/types';
+import { Series, Chapter } from '../models/types';
 import { getSeries } from '../extension/utils';
+import { setSource } from '../reader/actions';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -59,14 +59,14 @@ const mapDispatch = (dispatch: any) => ({
   saveLibrary: () => dispatch(saveLibrary()),
   readLibrary: () => dispatch(readLibrary()),
   deleteLibrary: () => dispatch(deleteLibrary()),
-  setChapterRead: (chapter: Chapter, read: boolean) =>
-    dispatch(setChapterRead(chapter, read)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   fetchSeriesList: () => loadSeriesList(dispatch),
   fetchSeries: (id: number) => loadSeries(dispatch, id),
   fetchChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
   getSeries: (id: string) => getSeries(dispatch, id),
   addSeries: (series: Series) => addSeries(dispatch, series),
+  setReaderSource: (series: Series, chapter: Chapter) =>
+    setSource(series, chapter),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -77,9 +77,12 @@ type Props = PropsFromRedux & {};
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
   useEffect(() => {
-    database.init().then(() => {
-      props.fetchSeriesList();
-    });
+    database
+      .init()
+      .then(() => {
+        props.fetchSeriesList();
+      })
+      .catch((error) => console.log(error));
   }, []);
 
   return (
@@ -92,6 +95,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           </Menu.Item>
           <Menu.Item key="2" icon={<DesktopOutlined />}>
             <Link to={routes.SEARCH}>Search</Link>
+          </Menu.Item>
+          <Menu.Item key="3" icon={<UserOutlined />}>
+            {/* <Link to={routes.READER}>Reader</Link> */}
+            <Link to={`${routes.READER}/1197`}>Reader</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
             <Menu.Item key="3">Tom</Menu.Item>
@@ -108,7 +115,18 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       <Layout className={`site-layout ${styles.contentLayout}`}>
         <Content className={styles.content}>
           <Switch>
-            <Route path="/" exact>
+            <Route path={`${routes.SERIES}/:id`} exact>
+              <SeriesDetails
+                series={props.series}
+                chapterList={props.chapterList}
+                fetchSeries={props.fetchSeries}
+                fetchChapterList={props.fetchChapterList}
+              />
+            </Route>
+            <Route path={routes.SEARCH} exact>
+              <Search library={props.library} />
+            </Route>
+            <Route path={routes.LIBRARY}>
               <>
                 <Button onClick={() => db.deleteAllSeries()}>
                   delete all series
@@ -116,7 +134,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 <Button onClick={() => props.fetchSeriesList()}>
                   fetch series list
                 </Button>
-                <Button onClick={() => db.addChapters(6)}>add chapters</Button>
+                <Button onClick={() => db.addChapters(18)}>add chapters</Button>
                 <Button onClick={props.updateSeriesList}>
                   update the series list
                 </Button>
@@ -157,17 +175,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 columns={props.columns}
                 seriesList={props.seriesList}
               />
-            </Route>
-            <Route path="/series/:id" exact>
-              <SeriesDetails
-                series={props.series}
-                chapterList={props.chapterList}
-                fetchSeries={props.fetchSeries}
-                fetchChapterList={props.fetchChapterList}
-              />
-            </Route>
-            <Route path="/search" exact>
-              <Search library={props.library} />
             </Route>
           </Switch>
         </Content>
