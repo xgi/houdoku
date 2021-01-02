@@ -1,31 +1,25 @@
-import { remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
-export default function handleWindowControls() {
-  const win = remote.getCurrentWindow();
-
+export default async function createWindowControlListeners() {
   const minButton = document.getElementById('min-button');
   const maxRestoreButton = document.getElementById('max-restore-button');
   const closeButton = document.getElementById('close-button');
 
   if (minButton != null) {
     minButton.addEventListener('click', () => {
-      win.minimize();
+      ipcRenderer.invoke('window-minimize');
     });
   }
 
   if (maxRestoreButton != null) {
     maxRestoreButton.addEventListener('click', () => {
-      if (win.isMaximized()) {
-        win.restore();
-      } else {
-        win.maximize();
-      }
+      ipcRenderer.invoke('window-max-restore');
     });
   }
 
   if (closeButton != null) {
     closeButton.addEventListener('click', () => {
-      win.close();
+      ipcRenderer.invoke('window-close');
     });
   }
 }

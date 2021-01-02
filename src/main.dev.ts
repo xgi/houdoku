@@ -132,6 +132,22 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-ipcMain.handle('get-thumbnails-dir', async (event) => {
+ipcMain.handle('window-minimize', (event) => {
+  mainWindow?.minimize();
+});
+
+ipcMain.handle('window-max-restore', (event) => {
+  if (mainWindow?.isMaximized()) {
+    mainWindow?.restore();
+  } else {
+    mainWindow?.maximize();
+  }
+});
+
+ipcMain.handle('window-close', (event) => {
+  mainWindow?.close();
+});
+
+ipcMain.handle('get-thumbnails-dir', (event) => {
   return path.join(app.getPath('userData'), 'thumbnails');
 });
