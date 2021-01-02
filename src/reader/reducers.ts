@@ -1,16 +1,30 @@
 import { PageFit } from '../models/types';
 import {
+  CHANGE_PAGE_NUMBER,
   ReaderState,
   SET_PAGE_FIT,
-  SET_SOURCE,
+  SET_PAGE_NUMBER,
   TOGGLE_PAGE_FIT,
 } from './types';
 
 const initialState: ReaderState = {
-  series: undefined,
-  chapter: undefined,
+  pageNumber: 1,
+  lastPageNumber: 20,
   pageFit: PageFit.Width,
 };
+
+function sanitizedPageNumber(
+  pageNumber: number,
+  lastPageNumber: number
+): number {
+  if (pageNumber < 1) {
+    return 1;
+  }
+  if (pageNumber > lastPageNumber) {
+    return lastPageNumber;
+  }
+  return pageNumber;
+}
 
 function nextPageFit(pageFit: PageFit): PageFit {
   if (pageFit === PageFit.Height) {
@@ -28,11 +42,21 @@ export default function status(
   action: any
 ): ReaderState {
   switch (action.type) {
-    case SET_SOURCE:
+    case SET_PAGE_NUMBER:
       return {
         ...state,
-        series: action.payload.series,
-        chapter: action.payload.chapter,
+        pageNumber: sanitizedPageNumber(
+          action.payload.pageNumber,
+          state.lastPageNumber
+        ),
+      };
+    case CHANGE_PAGE_NUMBER:
+      return {
+        ...state,
+        pageNumber: sanitizedPageNumber(
+          state.pageNumber + action.payload.delta,
+          state.lastPageNumber
+        ),
       };
     case SET_PAGE_FIT:
       return { ...state, pageFit: action.payload.pageFit };

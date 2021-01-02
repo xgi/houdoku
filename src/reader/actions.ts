@@ -1,17 +1,26 @@
-import { Series, Chapter, PageFit } from '../models/types';
+import { PageFit } from '../models/types';
 import {
   SET_PAGE_FIT,
   TOGGLE_PAGE_FIT,
   ReaderAction,
-  SET_SOURCE,
+  SET_PAGE_NUMBER,
+  CHANGE_PAGE_NUMBER,
 } from './types';
 
-export function setSource(series: Series, chapter: Chapter): ReaderAction {
+export function setPageNumber(pageNumber: number): ReaderAction {
   return {
-    type: SET_SOURCE,
+    type: SET_PAGE_NUMBER,
     payload: {
-      series,
-      chapter,
+      pageNumber,
+    },
+  };
+}
+
+export function changePageNumber(delta: number): ReaderAction {
+  return {
+    type: CHANGE_PAGE_NUMBER,
+    payload: {
+      delta,
     },
   };
 }

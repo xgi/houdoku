@@ -1,20 +1,27 @@
-import { Series, Chapter, PageFit } from '../models/types';
+import { PageFit } from '../models/types';
 
-export const SET_SOURCE = 'SET_SOURCE';
+export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
+export const CHANGE_PAGE_NUMBER = 'CHANGE_PAGE_NUMBER';
 export const SET_PAGE_FIT = 'SET_PAGE_FIT';
 export const TOGGLE_PAGE_FIT = 'TOGGLE_PAGE_FIT';
 
 export interface ReaderState {
-  series?: Series;
-  chapter?: Chapter;
+  pageNumber: number;
+  lastPageNumber: number;
   pageFit: PageFit;
 }
 
-interface SetSource {
-  type: typeof SET_SOURCE;
+interface SetPageNumberAction {
+  type: typeof SET_PAGE_NUMBER;
   payload: {
-    series: Series;
-    chapter: Chapter;
+    pageNumber: number;
+  };
+}
+
+interface ChangePageNumberAction {
+  type: typeof CHANGE_PAGE_NUMBER;
+  payload: {
+    delta: number;
   };
 }
 
@@ -29,4 +36,8 @@ interface TogglePageFitAction {
   type: typeof TOGGLE_PAGE_FIT;
 }
 
-export type ReaderAction = SetPageFitAction | TogglePageFitAction;
+export type ReaderAction =
+  | SetPageNumberAction
+  | ChangePageNumberAction
+  | SetPageFitAction
+  | TogglePageFitAction;
