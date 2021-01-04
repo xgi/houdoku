@@ -5,6 +5,8 @@ import {
   ReaderAction,
   SET_PAGE_NUMBER,
   CHANGE_PAGE_NUMBER,
+  TOGGLE_TWO_PAGE_VIEW,
+  TOGGLE_TWO_PAGE_EVEN_START,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -37,5 +39,17 @@ export function setPageFit(pageFit: PageFit): ReaderAction {
 export function togglePageFit(): ReaderAction {
   return {
     type: TOGGLE_PAGE_FIT,
+  };
+}
+
+export function toggleTwoPageView(): ReaderAction {
+  return {
+    type: TOGGLE_TWO_PAGE_VIEW,
+  };
+}
+
+export function toggleTwoPageEvenStart(): ReaderAction {
+  return {
+    type: TOGGLE_TWO_PAGE_EVEN_START,
   };
 }

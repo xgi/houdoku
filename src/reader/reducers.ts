@@ -5,12 +5,16 @@ import {
   SET_PAGE_FIT,
   SET_PAGE_NUMBER,
   TOGGLE_PAGE_FIT,
+  TOGGLE_TWO_PAGE_EVEN_START,
+  TOGGLE_TWO_PAGE_VIEW,
 } from './types';
 
 const initialState: ReaderState = {
   pageNumber: 1,
   lastPageNumber: 20,
   pageFit: PageFit.Width,
+  twoPageView: false,
+  twoPageEvenStart: false,
 };
 
 function sanitizedPageNumber(
@@ -62,6 +66,10 @@ export default function status(
       return { ...state, pageFit: action.payload.pageFit };
     case TOGGLE_PAGE_FIT:
       return { ...state, pageFit: nextPageFit(state.pageFit) };
+    case TOGGLE_TWO_PAGE_VIEW:
+      return { ...state, twoPageView: !state.twoPageView };
+    case TOGGLE_TWO_PAGE_EVEN_START:
+      return { ...state, twoPageEvenStart: !state.twoPageEvenStart };
     default:
       return state;
   }

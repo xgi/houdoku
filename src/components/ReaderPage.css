@@ -28,6 +28,14 @@
   width: var(--sider-width) !important;
 }
 
+.preloadContainer {
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
 .pageImage {
   min-width: 0;
   width: 100%;
@@ -41,4 +49,9 @@
 .fitWidth .pageImage {
   max-width: unset;
   flex-grow: 1;
+}
+
+.imageColumn {
+  float: left;
+  width: 50%;
 }
