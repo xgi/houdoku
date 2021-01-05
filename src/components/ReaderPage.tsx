@@ -136,7 +136,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           />
         </div>
         <Content
-          className={`
+          className={`${styles.viewerContainer}
+              ${props.pageFit === PageFit.Auto ? styles.fitAuto : ''}
               ${props.pageFit === PageFit.Width ? styles.fitWidth : ''}
               ${props.pageFit === PageFit.Height ? styles.fitHeight : ''}
             `}

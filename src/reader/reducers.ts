@@ -12,7 +12,7 @@ import {
 const initialState: ReaderState = {
   pageNumber: 1,
   lastPageNumber: 20,
-  pageFit: PageFit.Width,
+  pageFit: PageFit.Auto,
   twoPageView: false,
   twoPageEvenStart: false,
 };
@@ -31,7 +31,7 @@ function sanitizedPageNumber(
 }
 
 function nextPageFit(pageFit: PageFit): PageFit {
-  if (pageFit === PageFit.Height) {
+  if (pageFit === PageFit.Auto) {
     return PageFit.Width;
   }
   if (pageFit === PageFit.Width) {
