@@ -20,3 +20,8 @@ export enum PageFit {
   Width,
   Height,
 }
+
+export enum LayoutDirection {
+  LeftToRight,
+  RightToLeft,
+}

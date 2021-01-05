@@ -8,6 +8,7 @@ import {
   changePageNumber,
   setPageFit,
   setPageNumber,
+  toggleLayoutDirection,
   togglePageFit,
   toggleTwoPageEvenStart,
   toggleTwoPageView,
@@ -15,7 +16,7 @@ import {
 import samplePage from '../img/samplePage.png';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
-import { PageFit } from '../models/types';
+import { LayoutDirection, PageFit } from '../models/types';
 import { loadChapter } from '../datastore/utils';
 
 const { Content, Sider } = Layout;
@@ -27,6 +28,7 @@ const mapState = (state: RootState) => ({
   pageFit: state.reader.pageFit,
   twoPageView: state.reader.twoPageView,
   twoPageEvenStart: state.reader.twoPageEvenStart,
+  layoutDirection: state.reader.layoutDirection,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -38,6 +40,7 @@ const mapDispatch = (dispatch: any) => ({
   togglePageFit: () => dispatch(togglePageFit()),
   toggleTwoPageView: () => dispatch(toggleTwoPageView()),
   toggleTwoPageEvenStart: () => dispatch(toggleTwoPageEvenStart()),
+  toggleLayoutDirection: () => dispatch(toggleLayoutDirection()),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -72,17 +75,40 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   const renderTwoPageLayout = (pageNumber: number) => {
-    const leftPageNumber = props.twoPageEvenStart ? pageNumber - 1 : pageNumber;
+    const firstPageNumber = props.twoPageEvenStart
+      ? pageNumber - 1
+      : pageNumber;
     return (
       <>
         <span className={styles.imageColumn}>
-          {renderPageImage(leftPageNumber)}
+          {renderPageImage(
+            props.layoutDirection === LayoutDirection.LeftToRight
+              ? firstPageNumber
+              : firstPageNumber + 1
+          )}
         </span>
         <span className={styles.imageColumn}>
-          {renderPageImage(leftPageNumber + 1)}
+          {renderPageImage(
+            props.layoutDirection === LayoutDirection.LeftToRight
+              ? firstPageNumber + 1
+              : firstPageNumber
+          )}
         </span>
       </>
     );
+  };
+
+  const changePage = (left: boolean) => {
+    let delta = left ? -1 : 1;
+
+    if (props.layoutDirection === LayoutDirection.RightToLeft) {
+      delta = -delta;
+    }
+    if (props.twoPageView) {
+      delta *= 2;
+    }
+
+    props.changePageNumber(delta);
   };
 
   return (
@@ -94,21 +120,17 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         <Button onClick={() => props.togglePageFit()}>change fit</Button>
         <p>{`cur_page=${props.pageNumber} last_page=${props.lastPageNumber}`}</p>
         <p>{`two_page=${props.twoPageView} even_start=${props.twoPageEvenStart}`}</p>
-        <Button
-          onClick={() => props.changePageNumber(props.twoPageView ? -2 : -1)}
-        >
-          prev page
-        </Button>
-        <Button
-          onClick={() => props.changePageNumber(props.twoPageView ? 2 : 1)}
-        >
-          next page
-        </Button>
+        <p>{`layout_dir=${props.layoutDirection}`}</p>
+        <Button onClick={() => changePage(true)}>left</Button>
+        <Button onClick={() => changePage(false)}>right</Button>
         <Button onClick={() => props.toggleTwoPageView()}>
           toggle two page display
         </Button>
         <Button onClick={() => props.toggleTwoPageEvenStart()}>
           toggle two page even start
+        </Button>
+        <Button onClick={() => props.toggleLayoutDirection()}>
+          toggle layout direction
         </Button>
         <Link to={routes.LIBRARY}>
           <Button>back to library</Button>

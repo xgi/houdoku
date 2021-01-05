@@ -1,9 +1,10 @@
-import { PageFit } from '../models/types';
+import { LayoutDirection, PageFit } from '../models/types';
 import {
   CHANGE_PAGE_NUMBER,
   ReaderState,
   SET_PAGE_FIT,
   SET_PAGE_NUMBER,
+  TOGGLE_LAYOUT_DIRECTION,
   TOGGLE_PAGE_FIT,
   TOGGLE_TWO_PAGE_EVEN_START,
   TOGGLE_TWO_PAGE_VIEW,
@@ -15,6 +16,7 @@ const initialState: ReaderState = {
   pageFit: PageFit.Auto,
   twoPageView: false,
   twoPageEvenStart: false,
+  layoutDirection: LayoutDirection.LeftToRight,
 };
 
 function sanitizedPageNumber(
@@ -38,6 +40,15 @@ function nextPageFit(pageFit: PageFit): PageFit {
     return PageFit.Height;
   }
   return PageFit.Auto;
+}
+
+function nextLayoutDirection(
+  layoutDirection: LayoutDirection
+): LayoutDirection {
+  if (layoutDirection === LayoutDirection.LeftToRight) {
+    return LayoutDirection.RightToLeft;
+  }
+  return LayoutDirection.LeftToRight;
 }
 
 export default function status(
@@ -70,6 +81,11 @@ export default function status(
       return { ...state, twoPageView: !state.twoPageView };
     case TOGGLE_TWO_PAGE_EVEN_START:
       return { ...state, twoPageEvenStart: !state.twoPageEvenStart };
+    case TOGGLE_LAYOUT_DIRECTION:
+      return {
+        ...state,
+        layoutDirection: nextLayoutDirection(state.layoutDirection),
+      };
     default:
       return state;
   }

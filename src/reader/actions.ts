@@ -7,6 +7,7 @@ import {
   CHANGE_PAGE_NUMBER,
   TOGGLE_TWO_PAGE_VIEW,
   TOGGLE_TWO_PAGE_EVEN_START,
+  TOGGLE_LAYOUT_DIRECTION,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -51,5 +52,11 @@ export function toggleTwoPageView(): ReaderAction {
 export function toggleTwoPageEvenStart(): ReaderAction {
   return {
     type: TOGGLE_TWO_PAGE_EVEN_START,
+  };
+}
+
+export function toggleLayoutDirection(): ReaderAction {
+  return {
+    type: TOGGLE_LAYOUT_DIRECTION,
   };
 }

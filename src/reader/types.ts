@@ -1,4 +1,4 @@
-import { PageFit } from '../models/types';
+import { LayoutDirection, PageFit } from '../models/types';
 
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 export const CHANGE_PAGE_NUMBER = 'CHANGE_PAGE_NUMBER';
@@ -6,6 +6,7 @@ export const SET_PAGE_FIT = 'SET_PAGE_FIT';
 export const TOGGLE_PAGE_FIT = 'TOGGLE_PAGE_FIT';
 export const TOGGLE_TWO_PAGE_VIEW = 'TOGGLE_TWO_PAGE_VIEW';
 export const TOGGLE_TWO_PAGE_EVEN_START = 'TOGGLE_TWO_PAGE_EVEN_START';
+export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
 
 export interface ReaderState {
   pageNumber: number;
@@ -13,6 +14,7 @@ export interface ReaderState {
   pageFit: PageFit;
   twoPageView: boolean;
   twoPageEvenStart: boolean;
+  layoutDirection: LayoutDirection;
 }
 
 interface SetPageNumberAction {
@@ -48,10 +50,15 @@ interface ToggleTwoPageEvenStartAction {
   type: typeof TOGGLE_TWO_PAGE_EVEN_START;
 }
 
+interface ToggleLayoutDirectionAction {
+  type: typeof TOGGLE_LAYOUT_DIRECTION;
+}
+
 export type ReaderAction =
   | SetPageNumberAction
   | ChangePageNumberAction
   | SetPageFitAction
   | TogglePageFitAction
   | ToggleTwoPageViewAction
-  | ToggleTwoPageEvenStartAction;
+  | ToggleTwoPageEvenStartAction
+  | ToggleLayoutDirectionAction;
