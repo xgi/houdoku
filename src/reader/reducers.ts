@@ -4,6 +4,7 @@ import {
   ReaderState,
   SET_PAGE_FIT,
   SET_PAGE_NUMBER,
+  SET_PRELOAD_AMOUNT,
   TOGGLE_LAYOUT_DIRECTION,
   TOGGLE_PAGE_FIT,
   TOGGLE_TWO_PAGE_EVEN_START,
@@ -17,6 +18,7 @@ const initialState: ReaderState = {
   twoPageView: false,
   twoPageEvenStart: false,
   layoutDirection: LayoutDirection.LeftToRight,
+  preloadAmount: 3,
 };
 
 function sanitizedPageNumber(
@@ -85,6 +87,14 @@ export default function status(
       return {
         ...state,
         layoutDirection: nextLayoutDirection(state.layoutDirection),
+      };
+    case SET_PRELOAD_AMOUNT:
+      return {
+        ...state,
+        preloadAmount:
+          action.payload.preloadAmount === 10
+            ? Infinity
+            : action.payload.preloadAmount,
       };
     default:
       return state;

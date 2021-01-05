@@ -8,6 +8,7 @@ import {
   TOGGLE_TWO_PAGE_VIEW,
   TOGGLE_TWO_PAGE_EVEN_START,
   TOGGLE_LAYOUT_DIRECTION,
+  SET_PRELOAD_AMOUNT,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -58,5 +59,14 @@ export function toggleTwoPageEvenStart(): ReaderAction {
 export function toggleLayoutDirection(): ReaderAction {
   return {
     type: TOGGLE_LAYOUT_DIRECTION,
+  };
+}
+
+export function setPreloadAmount(preloadAmount: number): ReaderAction {
+  return {
+    type: SET_PRELOAD_AMOUNT,
+    payload: {
+      preloadAmount,
+    },
   };
 }

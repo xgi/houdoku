@@ -7,6 +7,7 @@ export const TOGGLE_PAGE_FIT = 'TOGGLE_PAGE_FIT';
 export const TOGGLE_TWO_PAGE_VIEW = 'TOGGLE_TWO_PAGE_VIEW';
 export const TOGGLE_TWO_PAGE_EVEN_START = 'TOGGLE_TWO_PAGE_EVEN_START';
 export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
+export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 
 export interface ReaderState {
   pageNumber: number;
@@ -15,6 +16,7 @@ export interface ReaderState {
   twoPageView: boolean;
   twoPageEvenStart: boolean;
   layoutDirection: LayoutDirection;
+  preloadAmount: number;
 }
 
 interface SetPageNumberAction {
@@ -54,6 +56,13 @@ interface ToggleLayoutDirectionAction {
   type: typeof TOGGLE_LAYOUT_DIRECTION;
 }
 
+interface SetPreloadAmountAction {
+  type: typeof SET_PRELOAD_AMOUNT;
+  payload: {
+    preloadAmount: number;
+  };
+}
+
 export type ReaderAction =
   | SetPageNumberAction
   | ChangePageNumberAction
@@ -61,4 +70,5 @@ export type ReaderAction =
   | TogglePageFitAction
   | ToggleTwoPageViewAction
   | ToggleTwoPageEvenStartAction
-  | ToggleLayoutDirectionAction;
+  | ToggleLayoutDirectionAction
+  | SetPreloadAmountAction;

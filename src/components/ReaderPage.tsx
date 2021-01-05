@@ -2,12 +2,13 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route, useParams } from 'react-router-dom';
-import { Layout, Typography, Button, Row, Col } from 'antd';
+import { Layout, Typography, Button, Row, Col, Slider } from 'antd';
 import { RootState } from '../store';
 import {
   changePageNumber,
   setPageFit,
   setPageNumber,
+  setPreloadAmount,
   toggleLayoutDirection,
   togglePageFit,
   toggleTwoPageEvenStart,
@@ -29,6 +30,7 @@ const mapState = (state: RootState) => ({
   twoPageView: state.reader.twoPageView,
   twoPageEvenStart: state.reader.twoPageEvenStart,
   layoutDirection: state.reader.layoutDirection,
+  preloadAmount: state.reader.preloadAmount,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -41,6 +43,8 @@ const mapDispatch = (dispatch: any) => ({
   toggleTwoPageView: () => dispatch(toggleTwoPageView()),
   toggleTwoPageEvenStart: () => dispatch(toggleTwoPageEvenStart()),
   toggleLayoutDirection: () => dispatch(toggleLayoutDirection()),
+  setPreloadAmount: (preloadAmount: number) =>
+    dispatch(setPreloadAmount(preloadAmount)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -98,6 +102,28 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const renderPreloadContainer = (pageNumber: number) => {
+    const images = [];
+
+    for (
+      let i = 1;
+      i + pageNumber <= props.lastPageNumber && i <= props.preloadAmount;
+      i += 1
+    ) {
+      images.push(
+        <img
+          src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
+            pageNumber + i
+          )}.png`}
+          alt="pagepreload"
+          key={i}
+        />
+      );
+    }
+
+    return <div className={styles.preloadContainer}>{images}</div>;
+  };
+
   const changePage = (left: boolean) => {
     let delta = left ? -1 : 1;
 
@@ -111,6 +137,27 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.changePageNumber(delta);
   };
 
+  const preloadSliderMarks: { [key: number]: string } = {
+    0: '0',
+    1: '1',
+    2: '2',
+    3: '3',
+    4: '4',
+    5: '5',
+    6: '6',
+    7: '7',
+    8: '8',
+    9: '9',
+    10: '∞',
+  };
+
+  const preloadSliderTipFormatter = (value?: number): string => {
+    if (value === undefined) {
+      return '';
+    }
+    return preloadSliderMarks[value];
+  };
+
   return (
     <Layout className={styles.pageLayout}>
       <Sider className={styles.sider}>
@@ -121,6 +168,15 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         <p>{`cur_page=${props.pageNumber} last_page=${props.lastPageNumber}`}</p>
         <p>{`two_page=${props.twoPageView} even_start=${props.twoPageEvenStart}`}</p>
         <p>{`layout_dir=${props.layoutDirection}`}</p>
+        <p>{`preload=${props.preloadAmount}`}</p>
+        <Slider
+          min={0}
+          max={10}
+          marks={preloadSliderMarks}
+          tipFormatter={(value?: number) => preloadSliderTipFormatter(value)}
+          defaultValue={props.preloadAmount}
+          onChange={(value: number) => props.setPreloadAmount(value)}
+        />
         <Button onClick={() => changePage(true)}>left</Button>
         <Button onClick={() => changePage(false)}>right</Button>
         <Button onClick={() => props.toggleTwoPageView()}>
@@ -137,26 +193,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         </Link>
       </Sider>
       <Layout className={`site-layout ${styles.contentLayout}`}>
-        <div className={styles.preloadContainer}>
-          <img
-            src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
-              props.pageNumber + 1
-            )}.png`}
-            alt="pagepreload"
-          />
-          <img
-            src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
-              props.pageNumber + 2
-            )}.png`}
-            alt="pagepreload"
-          />
-          <img
-            src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
-              props.pageNumber + 3
-            )}.png`}
-            alt="pagepreload"
-          />
-        </div>
+        {renderPreloadContainer(props.pageNumber)}
         <Content
           className={`${styles.viewerContainer}
               ${props.pageFit === PageFit.Auto ? styles.fitAuto : ''}
