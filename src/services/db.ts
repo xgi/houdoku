@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-cycle
 import * as db from '../db';
-import { Series } from '../models/types';
+import { Chapter, Series } from '../models/types';
 
 export default {
   fetchSerieses() {
@@ -28,24 +28,22 @@ export default {
       .exec();
   },
   addSeries(series: Series) {
+    const seriesCopy: Series = { ...series };
+
     return db.database
       .insertOrReplace()
       .into(db.seriesTable)
-      .values([db.seriesTable.createRow(series)])
+      .values([db.seriesTable.createRow(seriesCopy)])
       .exec();
   },
-  addChapters(seriesId: number) {
-    const values = [];
-    for (let i = 0; i < 200; i += 1) {
-      const data = {
-        title: `chaptertitle${i}`,
-        chapterNumber: i,
-        volumeNumber: 1,
-        series_id: seriesId,
-      };
+  addChapters(chapters: Chapter[], series: Series) {
+    const chaptersCopy: Chapter[] = chapters.map((chapter: Chapter) => {
+      return { ...chapter, series_id: series.id };
+    });
 
-      values.push(db.chapterTable.createRow(data));
-    }
+    const values = chaptersCopy.map((chapter) =>
+      db.chapterTable.createRow(chapter)
+    );
 
     return db.database
       .insertOrReplace()

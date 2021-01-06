@@ -6,44 +6,36 @@ import {
   afterLoadSeriesList,
   beforeLoadChapterList,
   afterLoadChapterList,
-  beforeAddSeries,
-  afterAddSeries,
   afterLoadChapter,
   beforeLoadChapter,
 } from './actions';
 import db from '../services/db';
-import Series from '../models/series';
+import { Chapter, Series } from '../models/types';
 
 export function loadSeriesList(dispatch: any) {
   dispatch(beforeLoadSeriesList());
-  db.fetchSerieses().then((response) =>
+  db.fetchSerieses().then((response: any) =>
     dispatch(afterLoadSeriesList(response))
   );
 }
 
 export function loadSeries(dispatch: any, id: number) {
   dispatch(beforeLoadSeries());
-  db.fetchSeries(id).then((response) => dispatch(afterLoadSeries(response[0])));
+  db.fetchSeries(id).then((response: any) =>
+    dispatch(afterLoadSeries(response[0]))
+  );
 }
 
 export function loadChapter(dispatch: any, id: number) {
   dispatch(beforeLoadChapter());
-  db.fetchChapter(id).then((response) =>
+  db.fetchChapter(id).then((response: any) =>
     dispatch(afterLoadChapter(response[0]))
   );
 }
 
 export function loadChapterList(dispatch: any, seriesId: number) {
   dispatch(beforeLoadChapterList());
-  db.fetchChapters(seriesId).then((response) =>
+  db.fetchChapters(seriesId).then((response: any) =>
     dispatch(afterLoadChapterList(response))
-  );
-}
-
-export function addSeries(dispatch: any, series: Series) {
-  const seriesCopy = { ...series };
-  dispatch(beforeAddSeries());
-  db.addSeries(seriesCopy).then((response) =>
-    dispatch(afterAddSeries(response[0]))
   );
 }

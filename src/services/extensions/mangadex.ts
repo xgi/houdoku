@@ -1,8 +1,9 @@
-import { Series } from '../../models/types';
+import { Chapter, Series } from '../../models/types';
 import {
   FetchSeriesFunc,
   FetchChaptersFunc,
   ParseSeriesFunc,
+  ParseChaptersFunc,
 } from './interface';
 
 const fetchSeries: FetchSeriesFunc = (id: string) => {
@@ -10,7 +11,7 @@ const fetchSeries: FetchSeriesFunc = (id: string) => {
   return promise;
 };
 
-const parseSeries: ParseSeriesFunc = (json: any) => {
+const parseSeries: ParseSeriesFunc = (json: any): Series => {
   const series: Series = {
     id: undefined,
     source_id: json.data.id,
@@ -27,8 +28,25 @@ const fetchChapters: FetchChaptersFunc = (id: string) => {
   return promise;
 };
 
+const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
+  const chapters: Chapter[] = [];
+
+  json.data.chapters.forEach((element: any) => {
+    chapters.push({
+      id: undefined,
+      source_id: element.id,
+      title: element.title,
+      chapterNumber: element.chapter,
+      volumeNumber: element.volume,
+      series_id: 13,
+    });
+  });
+  return chapters;
+};
+
 export default {
   fetchSeries,
   parseSeries,
   fetchChapters,
+  parseChapters,
 };

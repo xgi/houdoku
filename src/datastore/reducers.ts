@@ -1,6 +1,3 @@
-import fs from 'fs';
-import path from 'path';
-import { ipcRenderer } from 'electron';
 import { Series } from '../models/types';
 import {
   DatabaseState,
@@ -14,6 +11,8 @@ import {
   BEFORE_ADD_SERIES,
   AFTER_LOAD_CHAPTER,
   BEFORE_LOAD_CHAPTER,
+  BEFORE_ADD_CHAPTERS,
+  AFTER_ADD_CHAPTERS,
 } from './types';
 
 const initialState: DatabaseState = {
@@ -22,38 +21,13 @@ const initialState: DatabaseState = {
   fetchingChapter: false,
   fetchingChapterList: false,
   addingSeries: false,
+  addingChapters: false,
   seriesList: [],
   series: undefined,
   chapter: undefined,
   chapterList: [],
   addedSeries: undefined,
 };
-
-async function downloadCover(series: Series) {
-  const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
-  if (!fs.existsSync(thumbnailsDir)) {
-    fs.mkdirSync(thumbnailsDir);
-  }
-
-  const ext = series.remoteCoverUrl.split('.').pop();
-  // eslint-disable-next-line promise/catch-or-return
-  fetch(series.remoteCoverUrl)
-    .then((response) => response.arrayBuffer())
-    .then((buffer) => {
-      fs.writeFile(
-        path.join(thumbnailsDir, `${series.id}.${ext}`),
-        Buffer.from(buffer),
-        (err) => {
-          if (err) {
-            alert(err);
-          } else {
-            console.log('Saved file');
-          }
-        }
-      );
-      return true;
-    });
-}
 
 export default function datastore(
   state = initialState,
@@ -93,15 +67,19 @@ export default function datastore(
         fetchingChapterList: false,
         chapterList: action.payload.response,
       };
-    case BEFORE_ADD_SERIES:
-      return { ...state, addingSeries: true, addedSeries: undefined };
-    case AFTER_ADD_SERIES:
-      downloadCover(action.payload.addedSeries);
-      return {
-        ...state,
-        addingSeries: false,
-        addedSeries: action.payload.addedSeries,
-      };
+    // case BEFORE_ADD_SERIES:
+    //   return { ...state, addingSeries: true, addedSeries: undefined };
+    // case AFTER_ADD_SERIES:
+    //   downloadCover(action.payload.addedSeries);
+    //   return {
+    //     ...state,
+    //     addingSeries: false,
+    //     addedSeries: action.payload.addedSeries,
+    //   };
+    // case BEFORE_ADD_CHAPTERS:
+    //   return { ...state, addingChapters: true };
+    // case AFTER_ADD_CHAPTERS:
+    //   return { ...state, addingChapters: false };
     default:
       return state;
   }

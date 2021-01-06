@@ -27,7 +27,6 @@ import styles from './DashboardPage.css';
 import routes from '../constants/routes.json';
 import db from '../services/db';
 import {
-  addSeries,
   loadChapter,
   loadChapterList,
   loadSeries,
@@ -35,8 +34,8 @@ import {
 } from '../datastore/utils';
 import * as database from '../db';
 import { Series, Chapter } from '../models/types';
-import { getSeries } from '../extension/utils';
-import { setSource } from '../reader/actions';
+import { getSeries, getChapters } from '../services/extension';
+import { downloadCover } from '../util/download';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -47,9 +46,9 @@ const mapState = (state: RootState) => ({
   fetchingSeries: state.datastore.fetchingSeries,
   fetchingChapterList: state.datastore.fetchingChapterList,
   series: state.datastore.series,
+  addedSeries: state.datastore.addedSeries,
   chapterList: state.datastore.chapterList,
   columns: state.library.columns,
-  extensionSeries: state.extension.series,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,10 +62,9 @@ const mapDispatch = (dispatch: any) => ({
   fetchSeriesList: () => loadSeriesList(dispatch),
   fetchSeries: (id: number) => loadSeries(dispatch, id),
   fetchChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
-  getSeries: (id: string) => getSeries(dispatch, id),
-  addSeries: (series: Series) => addSeries(dispatch, series),
-  setReaderSource: (series: Series, chapter: Chapter) =>
-    setSource(series, chapter),
+  // addSeries: (series: Series) => addSeries(dispatch, series),
+  // addChapters: (chapters: Chapter[], series: Series) =>
+  //   addChapters(dispatch, chapters, series),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -84,6 +82,16 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       })
       .catch((error) => console.log(error));
   }, []);
+
+  const importSeries = async (sourceId: string) => {
+    const series: Series = await getSeries(sourceId);
+    const chapters: Chapter[] = await getChapters(sourceId);
+
+    const addResponse = await db.addSeries(series);
+    await db.addChapters(chapters, addResponse[0]);
+    props.fetchSeriesList();
+    downloadCover(addResponse[0]);
+  };
 
   return (
     <Layout className={styles.pageLayout}>
@@ -134,7 +142,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 <Button onClick={() => props.fetchSeriesList()}>
                   fetch series list
                 </Button>
-                <Button onClick={() => db.addChapters(18)}>add chapters</Button>
                 <Button onClick={props.updateSeriesList}>
                   update the series list
                 </Button>
@@ -156,20 +163,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 <Button onClick={() => props.setStatusText('new status')}>
                   set status
                 </Button>
-                <Button onClick={() => props.getSeries('429')}>
-                  get mangadex series
-                </Button>
-                <Button
-                  onClick={() => {
-                    if (props.extensionSeries !== undefined)
-                      props.addSeries(props.extensionSeries);
-                  }}
-                >
-                  add extension series
-                </Button>
-                <Button onClick={() => console.log(props.extensionSeries)}>
-                  log extension series
-                </Button>
+                <Button onClick={() => importSeries('429')}>import 429</Button>
               </>
               <LibraryGrid
                 columns={props.columns}

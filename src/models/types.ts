@@ -8,11 +8,12 @@ export type Series = {
 };
 
 export type Chapter = {
-  id: number;
+  id?: number;
+  source_id: string;
   title: string;
-  chapterNumber: number;
-  volumeNumber: number;
-  series_id: number;
+  chapterNumber: string;
+  volumeNumber: string;
+  series_id?: number;
 };
 
 export enum PageFit {

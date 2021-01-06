@@ -10,6 +10,8 @@ export const BEFORE_LOAD_CHAPTER_LIST = 'BEFORE_LOAD_CHAPTER_LIST';
 export const AFTER_LOAD_CHAPTER_LIST = 'AFTER_LOAD_CHAPTER_LIST';
 export const BEFORE_ADD_SERIES = 'BEFORE_ADD_SERIES';
 export const AFTER_ADD_SERIES = 'AFTER_ADD_SERIES';
+export const BEFORE_ADD_CHAPTERS = 'BEFORE_ADD_CHAPTERS';
+export const AFTER_ADD_CHAPTERS = 'AFTER_ADD_CHAPTERS';
 
 export interface DatabaseState {
   fetchingSeriesList: boolean;
@@ -17,6 +19,7 @@ export interface DatabaseState {
   fetchingChapter: boolean;
   fetchingChapterList: boolean;
   addingSeries: boolean;
+  addingChapters: boolean;
   seriesList: Series[];
   series?: Series;
   chapter?: Chapter;
@@ -26,7 +29,6 @@ export interface DatabaseState {
 
 interface BeforeLoadSeriesListAction {
   type: typeof BEFORE_LOAD_SERIES_LIST;
-  payload: unknown;
 }
 
 interface AfterLoadSeriesListAction {
@@ -38,7 +40,6 @@ interface AfterLoadSeriesListAction {
 
 interface BeforeLoadSeriesAction {
   type: typeof BEFORE_LOAD_SERIES;
-  payload: unknown;
 }
 
 interface AfterLoadSeriesAction {
@@ -50,7 +51,6 @@ interface AfterLoadSeriesAction {
 
 interface BeforeLoadChapterAction {
   type: typeof BEFORE_LOAD_CHAPTER;
-  payload: unknown;
 }
 
 interface AfterLoadChapterAction {
@@ -62,7 +62,6 @@ interface AfterLoadChapterAction {
 
 interface BeforeLoadChapterListAction {
   type: typeof BEFORE_LOAD_CHAPTER_LIST;
-  payload: unknown;
 }
 
 interface AfterLoadChapterListAction {
@@ -74,7 +73,6 @@ interface AfterLoadChapterListAction {
 
 interface BeforeAddSeriesAction {
   type: typeof BEFORE_ADD_SERIES;
-  payload: unknown;
 }
 
 interface AfterAddSeriesAction {
@@ -82,6 +80,14 @@ interface AfterAddSeriesAction {
   payload: {
     addedSeries: Series;
   };
+}
+
+interface BeforeAddChaptersAction {
+  type: typeof BEFORE_ADD_CHAPTERS;
+}
+
+interface AfterAddChaptersAction {
+  type: typeof AFTER_ADD_CHAPTERS;
 }
 
 export type DatabaseAction =
@@ -94,4 +100,6 @@ export type DatabaseAction =
   | BeforeLoadChapterListAction
   | AfterLoadChapterListAction
   | BeforeAddSeriesAction
-  | AfterAddSeriesAction;
+  | AfterAddSeriesAction
+  | BeforeAddChaptersAction
+  | AfterAddChaptersAction;
