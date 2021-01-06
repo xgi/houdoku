@@ -1,24 +1,32 @@
 /* eslint-disable import/no-mutable-exports */
 import lf from 'lovefield';
-import db from './services/db';
 
 const schemaBuilder = lf.schema.create('houdoku', 1);
 
 schemaBuilder
   .createTable('series')
   .addColumn('id', lf.Type.INTEGER)
+  .addColumn('source_id', lf.Type.STRING)
   .addColumn('title', lf.Type.STRING)
-  .addColumn('author', lf.Type.STRING)
-  .addColumn('artist', lf.Type.STRING)
+  .addColumn('altTitles', lf.Type.OBJECT)
+  .addColumn('description', lf.Type.STRING)
+  .addColumn('authors', lf.Type.OBJECT)
+  .addColumn('artists', lf.Type.OBJECT)
+  .addColumn('status', lf.Type.OBJECT)
+  .addColumn('originalLanguage', lf.Type.OBJECT)
+  .addColumn('remoteCoverUrl', lf.Type.STRING)
   .addPrimaryKey(['id'], true);
 
 schemaBuilder
   .createTable('chapter')
   .addColumn('id', lf.Type.INTEGER)
-  .addColumn('title', lf.Type.STRING)
-  .addColumn('chapterNumber', lf.Type.NUMBER)
-  .addColumn('volumeNumber', lf.Type.NUMBER)
   .addColumn('series_id', lf.Type.NUMBER)
+  .addColumn('source_id', lf.Type.STRING)
+  .addColumn('title', lf.Type.STRING)
+  .addColumn('chapterNumber', lf.Type.STRING)
+  .addColumn('volumeNumber', lf.Type.STRING)
+  .addColumn('language', lf.Type.OBJECT)
+  .addColumn('time', lf.Type.NUMBER)
   .addPrimaryKey(['id'], true);
 
 export let database: lf.Database;

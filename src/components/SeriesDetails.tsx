@@ -4,8 +4,9 @@ import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix } from 'antd';
 import { ipcRenderer } from 'electron';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import ChapterTable from './ChapterTable';
-import { Chapter, Series } from '../models/types';
+import { Chapter, Language, Series, SeriesStatus } from '../models/types';
 import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
@@ -46,6 +47,30 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
   };
 
+  const renderSeriesDescriptions = (series: Series) => {
+    console.log(series);
+    return (
+      <Descriptions column={4}>
+        <Descriptions.Item label="Author">
+          {series.authors.join(';')}
+        </Descriptions.Item>
+        <Descriptions.Item label="Artist">
+          {series.artists.join(';')}
+        </Descriptions.Item>
+        <Descriptions.Item label="Status">
+          {SeriesStatus[series.status]}
+        </Descriptions.Item>
+        <Descriptions.Item label="Language">
+          {Language[series.originalLanguage]}
+        </Descriptions.Item>
+        <Descriptions.Item label="Genres">
+          Award Winning, Comedy, Drama, Music, Romance, School Life, Slice of
+          Life, Tragedy
+        </Descriptions.Item>
+      </Descriptions>
+    );
+  };
+
   return (
     <div>
       <Link to={routes.LIBRARY}>
@@ -66,21 +91,12 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </div>
         <div className={styles.headerDetailsContainer}>
           <Title level={4}>{props.series.title}</Title>
-          {/* <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
-            {series.description}
-          </Paragraph> */}
+          <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
+            {props.series.description}
+          </Paragraph>
         </div>
       </div>
-      <Descriptions column={4}>
-        <Descriptions.Item label="Author">Arakawa Naoshi</Descriptions.Item>
-        <Descriptions.Item label="Artist">Arakawa Naoshi</Descriptions.Item>
-        <Descriptions.Item label="Status">Completed</Descriptions.Item>
-        <Descriptions.Item label="Chapters">44</Descriptions.Item>
-        <Descriptions.Item label="Genres">
-          Award Winning, Comedy, Drama, Music, Romance, School Life, Slice of
-          Life, Tragedy
-        </Descriptions.Item>
-      </Descriptions>
+      {props.series !== undefined ? renderSeriesDescriptions(props.series) : ''}
       <ChapterTable chapterList={props.chapterList} />
     </div>
   );

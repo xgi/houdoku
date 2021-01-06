@@ -10,7 +10,6 @@ import {
   beforeLoadChapter,
 } from './actions';
 import db from '../services/db';
-import { Chapter, Series } from '../models/types';
 
 export function loadSeriesList(dispatch: any) {
   dispatch(beforeLoadSeriesList());

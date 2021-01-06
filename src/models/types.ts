@@ -2,18 +2,24 @@ export type Series = {
   id?: number;
   source_id: string;
   title: string;
-  author: string;
-  artist: string;
+  altTitles: string[];
+  description: string;
+  authors: string[];
+  artists: string[];
+  status: SeriesStatus;
+  originalLanguage: Language;
   remoteCoverUrl: string;
 };
 
 export type Chapter = {
   id?: number;
+  series_id?: number;
   source_id: string;
   title: string;
   chapterNumber: string;
   volumeNumber: string;
-  series_id?: number;
+  language: Language;
+  time: number;
 };
 
 export enum PageFit {
@@ -25,4 +31,15 @@ export enum PageFit {
 export enum LayoutDirection {
   LeftToRight,
   RightToLeft,
+}
+
+export enum SeriesStatus {
+  ONGOING,
+  COMPLETED,
+  CANCELLED,
+}
+
+export enum Language {
+  ENGLISH,
+  JAPANESE,
 }
