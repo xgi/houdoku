@@ -6,7 +6,16 @@ import { Typography, Button, Descriptions, Affix } from 'antd';
 import { ipcRenderer } from 'electron';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import ChapterTable from './ChapterTable';
-import { Chapter, Language, Series, SeriesStatus } from '../models/types';
+import {
+  Chapter,
+  ContentWarning,
+  Format,
+  Genre,
+  Language,
+  Series,
+  SeriesStatus,
+  Theme,
+} from '../models/types';
 import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
@@ -63,9 +72,21 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         <Descriptions.Item label="Language">
           {Language[series.originalLanguage]}
         </Descriptions.Item>
-        <Descriptions.Item label="Genres">
-          Award Winning, Comedy, Drama, Music, Romance, School Life, Slice of
-          Life, Tragedy
+        <Descriptions.Item label="Genres" span={2}>
+          {series.genres.map((genre: Genre) => Genre[genre]).join('; ')}
+        </Descriptions.Item>
+        <Descriptions.Item label="Themes" span={2}>
+          {series.themes.map((theme: Theme) => Theme[theme]).join('; ')}
+        </Descriptions.Item>
+        <Descriptions.Item label="Formats" span={2}>
+          {series.formats.map((format: Format) => Format[format]).join('; ')}
+        </Descriptions.Item>
+        <Descriptions.Item label="Content Warnings" span={2}>
+          {series.contentWarnings
+            .map(
+              (contentWarning: ContentWarning) => ContentWarning[contentWarning]
+            )
+            .join('; ')}
         </Descriptions.Item>
       </Descriptions>
     );
