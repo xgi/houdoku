@@ -1,4 +1,5 @@
 import { Chapter, Series } from '../../models/types';
+import { PageRequesterData } from './types';
 
 export interface FetchSeriesFunc {
   (id: string): Promise<Response>;
@@ -14,4 +15,20 @@ export interface FetchChaptersFunc {
 
 export interface ParseChaptersFunc {
   (json: any): Chapter[];
+}
+
+export interface FetchPageRequesterDataFunc {
+  (chapter_id: string): Promise<Response>;
+}
+
+export interface ParsePageRequesterDataFunc {
+  (json: any): PageRequesterData;
+}
+
+export interface GetPageUrlFunctionFunc {
+  (pageRequesterData: PageRequesterData): PageUrlFunction;
+}
+
+export interface PageUrlFunction {
+  (pageNumber: number): string;
 }

@@ -4,6 +4,7 @@ import {
   ReaderState,
   SET_PAGE_FIT,
   SET_PAGE_NUMBER,
+  SET_PAGE_URL_FUNCTION,
   SET_PRELOAD_AMOUNT,
   TOGGLE_LAYOUT_DIRECTION,
   TOGGLE_PAGE_FIT,
@@ -95,6 +96,11 @@ export default function status(
           action.payload.preloadAmount === 10
             ? Infinity
             : action.payload.preloadAmount,
+      };
+    case SET_PAGE_URL_FUNCTION:
+      return {
+        ...state,
+        pageUrlFunction: action.payload.pageUrlFunction,
       };
     default:
       return state;

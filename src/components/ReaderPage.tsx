@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
@@ -8,17 +9,24 @@ import {
   changePageNumber,
   setPageFit,
   setPageNumber,
+  setPageUrlFunction,
   setPreloadAmount,
   toggleLayoutDirection,
   togglePageFit,
   toggleTwoPageEvenStart,
   toggleTwoPageView,
 } from '../reader/actions';
-import samplePage from '../img/samplePage.png';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
-import { LayoutDirection, PageFit } from '../models/types';
+import { Chapter, LayoutDirection, PageFit } from '../models/types';
 import { loadChapter } from '../datastore/utils';
+import { PageUrlFunction } from '../services/extensions/interface';
+import {
+  getPageRequesterData,
+  getPageUrlFunction,
+} from '../services/extension';
+import { PageRequesterData } from '../services/extensions/types';
+import db from '../services/db';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -31,6 +39,7 @@ const mapState = (state: RootState) => ({
   twoPageEvenStart: state.reader.twoPageEvenStart,
   layoutDirection: state.reader.layoutDirection,
   preloadAmount: state.reader.preloadAmount,
+  pageUrlFunction: state.reader.pageUrlFunction,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -45,6 +54,8 @@ const mapDispatch = (dispatch: any) => ({
   toggleLayoutDirection: () => dispatch(toggleLayoutDirection()),
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
+  setPageUrlFunction: (pageUrlFunction: PageUrlFunction) =>
+    dispatch(setPageUrlFunction(pageUrlFunction)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -56,8 +67,20 @@ type Props = PropsFromRedux & {};
 const ReaderPage: React.FC<Props> = (props: Props) => {
   const { chapter_id } = useParams();
 
+  const thing = async () => {
+    const pageUrlFunction: PageUrlFunction = await db
+      .fetchChapter(chapter_id)
+      .then((response: any) => response[0])
+      .then((chapter: Chapter) => getPageRequesterData(chapter.source_id))
+      .then((pageRequesterData: PageRequesterData) =>
+        getPageUrlFunction(pageRequesterData)
+      );
+    props.setPageUrlFunction(pageUrlFunction);
+  };
+
   useEffect(() => {
     props.fetchChapter(chapter_id);
+    thing();
   }, []);
 
   const getFileName = (pageNumber: number): string => {
@@ -65,12 +88,15 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   const renderPageImage = (pageNumber: number) => {
+    if (props.pageUrlFunction === undefined) return;
+
     return pageNumber <= props.lastPageNumber && pageNumber > 0 ? (
       <img
         className={styles.pageImage}
-        src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
-          pageNumber
-        )}.png`}
+        src={props.pageUrlFunction(pageNumber)}
+        // src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
+        //   pageNumber
+        // )}.png`}
         alt={`page${pageNumber}`}
       />
     ) : (
@@ -103,6 +129,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   const renderPreloadContainer = (pageNumber: number) => {
+    if (props.pageUrlFunction === undefined) return;
+
     const images = [];
 
     for (
@@ -112,9 +140,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     ) {
       images.push(
         <img
-          src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
-            pageNumber + i
-          )}.png`}
+          src={props.pageUrlFunction(pageNumber + 1)}
+          // src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
+          //   pageNumber + i
+          // )}.png`}
           alt="pagepreload"
           key={i}
         />
@@ -157,6 +186,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     }
     return preloadSliderMarks[value];
   };
+
+  if (props.pageUrlFunction === undefined) {
+    return <p>loading...</p>;
+  }
 
   return (
     <Layout className={styles.pageLayout}>

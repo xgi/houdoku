@@ -59,9 +59,9 @@ const mapDispatch = (dispatch: any) => ({
   readLibrary: () => dispatch(readLibrary()),
   deleteLibrary: () => dispatch(deleteLibrary()),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
-  fetchSeriesList: () => loadSeriesList(dispatch),
-  fetchSeries: (id: number) => loadSeries(dispatch, id),
-  fetchChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  loadSeriesList: () => loadSeriesList(dispatch),
+  loadSeries: (id: number) => loadSeries(dispatch, id),
+  loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
   // addSeries: (series: Series) => addSeries(dispatch, series),
   // addChapters: (chapters: Chapter[], series: Series) =>
   //   addChapters(dispatch, chapters, series),
@@ -78,7 +78,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
     database
       .init()
       .then(() => {
-        props.fetchSeriesList();
+        props.loadSeriesList();
       })
       .catch((error) => console.log(error));
   }, []);
@@ -89,7 +89,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
 
     const addResponse = await db.addSeries(series);
     await db.addChapters(chapters, addResponse[0]);
-    props.fetchSeriesList();
+    props.loadSeriesList();
     downloadCover(addResponse[0]);
   };
 
@@ -127,8 +127,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               <SeriesDetails
                 series={props.series}
                 chapterList={props.chapterList}
-                fetchSeries={props.fetchSeries}
-                fetchChapterList={props.fetchChapterList}
+                loadSeries={props.loadSeries}
+                loadChapterList={props.loadChapterList}
               />
             </Route>
             <Route path={routes.SEARCH} exact>
@@ -139,13 +139,13 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 <Button onClick={() => db.deleteAllSeries()}>
                   delete all series
                 </Button>
-                <Button onClick={() => props.fetchSeriesList()}>
+                <Button onClick={() => props.loadSeriesList()}>
                   fetch series list
                 </Button>
                 <Button onClick={props.updateSeriesList}>
                   update the series list
                 </Button>
-                <Button onClick={() => props.fetchChapterList(1)}>
+                <Button onClick={() => props.loadChapterList(1)}>
                   fetch chapter list
                 </Button>
                 <Button onClick={() => props.changeNumColumns(8)}>

@@ -13,7 +13,11 @@ import {
   FetchChaptersFunc,
   ParseSeriesFunc,
   ParseChaptersFunc,
+  ParsePageRequesterDataFunc,
+  FetchPageRequesterDataFunc,
+  GetPageUrlFunctionFunc,
 } from './interface';
+import { PageRequesterData } from './types';
 
 const SERIES_STATUS_MAP: { [key: number]: SeriesStatus } = {
   1: SeriesStatus.ONGOING,
@@ -186,9 +190,43 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
   return chapters;
 };
 
+const fetchPageRequesterData: FetchPageRequesterDataFunc = (
+  chapter_id: string
+) => {
+  const promise = fetch(`https://mangadex.org/api/v2/chapter/${chapter_id}`);
+  return promise;
+};
+
+const parsePageRequesterData: ParsePageRequesterDataFunc = (
+  json: any
+): PageRequesterData => {
+  const pageFilenames: string[] = [];
+  json.data.pages.forEach((filename: string) => pageFilenames.push(filename));
+
+  return {
+    server: json.data.server,
+    hash: json.data.hash,
+    numPages: pageFilenames.length,
+    pageFilenames,
+  };
+};
+
+const getPageUrlFunction: GetPageUrlFunctionFunc = (
+  pageRequesterData: PageRequesterData
+) => {
+  return (pageNumber: number): string => {
+    return `${pageRequesterData.server}${pageRequesterData.hash}/${
+      pageRequesterData.pageFilenames[pageNumber - 1]
+    }`;
+  };
+};
+
 export default {
   fetchSeries,
   parseSeries,
   fetchChapters,
   parseChapters,
+  fetchPageRequesterData,
+  parsePageRequesterData,
+  getPageUrlFunction,
 };

@@ -31,16 +31,16 @@ if (!fs.existsSync(thumbnailsDir)) {
 type Props = {
   series: Series | undefined;
   chapterList: Chapter[];
-  fetchSeries: (id: number) => void;
-  fetchChapterList: (seriesId: number) => void;
+  loadSeries: (id: number) => void;
+  loadChapterList: (seriesId: number) => void;
 };
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams();
 
   useEffect(() => {
-    props.fetchSeries(id);
-    props.fetchChapterList(id);
+    props.loadSeries(id);
+    props.loadChapterList(id);
   }, []);
 
   if (props.series === undefined) {
@@ -57,7 +57,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   };
 
   const renderSeriesDescriptions = (series: Series) => {
-    console.log(series);
     return (
       <Descriptions column={4}>
         <Descriptions.Item label="Author">
