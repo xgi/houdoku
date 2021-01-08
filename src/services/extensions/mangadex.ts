@@ -15,7 +15,7 @@ import {
   ParseChaptersFunc,
   ParsePageRequesterDataFunc,
   FetchPageRequesterDataFunc,
-  GetPageUrlFunctionFunc,
+  GetPageUrlsFunction,
 } from './interface';
 import { PageRequesterData } from './types';
 
@@ -211,14 +211,16 @@ const parsePageRequesterData: ParsePageRequesterDataFunc = (
   };
 };
 
-const getPageUrlFunction: GetPageUrlFunctionFunc = (
+const getPageUrls: GetPageUrlsFunction = (
   pageRequesterData: PageRequesterData
 ) => {
-  return (pageNumber: number): string => {
-    return `${pageRequesterData.server}${pageRequesterData.hash}/${
-      pageRequesterData.pageFilenames[pageNumber - 1]
-    }`;
-  };
+  const pageUrls: string[] = [];
+  for (let i = 0; i < pageRequesterData.numPages; i += 1) {
+    pageUrls.push(
+      `${pageRequesterData.server}${pageRequesterData.hash}/${pageRequesterData.pageFilenames[i]}`
+    );
+  }
+  return pageUrls;
 };
 
 export default {
@@ -228,5 +230,5 @@ export default {
   parseChapters,
   fetchPageRequesterData,
   parsePageRequesterData,
-  getPageUrlFunction,
+  getPageUrls,
 };

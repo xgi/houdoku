@@ -25,10 +25,6 @@ export interface ParsePageRequesterDataFunc {
   (json: any): PageRequesterData;
 }
 
-export interface GetPageUrlFunctionFunc {
-  (pageRequesterData: PageRequesterData): PageUrlFunction;
-}
-
-export interface PageUrlFunction {
-  (pageNumber: number): string;
+export interface GetPageUrlsFunction {
+  (pageRequesterData: PageRequesterData): string[];
 }

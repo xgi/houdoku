@@ -23,6 +23,6 @@ export function getPageRequesterData(chapter_id: string) {
     .then((data) => mangadex.parsePageRequesterData(data));
 }
 
-export function getPageUrlFunction(pageRequesterData: PageRequesterData) {
-  return mangadex.getPageUrlFunction(pageRequesterData);
+export function getPageUrls(pageRequesterData: PageRequesterData) {
+  return mangadex.getPageUrls(pageRequesterData);
 }

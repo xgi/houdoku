@@ -1,5 +1,4 @@
 import { PageFit } from '../models/types';
-import { PageUrlFunction } from '../services/extensions/interface';
 import {
   SET_PAGE_FIT,
   TOGGLE_PAGE_FIT,
@@ -10,7 +9,7 @@ import {
   TOGGLE_TWO_PAGE_EVEN_START,
   TOGGLE_LAYOUT_DIRECTION,
   SET_PRELOAD_AMOUNT,
-  SET_PAGE_URL_FUNCTION,
+  SET_PAGE_URLS,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -73,13 +72,11 @@ export function setPreloadAmount(preloadAmount: number): ReaderAction {
   };
 }
 
-export function setPageUrlFunction(
-  pageUrlFunction: PageUrlFunction
-): ReaderAction {
+export function setPageUrls(pageUrls: string[]): ReaderAction {
   return {
-    type: SET_PAGE_URL_FUNCTION,
+    type: SET_PAGE_URLS,
     payload: {
-      pageUrlFunction,
+      pageUrls,
     },
   };
 }

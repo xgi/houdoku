@@ -9,7 +9,7 @@ import {
   changePageNumber,
   setPageFit,
   setPageNumber,
-  setPageUrlFunction,
+  setPageUrls,
   setPreloadAmount,
   toggleLayoutDirection,
   togglePageFit,
@@ -20,11 +20,7 @@ import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
 import { Chapter, LayoutDirection, PageFit } from '../models/types';
 import { loadChapter } from '../datastore/utils';
-import { PageUrlFunction } from '../services/extensions/interface';
-import {
-  getPageRequesterData,
-  getPageUrlFunction,
-} from '../services/extension';
+import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
 
@@ -39,7 +35,7 @@ const mapState = (state: RootState) => ({
   twoPageEvenStart: state.reader.twoPageEvenStart,
   layoutDirection: state.reader.layoutDirection,
   preloadAmount: state.reader.preloadAmount,
-  pageUrlFunction: state.reader.pageUrlFunction,
+  pageUrls: state.reader.pageUrls,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,8 +50,7 @@ const mapDispatch = (dispatch: any) => ({
   toggleLayoutDirection: () => dispatch(toggleLayoutDirection()),
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
-  setPageUrlFunction: (pageUrlFunction: PageUrlFunction) =>
-    dispatch(setPageUrlFunction(pageUrlFunction)),
+  setPageUrls: (pageUrls: string[]) => dispatch(setPageUrls(pageUrls)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -68,14 +63,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const { chapter_id } = useParams();
 
   const thing = async () => {
-    const pageUrlFunction: PageUrlFunction = await db
+    const pageUrls: string[] = await db
       .fetchChapter(chapter_id)
       .then((response: any) => response[0])
       .then((chapter: Chapter) => getPageRequesterData(chapter.source_id))
       .then((pageRequesterData: PageRequesterData) =>
-        getPageUrlFunction(pageRequesterData)
+        getPageUrls(pageRequesterData)
       );
-    props.setPageUrlFunction(pageUrlFunction);
+    props.setPageUrls(pageUrls);
   };
 
   useEffect(() => {
@@ -83,20 +78,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     thing();
   }, []);
 
-  const getFileName = (pageNumber: number): string => {
-    return `${pageNumber}`.padStart(2, '0');
-  };
-
   const renderPageImage = (pageNumber: number) => {
-    if (props.pageUrlFunction === undefined) return;
+    if (props.pageUrls.length === 0) return;
 
     return pageNumber <= props.lastPageNumber && pageNumber > 0 ? (
       <img
         className={styles.pageImage}
-        src={props.pageUrlFunction(pageNumber)}
-        // src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
-        //   pageNumber
-        // )}.png`}
+        src={props.pageUrls[pageNumber - 1]}
         alt={`page${pageNumber}`}
       />
     ) : (
@@ -129,7 +117,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   const renderPreloadContainer = (pageNumber: number) => {
-    if (props.pageUrlFunction === undefined) return;
+    if (props.pageUrls.length === 0) return;
 
     const images = [];
 
@@ -139,14 +127,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       i += 1
     ) {
       images.push(
-        <img
-          src={props.pageUrlFunction(pageNumber + 1)}
-          // src={`https://guya.moe/media/manga/Kaguya-Wants-To-Be-Confessed-To/chapters/0136_80xfd62s/3/${getFileName(
-          //   pageNumber + i
-          // )}.png`}
-          alt="pagepreload"
-          key={i}
-        />
+        <img src={props.pageUrls[pageNumber]} alt="pagepreload" key={i} />
       );
     }
 
@@ -187,7 +168,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return preloadSliderMarks[value];
   };
 
-  if (props.pageUrlFunction === undefined) {
+  if (props.pageUrls.length === 0) {
     return <p>loading...</p>;
   }
 

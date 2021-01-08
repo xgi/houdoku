@@ -1,5 +1,4 @@
 import { LayoutDirection, PageFit } from '../models/types';
-import { PageUrlFunction } from '../services/extensions/interface';
 
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 export const CHANGE_PAGE_NUMBER = 'CHANGE_PAGE_NUMBER';
@@ -9,7 +8,7 @@ export const TOGGLE_TWO_PAGE_VIEW = 'TOGGLE_TWO_PAGE_VIEW';
 export const TOGGLE_TWO_PAGE_EVEN_START = 'TOGGLE_TWO_PAGE_EVEN_START';
 export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
 export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
-export const SET_PAGE_URL_FUNCTION = 'SET_PAGE_URL_FUNCTION';
+export const SET_PAGE_URLS = 'SET_PAGE_URLS';
 
 export interface ReaderState {
   pageNumber: number;
@@ -19,7 +18,7 @@ export interface ReaderState {
   twoPageEvenStart: boolean;
   layoutDirection: LayoutDirection;
   preloadAmount: number;
-  pageUrlFunction: PageUrlFunction;
+  pageUrls: string[];
 }
 
 interface SetPageNumberAction {
@@ -66,10 +65,10 @@ interface SetPreloadAmountAction {
   };
 }
 
-interface SetPageUrlFunction {
-  type: typeof SET_PAGE_URL_FUNCTION;
+interface SetPageUrlsAction {
+  type: typeof SET_PAGE_URLS;
   payload: {
-    pageUrlFunction: PageUrlFunction;
+    pageUrls: string[];
   };
 }
 
@@ -82,4 +81,4 @@ export type ReaderAction =
   | ToggleTwoPageEvenStartAction
   | ToggleLayoutDirectionAction
   | SetPreloadAmountAction
-  | SetPageUrlFunction;
+  | SetPageUrlsAction;
