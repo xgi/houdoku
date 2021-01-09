@@ -11,6 +11,7 @@
   align-items: center;
   height: calc(100vh - 24px);
   overflow-y: auto;
+  overflow-x: hidden;
   /* margin-left: var(--sider-width); */
 }
 
@@ -39,7 +40,15 @@
 }
 
 .viewerContainer {
+  width: 100%;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.imageWrapper {
   min-width: 100%;
+  overflow-y: auto;
 }
 
 .pageImage {
