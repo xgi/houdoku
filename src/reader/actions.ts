@@ -1,4 +1,4 @@
-import { PageFit } from '../models/types';
+import { Chapter, PageFit, Series } from '../models/types';
 import {
   SET_PAGE_FIT,
   TOGGLE_PAGE_FIT,
@@ -10,6 +10,7 @@ import {
   TOGGLE_LAYOUT_DIRECTION,
   SET_PRELOAD_AMOUNT,
   SET_PAGE_URLS,
+  SET_SOURCE,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -77,6 +78,16 @@ export function setPageUrls(pageUrls: string[]): ReaderAction {
     type: SET_PAGE_URLS,
     payload: {
       pageUrls,
+    },
+  };
+}
+
+export function setSource(series?: Series, chapter?: Chapter): ReaderAction {
+  return {
+    type: SET_SOURCE,
+    payload: {
+      series,
+      chapter,
     },
   };
 }

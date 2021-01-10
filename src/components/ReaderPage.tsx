@@ -15,6 +15,7 @@ import {
   togglePageFit,
   toggleTwoPageEvenStart,
   toggleTwoPageView,
+  setSource,
 } from '../reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
@@ -36,6 +37,8 @@ const mapState = (state: RootState) => ({
   layoutDirection: state.reader.layoutDirection,
   preloadAmount: state.reader.preloadAmount,
   pageUrls: state.reader.pageUrls,
+  series: state.reader.series,
+  chapter: state.reader.chapter,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -51,6 +54,8 @@ const mapDispatch = (dispatch: any) => ({
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
   setPageUrls: (pageUrls: string[]) => dispatch(setPageUrls(pageUrls)),
+  setSource: (series?: Series, chapter?: Chapter) =>
+    dispatch(setSource(series, chapter)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -71,6 +76,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     const series: Series = await db
       .fetchSeries(chapter.seriesId)
       .then((response: any) => response[0]);
+
+    props.setSource(series, chapter);
 
     const pageUrls: string[] = await getPageRequesterData(
       series.extensionId,
@@ -207,7 +214,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   return (
     <Layout className={styles.pageLayout}>
       <Sider className={styles.sider}>
-        <Title level={4}>Kaguya-sama: Love is War</Title>
+        <Title level={4}>
+          {props.series === undefined ? 'loading...' : props.series.title}
+        </Title>
         <p>Fit is: {props.pageFit}</p>
         <p>{chapter_id}</p>
         <Button onClick={() => props.togglePageFit()}>change fit</Button>

@@ -10,6 +10,7 @@ import {
   TOGGLE_PAGE_FIT,
   TOGGLE_TWO_PAGE_EVEN_START,
   TOGGLE_TWO_PAGE_VIEW,
+  SET_SOURCE,
 } from './types';
 
 const initialState: ReaderState = {
@@ -21,6 +22,8 @@ const initialState: ReaderState = {
   layoutDirection: LayoutDirection.LeftToRight,
   preloadAmount: 3,
   pageUrls: [],
+  series: undefined,
+  chapter: undefined,
 };
 
 function sanitizedPageNumber(
@@ -102,6 +105,18 @@ export default function status(
       return {
         ...state,
         pageUrls: action.payload.pageUrls,
+      };
+    case SET_SOURCE:
+      return {
+        ...state,
+        series:
+          action.payload.series === undefined
+            ? state.series
+            : action.payload.series,
+        chapter:
+          action.payload.chapter === undefined
+            ? state.chapter
+            : action.payload.chapter,
       };
     default:
       return state;

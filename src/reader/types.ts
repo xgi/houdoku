@@ -1,4 +1,4 @@
-import { LayoutDirection, PageFit } from '../models/types';
+import { Chapter, LayoutDirection, PageFit, Series } from '../models/types';
 
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 export const CHANGE_PAGE_NUMBER = 'CHANGE_PAGE_NUMBER';
@@ -9,6 +9,7 @@ export const TOGGLE_TWO_PAGE_EVEN_START = 'TOGGLE_TWO_PAGE_EVEN_START';
 export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
 export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 export const SET_PAGE_URLS = 'SET_PAGE_URLS';
+export const SET_SOURCE = 'SET_SOURCE';
 
 export interface ReaderState {
   pageNumber: number;
@@ -19,6 +20,8 @@ export interface ReaderState {
   layoutDirection: LayoutDirection;
   preloadAmount: number;
   pageUrls: string[];
+  series?: Series;
+  chapter?: Chapter;
 }
 
 interface SetPageNumberAction {
@@ -72,6 +75,14 @@ interface SetPageUrlsAction {
   };
 }
 
+interface SetSourceAction {
+  type: typeof SET_SOURCE;
+  payload: {
+    series?: Series;
+    chapter?: Chapter;
+  };
+}
+
 export type ReaderAction =
   | SetPageNumberAction
   | ChangePageNumberAction
@@ -81,4 +92,5 @@ export type ReaderAction =
   | ToggleTwoPageEvenStartAction
   | ToggleLayoutDirectionAction
   | SetPreloadAmountAction
-  | SetPageUrlsAction;
+  | SetPageUrlsAction
+  | SetSourceAction;
