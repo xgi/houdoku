@@ -83,9 +83,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       .catch((error) => console.log(error));
   }, []);
 
-  const importSeries = async (sourceId: string) => {
-    const series: Series = await getSeries(sourceId);
-    const chapters: Chapter[] = await getChapters(sourceId);
+  const importSeries = async (extensionId: number, sourceId: string) => {
+    const series: Series = await getSeries(extensionId, sourceId);
+    const chapters: Chapter[] = await getChapters(extensionId, sourceId);
 
     const addResponse = await db.addSeries(series);
     await db.addChapters(chapters, addResponse[0]);
@@ -163,7 +163,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 <Button onClick={() => props.setStatusText('new status')}>
                   set status
                 </Button>
-                <Button onClick={() => importSeries('429')}>import 429</Button>
+                <Button onClick={() => importSeries(2, '429')}>
+                  import 429
+                </Button>
               </>
               <LibraryGrid
                 columns={props.columns}

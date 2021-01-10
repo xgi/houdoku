@@ -18,7 +18,7 @@ import {
 } from '../reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
-import { Chapter, LayoutDirection, PageFit } from '../models/types';
+import { Chapter, LayoutDirection, PageFit, Series } from '../models/types';
 import { loadChapter } from '../datastore/utils';
 import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
@@ -63,13 +63,21 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const { chapter_id } = useParams();
 
   const thing = async () => {
-    const pageUrls: string[] = await db
+    const chapter: Chapter = await db
       .fetchChapter(chapter_id)
-      .then((response: any) => response[0])
-      .then((chapter: Chapter) => getPageRequesterData(chapter.source_id))
-      .then((pageRequesterData: PageRequesterData) =>
-        getPageUrls(pageRequesterData)
-      );
+      .then((response: any) => response[0]);
+
+    if (chapter.seriesId === undefined) return;
+    const series: Series = await db
+      .fetchSeries(chapter.seriesId)
+      .then((response: any) => response[0]);
+
+    const pageUrls: string[] = await getPageRequesterData(
+      series.extensionId,
+      chapter.sourceId
+    ).then((pageRequesterData: PageRequesterData) =>
+      getPageUrls(series.extensionId, pageRequesterData)
+    );
     props.setPageUrls(pageUrls);
   };
 

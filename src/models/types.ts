@@ -1,6 +1,7 @@
 export type Series = {
   id?: number;
-  source_id: string;
+  extensionId: number;
+  sourceId: string;
   title: string;
   altTitles: string[];
   description: string;
@@ -17,8 +18,8 @@ export type Series = {
 
 export type Chapter = {
   id?: number;
-  series_id?: number;
-  source_id: string;
+  seriesId?: number;
+  sourceId: string;
   title: string;
   chapterNumber: string;
   volumeNumber: string;

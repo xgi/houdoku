@@ -17,7 +17,14 @@ import {
   FetchPageRequesterDataFunc,
   GetPageUrlsFunction,
 } from './interface';
-import { PageRequesterData } from './types';
+import { ExtensionMetadata, PageRequesterData } from './types';
+
+const METADATA: ExtensionMetadata = {
+  id: 2,
+  name: 'MangaDex',
+  url: 'https://mangadex.org',
+  version: 1,
+};
 
 const SERIES_STATUS_MAP: { [key: number]: SeriesStatus } = {
   1: SeriesStatus.ONGOING,
@@ -150,7 +157,8 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
 
   const series: Series = {
     id: undefined,
-    source_id: json.data.id,
+    extensionId: METADATA.id,
+    sourceId: json.data.id,
     title: json.data.title,
     altTitles: json.data.altTitles,
     description: json.data.description,
@@ -178,8 +186,8 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
   json.data.chapters.forEach((element: any) => {
     chapters.push({
       id: undefined,
-      series_id: undefined,
-      source_id: element.id,
+      seriesId: undefined,
+      sourceId: element.id,
       title: element.title,
       chapterNumber: element.chapter,
       volumeNumber: element.volume,
@@ -224,6 +232,7 @@ const getPageUrls: GetPageUrlsFunction = (
 };
 
 export default {
+  METADATA,
   fetchSeries,
   parseSeries,
   fetchChapters,

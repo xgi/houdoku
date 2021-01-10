@@ -10,7 +10,7 @@ export default {
     return db.database
       .select()
       .from(db.chapterTable)
-      .where(db.chapterTable.series_id.eq(seriesId))
+      .where(db.chapterTable.seriesId.eq(seriesId))
       .exec();
   },
   fetchSeries(id: number) {
@@ -38,7 +38,7 @@ export default {
   },
   addChapters(chapters: Chapter[], series: Series) {
     const chaptersCopy: Chapter[] = chapters.map((chapter: Chapter) => {
-      return { ...chapter, series_id: series.id };
+      return { ...chapter, seriesId: series.id };
     });
 
     const values = chaptersCopy.map((chapter) =>

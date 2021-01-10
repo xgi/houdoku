@@ -6,7 +6,8 @@ const schemaBuilder = lf.schema.create('houdoku', 1);
 schemaBuilder
   .createTable('series')
   .addColumn('id', lf.Type.INTEGER)
-  .addColumn('source_id', lf.Type.STRING)
+  .addColumn('extensionId', lf.Type.INTEGER)
+  .addColumn('sourceId', lf.Type.STRING)
   .addColumn('title', lf.Type.STRING)
   .addColumn('altTitles', lf.Type.OBJECT)
   .addColumn('description', lf.Type.STRING)
@@ -24,8 +25,8 @@ schemaBuilder
 schemaBuilder
   .createTable('chapter')
   .addColumn('id', lf.Type.INTEGER)
-  .addColumn('series_id', lf.Type.NUMBER)
-  .addColumn('source_id', lf.Type.STRING)
+  .addColumn('seriesId', lf.Type.NUMBER)
+  .addColumn('sourceId', lf.Type.STRING)
   .addColumn('title', lf.Type.STRING)
   .addColumn('chapterNumber', lf.Type.STRING)
   .addColumn('volumeNumber', lf.Type.STRING)
