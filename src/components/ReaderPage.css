@@ -1,5 +1,17 @@
+button:hover {
+  color: var(--color-link);
+}
+
+.exitButton {
+  background: var(--color-background-alt);
+}
+
+.chapterHeader, .chapterButton {
+  background: var(--color-background);
+}
+
 :root {
-  --sider-width: 260px;
+  --sider-width: 300px;
 }
 
 .pageLayout {
@@ -27,6 +39,73 @@
   max-width: var(--sider-width) !important;
   min-width: var(--sider-width) !important;
   width: var(--sider-width) !important;
+}
+
+.siderHeader {
+  display: flex;
+  align-content: stretch;
+}
+
+.exitButton, .chapterButton {
+  margin: 0;
+  padding: 0;
+  border: none;
+  outline: none;
+  height: 3rem;
+  width: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  position: relative;
+}
+
+.exitButton {
+  height: 3rem;
+  width: 3rem;
+  font-size: 22px;
+}
+
+.exitButton::before {
+  content: "✖";
+}
+
+.seriesTitle {
+  padding: 8px;
+  margin-bottom: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chapterHeader {
+  display: flex;
+  align-content: stretch;
+  align-items: stretch;
+}
+
+.chapterName {
+  text-align: center;
+  line-height: 1.1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.chapterButton {
+  height: 2.5rem;
+  width: 2.5rem;
+  font-size: 16px;
+}
+
+.chapterButton.prev::before {
+  content: "⮜";
+}
+
+.chapterButton.next::before {
+  content: "⮞";
 }
 
 .preloadContainer {

@@ -214,9 +214,21 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   return (
     <Layout className={styles.pageLayout}>
       <Sider className={styles.sider}>
-        <Title level={4}>
-          {props.series === undefined ? 'loading...' : props.series.title}
-        </Title>
+        <div className={styles.siderHeader}>
+          <button className={styles.exitButton} />
+          <Title className={styles.seriesTitle} level={4}>
+            {props.series === undefined ? 'loading...' : props.series.title}
+          </Title>
+        </div>
+        <div className={styles.chapterHeader}>
+          <button className={`${styles.chapterButton} ${styles.prev}`} />
+          <Text className={styles.chapterName}>
+            {props.chapter === undefined
+              ? 'loading...'
+              : `${props.chapter.chapterNumber} - ${props.chapter.title}`}
+          </Text>
+          <button className={`${styles.chapterButton} ${styles.next}`} />
+        </div>
         <p>Fit is: {props.pageFit}</p>
         <p>{chapter_id}</p>
         <Button onClick={() => props.togglePageFit()}>change fit</Button>
