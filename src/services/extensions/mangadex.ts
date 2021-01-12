@@ -3,7 +3,7 @@ import {
   ContentWarning,
   Format,
   Genre,
-  Language,
+  LanguageKey,
   Series,
   SeriesStatus,
   Theme,
@@ -32,9 +32,47 @@ const SERIES_STATUS_MAP: { [key: number]: SeriesStatus } = {
   3: SeriesStatus.CANCELLED,
 };
 
-const LANGUAGE_MAP: { [key: string]: Language } = {
-  gb: Language.ENGLISH,
-  jp: Language.JAPANESE,
+const LANGUAGE_MAP: { [key: string]: LanguageKey } = {
+  sa: LanguageKey.ARABIC,
+  bd: LanguageKey.BENGALI,
+  bg: LanguageKey.BULGARIAN,
+  mm: LanguageKey.BURMESE,
+  ct: LanguageKey.CATALAN,
+  cn: LanguageKey.CHINESE_SIMP,
+  hk: LanguageKey.CHINESE_TRAD,
+  cz: LanguageKey.CZECH,
+  dk: LanguageKey.DANISH,
+  nl: LanguageKey.DUTCH,
+  gb: LanguageKey.ENGLISH,
+  ph: LanguageKey.FILIPINO,
+  fi: LanguageKey.FINNISH,
+  fr: LanguageKey.FRENCH,
+  de: LanguageKey.GERMAN,
+  gr: LanguageKey.GREEK,
+  il: LanguageKey.HEBREW,
+  in: LanguageKey.HINDI,
+  hu: LanguageKey.HUNGARIAN,
+  id: LanguageKey.INDONESIAN,
+  it: LanguageKey.ITALIAN,
+  jp: LanguageKey.JAPANESE,
+  kr: LanguageKey.KOREAN,
+  lt: LanguageKey.LITHUANIAN,
+  my: LanguageKey.MALAY,
+  mn: LanguageKey.MONGOLIAN,
+  ir: LanguageKey.PERSIAN,
+  pl: LanguageKey.POLISH,
+  br: LanguageKey.PORTUGUESE_BR,
+  pt: LanguageKey.PORTUGUESE_PT,
+  ro: LanguageKey.ROMANIAN,
+  ru: LanguageKey.RUSSIAN,
+  rs: LanguageKey.SERBO_CROATIAN,
+  es: LanguageKey.SPANISH_ES,
+  mx: LanguageKey.SPANISH_LATAM,
+  se: LanguageKey.SWEDISH,
+  th: LanguageKey.THAI,
+  tr: LanguageKey.TURKISH,
+  ua: LanguageKey.UKRAINIAN,
+  vn: LanguageKey.VIETNAMESE,
 };
 
 const GENRES_MAP: { [key: number]: Genre } = {
@@ -169,7 +207,7 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
     formats,
     contentWarnings,
     status: SERIES_STATUS_MAP[json.data.publication.status],
-    originalLanguage: LANGUAGE_MAP[json.data.publication.language],
+    originalLanguageKey: LANGUAGE_MAP[json.data.publication.language],
     remoteCoverUrl: json.data.mainCover.split('?')[0],
   };
   return series;
@@ -191,7 +229,7 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
       title: element.title,
       chapterNumber: element.chapter,
       volumeNumber: element.volume,
-      language: LANGUAGE_MAP[element.language],
+      languageKey: LANGUAGE_MAP[element.language],
       time: element.timestamp,
     });
   });

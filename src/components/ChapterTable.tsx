@@ -3,6 +3,7 @@ import { Table, Checkbox, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { Chapter } from '../models/types';
 import routes from '../constants/routes.json';
+import { Languages } from '../models/languages';
 
 type Props = {
   chapterList: Chapter[];
@@ -32,6 +33,22 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       },
     },
     {
+      title: '',
+      dataIndex: 'language',
+      key: 'language',
+      width: '6%',
+      render: function render(text: any, record: any) {
+        console.log(record.languageKey);
+        return Languages[record.languageKey] === undefined ? (
+          <></>
+        ) : (
+          <div
+            className={`flag flag-${Languages[record.languageKey].flagCode}`}
+          />
+        );
+      },
+    },
+    {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
@@ -42,7 +59,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'volumeNumber',
       key: 'volumeNumber',
       defaultSortOrder: 'descend',
-      width: '15%',
+      width: '12%',
       align: 'center',
       sorter: {
         compare: (a: any, b: any) => a.volumeNumber - b.volumeNumber,
@@ -54,7 +71,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'chapterNumber',
       key: 'chapterNumber',
       defaultSortOrder: 'descend',
-      width: '15%',
+      width: '12%',
       align: 'center',
       sorter: {
         compare: (a: any, b: any) => a.chapterNumber - b.chapterNumber,

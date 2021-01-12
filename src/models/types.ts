@@ -12,7 +12,7 @@ export type Series = {
   contentWarnings: ContentWarning[];
   formats: Format[];
   status: SeriesStatus;
-  originalLanguage: Language;
+  originalLanguageKey: LanguageKey;
   remoteCoverUrl: string;
 };
 
@@ -23,8 +23,57 @@ export type Chapter = {
   title: string;
   chapterNumber: string;
   volumeNumber: string;
-  language: Language;
+  languageKey: LanguageKey;
   time: number;
+};
+
+export enum LanguageKey {
+  ARABIC,
+  BENGALI,
+  BULGARIAN,
+  BURMESE,
+  CATALAN,
+  CHINESE_SIMP,
+  CHINESE_TRAD,
+  CZECH,
+  DANISH,
+  DUTCH,
+  ENGLISH,
+  FILIPINO,
+  FINNISH,
+  FRENCH,
+  GERMAN,
+  GREEK,
+  HEBREW,
+  HINDI,
+  HUNGARIAN,
+  INDONESIAN,
+  ITALIAN,
+  JAPANESE,
+  KOREAN,
+  LITHUANIAN,
+  MALAY,
+  MONGOLIAN,
+  PERSIAN,
+  POLISH,
+  PORTUGUESE_BR,
+  PORTUGUESE_PT,
+  ROMANIAN,
+  RUSSIAN,
+  SERBO_CROATIAN,
+  SPANISH_ES,
+  SPANISH_LATAM,
+  SWEDISH,
+  THAI,
+  TURKISH,
+  UKRAINIAN,
+  VIETNAMESE,
+}
+
+export type Language = {
+  key: LanguageKey;
+  name: string;
+  flagCode: string;
 };
 
 export enum PageFit {
@@ -42,11 +91,6 @@ export enum SeriesStatus {
   ONGOING,
   COMPLETED,
   CANCELLED,
-}
-
-export enum Language {
-  ENGLISH,
-  JAPANESE,
 }
 
 export enum Genre {

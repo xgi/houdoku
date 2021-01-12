@@ -6,6 +6,7 @@
 @import '~antd/dist/antd.dark.css';
 @import 'colors.css';
 @import 'titlebar.css';
+@import 'flags.css';
 
 body {
   /* height: 100vh; */

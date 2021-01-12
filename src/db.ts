@@ -18,7 +18,7 @@ schemaBuilder
   .addColumn('contentWarnings', lf.Type.OBJECT)
   .addColumn('formats', lf.Type.OBJECT)
   .addColumn('status', lf.Type.OBJECT)
-  .addColumn('originalLanguage', lf.Type.OBJECT)
+  .addColumn('originalLanguageKey', lf.Type.OBJECT)
   .addColumn('remoteCoverUrl', lf.Type.STRING)
   .addPrimaryKey(['id'], true);
 
@@ -30,7 +30,7 @@ schemaBuilder
   .addColumn('title', lf.Type.STRING)
   .addColumn('chapterNumber', lf.Type.STRING)
   .addColumn('volumeNumber', lf.Type.STRING)
-  .addColumn('language', lf.Type.OBJECT)
+  .addColumn('languageKey', lf.Type.OBJECT)
   .addColumn('time', lf.Type.NUMBER)
   .addPrimaryKey(['id'], true);
 

@@ -11,14 +11,15 @@ import {
   ContentWarning,
   Format,
   Genre,
-  Language,
   Series,
   SeriesStatus,
   Theme,
 } from '../models/types';
+import { Languages } from '../models/languages';
 import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
+import flagsSheet from '../img/flags.png';
 import routes from '../constants/routes.json';
 
 const { Title } = Typography;
@@ -69,7 +70,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           {SeriesStatus[series.status]}
         </Descriptions.Item>
         <Descriptions.Item label="Language">
-          {Language[series.originalLanguage]}
+          {Languages[series.originalLanguageKey].name}
         </Descriptions.Item>
         <Descriptions.Item label="Genres" span={2}>
           {series.genres.map((genre: Genre) => Genre[genre]).join('; ')}
