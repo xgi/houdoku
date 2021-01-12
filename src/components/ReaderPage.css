@@ -1,12 +1,13 @@
 button:hover {
   color: var(--color-link);
+  cursor: pointer;
 }
 
 .exitButton {
   background: var(--color-background-alt);
 }
 
-.chapterHeader, .chapterButton {
+.chapterHeader, .chapterButton, .pageNumber, .pageButton {
   background: var(--color-background);
 }
 
@@ -46,7 +47,7 @@ button:hover {
   align-content: stretch;
 }
 
-.exitButton, .chapterButton {
+.exitButton, .chapterButton, .pageButton {
   margin: 0;
   padding: 0;
   border: none;
@@ -85,7 +86,7 @@ button:hover {
   align-items: stretch;
 }
 
-.chapterName {
+.chapterName, .pageNumber {
   text-align: center;
   line-height: 1.1;
   display: flex;
@@ -100,12 +101,34 @@ button:hover {
   font-size: 16px;
 }
 
-.chapterButton.prev::before {
+.chapterButton.prev::before, .pageButton.prev::before {
   content: "⮜";
 }
 
-.chapterButton.next::before {
+.chapterButton.next::before, .pageButton.next::before {
   content: "⮞";
+}
+
+.pageButton.start::before {
+  content: "⇤";
+  font-size: 22px;
+}
+
+.pageButton.end::before {
+  content: "⇥";
+  font-size: 22px;
+}
+
+.pageControlBar {
+  display: flex;
+  align-content: stretch;
+  align-items: stretch;
+}
+
+.pageButton {
+  height: 2.2rem;
+  width: 2.2rem;
+  font-size: 14px;
 }
 
 .preloadContainer {

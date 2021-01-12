@@ -105,6 +105,7 @@ export default function status(
       return {
         ...state,
         pageUrls: action.payload.pageUrls,
+        lastPageNumber: action.payload.pageUrls.length,
       };
     case SET_SOURCE:
       return {

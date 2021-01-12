@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable react/button-has-type */
 /* eslint-disable consistent-return */
 /* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
@@ -228,6 +230,27 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               : `${props.chapter.chapterNumber} - ${props.chapter.title}`}
           </Text>
           <button className={`${styles.chapterButton} ${styles.next}`} />
+        </div>
+        <div className={styles.pageControlBar}>
+          <button
+            className={`${styles.pageButton} ${styles.start}`}
+            onClick={() => props.setPageNumber(1)}
+          />
+          <button
+            className={`${styles.pageButton} ${styles.prev}`}
+            onClick={() => changePage(true)}
+          />
+          <Text className={styles.pageNumber}>
+            {`${props.pageNumber} / ${props.lastPageNumber}`}
+          </Text>
+          <button
+            className={`${styles.pageButton} ${styles.next}`}
+            onClick={() => changePage(false)}
+          />
+          <button
+            className={`${styles.pageButton} ${styles.end}`}
+            onClick={() => props.setPageNumber(props.lastPageNumber)}
+          />
         </div>
         <p>Fit is: {props.pageFit}</p>
         <p>{chapter_id}</p>

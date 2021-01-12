@@ -38,7 +38,6 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       key: 'language',
       width: '6%',
       render: function render(text: any, record: any) {
-        console.log(record.languageKey);
         return Languages[record.languageKey] === undefined ? (
           <></>
         ) : (
