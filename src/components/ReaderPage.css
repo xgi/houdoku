@@ -7,8 +7,19 @@ button:hover {
   background: var(--color-background-alt);
 }
 
-.chapterHeader, .chapterButton, .pageNumber, .pageButton {
+.chapterHeader,
+.chapterButton,
+.pageNumber,
+.pageButton,
+.settingsButton {
   background: var(--color-background);
+}
+
+.exitButton,
+.chapterButton,
+.pageButton,
+.settingsButton {
+  font-family: 'Icons';
 }
 
 :root {
@@ -47,7 +58,10 @@ button:hover {
   align-content: stretch;
 }
 
-.exitButton, .chapterButton, .pageButton {
+.exitButton,
+.chapterButton,
+.pageButton,
+.settingsButton {
   margin: 0;
   padding: 0;
   border: none;
@@ -65,11 +79,11 @@ button:hover {
 .exitButton {
   height: 3rem;
   width: 3rem;
-  font-size: 22px;
+  font-size: 16px;
 }
 
 .exitButton::before {
-  content: "✖";
+  content: '\ea0f';
 }
 
 .seriesTitle {
@@ -86,7 +100,8 @@ button:hover {
   align-items: stretch;
 }
 
-.chapterName, .pageNumber {
+.chapterName,
+.pageNumber {
   text-align: center;
   line-height: 1.1;
   display: flex;
@@ -101,22 +116,22 @@ button:hover {
   font-size: 16px;
 }
 
-.chapterButton.prev::before, .pageButton.prev::before {
-  content: "⮜";
+.chapterButton.prev::before,
+.pageButton.prev::before {
+  content: '\ea40';
 }
 
-.chapterButton.next::before, .pageButton.next::before {
-  content: "⮞";
+.chapterButton.next::before,
+.pageButton.next::before {
+  content: '\ea3c';
 }
 
 .pageButton.start::before {
-  content: "⇤";
-  font-size: 22px;
+  content: '\ea23';
 }
 
 .pageButton.end::before {
-  content: "⇥";
-  font-size: 22px;
+  content: '\ea24';
 }
 
 .pageControlBar {
@@ -128,7 +143,44 @@ button:hover {
 .pageButton {
   height: 2.2rem;
   width: 2.2rem;
-  font-size: 14px;
+  font-size: 16px;
+}
+
+.settingsBar {
+  display: flex;
+  align-content: stretch;
+  align-items: stretch;
+}
+
+.settingsButton {
+  height: 2.5rem;
+  width: 2.5rem;
+  font-size: 16px;
+}
+
+.settingsButton.fit.auto::before {
+  content: '\e989';
+}
+
+.settingsButton.fit.width::before {
+  content: 'W';
+}
+
+.settingsButton.fit.height::before {
+  content: 'H';
+}
+
+.settingsButton.pageView.single::before {
+  content: '\e927';
+}
+
+.settingsButton.pageView.double::before {
+  content: '\e90e';
+}
+
+.settingsButton.pageView.doubleOdd::before {
+  content: '\e90e';
+  transform: scaleX(-1);
 }
 
 .preloadContainer {

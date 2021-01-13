@@ -87,6 +87,12 @@ export enum LayoutDirection {
   RightToLeft,
 }
 
+export enum PageView {
+  Single,
+  Double,
+  Double_OddStart,
+}
+
 export enum SeriesStatus {
   ONGOING,
   COMPLETED,

@@ -1,4 +1,4 @@
-import { LayoutDirection, PageFit } from '../models/types';
+import { LayoutDirection, PageFit, PageView } from '../models/types';
 import {
   CHANGE_PAGE_NUMBER,
   ReaderState,
@@ -8,8 +8,7 @@ import {
   SET_PRELOAD_AMOUNT,
   TOGGLE_LAYOUT_DIRECTION,
   TOGGLE_PAGE_FIT,
-  TOGGLE_TWO_PAGE_EVEN_START,
-  TOGGLE_TWO_PAGE_VIEW,
+  TOGGLE_PAGE_VIEW,
   SET_SOURCE,
 } from './types';
 
@@ -17,8 +16,7 @@ const initialState: ReaderState = {
   pageNumber: 1,
   lastPageNumber: 20,
   pageFit: PageFit.Auto,
-  twoPageView: false,
-  twoPageEvenStart: false,
+  pageView: PageView.Single,
   layoutDirection: LayoutDirection.LeftToRight,
   preloadAmount: 3,
   pageUrls: [],
@@ -58,6 +56,16 @@ function nextLayoutDirection(
   return LayoutDirection.LeftToRight;
 }
 
+function nextPageView(pageView: PageView): PageView {
+  if (pageView === PageView.Single) {
+    return PageView.Double;
+  }
+  if (pageView === PageView.Double) {
+    return PageView.Double_OddStart;
+  }
+  return PageView.Single;
+}
+
 export default function status(
   state = initialState,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,10 +92,8 @@ export default function status(
       return { ...state, pageFit: action.payload.pageFit };
     case TOGGLE_PAGE_FIT:
       return { ...state, pageFit: nextPageFit(state.pageFit) };
-    case TOGGLE_TWO_PAGE_VIEW:
-      return { ...state, twoPageView: !state.twoPageView };
-    case TOGGLE_TWO_PAGE_EVEN_START:
-      return { ...state, twoPageEvenStart: !state.twoPageEvenStart };
+    case TOGGLE_PAGE_VIEW:
+      return { ...state, pageView: nextPageView(state.pageView) };
     case TOGGLE_LAYOUT_DIRECTION:
       return {
         ...state,

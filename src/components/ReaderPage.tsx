@@ -15,13 +15,18 @@ import {
   setPreloadAmount,
   toggleLayoutDirection,
   togglePageFit,
-  toggleTwoPageEvenStart,
-  toggleTwoPageView,
+  togglePageView,
   setSource,
 } from '../reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
-import { Chapter, LayoutDirection, PageFit, Series } from '../models/types';
+import {
+  Chapter,
+  LayoutDirection,
+  PageFit,
+  PageView,
+  Series,
+} from '../models/types';
 import { loadChapter } from '../datastore/utils';
 import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
@@ -34,8 +39,7 @@ const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
   lastPageNumber: state.reader.lastPageNumber,
   pageFit: state.reader.pageFit,
-  twoPageView: state.reader.twoPageView,
-  twoPageEvenStart: state.reader.twoPageEvenStart,
+  pageView: state.reader.pageView,
   layoutDirection: state.reader.layoutDirection,
   preloadAmount: state.reader.preloadAmount,
   pageUrls: state.reader.pageUrls,
@@ -50,8 +54,7 @@ const mapDispatch = (dispatch: any) => ({
   changePageNumber: (delta: number) => dispatch(changePageNumber(delta)),
   setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
   togglePageFit: () => dispatch(togglePageFit()),
-  toggleTwoPageView: () => dispatch(toggleTwoPageView()),
-  toggleTwoPageEvenStart: () => dispatch(toggleTwoPageEvenStart()),
+  togglePageView: () => dispatch(togglePageView()),
   toggleLayoutDirection: () => dispatch(toggleLayoutDirection()),
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
@@ -94,6 +97,26 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return `${props.pageNumber * -100 + 100}%`;
   };
 
+  const getPageFitClass = () => {
+    if (props.pageFit === PageFit.Auto) {
+      return styles.auto;
+    }
+    if (props.pageFit === PageFit.Width) {
+      return styles.width;
+    }
+    return styles.height;
+  };
+
+  const getPageViewClass = () => {
+    if (props.pageView === PageView.Single) {
+      return styles.single;
+    }
+    if (props.pageView === PageView.Double) {
+      return styles.double;
+    }
+    return styles.doubleOdd;
+  };
+
   useEffect(() => {
     props.fetchChapter(chapter_id);
     thing();
@@ -115,9 +138,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   const renderTwoPageLayout = (pageNumber: number) => {
-    const firstPageNumber = props.twoPageEvenStart
-      ? pageNumber - 1
-      : pageNumber;
+    const firstPageNumber =
+      props.pageView === PageView.Double_OddStart ? pageNumber - 1 : pageNumber;
     return (
       <>
         <span className={styles.imageColumn}>
@@ -167,7 +189,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           `}
           style={{ marginLeft: i === 1 ? getPageMargin() : 0 }}
         >
-          {props.twoPageView ? renderTwoPageLayout(i) : renderPageImage(i)}
+          {props.pageView === PageView.Single
+            ? renderPageImage(i)
+            : renderTwoPageLayout(i)}
         </Content>
       );
     }
@@ -181,7 +205,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     if (props.layoutDirection === LayoutDirection.RightToLeft) {
       delta = -delta;
     }
-    if (props.twoPageView) {
+    if (props.pageView !== PageView.Single) {
       delta *= 2;
     }
 
@@ -231,6 +255,26 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           </Text>
           <button className={`${styles.chapterButton} ${styles.next}`} />
         </div>
+        <div className={styles.settingsBar}>
+          <button
+            className={`${styles.settingsButton} ${styles.start}`}
+            onClick={() => props.setPageNumber(1)}
+          />
+          <button
+            className={`${styles.settingsButton}
+                        ${styles.fit} ${getPageFitClass()}`}
+            onClick={() => props.togglePageFit()}
+          />
+          <button
+            className={`${styles.settingsButton}
+                        ${styles.pageView} ${getPageViewClass()}`}
+            onClick={() => props.togglePageView()}
+          />
+          <button
+            className={`${styles.settingsButton} ${styles.end}`}
+            onClick={() => props.setPageNumber(props.lastPageNumber)}
+          />
+        </div>
         <div className={styles.pageControlBar}>
           <button
             className={`${styles.pageButton} ${styles.start}`}
@@ -256,7 +300,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         <p>{chapter_id}</p>
         <Button onClick={() => props.togglePageFit()}>change fit</Button>
         <p>{`cur_page=${props.pageNumber} last_page=${props.lastPageNumber}`}</p>
-        <p>{`two_page=${props.twoPageView} even_start=${props.twoPageEvenStart}`}</p>
+        <p>{`page_view=${props.pageView}`}</p>
         <p>{`layout_dir=${props.layoutDirection}`}</p>
         <p>{`preload=${props.preloadAmount}`}</p>
         <Slider
@@ -269,12 +313,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         />
         <Button onClick={() => changePage(true)}>left</Button>
         <Button onClick={() => changePage(false)}>right</Button>
-        <Button onClick={() => props.toggleTwoPageView()}>
-          toggle two page display
-        </Button>
-        <Button onClick={() => props.toggleTwoPageEvenStart()}>
-          toggle two page even start
-        </Button>
         <Button onClick={() => props.toggleLayoutDirection()}>
           toggle layout direction
         </Button>

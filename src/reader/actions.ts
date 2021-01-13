@@ -5,8 +5,7 @@ import {
   ReaderAction,
   SET_PAGE_NUMBER,
   CHANGE_PAGE_NUMBER,
-  TOGGLE_TWO_PAGE_VIEW,
-  TOGGLE_TWO_PAGE_EVEN_START,
+  TOGGLE_PAGE_VIEW,
   TOGGLE_LAYOUT_DIRECTION,
   SET_PRELOAD_AMOUNT,
   SET_PAGE_URLS,
@@ -46,15 +45,9 @@ export function togglePageFit(): ReaderAction {
   };
 }
 
-export function toggleTwoPageView(): ReaderAction {
+export function togglePageView(): ReaderAction {
   return {
-    type: TOGGLE_TWO_PAGE_VIEW,
-  };
-}
-
-export function toggleTwoPageEvenStart(): ReaderAction {
-  return {
-    type: TOGGLE_TWO_PAGE_EVEN_START,
+    type: TOGGLE_PAGE_VIEW,
   };
 }
 

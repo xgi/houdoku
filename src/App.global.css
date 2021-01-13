@@ -8,6 +8,13 @@
 @import 'titlebar.css';
 @import 'flags.css';
 
+@font-face {
+  font-family: 'Icons';
+  src: url('./font/Icons.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   /* height: 100vh; */
 
