@@ -10,9 +10,12 @@ button:hover {
 .chapterHeader,
 .chapterButton,
 .pageNumber,
-.pageButton,
-.settingsButton {
+.pageButton {
   background: var(--color-background);
+}
+
+.settingsButton {
+  background: var(--color-background-alt);
 }
 
 .exitButton,
@@ -181,6 +184,14 @@ button:hover {
 .settingsButton.pageView.doubleOdd::before {
   content: '\e90e';
   transform: scaleX(-1);
+}
+
+.settingsButton.layoutDirection.leftToRight::before {
+  content: '\ea3c';
+}
+
+.settingsButton.layoutDirection.rightToLeft::before {
+  content: '\ea40';
 }
 
 .preloadContainer {

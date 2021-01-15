@@ -5,7 +5,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route, useParams } from 'react-router-dom';
-import { Layout, Typography, Button, Row, Col, Slider } from 'antd';
+import { Layout, Typography, Button, Row, Col, Slider, Tooltip } from 'antd';
 import { RootState } from '../store';
 import {
   changePageNumber,
@@ -117,6 +117,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return styles.doubleOdd;
   };
 
+  const getLayoutDirectionClass = () => {
+    if (props.layoutDirection === LayoutDirection.LeftToRight) {
+      return styles.leftToRight;
+    }
+    return styles.rightToLeft;
+  };
+
   useEffect(() => {
     props.fetchChapter(chapter_id);
     thing();
@@ -199,7 +206,16 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return <div className={styles.viewerContainer}>{imageWrappers}</div>;
   };
 
-  const changePage = (left: boolean) => {
+  const changePage = (left: boolean, toBound = false) => {
+    if (toBound) {
+      if (props.layoutDirection === LayoutDirection.LeftToRight) {
+        props.setPageNumber(left ? 0 : props.lastPageNumber);
+      } else {
+        props.setPageNumber(left ? props.lastPageNumber : 0);
+      }
+      return;
+    }
+
     let delta = left ? -1 : 1;
 
     if (props.layoutDirection === LayoutDirection.RightToLeft) {
@@ -260,16 +276,27 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
             className={`${styles.settingsButton} ${styles.start}`}
             onClick={() => props.setPageNumber(1)}
           />
-          <button
-            className={`${styles.settingsButton}
+          <Tooltip title="Change page fit">
+            <button
+              className={`${styles.settingsButton}
                         ${styles.fit} ${getPageFitClass()}`}
-            onClick={() => props.togglePageFit()}
-          />
-          <button
-            className={`${styles.settingsButton}
+              onClick={() => props.togglePageFit()}
+            />
+          </Tooltip>
+          <Tooltip title="Change two-page view">
+            <button
+              className={`${styles.settingsButton}
                         ${styles.pageView} ${getPageViewClass()}`}
-            onClick={() => props.togglePageView()}
-          />
+              onClick={() => props.togglePageView()}
+            />
+          </Tooltip>
+          <Tooltip title="Change reader direction">
+            <button
+              className={`${styles.settingsButton}
+                        ${styles.layoutDirection} ${getLayoutDirectionClass()}`}
+              onClick={() => props.toggleLayoutDirection()}
+            />
+          </Tooltip>
           <button
             className={`${styles.settingsButton} ${styles.end}`}
             onClick={() => props.setPageNumber(props.lastPageNumber)}
@@ -278,7 +305,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         <div className={styles.pageControlBar}>
           <button
             className={`${styles.pageButton} ${styles.start}`}
-            onClick={() => props.setPageNumber(1)}
+            onClick={() => changePage(true, true)}
           />
           <button
             className={`${styles.pageButton} ${styles.prev}`}
@@ -293,7 +320,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           />
           <button
             className={`${styles.pageButton} ${styles.end}`}
-            onClick={() => props.setPageNumber(props.lastPageNumber)}
+            onClick={() => changePage(false, true)}
           />
         </div>
         <p>Fit is: {props.pageFit}</p>
