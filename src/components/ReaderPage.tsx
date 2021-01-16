@@ -382,6 +382,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         <p>{`page_view=${props.pageView}`}</p>
         <p>{`layout_dir=${props.layoutDirection}`}</p>
         <p>{`preload=${props.preloadAmount}`}</p>
+        <p>{props.chapter?.groupName}</p>
         <Slider
           min={0}
           max={10}

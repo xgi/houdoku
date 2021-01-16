@@ -224,10 +224,8 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
 
   json.data.chapters.forEach((element: any) => {
     const groupId: number = element.groups[0];
-    const groupName: string = groups.reduce((group: any) => {
-      if (group.id === groupId) return group.name;
-      return false;
-    });
+    const groupName: string = groups.find((group: any) => group.id === groupId)
+      ?.name;
 
     chapters.push({
       id: undefined,
