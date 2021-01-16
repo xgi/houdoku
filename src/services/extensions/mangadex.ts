@@ -220,8 +220,15 @@ const fetchChapters: FetchChaptersFunc = (id: string) => {
 
 const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
   const chapters: Chapter[] = [];
+  const { groups } = json.data;
 
   json.data.chapters.forEach((element: any) => {
+    const groupId: number = element.groups[0];
+    const groupName: string = groups.reduce((group: any) => {
+      if (group.id === groupId) return group.name;
+      return false;
+    });
+
     chapters.push({
       id: undefined,
       seriesId: undefined,
@@ -230,6 +237,7 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
       chapterNumber: element.chapter,
       volumeNumber: element.volume,
       languageKey: LANGUAGE_MAP[element.language],
+      groupName,
       time: element.timestamp,
     });
   });

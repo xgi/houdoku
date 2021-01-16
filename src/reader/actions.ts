@@ -10,6 +10,7 @@ import {
   SET_PRELOAD_AMOUNT,
   SET_PAGE_URLS,
   SET_SOURCE,
+  SET_CHAPTER_ID_LIST,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -81,6 +82,15 @@ export function setSource(series?: Series, chapter?: Chapter): ReaderAction {
     payload: {
       series,
       chapter,
+    },
+  };
+}
+
+export function setChapterIdList(chapterIdList: number[]): ReaderAction {
+  return {
+    type: SET_CHAPTER_ID_LIST,
+    payload: {
+      chapterIdList,
     },
   };
 }

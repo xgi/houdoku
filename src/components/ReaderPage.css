@@ -187,11 +187,11 @@ button:hover {
 }
 
 .settingsButton.layoutDirection.leftToRight::before {
-  content: '\ea3c';
+  content: '\ea42';
 }
 
 .settingsButton.layoutDirection.rightToLeft::before {
-  content: '\ea40';
+  content: '\ea44';
 }
 
 .preloadContainer {

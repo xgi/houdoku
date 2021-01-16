@@ -24,6 +24,7 @@ export type Chapter = {
   chapterNumber: string;
   volumeNumber: string;
   languageKey: LanguageKey;
+  groupName: string;
   time: number;
 };
 

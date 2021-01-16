@@ -17,6 +17,7 @@ import {
   togglePageFit,
   togglePageView,
   setSource,
+  setChapterIdList,
 } from '../reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
@@ -31,6 +32,7 @@ import { loadChapter } from '../datastore/utils';
 import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
+import { selectMostSimilarChapter } from '../util/comparison';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -45,6 +47,8 @@ const mapState = (state: RootState) => ({
   pageUrls: state.reader.pageUrls,
   series: state.reader.series,
   chapter: state.reader.chapter,
+  chapterIdList: state.reader.chapterIdList,
+  createdChapterIdList: state.reader.createdChapterIdList,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,6 +65,8 @@ const mapDispatch = (dispatch: any) => ({
   setPageUrls: (pageUrls: string[]) => dispatch(setPageUrls(pageUrls)),
   setSource: (series?: Series, chapter?: Chapter) =>
     dispatch(setSource(series, chapter)),
+  setChapterIdList: (chapterIdList: number[]) =>
+    dispatch(setChapterIdList(chapterIdList)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -72,9 +78,36 @@ type Props = PropsFromRedux & {};
 const ReaderPage: React.FC<Props> = (props: Props) => {
   const { chapter_id } = useParams();
 
-  const thing = async () => {
+  const createChapterIdList = async (series: Series, chapter: Chapter) => {
+    if (series.id === undefined) return;
+
+    const chapterIdList: number[] = [];
+
+    const chapters: Chapter[] = await db.fetchChapters(series.id);
+
+    const chapterNumbers: Set<string> = new Set();
+    chapters.forEach((c: Chapter) => chapterNumbers.add(c.chapterNumber));
+
+    chapterNumbers.forEach((chapterNumber: string) => {
+      const curChapters: Chapter[] = chapters.filter(
+        (c: Chapter) => c.chapterNumber === chapterNumber
+      );
+
+      const bestMatch: Chapter | null = selectMostSimilarChapter(
+        chapter,
+        curChapters
+      );
+      if (bestMatch !== null && bestMatch.id !== undefined) {
+        chapterIdList.push(bestMatch.id);
+      }
+    });
+
+    props.setChapterIdList(chapterIdList);
+  };
+
+  const loadChapterData = async (chapterId: number) => {
     const chapter: Chapter = await db
-      .fetchChapter(chapter_id)
+      .fetchChapter(chapterId)
       .then((response: any) => response[0]);
 
     if (chapter.seriesId === undefined) return;
@@ -83,6 +116,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       .then((response: any) => response[0]);
 
     props.setSource(series, chapter);
+    if (!props.createdChapterIdList) createChapterIdList(series, chapter);
 
     const pageUrls: string[] = await getPageRequesterData(
       series.extensionId,
@@ -126,7 +160,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     props.fetchChapter(chapter_id);
-    thing();
+    loadChapterData(chapter_id);
   }, []);
 
   const renderPageImage = (pageNumber: number) => {
@@ -228,6 +262,18 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.changePageNumber(delta);
   };
 
+  const changeChapter = (left: boolean) => {
+    if (props.chapter === undefined) return;
+
+    const curChapterIndex: number = props.chapterIdList.findIndex(
+      (id: number) => id === props.chapter.id
+    );
+
+    const newChapterId: number =
+      props.chapterIdList[left ? curChapterIndex + 1 : curChapterIndex - 1];
+    loadChapterData(newChapterId);
+  };
+
   const preloadSliderMarks: { [key: number]: string } = {
     0: '0',
     1: '1',
@@ -263,13 +309,19 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           </Title>
         </div>
         <div className={styles.chapterHeader}>
-          <button className={`${styles.chapterButton} ${styles.prev}`} />
+          <button
+            className={`${styles.chapterButton} ${styles.prev}`}
+            onClick={() => changeChapter(true)}
+          />
           <Text className={styles.chapterName}>
             {props.chapter === undefined
               ? 'loading...'
               : `${props.chapter.chapterNumber} - ${props.chapter.title}`}
           </Text>
-          <button className={`${styles.chapterButton} ${styles.next}`} />
+          <button
+            className={`${styles.chapterButton} ${styles.next}`}
+            onClick={() => changeChapter(false)}
+          />
         </div>
         <div className={styles.settingsBar}>
           <button

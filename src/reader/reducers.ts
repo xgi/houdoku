@@ -10,6 +10,7 @@ import {
   TOGGLE_PAGE_FIT,
   TOGGLE_PAGE_VIEW,
   SET_SOURCE,
+  SET_CHAPTER_ID_LIST,
 } from './types';
 
 const initialState: ReaderState = {
@@ -22,6 +23,8 @@ const initialState: ReaderState = {
   pageUrls: [],
   series: undefined,
   chapter: undefined,
+  chapterIdList: [],
+  createdChapterIdList: false,
 };
 
 function sanitizedPageNumber(
@@ -124,6 +127,12 @@ export default function status(
           action.payload.chapter === undefined
             ? state.chapter
             : action.payload.chapter,
+      };
+    case SET_CHAPTER_ID_LIST:
+      return {
+        ...state,
+        chapterIdList: action.payload.chapterIdList,
+        createdChapterIdList: true,
       };
     default:
       return state;

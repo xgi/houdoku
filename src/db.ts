@@ -31,6 +31,7 @@ schemaBuilder
   .addColumn('chapterNumber', lf.Type.STRING)
   .addColumn('volumeNumber', lf.Type.STRING)
   .addColumn('languageKey', lf.Type.OBJECT)
+  .addColumn('groupName', lf.Type.STRING)
   .addColumn('time', lf.Type.NUMBER)
   .addPrimaryKey(['id'], true);
 

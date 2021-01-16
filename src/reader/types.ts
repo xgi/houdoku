@@ -15,6 +15,7 @@ export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
 export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 export const SET_PAGE_URLS = 'SET_PAGE_URLS';
 export const SET_SOURCE = 'SET_SOURCE';
+export const SET_CHAPTER_ID_LIST = 'SET_CHAPTER_ID_LIST';
 
 export interface ReaderState {
   pageNumber: number;
@@ -26,6 +27,8 @@ export interface ReaderState {
   pageUrls: string[];
   series?: Series;
   chapter?: Chapter;
+  chapterIdList: number[];
+  createdChapterIdList: boolean;
 }
 
 interface SetPageNumberAction {
@@ -83,6 +86,13 @@ interface SetSourceAction {
   };
 }
 
+interface SetChapterIdListAction {
+  type: typeof SET_CHAPTER_ID_LIST;
+  payload: {
+    chapterIdList: number[];
+  };
+}
+
 export type ReaderAction =
   | SetPageNumberAction
   | ChangePageNumberAction
@@ -92,4 +102,5 @@ export type ReaderAction =
   | ToggleLayoutDirectionAction
   | SetPreloadAmountAction
   | SetPageUrlsAction
-  | SetSourceAction;
+  | SetSourceAction
+  | SetChapterIdListAction;
