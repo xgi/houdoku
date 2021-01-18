@@ -3,6 +3,14 @@ button:hover {
   cursor: pointer;
 }
 
+button.disabled {
+  color: var(--color-foreground-alt);
+}
+
+button.disabled:hover {
+  cursor: not-allowed;
+}
+
 .exitButton {
   background: var(--color-background-alt);
 }

@@ -262,15 +262,35 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.changePageNumber(delta);
   };
 
-  const changeChapter = (left: boolean) => {
-    if (props.chapter === undefined) return;
+  /**
+   * Get the ID of a chapter just before or after the current one.
+   * @param previous whether to get the previous chapter (instead of the next one)
+   * @return the ID of the chapter, or -1 if none exists (or props.chapter or props.chapterIdList
+   *  have not been loaded)
+   */
+  const getAdjacentChapterId = (previous: boolean): number => {
+    if (props.chapter === undefined) return -1;
 
     const curChapterIndex: number = props.chapterIdList.findIndex(
       (id: number) => id === props.chapter.id
     );
+    const newChapterIndex = previous
+      ? curChapterIndex + 1
+      : curChapterIndex - 1;
 
-    const newChapterId: number =
-      props.chapterIdList[left ? curChapterIndex + 1 : curChapterIndex - 1];
+    if (
+      curChapterIndex === -1 ||
+      newChapterIndex < 0 ||
+      newChapterIndex >= props.chapterIdList.length
+    )
+      return -1;
+
+    return props.chapterIdList[newChapterIndex];
+  };
+
+  const changeChapter = (previous: boolean) => {
+    const newChapterId = getAdjacentChapterId(previous);
+    if (newChapterId === -1) return;
     loadChapterData(newChapterId);
   };
 
@@ -310,7 +330,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         </div>
         <div className={styles.chapterHeader}>
           <button
-            className={`${styles.chapterButton} ${styles.prev}`}
+            className={`${styles.chapterButton} ${styles.prev}
+            ${getAdjacentChapterId(true) === -1 ? styles.disabled : ''}`}
             onClick={() => changeChapter(true)}
           />
           <Text className={styles.chapterName}>
@@ -319,7 +340,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               : `${props.chapter.chapterNumber} - ${props.chapter.title}`}
           </Text>
           <button
-            className={`${styles.chapterButton} ${styles.next}`}
+            className={`${styles.chapterButton} ${styles.next}
+            ${getAdjacentChapterId(false) === -1 ? styles.disabled : ''}`}
             onClick={() => changeChapter(false)}
           />
         </div>
