@@ -291,6 +291,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const changeChapter = (previous: boolean) => {
     const newChapterId = getAdjacentChapterId(previous);
     if (newChapterId === -1) return;
+
+    props.setPageNumber(1);
+    props.setPageUrls([]);
+
     loadChapterData(newChapterId);
   };
 
@@ -314,10 +318,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     }
     return preloadSliderMarks[value];
   };
-
-  if (props.pageUrls.length === 0) {
-    return <p>loading...</p>;
-  }
 
   return (
     <Layout className={styles.pageLayout}>
