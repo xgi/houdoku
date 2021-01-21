@@ -18,6 +18,8 @@ import {
   togglePageView,
   setSource,
   setChapterIdList,
+  setLayoutDirection,
+  setPageView,
 } from '../reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
@@ -26,6 +28,7 @@ import {
   LayoutDirection,
   PageFit,
   PageView,
+  ReaderSetting,
   Series,
 } from '../models/types';
 import { loadChapter } from '../datastore/utils';
@@ -33,6 +36,7 @@ import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
 import { selectMostSimilarChapter } from '../util/comparison';
+import { getStoredReaderSettings } from '../reader/utils';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -58,7 +62,10 @@ const mapDispatch = (dispatch: any) => ({
   changePageNumber: (delta: number) => dispatch(changePageNumber(delta)),
   setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
   togglePageFit: () => dispatch(togglePageFit()),
+  setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
   togglePageView: () => dispatch(togglePageView()),
+  setLayoutDirection: (layoutDirection: LayoutDirection) =>
+    dispatch(setLayoutDirection(layoutDirection)),
   toggleLayoutDirection: () => dispatch(toggleLayoutDirection()),
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
@@ -159,6 +166,24 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
+    const settings: {
+      [key in ReaderSetting]?: any;
+    } = getStoredReaderSettings();
+
+    // apply saved settings
+    if (settings[ReaderSetting.LayoutDirection] !== null) {
+      props.setLayoutDirection(settings[ReaderSetting.LayoutDirection]);
+    }
+    if (settings[ReaderSetting.PageView] !== null) {
+      props.setPageView(settings[ReaderSetting.PageView]);
+    }
+    if (settings[ReaderSetting.PageFit] !== null) {
+      props.setPageFit(settings[ReaderSetting.PageFit]);
+    }
+    if (settings[ReaderSetting.PreloadAmount] !== null) {
+      props.setPreloadAmount(settings[ReaderSetting.PreloadAmount]);
+    }
+
     props.fetchChapter(chapter_id);
     loadChapterData(chapter_id);
   }, []);
@@ -223,6 +248,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     for (let i = 1; i <= props.lastPageNumber; i += 1) {
       imageWrappers.push(
         <Content
+          key={i}
           className={`${styles.imageWrapper}
             ${props.pageFit === PageFit.Auto ? styles.fitAuto : ''}
             ${props.pageFit === PageFit.Width ? styles.fitWidth : ''}

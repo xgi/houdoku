@@ -77,6 +77,13 @@ export type Language = {
   flagCode: string;
 };
 
+export enum ReaderSetting {
+  PageFit = 'PageFit',
+  LayoutDirection = 'LayoutDirection',
+  PageView = 'PageView',
+  PreloadAmount = 'PreloadAmount',
+}
+
 export enum PageFit {
   Auto,
   Width,

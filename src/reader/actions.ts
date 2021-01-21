@@ -1,4 +1,4 @@
-import { Chapter, PageFit, Series } from '../models/types';
+import { Chapter, LayoutDirection, PageFit, PageView, Series } from '../models/types';
 import {
   SET_PAGE_FIT,
   TOGGLE_PAGE_FIT,
@@ -11,6 +11,8 @@ import {
   SET_PAGE_URLS,
   SET_SOURCE,
   SET_CHAPTER_ID_LIST,
+  SET_PAGE_VIEW,
+  SET_LAYOUT_DIRECTION,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -46,9 +48,29 @@ export function togglePageFit(): ReaderAction {
   };
 }
 
+export function setPageView(pageView: PageView): ReaderAction {
+  return {
+    type: SET_PAGE_VIEW,
+    payload: {
+      pageView,
+    },
+  };
+}
+
 export function togglePageView(): ReaderAction {
   return {
     type: TOGGLE_PAGE_VIEW,
+  };
+}
+
+export function setLayoutDirection(
+  layoutDirection: LayoutDirection
+): ReaderAction {
+  return {
+    type: SET_LAYOUT_DIRECTION,
+    payload: {
+      layoutDirection,
+    },
   };
 }
 

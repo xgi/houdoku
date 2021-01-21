@@ -9,7 +9,7 @@ import {
   CHANGE_NUM_COLUMNS,
   SET_CHAPTER_READ,
 } from './types';
-import persistantStore from '../utils/persistantStore';
+import persistantStore from '../util/persistantStore';
 import Library from '../models/library';
 import Series from '../models/Series';
 import Chapter from '../models/Chapter';

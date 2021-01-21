@@ -1,4 +1,10 @@
-import { LayoutDirection, PageFit, PageView } from '../models/types';
+/* eslint-disable no-case-declarations */
+import {
+  LayoutDirection,
+  PageFit,
+  PageView,
+  ReaderSetting,
+} from '../models/types';
 import {
   CHANGE_PAGE_NUMBER,
   ReaderState,
@@ -11,7 +17,10 @@ import {
   TOGGLE_PAGE_VIEW,
   SET_SOURCE,
   SET_CHAPTER_ID_LIST,
+  SET_LAYOUT_DIRECTION,
+  SET_PAGE_VIEW,
 } from './types';
+import { saveReaderSetting } from './utils';
 
 const initialState: ReaderState = {
   pageNumber: 1,
@@ -92,24 +101,44 @@ export default function status(
         ),
       };
     case SET_PAGE_FIT:
+      saveReaderSetting(ReaderSetting.PageFit, action.payload.pageFit);
       return { ...state, pageFit: action.payload.pageFit };
     case TOGGLE_PAGE_FIT:
-      return { ...state, pageFit: nextPageFit(state.pageFit) };
+      const newPageFit: PageFit = nextPageFit(state.pageFit);
+      saveReaderSetting(ReaderSetting.PageFit, newPageFit);
+      return { ...state, pageFit: newPageFit };
+    case SET_PAGE_VIEW:
+      saveReaderSetting(ReaderSetting.PageView, action.payload.pageView);
+      return { ...state, pageView: action.payload.pageView };
     case TOGGLE_PAGE_VIEW:
-      return { ...state, pageView: nextPageView(state.pageView) };
+      const newPageView: PageView = nextPageView(state.pageView);
+      saveReaderSetting(ReaderSetting.PageView, newPageView);
+      return { ...state, pageView: newPageView };
+    case SET_LAYOUT_DIRECTION:
+      saveReaderSetting(
+        ReaderSetting.LayoutDirection,
+        action.payload.layoutDirection
+      );
+      return { ...state, layoutDirection: action.payload.layoutDirection };
     case TOGGLE_LAYOUT_DIRECTION:
+      const newLayoutDirection: LayoutDirection = nextLayoutDirection(
+        state.layoutDirection
+      );
+      saveReaderSetting(ReaderSetting.LayoutDirection, newLayoutDirection);
       return {
         ...state,
-        layoutDirection: nextLayoutDirection(state.layoutDirection),
+        layoutDirection: newLayoutDirection,
       };
     case SET_PRELOAD_AMOUNT:
-      return {
-        ...state,
-        preloadAmount:
-          action.payload.preloadAmount === 10
-            ? Infinity
-            : action.payload.preloadAmount,
-      };
+      const newPreloadAmount: number =
+        action.payload.preloadAmount === 10
+          ? Infinity
+          : action.payload.preloadAmount;
+      saveReaderSetting(
+        ReaderSetting.PreloadAmount,
+        action.payload.preloadAmount
+      );
+      return { ...state, preloadAmount: newPreloadAmount };
     case SET_PAGE_URLS:
       return {
         ...state,
