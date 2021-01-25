@@ -5,7 +5,16 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route, useParams } from 'react-router-dom';
-import { Layout, Typography, Button, Row, Col, Slider, Tooltip } from 'antd';
+import {
+  Layout,
+  Typography,
+  Button,
+  Row,
+  Col,
+  Slider,
+  Tooltip,
+  Modal,
+} from 'antd';
 import { RootState } from '../store';
 import {
   changePageNumber,
@@ -20,6 +29,7 @@ import {
   setChapterIdList,
   setLayoutDirection,
   setPageView,
+  toggleShowingSettingsModal,
 } from '../reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
@@ -36,7 +46,8 @@ import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
 import { selectMostSimilarChapter } from '../util/comparison';
-import { getStoredReaderSettings } from '../reader/utils';
+import { getStoredReaderSettings, saveReaderSetting } from '../reader/utils';
+import ReaderSettingsModal from './ReaderSettingsModal';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -53,6 +64,7 @@ const mapState = (state: RootState) => ({
   chapter: state.reader.chapter,
   chapterIdList: state.reader.chapterIdList,
   createdChapterIdList: state.reader.createdChapterIdList,
+  showingSettingsModal: state.reader.showingSettingsModal,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,6 +86,7 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setSource(series, chapter)),
   setChapterIdList: (chapterIdList: number[]) =>
     dispatch(setChapterIdList(chapterIdList)),
+  toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -165,12 +178,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return styles.rightToLeft;
   };
 
-  useEffect(() => {
+  const applySavedSettings = () => {
     const settings: {
       [key in ReaderSetting]?: any;
     } = getStoredReaderSettings();
 
-    // apply saved settings
     if (settings[ReaderSetting.LayoutDirection] !== null) {
       props.setLayoutDirection(settings[ReaderSetting.LayoutDirection]);
     }
@@ -183,7 +195,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     if (settings[ReaderSetting.PreloadAmount] !== null) {
       props.setPreloadAmount(settings[ReaderSetting.PreloadAmount]);
     }
+  };
 
+  useEffect(() => {
+    applySavedSettings();
     props.fetchChapter(chapter_id);
     loadChapterData(chapter_id);
   }, []);
@@ -347,6 +362,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
   return (
     <Layout className={styles.pageLayout}>
+      <ReaderSettingsModal
+        visible={props.showingSettingsModal}
+        toggleVisible={props.toggleShowingSettingsModal}
+        saveSetting={saveReaderSetting}
+      />
       <Sider className={styles.sider}>
         <div className={styles.siderHeader}>
           <button className={styles.exitButton} />
@@ -441,6 +461,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         />
         <Button onClick={() => changePage(true)}>left</Button>
         <Button onClick={() => changePage(false)}>right</Button>
+        <Button onClick={() => props.toggleShowingSettingsModal()}>
+          show modal
+        </Button>
         <Button onClick={() => props.toggleLayoutDirection()}>
           toggle layout direction
         </Button>

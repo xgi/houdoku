@@ -18,6 +18,7 @@ export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 export const SET_PAGE_URLS = 'SET_PAGE_URLS';
 export const SET_SOURCE = 'SET_SOURCE';
 export const SET_CHAPTER_ID_LIST = 'SET_CHAPTER_ID_LIST';
+export const TOGGLE_SHOWING_SETTINGS_MODAL = 'TOGGLE_SHOWING_SETTINGS_MODAL';
 
 export interface ReaderState {
   pageNumber: number;
@@ -31,6 +32,7 @@ export interface ReaderState {
   chapter?: Chapter;
   chapterIdList: number[];
   createdChapterIdList: boolean;
+  showingSettingsModal: boolean;
 }
 
 interface SetPageNumberAction {
@@ -109,6 +111,10 @@ interface SetChapterIdListAction {
   };
 }
 
+interface ToggleShowingSettingsModal {
+  type: typeof TOGGLE_SHOWING_SETTINGS_MODAL;
+}
+
 export type ReaderAction =
   | SetPageNumberAction
   | ChangePageNumberAction
@@ -121,4 +127,5 @@ export type ReaderAction =
   | SetPreloadAmountAction
   | SetPageUrlsAction
   | SetSourceAction
-  | SetChapterIdListAction;
+  | SetChapterIdListAction
+  | ToggleShowingSettingsModal;

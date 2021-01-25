@@ -57,7 +57,6 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       title: 'Volume',
       dataIndex: 'volumeNumber',
       key: 'volumeNumber',
-      defaultSortOrder: 'descend',
       width: '12%',
       align: 'center',
       sorter: {

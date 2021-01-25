@@ -19,6 +19,7 @@ import {
   SET_CHAPTER_ID_LIST,
   SET_LAYOUT_DIRECTION,
   SET_PAGE_VIEW,
+  TOGGLE_SHOWING_SETTINGS_MODAL,
 } from './types';
 import { saveReaderSetting } from './utils';
 
@@ -34,6 +35,7 @@ const initialState: ReaderState = {
   chapter: undefined,
   chapterIdList: [],
   createdChapterIdList: false,
+  showingSettingsModal: false,
 };
 
 function sanitizedPageNumber(
@@ -163,6 +165,8 @@ export default function status(
         chapterIdList: action.payload.chapterIdList,
         createdChapterIdList: true,
       };
+    case TOGGLE_SHOWING_SETTINGS_MODAL:
+      return { ...state, showingSettingsModal: !state.showingSettingsModal };
     default:
       return state;
   }
