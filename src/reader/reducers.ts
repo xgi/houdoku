@@ -29,7 +29,7 @@ const initialState: ReaderState = {
   pageFit: PageFit.Auto,
   pageView: PageView.Single,
   layoutDirection: LayoutDirection.LeftToRight,
-  preloadAmount: 3,
+  preloadAmount: 2,
   pageUrls: [],
   series: undefined,
   chapter: undefined,
@@ -132,15 +132,11 @@ export default function status(
         layoutDirection: newLayoutDirection,
       };
     case SET_PRELOAD_AMOUNT:
-      const newPreloadAmount: number =
-        action.payload.preloadAmount === 10
-          ? Infinity
-          : action.payload.preloadAmount;
       saveReaderSetting(
         ReaderSetting.PreloadAmount,
         action.payload.preloadAmount
       );
-      return { ...state, preloadAmount: newPreloadAmount };
+      return { ...state, preloadAmount: action.payload.preloadAmount };
     case SET_PAGE_URLS:
       return {
         ...state,

@@ -21,16 +21,16 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
     `${prefix}${ReaderSetting.PreloadAmount}`
   );
 
-  if (layoutDirection != null) {
+  if (layoutDirection !== null) {
     settings[ReaderSetting.LayoutDirection] = parseInt(layoutDirection, 10);
   }
-  if (pageFit != null) {
+  if (pageFit !== null) {
     settings[ReaderSetting.PageFit] = parseInt(pageFit, 10);
   }
-  if (pageView != null) {
+  if (pageView !== null) {
     settings[ReaderSetting.PageView] = parseInt(pageView, 10);
   }
-  if (preloadAmount != null) {
+  if (preloadAmount !== null) {
     settings[ReaderSetting.PreloadAmount] = parseInt(preloadAmount, 10);
   }
   return settings;

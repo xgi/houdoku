@@ -183,16 +183,16 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       [key in ReaderSetting]?: any;
     } = getStoredReaderSettings();
 
-    if (settings[ReaderSetting.LayoutDirection] !== null) {
+    if (ReaderSetting.LayoutDirection in settings) {
       props.setLayoutDirection(settings[ReaderSetting.LayoutDirection]);
     }
-    if (settings[ReaderSetting.PageView] !== null) {
+    if (ReaderSetting.PageView in settings) {
       props.setPageView(settings[ReaderSetting.PageView]);
     }
-    if (settings[ReaderSetting.PageFit] !== null) {
+    if (ReaderSetting.PageFit in settings) {
       props.setPageFit(settings[ReaderSetting.PageFit]);
     }
-    if (settings[ReaderSetting.PreloadAmount] !== null) {
+    if (ReaderSetting.PreloadAmount in settings) {
       props.setPreloadAmount(settings[ReaderSetting.PreloadAmount]);
     }
   };
@@ -339,33 +339,19 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     loadChapterData(newChapterId);
   };
 
-  const preloadSliderMarks: { [key: number]: string } = {
-    0: '0',
-    1: '1',
-    2: '2',
-    3: '3',
-    4: '4',
-    5: '5',
-    6: '6',
-    7: '7',
-    8: '8',
-    9: '9',
-    10: '∞',
-  };
-
-  const preloadSliderTipFormatter = (value?: number): string => {
-    if (value === undefined) {
-      return '';
-    }
-    return preloadSliderMarks[value];
-  };
-
   return (
     <Layout className={styles.pageLayout}>
       <ReaderSettingsModal
         visible={props.showingSettingsModal}
         toggleVisible={props.toggleShowingSettingsModal}
-        saveSetting={saveReaderSetting}
+        layoutDirection={props.layoutDirection}
+        setLayoutDirection={props.setLayoutDirection}
+        pageView={props.pageView}
+        setPageView={props.setPageView}
+        pageFit={props.pageFit}
+        setPageFit={props.setPageFit}
+        preloadAmount={props.preloadAmount}
+        setPreloadAmount={props.setPreloadAmount}
       />
       <Sider className={styles.sider}>
         <div className={styles.siderHeader}>
@@ -451,14 +437,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         <p>{`layout_dir=${props.layoutDirection}`}</p>
         <p>{`preload=${props.preloadAmount}`}</p>
         <p>{props.chapter?.groupName}</p>
-        <Slider
-          min={0}
-          max={10}
-          marks={preloadSliderMarks}
-          tipFormatter={(value?: number) => preloadSliderTipFormatter(value)}
-          defaultValue={props.preloadAmount}
-          onChange={(value: number) => props.setPreloadAmount(value)}
-        />
         <Button onClick={() => changePage(true)}>left</Button>
         <Button onClick={() => changePage(false)}>right</Button>
         <Button onClick={() => props.toggleShowingSettingsModal()}>
