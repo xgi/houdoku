@@ -19,7 +19,6 @@ import { Languages } from '../models/languages';
 import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
-import flagsSheet from '../img/flags.png';
 import routes from '../constants/routes.json';
 
 const { Title } = Typography;

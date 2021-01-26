@@ -39,6 +39,10 @@ export default merge(baseConfig, {
     filename: 'renderer.prod.js',
   },
 
+  experiments: {
+    topLevelAwait: true,
+  },
+
   module: {
     rules: [
       // Extract all .global.css to style.css as is
