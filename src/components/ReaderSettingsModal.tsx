@@ -60,25 +60,41 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
   };
 
   const layoutDirectionMenu = (
-    <Menu onClick={(e) => props.setLayoutDirection(e.item.props['data-value'])}>
+    <Menu
+      onClick={(e) =>
+        props.setLayoutDirection(parseInt(e.item.props['data-value'], 10))
+      }
+    >
       {renderMenuItems(layoutDirectionText)}
     </Menu>
   );
 
   const pageViewMenu = (
-    <Menu onClick={(e) => props.setPageView(e.item.props['data-value'])}>
+    <Menu
+      onClick={(e) => {
+        props.setPageView(parseInt(e.item.props['data-value'], 10));
+      }}
+    >
       {renderMenuItems(pageViewText)}
     </Menu>
   );
 
   const pageFitMenu = (
-    <Menu onClick={(e) => props.setPageFit(e.item.props['data-value'])}>
+    <Menu
+      onClick={(e) =>
+        props.setPageFit(parseInt(e.item.props['data-value'], 10))
+      }
+    >
       {renderMenuItems(pageFitText)}
     </Menu>
   );
 
   const preloadMenu = (
-    <Menu onClick={(e) => props.setPreloadAmount(e.item.props['data-value'])}>
+    <Menu
+      onClick={(e) =>
+        props.setPreloadAmount(parseInt(e.item.props['data-value'], 10))
+      }
+    >
       {renderMenuItems(preloadText)}
     </Menu>
   );
@@ -130,6 +146,7 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
           </Dropdown>
         </Col>
       </Row>
+      <Button onClick={() => console.log(props.pageView)}>test</Button>
     </Modal>
   );
 };
