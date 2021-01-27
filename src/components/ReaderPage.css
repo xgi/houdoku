@@ -26,13 +26,6 @@ button.disabled:hover {
   background: var(--color-background-alt);
 }
 
-.exitButton,
-.chapterButton,
-.pageButton,
-.settingsButton {
-  font-family: 'Icons';
-}
-
 :root {
   --sider-width: 300px;
 }
@@ -87,16 +80,6 @@ button.disabled:hover {
   position: relative;
 }
 
-.exitButton {
-  height: 3rem;
-  width: 3rem;
-  font-size: 16px;
-}
-
-.exitButton::before {
-  content: '\ea0f';
-}
-
 .seriesTitle {
   padding: 8px;
   margin-bottom: 0 !important;
@@ -127,24 +110,6 @@ button.disabled:hover {
   font-size: 16px;
 }
 
-.chapterButton.prev::before,
-.pageButton.prev::before {
-  content: '\ea40';
-}
-
-.chapterButton.next::before,
-.pageButton.next::before {
-  content: '\ea3c';
-}
-
-.pageButton.start::before {
-  content: '\ea23';
-}
-
-.pageButton.end::before {
-  content: '\ea24';
-}
-
 .pageControlBar {
   display: flex;
   align-content: stretch;
@@ -167,39 +132,6 @@ button.disabled:hover {
   height: 2.5rem;
   width: 2.5rem;
   font-size: 16px;
-}
-
-.settingsButton.fit.auto::before {
-  content: '\e989';
-}
-
-.settingsButton.fit.width::before {
-  content: 'W';
-}
-
-.settingsButton.fit.height::before {
-  content: 'H';
-}
-
-.settingsButton.pageView.single::before {
-  content: '\e927';
-}
-
-.settingsButton.pageView.double::before {
-  content: '\e90e';
-}
-
-.settingsButton.pageView.doubleOdd::before {
-  content: '\e90e';
-  transform: scaleX(-1);
-}
-
-.settingsButton.layoutDirection.leftToRight::before {
-  content: '\ea42';
-}
-
-.settingsButton.layoutDirection.rightToLeft::before {
-  content: '\ea44';
 }
 
 .preloadContainer {

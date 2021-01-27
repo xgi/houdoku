@@ -6,14 +6,17 @@
 @import '~antd/dist/antd.dark.css';
 @import 'colors.css';
 @import 'titlebar.css';
+@import 'icons.css';
 @import 'flags.css';
 
-@font-face {
-  font-family: 'Icons';
-  src: url('./font/Icons.ttf') format('truetype');
+/* @font-face {
+  font-family: 'Houdoku';
+  src: url('font/Houdoku.ttf') format('truetype'),
+    url('font/Houdoku.woff') format('woff'),
+    url('font/Houdoku.svg') format('svg');
   font-weight: normal;
   font-style: normal;
-}
+} */
 
 body {
   /* height: 100vh; */

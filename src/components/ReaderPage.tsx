@@ -151,31 +151,31 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return `${props.pageNumber * -100 + 100}%`;
   };
 
-  const getPageFitClass = () => {
+  const getPageFitIconClass = () => {
     if (props.pageFit === PageFit.Auto) {
-      return styles.auto;
+      return 'icon-enlarge2';
     }
     if (props.pageFit === PageFit.Width) {
-      return styles.width;
+      return 'icon-width';
     }
-    return styles.height;
+    return 'icon-height2';
   };
 
-  const getPageViewClass = () => {
+  const getPageViewIconClass = () => {
     if (props.pageView === PageView.Single) {
-      return styles.single;
+      return 'icon-image2';
     }
     if (props.pageView === PageView.Double) {
-      return styles.double;
+      return 'icon-images2';
     }
-    return styles.doubleOdd;
+    return 'icon-images2-flipped';
   };
 
-  const getLayoutDirectionClass = () => {
+  const getLayoutDirectionIconClass = () => {
     if (props.layoutDirection === LayoutDirection.LeftToRight) {
-      return styles.leftToRight;
+      return 'icon-square-right';
     }
-    return styles.rightToLeft;
+    return 'icon-square-left';
   };
 
   const applySavedSettings = () => {
@@ -355,79 +355,88 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       />
       <Sider className={styles.sider}>
         <div className={styles.siderHeader}>
-          <button className={styles.exitButton} />
+          <button className={styles.exitButton}>
+            <span className="icon-cross" />
+          </button>
           <Title className={styles.seriesTitle} level={4}>
             {props.series === undefined ? 'loading...' : props.series.title}
           </Title>
         </div>
         <div className={styles.chapterHeader}>
           <button
-            className={`${styles.chapterButton} ${styles.prev}
+            className={`${styles.chapterButton}
             ${getAdjacentChapterId(true) === -1 ? styles.disabled : ''}`}
             onClick={() => changeChapter(true)}
-          />
+          >
+            <span className="icon-arrow-left6" />
+          </button>
           <Text className={styles.chapterName}>
             {props.chapter === undefined
               ? 'loading...'
               : `${props.chapter.chapterNumber} - ${props.chapter.title}`}
           </Text>
           <button
-            className={`${styles.chapterButton} ${styles.next}
+            className={`${styles.chapterButton}
             ${getAdjacentChapterId(false) === -1 ? styles.disabled : ''}`}
             onClick={() => changeChapter(false)}
-          />
+          >
+            <span className="icon-arrow-right6" />
+          </button>
         </div>
         <div className={styles.settingsBar}>
-          <button
-            className={`${styles.settingsButton} ${styles.start}`}
-            onClick={() => props.setPageNumber(1)}
-          />
           <Tooltip title="Change page fit">
             <button
-              className={`${styles.settingsButton}
-                        ${styles.fit} ${getPageFitClass()}`}
+              className={`${styles.settingsButton}`}
               onClick={() => props.togglePageFit()}
-            />
+            >
+              <span className={`${getPageFitIconClass()}`} />
+            </button>
           </Tooltip>
           <Tooltip title="Change two-page view">
             <button
-              className={`${styles.settingsButton}
-                        ${styles.pageView} ${getPageViewClass()}`}
+              className={`${styles.settingsButton}`}
               onClick={() => props.togglePageView()}
-            />
+            >
+              <span className={`${getPageViewIconClass()}`} />
+            </button>
           </Tooltip>
           <Tooltip title="Change reader direction">
             <button
-              className={`${styles.settingsButton}
-                        ${styles.layoutDirection} ${getLayoutDirectionClass()}`}
+              className={`${styles.settingsButton}`}
               onClick={() => props.toggleLayoutDirection()}
-            />
+            >
+              <span className={`${getLayoutDirectionIconClass()}`} />
+            </button>
           </Tooltip>
-          <button
-            className={`${styles.settingsButton} ${styles.end}`}
-            onClick={() => props.setPageNumber(props.lastPageNumber)}
-          />
         </div>
         <div className={styles.pageControlBar}>
           <button
-            className={`${styles.pageButton} ${styles.start}`}
+            className={`${styles.pageButton}`}
             onClick={() => changePage(true, true)}
-          />
+          >
+            <span className="icon-first2" />
+          </button>
           <button
-            className={`${styles.pageButton} ${styles.prev}`}
+            className={`${styles.pageButton}`}
             onClick={() => changePage(true)}
-          />
+          >
+            <span className="icon-arrow-left" />
+          </button>
           <Text className={styles.pageNumber}>
             {`${props.pageNumber} / ${props.lastPageNumber}`}
           </Text>
           <button
-            className={`${styles.pageButton} ${styles.next}`}
+            className={`${styles.pageButton}`}
             onClick={() => changePage(false)}
-          />
+          >
+            <span className="icon-arrow-right" />
+          </button>
           <button
-            className={`${styles.pageButton} ${styles.end}`}
+            className={`${styles.pageButton}`}
             onClick={() => changePage(false, true)}
-          />
+          >
+            <span className="icon-last2" />
+          </button>
         </div>
         <p>Fit is: {props.pageFit}</p>
         <p>{chapter_id}</p>
