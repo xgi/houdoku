@@ -408,6 +408,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               <span className={`${getLayoutDirectionIconClass()}`} />
             </button>
           </Tooltip>
+          <Tooltip title="Advanced Settings">
+            <button
+              className={`${styles.settingsButton}`}
+              onClick={() => props.toggleShowingSettingsModal()}
+            >
+              <span className="icon-cog" />
+            </button>
+          </Tooltip>
         </div>
         <div className={styles.pageControlBar}>
           <button

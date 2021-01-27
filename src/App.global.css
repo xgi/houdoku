@@ -9,15 +9,6 @@
 @import 'icons.css';
 @import 'flags.css';
 
-/* @font-face {
-  font-family: 'Houdoku';
-  src: url('font/Houdoku.ttf') format('truetype'),
-    url('font/Houdoku.woff') format('woff'),
-    url('font/Houdoku.svg') format('svg');
-  font-weight: normal;
-  font-style: normal;
-} */
-
 body {
   /* height: 100vh; */
 
