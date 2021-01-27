@@ -4,7 +4,7 @@
 /* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Link, Switch, Route, useParams } from 'react-router-dom';
+import { Link, Switch, Route, useParams, useHistory } from 'react-router-dom';
 import {
   Layout,
   Typography,
@@ -46,7 +46,7 @@ import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
 import { selectMostSimilarChapter } from '../util/comparison';
-import { getStoredReaderSettings, saveReaderSetting } from '../reader/utils';
+import { getStoredReaderSettings } from '../reader/utils';
 import ReaderSettingsModal from './ReaderSettingsModal';
 
 const { Content, Sider } = Layout;
@@ -97,6 +97,7 @@ type Props = PropsFromRedux & {};
 
 const ReaderPage: React.FC<Props> = (props: Props) => {
   const { chapter_id } = useParams();
+  const history = useHistory();
 
   const createChapterIdList = async (series: Series, chapter: Chapter) => {
     if (series.id === undefined) return;
@@ -202,6 +203,21 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.fetchChapter(chapter_id);
     loadChapterData(chapter_id);
   }, []);
+
+  /**
+   * Exit the reader page.
+   * If the series prop is loaded, go to its series detail page. Otherwise, go to the library.
+   */
+  const exitPage = () => {
+    props.setPageNumber(1);
+    props.setPageUrls([]);
+
+    if (props.series !== undefined) {
+      history.push(`${routes.SERIES}/${props.series.id}`);
+    } else {
+      history.push(routes.LIBRARY);
+    }
+  };
 
   const renderPageImage = (pageNumber: number) => {
     if (props.pageUrls.length === 0) return;
@@ -355,7 +371,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       />
       <Sider className={styles.sider}>
         <div className={styles.siderHeader}>
-          <button className={styles.exitButton}>
+          <button className={styles.exitButton} onClick={() => exitPage()}>
             <span className="icon-cross" />
           </button>
           <Title className={styles.seriesTitle} level={4}>
