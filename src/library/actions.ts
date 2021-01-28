@@ -1,3 +1,4 @@
+import { Chapter } from '../models/types';
 import {
   UPDATE_SERIES_LIST,
   CHANGE_NUM_COLUMNS,
@@ -7,9 +8,8 @@ import {
   DELETE_LIBRARY,
   SET_CHAPTER_READ,
   GET_SERIES,
+  SET_RELOADING_SERIES,
 } from './types';
-import Series from '../models/series';
-import Chapter from '../models/chapter';
 
 export function updateSeriesList(): LibraryAction {
   return {
@@ -59,6 +59,15 @@ export function setChapterRead(chapter: Chapter, read: boolean): LibraryAction {
     payload: {
       chapter,
       read,
+    },
+  };
+}
+
+export function setReloadingSeries(reloading: boolean): LibraryAction {
+  return {
+    type: SET_RELOADING_SERIES,
+    payload: {
+      reloading,
     },
   };
 }

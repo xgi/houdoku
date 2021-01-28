@@ -20,6 +20,8 @@ import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
 import routes from '../constants/routes.json';
+import { getChapters, getSeries } from '../services/extension';
+import db from '../services/db';
 
 const { Title } = Typography;
 
@@ -31,8 +33,10 @@ if (!fs.existsSync(thumbnailsDir)) {
 type Props = {
   series: Series | undefined;
   chapterList: Chapter[];
+  reloadingSeries: boolean;
   loadSeries: (id: number) => void;
   loadChapterList: (seriesId: number) => void;
+  setReloadingSeries: (reloading: boolean) => void;
 };
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
@@ -50,6 +54,25 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       </div>
     );
   }
+
+  const reloadSeries = async () => {
+    if (props.series === undefined) return;
+
+    props.setReloadingSeries(true);
+    const series: Series = await getSeries(
+      props.series.extensionId,
+      props.series.sourceId
+    );
+    const chapters: Chapter[] = await getChapters(
+      props.series.extensionId,
+      props.series.sourceId
+    );
+
+    series.id = props.series.id;
+    const addResponse = await db.addSeries(series);
+    await db.addChapters(chapters, addResponse[0]);
+    props.setReloadingSeries(false);
+  };
 
   const getThumbnailPath = (seriesId?: number) => {
     const thumbnailPath = path.join(thumbnailsDir, `${id}.jpg`);
@@ -98,6 +121,12 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           <Button>◀ Back to library</Button>
         </Affix>
       </Link>
+      <Affix className={styles.refreshButtonAffix}>
+        <Button onClick={() => reloadSeries()}>
+          <span className="icon-spinner11" />
+          &nbsp;{props.reloadingSeries ? 'Refreshing...' : 'Refresh'}
+        </Button>
+      </Affix>
       <div className={styles.imageContainer}>
         <img src={exampleBackground} alt={props.series.title} />
       </div>

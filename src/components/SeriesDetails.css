@@ -30,4 +30,13 @@
   position: absolute;
   top: 29px;
   z-index: 100;
+  background-color: var(--color-background-faded);
+}
+
+.refreshButtonAffix {
+  position: absolute;
+  top: 29px;
+  right: 30px;
+  z-index: 100;
+  background-color: var(--color-background-faded);
 }

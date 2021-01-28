@@ -1,5 +1,6 @@
 :root {
   --color-background: rgba(29, 31, 33, 1);
+  --color-background-faded:  rgba(29, 31, 33, 0.75);
   --color-foreground: rgba(197, 200, 198, 0.8);
   --color-0: rgba(40, 42, 46, 1); /* black */
   --color-8: rgba(55, 59, 65, 1); /* light black (dark gray) */

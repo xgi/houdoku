@@ -15,9 +15,7 @@ import LibraryGrid from './LibraryGrid';
 import {
   updateSeriesList,
   changeNumColumns,
-  saveLibrary,
-  readLibrary,
-  deleteLibrary,
+  setReloadingSeries,
 } from '../library/actions';
 import { setStatusText } from '../statusbar/actions';
 import SeriesDetails from './SeriesDetails';
@@ -27,7 +25,6 @@ import styles from './DashboardPage.css';
 import routes from '../constants/routes.json';
 import db from '../services/db';
 import {
-  loadChapter,
   loadChapterList,
   loadSeries,
   loadSeriesList,
@@ -49,15 +46,15 @@ const mapState = (state: RootState) => ({
   addedSeries: state.datastore.addedSeries,
   chapterList: state.datastore.chapterList,
   columns: state.library.columns,
+  reloadingSeries: state.library.reloadingSeries,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
   updateSeriesList: () => dispatch(updateSeriesList()),
   changeNumColumns: (columns: number) => dispatch(changeNumColumns(columns)),
-  saveLibrary: () => dispatch(saveLibrary()),
-  readLibrary: () => dispatch(readLibrary()),
-  deleteLibrary: () => dispatch(deleteLibrary()),
+  setReloadingSeries: (reloading: boolean) =>
+    dispatch(setReloadingSeries(reloading)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeriesList: () => loadSeriesList(dispatch),
   loadSeries: (id: number) => loadSeries(dispatch, id),
@@ -127,12 +124,14 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               <SeriesDetails
                 series={props.series}
                 chapterList={props.chapterList}
+                reloadingSeries={props.reloadingSeries}
                 loadSeries={props.loadSeries}
                 loadChapterList={props.loadChapterList}
+                setReloadingSeries={props.setReloadingSeries}
               />
             </Route>
             <Route path={routes.SEARCH} exact>
-              <Search library={props.library} />
+              <Search library={null} />
             </Route>
             <Route path={routes.LIBRARY}>
               <>
@@ -150,15 +149,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 </Button>
                 <Button onClick={() => props.changeNumColumns(8)}>
                   update num columns
-                </Button>
-                <Button onClick={() => props.saveLibrary()}>
-                  save library
-                </Button>
-                <Button onClick={() => props.readLibrary()}>
-                  read library
-                </Button>
-                <Button onClick={() => props.deleteLibrary()}>
-                  delete library
                 </Button>
                 <Button onClick={() => props.setStatusText('new status')}>
                   set status
