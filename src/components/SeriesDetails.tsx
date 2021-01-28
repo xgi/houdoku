@@ -33,10 +33,9 @@ if (!fs.existsSync(thumbnailsDir)) {
 type Props = {
   series: Series | undefined;
   chapterList: Chapter[];
-  reloadingSeries: boolean;
   loadSeries: (id: number) => void;
   loadChapterList: (seriesId: number) => void;
-  setReloadingSeries: (reloading: boolean) => void;
+  setStatusText: (text?: string) => void;
 };
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
@@ -58,7 +57,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const reloadSeries = async () => {
     if (props.series === undefined) return;
 
-    props.setReloadingSeries(true);
+    props.setStatusText(`Reloading series "${props.series.title}"...`);
     const series: Series = await getSeries(
       props.series.extensionId,
       props.series.sourceId
@@ -71,7 +70,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     series.id = props.series.id;
     const addResponse = await db.addSeries(series);
     await db.addChapters(chapters, addResponse[0]);
-    props.setReloadingSeries(false);
+    props.setStatusText(`Finished reloading series "${props.series.title}".`);
   };
 
   const getThumbnailPath = (seriesId?: number) => {
@@ -124,7 +123,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       <Affix className={styles.refreshButtonAffix}>
         <Button onClick={() => reloadSeries()}>
           <span className="icon-spinner11" />
-          &nbsp;{props.reloadingSeries ? 'Refreshing...' : 'Refresh'}
+          &nbsp;Refresh
         </Button>
       </Affix>
       <div className={styles.imageContainer}>

@@ -1,4 +1,4 @@
-import { Chapter } from "../models/types";
+import { Chapter } from '../models/types';
 
 export const UPDATE_SERIES_LIST = 'UPDATE_SERIES_LIST';
 export const CHANGE_NUM_COLUMNS = 'CHANGE_NUM_COLUMNS';
@@ -7,12 +7,10 @@ export const READ_LIBRARY = 'READ_LIBRARY';
 export const DELETE_LIBRARY = 'DELETE_LIBRARY';
 export const GET_SERIES = 'GET_SERIES';
 export const SET_CHAPTER_READ = 'SET_CHAPTER_READ';
-export const SET_RELOADING_SERIES = 'SET_RELOADING_SERIES';
 
 export interface LibraryState {
   seriesList: string[];
   columns: number;
-  reloadingSeries: boolean;
 }
 
 interface UpdateSeriesListAction {
@@ -53,13 +51,6 @@ interface SetChapterReadAction {
   };
 }
 
-interface SetReloadingSeriesAction {
-  type: typeof SET_RELOADING_SERIES;
-  payload: {
-    reloading: boolean;
-  };
-}
-
 export type LibraryAction =
   | UpdateSeriesListAction
   | ChangeNumColumnsAction
@@ -67,5 +58,4 @@ export type LibraryAction =
   | ReadLibraryAction
   | DeleteLibraryAction
   | GetSeriesAction
-  | SetChapterReadAction
-  | SetReloadingSeriesAction;
+  | SetChapterReadAction;

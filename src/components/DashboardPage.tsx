@@ -124,10 +124,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               <SeriesDetails
                 series={props.series}
                 chapterList={props.chapterList}
-                reloadingSeries={props.reloadingSeries}
                 loadSeries={props.loadSeries}
                 loadChapterList={props.loadChapterList}
-                setReloadingSeries={props.setReloadingSeries}
+                setStatusText={props.setStatusText}
               />
             </Route>
             <Route path={routes.SEARCH} exact>

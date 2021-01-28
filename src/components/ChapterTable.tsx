@@ -1,7 +1,10 @@
-import React from 'react';
-import { Table, Checkbox, Button } from 'antd';
+/* eslint-disable react/prop-types */
+/* eslint-disable react/display-name */
+import React, { constructor, useState } from 'react';
+import { Table, Checkbox, Button, Input, Space } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Chapter } from '../models/types';
+import { Chapter, Language, LanguageKey } from '../models/types';
 import routes from '../constants/routes.json';
 import { Languages } from '../models/languages';
 
@@ -9,7 +12,11 @@ type Props = {
   chapterList: Chapter[];
 };
 
+let searchInput: Input | null;
+
 const ChapterTable: React.FC<Props> = (props: Props) => {
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
   // let dataSource: any[] = [];
 
   // const reloadDataSource = () => {
@@ -21,6 +28,74 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   //     chapterNumber: chapter.chapterNumber,
   //   }));
   // };
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={(node) => {
+            searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilter: (value: string, record: any) =>
+      record[dataIndex]
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        : '',
+    onFilterDropdownVisibleChange: (visible: boolean) => {
+      if (visible) {
+        setTimeout(() => searchInput?.select(), 100);
+      }
+    },
+  });
 
   const columns = [
     {
@@ -37,6 +112,11 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'language',
       key: 'language',
       width: '6%',
+      filters: Object.values(Languages).map((language: Language) => {
+        return { text: language.name, value: language.key };
+      }),
+      onFilter: (value: LanguageKey, record: any) =>
+        record.languageKey === value,
       render: function render(text: any, record: any) {
         return Languages[record.languageKey] === undefined ? (
           <></>
@@ -52,6 +132,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'title',
       key: 'title',
       width: '50%',
+      ...getColumnSearchProps('title'),
     },
     {
       title: 'Volume',

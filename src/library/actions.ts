@@ -62,12 +62,3 @@ export function setChapterRead(chapter: Chapter, read: boolean): LibraryAction {
     },
   };
 }
-
-export function setReloadingSeries(reloading: boolean): LibraryAction {
-  return {
-    type: SET_RELOADING_SERIES,
-    payload: {
-      reloading,
-    },
-  };
-}

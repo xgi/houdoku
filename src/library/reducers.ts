@@ -12,7 +12,6 @@ import {
 const initialState: LibraryState = {
   seriesList: [],
   columns: 6,
-  reloadingSeries: false,
 };
 
 export default function library(
@@ -25,8 +24,6 @@ export default function library(
       return { ...state, columns: 2 };
     case CHANGE_NUM_COLUMNS:
       return { ...state, columns: action.payload.columns };
-    case SET_RELOADING_SERIES:
-      return { ...state, reloadingSeries: action.payload.reloading };
     default:
       return state;
   }
