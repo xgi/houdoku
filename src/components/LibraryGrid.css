@@ -1,3 +1,31 @@
+.coverContainer {
+  display: flex;
+  align-items: center;
+}
+
+.seriesTitle {
+  position: absolute;
+  width: 85%;
+  bottom: 0px;
+  left: 12px;
+  text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333,
+    1px 1px 0 #333;
+  -webkit-user-select: none;
+}
+
 .coverImage {
   width: 100%;
+  opacity: 0.8;
+}
+
+.coverContainer:hover {
+  cursor: pointer;
+}
+
+.coverContainer:hover > .coverImage {
+  opacity: 0.2 !important;
+}
+
+.coverContainer:hover > .seriesTitle {
+  opacity: 0.6 !important;
 }
