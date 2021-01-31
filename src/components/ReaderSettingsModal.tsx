@@ -41,7 +41,6 @@ const preloadText: { [key: number]: string } = {
   3: '3 Pages',
   4: '4 Pages',
   5: '5 Pages',
-  Infinity: 'Infinite',
 };
 
 const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
