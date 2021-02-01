@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import fs from 'fs';
@@ -20,6 +21,7 @@ if (!fs.existsSync(thumbnailsDir)) {
 type Props = {
   columns: number;
   seriesList: Series[];
+  filter: string;
 };
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
@@ -30,6 +32,15 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
   };
 
+  const getFilteredList = (seriesList: Series[]): Series[] => {
+    const filter = props.filter.toLowerCase();
+
+    return seriesList.filter((series: Series) => {
+      if (series.title.toLowerCase().includes(filter)) return true;
+      return false;
+    });
+  };
+
   const goToSeries = (seriesId: number | undefined) => {
     if (seriesId !== undefined) history.push(`${routes.SERIES}/${seriesId}`);
   };
@@ -37,7 +48,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
   return (
     <div>
       <Row gutter={[16, 16]}>
-        {props.seriesList.map((series: Series) => {
+        {getFilteredList(props.seriesList).map((series: Series) => {
           return (
             <Col span={24 / props.columns} key={series.id}>
               <div

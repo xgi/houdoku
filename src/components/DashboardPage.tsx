@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route } from 'react-router-dom';
-import { Layout, Menu, Button } from 'antd';
+import { Layout, Menu, Button, Upload, Input } from 'antd';
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -15,7 +15,7 @@ import LibraryGrid from './LibraryGrid';
 import {
   updateSeriesList,
   changeNumColumns,
-  setReloadingSeries,
+  setFilter,
 } from '../library/actions';
 import { setStatusText } from '../statusbar/actions';
 import SeriesDetails from './SeriesDetails';
@@ -33,6 +33,7 @@ import * as database from '../db';
 import { Series, Chapter } from '../models/types';
 import { getSeries, getChapters } from '../services/extension';
 import { downloadCover } from '../util/download';
+import Uploader from './Uploader';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -46,19 +47,18 @@ const mapState = (state: RootState) => ({
   addedSeries: state.datastore.addedSeries,
   chapterList: state.datastore.chapterList,
   columns: state.library.columns,
-  reloadingSeries: state.library.reloadingSeries,
+  filter: state.library.filter,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
   updateSeriesList: () => dispatch(updateSeriesList()),
   changeNumColumns: (columns: number) => dispatch(changeNumColumns(columns)),
-  setReloadingSeries: (reloading: boolean) =>
-    dispatch(setReloadingSeries(reloading)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeriesList: () => loadSeriesList(dispatch),
   loadSeries: (id: number) => loadSeries(dispatch, id),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  setFilter: (filter: string) => dispatch(setFilter(filter)),
   // addSeries: (series: Series) => addSeries(dispatch, series),
   // addChapters: (chapters: Chapter[], series: Series) =>
   //   addChapters(dispatch, chapters, series),
@@ -152,13 +152,23 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 <Button onClick={() => props.setStatusText('new status')}>
                   set status
                 </Button>
-                <Button onClick={() => importSeries(2, '429')}>
-                  import 429
+                <Button onClick={() => importSeries(2, '9570')}>
+                  import 9570
                 </Button>
+                <Button onClick={() => importSeries(1, 'aklsdj')}>
+                  fs import
+                </Button>
+                <Input
+                  placeholder="Filter series list..."
+                  onChange={(e) => props.setFilter(e.target.value)}
+                />
+                <Uploader callback={(name: string) => console.log(name)} />
               </>
+              <p>{props.filter}</p>
               <LibraryGrid
                 columns={props.columns}
                 seriesList={props.seriesList}
+                filter={props.filter}
               />
             </Route>
           </Switch>
