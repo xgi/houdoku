@@ -55,6 +55,9 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                 className={styles.coverContainer}
                 onClick={() => goToSeries(series.id)}
               >
+                <Title level={5} className={styles.seriesUnreadCount}>
+                  23
+                </Title>
                 <img
                   src={getThumbnailPath(series.id)}
                   alt={series.toString()}

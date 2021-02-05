@@ -10,7 +10,17 @@
   left: 12px;
   text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333,
     1px 1px 0 #333;
-  -webkit-user-select: none;
+  user-select: none;
+}
+
+.seriesUnreadCount {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 0 5px;
+  background-color: var(--color-exit);
+  user-select: none;
+  z-index: 1;
 }
 
 .coverImage {
@@ -22,10 +32,10 @@
   cursor: pointer;
 }
 
-.coverContainer:hover > .coverImage {
-  opacity: 0.2 !important;
+.coverContainer:hover > * {
+  opacity: 0.6;
 }
 
-.coverContainer:hover > .seriesTitle {
-  opacity: 0.6 !important;
+.coverContainer:hover > .coverImage {
+  opacity: 0.2;
 }
