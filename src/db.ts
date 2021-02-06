@@ -33,6 +33,7 @@ schemaBuilder
   .addColumn('languageKey', lf.Type.OBJECT)
   .addColumn('groupName', lf.Type.STRING)
   .addColumn('time', lf.Type.NUMBER)
+  .addColumn('read', lf.Type.BOOLEAN)
   .addPrimaryKey(['id'], true);
 
 export let database: lf.Database;

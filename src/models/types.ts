@@ -26,6 +26,7 @@ export type Chapter = {
   languageKey: LanguageKey;
   groupName: string;
   time: number;
+  read: boolean;
 };
 
 export enum LanguageKey {

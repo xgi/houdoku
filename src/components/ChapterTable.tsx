@@ -1,15 +1,18 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
-import React, { constructor, useState } from 'react';
+import React, { useState } from 'react';
 import { Table, Checkbox, Button, Input, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Chapter, Language, LanguageKey } from '../models/types';
+import { Chapter, Language, LanguageKey, Series } from '../models/types';
 import routes from '../constants/routes.json';
 import { Languages } from '../models/languages';
+import db from '../services/db';
 
 type Props = {
   chapterList: Chapter[];
+  series: Series;
+  loadChapterList: (seriesId: number) => void;
 };
 
 let searchInput: Input | null;
@@ -104,7 +107,19 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       key: 'read',
       width: '5%',
       render: function render(text: any, record: any) {
-        return <Checkbox checked={false} />;
+        return (
+          <Checkbox
+            checked={record.read}
+            onChange={() => {
+              const chapter: Chapter = { ...record, read: !record.read };
+              return db.addChapters([chapter], props.series).then(() => {
+                // eslint-disable-next-line promise/always-return
+                if (props.series.id !== undefined)
+                  props.loadChapterList(props.series.id);
+              });
+            }}
+          />
+        );
       },
     },
     {

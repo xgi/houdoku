@@ -1,4 +1,3 @@
-import { Series } from '../models/types';
 import {
   DatabaseState,
   BEFORE_LOAD_SERIES_LIST,
@@ -7,12 +6,8 @@ import {
   AFTER_LOAD_SERIES,
   AFTER_LOAD_CHAPTER_LIST,
   BEFORE_LOAD_CHAPTER_LIST,
-  AFTER_ADD_SERIES,
-  BEFORE_ADD_SERIES,
   AFTER_LOAD_CHAPTER,
   BEFORE_LOAD_CHAPTER,
-  BEFORE_ADD_CHAPTERS,
-  AFTER_ADD_CHAPTERS,
 } from './types';
 
 const initialState: DatabaseState = {
@@ -67,19 +62,6 @@ export default function datastore(
         fetchingChapterList: false,
         chapterList: action.payload.response,
       };
-    // case BEFORE_ADD_SERIES:
-    //   return { ...state, addingSeries: true, addedSeries: undefined };
-    // case AFTER_ADD_SERIES:
-    //   downloadCover(action.payload.addedSeries);
-    //   return {
-    //     ...state,
-    //     addingSeries: false,
-    //     addedSeries: action.payload.addedSeries,
-    //   };
-    // case BEFORE_ADD_CHAPTERS:
-    //   return { ...state, addingChapters: true };
-    // case AFTER_ADD_CHAPTERS:
-    //   return { ...state, addingChapters: false };
     default:
       return state;
   }

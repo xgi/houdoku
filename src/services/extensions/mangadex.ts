@@ -237,6 +237,7 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
       languageKey: LANGUAGE_MAP[element.language],
       groupName,
       time: element.timestamp,
+      read: false,
     });
   });
   return chapters;

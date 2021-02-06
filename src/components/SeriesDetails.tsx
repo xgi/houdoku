@@ -157,7 +157,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </div>
       </div>
       {props.series !== undefined ? renderSeriesDescriptions(props.series) : ''}
-      <ChapterTable chapterList={props.chapterList} />
+      <ChapterTable
+        chapterList={props.chapterList}
+        series={props.series}
+        loadChapterList={props.loadChapterList}
+      />
     </div>
   );
 };

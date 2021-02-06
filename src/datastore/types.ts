@@ -8,10 +8,6 @@ export const BEFORE_LOAD_CHAPTER = 'BEFORE_LOAD_CHAPTER';
 export const AFTER_LOAD_CHAPTER = 'AFTER_LOAD_CHAPTER';
 export const BEFORE_LOAD_CHAPTER_LIST = 'BEFORE_LOAD_CHAPTER_LIST';
 export const AFTER_LOAD_CHAPTER_LIST = 'AFTER_LOAD_CHAPTER_LIST';
-export const BEFORE_ADD_SERIES = 'BEFORE_ADD_SERIES';
-export const AFTER_ADD_SERIES = 'AFTER_ADD_SERIES';
-export const BEFORE_ADD_CHAPTERS = 'BEFORE_ADD_CHAPTERS';
-export const AFTER_ADD_CHAPTERS = 'AFTER_ADD_CHAPTERS';
 
 export interface DatabaseState {
   fetchingSeriesList: boolean;
@@ -71,25 +67,6 @@ interface AfterLoadChapterListAction {
   };
 }
 
-interface BeforeAddSeriesAction {
-  type: typeof BEFORE_ADD_SERIES;
-}
-
-interface AfterAddSeriesAction {
-  type: typeof AFTER_ADD_SERIES;
-  payload: {
-    addedSeries: Series;
-  };
-}
-
-interface BeforeAddChaptersAction {
-  type: typeof BEFORE_ADD_CHAPTERS;
-}
-
-interface AfterAddChaptersAction {
-  type: typeof AFTER_ADD_CHAPTERS;
-}
-
 export type DatabaseAction =
   | BeforeLoadSeriesListAction
   | AfterLoadSeriesListAction
@@ -98,8 +75,4 @@ export type DatabaseAction =
   | BeforeLoadChapterAction
   | AfterLoadChapterAction
   | BeforeLoadChapterListAction
-  | AfterLoadChapterListAction
-  | BeforeAddSeriesAction
-  | AfterAddSeriesAction
-  | BeforeAddChaptersAction
-  | AfterAddChaptersAction;
+  | AfterLoadChapterListAction;
