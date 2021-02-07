@@ -162,7 +162,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                   placeholder="Filter series list..."
                   onChange={(e) => props.setFilter(e.target.value)}
                 />
-                <Uploader callback={(name: string) => console.log(name)} />
+                <Uploader callback={(path: string) => importSeries(1, path)} />
               </>
               <p>{props.filter}</p>
               <LibraryGrid

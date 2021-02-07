@@ -15,6 +15,7 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+import { walk } from './util/filesystem';
 
 export default class AppUpdater {
   constructor() {
@@ -150,4 +151,8 @@ ipcMain.handle('window-close', (event) => {
 
 ipcMain.handle('get-thumbnails-dir', (event) => {
   return path.join(app.getPath('userData'), 'thumbnails');
+});
+
+ipcMain.handle('get-all-files', (event, rootPath: string) => {
+  return walk(rootPath);
 });
