@@ -21,7 +21,7 @@ const METADATA: ExtensionMetadata = {
 
 const fetchSeries: FetchSeriesFunc = (id: string) => {
   return new Promise((resolve, reject) => {
-    const data = { path: id, title: id };
+    const data = { path: id };
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: 'application/json',
     });
@@ -31,11 +31,17 @@ const fetchSeries: FetchSeriesFunc = (id: string) => {
 };
 
 const parseSeries: ParseSeriesFunc = (json: any): Series => {
+  const dirName = path.basename(json.path);
+  const matchTitle: RegExpMatchArray | null = dirName.match(
+    new RegExp(/(?:(?![v\d|c\d]).)*/g)
+  );
+  const title: string = matchTitle === null ? json.path : matchTitle[0];
+
   const series: Series = {
     id: undefined,
     extensionId: METADATA.id,
     sourceId: json.path,
-    title: json.title,
+    title,
     altTitles: [],
     description: '',
     authors: [],
@@ -72,24 +78,43 @@ const fetchChapters: FetchChaptersFunc = (id: string) => {
 const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
   const chapters: Chapter[] = [];
 
-  console.log(json);
-  let num = 1;
   json.imageDirectories.forEach((directory: string) => {
-    const title: string = path.basename(directory);
+    const dirName: string = path.basename(directory);
+    const matchChapterNum: RegExpMatchArray | null = dirName.match(
+      new RegExp(/c(\d)+/g)
+    );
+    const matchVolumeNum: RegExpMatchArray | null = dirName.match(
+      new RegExp(/v(\d)+/g)
+    );
+    const matchGroup: RegExpMatchArray | null = dirName.match(
+      new RegExp(/\[.*\]/g)
+    );
+
+    if (matchChapterNum === null) return;
+    const chapterNum: string = parseFloat(
+      matchChapterNum[0].replace('c', '')
+    ).toString();
+    const volumeNum: string =
+      matchVolumeNum === null
+        ? ''
+        : parseFloat(matchVolumeNum[0].replace('v', '')).toString();
+    const group: string =
+      matchGroup === null
+        ? ''
+        : matchGroup[0].replace('[', '').replace(']', '');
 
     chapters.push({
       id: undefined,
       seriesId: undefined,
       sourceId: directory,
-      title,
-      chapterNumber: num.toString(),
-      volumeNumber: '1',
+      title: '',
+      chapterNumber: chapterNum,
+      volumeNumber: volumeNum,
       languageKey: LanguageKey.ENGLISH,
-      groupName: 'group',
+      groupName: group,
       time: new Date().getTime(),
       read: false,
     });
-    num += 1;
   });
   return chapters;
 };
