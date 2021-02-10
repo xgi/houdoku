@@ -106,12 +106,16 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     const chapters: Chapter[] = await db.fetchChapters(series.id);
 
-    const chapterNumbers: Set<string> = new Set();
-    chapters.forEach((c: Chapter) => chapterNumbers.add(c.chapterNumber));
+    const chapterNumbersSet: Set<string> = new Set();
+    chapters.forEach((c: Chapter) => chapterNumbersSet.add(c.chapterNumber));
+    const chapterNumbers: number[] = Array.from(chapterNumbersSet)
+      .map((chapterNumberStr: string) => parseFloat(chapterNumberStr))
+      .sort((a, b) => a - b)
+      .reverse();
 
-    chapterNumbers.forEach((chapterNumber: string) => {
+    chapterNumbers.forEach((chapterNumber: number) => {
       const curChapters: Chapter[] = chapters.filter(
-        (c: Chapter) => c.chapterNumber === chapterNumber
+        (c: Chapter) => c.chapterNumber === chapterNumber.toString()
       );
 
       const bestMatch: Chapter | null = selectMostSimilarChapter(
