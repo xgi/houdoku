@@ -183,6 +183,15 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return 'icon-square-left';
   };
 
+  const getChapterTitleDisplay = (): string => {
+    if (props.chapter === undefined) return 'Loading chapter title...';
+
+    if (props.chapter.title.length > 0) {
+      return `${props.chapter.chapterNumber} - ${props.chapter.title}`;
+    }
+    return `Chapter ${props.chapter.chapterNumber}`;
+  };
+
   const applySavedSettings = () => {
     const settings: {
       [key in ReaderSetting]?: any;
@@ -390,11 +399,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           >
             <span className="icon-arrow-left6" />
           </button>
-          <Text className={styles.chapterName}>
-            {props.chapter === undefined
-              ? 'loading...'
-              : `${props.chapter.chapterNumber} - ${props.chapter.title}`}
-          </Text>
+          <Text className={styles.chapterName}>{getChapterTitleDisplay()}</Text>
           <button
             className={`${styles.chapterButton}
             ${getAdjacentChapterId(false) === -1 ? styles.disabled : ''}`}
