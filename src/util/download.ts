@@ -5,6 +5,8 @@ import { Series } from '../models/types';
 
 // eslint-disable-next-line import/prefer-default-export
 export async function downloadCover(series: Series) {
+  if (series.remoteCoverUrl === '') return;
+
   const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
   if (!fs.existsSync(thumbnailsDir)) {
     fs.mkdirSync(thumbnailsDir);
