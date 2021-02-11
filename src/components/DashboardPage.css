@@ -14,7 +14,7 @@
   height: 100vh;
   position: fixed;
   left: 0;
-  
+
   /* overrides since sider itself does not support sider prop
      https://github.com/ant-design/ant-design/issues/9719 */
   flex: 0 0 180px !important;
@@ -26,4 +26,22 @@
 .content {
   margin: 0px 16px 0;
   /* overflow: scroll; */
+}
+
+.controlBar {
+  display: flex;
+  align-items: center;
+}
+
+.controlBarSpacer {
+  flex: 7;
+}
+
+.columnsSlider {
+  flex: 4;
+}
+
+.seriesFilter {
+  flex: 3;
+  margin-left: 3rem !important;
 }

@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route } from 'react-router-dom';
-import { Layout, Menu, Button, Upload, Input } from 'antd';
+import { Layout, Menu, Button, Upload, Input, Slider } from 'antd';
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -158,10 +158,24 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 <Button onClick={() => importSeries(1, 'aklsdj')}>
                   fs import
                 </Button>
-                <Input
-                  placeholder="Filter series list..."
-                  onChange={(e) => props.setFilter(e.target.value)}
-                />
+                <hr />
+                <div className={styles.controlBar}>
+                  <div className={styles.controlBarSpacer} />
+                  <Slider
+                    className={styles.columnsSlider}
+                    min={2}
+                    max={8}
+                    step={2}
+                    value={props.columns}
+                    marks={{ 2: '2', 4: '4', 6: '6', 8: '8' }}
+                    onChange={(value: number) => props.changeNumColumns(value)}
+                  />
+                  <Input
+                    className={styles.seriesFilter}
+                    placeholder="Filter series list..."
+                    onChange={(e) => props.setFilter(e.target.value)}
+                  />
+                </div>
                 <Uploader callback={(path: string) => importSeries(1, path)} />
               </>
               <p>{props.filter}</p>
