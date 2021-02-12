@@ -4,7 +4,7 @@ import {
   PageFit,
   PageView,
   Series,
-} from '../models/types';
+} from '../../models/types';
 
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 export const CHANGE_PAGE_NUMBER = 'CHANGE_PAGE_NUMBER';

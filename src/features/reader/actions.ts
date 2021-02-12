@@ -4,7 +4,7 @@ import {
   PageFit,
   PageView,
   Series,
-} from '../models/types';
+} from '../../models/types';
 import {
   SET_PAGE_FIT,
   TOGGLE_PAGE_FIT,

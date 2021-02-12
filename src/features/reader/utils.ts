@@ -1,5 +1,5 @@
-import { ReaderSetting } from '../models/types';
-import persistantStore from '../util/persistantStore';
+import { ReaderSetting } from '../../models/types';
+import persistantStore from '../../util/persistantStore';
 
 const prefix = 'reader-';
 

@@ -30,7 +30,7 @@ import {
   setLayoutDirection,
   setPageView,
   toggleShowingSettingsModal,
-} from '../reader/actions';
+} from '../features/reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
 import {
@@ -41,12 +41,12 @@ import {
   ReaderSetting,
   Series,
 } from '../models/types';
-import { loadChapter } from '../datastore/utils';
+import { loadChapter } from '../features/datastore/utils';
 import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
 import { selectMostSimilarChapter } from '../util/comparison';
-import { getStoredReaderSettings } from '../reader/utils';
+import { getStoredReaderSettings } from '../features/reader/utils';
 import ReaderSettingsModal from './ReaderSettingsModal';
 
 const { Content, Sider } = Layout;

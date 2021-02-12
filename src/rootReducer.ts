@@ -1,11 +1,10 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import { History } from 'history';
-// eslint-disable-next-line import/no-cycle
-import library from './library/reducers';
-import status from './statusbar/reducers';
-import datastore from './datastore/reducers';
-import reader from './reader/reducers';
+import library from './features/library/reducers';
+import status from './features/statusbar/reducers';
+import datastore from './features/datastore/reducers';
+import reader from './features/reader/reducers';
 
 export default function createRootReducer(history: History) {
   return combineReducers({

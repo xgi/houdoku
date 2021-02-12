@@ -9,7 +9,7 @@ import {
   afterLoadChapter,
   beforeLoadChapter,
 } from './actions';
-import db from '../services/db';
+import db from '../../services/db';
 
 export function loadSeriesList(dispatch: any) {
   dispatch(beforeLoadSeriesList());

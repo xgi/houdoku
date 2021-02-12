@@ -4,7 +4,7 @@ import {
   PageFit,
   PageView,
   ReaderSetting,
-} from '../models/types';
+} from '../../models/types';
 import {
   CHANGE_PAGE_NUMBER,
   ReaderState,

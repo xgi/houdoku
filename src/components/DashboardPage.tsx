@@ -16,8 +16,8 @@ import {
   updateSeriesList,
   changeNumColumns,
   setFilter,
-} from '../library/actions';
-import { setStatusText } from '../statusbar/actions';
+} from '../features/library/actions';
+import { setStatusText } from '../features/statusbar/actions';
 import SeriesDetails from './SeriesDetails';
 import Search from './Search';
 import StatusBar from './StatusBar';
@@ -28,7 +28,7 @@ import {
   loadChapterList,
   loadSeries,
   loadSeriesList,
-} from '../datastore/utils';
+} from '../features/datastore/utils';
 import * as database from '../db';
 import { Series, Chapter } from '../models/types';
 import { getSeries, getChapters } from '../services/extension';

@@ -1,4 +1,4 @@
-import { Series, Chapter } from '../models/types';
+import { Series, Chapter } from '../../models/types';
 
 export const BEFORE_LOAD_SERIES_LIST = 'BEFORE_LOAD_SERIES_LIST';
 export const AFTER_LOAD_SERIES_LIST = 'AFTER_LOAD_SERIES_LIST';

@@ -1,4 +1,4 @@
-import { Chapter, Series } from '../models/types';
+import { Chapter, Series } from '../../models/types';
 import {
   DatabaseAction,
   BEFORE_LOAD_SERIES_LIST,
