@@ -24,6 +24,9 @@ const METADATA: ExtensionMetadata = {
   name: 'MangaDex',
   url: 'https://mangadex.org',
   version: 1,
+  notice:
+    'This extension currently has limited search functionality. To add a series,' +
+    ' either copy-paste the URL into the search field, or enter id:<series_id>',
 };
 
 const SERIES_STATUS_MAP: { [key: number]: SeriesStatus } = {

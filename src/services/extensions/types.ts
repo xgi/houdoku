@@ -3,6 +3,7 @@ export type ExtensionMetadata = {
   name: string;
   url: string;
   version: number;
+  notice: string;
 };
 
 export type PageRequesterData = {

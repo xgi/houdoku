@@ -17,6 +17,7 @@ const METADATA: ExtensionMetadata = {
   name: 'filesystem',
   url: '',
   version: 1,
+  notice: '',
 };
 
 const fetchSeries: FetchSeriesFunc = (id: string) => {

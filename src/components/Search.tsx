@@ -1,14 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Typography,
-  Button,
-  Descriptions,
-  Affix,
-  Input,
-  Dropdown,
-  Menu,
-} from 'antd';
+import { Typography, Button, Alert, Input, Dropdown, Menu } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import styles from './Search.css';
 import routes from '../constants/routes.json';
@@ -31,6 +23,15 @@ const Search: React.FC<Props> = (props: Props) => {
     return metadata.name;
   };
 
+  const renderAlert = () => {
+    const metadata: ExtensionMetadata = getExtensionMetadata(
+      props.searchExtension
+    );
+    if (metadata.notice.length > 0) {
+      return <Alert message={`Notice: ${metadata.notice}`} type="warning" />;
+    }
+  };
+
   const extensionMenu = (
     <Menu
       onClick={(e) =>
@@ -49,17 +50,21 @@ const Search: React.FC<Props> = (props: Props) => {
   );
 
   return (
-    <div className={styles.searchBar}>
-      <Dropdown className={styles.extensionDropdown} overlay={extensionMenu}>
-        <Button>
-          Extension: {getExtensionName(props.searchExtension)} <DownOutlined />
-        </Button>
-      </Dropdown>
-      <Input
-        className={styles.searchField}
-        placeholder="Search for a series..."
-      />
-    </div>
+    <>
+      <div className={styles.searchBar}>
+        <Dropdown className={styles.extensionDropdown} overlay={extensionMenu}>
+          <Button>
+            Extension: {getExtensionName(props.searchExtension)}{' '}
+            <DownOutlined />
+          </Button>
+        </Dropdown>
+        <Input
+          className={styles.searchField}
+          placeholder="Search for a series..."
+        />
+      </div>
+      {renderAlert()}
+    </>
   );
 };
 

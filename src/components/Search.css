@@ -1,6 +1,8 @@
 .searchBar {
   display: flex;
   align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .extensionDropdown {
