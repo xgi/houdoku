@@ -16,6 +16,7 @@ import {
   updateSeriesList,
   changeNumColumns,
   setFilter,
+  setSearchExtension,
 } from '../features/library/actions';
 import { setStatusText } from '../features/statusbar/actions';
 import SeriesDetails from './SeriesDetails';
@@ -48,6 +49,7 @@ const mapState = (state: RootState) => ({
   chapterList: state.datastore.chapterList,
   columns: state.library.columns,
   filter: state.library.filter,
+  searchExtension: state.library.searchExtension,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,9 +61,8 @@ const mapDispatch = (dispatch: any) => ({
   loadSeries: (id: number) => loadSeries(dispatch, id),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
   setFilter: (filter: string) => dispatch(setFilter(filter)),
-  // addSeries: (series: Series) => addSeries(dispatch, series),
-  // addChapters: (chapters: Chapter[], series: Series) =>
-  //   addChapters(dispatch, chapters, series),
+  setSearchExtension: (searchExtension: number) =>
+    dispatch(setSearchExtension(searchExtension)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -130,7 +131,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               />
             </Route>
             <Route path={routes.SEARCH} exact>
-              <Search library={null} />
+              <Search
+                searchExtension={props.searchExtension}
+                setSearchExtension={props.setSearchExtension}
+              />
             </Route>
             <Route path={routes.LIBRARY}>
               <>

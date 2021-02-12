@@ -1,0 +1,13 @@
+.searchBar {
+  display: flex;
+  align-items: center;
+}
+
+.extensionDropdown {
+  flex: 1;
+}
+
+.searchField {
+  flex: 5;
+  margin-left: 0.5rem !important;
+}
