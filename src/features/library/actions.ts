@@ -3,7 +3,6 @@ import {
   CHANGE_NUM_COLUMNS,
   LibraryAction,
   SET_FILTER,
-  SET_SEARCH_EXTENSION,
 } from './types';
 
 export function updateSeriesList(): LibraryAction {
@@ -26,15 +25,6 @@ export function setFilter(filter: string): LibraryAction {
     type: SET_FILTER,
     payload: {
       filter,
-    },
-  };
-}
-
-export function setSearchExtension(searchExtension: number): LibraryAction {
-  return {
-    type: SET_SEARCH_EXTENSION,
-    payload: {
-      searchExtension,
     },
   };
 }

@@ -3,14 +3,12 @@ import {
   UPDATE_SERIES_LIST,
   CHANGE_NUM_COLUMNS,
   SET_FILTER,
-  SET_SEARCH_EXTENSION,
 } from './types';
 
 const initialState: LibraryState = {
   seriesList: [],
   columns: 6,
   filter: '',
-  searchExtension: 2,
 };
 
 export default function library(
@@ -25,8 +23,6 @@ export default function library(
       return { ...state, columns: action.payload.columns };
     case SET_FILTER:
       return { ...state, filter: action.payload.filter };
-    case SET_SEARCH_EXTENSION:
-      return { ...state, searchExtension: action.payload.searchExtension };
     default:
       return state;
   }

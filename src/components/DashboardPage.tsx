@@ -16,7 +16,6 @@ import {
   updateSeriesList,
   changeNumColumns,
   setFilter,
-  setSearchExtension,
 } from '../features/library/actions';
 import { setStatusText } from '../features/statusbar/actions';
 import SeriesDetails from './SeriesDetails';
@@ -35,6 +34,7 @@ import { Series, Chapter } from '../models/types';
 import { getSeries, getChapters } from '../services/extension';
 import { downloadCover } from '../util/download';
 import Uploader from './Uploader';
+import { setSearchExtension } from '../features/search/actions';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -49,7 +49,7 @@ const mapState = (state: RootState) => ({
   chapterList: state.datastore.chapterList,
   columns: state.library.columns,
   filter: state.library.filter,
-  searchExtension: state.library.searchExtension,
+  searchExtension: state.search.searchExtension,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
