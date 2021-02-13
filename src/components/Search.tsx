@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography, Button, Alert, Input, Dropdown, Menu } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -8,7 +8,9 @@ import { ExtensionMetadata } from '../services/extensions/types';
 import {
   getExtensionMetadata,
   getSearchableExtensions,
+  search,
 } from '../services/extension';
+import { Series } from '../models/types';
 
 const { Title, Text } = Typography;
 
@@ -18,9 +20,18 @@ type Props = {
 };
 
 const Search: React.FC<Props> = (props: Props) => {
+  const [searchText, setSearchText] = useState('');
+
   const getExtensionName = (extensionId: number) => {
     const metadata: ExtensionMetadata = getExtensionMetadata(extensionId);
     return metadata.name;
+  };
+
+  const handleSearch = async () => {
+    const seriesList: Series[] = await search(
+      props.searchExtension,
+      searchText
+    );
   };
 
   const renderAlert = () => {
@@ -61,6 +72,8 @@ const Search: React.FC<Props> = (props: Props) => {
         <Input
           className={styles.searchField}
           placeholder="Search for a series..."
+          onChange={(e) => setSearchText(e.target.value)}
+          onPressEnter={handleSearch}
         />
       </div>
       {renderAlert()}

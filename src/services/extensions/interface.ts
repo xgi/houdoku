@@ -28,3 +28,11 @@ export interface ParsePageRequesterDataFunc {
 export interface GetPageUrlsFunction {
   (pageRequesterData: PageRequesterData): string[];
 }
+
+export interface FetchSearchFunc {
+  (text: string, params: { [key: string]: string }): Promise<Response>;
+}
+
+export interface ParseSearchFunc {
+  (json: any): Series[];
+}

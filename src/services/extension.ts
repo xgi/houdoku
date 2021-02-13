@@ -47,3 +47,22 @@ export function getPageUrls(
 ) {
   return EXTENSIONS[extensionId].getPageUrls(pageRequesterData);
 }
+
+export function search(extensionId: number, text: string) {
+  const paramsRegExp = new RegExp(/\S*:\S*/g);
+  const matchParams: RegExpMatchArray | null = text.match(paramsRegExp);
+
+  let params: { [key: string]: string } = {};
+  if (matchParams !== null) {
+    matchParams.forEach((match: string) => {
+      const parts: string[] = match.split(':');
+      params = { [parts[0]]: parts[1], ...params };
+    });
+  }
+
+  const extension = EXTENSIONS[extensionId];
+  return extension
+    .fetchSearch(text.replace(paramsRegExp, ''), params)
+    .then((response) => response.json())
+    .then((data) => extension.parseSearch(data));
+}

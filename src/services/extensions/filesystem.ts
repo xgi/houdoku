@@ -9,6 +9,8 @@ import {
   ParsePageRequesterDataFunc,
   FetchPageRequesterDataFunc,
   GetPageUrlsFunction,
+  FetchSearchFunc,
+  ParseSearchFunc,
 } from './interface';
 import { ExtensionMetadata, PageRequesterData } from './types';
 
@@ -159,6 +161,24 @@ const getPageUrls: GetPageUrlsFunction = (
   return pageUrls;
 };
 
+const fetchSearch: FetchSearchFunc = (
+  text: string,
+  params: { [key: string]: string }
+) => {
+  return new Promise((resolve, reject) => {
+    const data = { text, params };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: 'application/json',
+    });
+    const init = { status: 200 };
+    resolve(new Response(blob, init));
+  });
+};
+
+const parseSearch: ParseSearchFunc = (json: any) => {
+  return [];
+};
+
 export default {
   METADATA,
   fetchSeries,
@@ -168,4 +188,6 @@ export default {
   fetchPageRequesterData,
   parsePageRequesterData,
   getPageUrls,
+  fetchSearch,
+  parseSearch,
 };
