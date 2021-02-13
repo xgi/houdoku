@@ -285,19 +285,40 @@ const fetchSearch: FetchSearchFunc = (
   text: string,
   params: { [key: string]: string }
 ) => {
+  if ('id' in params) {
+    if (!Number.isNaN(parseInt(params.id, 10))) {
+      return fetch(`https://mangadex.org/api/v2/manga/${params.id}`);
+    }
+  }
+
+  if ('https' in params) {
+    const matchUrl: RegExpMatchArray | null = params.https.match(
+      new RegExp(/\/\/mangadex\.org\/title\/\d*/g)
+    );
+    if (matchUrl !== null) {
+      const id: string = matchUrl[0].replace('//mangadex.org/title/', '');
+      return fetch(`https://mangadex.org/api/v2/manga/${id}`);
+    }
+  }
+
   return new Promise((resolve, reject) => {
-    const data = { text, params };
+    const data = {
+      error: 'Did not receive an expected ID parameter or series page URL',
+      receivedText: text,
+      receivedParams: params,
+    };
     const blob = new Blob([JSON.stringify(data, null, 2)], {
       type: 'application/json',
     });
-    const init = { status: 200 };
+    const init = { status: 400 };
     resolve(new Response(blob, init));
   });
 };
 
 const parseSearch: ParseSearchFunc = (json: any) => {
-  console.log('got data:');
-  console.log(json);
+  if (!('error' in json) && json.code === 200) {
+    return [parseSeries(json)];
+  }
   return [];
 };
 

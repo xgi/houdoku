@@ -32,6 +32,8 @@ const Search: React.FC<Props> = (props: Props) => {
       props.searchExtension,
       searchText
     );
+
+    console.log(seriesList);
   };
 
   const renderAlert = () => {

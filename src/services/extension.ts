@@ -49,6 +49,8 @@ export function getPageUrls(
 }
 
 export function search(extensionId: number, text: string) {
+  let adjustedText: string = text;
+
   const paramsRegExp = new RegExp(/\S*:\S*/g);
   const matchParams: RegExpMatchArray | null = text.match(paramsRegExp);
 
@@ -58,11 +60,13 @@ export function search(extensionId: number, text: string) {
       const parts: string[] = match.split(':');
       params = { [parts[0]]: parts[1], ...params };
     });
+
+    adjustedText = text.replace(paramsRegExp, '');
   }
 
   const extension = EXTENSIONS[extensionId];
   return extension
-    .fetchSearch(text.replace(paramsRegExp, ''), params)
+    .fetchSearch(adjustedText, params)
     .then((response) => response.json())
     .then((data) => extension.parseSearch(data));
 }
