@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix } from 'antd';
 import { ipcRenderer } from 'electron';
+import { ReloadOutlined, LoadingOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import ChapterTable from './ChapterTable';
 import {
@@ -133,9 +134,8 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </Affix>
       </Link>
       <Affix className={styles.refreshButtonAffix}>
-        <Button onClick={() => reloadSeries()}>
-          <span className="icon-spinner11" />
-          &nbsp;Refresh
+        <Button icon={<ReloadOutlined />} onClick={() => reloadSeries()}>
+          Refresh
         </Button>
       </Affix>
       <div className={styles.imageContainer}>
