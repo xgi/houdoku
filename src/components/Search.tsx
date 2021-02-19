@@ -46,7 +46,9 @@ const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = PropsFromRedux & {
+  importSeries: (extensionId: number, sourceId: string) => void;
+};
 
 const Search: React.FC<Props> = (props: Props) => {
   const [searchText, setSearchText] = useState('');
@@ -103,9 +105,10 @@ const Search: React.FC<Props> = (props: Props) => {
       <AddSeriesModal
         visible={props.showingAddModal}
         series={props.addModalSeries}
+        extensionId={props.searchExtension}
         toggleVisible={props.toggleShowingAddModal}
+        importSeries={props.importSeries}
       />
-      <Button onClick={props.toggleShowingAddModal}>show modal</Button>
       <div className={styles.searchBar}>
         <Dropdown className={styles.extensionDropdown} overlay={extensionMenu}>
           <Button>

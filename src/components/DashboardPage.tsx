@@ -133,7 +133,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               />
             </Route>
             <Route path={routes.SEARCH} exact>
-              <Search />
+              <Search importSeries={importSeries} />
             </Route>
             <Route path={routes.LIBRARY}>
               <>

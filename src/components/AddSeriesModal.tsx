@@ -7,12 +7,20 @@ import { Languages } from '../models/languages';
 type Props = {
   series: Series | undefined;
   visible: boolean;
+  extensionId: number;
+  importSeries: (extensionId: number, sourceId: string) => void;
   toggleVisible: () => void;
 };
 
 const AddSeriesModal: React.FC<Props> = (props: Props) => {
-  if (props.series === undefined) return <></>;
+  const handleAdd = () => {
+    if (props.series !== undefined) {
+      props.importSeries(props.extensionId, props.series.sourceId);
+      props.toggleVisible();
+    }
+  };
 
+  if (props.series === undefined) return <></>;
   return (
     <Modal
       title="Add Series to Library"
@@ -113,7 +121,9 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
         </Col>
       </Row>
       <Row className={styles.buttonRow}>
-        <Button className={styles.button}>Add Series</Button>
+        <Button className={styles.button} onClick={handleAdd}>
+          Add Series
+        </Button>
       </Row>
     </Modal>
   );
