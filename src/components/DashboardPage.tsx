@@ -2,10 +2,10 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route, useHistory } from 'react-router-dom';
-import { Layout, Menu, Button, Upload, Input, Slider } from 'antd';
+import { Layout, Menu, Button, Input, Slider } from 'antd';
 import {
-  DesktopOutlined,
-  PieChartOutlined,
+  BookOutlined,
+  SearchOutlined,
   FileOutlined,
   TeamOutlined,
   UserOutlined,
@@ -30,11 +30,6 @@ import { Series, Chapter } from '../models/types';
 import { getSeries, getChapters } from '../services/extension';
 import { downloadCover } from '../util/download';
 import Uploader from './Uploader';
-import {
-  setSearchExtension,
-  setSearchResults,
-  toggleShowingAddModal,
-} from '../features/search/actions';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -98,15 +93,11 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       <Sider className={styles.sider}>
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1" icon={<PieChartOutlined />}>
+          <Menu.Item key="1" icon={<BookOutlined />}>
             <Link to={routes.LIBRARY}>Library</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<DesktopOutlined />}>
+          <Menu.Item key="2" icon={<SearchOutlined />}>
             <Link to={routes.SEARCH}>Search</Link>
-          </Menu.Item>
-          <Menu.Item key="3" icon={<UserOutlined />}>
-            {/* <Link to={routes.READER}>Reader</Link> */}
-            <Link to={`${routes.READER}/1197`}>Reader</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
             <Menu.Item key="3">Tom</Menu.Item>
