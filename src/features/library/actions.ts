@@ -5,12 +5,6 @@ import {
   SET_FILTER,
 } from './types';
 
-export function updateSeriesList(): LibraryAction {
-  return {
-    type: UPDATE_SERIES_LIST,
-  };
-}
-
 export function changeNumColumns(columns: number): LibraryAction {
   return {
     type: CHANGE_NUM_COLUMNS,

@@ -4,13 +4,11 @@
 import fs from 'fs';
 import path from 'path';
 import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
 import { Row, Col, Button } from 'antd';
 import { ipcRenderer } from 'electron';
 import Title from 'antd/lib/typography/Title';
 import { Series } from '../models/types';
 import styles from './LibraryGrid.css';
-import routes from '../constants/routes.json';
 import blankCover from '../img/blank_cover.png';
 
 const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
@@ -22,14 +20,18 @@ type Props = {
   columns: number;
   seriesList: Series[];
   filter: string;
+  clickFunc: (series: Series) => void;
 };
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
-  const history = useHistory();
+  const getImageSource = (series: Series) => {
+    let thumbnailPath: string;
+    if (series.id !== undefined) {
+      thumbnailPath = path.join(thumbnailsDir, `${series.id}.jpg`);
+      return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
+    }
 
-  const getThumbnailPath = (id?: number) => {
-    const thumbnailPath = path.join(thumbnailsDir, `${id}.jpg`);
-    return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
+    return series.remoteCoverUrl;
   };
 
   const getFilteredList = (seriesList: Series[]): Series[] => {
@@ -41,25 +43,21 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     });
   };
 
-  const goToSeries = (seriesId: number | undefined) => {
-    if (seriesId !== undefined) history.push(`${routes.SERIES}/${seriesId}`);
-  };
-
   return (
     <div>
       <Row gutter={[16, 16]}>
         {getFilteredList(props.seriesList).map((series: Series) => {
           return (
-            <Col span={24 / props.columns} key={series.id}>
+            <Col span={24 / props.columns} key={`${series.id}-${series.title}`}>
               <div
                 className={styles.coverContainer}
-                onClick={() => goToSeries(series.id)}
+                onClick={() => props.clickFunc(series)}
               >
                 <Title level={5} className={styles.seriesUnreadCount}>
                   23
                 </Title>
                 <img
-                  src={getThumbnailPath(series.id)}
+                  src={getImageSource(series)}
                   alt={series.toString()}
                   className={styles.coverImage}
                 />

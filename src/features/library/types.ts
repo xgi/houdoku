@@ -8,10 +8,6 @@ export interface LibraryState {
   filter: string;
 }
 
-interface UpdateSeriesListAction {
-  type: typeof UPDATE_SERIES_LIST;
-}
-
 interface ChangeNumColumnsAction {
   type: typeof CHANGE_NUM_COLUMNS;
   payload: {
@@ -26,7 +22,4 @@ interface SetFilterAction {
   };
 }
 
-export type LibraryAction =
-  | UpdateSeriesListAction
-  | ChangeNumColumnsAction
-  | SetFilterAction;
+export type LibraryAction = ChangeNumColumnsAction | SetFilterAction;

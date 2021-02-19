@@ -13,3 +13,7 @@
   flex: 5;
   margin-left: 0.5rem !important;
 }
+
+.alert {
+  margin-bottom: 0.5rem !important;
+}

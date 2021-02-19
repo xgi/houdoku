@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Typography, Button, Alert, Input, Dropdown, Menu } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { connect, ConnectedProps } from 'react-redux';
 import styles from './Search.css';
 import routes from '../constants/routes.json';
 import { ExtensionMetadata } from '../services/extensions/types';
@@ -11,13 +12,41 @@ import {
   search,
 } from '../services/extension';
 import { Series } from '../models/types';
+import LibraryGrid from './LibraryGrid';
+import {
+  setAddModalSeries,
+  setSearchExtension,
+  setSearchResults,
+  toggleShowingAddModal,
+} from '../features/search/actions';
+import { RootState } from '../store';
+import AddSeriesModal from './AddSeriesModal';
 
 const { Title, Text } = Typography;
 
-type Props = {
-  searchExtension: number;
-  setSearchExtension: (searchExtension: number) => void;
-};
+const mapState = (state: RootState) => ({
+  searchExtension: state.search.searchExtension,
+  searchResults: state.search.searchResults,
+  addModalSeries: state.search.addModalSeries,
+  showingAddModal: state.search.showingAddModal,
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapDispatch = (dispatch: any) => ({
+  setSearchExtension: (searchExtension: number) =>
+    dispatch(setSearchExtension(searchExtension)),
+  setSearchResults: (searchResults: Series[]) =>
+    dispatch(setSearchResults(searchResults)),
+  setAddModalSeries: (addModalSeries: Series) =>
+    dispatch(setAddModalSeries(addModalSeries)),
+  toggleShowingAddModal: () => dispatch(toggleShowingAddModal()),
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = PropsFromRedux & {};
 
 const Search: React.FC<Props> = (props: Props) => {
   const [searchText, setSearchText] = useState('');
@@ -33,7 +62,7 @@ const Search: React.FC<Props> = (props: Props) => {
       searchText
     );
 
-    console.log(seriesList);
+    props.setSearchResults(seriesList);
   };
 
   const renderAlert = () => {
@@ -41,8 +70,15 @@ const Search: React.FC<Props> = (props: Props) => {
       props.searchExtension
     );
     if (metadata.notice.length > 0) {
-      return <Alert message={`Notice: ${metadata.notice}`} type="warning" />;
+      return (
+        <Alert
+          className={styles.alert}
+          message={`Notice: ${metadata.notice}`}
+          type="warning"
+        />
+      );
     }
+    return <></>;
   };
 
   const extensionMenu = (
@@ -64,6 +100,12 @@ const Search: React.FC<Props> = (props: Props) => {
 
   return (
     <>
+      <AddSeriesModal
+        visible={props.showingAddModal}
+        series={props.addModalSeries}
+        toggleVisible={props.toggleShowingAddModal}
+      />
+      <Button onClick={props.toggleShowingAddModal}>show modal</Button>
       <div className={styles.searchBar}>
         <Dropdown className={styles.extensionDropdown} overlay={extensionMenu}>
           <Button>
@@ -79,8 +121,17 @@ const Search: React.FC<Props> = (props: Props) => {
         />
       </div>
       {renderAlert()}
+      <LibraryGrid
+        columns={4}
+        seriesList={props.searchResults}
+        filter=""
+        clickFunc={(series: Series) => {
+          props.setAddModalSeries(series);
+          props.toggleShowingAddModal();
+        }}
+      />
     </>
   );
 };
 
-export default Search;
+export default connector(Search);

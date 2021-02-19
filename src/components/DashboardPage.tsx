@@ -1,7 +1,7 @@
 /* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Link, Switch, Route } from 'react-router-dom';
+import { Link, Switch, Route, useHistory } from 'react-router-dom';
 import { Layout, Menu, Button, Upload, Input, Slider } from 'antd';
 import {
   DesktopOutlined,
@@ -12,11 +12,7 @@ import {
 } from '@ant-design/icons';
 import { RootState } from '../store';
 import LibraryGrid from './LibraryGrid';
-import {
-  updateSeriesList,
-  changeNumColumns,
-  setFilter,
-} from '../features/library/actions';
+import { changeNumColumns, setFilter } from '../features/library/actions';
 import { setStatusText } from '../features/statusbar/actions';
 import SeriesDetails from './SeriesDetails';
 import Search from './Search';
@@ -34,7 +30,11 @@ import { Series, Chapter } from '../models/types';
 import { getSeries, getChapters } from '../services/extension';
 import { downloadCover } from '../util/download';
 import Uploader from './Uploader';
-import { setSearchExtension } from '../features/search/actions';
+import {
+  setSearchExtension,
+  setSearchResults,
+  toggleShowingAddModal,
+} from '../features/search/actions';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -49,20 +49,16 @@ const mapState = (state: RootState) => ({
   chapterList: state.datastore.chapterList,
   columns: state.library.columns,
   filter: state.library.filter,
-  searchExtension: state.search.searchExtension,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  updateSeriesList: () => dispatch(updateSeriesList()),
   changeNumColumns: (columns: number) => dispatch(changeNumColumns(columns)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeriesList: () => loadSeriesList(dispatch),
   loadSeries: (id: number) => loadSeries(dispatch, id),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
   setFilter: (filter: string) => dispatch(setFilter(filter)),
-  setSearchExtension: (searchExtension: number) =>
-    dispatch(setSearchExtension(searchExtension)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -72,6 +68,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
+  const history = useHistory();
+
   useEffect(() => {
     database
       .init()
@@ -89,6 +87,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
     await db.addChapters(chapters, addResponse[0]);
     props.loadSeriesList();
     downloadCover(addResponse[0]);
+  };
+
+  const goToSeries = (series: Series) => {
+    if (series.id !== undefined) history.push(`${routes.SERIES}/${series.id}`);
   };
 
   return (
@@ -131,10 +133,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               />
             </Route>
             <Route path={routes.SEARCH} exact>
-              <Search
-                searchExtension={props.searchExtension}
-                setSearchExtension={props.setSearchExtension}
-              />
+              <Search />
             </Route>
             <Route path={routes.LIBRARY}>
               <>
@@ -143,9 +142,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 </Button>
                 <Button onClick={() => props.loadSeriesList()}>
                   fetch series list
-                </Button>
-                <Button onClick={props.updateSeriesList}>
-                  update the series list
                 </Button>
                 <Button onClick={() => props.loadChapterList(1)}>
                   fetch chapter list
@@ -187,6 +183,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 columns={props.columns}
                 seriesList={props.seriesList}
                 filter={props.filter}
+                clickFunc={goToSeries}
               />
             </Route>
           </Switch>
