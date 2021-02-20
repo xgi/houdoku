@@ -1,7 +1,6 @@
 /* eslint-disable no-lonely-if */
 import { Chapter } from '../models/types';
 
-// eslint-disable-next-line import/prefer-default-export
 export function selectMostSimilarChapter(
   original: Chapter,
   options: Chapter[]
@@ -38,4 +37,21 @@ export function selectMostSimilarChapter(
     return matchesLanguage;
   }
   return null;
+}
+
+export function getNumberUnreadChapters(chapterList: Chapter[]): number {
+  let highestRead = 0;
+  let highestReleased = 0;
+
+  chapterList.forEach((chapter: Chapter) => {
+    const chapterNumber = parseFloat(chapter.chapterNumber);
+    if (chapter.read && chapterNumber > highestRead) {
+      highestRead = chapterNumber;
+    }
+    if (chapterNumber > highestReleased) {
+      highestReleased = chapterNumber;
+    }
+  });
+
+  return Math.ceil(highestReleased - highestRead);
 }

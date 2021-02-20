@@ -84,6 +84,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
 
     const addResponse = await db.addSeries(series);
     await db.addChapters(chapters, addResponse[0]);
+    await db.updateSeriesNumberUnread(addResponse[0]);
     props.loadSeriesList();
     downloadCover(addResponse[0]);
   };

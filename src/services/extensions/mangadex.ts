@@ -213,6 +213,7 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
     contentWarnings,
     status: SERIES_STATUS_MAP[json.data.publication.status],
     originalLanguageKey: LANGUAGE_MAP[json.data.publication.language],
+    numberUnread: 0,
     remoteCoverUrl: json.data.mainCover.split('?')[0],
   };
   return series;

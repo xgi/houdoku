@@ -43,6 +43,17 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     });
   };
 
+  const renderUnreadBadge = (series: Series) => {
+    if (series.numberUnread > 0) {
+      return (
+        <Title level={5} className={styles.seriesUnreadCount}>
+          {series.numberUnread}
+        </Title>
+      );
+    }
+    return <></>;
+  };
+
   return (
     <div>
       <Row gutter={[16, 16]}>
@@ -53,9 +64,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                 className={styles.coverContainer}
                 onClick={() => props.clickFunc(series)}
               >
-                <Title level={5} className={styles.seriesUnreadCount}>
-                  23
-                </Title>
+                {renderUnreadBadge(series)}
                 <img
                   src={getImageSource(series)}
                   alt={series.toString()}

@@ -7,12 +7,11 @@ import { Link } from 'react-router-dom';
 import { Chapter, Language, LanguageKey, Series } from '../models/types';
 import routes from '../constants/routes.json';
 import { Languages } from '../models/languages';
-import db from '../services/db';
 
 type Props = {
   chapterList: Chapter[];
   series: Series;
-  loadChapterList: (seriesId: number) => void;
+  toggleChapterRead: (chapter: Chapter, series: Series) => void;
 };
 
 let searchInput: Input | null;
@@ -110,14 +109,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         return (
           <Checkbox
             checked={record.read}
-            onChange={() => {
-              const chapter: Chapter = { ...record, read: !record.read };
-              return db.addChapters([chapter], props.series).then(() => {
-                // eslint-disable-next-line promise/always-return
-                if (props.series.id !== undefined)
-                  props.loadChapterList(props.series.id);
-              });
-            }}
+            onChange={() => props.toggleChapterRead(record, props.series)}
           />
         );
       },

@@ -13,6 +13,7 @@ export type Series = {
   formats: Format[];
   status: SeriesStatus;
   originalLanguageKey: LanguageKey;
+  numberUnread: number;
   remoteCoverUrl: string;
 };
 

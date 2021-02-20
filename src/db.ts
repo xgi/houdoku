@@ -19,6 +19,7 @@ schemaBuilder
   .addColumn('formats', lf.Type.OBJECT)
   .addColumn('status', lf.Type.OBJECT)
   .addColumn('originalLanguageKey', lf.Type.OBJECT)
+  .addColumn('numberUnread', lf.Type.INTEGER)
   .addColumn('remoteCoverUrl', lf.Type.STRING)
   .addPrimaryKey(['id'], true);
 

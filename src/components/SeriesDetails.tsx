@@ -30,7 +30,11 @@ import {
   setSeries,
   setSeriesBannerUrl,
 } from '../features/library/actions';
-import { loadChapterList, loadSeries } from '../features/library/utils';
+import {
+  loadChapterList,
+  loadSeries,
+  toggleChapterRead,
+} from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
 import { RootState } from '../store';
 
@@ -55,6 +59,8 @@ const mapDispatch = (dispatch: any) => ({
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeries: (id: number) => loadSeries(dispatch, id),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  toggleChapterRead: (chapter: Chapter, series: Series) =>
+    toggleChapterRead(dispatch, chapter, series),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
     dispatch(setSeriesBannerUrl(seriesBannerUrl)),
 });
@@ -122,6 +128,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
 
     await db.addSeries(series);
     await db.addChapters(chapters, series);
+    await db.updateSeriesNumberUnread(series);
     props.setStatusText(`Finished reloading series "${props.series.title}".`);
   };
 
@@ -206,7 +213,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       <ChapterTable
         chapterList={props.chapterList}
         series={props.series}
-        loadChapterList={props.loadChapterList}
+        toggleChapterRead={props.toggleChapterRead}
       />
     </div>
   );
