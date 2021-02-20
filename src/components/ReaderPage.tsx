@@ -41,7 +41,6 @@ import {
   ReaderSetting,
   Series,
 } from '../models/types';
-import { loadChapter } from '../features/datastore/utils';
 import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
@@ -69,7 +68,6 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  fetchChapter: (id: number) => loadChapter(dispatch, id),
   setPageNumber: (pageNumber: number) => dispatch(setPageNumber(pageNumber)),
   changePageNumber: (delta: number) => dispatch(changePageNumber(delta)),
   setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
@@ -213,7 +211,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     applySavedSettings();
-    props.fetchChapter(chapter_id);
     loadChapterData(chapter_id);
   }, []);
 

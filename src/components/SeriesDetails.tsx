@@ -6,6 +6,7 @@ import { Typography, Button, Descriptions, Affix } from 'antd';
 import { ipcRenderer } from 'electron';
 import { ReloadOutlined, LoadingOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
+import { connect, ConnectedProps } from 'react-redux';
 import ChapterTable from './ChapterTable';
 import {
   Chapter,
@@ -23,6 +24,15 @@ import blankCover from '../img/blank_cover.png';
 import routes from '../constants/routes.json';
 import { getChapters, getSeries } from '../services/extension';
 import db from '../services/db';
+import { getBannerImageUrl } from '../services/mediasource';
+import {
+  setChapterList,
+  setSeries,
+  setSeriesBannerUrl,
+} from '../features/library/actions';
+import { loadChapterList, loadSeries } from '../features/library/utils';
+import { setStatusText } from '../features/statusbar/actions';
+import { RootState } from '../store';
 
 const { Title } = Typography;
 
@@ -31,20 +41,49 @@ if (!fs.existsSync(thumbnailsDir)) {
   fs.mkdirSync(thumbnailsDir);
 }
 
-type Props = {
-  series: Series | undefined;
-  chapterList: Chapter[];
-  loadSeries: (id: number) => void;
-  loadChapterList: (seriesId: number) => void;
-  setStatusText: (text?: string) => void;
-};
+const mapState = (state: RootState) => ({
+  series: state.library.series,
+  chapterList: state.library.chapterList,
+  seriesBannerUrl: state.library.seriesBannerUrl,
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapDispatch = (dispatch: any) => ({
+  setSeries: (series: Series) => dispatch(setSeries(series)),
+  setChapterList: (chapterList: Chapter[]) =>
+    dispatch(setChapterList(chapterList)),
+  setStatusText: (text?: string) => dispatch(setStatusText(text)),
+  loadSeries: (id: number) => loadSeries(dispatch, id),
+  loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
+    dispatch(setSeriesBannerUrl(seriesBannerUrl)),
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = PropsFromRedux & {};
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams();
 
-  useEffect(() => {
-    props.loadSeries(id);
+  const loadContent = async () => {
+    // eslint-disable-next-line promise/catch-or-return
+    db.fetchSeries(id)
+      .then((response: any) => {
+        props.setSeries(response[0]);
+        return getBannerImageUrl(response[0]);
+      })
+      .then((seriesBannerUrl: string) =>
+        props.setSeriesBannerUrl(seriesBannerUrl)
+      );
+
     props.loadChapterList(id);
+  };
+
+  useEffect(() => {
+    loadContent();
   }, []);
 
   if (props.series === undefined) {
@@ -139,7 +178,14 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </Button>
       </Affix>
       <div className={styles.imageContainer}>
-        <img src={exampleBackground} alt={props.series.title} />
+        <img
+          src={
+            props.seriesBannerUrl === null
+              ? exampleBackground
+              : props.seriesBannerUrl
+          }
+          alt={props.series.title}
+        />
       </div>
       <div className={styles.headerContainer}>
         <div>
@@ -166,4 +212,4 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default SeriesDetails;
+export default connector(SeriesDetails);

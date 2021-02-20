@@ -12,7 +12,11 @@ import {
 } from '@ant-design/icons';
 import { RootState } from '../store';
 import LibraryGrid from './LibraryGrid';
-import { changeNumColumns, setFilter } from '../features/library/actions';
+import {
+  changeNumColumns,
+  setFilter,
+  setSeriesBannerUrl,
+} from '../features/library/actions';
 import { setStatusText } from '../features/statusbar/actions';
 import SeriesDetails from './SeriesDetails';
 import Search from './Search';
@@ -24,26 +28,24 @@ import {
   loadChapterList,
   loadSeries,
   loadSeriesList,
-} from '../features/datastore/utils';
+} from '../features/library/utils';
 import * as database from '../db';
 import { Series, Chapter } from '../models/types';
 import { getSeries, getChapters } from '../services/extension';
 import { downloadCover } from '../util/download';
 import Uploader from './Uploader';
+import { getBannerImageUrl } from '../services/mediasource';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const mapState = (state: RootState) => ({
-  seriesList: state.datastore.seriesList,
-  fetchingSeriesList: state.datastore.fetchingSeriesList,
-  fetchingSeries: state.datastore.fetchingSeries,
-  fetchingChapterList: state.datastore.fetchingChapterList,
-  series: state.datastore.series,
-  addedSeries: state.datastore.addedSeries,
-  chapterList: state.datastore.chapterList,
+  seriesList: state.library.seriesList,
+  series: state.library.series,
+  chapterList: state.library.chapterList,
   columns: state.library.columns,
   filter: state.library.filter,
+  seriesBannerUrl: state.library.seriesBannerUrl,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,6 +56,8 @@ const mapDispatch = (dispatch: any) => ({
   loadSeries: (id: number) => loadSeries(dispatch, id),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
   setFilter: (filter: string) => dispatch(setFilter(filter)),
+  setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
+    dispatch(setSeriesBannerUrl(seriesBannerUrl)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -115,13 +119,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         <Content className={styles.content}>
           <Switch>
             <Route path={`${routes.SERIES}/:id`} exact>
-              <SeriesDetails
-                series={props.series}
-                chapterList={props.chapterList}
-                loadSeries={props.loadSeries}
-                loadChapterList={props.loadChapterList}
-                setStatusText={props.setStatusText}
-              />
+              <SeriesDetails />
             </Route>
             <Route path={routes.SEARCH} exact>
               <Search importSeries={importSeries} />
@@ -148,6 +146,11 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                 </Button>
                 <Button onClick={() => importSeries(1, 'aklsdj')}>
                   fs import
+                </Button>
+                <Button
+                  onClick={async () => console.log(await getBannerImageUrl({}))}
+                >
+                  get banner
                 </Button>
                 <hr />
                 <div className={styles.controlBar}>
