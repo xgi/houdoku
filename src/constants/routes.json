@@ -2,5 +2,6 @@
   "LIBRARY": "/",
   "SERIES": "/series",
   "SEARCH": "/search",
-  "READER": "/reader"
+  "READER": "/reader",
+  "SETTINGS": "/settings"
 }

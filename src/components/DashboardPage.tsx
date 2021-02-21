@@ -9,6 +9,7 @@ import {
   FileOutlined,
   TeamOutlined,
   UserOutlined,
+  SettingOutlined,
 } from '@ant-design/icons';
 import { RootState } from '../store';
 import LibraryGrid from './LibraryGrid';
@@ -35,6 +36,7 @@ import { getSeries, getChapters } from '../services/extension';
 import { downloadCover } from '../util/download';
 import Uploader from './Uploader';
 import { getBannerImageUrl } from '../services/mediasource';
+import Settings from './Settings';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -104,8 +106,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           <Menu.Item key="2" icon={<SearchOutlined />}>
             <Link to={routes.SEARCH}>Search</Link>
           </Menu.Item>
+          <Menu.Item key="3" icon={<SettingOutlined />}>
+            <Link to={routes.SETTINGS}>Settings</Link>
+          </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            <Menu.Item key="3">Tom</Menu.Item>
             <Menu.Item key="4">Bill</Menu.Item>
             <Menu.Item key="5">Alex</Menu.Item>
           </SubMenu>
@@ -121,6 +125,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           <Switch>
             <Route path={`${routes.SERIES}/:id`} exact>
               <SeriesDetails />
+            </Route>
+            <Route path={routes.SETTINGS} exact>
+              <Settings />
             </Route>
             <Route path={routes.SEARCH} exact>
               <Search importSeries={importSeries} />

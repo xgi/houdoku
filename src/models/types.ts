@@ -79,6 +79,10 @@ export type Language = {
   flagCode: string;
 };
 
+export enum GeneralSetting {
+  Languages = 'Languages',
+}
+
 export enum ReaderSetting {
   PageFit = 'PageFit',
   LayoutDirection = 'LayoutDirection',

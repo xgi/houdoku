@@ -4,16 +4,12 @@
 /* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Link, Switch, Route, useParams, useHistory } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import {
   Layout,
   Typography,
   Button,
-  Row,
-  Col,
-  Slider,
   Tooltip,
-  Modal,
 } from 'antd';
 import { RootState } from '../store';
 import {
@@ -45,7 +41,7 @@ import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
 import { selectMostSimilarChapter } from '../util/comparison';
-import { getStoredReaderSettings } from '../features/reader/utils';
+import { getStoredReaderSettings } from '../util/settings';
 import ReaderSettingsModal from './ReaderSettingsModal';
 
 const { Content, Sider } = Layout;

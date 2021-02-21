@@ -20,6 +20,7 @@ export default function App() {
           />
           <Route path={routes.SERIES} component={DashboardPage} />
           <Route path={routes.SEARCH} component={DashboardPage} />
+          <Route path={routes.SETTINGS} component={DashboardPage} />
           <Route path={routes.LIBRARY} component={DashboardPage} />
         </Switch>
       </Router>

@@ -21,15 +21,18 @@ import {
   SET_PAGE_VIEW,
   TOGGLE_SHOWING_SETTINGS_MODAL,
 } from './types';
-import { saveReaderSetting } from './utils';
+import {
+  DEFAULT_READER_SETTINGS,
+  saveReaderSetting,
+} from '../../util/settings';
 
 const initialState: ReaderState = {
   pageNumber: 1,
   lastPageNumber: 20,
-  pageFit: PageFit.Auto,
-  pageView: PageView.Single,
-  layoutDirection: LayoutDirection.LeftToRight,
-  preloadAmount: 2,
+  pageFit: DEFAULT_READER_SETTINGS[ReaderSetting.PageFit],
+  pageView: DEFAULT_READER_SETTINGS[ReaderSetting.PageView],
+  layoutDirection: DEFAULT_READER_SETTINGS[ReaderSetting.LayoutDirection],
+  preloadAmount: DEFAULT_READER_SETTINGS[ReaderSetting.PreloadAmount],
   pageUrls: [],
   series: undefined,
   chapter: undefined,

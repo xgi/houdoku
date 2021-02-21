@@ -145,7 +145,6 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
           </Dropdown>
         </Col>
       </Row>
-      <Button onClick={() => console.log(props.pageView)}>test</Button>
     </Modal>
   );
 };
