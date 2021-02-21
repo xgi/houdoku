@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Select, Col, Input, Row, Menu, Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
@@ -54,22 +54,40 @@ const preloadText: { [key: number]: string } = {
 };
 
 const Settings: React.FC<Props> = (props: Props) => {
-  const settings: { [key in ReaderSetting]?: any } = getStoredReaderSettings();
+  const [displayedLayoutDirection, setDisplayedLayoutDirection] = useState(
+    DEFAULT_READER_SETTINGS[ReaderSetting.LayoutDirection]
+  );
+  const [displayedPageView, setDisplayedPageView] = useState(
+    DEFAULT_READER_SETTINGS[ReaderSetting.PageView]
+  );
+  const [displayedPageFit, setDisplayedPageFit] = useState(
+    DEFAULT_READER_SETTINGS[ReaderSetting.PageFit]
+  );
+  const [displayedPreloadAmount, setDisplayedPreloadAmount] = useState(
+    DEFAULT_READER_SETTINGS[ReaderSetting.PreloadAmount]
+  );
 
-  let layoutDirection: LayoutDirection =
-    settings[ReaderSetting.LayoutDirection];
-  let pageView: PageView = settings[ReaderSetting.PageView];
-  let pageFit: PageFit = settings[ReaderSetting.PageFit];
-  let preloadAmount: number = settings[ReaderSetting.PreloadAmount];
+  const updateDisplayedSettings = () => {
+    const settings: {
+      [key in ReaderSetting]?: any;
+    } = getStoredReaderSettings();
 
-  if (layoutDirection === undefined)
-    layoutDirection = DEFAULT_READER_SETTINGS[ReaderSetting.LayoutDirection];
-  if (pageView === undefined)
-    pageView = DEFAULT_READER_SETTINGS[ReaderSetting.PageView];
-  if (pageFit === undefined)
-    pageFit = DEFAULT_READER_SETTINGS[ReaderSetting.PageFit];
-  if (preloadAmount === undefined)
-    preloadAmount = DEFAULT_READER_SETTINGS[ReaderSetting.PreloadAmount];
+    const layoutDirection: LayoutDirection =
+      settings[ReaderSetting.LayoutDirection];
+    const pageView: PageView = settings[ReaderSetting.PageView];
+    const pageFit: PageFit = settings[ReaderSetting.PageFit];
+    const preloadAmount: number = settings[ReaderSetting.PreloadAmount];
+
+    if (layoutDirection !== undefined)
+      setDisplayedLayoutDirection(layoutDirection);
+    if (pageView !== undefined) setDisplayedPageView(pageView);
+    if (pageFit !== undefined) setDisplayedPageFit(pageFit);
+    if (preloadAmount !== undefined) setDisplayedPreloadAmount(preloadAmount);
+  };
+
+  useEffect(() => {
+    updateDisplayedSettings();
+  }, []);
 
   const renderMenuItems = (textMap: { [key: number]: string }) => {
     return (
@@ -91,12 +109,13 @@ const Settings: React.FC<Props> = (props: Props) => {
   ) => {
     return (
       <Menu
-        onClick={(e) =>
+        onClick={(e) => {
           saveReaderSetting(
             readerSetting,
             parseInt(e.item.props['data-value'], 10)
-          )
-        }
+          );
+          updateDisplayedSettings();
+        }}
       >
         {renderMenuItems(textMap)}
       </Menu>
@@ -142,7 +161,7 @@ const Settings: React.FC<Props> = (props: Props) => {
             )}
           >
             <Button>
-              {layoutDirectionText[layoutDirection]} <DownOutlined />
+              {layoutDirectionText[displayedLayoutDirection]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -152,7 +171,7 @@ const Settings: React.FC<Props> = (props: Props) => {
         <Col span={14}>
           <Dropdown overlay={renderMenu(ReaderSetting.PageView, pageViewText)}>
             <Button>
-              {pageViewText[pageView]} <DownOutlined />
+              {pageViewText[displayedPageView]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -162,7 +181,7 @@ const Settings: React.FC<Props> = (props: Props) => {
         <Col span={14}>
           <Dropdown overlay={renderMenu(ReaderSetting.PageFit, pageFitText)}>
             <Button>
-              {pageFitText[pageFit]} <DownOutlined />
+              {pageFitText[displayedPageFit]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -174,7 +193,7 @@ const Settings: React.FC<Props> = (props: Props) => {
             overlay={renderMenu(ReaderSetting.PreloadAmount, preloadText)}
           >
             <Button>
-              {preloadText[preloadAmount]} <DownOutlined />
+              {preloadText[displayedPreloadAmount]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
