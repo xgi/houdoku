@@ -32,7 +32,9 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   );
 
   if (chapterListLanguages !== null) {
-    settings[GeneralSetting.ChapterLanguages] = chapterListLanguages.split(';');
+    settings[GeneralSetting.ChapterLanguages] = chapterListLanguages
+      .split(',')
+      .map((value: string) => parseInt(value, 10)) as LanguageKey[];
   }
 
   return settings;
