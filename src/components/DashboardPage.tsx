@@ -5,7 +5,7 @@ import { Link, Switch, Route, useHistory } from 'react-router-dom';
 import { Layout, Menu, Button, Input, Slider } from 'antd';
 import {
   BookOutlined,
-  SearchOutlined,
+  PlusSquareOutlined,
   FileOutlined,
   TeamOutlined,
   UserOutlined,
@@ -103,8 +103,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           <Menu.Item key="1" icon={<BookOutlined />}>
             <Link to={routes.LIBRARY}>Library</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<SearchOutlined />}>
-            <Link to={routes.SEARCH}>Search</Link>
+          <Menu.Item key="2" icon={<PlusSquareOutlined />}>
+            <Link to={routes.SEARCH}>Add Series</Link>
           </Menu.Item>
           <Menu.Item key="3" icon={<SettingOutlined />}>
             <Link to={routes.SETTINGS}>Settings</Link>
