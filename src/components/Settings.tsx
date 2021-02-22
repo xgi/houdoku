@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Select, Col, Input, Row, Menu, Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
+import { connect, ConnectedProps } from 'react-redux';
 import styles from './Settings.css';
 import { Languages } from '../models/languages';
 import {
@@ -11,15 +12,15 @@ import {
   PageView,
   ReaderSetting,
 } from '../models/types';
+import { RootState } from '../store';
 import {
-  DEFAULT_READER_SETTINGS,
-  getStoredReaderSettings,
-  saveReaderSetting,
-} from '../util/settings';
+  setLayoutDirection,
+  setPageFit,
+  setPageView,
+  setPreloadAmount,
+} from '../features/settings/actions';
 
 const { Option } = Select;
-
-type Props = {};
 
 const languageOptions = Object.values(Languages).map((language: Language) => (
   <Option key={language.key} value={language.key}>
@@ -53,41 +54,48 @@ const preloadText: { [key: number]: string } = {
   5: '5 Pages',
 };
 
+const mapState = (state: RootState) => ({
+  pageFit: state.settings.pageFit,
+  pageView: state.settings.pageView,
+  layoutDirection: state.settings.layoutDirection,
+  preloadAmount: state.settings.preloadAmount,
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapDispatch = (dispatch: any) => ({
+  setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
+  setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
+  setLayoutDirection: (layoutDirection: LayoutDirection) =>
+    dispatch(setLayoutDirection(layoutDirection)),
+  setPreloadAmount: (preloadAmount: number) =>
+    dispatch(setPreloadAmount(preloadAmount)),
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = PropsFromRedux & {};
+
 const Settings: React.FC<Props> = (props: Props) => {
-  const [displayedLayoutDirection, setDisplayedLayoutDirection] = useState(
-    DEFAULT_READER_SETTINGS[ReaderSetting.LayoutDirection]
-  );
-  const [displayedPageView, setDisplayedPageView] = useState(
-    DEFAULT_READER_SETTINGS[ReaderSetting.PageView]
-  );
-  const [displayedPageFit, setDisplayedPageFit] = useState(
-    DEFAULT_READER_SETTINGS[ReaderSetting.PageFit]
-  );
-  const [displayedPreloadAmount, setDisplayedPreloadAmount] = useState(
-    DEFAULT_READER_SETTINGS[ReaderSetting.PreloadAmount]
-  );
-
-  const updateDisplayedSettings = () => {
-    const settings: {
-      [key in ReaderSetting]?: any;
-    } = getStoredReaderSettings();
-
-    const layoutDirection: LayoutDirection =
-      settings[ReaderSetting.LayoutDirection];
-    const pageView: PageView = settings[ReaderSetting.PageView];
-    const pageFit: PageFit = settings[ReaderSetting.PageFit];
-    const preloadAmount: number = settings[ReaderSetting.PreloadAmount];
-
-    if (layoutDirection !== undefined)
-      setDisplayedLayoutDirection(layoutDirection);
-    if (pageView !== undefined) setDisplayedPageView(pageView);
-    if (pageFit !== undefined) setDisplayedPageFit(pageFit);
-    if (preloadAmount !== undefined) setDisplayedPreloadAmount(preloadAmount);
+  const updateSetting = (readerSetting: ReaderSetting, value: any) => {
+    switch (readerSetting) {
+      case ReaderSetting.LayoutDirection:
+        props.setLayoutDirection(value);
+        break;
+      case ReaderSetting.PageFit:
+        props.setPageFit(value);
+        break;
+      case ReaderSetting.PageView:
+        props.setPageView(value);
+        break;
+      case ReaderSetting.PreloadAmount:
+        props.setPreloadAmount(value);
+        break;
+      default:
+        break;
+    }
   };
-
-  useEffect(() => {
-    updateDisplayedSettings();
-  }, []);
 
   const renderMenuItems = (textMap: { [key: number]: string }) => {
     return (
@@ -110,11 +118,10 @@ const Settings: React.FC<Props> = (props: Props) => {
     return (
       <Menu
         onClick={(e) => {
-          saveReaderSetting(
+          updateSetting(
             readerSetting,
             parseInt(e.item.props['data-value'], 10)
           );
-          updateDisplayedSettings();
         }}
       >
         {renderMenuItems(textMap)}
@@ -161,7 +168,7 @@ const Settings: React.FC<Props> = (props: Props) => {
             )}
           >
             <Button>
-              {layoutDirectionText[displayedLayoutDirection]} <DownOutlined />
+              {layoutDirectionText[props.layoutDirection]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -171,7 +178,7 @@ const Settings: React.FC<Props> = (props: Props) => {
         <Col span={14}>
           <Dropdown overlay={renderMenu(ReaderSetting.PageView, pageViewText)}>
             <Button>
-              {pageViewText[displayedPageView]} <DownOutlined />
+              {pageViewText[props.pageView]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -181,7 +188,7 @@ const Settings: React.FC<Props> = (props: Props) => {
         <Col span={14}>
           <Dropdown overlay={renderMenu(ReaderSetting.PageFit, pageFitText)}>
             <Button>
-              {pageFitText[displayedPageFit]} <DownOutlined />
+              {pageFitText[props.pageFit]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -193,7 +200,7 @@ const Settings: React.FC<Props> = (props: Props) => {
             overlay={renderMenu(ReaderSetting.PreloadAmount, preloadText)}
           >
             <Button>
-              {preloadText[displayedPreloadAmount]} <DownOutlined />
+              {preloadText[props.preloadAmount]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -202,4 +209,4 @@ const Settings: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default Settings;
+export default connector(Settings);

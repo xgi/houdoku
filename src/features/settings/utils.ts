@@ -4,8 +4,8 @@ import {
   PageFit,
   PageView,
   ReaderSetting,
-} from '../models/types';
-import persistantStore from './persistantStore';
+} from '../../models/types';
+import persistantStore from '../../util/persistantStore';
 
 const PREFIXES = {
   general: 'general-',

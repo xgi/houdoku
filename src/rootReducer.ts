@@ -5,6 +5,7 @@ import library from './features/library/reducers';
 import status from './features/statusbar/reducers';
 import reader from './features/reader/reducers';
 import search from './features/search/reducers';
+import settings from './features/settings/reducers';
 
 export default function createRootReducer(history: History) {
   return combineReducers({
@@ -13,5 +14,6 @@ export default function createRootReducer(history: History) {
     status,
     reader,
     search,
+    settings,
   });
 }

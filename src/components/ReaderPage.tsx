@@ -5,26 +5,14 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, useParams, useHistory } from 'react-router-dom';
-import {
-  Layout,
-  Typography,
-  Button,
-  Tooltip,
-} from 'antd';
+import { Layout, Typography, Button, Tooltip } from 'antd';
 import { RootState } from '../store';
 import {
   changePageNumber,
-  setPageFit,
   setPageNumber,
   setPageUrls,
-  setPreloadAmount,
-  toggleLayoutDirection,
-  togglePageFit,
-  togglePageView,
   setSource,
   setChapterIdList,
-  setLayoutDirection,
-  setPageView,
   toggleShowingSettingsModal,
 } from '../features/reader/actions';
 import styles from './ReaderPage.css';
@@ -34,15 +22,22 @@ import {
   LayoutDirection,
   PageFit,
   PageView,
-  ReaderSetting,
   Series,
 } from '../models/types';
 import { getPageRequesterData, getPageUrls } from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
 import { selectMostSimilarChapter } from '../util/comparison';
-import { getStoredReaderSettings } from '../util/settings';
 import ReaderSettingsModal from './ReaderSettingsModal';
+import {
+  setLayoutDirection,
+  setPageFit,
+  setPageView,
+  setPreloadAmount,
+  toggleLayoutDirection,
+  togglePageFit,
+  togglePageView,
+} from '../features/settings/actions';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -50,16 +45,16 @@ const { Title, Text } = Typography;
 const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
   lastPageNumber: state.reader.lastPageNumber,
-  pageFit: state.reader.pageFit,
-  pageView: state.reader.pageView,
-  layoutDirection: state.reader.layoutDirection,
-  preloadAmount: state.reader.preloadAmount,
   pageUrls: state.reader.pageUrls,
   series: state.reader.series,
   chapter: state.reader.chapter,
   chapterIdList: state.reader.chapterIdList,
   createdChapterIdList: state.reader.createdChapterIdList,
   showingSettingsModal: state.reader.showingSettingsModal,
+  pageFit: state.settings.pageFit,
+  pageView: state.settings.pageView,
+  layoutDirection: state.settings.layoutDirection,
+  preloadAmount: state.settings.preloadAmount,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -186,27 +181,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return `Chapter ${props.chapter.chapterNumber}`;
   };
 
-  const applySavedSettings = () => {
-    const settings: {
-      [key in ReaderSetting]?: any;
-    } = getStoredReaderSettings();
-
-    if (ReaderSetting.LayoutDirection in settings) {
-      props.setLayoutDirection(settings[ReaderSetting.LayoutDirection]);
-    }
-    if (ReaderSetting.PageView in settings) {
-      props.setPageView(settings[ReaderSetting.PageView]);
-    }
-    if (ReaderSetting.PageFit in settings) {
-      props.setPageFit(settings[ReaderSetting.PageFit]);
-    }
-    if (ReaderSetting.PreloadAmount in settings) {
-      props.setPreloadAmount(settings[ReaderSetting.PreloadAmount]);
-    }
-  };
-
   useEffect(() => {
-    applySavedSettings();
     loadChapterData(chapter_id);
   }, []);
 
