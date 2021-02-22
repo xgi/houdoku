@@ -49,6 +49,7 @@ const mapState = (state: RootState) => ({
   series: state.library.series,
   chapterList: state.library.chapterList,
   seriesBannerUrl: state.library.seriesBannerUrl,
+  chapterLanguages: state.settings.chapterLanguages,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -213,6 +214,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       <ChapterTable
         chapterList={props.chapterList}
         series={props.series}
+        defaultChapterLanguages={props.chapterLanguages}
         toggleChapterRead={props.toggleChapterRead}
       />
     </div>

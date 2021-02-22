@@ -11,35 +11,23 @@ import { Languages } from '../models/languages';
 type Props = {
   chapterList: Chapter[];
   series: Series;
+  defaultChapterLanguages: LanguageKey[];
   toggleChapterRead: (chapter: Chapter, series: Series) => void;
 };
 
 let searchInput: Input | null;
 
 const ChapterTable: React.FC<Props> = (props: Props) => {
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  // let dataSource: any[] = [];
-
-  // const reloadDataSource = () => {
-  //   dataSource = props.chapterList.map((chapter: Chapter) => ({
-  //     key: chapter.uuid,
-  //     read: chapter.read,
-  //     title: chapter.title,
-  //     volumeNumber: chapter.volumeNumber,
-  //     chapterNumber: chapter.chapterNumber,
-  //   }));
-  // };
+  const [chapterLanguages, setChapterLanguages] = useState(
+    props.defaultChapterLanguages
+  );
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
   };
 
   const handleReset = (clearFilters) => {
     clearFilters();
-    setSearchText('');
   };
 
   const getColumnSearchProps = (dataIndex: string) => ({
@@ -122,7 +110,8 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       filters: Object.values(Languages).map((language: Language) => {
         return { text: language.name, value: language.key };
       }),
-      onFilter: (value: LanguageKey, record: any) =>
+      filteredValue: chapterLanguages,
+      onFilter: (value: string | number | boolean, record: Chapter) =>
         record.languageKey === value,
       render: function render(text: any, record: any) {
         return Languages[record.languageKey] === undefined ? (
@@ -179,13 +168,15 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
     },
   ];
 
-  // reloadDataSource();
   return (
     <Table
       dataSource={props.chapterList}
       columns={columns}
       rowKey="id"
       size="small"
+      onChange={(pagination, filters, sorter) => {
+        setChapterLanguages(filters.language as LanguageKey[]);
+      }}
     />
   );
 };
