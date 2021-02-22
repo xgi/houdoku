@@ -3,5 +3,6 @@
   "SERIES": "/series",
   "SEARCH": "/search",
   "READER": "/reader",
-  "SETTINGS": "/settings"
+  "SETTINGS": "/settings",
+  "ABOUT": "/about"
 }
