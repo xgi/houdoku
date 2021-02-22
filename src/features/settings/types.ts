@@ -1,5 +1,11 @@
-import { LayoutDirection, PageFit, PageView } from '../../models/types';
+import {
+  LanguageKey,
+  LayoutDirection,
+  PageFit,
+  PageView,
+} from '../../models/types';
 
+export const SET_CHAPTER_LANGUAGES = 'SET_CHAPTER_LANGUAGES';
 export const SET_PAGE_FIT = 'SET_PAGE_FIT';
 export const TOGGLE_PAGE_FIT = 'TOGGLE_PAGE_FIT';
 export const SET_PAGE_VIEW = 'SET_PAGE_VIEW';
@@ -9,10 +15,18 @@ export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
 export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 
 export interface SettingsState {
+  chapterLanguages: LanguageKey[];
   pageFit: PageFit;
   pageView: PageView;
   layoutDirection: LayoutDirection;
   preloadAmount: number;
+}
+
+interface SetChapterLanguagesAction {
+  type: typeof SET_CHAPTER_LANGUAGES;
+  payload: {
+    chapterLanguages: LanguageKey[];
+  };
 }
 
 interface SetPageFitAction {
@@ -56,6 +70,7 @@ interface SetPreloadAmountAction {
 }
 
 export type SettingsAction =
+  | SetChapterLanguagesAction
   | SetPageFitAction
   | TogglePageFitAction
   | SetPageViewAction

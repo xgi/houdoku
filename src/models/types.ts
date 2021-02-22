@@ -80,7 +80,7 @@ export type Language = {
 };
 
 export enum GeneralSetting {
-  Languages = 'Languages',
+  ChapterLanguages = 'ChapterLanguages',
 }
 
 export enum ReaderSetting {

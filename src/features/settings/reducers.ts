@@ -1,5 +1,6 @@
 /* eslint-disable no-case-declarations */
 import {
+  GeneralSetting,
   LayoutDirection,
   PageFit,
   PageView,
@@ -14,11 +15,14 @@ import {
   TOGGLE_PAGE_VIEW,
   SET_LAYOUT_DIRECTION,
   SET_PAGE_VIEW,
+  SET_CHAPTER_LANGUAGES,
 } from './types';
 import {
+  DEFAULT_GENERAL_SETTINGS,
   DEFAULT_READER_SETTINGS,
   getStoredGeneralSettings,
   getStoredReaderSettings,
+  saveGeneralSetting,
   saveReaderSetting,
 } from './utils';
 
@@ -26,6 +30,10 @@ const storedGeneralSettings = getStoredGeneralSettings();
 const storedReaderSettings = getStoredReaderSettings();
 
 const initialState: SettingsState = {
+  chapterLanguages:
+    storedGeneralSettings.ChapterLanguages === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.ChapterLanguages]
+      : storedGeneralSettings.ChapterLanguages,
   pageFit:
     storedReaderSettings.PageFit === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.PageFit]
@@ -79,6 +87,12 @@ export default function settings(
   action: any
 ): SettingsState {
   switch (action.type) {
+    case SET_CHAPTER_LANGUAGES:
+      saveGeneralSetting(
+        GeneralSetting.ChapterLanguages,
+        action.payload.chapterLanguages
+      );
+      return { ...state, chapterLanguages: action.payload.chapterLanguages };
     case SET_PAGE_FIT:
       saveReaderSetting(ReaderSetting.PageFit, action.payload.pageFit);
       return { ...state, pageFit: action.payload.pageFit };

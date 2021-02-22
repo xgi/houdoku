@@ -6,7 +6,9 @@ import { connect, ConnectedProps } from 'react-redux';
 import styles from './Settings.css';
 import { Languages } from '../models/languages';
 import {
+  GeneralSetting,
   Language,
+  LanguageKey,
   LayoutDirection,
   PageFit,
   PageView,
@@ -14,6 +16,7 @@ import {
 } from '../models/types';
 import { RootState } from '../store';
 import {
+  setChapterLanguages,
   setLayoutDirection,
   setPageFit,
   setPageView,
@@ -55,6 +58,7 @@ const preloadText: { [key: number]: string } = {
 };
 
 const mapState = (state: RootState) => ({
+  chapterLanguages: state.settings.chapterLanguages,
   pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
@@ -63,6 +67,8 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
+  setChapterLanguages: (chapterLanguages: LanguageKey[]) =>
+    dispatch(setChapterLanguages(chapterLanguages)),
   setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
   setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
   setLayoutDirection: (layoutDirection: LayoutDirection) =>
@@ -78,7 +84,17 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const Settings: React.FC<Props> = (props: Props) => {
-  const updateSetting = (readerSetting: ReaderSetting, value: any) => {
+  const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
+    switch (generalSetting) {
+      case GeneralSetting.ChapterLanguages:
+        props.setChapterLanguages(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
       case ReaderSetting.LayoutDirection:
         props.setLayoutDirection(value);
@@ -118,7 +134,7 @@ const Settings: React.FC<Props> = (props: Props) => {
     return (
       <Menu
         onClick={(e) => {
-          updateSetting(
+          updateReaderSetting(
             readerSetting,
             parseInt(e.item.props['data-value'], 10)
           );
@@ -140,6 +156,10 @@ const Settings: React.FC<Props> = (props: Props) => {
             allowClear
             style={{ width: '100%' }}
             placeholder="Select languages..."
+            defaultValue={props.chapterLanguages}
+            onChange={(value) =>
+              updateGeneralSetting(GeneralSetting.ChapterLanguages, value)
+            }
           >
             {languageOptions}
           </Select>

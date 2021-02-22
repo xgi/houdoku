@@ -1,5 +1,6 @@
 import {
   GeneralSetting,
+  LanguageKey,
   LayoutDirection,
   PageFit,
   PageView,
@@ -12,6 +13,10 @@ const PREFIXES = {
   reader: 'reader-',
 };
 
+export const DEFAULT_GENERAL_SETTINGS = {
+  [GeneralSetting.ChapterLanguages]: [LanguageKey.ENGLISH],
+};
+
 export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.LayoutDirection]: LayoutDirection.LeftToRight,
   [ReaderSetting.PageView]: PageView.Single,
@@ -22,12 +27,12 @@ export const DEFAULT_READER_SETTINGS = {
 export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   const settings: { [key in GeneralSetting]?: any } = {};
 
-  const languages: string | null = persistantStore.read(
-    `${PREFIXES.general}${GeneralSetting.Languages}`
+  const chapterListLanguages: string | null = persistantStore.read(
+    `${PREFIXES.general}${GeneralSetting.ChapterLanguages}`
   );
 
-  if (languages !== null) {
-    settings[GeneralSetting.Languages] = languages.split(';');
+  if (chapterListLanguages !== null) {
+    settings[GeneralSetting.ChapterLanguages] = chapterListLanguages.split(';');
   }
 
   return settings;

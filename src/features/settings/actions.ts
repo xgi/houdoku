@@ -1,4 +1,9 @@
-import { LayoutDirection, PageFit, PageView } from '../../models/types';
+import {
+  LanguageKey,
+  LayoutDirection,
+  PageFit,
+  PageView,
+} from '../../models/types';
 import {
   SET_PAGE_FIT,
   TOGGLE_PAGE_FIT,
@@ -8,7 +13,19 @@ import {
   SET_PRELOAD_AMOUNT,
   SET_PAGE_VIEW,
   SET_LAYOUT_DIRECTION,
+  SET_CHAPTER_LANGUAGES,
 } from './types';
+
+export function setChapterLanguages(
+  chapterLanguages: LanguageKey[]
+): SettingsAction {
+  return {
+    type: SET_CHAPTER_LANGUAGES,
+    payload: {
+      chapterLanguages,
+    },
+  };
+}
 
 export function setPageFit(pageFit: PageFit): SettingsAction {
   return {
