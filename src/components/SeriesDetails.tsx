@@ -108,31 +108,53 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const renderSeriesDescriptions = (series: Series) => {
     return (
       <Descriptions column={4}>
-        <Descriptions.Item label="Author">
+        <Descriptions.Item className={styles.descriptionItem} label="Author">
           {series.authors.join(';')}
         </Descriptions.Item>
-        <Descriptions.Item label="Artist">
+        <Descriptions.Item className={styles.descriptionItem} label="Artist">
           {series.artists.join(';')}
         </Descriptions.Item>
-        <Descriptions.Item label="Status">
-          {SeriesStatus[series.status]}
+        <Descriptions.Item className={styles.descriptionItem} label="Status">
+          {SeriesStatus[series.status].toLowerCase()}
         </Descriptions.Item>
-        <Descriptions.Item label="Language">
+        <Descriptions.Item className={styles.descriptionItem} label="Language">
           {Languages[series.originalLanguageKey].name}
         </Descriptions.Item>
-        <Descriptions.Item label="Genres" span={2}>
-          {series.genres.map((genre: Genre) => Genre[genre]).join('; ')}
+        <Descriptions.Item
+          className={styles.descriptionItem}
+          label="Genres"
+          span={2}
+        >
+          {series.genres
+            .map((genre: Genre) => Genre[genre].toLowerCase())
+            .join('; ')}
         </Descriptions.Item>
-        <Descriptions.Item label="Themes" span={2}>
-          {series.themes.map((theme: Theme) => Theme[theme]).join('; ')}
+        <Descriptions.Item
+          className={styles.descriptionItem}
+          label="Themes"
+          span={2}
+        >
+          {series.themes
+            .map((theme: Theme) => Theme[theme].toLowerCase())
+            .join('; ')}
         </Descriptions.Item>
-        <Descriptions.Item label="Formats" span={2}>
-          {series.formats.map((format: Format) => Format[format]).join('; ')}
+        <Descriptions.Item
+          className={styles.descriptionItem}
+          label="Formats"
+          span={2}
+        >
+          {series.formats
+            .map((format: Format) => Format[format].toLowerCase())
+            .join('; ')}
         </Descriptions.Item>
-        <Descriptions.Item label="Content Warnings" span={2}>
+        <Descriptions.Item
+          className={styles.descriptionItem}
+          label="Content Warnings"
+          span={2}
+        >
           {series.contentWarnings
-            .map(
-              (contentWarning: ContentWarning) => ContentWarning[contentWarning]
+            .map((contentWarning: ContentWarning) =>
+              ContentWarning[contentWarning].toLowerCase()
             )
             .join('; ')}
         </Descriptions.Item>

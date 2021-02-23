@@ -47,3 +47,7 @@
   z-index: 100;
   background-color: var(--color-background-faded);
 }
+
+.descriptionItem {
+  text-transform: capitalize;
+}
