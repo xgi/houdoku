@@ -22,7 +22,6 @@ import styles from './SeriesDetails.css';
 import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
 import routes from '../constants/routes.json';
-import { getChapters, getSeries } from '../services/extension';
 import db from '../services/db';
 import { getBannerImageUrl } from '../services/mediasource';
 import {
@@ -33,7 +32,7 @@ import {
 import {
   loadChapterList,
   loadSeries,
-  reloadSeries,
+  reloadSeriesList,
   toggleChapterRead,
 } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
@@ -102,38 +101,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     );
   }
 
-  // const reloadSeries = async () => {
-  //   if (props.series === undefined || props.series.id === undefined) return;
-
-  //   props.setStatusText(`Reloading series "${props.series.title}"...`);
-  //   const series: Series = await getSeries(
-  //     props.series.extensionId,
-  //     props.series.sourceId
-  //   );
-  //   const newChapters: Chapter[] = await getChapters(
-  //     props.series.extensionId,
-  //     props.series.sourceId
-  //   );
-
-  //   series.id = props.series.id;
-  //   const oldChapters: Chapter[] = await db.fetchChapters(series.id);
-
-  //   const chapters: Chapter[] = newChapters.map((chapter: Chapter) => {
-  //     const matchingChapter: Chapter | undefined = oldChapters.find(
-  //       (c: Chapter) => c.sourceId === chapter.sourceId
-  //     );
-  //     if (matchingChapter !== undefined) {
-  //       chapter.id = matchingChapter.id;
-  //     }
-  //     return chapter;
-  //   });
-
-  //   await db.addSeries(series);
-  //   await db.addChapters(chapters, series);
-  //   await db.updateSeriesNumberUnread(series);
-  //   props.setStatusText(`Finished reloading series "${props.series.title}".`);
-  // };
-
   const getThumbnailPath = (seriesId?: number) => {
     const thumbnailPath = path.join(thumbnailsDir, `${id}.jpg`);
     return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
@@ -186,7 +153,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           icon={<ReloadOutlined />}
           onClick={() => {
             if (props.series !== undefined)
-              reloadSeries(props.series, props.setStatusText, loadContent);
+              reloadSeriesList(
+                [props.series],
+                props.setStatusText,
+                loadContent
+              );
           }}
         >
           Refresh

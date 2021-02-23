@@ -25,7 +25,7 @@ type Props = PropsFromRedux & {};
 const StatusBar: React.FC<Props> = (props: Props) => {
   return (
     <Footer className={styles.statusBar}>
-      <p style={{ marginBottom: 0 }}>{props.text}</p>
+      <p className={styles.text}>{props.text}</p>
     </Footer>
   );
 };

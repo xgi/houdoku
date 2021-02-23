@@ -39,14 +39,9 @@ export function toggleChapterRead(
   }
 }
 
-export async function reloadSeries(
-  series: Series,
-  setStatusText: (text?: string) => void,
-  callback: () => void
-) {
+async function reloadSeries(series: Series) {
   if (series.id === undefined) return;
 
-  setStatusText(`Reloading series "${series.title}"...`);
   const newSeries: Series = await getSeries(
     series.extensionId,
     series.sourceId
@@ -76,7 +71,25 @@ export async function reloadSeries(
   await db.addSeries(newSeries);
   await db.addChapters(chapters, newSeries);
   await db.updateSeriesNumberUnread(newSeries);
-  setStatusText(`Finished reloading series "${newSeries.title}".`);
+}
 
-  callback();
+export async function reloadSeriesList(
+  seriesList: Series[],
+  setStatusText: (text?: string) => void,
+  callback?: () => void
+) {
+  let cur = 0;
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const series of seriesList) {
+    setStatusText(
+      `Reloading library (${cur}/${seriesList.length}) - ${series.title}`
+    );
+    // eslint-disable-next-line no-await-in-loop
+    await reloadSeries(series);
+    cur += 1;
+  }
+
+  setStatusText(`Reloaded ${cur} series`);
+  if (callback !== undefined) callback();
 }

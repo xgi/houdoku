@@ -30,6 +30,7 @@ import {
   loadChapterList,
   loadSeries,
   loadSeriesList,
+  reloadSeriesList,
 } from '../features/library/utils';
 import * as database from '../db';
 import { Series, Chapter } from '../models/types';
@@ -163,9 +164,11 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                   fs import
                 </Button>
                 <Button
-                  onClick={async () => console.log(await getBannerImageUrl({}))}
+                  onClick={() =>
+                    reloadSeriesList(props.seriesList, props.setStatusText)
+                  }
                 >
-                  get banner
+                  reload all
                 </Button>
                 <hr />
                 <div className={styles.controlBar}>

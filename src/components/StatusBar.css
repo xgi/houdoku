@@ -9,3 +9,8 @@
   bottom: 0;
   padding: 0 50px !important;
 }
+
+.text {
+  margin-bottom: 0;
+  user-select: none;
+}
