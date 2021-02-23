@@ -4,8 +4,8 @@
 /* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Link, useParams, useHistory } from 'react-router-dom';
-import { Layout, Typography, Button, Tooltip } from 'antd';
+import { useParams, useHistory } from 'react-router-dom';
+import { Layout, Typography, Tooltip } from 'antd';
 import { RootState } from '../store';
 import {
   changePageNumber,
@@ -439,25 +439,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
             <span className="icon-last2" />
           </button>
         </div>
-        <p>Fit is: {props.pageFit}</p>
-        <p>{chapter_id}</p>
-        <Button onClick={() => props.togglePageFit()}>change fit</Button>
-        <p>{`cur_page=${props.pageNumber} last_page=${props.lastPageNumber}`}</p>
-        <p>{`page_view=${props.pageView}`}</p>
-        <p>{`layout_dir=${props.layoutDirection}`}</p>
-        <p>{`preload=${props.preloadAmount}`}</p>
-        <p>{props.chapter?.groupName}</p>
-        <Button onClick={() => changePage(true)}>left</Button>
-        <Button onClick={() => changePage(false)}>right</Button>
-        <Button onClick={() => props.toggleShowingSettingsModal()}>
-          show modal
-        </Button>
-        <Button onClick={() => props.toggleLayoutDirection()}>
-          toggle layout direction
-        </Button>
-        <Link to={routes.LIBRARY}>
-          <Button>back to library</Button>
-        </Link>
+        <div className={styles.groupRow}>
+          <Text>Group: {props.chapter?.groupName}</Text>
+        </div>
       </Sider>
       <Layout className={`site-layout ${styles.contentLayout}`}>
         {renderPreloadContainer(props.pageNumber)}

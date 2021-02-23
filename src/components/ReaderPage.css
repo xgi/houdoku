@@ -134,6 +134,12 @@ button.disabled:hover {
   font-size: 16px;
 }
 
+.groupRow {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
 .preloadContainer {
   z-index: -1;
   position: absolute;
