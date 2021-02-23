@@ -161,7 +161,13 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       render: function render(text: any, record: any) {
         return (
           <Link to={`${routes.READER}/${record.id}`}>
-            <Button>Read</Button>
+            <Button
+              onClick={() => {
+                if (!record.read) props.toggleChapterRead(record, props.series);
+              }}
+            >
+              Read
+            </Button>
           </Link>
         );
       },

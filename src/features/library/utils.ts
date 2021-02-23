@@ -64,6 +64,7 @@ async function reloadSeries(series: Series) {
     );
     if (matchingChapter !== undefined) {
       chapter.id = matchingChapter.id;
+      chapter.read = matchingChapter.read;
     }
     return chapter;
   });

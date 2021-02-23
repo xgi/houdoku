@@ -31,6 +31,7 @@ import {
 import {
   loadChapterList,
   loadSeries,
+  loadSeriesList,
   reloadSeriesList,
   toggleChapterRead,
 } from '../features/library/utils';
@@ -58,6 +59,7 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setChapterList(chapterList)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeries: (id: number) => loadSeries(dispatch, id),
+  loadSeriesList: () => loadSeriesList(dispatch),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
@@ -166,7 +168,9 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     <div>
       <Link to={routes.LIBRARY}>
         <Affix className={styles.backButtonAffix}>
-          <Button>◀ Back to library</Button>
+          <Button onClick={() => props.loadSeriesList()}>
+            ◀ Back to library
+          </Button>
         </Affix>
       </Link>
       <Affix className={styles.refreshButtonAffix}>

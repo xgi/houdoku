@@ -40,7 +40,6 @@ import Settings from './Settings';
 import About from './About';
 
 const { Content, Sider } = Layout;
-const { Text } = Typography;
 const { SubMenu } = Menu;
 
 const mapState = (state: RootState) => ({
@@ -103,7 +102,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1" icon={<BookOutlined />}>
-            <Link to={routes.LIBRARY}>Library</Link>
+            <Link to={routes.LIBRARY} onClick={() => props.loadSeriesList()}>
+              Library
+            </Link>
           </Menu.Item>
           <Menu.Item key="2" icon={<PlusSquareOutlined />}>
             <Link to={routes.SEARCH}>Add Series</Link>
