@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import fs from 'fs';
 import path from 'path';
 import React from 'react';
-import { Row, Col, Button } from 'antd';
+import { Row, Col } from 'antd';
 import { ipcRenderer } from 'electron';
 import Title from 'antd/lib/typography/Title';
 import { Series } from '../models/types';
@@ -58,18 +57,18 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     <div>
       <Row gutter={[16, 16]}>
         {getFilteredList(props.seriesList).map((series: Series) => {
+          const coverSource = getImageSource(series).replaceAll('\\', '/');
           return (
             <Col span={24 / props.columns} key={`${series.id}-${series.title}`}>
               <div
                 className={styles.coverContainer}
                 onClick={() => props.clickFunc(series)}
+                style={{
+                  backgroundImage: `url(${coverSource})`,
+                  height: `calc(105vw / ${props.columns})`,
+                }}
               >
                 {renderUnreadBadge(series)}
-                <img
-                  src={getImageSource(series)}
-                  alt={series.toString()}
-                  className={styles.coverImage}
-                />
                 <Title level={5} className={styles.seriesTitle}>
                   {series.title}
                 </Title>

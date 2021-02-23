@@ -1,6 +1,8 @@
 .coverContainer {
   display: flex;
   align-items: center;
+  opacity: 0.8;
+  background-size: cover;
 }
 
 .seriesTitle {
@@ -8,9 +10,10 @@
   width: 85%;
   bottom: 0px;
   left: 12px;
-  text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333,
-    1px 1px 0 #333;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
   user-select: none;
+  color: white !important;
 }
 
 .seriesUnreadCount {
@@ -23,19 +26,7 @@
   z-index: 1;
 }
 
-.coverImage {
-  width: 100%;
-  opacity: 0.8;
-}
-
 .coverContainer:hover {
   cursor: pointer;
-}
-
-.coverContainer:hover > * {
-  opacity: 0.6;
-}
-
-.coverContainer:hover > .coverImage {
-  opacity: 0.2;
+  opacity: 0.3;
 }
