@@ -1,11 +1,18 @@
-.imageContainer {
+.backgroundContainer {
   width: auto;
   height: 180px;
   overflow: hidden;
   margin: 0 -16px 0 -16px;
+
+  background: linear-gradient(135deg, var(--color-background) 25%, transparent 25%) -50px 0,
+    linear-gradient(225deg, var(--color-background) 25%, transparent 25%) -50px 0,
+    linear-gradient(315deg, var(--color-background) 25%, transparent 25%),
+    linear-gradient(45deg, var(--color-background) 25%, transparent 25%);
+  background-size: 100px 100px;
+  background-color: var(--color-background-alt);
 }
 
-.imageContainer > img {
+.backgroundContainer > img {
   object-fit: cover;
   height: 100%;
   width: 100%;

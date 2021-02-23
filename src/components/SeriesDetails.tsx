@@ -19,7 +19,6 @@ import {
 } from '../models/types';
 import { Languages } from '../models/languages';
 import styles from './SeriesDetails.css';
-import exampleBackground from '../img/example_bg2.jpg';
 import blankCover from '../img/blank_cover.png';
 import routes from '../constants/routes.json';
 import db from '../services/db';
@@ -163,15 +162,12 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           Refresh
         </Button>
       </Affix>
-      <div className={styles.imageContainer}>
-        <img
-          src={
-            props.seriesBannerUrl === null
-              ? exampleBackground
-              : props.seriesBannerUrl
-          }
-          alt={props.series.title}
-        />
+      <div className={styles.backgroundContainer}>
+        {props.seriesBannerUrl === null ? (
+          <></>
+        ) : (
+          <img src={props.seriesBannerUrl} alt={props.series.title} />
+        )}
       </div>
       <div className={styles.headerContainer}>
         <div>

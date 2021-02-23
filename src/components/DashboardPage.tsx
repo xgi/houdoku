@@ -37,7 +37,6 @@ import { Series, Chapter } from '../models/types';
 import { getSeries, getChapters } from '../services/extension';
 import { downloadCover } from '../util/download';
 import Uploader from './Uploader';
-import { getBannerImageUrl } from '../services/mediasource';
 import Settings from './Settings';
 import About from './About';
 
