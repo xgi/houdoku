@@ -68,7 +68,6 @@ const updateSeriesNumberUnread = (series: Series) => {
         ...series,
         numberUnread: getNumberUnreadChapters(chapterList),
       };
-      console.log('setting to: ' + newSeries.numberUnread);
       return addSeries(newSeries);
     });
   }

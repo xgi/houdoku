@@ -33,6 +33,7 @@ import {
 import {
   loadChapterList,
   loadSeries,
+  reloadSeries,
   toggleChapterRead,
 } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
@@ -101,37 +102,37 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     );
   }
 
-  const reloadSeries = async () => {
-    if (props.series === undefined || props.series.id === undefined) return;
+  // const reloadSeries = async () => {
+  //   if (props.series === undefined || props.series.id === undefined) return;
 
-    props.setStatusText(`Reloading series "${props.series.title}"...`);
-    const series: Series = await getSeries(
-      props.series.extensionId,
-      props.series.sourceId
-    );
-    const newChapters: Chapter[] = await getChapters(
-      props.series.extensionId,
-      props.series.sourceId
-    );
+  //   props.setStatusText(`Reloading series "${props.series.title}"...`);
+  //   const series: Series = await getSeries(
+  //     props.series.extensionId,
+  //     props.series.sourceId
+  //   );
+  //   const newChapters: Chapter[] = await getChapters(
+  //     props.series.extensionId,
+  //     props.series.sourceId
+  //   );
 
-    series.id = props.series.id;
-    const oldChapters: Chapter[] = await db.fetchChapters(series.id);
+  //   series.id = props.series.id;
+  //   const oldChapters: Chapter[] = await db.fetchChapters(series.id);
 
-    const chapters: Chapter[] = newChapters.map((chapter: Chapter) => {
-      const matchingChapter: Chapter | undefined = oldChapters.find(
-        (c: Chapter) => c.sourceId === chapter.sourceId
-      );
-      if (matchingChapter !== undefined) {
-        chapter.id = matchingChapter.id;
-      }
-      return chapter;
-    });
+  //   const chapters: Chapter[] = newChapters.map((chapter: Chapter) => {
+  //     const matchingChapter: Chapter | undefined = oldChapters.find(
+  //       (c: Chapter) => c.sourceId === chapter.sourceId
+  //     );
+  //     if (matchingChapter !== undefined) {
+  //       chapter.id = matchingChapter.id;
+  //     }
+  //     return chapter;
+  //   });
 
-    await db.addSeries(series);
-    await db.addChapters(chapters, series);
-    await db.updateSeriesNumberUnread(series);
-    props.setStatusText(`Finished reloading series "${props.series.title}".`);
-  };
+  //   await db.addSeries(series);
+  //   await db.addChapters(chapters, series);
+  //   await db.updateSeriesNumberUnread(series);
+  //   props.setStatusText(`Finished reloading series "${props.series.title}".`);
+  // };
 
   const getThumbnailPath = (seriesId?: number) => {
     const thumbnailPath = path.join(thumbnailsDir, `${id}.jpg`);
@@ -181,7 +182,13 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </Affix>
       </Link>
       <Affix className={styles.refreshButtonAffix}>
-        <Button icon={<ReloadOutlined />} onClick={() => reloadSeries()}>
+        <Button
+          icon={<ReloadOutlined />}
+          onClick={() => {
+            if (props.series !== undefined)
+              reloadSeries(props.series, props.setStatusText, loadContent);
+          }}
+        >
           Refresh
         </Button>
       </Affix>

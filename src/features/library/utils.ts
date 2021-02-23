@@ -2,6 +2,8 @@
 import { setSeriesList, setSeries, setChapterList } from './actions';
 import db from '../../services/db';
 import { Chapter, Series } from '../../models/types';
+import { getChapters, getSeries } from '../../services/extension';
+import filesystem from '../../services/extensions/filesystem';
 
 export function loadSeriesList(dispatch: any) {
   db.fetchSerieses().then((response: any) => dispatch(setSeriesList(response)));
@@ -35,4 +37,46 @@ export function toggleChapterRead(
         return true;
       });
   }
+}
+
+export async function reloadSeries(
+  series: Series,
+  setStatusText: (text?: string) => void,
+  callback: () => void
+) {
+  if (series.id === undefined) return;
+
+  setStatusText(`Reloading series "${series.title}"...`);
+  const newSeries: Series = await getSeries(
+    series.extensionId,
+    series.sourceId
+  );
+  const newChapters: Chapter[] = await getChapters(
+    series.extensionId,
+    series.sourceId
+  );
+
+  if (series.extensionId !== filesystem.METADATA.id) {
+    newSeries.id = series.id;
+  } else {
+    // TODO: add logic to avoid overriding manual values for filesystem-sourced series
+  }
+
+  const oldChapters: Chapter[] = await db.fetchChapters(series.id);
+  const chapters: Chapter[] = newChapters.map((chapter: Chapter) => {
+    const matchingChapter: Chapter | undefined = oldChapters.find(
+      (c: Chapter) => c.sourceId === chapter.sourceId
+    );
+    if (matchingChapter !== undefined) {
+      chapter.id = matchingChapter.id;
+    }
+    return chapter;
+  });
+
+  await db.addSeries(newSeries);
+  await db.addChapters(chapters, newSeries);
+  await db.updateSeriesNumberUnread(newSeries);
+  setStatusText(`Finished reloading series "${newSeries.title}".`);
+
+  callback();
 }
