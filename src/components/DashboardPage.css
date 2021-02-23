@@ -31,17 +31,19 @@
 .controlBar {
   display: flex;
   align-items: center;
+  border-bottom: 2px solid var(--color-background-alt);
+  margin-bottom: 1rem;
 }
 
 .controlBarSpacer {
-  flex: 7;
+  flex: 6;
 }
 
 .columnsSlider {
-  flex: 4;
+  flex: 3;
 }
 
 .seriesFilter {
-  flex: 3;
+  flex: 4;
   margin-left: 3rem !important;
 }

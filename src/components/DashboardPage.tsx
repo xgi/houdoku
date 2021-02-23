@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route, useHistory } from 'react-router-dom';
-import { Layout, Menu, Button, Input, Slider } from 'antd';
+import { Layout, Menu, Button, Input, Slider, Typography } from 'antd';
 import {
   BookOutlined,
   PlusSquareOutlined,
@@ -36,11 +36,11 @@ import * as database from '../db';
 import { Series, Chapter } from '../models/types';
 import { getSeries, getChapters } from '../services/extension';
 import { downloadCover } from '../util/download';
-import Uploader from './Uploader';
 import Settings from './Settings';
 import About from './About';
 
 const { Content, Sider } = Layout;
+const { Text } = Typography;
 const { SubMenu } = Menu;
 
 const mapState = (state: RootState) => ({
@@ -141,36 +141,19 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
             </Route>
             <Route path={routes.LIBRARY}>
               <>
-                <Button onClick={() => db.deleteAllSeries()}>
-                  delete all series
-                </Button>
-                <Button onClick={() => props.loadSeriesList()}>
-                  fetch series list
-                </Button>
-                <Button onClick={() => props.loadChapterList(1)}>
-                  fetch chapter list
-                </Button>
-                <Button onClick={() => props.changeNumColumns(8)}>
-                  update num columns
-                </Button>
-                <Button onClick={() => props.setStatusText('new status')}>
-                  set status
-                </Button>
-                <Button onClick={() => importSeries(2, '9570')}>
-                  import 9570
-                </Button>
-                <Button onClick={() => importSeries(1, 'aklsdj')}>
-                  fs import
-                </Button>
-                <Button
-                  onClick={() =>
-                    reloadSeriesList(props.seriesList, props.setStatusText)
-                  }
-                >
-                  reload all
-                </Button>
-                <hr />
                 <div className={styles.controlBar}>
+                  <Button
+                    className={styles.reloadButton}
+                    onClick={() =>
+                      reloadSeriesList(
+                        props.seriesList,
+                        props.setStatusText,
+                        props.loadSeriesList
+                      )
+                    }
+                  >
+                    Reload All Series
+                  </Button>
                   <div className={styles.controlBarSpacer} />
                   <Slider
                     className={styles.columnsSlider}
@@ -187,9 +170,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
                     onChange={(e) => props.setFilter(e.target.value)}
                   />
                 </div>
-                <Uploader callback={(path: string) => importSeries(1, path)} />
+                {/* <Uploader callback={(path: string) => importSeries(1, path)} /> */}
               </>
-              <p>{props.filter}</p>
               <LibraryGrid
                 columns={props.columns}
                 seriesList={props.seriesList}

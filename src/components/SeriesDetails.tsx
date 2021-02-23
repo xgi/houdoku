@@ -101,7 +101,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   }
 
   const getThumbnailPath = (seriesId?: number) => {
-    const thumbnailPath = path.join(thumbnailsDir, `${id}.jpg`);
+    const thumbnailPath = path.join(thumbnailsDir, `${seriesId}.jpg`);
     return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
   };
 
