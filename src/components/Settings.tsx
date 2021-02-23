@@ -147,7 +147,9 @@ const Settings: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Title level={3}>General</Title>
+      <Title className={styles.title} level={4}>
+        General
+      </Title>
       <Row className={styles.row}>
         <Col span={10}>Languages in Chapter List</Col>
         <Col span={14}>
@@ -165,19 +167,9 @@ const Settings: React.FC<Props> = (props: Props) => {
           </Select>
         </Col>
       </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Author(s)</Col>
-        <Col span={14}>
-          <Input />
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Artist(s)</Col>
-        <Col span={14}>
-          <Input />
-        </Col>
-      </Row>
-      <Title level={3}>Reader</Title>
+      <Title className={styles.title} level={4}>
+        Reader
+      </Title>
       <Row className={styles.row}>
         <Col span={10}>Layout Direction</Col>
         <Col span={14}>
