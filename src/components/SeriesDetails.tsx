@@ -1,10 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import React, { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { Typography, Button, Descriptions, Affix } from 'antd';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { Typography, Button, Descriptions, Affix, Modal } from 'antd';
 import { ipcRenderer } from 'electron';
-import { ReloadOutlined, LoadingOutlined } from '@ant-design/icons';
+import {
+  ReloadOutlined,
+  LoadingOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { connect, ConnectedProps } from 'react-redux';
 import ChapterTable from './ChapterTable';
@@ -33,12 +37,14 @@ import {
   loadSeries,
   loadSeriesList,
   reloadSeriesList,
+  removeSeries,
   toggleChapterRead,
 } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
 import { RootState } from '../store';
 
 const { Title } = Typography;
+const { confirm } = Modal;
 
 const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
 if (!fs.existsSync(thumbnailsDir)) {
@@ -61,6 +67,7 @@ const mapDispatch = (dispatch: any) => ({
   loadSeries: (id: number) => loadSeries(dispatch, id),
   loadSeriesList: () => loadSeriesList(dispatch),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  removeSeries: (series: Series) => removeSeries(dispatch, series),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
@@ -75,6 +82,7 @@ type Props = PropsFromRedux & {};
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams();
+  const history = useHistory();
 
   const loadContent = async () => {
     // eslint-disable-next-line promise/catch-or-return
@@ -105,6 +113,20 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const getThumbnailPath = (seriesId?: number) => {
     const thumbnailPath = path.join(thumbnailsDir, `${seriesId}.jpg`);
     return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
+  };
+
+  const handleRemove = () => {
+    confirm({
+      title: 'Remove this series from your library?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'This action is irreversible.',
+      onOk() {
+        if (props.series !== undefined) {
+          props.removeSeries(props.series);
+          history.push(routes.LIBRARY);
+        }
+      },
+    });
   };
 
   const renderSeriesDescriptions = (series: Series) => {
@@ -173,20 +195,26 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           </Button>
         </Affix>
       </Link>
-      <Affix className={styles.refreshButtonAffix}>
-        <Button
-          icon={<ReloadOutlined />}
-          onClick={() => {
-            if (props.series !== undefined)
-              reloadSeriesList(
-                [props.series],
-                props.setStatusText,
-                loadContent
-              );
-          }}
-        >
-          Refresh
-        </Button>
+      <Affix className={styles.controlButtonAffix}>
+        <>
+          <Button className={styles.removeButton} onClick={handleRemove}>
+            Remove Series
+          </Button>
+          <Button
+            className={styles.refreshButton}
+            icon={<ReloadOutlined />}
+            onClick={() => {
+              if (props.series !== undefined)
+                reloadSeriesList(
+                  [props.series],
+                  props.setStatusText,
+                  loadContent
+                );
+            }}
+          >
+            Refresh
+          </Button>
+        </>
       </Affix>
       <div className={styles.backgroundContainer}>
         {props.seriesBannerUrl === null ? (

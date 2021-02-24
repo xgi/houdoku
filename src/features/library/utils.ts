@@ -4,6 +4,7 @@ import db from '../../services/db';
 import { Chapter, Series } from '../../models/types';
 import { getChapters, getSeries } from '../../services/extension';
 import filesystem from '../../services/extensions/filesystem';
+import { deleteThumbnail } from '../../util/filesystem';
 
 export function loadSeriesList(dispatch: any) {
   db.fetchSerieses().then((response: any) => dispatch(setSeriesList(response)));
@@ -17,6 +18,15 @@ export function loadChapterList(dispatch: any, seriesId: number) {
   db.fetchChapters(seriesId).then((response: any) =>
     dispatch(setChapterList(response))
   );
+}
+
+export function removeSeries(dispatch: any, series: Series) {
+  if (series.id === undefined) return;
+
+  db.deleteSeries(series.id).then((response: any) => {
+    deleteThumbnail(series);
+    return loadSeriesList(dispatch);
+  });
 }
 
 export function toggleChapterRead(

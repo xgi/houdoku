@@ -1,7 +1,8 @@
 import path from 'path';
 import fs from 'fs';
+import { ipcRenderer } from 'electron';
+import { Series } from '../models/types';
 
-// eslint-disable-next-line import/prefer-default-export
 export function walk(directory: string): string[] {
   let fileList: string[] = [];
 
@@ -17,4 +18,27 @@ export function walk(directory: string): string[] {
   }
 
   return fileList;
+}
+
+export async function getThumbnailPath(series: Series): Promise<string | null> {
+  if (series.remoteCoverUrl === '') return null;
+
+  const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
+  if (!fs.existsSync(thumbnailsDir)) {
+    fs.mkdirSync(thumbnailsDir);
+  }
+
+  const ext = series.remoteCoverUrl.split('.').pop();
+  return path.join(thumbnailsDir, `${series.id}.${ext}`);
+}
+
+export async function deleteThumbnail(series: Series) {
+  const thumbnailPath = await getThumbnailPath(series);
+  if (thumbnailPath === null) return;
+
+  fs.unlink(thumbnailPath, (err) => {
+    if (err) {
+      console.error(err);
+    }
+  });
 }
