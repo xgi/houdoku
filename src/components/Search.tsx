@@ -45,7 +45,6 @@ const mapDispatch = (dispatch: any) => ({
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type Props = PropsFromRedux & {
   importSeries: (extensionId: number, sourceId: string) => void;
 };

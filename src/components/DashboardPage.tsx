@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route, useHistory } from 'react-router-dom';
-import { Layout, Menu, Button, Input, Slider, Typography } from 'antd';
+import { Layout, Menu } from 'antd';
 import {
   BookOutlined,
   PlusSquareOutlined,
@@ -13,7 +13,6 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import { RootState } from '../store';
-import LibraryGrid from './LibraryGrid';
 import {
   changeNumColumns,
   setFilter,
@@ -30,7 +29,6 @@ import {
   loadChapterList,
   loadSeries,
   loadSeriesList,
-  reloadSeriesList,
 } from '../features/library/utils';
 import * as database from '../db';
 import { Series, Chapter } from '../models/types';
@@ -38,6 +36,7 @@ import { getSeries, getChapters } from '../services/extension';
 import { downloadCover } from '../util/download';
 import Settings from './Settings';
 import About from './About';
+import Library from './Library';
 
 const { Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -92,10 +91,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
     downloadCover(addResponse[0]);
   };
 
-  const goToSeries = (series: Series) => {
-    if (series.id !== undefined) history.push(`${routes.SERIES}/${series.id}`);
-  };
-
   return (
     <Layout className={styles.pageLayout}>
       <Sider className={styles.sider}>
@@ -141,44 +136,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               <Search importSeries={importSeries} />
             </Route>
             <Route path={routes.LIBRARY}>
-              <>
-                <div className={styles.controlBar}>
-                  <Button
-                    className={styles.reloadButton}
-                    onClick={() =>
-                      reloadSeriesList(
-                        props.seriesList,
-                        props.setStatusText,
-                        props.loadSeriesList
-                      )
-                    }
-                  >
-                    Reload All Series
-                  </Button>
-                  <div className={styles.controlBarSpacer} />
-                  <Slider
-                    className={styles.columnsSlider}
-                    min={2}
-                    max={8}
-                    step={2}
-                    value={props.columns}
-                    marks={{ 2: '2', 4: '4', 6: '6', 8: '8' }}
-                    onChange={(value: number) => props.changeNumColumns(value)}
-                  />
-                  <Input
-                    className={styles.seriesFilter}
-                    placeholder="Filter series list..."
-                    onChange={(e) => props.setFilter(e.target.value)}
-                  />
-                </div>
-                {/* <Uploader callback={(path: string) => importSeries(1, path)} /> */}
-              </>
-              <LibraryGrid
-                columns={props.columns}
-                seriesList={props.seriesList}
-                filter={props.filter}
-                clickFunc={goToSeries}
-              />
+              <Library />
             </Route>
           </Switch>
         </Content>

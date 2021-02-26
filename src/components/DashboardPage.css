@@ -24,26 +24,6 @@
 }
 
 .content {
-  margin: 0px 16px 0;
-  /* overflow: scroll; */
-}
-
-.controlBar {
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid var(--color-background-alt);
-  margin-bottom: 1rem;
-}
-
-.controlBarSpacer {
-  flex: 6;
-}
-
-.columnsSlider {
-  flex: 3;
-}
-
-.seriesFilter {
-  flex: 4;
-  margin-left: 3rem !important;
+  margin: 0 16px 0;
+  overflow: none;
 }
