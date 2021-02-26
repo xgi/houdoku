@@ -1,0 +1,42 @@
+:root {
+  --header-height: 50px;
+}
+
+.header {
+  position: fixed;
+  z-index: 1;
+  width: calc(100vw - 180px);
+  height: var(--header-height) !important;
+  padding: 0 24px !important;
+  margin-left: -16px;
+  background: var(--color-background-alt) !important;
+  display: flex;
+  align-items: center;
+}
+
+.libraryGrid {
+  margin-top: var(--header-height);
+  margin-right: -16px;
+  padding-top: 16px;
+  padding-right: 16px;
+  overflow-y: scroll;
+  height: calc(100vh - 24px - 24px - var(--header-height));
+}
+
+.controlBar {
+  display: flex;
+  align-items: center;
+}
+
+.controlBarSpacer {
+  flex: 6;
+}
+
+.columnsSlider {
+  flex: 3;
+}
+
+.seriesFilter {
+  flex: 4;
+  margin-left: 3rem !important;
+}
