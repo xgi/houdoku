@@ -27,7 +27,7 @@ h4.ant-typography {
 }
 
 #root {
-  height: calc(100%-24px);
+  height: calc(100vh);
   margin-top: 24px;
   overflow-y: auto;
 }
