@@ -16,6 +16,11 @@ body {
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   font-size: 14px;
 }
+#root {
+  height: calc(100vh);
+  margin-top: 24px;
+  overflow-y: auto;
+}
 
 h4.ant-typography {
   font-size: 18px;
@@ -26,8 +31,15 @@ h4.ant-typography {
   user-select: none;
 }
 
-#root {
-  height: calc(100vh);
-  margin-top: 24px;
-  overflow-y: auto;
+::-webkit-scrollbar {
+  width: 14px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-foreground-alt);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-foreground);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-7);
 }
