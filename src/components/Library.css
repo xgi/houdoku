@@ -32,11 +32,15 @@
   flex: 6;
 }
 
+.columnsText {
+  margin: 0 6px 0 0 !important;
+}
+
 .columnsSlider {
   flex: 3;
 }
 
 .seriesFilter {
   flex: 4;
-  margin-left: 3rem !important;
+  margin-left: 2rem !important;
 }

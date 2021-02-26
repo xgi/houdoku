@@ -11,6 +11,7 @@ import { loadSeriesList, reloadSeriesList } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
 import { RootState } from '../store';
 import LibraryGrid from './LibraryGrid';
+import Paragraph from 'antd/lib/typography/Paragraph';
 
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
@@ -56,6 +57,7 @@ const Library: React.FC<Props> = (props: Props) => {
             Reload All Series
           </Button>
           <div className={styles.controlBarSpacer} />
+          <Paragraph className={styles.columnsText}>Columns:</Paragraph>
           <Slider
             className={styles.columnsSlider}
             min={2}
