@@ -1,4 +1,3 @@
-/* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route } from 'react-router-dom';
@@ -6,9 +5,6 @@ import { Layout, Menu } from 'antd';
 import {
   BookOutlined,
   PlusSquareOutlined,
-  FileOutlined,
-  TeamOutlined,
-  UserOutlined,
   SettingOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
@@ -39,7 +35,6 @@ import About from './About';
 import Library from './Library';
 
 const { Content, Sider } = Layout;
-const { SubMenu } = Menu;
 
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
@@ -72,6 +67,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     database
       .init()
+      // eslint-disable-next-line promise/always-return
       .then(() => {
         props.loadSeriesList();
       })
@@ -108,14 +104,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           <Menu.Item key="4" icon={<InfoCircleOutlined />}>
             <Link to={routes.ABOUT}>About</Link>
           </Menu.Item>
-          <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            <Menu.Item key="5">Alex</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
-            <Menu.Item key="6">Team 1</Menu.Item>
-            <Menu.Item key="8">Team 2</Menu.Item>
-          </SubMenu>
-          <Menu.Item key="9" icon={<FileOutlined />} />
         </Menu>
       </Sider>
       <Layout className={`site-layout ${styles.contentLayout}`}>
