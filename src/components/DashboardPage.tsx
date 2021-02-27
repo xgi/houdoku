@@ -79,10 +79,13 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
     const chapters: Chapter[] = await getChapters(extensionId, sourceId);
 
     const addResponse = await db.addSeries(series);
-    await db.addChapters(chapters, addResponse[0]);
-    await db.updateSeriesNumberUnread(addResponse[0]);
+    const addedSeries: Series = addResponse[0];
+    await db.addChapters(chapters, addedSeries);
+    await db.updateSeriesNumberUnread(addedSeries);
     props.loadSeriesList();
-    downloadCover(addResponse[0]);
+    downloadCover(addedSeries);
+
+    props.setStatusText(`Added "${addedSeries.title}" to your library.`);
   };
 
   return (
