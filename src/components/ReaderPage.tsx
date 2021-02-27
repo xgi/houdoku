@@ -398,24 +398,28 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           </Title>
         </div>
         <div className={styles.chapterHeader}>
-          <button
-            className={`${styles.chapterButton}
+          <Tooltip title="Previous Chapter ([)">
+            <button
+              className={`${styles.chapterButton}
             ${getAdjacentChapterId(true) === -1 ? styles.disabled : ''}`}
-            onClick={() => changeChapter(true)}
-          >
-            <span className="icon-arrow-left6" />
-          </button>
+              onClick={() => changeChapter(true)}
+            >
+              <span className="icon-arrow-left6" />
+            </button>
+          </Tooltip>
           <Text className={styles.chapterName}>{getChapterTitleDisplay()}</Text>
-          <button
-            className={`${styles.chapterButton}
+          <Tooltip title="Next Chapter (])">
+            <button
+              className={`${styles.chapterButton}
             ${getAdjacentChapterId(false) === -1 ? styles.disabled : ''}`}
-            onClick={() => changeChapter(false)}
-          >
-            <span className="icon-arrow-right6" />
-          </button>
+              onClick={() => changeChapter(false)}
+            >
+              <span className="icon-arrow-right6" />
+            </button>
+          </Tooltip>
         </div>
         <div className={styles.settingsBar}>
-          <Tooltip title="Change page fit">
+          <Tooltip title="Change page fit (f)">
             <button
               className={`${styles.settingsButton}`}
               onClick={() => props.togglePageFit()}
@@ -423,7 +427,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               <span className={`${getPageFitIconClass()}`} />
             </button>
           </Tooltip>
-          <Tooltip title="Change two-page view">
+          <Tooltip title="Change two-page view (q)">
             <button
               className={`${styles.settingsButton}`}
               onClick={() => props.togglePageView()}
@@ -431,7 +435,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               <span className={`${getPageViewIconClass()}`} />
             </button>
           </Tooltip>
-          <Tooltip title="Change reader direction">
+          <Tooltip title="Change reader direction (d)">
             <button
               className={`${styles.settingsButton}`}
               onClick={() => props.toggleLayoutDirection()}
@@ -439,7 +443,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               <span className={`${getLayoutDirectionIconClass()}`} />
             </button>
           </Tooltip>
-          <Tooltip title="Advanced Settings">
+          <Tooltip title="Advanced Settings (o)">
             <button
               className={`${styles.settingsButton}`}
               onClick={() => props.toggleShowingSettingsModal()}
@@ -449,33 +453,41 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           </Tooltip>
         </div>
         <div className={styles.pageControlBar}>
-          <button
-            className={`${styles.pageButton}`}
-            onClick={() => changePage(true, true)}
-          >
-            <span className="icon-first2" />
-          </button>
-          <button
-            className={`${styles.pageButton}`}
-            onClick={() => changePage(true)}
-          >
-            <span className="icon-arrow-left" />
-          </button>
+          <Tooltip title="First Page (ctrl+←)">
+            <button
+              className={`${styles.pageButton}`}
+              onClick={() => changePage(true, true)}
+            >
+              <span className="icon-first2" />
+            </button>
+          </Tooltip>
+          <Tooltip title="Previous Page (←)">
+            <button
+              className={`${styles.pageButton}`}
+              onClick={() => changePage(true)}
+            >
+              <span className="icon-arrow-left" />
+            </button>
+          </Tooltip>
           <Text className={styles.pageNumber}>
             {`${props.pageNumber} / ${props.lastPageNumber}`}
           </Text>
-          <button
-            className={`${styles.pageButton}`}
-            onClick={() => changePage(false)}
-          >
-            <span className="icon-arrow-right" />
-          </button>
-          <button
-            className={`${styles.pageButton}`}
-            onClick={() => changePage(false, true)}
-          >
-            <span className="icon-last2" />
-          </button>
+          <Tooltip title="Next Page (→)">
+            <button
+              className={`${styles.pageButton}`}
+              onClick={() => changePage(false)}
+            >
+              <span className="icon-arrow-right" />
+            </button>
+          </Tooltip>
+          <Tooltip title="Last Page (ctrl+→)">
+            <button
+              className={`${styles.pageButton}`}
+              onClick={() => changePage(false, true)}
+            >
+              <span className="icon-last2" />
+            </button>
+          </Tooltip>
         </div>
         <div className={styles.groupRow}>
           <Text>Group: {props.chapter?.groupName}</Text>
