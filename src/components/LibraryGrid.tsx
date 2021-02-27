@@ -6,6 +6,7 @@ import React from 'react';
 import { Row, Col } from 'antd';
 import { ipcRenderer } from 'electron';
 import Title from 'antd/lib/typography/Title';
+import { CheckOutlined } from '@ant-design/icons';
 import { Series } from '../models/types';
 import styles from './LibraryGrid.css';
 import blankCover from '../img/blank_cover.png';
@@ -19,7 +20,8 @@ type Props = {
   columns: number;
   seriesList: Series[];
   filter: string;
-  clickFunc: (series: Series) => void;
+  clickFunc: (series: Series, inLibrary: boolean | undefined) => void;
+  inLibraryFunc: ((series: Series) => boolean) | undefined;
 };
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
@@ -53,22 +55,36 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     return <></>;
   };
 
+  const renderInLibraryBadge = () => {
+    return (
+      <Title level={3} className={styles.seriesInLibrary}>
+        <CheckOutlined />
+      </Title>
+    );
+  };
+
   return (
     <div>
       <Row gutter={[16, 16]}>
         {getFilteredList(props.seriesList).map((series: Series) => {
           const coverSource = getImageSource(series).replaceAll('\\', '/');
+          const inLibrary: boolean | undefined =
+            props.inLibraryFunc === undefined
+              ? undefined
+              : props.inLibraryFunc(series);
+
           return (
             <Col span={24 / props.columns} key={`${series.id}-${series.title}`}>
               <div
                 className={styles.coverContainer}
-                onClick={() => props.clickFunc(series)}
+                onClick={() => props.clickFunc(series, inLibrary)}
                 style={{
                   backgroundImage: `url(${coverSource})`,
                   height: `calc(105vw / ${props.columns})`,
                 }}
               >
                 {renderUnreadBadge(series)}
+                {inLibrary ? renderInLibraryBadge() : ''}
                 <Title level={5} className={styles.seriesTitle}>
                   {series.title}
                 </Title>

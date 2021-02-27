@@ -27,6 +27,7 @@
   --color-link-highlight: var(--color-12);
 
   --color-exit: var(--color-1);
+  --color-success: var(--color-2);
 }
 
 #root {

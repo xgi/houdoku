@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Typography, Button, Alert, Input, Dropdown, Menu } from 'antd';
+import { Button, Alert, Input, Dropdown, Menu, Modal } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import styles from './Search.css';
-import routes from '../constants/routes.json';
 import { ExtensionMetadata } from '../services/extensions/types';
 import {
   getExtensionMetadata,
@@ -21,14 +19,16 @@ import {
 } from '../features/search/actions';
 import { RootState } from '../store';
 import AddSeriesModal from './AddSeriesModal';
+import Paragraph from 'antd/lib/typography/Paragraph';
 
-const { Title, Text } = Typography;
+const { info } = Modal;
 
 const mapState = (state: RootState) => ({
   searchExtension: state.search.searchExtension,
   searchResults: state.search.searchResults,
   addModalSeries: state.search.addModalSeries,
   showingAddModal: state.search.showingAddModal,
+  seriesList: state.library.seriesList,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,6 +57,17 @@ const Search: React.FC<Props> = (props: Props) => {
     return metadata.name;
   };
 
+  const inLibrary = (series: Series): boolean => {
+    return (
+      props.seriesList.find(
+        (_series: Series) =>
+          (series.extensionId === _series.extensionId &&
+            series.sourceId === _series.sourceId) ||
+          series.title === _series.title
+      ) !== undefined
+    );
+  };
+
   const handleSearch = async () => {
     const seriesList: Series[] = await search(
       props.searchExtension,
@@ -80,6 +91,12 @@ const Search: React.FC<Props> = (props: Props) => {
       );
     }
     return <></>;
+  };
+
+  const showInLibraryMessage = () => {
+    info({
+      content: <Paragraph>This series is already in your library.</Paragraph>,
+    });
   };
 
   const extensionMenu = (
@@ -127,10 +144,18 @@ const Search: React.FC<Props> = (props: Props) => {
         columns={4}
         seriesList={props.searchResults}
         filter=""
-        clickFunc={(series: Series) => {
-          props.setAddModalSeries(series);
-          props.toggleShowingAddModal();
+        clickFunc={(
+          series: Series,
+          isInLibrary: boolean | undefined = undefined
+        ) => {
+          if (isInLibrary) {
+            showInLibraryMessage();
+          } else {
+            props.setAddModalSeries(series);
+            props.toggleShowingAddModal();
+          }
         }}
+        inLibraryFunc={inLibrary}
       />
     </>
   );

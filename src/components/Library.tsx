@@ -80,6 +80,7 @@ const Library: React.FC<Props> = (props: Props) => {
           seriesList={props.seriesList}
           filter={props.filter}
           clickFunc={goToSeries}
+          inLibraryFunc={undefined}
         />
       </div>
     </>

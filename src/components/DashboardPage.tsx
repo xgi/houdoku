@@ -1,7 +1,7 @@
 /* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Link, Switch, Route, useHistory } from 'react-router-dom';
+import { Link, Switch, Route } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import {
   BookOutlined,
@@ -69,8 +69,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
-  const history = useHistory();
-
   useEffect(() => {
     database
       .init()

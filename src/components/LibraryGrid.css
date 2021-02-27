@@ -26,6 +26,16 @@
   z-index: 1;
 }
 
+.seriesInLibrary {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 0 5px;
+  background-color: var(--color-success);
+  user-select: none;
+  z-index: 1;
+}
+
 .coverContainer:hover {
   cursor: pointer;
   opacity: 0.3;
