@@ -39,6 +39,7 @@ import {
   togglePageFit,
   togglePageView,
 } from '../features/settings/actions';
+import { toggleChapterRead } from '../features/library/utils';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -89,6 +90,8 @@ const mapDispatch = (dispatch: any) => ({
   setChapterIdList: (chapterIdList: number[]) =>
     dispatch(setChapterIdList(chapterIdList)),
   toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
+  toggleChapterRead: (chapter: Chapter, series: Series) =>
+    toggleChapterRead(dispatch, chapter, series),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -144,6 +147,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       .then((response: any) => response[0]);
 
     props.setSource(series, chapter);
+    if (!chapter.read) props.toggleChapterRead(chapter, series);
+
     createChapterIdList(series, chapter);
 
     const pageUrls: string[] = await getPageRequesterData(
