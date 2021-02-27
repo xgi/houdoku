@@ -23,6 +23,13 @@
   height: calc(100vh - 24px - 24px - var(--header-height));
 }
 
+.emptyMessageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 24px - 24px);
+}
+
 .controlBar {
   display: flex;
   align-items: center;

@@ -40,6 +40,31 @@ const Library: React.FC<Props> = (props: Props) => {
     if (series.id !== undefined) history.push(`${routes.SERIES}/${series.id}`);
   };
 
+  const renderLibraryGrid = () => {
+    return (
+      <div className={styles.libraryGrid}>
+        <LibraryGrid
+          columns={props.columns}
+          seriesList={props.seriesList}
+          filter={props.filter}
+          clickFunc={goToSeries}
+          inLibraryFunc={undefined}
+        />
+      </div>
+    );
+  };
+
+  const renderEmptyMessage = () => {
+    return (
+      <div className={styles.emptyMessageContainer}>
+        <Paragraph>
+          Your library is empty. Click the Add Series tab on the left to get
+          started.
+        </Paragraph>
+      </div>
+    );
+  };
+
   return (
     <>
       <>
@@ -74,15 +99,7 @@ const Library: React.FC<Props> = (props: Props) => {
         </Header>
         {/* <Uploader callback={(path: string) => importSeries(1, path)} /> */}
       </>
-      <div className={styles.libraryGrid}>
-        <LibraryGrid
-          columns={props.columns}
-          seriesList={props.seriesList}
-          filter={props.filter}
-          clickFunc={goToSeries}
-          inLibraryFunc={undefined}
-        />
-      </div>
+      {props.seriesList.length > 0 ? renderLibraryGrid() : renderEmptyMessage()}
     </>
   );
 };
