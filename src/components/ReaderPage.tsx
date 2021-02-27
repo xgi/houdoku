@@ -4,8 +4,9 @@
 /* eslint-disable promise/catch-or-return */
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { Layout, Typography, Tooltip } from 'antd';
+import Mousetrap from 'mousetrap';
 import { RootState } from '../store';
 import {
   changePageNumber,
@@ -41,6 +42,19 @@ import {
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
+
+const KEYBOARD_SHORTCUTS = {
+  previousPage: 'left',
+  firstPage: 'ctrl+left',
+  nextPage: 'right',
+  lastPage: 'ctrl+right',
+  previousChapter: '[',
+  nextChapter: ']',
+  toggleLayoutDirection: 'd',
+  togglePageView: 'q',
+  togglePageFit: 'f',
+  toggleShowingSettingsModal: 'o',
+};
 
 const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
@@ -87,6 +101,7 @@ type Props = PropsFromRedux & {};
 const ReaderPage: React.FC<Props> = (props: Props) => {
   const { chapter_id } = useParams();
   const history = useHistory();
+  const location = useLocation();
 
   const createChapterIdList = async (series: Series, chapter: Chapter) => {
     if (series.id === undefined) return;
@@ -179,25 +194,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       return `${props.chapter.chapterNumber} - ${props.chapter.title}`;
     }
     return `Chapter ${props.chapter.chapterNumber}`;
-  };
-
-  useEffect(() => {
-    loadChapterData(chapter_id);
-  }, []);
-
-  /**
-   * Exit the reader page.
-   * If the series prop is loaded, go to its series detail page. Otherwise, go to the library.
-   */
-  const exitPage = () => {
-    props.setPageNumber(1);
-    props.setPageUrls([]);
-
-    if (props.series !== undefined) {
-      history.push(`${routes.SERIES}/${props.series.id}`);
-    } else {
-      history.push(routes.LIBRARY);
-    }
   };
 
   const renderPageImage = (pageNumber: number) => {
@@ -335,6 +331,48 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     loadChapterData(newChapterId);
   };
+
+  const removeKeybindings = () => {
+    Mousetrap.unbind(Object.values(KEYBOARD_SHORTCUTS));
+  };
+
+  /**
+   * Exit the reader page.
+   * If the series prop is loaded, go to its series detail page. Otherwise, go to the library.
+   */
+  const exitPage = () => {
+    props.setPageNumber(1);
+    props.setPageUrls([]);
+    props.setChapterIdList([]);
+    removeKeybindings();
+
+    if (props.series !== undefined) {
+      history.push(`${routes.SERIES}/${props.series.id}`);
+    } else {
+      history.push(routes.LIBRARY);
+    }
+  };
+
+  useEffect(() => {
+    loadChapterData(chapter_id);
+  }, [location]);
+
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.previousPage, () => changePage(true));
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.firstPage, () => changePage(true, true));
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.nextPage, () => changePage(false));
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.lastPage, () => changePage(false, true));
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.previousChapter, () => changeChapter(true));
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.nextChapter, () => changeChapter(false));
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleLayoutDirection, () =>
+    props.toggleLayoutDirection()
+  );
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.togglePageView, () =>
+    props.togglePageView()
+  );
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.togglePageFit, () => props.togglePageFit());
+  Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleShowingSettingsModal, () =>
+    props.toggleShowingSettingsModal()
+  );
 
   return (
     <Layout className={styles.pageLayout}>
