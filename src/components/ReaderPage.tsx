@@ -63,7 +63,6 @@ const mapState = (state: RootState) => ({
   series: state.reader.series,
   chapter: state.reader.chapter,
   chapterIdList: state.reader.chapterIdList,
-  createdChapterIdList: state.reader.createdChapterIdList,
   showingSettingsModal: state.reader.showingSettingsModal,
   pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
@@ -145,7 +144,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       .then((response: any) => response[0]);
 
     props.setSource(series, chapter);
-    if (!props.createdChapterIdList) createChapterIdList(series, chapter);
+    createChapterIdList(series, chapter);
 
     const pageUrls: string[] = await getPageRequesterData(
       series.extensionId,

@@ -15,7 +15,6 @@ const initialState: ReaderState = {
   series: undefined,
   chapter: undefined,
   chapterIdList: [],
-  createdChapterIdList: false,
   showingSettingsModal: false,
 };
 
@@ -76,7 +75,6 @@ export default function reader(
       return {
         ...state,
         chapterIdList: action.payload.chapterIdList,
-        createdChapterIdList: true,
       };
     case TOGGLE_SHOWING_SETTINGS_MODAL:
       return { ...state, showingSettingsModal: !state.showingSettingsModal };

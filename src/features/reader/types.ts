@@ -14,7 +14,6 @@ export interface ReaderState {
   series?: Series;
   chapter?: Chapter;
   chapterIdList: number[];
-  createdChapterIdList: boolean;
   showingSettingsModal: boolean;
 }
 
