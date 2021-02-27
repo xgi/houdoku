@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Alert, Input, Dropdown, Menu, Modal } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
+import Paragraph from 'antd/lib/typography/Paragraph';
+import { useLocation } from 'react-router-dom';
 import styles from './Search.css';
 import { ExtensionMetadata } from '../services/extensions/types';
 import {
@@ -19,7 +21,6 @@ import {
 } from '../features/search/actions';
 import { RootState } from '../store';
 import AddSeriesModal from './AddSeriesModal';
-import Paragraph from 'antd/lib/typography/Paragraph';
 
 const { info } = Modal;
 
@@ -50,6 +51,7 @@ type Props = PropsFromRedux & {
 };
 
 const Search: React.FC<Props> = (props: Props) => {
+  const location = useLocation();
   const [searchText, setSearchText] = useState('');
 
   const getExtensionName = (extensionId: number) => {
@@ -115,6 +117,10 @@ const Search: React.FC<Props> = (props: Props) => {
       })}
     </Menu>
   );
+
+  useEffect(() => {
+    props.setSearchResults([]);
+  }, [location]);
 
   return (
     <>

@@ -1,7 +1,7 @@
 import { StatusState, SET_STATUS_TEXT } from './types';
 
 const initialState: StatusState = {
-  text: 'No status set...',
+  text: '',
 };
 
 export default function status(
