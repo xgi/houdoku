@@ -6,6 +6,24 @@ import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { Layout, Typography, Tooltip } from 'antd';
+import {
+  FullscreenOutlined,
+  ColumnWidthOutlined,
+  ColumnHeightOutlined,
+  PictureOutlined,
+  ReadOutlined,
+  ReadFilled,
+  RightSquareOutlined,
+  LeftSquareOutlined,
+  SettingOutlined,
+  ArrowRightOutlined,
+  ArrowLeftOutlined,
+  RightOutlined,
+  LeftOutlined,
+  VerticalLeftOutlined,
+  VerticalRightOutlined,
+  CloseOutlined,
+} from '@ant-design/icons';
 import Mousetrap from 'mousetrap';
 import { RootState } from '../store';
 import {
@@ -55,6 +73,23 @@ const KEYBOARD_SHORTCUTS = {
   togglePageView: 'q',
   togglePageFit: 'f',
   toggleShowingSettingsModal: 'o',
+};
+
+const ICONS_PAGE_FIT = {
+  [PageFit.Auto]: <FullscreenOutlined />,
+  [PageFit.Width]: <ColumnWidthOutlined />,
+  [PageFit.Height]: <ColumnHeightOutlined />,
+};
+
+const ICONS_PAGE_VIEW = {
+  [PageView.Single]: <PictureOutlined />,
+  [PageView.Double]: <ReadOutlined />,
+  [PageView.Double_OddStart]: <ReadFilled />,
+};
+
+const ICONS_LAYOUT_DIRECTION = {
+  [LayoutDirection.LeftToRight]: <RightSquareOutlined />,
+  [LayoutDirection.RightToLeft]: <LeftSquareOutlined />,
 };
 
 const mapState = (state: RootState) => ({
@@ -162,33 +197,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
   const getPageMargin = () => {
     return `${props.pageNumber * -100 + 100}%`;
-  };
-
-  const getPageFitIconClass = () => {
-    if (props.pageFit === PageFit.Auto) {
-      return 'icon-enlarge2';
-    }
-    if (props.pageFit === PageFit.Width) {
-      return 'icon-width';
-    }
-    return 'icon-height2';
-  };
-
-  const getPageViewIconClass = () => {
-    if (props.pageView === PageView.Single) {
-      return 'icon-image2';
-    }
-    if (props.pageView === PageView.Double) {
-      return 'icon-images2';
-    }
-    return 'icon-images2-flipped';
-  };
-
-  const getLayoutDirectionIconClass = () => {
-    if (props.layoutDirection === LayoutDirection.LeftToRight) {
-      return 'icon-square-right';
-    }
-    return 'icon-square-left';
   };
 
   const getChapterTitleDisplay = (): string => {
@@ -395,7 +403,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       <Sider className={styles.sider}>
         <div className={styles.siderHeader}>
           <button className={styles.exitButton} onClick={() => exitPage()}>
-            <span className="icon-cross" />
+            <CloseOutlined />
           </button>
           <Title className={styles.seriesTitle} level={4}>
             {props.series === undefined ? 'loading...' : props.series.title}
@@ -408,7 +416,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
             ${getAdjacentChapterId(true) === -1 ? styles.disabled : ''}`}
               onClick={() => changeChapter(true)}
             >
-              <span className="icon-arrow-left6" />
+              <ArrowLeftOutlined />
             </button>
           </Tooltip>
           <Text className={styles.chapterName}>{getChapterTitleDisplay()}</Text>
@@ -418,7 +426,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
             ${getAdjacentChapterId(false) === -1 ? styles.disabled : ''}`}
               onClick={() => changeChapter(false)}
             >
-              <span className="icon-arrow-right6" />
+              <ArrowRightOutlined />
             </button>
           </Tooltip>
         </div>
@@ -428,7 +436,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               className={`${styles.settingsButton}`}
               onClick={() => props.togglePageFit()}
             >
-              <span className={`${getPageFitIconClass()}`} />
+              {ICONS_PAGE_FIT[props.pageFit]}
             </button>
           </Tooltip>
           <Tooltip title="Change two-page view (q)">
@@ -436,7 +444,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               className={`${styles.settingsButton}`}
               onClick={() => props.togglePageView()}
             >
-              <span className={`${getPageViewIconClass()}`} />
+              {ICONS_PAGE_VIEW[props.pageView]}
             </button>
           </Tooltip>
           <Tooltip title="Change reader direction (d)">
@@ -444,7 +452,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               className={`${styles.settingsButton}`}
               onClick={() => props.toggleLayoutDirection()}
             >
-              <span className={`${getLayoutDirectionIconClass()}`} />
+              {ICONS_LAYOUT_DIRECTION[props.layoutDirection]}
             </button>
           </Tooltip>
           <Tooltip title="Advanced Settings (o)">
@@ -452,7 +460,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               className={`${styles.settingsButton}`}
               onClick={() => props.toggleShowingSettingsModal()}
             >
-              <span className="icon-cog" />
+              <SettingOutlined />
             </button>
           </Tooltip>
         </div>
@@ -462,7 +470,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               className={`${styles.pageButton}`}
               onClick={() => changePage(true, true)}
             >
-              <span className="icon-first2" />
+              <VerticalRightOutlined />
             </button>
           </Tooltip>
           <Tooltip title="Previous Page (←)">
@@ -470,7 +478,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               className={`${styles.pageButton}`}
               onClick={() => changePage(true)}
             >
-              <span className="icon-arrow-left" />
+              <LeftOutlined />
             </button>
           </Tooltip>
           <Text className={styles.pageNumber}>
@@ -481,7 +489,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               className={`${styles.pageButton}`}
               onClick={() => changePage(false)}
             >
-              <span className="icon-arrow-right" />
+              <RightOutlined />
             </button>
           </Tooltip>
           <Tooltip title="Last Page (ctrl+→)">
@@ -489,7 +497,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               className={`${styles.pageButton}`}
               onClick={() => changePage(false, true)}
             >
-              <span className="icon-last2" />
+              <VerticalLeftOutlined />
             </button>
           </Tooltip>
         </div>

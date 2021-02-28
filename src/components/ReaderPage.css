@@ -1,3 +1,7 @@
+:root {
+  --sider-width: 300px;
+}
+
 button:hover {
   color: var(--color-link);
   cursor: pointer;
@@ -24,10 +28,6 @@ button.disabled:hover {
 
 .settingsButton {
   background: var(--color-background-alt);
-}
-
-:root {
-  --sider-width: 300px;
 }
 
 .pageLayout {
@@ -107,7 +107,6 @@ button.disabled:hover {
 .chapterButton {
   height: 2.5rem;
   width: 2.5rem;
-  font-size: 16px;
 }
 
 .pageControlBar {
@@ -119,7 +118,6 @@ button.disabled:hover {
 .pageButton {
   height: 2.2rem;
   width: 2.2rem;
-  font-size: 16px;
 }
 
 .settingsBar {
@@ -131,7 +129,6 @@ button.disabled:hover {
 .settingsButton {
   height: 2.5rem;
   width: 2.5rem;
-  font-size: 16px;
 }
 
 .groupRow {
