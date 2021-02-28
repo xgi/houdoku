@@ -14,6 +14,7 @@ import {
   SET_PAGE_VIEW,
   SET_LAYOUT_DIRECTION,
   SET_CHAPTER_LANGUAGES,
+  SET_REFRESH_ON_START,
 } from './types';
 
 export function setChapterLanguages(
@@ -23,6 +24,15 @@ export function setChapterLanguages(
     type: SET_CHAPTER_LANGUAGES,
     payload: {
       chapterLanguages,
+    },
+  };
+}
+
+export function setRefreshOnStart(refreshOnStart: boolean): SettingsAction {
+  return {
+    type: SET_REFRESH_ON_START,
+    payload: {
+      refreshOnStart,
     },
   };
 }

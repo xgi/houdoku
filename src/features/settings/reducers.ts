@@ -16,6 +16,7 @@ import {
   SET_LAYOUT_DIRECTION,
   SET_PAGE_VIEW,
   SET_CHAPTER_LANGUAGES,
+  SET_REFRESH_ON_START,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -34,6 +35,10 @@ const initialState: SettingsState = {
     storedGeneralSettings.ChapterLanguages === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.ChapterLanguages]
       : storedGeneralSettings.ChapterLanguages,
+  refreshOnStart:
+    storedGeneralSettings.RefreshOnStart === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.RefreshOnStart]
+      : storedGeneralSettings.RefreshOnStart,
   pageFit:
     storedReaderSettings.PageFit === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.PageFit]
@@ -93,6 +98,12 @@ export default function settings(
         action.payload.chapterLanguages
       );
       return { ...state, chapterLanguages: action.payload.chapterLanguages };
+    case SET_REFRESH_ON_START:
+      saveGeneralSetting(
+        GeneralSetting.RefreshOnStart,
+        action.payload.refreshOnStart
+      );
+      return { ...state, refreshOnStart: action.payload.refreshOnStart };
     case SET_PAGE_FIT:
       saveReaderSetting(ReaderSetting.PageFit, action.payload.pageFit);
       return { ...state, pageFit: action.payload.pageFit };

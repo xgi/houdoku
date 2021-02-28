@@ -79,7 +79,7 @@ const Library: React.FC<Props> = (props: Props) => {
               )
             }
           >
-            Reload All Series
+            Refresh All Series
           </Button>
           <div className={styles.controlBarSpacer} />
           <Paragraph className={styles.columnsText}>Columns:</Paragraph>

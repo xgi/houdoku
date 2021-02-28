@@ -81,6 +81,7 @@ export type Language = {
 
 export enum GeneralSetting {
   ChapterLanguages = 'ChapterLanguages',
+  RefreshOnStart = 'RefreshOnStart',
 }
 
 export enum ReaderSetting {

@@ -15,6 +15,7 @@ const PREFIXES = {
 
 export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.ChapterLanguages]: [LanguageKey.ENGLISH],
+  [GeneralSetting.RefreshOnStart]: true,
 };
 
 export const DEFAULT_READER_SETTINGS = {
@@ -30,11 +31,17 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   const chapterListLanguages: string | null = persistantStore.read(
     `${PREFIXES.general}${GeneralSetting.ChapterLanguages}`
   );
+  const refreshOnStart: string | null = persistantStore.read(
+    `${PREFIXES.general}${GeneralSetting.RefreshOnStart}`
+  );
 
   if (chapterListLanguages !== null) {
     settings[GeneralSetting.ChapterLanguages] = chapterListLanguages
       .split(',')
       .map((value: string) => parseInt(value, 10)) as LanguageKey[];
+  }
+  if (refreshOnStart !== null) {
+    settings[GeneralSetting.RefreshOnStart] = refreshOnStart === 'true';
   }
 
   return settings;

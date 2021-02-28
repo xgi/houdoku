@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Select, Col, Input, Row, Menu, Dropdown, Button } from 'antd';
+import React from 'react';
+import { Select, Col, Row, Menu, Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import { connect, ConnectedProps } from 'react-redux';
@@ -21,6 +21,7 @@ import {
   setPageFit,
   setPageView,
   setPreloadAmount,
+  setRefreshOnStart,
 } from '../features/settings/actions';
 
 const { Option } = Select;
@@ -30,6 +31,11 @@ const languageOptions = Object.values(Languages).map((language: Language) => (
     {language.name}
   </Option>
 ));
+
+const refreshOnStartText: { [key: string]: string } = {
+  true: 'Yes',
+  false: 'No',
+};
 
 const layoutDirectionText: { [key in LayoutDirection]: string } = {
   [LayoutDirection.LeftToRight]: 'Left-to-Right',
@@ -59,6 +65,7 @@ const preloadText: { [key: number]: string } = {
 
 const mapState = (state: RootState) => ({
   chapterLanguages: state.settings.chapterLanguages,
+  refreshOnStart: state.settings.refreshOnStart,
   pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
@@ -69,6 +76,8 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (dispatch: any) => ({
   setChapterLanguages: (chapterLanguages: LanguageKey[]) =>
     dispatch(setChapterLanguages(chapterLanguages)),
+  setRefreshOnStart: (refreshOnStart: boolean) =>
+    dispatch(setRefreshOnStart(refreshOnStart)),
   setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
   setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
   setLayoutDirection: (layoutDirection: LayoutDirection) =>
@@ -88,6 +97,9 @@ const Settings: React.FC<Props> = (props: Props) => {
     switch (generalSetting) {
       case GeneralSetting.ChapterLanguages:
         props.setChapterLanguages(value);
+        break;
+      case GeneralSetting.RefreshOnStart:
+        props.setRefreshOnStart(value);
         break;
       default:
         break;
@@ -165,6 +177,35 @@ const Settings: React.FC<Props> = (props: Props) => {
           >
             {languageOptions}
           </Select>
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Refresh All Series on Startup</Col>
+        <Col span={14}>
+          <Dropdown
+            overlay={
+              <Menu
+                onClick={(e) => {
+                  updateGeneralSetting(
+                    GeneralSetting.RefreshOnStart,
+                    e.item.props['data-value'] === 'true'
+                  );
+                }}
+              >
+                <Menu.Item key={1} data-value="true">
+                  Yes
+                </Menu.Item>
+                <Menu.Item key={2} data-value="false">
+                  No
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button>
+              {refreshOnStartText[props.refreshOnStart.toString()]}{' '}
+              <DownOutlined />
+            </Button>
+          </Dropdown>
         </Col>
       </Row>
       <Title className={styles.title} level={4}>

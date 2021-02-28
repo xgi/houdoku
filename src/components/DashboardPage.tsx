@@ -25,6 +25,7 @@ import {
   loadChapterList,
   loadSeries,
   loadSeriesList,
+  reloadSeriesList,
 } from '../features/library/utils';
 import * as database from '../db';
 import { Series, Chapter } from '../models/types';
@@ -43,6 +44,7 @@ const mapState = (state: RootState) => ({
   columns: state.library.columns,
   filter: state.library.filter,
   seriesBannerUrl: state.library.seriesBannerUrl,
+  refreshOnStart: state.settings.refreshOnStart,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,7 +73,18 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       .then(() => {
         props.loadSeriesList();
       })
+      .then(() => {
+        // eslint-disable-next-line promise/always-return
+        if (props.refreshOnStart) {
+          reloadSeriesList(
+            props.seriesList,
+            props.setStatusText,
+            props.loadSeriesList
+          );
+        }
+      })
       .catch((error) => console.log(error));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const importSeries = async (extensionId: number, sourceId: string) => {
