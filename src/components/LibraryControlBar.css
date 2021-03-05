@@ -1,0 +1,34 @@
+.header {
+  position: fixed;
+  z-index: 1;
+  width: calc(100vw - 180px);
+  height: 50px !important;
+  /* height: var(--header-height) !important; */
+  padding: 0 24px !important;
+  margin-left: -16px;
+  background: var(--color-background-alt) !important;
+  display: flex;
+  align-items: center;
+}
+
+.controlBar {
+  display: flex;
+  align-items: center;
+}
+
+.controlBarSpacer {
+  flex: 6;
+}
+
+.columnsText {
+  margin: 0 6px 0 0 !important;
+}
+
+.columnsSlider {
+  flex: 3;
+}
+
+.seriesFilter {
+  flex: 4;
+  margin-left: 2rem !important;
+}

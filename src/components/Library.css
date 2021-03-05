@@ -2,18 +2,6 @@
   --header-height: 50px;
 }
 
-.header {
-  position: fixed;
-  z-index: 1;
-  width: calc(100vw - 180px);
-  height: var(--header-height) !important;
-  padding: 0 24px !important;
-  margin-left: -16px;
-  background: var(--color-background-alt) !important;
-  display: flex;
-  align-items: center;
-}
-
 .libraryGrid {
   margin-top: var(--header-height);
   margin-right: -16px;
@@ -28,26 +16,4 @@
   align-items: center;
   justify-content: center;
   height: calc(100vh - 24px - 24px);
-}
-
-.controlBar {
-  display: flex;
-  align-items: center;
-}
-
-.controlBarSpacer {
-  flex: 6;
-}
-
-.columnsText {
-  margin: 0 6px 0 0 !important;
-}
-
-.columnsSlider {
-  flex: 3;
-}
-
-.seriesFilter {
-  flex: 4;
-  margin-left: 2rem !important;
 }

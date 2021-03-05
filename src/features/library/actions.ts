@@ -1,9 +1,10 @@
-import { Chapter, Series } from '../../models/types';
+import { Chapter, Series, SeriesStatus } from '../../models/types';
 import {
   CHANGE_NUM_COLUMNS,
   LibraryAction,
   SET_CHAPTER_LIST,
   SET_FILTER,
+  SET_FILTER_STATUS,
   SET_SERIES,
   SET_SERIES_BANNER_URL,
   SET_SERIES_LIST,
@@ -50,6 +51,15 @@ export function setFilter(filter: string): LibraryAction {
     type: SET_FILTER,
     payload: {
       filter,
+    },
+  };
+}
+
+export function setFilterStatus(status: SeriesStatus | null): LibraryAction {
+  return {
+    type: SET_FILTER_STATUS,
+    payload: {
+      status,
     },
   };
 }

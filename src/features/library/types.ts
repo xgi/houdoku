@@ -1,4 +1,4 @@
-import { Chapter, Series } from '../../models/types';
+import { Chapter, Series, SeriesStatus } from '../../models/types';
 
 export const SET_SERIES_LIST = 'SET_SERIES_LIST';
 export const SET_SERIES = 'SET_SERIES';
@@ -6,6 +6,7 @@ export const SET_CHAPTER_LIST = 'SET_CHAPTER_LIST';
 export const UPDATE_SERIES_LIST = 'UPDATE_SERIES_LIST';
 export const CHANGE_NUM_COLUMNS = 'CHANGE_NUM_COLUMNS';
 export const SET_FILTER = 'SET_FILTER';
+export const SET_FILTER_STATUS = 'SET_FILTER_STATUS';
 export const SET_SERIES_BANNER_URL = 'SET_SERIES_BANNER_URL';
 
 export interface LibraryState {
@@ -14,6 +15,7 @@ export interface LibraryState {
   chapterList: Chapter[];
   columns: number;
   filter: string;
+  filterStatus: SeriesStatus | null;
   seriesBannerUrl: string | null;
 }
 
@@ -52,6 +54,13 @@ interface SetFilterAction {
   };
 }
 
+interface SetFilterStatusAction {
+  type: typeof SET_FILTER_STATUS;
+  payload: {
+    status: SeriesStatus | null;
+  };
+}
+
 interface SetSeriesBannerUrlAction {
   type: typeof SET_SERIES_BANNER_URL;
   payload: {
@@ -65,4 +74,5 @@ export type LibraryAction =
   | SetChapterListAction
   | ChangeNumColumnsAction
   | SetFilterAction
+  | SetFilterStatusAction
   | SetSeriesBannerUrlAction;

@@ -7,7 +7,7 @@ import { Row, Col } from 'antd';
 import { ipcRenderer } from 'electron';
 import Title from 'antd/lib/typography/Title';
 import { CheckOutlined } from '@ant-design/icons';
-import { Series } from '../models/types';
+import { Series, SeriesStatus } from '../models/types';
 import styles from './LibraryGrid.css';
 import blankCover from '../img/blank_cover.png';
 
@@ -20,6 +20,7 @@ type Props = {
   columns: number;
   seriesList: Series[];
   filter: string;
+  filterStatus: SeriesStatus | null;
   clickFunc: (series: Series, inLibrary: boolean | undefined) => void;
   inLibraryFunc: ((series: Series) => boolean) | undefined;
 };
@@ -39,8 +40,11 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     const filter = props.filter.toLowerCase();
 
     return seriesList.filter((series: Series) => {
-      if (series.title.toLowerCase().includes(filter)) return true;
-      return false;
+      if (!series.title.toLowerCase().includes(filter)) return false;
+      if (props.filterStatus !== null && series.status !== props.filterStatus)
+        return false;
+
+      return true;
     });
   };
 

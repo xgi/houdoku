@@ -7,6 +7,7 @@ import {
   SET_SERIES_LIST,
   SET_SERIES,
   SET_CHAPTER_LIST,
+  SET_FILTER_STATUS,
 } from './types';
 
 const initialState: LibraryState = {
@@ -15,6 +16,7 @@ const initialState: LibraryState = {
   chapterList: [],
   columns: 6,
   filter: '',
+  filterStatus: null,
   seriesBannerUrl: null,
 };
 
@@ -36,6 +38,8 @@ export default function library(
       return { ...state, columns: action.payload.columns };
     case SET_FILTER:
       return { ...state, filter: action.payload.filter };
+    case SET_FILTER_STATUS:
+      return { ...state, filterStatus: action.payload.status };
     case SET_SERIES_BANNER_URL:
       return { ...state, seriesBannerUrl: action.payload.seriesBannerUrl };
     default:

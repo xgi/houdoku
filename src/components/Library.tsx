@@ -1,22 +1,22 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Slider, Input } from 'antd';
-import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import { Series } from '../models/types';
 import styles from './Library.css';
 import routes from '../constants/routes.json';
 import { changeNumColumns, setFilter } from '../features/library/actions';
-import { loadSeriesList, reloadSeriesList } from '../features/library/utils';
+import { loadSeriesList } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
 import { RootState } from '../store';
 import LibraryGrid from './LibraryGrid';
-import Paragraph from 'antd/lib/typography/Paragraph';
+import LibraryControlBar from './LibraryControlBar';
 
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
   columns: state.library.columns,
   filter: state.library.filter,
+  filterStatus: state.library.filterStatus,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,6 +47,7 @@ const Library: React.FC<Props> = (props: Props) => {
           columns={props.columns}
           seriesList={props.seriesList}
           filter={props.filter}
+          filterStatus={props.filterStatus}
           clickFunc={goToSeries}
           inLibraryFunc={undefined}
         />
@@ -67,38 +68,7 @@ const Library: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <>
-        <Header className={styles.header}>
-          <Button
-            className={styles.reloadButton}
-            onClick={() =>
-              reloadSeriesList(
-                props.seriesList,
-                props.setStatusText,
-                props.loadSeriesList
-              )
-            }
-          >
-            Refresh All Series
-          </Button>
-          <div className={styles.controlBarSpacer} />
-          <Paragraph className={styles.columnsText}>Columns:</Paragraph>
-          <Slider
-            className={styles.columnsSlider}
-            min={2}
-            max={8}
-            step={2}
-            value={props.columns}
-            onChange={(value: number) => props.changeNumColumns(value)}
-          />
-          <Input
-            className={styles.seriesFilter}
-            placeholder="Filter series list..."
-            onChange={(e) => props.setFilter(e.target.value)}
-          />
-        </Header>
-        {/* <Uploader callback={(path: string) => importSeries(1, path)} /> */}
-      </>
+      <LibraryControlBar />
       {props.seriesList.length > 0 ? renderLibraryGrid() : renderEmptyMessage()}
     </>
   );
