@@ -1,3 +1,4 @@
+import { ProgressFilter } from '../../models/types';
 import {
   LibraryState,
   UPDATE_SERIES_LIST,
@@ -8,6 +9,7 @@ import {
   SET_SERIES,
   SET_CHAPTER_LIST,
   SET_FILTER_STATUS,
+  SET_FILTER_PROGRESS,
 } from './types';
 
 const initialState: LibraryState = {
@@ -17,6 +19,7 @@ const initialState: LibraryState = {
   columns: 6,
   filter: '',
   filterStatus: null,
+  filterProgress: ProgressFilter.Unread,
   seriesBannerUrl: null,
 };
 
@@ -40,6 +43,8 @@ export default function library(
       return { ...state, filter: action.payload.filter };
     case SET_FILTER_STATUS:
       return { ...state, filterStatus: action.payload.status };
+    case SET_FILTER_PROGRESS:
+      return { ...state, filterProgress: action.payload.progress };
     case SET_SERIES_BANNER_URL:
       return { ...state, seriesBannerUrl: action.payload.seriesBannerUrl };
     default:

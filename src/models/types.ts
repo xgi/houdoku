@@ -79,6 +79,12 @@ export type Language = {
   flagCode: string;
 };
 
+export enum ProgressFilter {
+  All,
+  Unread,
+  Finished,
+}
+
 export enum GeneralSetting {
   ChapterLanguages = 'ChapterLanguages',
   RefreshOnStart = 'RefreshOnStart',

@@ -7,7 +7,7 @@ import { Row, Col } from 'antd';
 import { ipcRenderer } from 'electron';
 import Title from 'antd/lib/typography/Title';
 import { CheckOutlined } from '@ant-design/icons';
-import { Series, SeriesStatus } from '../models/types';
+import { ProgressFilter, Series, SeriesStatus } from '../models/types';
 import styles from './LibraryGrid.css';
 import blankCover from '../img/blank_cover.png';
 
@@ -21,6 +21,7 @@ type Props = {
   seriesList: Series[];
   filter: string;
   filterStatus: SeriesStatus | null;
+  filterProgress: ProgressFilter;
   clickFunc: (series: Series, inLibrary: boolean | undefined) => void;
   inLibraryFunc: ((series: Series) => boolean) | undefined;
 };
@@ -42,6 +43,16 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     return seriesList.filter((series: Series) => {
       if (!series.title.toLowerCase().includes(filter)) return false;
       if (props.filterStatus !== null && series.status !== props.filterStatus)
+        return false;
+      if (
+        props.filterProgress === ProgressFilter.Unread &&
+        series.numberUnread === 0
+      )
+        return false;
+      if (
+        props.filterProgress === ProgressFilter.Finished &&
+        series.numberUnread > 0
+      )
         return false;
 
       return true;

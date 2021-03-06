@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-boolean-value */
 import React, { useState } from 'react';
 import { Button, Slider, Input, Dropdown, Menu, Popover } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -7,18 +8,20 @@ import styles from './LibraryControlBar.css';
 import {
   changeNumColumns,
   setFilter,
+  setFilterProgress,
   setFilterStatus,
 } from '../features/library/actions';
 import { loadSeriesList, reloadSeriesList } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
 import { RootState } from '../store';
-import { SeriesStatus } from '../models/types';
+import { ProgressFilter, SeriesStatus } from '../models/types';
 
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
   columns: state.library.columns,
   filter: state.library.filter,
   filterStatus: state.library.filterStatus,
+  filterProgress: state.library.filterProgress,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,6 +32,7 @@ const mapDispatch = (dispatch: any) => ({
   setFilter: (filter: string) => dispatch(setFilter(filter)),
   setFilterStatus: (status: SeriesStatus | null) =>
     dispatch(setFilterStatus(status)),
+  setFilterProgress: (unread: boolean) => dispatch(setFilterProgress(unread)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -48,7 +52,18 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
     else if (status === SeriesStatus.ONGOING) valueText = 'Ongoing';
     else if (status === SeriesStatus.COMPLETED) valueText = 'Completed';
     else if (status === SeriesStatus.CANCELLED) valueText = 'Cancelled';
-    return `Status: ${valueText}`;
+    return `Release Status: ${valueText}`;
+  };
+
+  const getFilterProgressText = () => {
+    const prefix = 'Showing: ';
+
+    if (props.filterProgress === ProgressFilter.All) return `${prefix}All`;
+    if (props.filterProgress === ProgressFilter.Unread)
+      return `${prefix}Unread`;
+    if (props.filterProgress === ProgressFilter.Finished)
+      return `${prefix}Finished`;
+    return prefix;
   };
 
   return (
@@ -87,6 +102,38 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
         >
           <Button>Columns</Button>
         </Popover>
+        <Dropdown
+          overlay={
+            <Menu
+              onClick={(e) =>
+                props.setFilterProgress(e.item.props['data-value'])
+              }
+            >
+              <Menu.Item
+                key={ProgressFilter.All}
+                data-value={ProgressFilter.All}
+              >
+                All
+              </Menu.Item>
+              <Menu.Item
+                key={ProgressFilter.Unread}
+                data-value={ProgressFilter.Unread}
+              >
+                Unread
+              </Menu.Item>
+              <Menu.Item
+                key={ProgressFilter.Finished}
+                data-value={ProgressFilter.Finished}
+              >
+                Finished
+              </Menu.Item>
+            </Menu>
+          }
+        >
+          <Button>
+            {getFilterProgressText()} <DownOutlined />
+          </Button>
+        </Dropdown>
         <Dropdown
           overlay={
             <Menu

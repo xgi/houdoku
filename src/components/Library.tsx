@@ -17,6 +17,7 @@ const mapState = (state: RootState) => ({
   columns: state.library.columns,
   filter: state.library.filter,
   filterStatus: state.library.filterStatus,
+  filterProgress: state.library.filterProgress,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,6 +49,7 @@ const Library: React.FC<Props> = (props: Props) => {
           seriesList={props.seriesList}
           filter={props.filter}
           filterStatus={props.filterStatus}
+          filterProgress={props.filterProgress}
           clickFunc={goToSeries}
           inLibraryFunc={undefined}
         />
