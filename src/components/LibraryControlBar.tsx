@@ -1,9 +1,8 @@
-import React from 'react';
-import { Button, Slider, Input, Dropdown, Menu } from 'antd';
+import React, { useState } from 'react';
+import { Button, Slider, Input, Dropdown, Menu, Popover } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './LibraryControlBar.css';
 import {
   changeNumColumns,
@@ -39,6 +38,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const LibraryControlBar: React.FC<Props> = (props: Props) => {
+  const [showingColumnsPopover, setShowingColumnsPopover] = useState(false);
+
   const getFilterStatusText = () => {
     const status = props.filterStatus;
 
@@ -66,15 +67,26 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           Refresh All Series
         </Button>
         <div className={styles.controlBarSpacer} />
-        <Paragraph className={styles.columnsText}>Columns:</Paragraph>
-        <Slider
-          className={styles.columnsSlider}
-          min={2}
-          max={8}
-          step={2}
-          value={props.columns}
-          onChange={(value: number) => props.changeNumColumns(value)}
-        />
+        <Popover
+          content={
+            <Slider
+              className={styles.columnsSlider}
+              min={2}
+              max={8}
+              step={2}
+              value={props.columns}
+              onChange={(value: number) => props.changeNumColumns(value)}
+            />
+          }
+          title="Change number of columns"
+          trigger="click"
+          visible={showingColumnsPopover}
+          onVisibleChange={(visible: boolean) =>
+            setShowingColumnsPopover(visible)
+          }
+        >
+          <Button>Columns</Button>
+        </Popover>
         <Dropdown
           overlay={
             <Menu
@@ -105,7 +117,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           }
         >
           <Button>
-            {getFilterStatusText(SeriesStatus.COMPLETED)} <DownOutlined />
+            {getFilterStatusText()} <DownOutlined />
           </Button>
         </Dropdown>
         <Input
