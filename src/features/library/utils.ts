@@ -63,6 +63,7 @@ async function reloadSeries(series: Series) {
 
   if (series.extensionId !== filesystem.METADATA.id) {
     newSeries.id = series.id;
+    newSeries.userTags = series.userTags;
   } else {
     // TODO: add logic to avoid overriding manual values for filesystem-sourced series
   }
@@ -102,5 +103,15 @@ export async function reloadSeriesList(
   }
 
   setStatusText(`Reloaded ${cur} series`);
+  if (callback !== undefined) callback();
+}
+
+export async function updateSeriesUserTags(
+  series: Series,
+  userTags: string[],
+  callback?: () => void
+) {
+  const newSeries: Series = { ...series, userTags };
+  await db.addSeries(newSeries);
   if (callback !== undefined) callback();
 }

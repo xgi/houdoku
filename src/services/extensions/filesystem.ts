@@ -57,6 +57,7 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
     originalLanguageKey: LanguageKey.ENGLISH,
     numberUnread: 0,
     remoteCoverUrl: '',
+    userTags: [],
   };
   return series;
 };

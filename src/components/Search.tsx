@@ -11,7 +11,7 @@ import {
   getSearchableExtensions,
   search,
 } from '../services/extension';
-import { Series } from '../models/types';
+import { ProgressFilter, Series } from '../models/types';
 import LibraryGrid from './LibraryGrid';
 import {
   setAddModalSeries,
@@ -150,6 +150,8 @@ const Search: React.FC<Props> = (props: Props) => {
         columns={4}
         seriesList={props.searchResults}
         filter=""
+        filterProgress={ProgressFilter.All}
+        filterStatus={null}
         clickFunc={(
           series: Series,
           isInLibrary: boolean | undefined = undefined

@@ -8,7 +8,6 @@ import {
 export const SET_SERIES_LIST = 'SET_SERIES_LIST';
 export const SET_SERIES = 'SET_SERIES';
 export const SET_CHAPTER_LIST = 'SET_CHAPTER_LIST';
-export const UPDATE_SERIES_LIST = 'UPDATE_SERIES_LIST';
 export const CHANGE_NUM_COLUMNS = 'CHANGE_NUM_COLUMNS';
 export const SET_FILTER = 'SET_FILTER';
 export const SET_FILTER_STATUS = 'SET_FILTER_STATUS';
@@ -19,6 +18,7 @@ export interface LibraryState {
   seriesList: Series[];
   series: Series | undefined;
   chapterList: Chapter[];
+  userTags: string[];
   columns: number;
   filter: string;
   filterStatus: SeriesStatus | null;

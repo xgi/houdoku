@@ -21,6 +21,7 @@ schemaBuilder
   .addColumn('originalLanguageKey', lf.Type.OBJECT)
   .addColumn('numberUnread', lf.Type.INTEGER)
   .addColumn('remoteCoverUrl', lf.Type.STRING)
+  .addColumn('userTags', lf.Type.OBJECT)
   .addPrimaryKey(['id'], true);
 
 schemaBuilder

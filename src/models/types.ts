@@ -15,6 +15,7 @@ export type Series = {
   originalLanguageKey: LanguageKey;
   numberUnread: number;
   remoteCoverUrl: string;
+  userTags: string[];
 };
 
 export type Chapter = {

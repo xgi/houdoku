@@ -30,6 +30,10 @@ h4.ant-typography {
   user-select: none;
 }
 
+.ant-descriptions-item-container {
+  align-items: center;
+}
+
 ::-webkit-scrollbar {
   width: 14px;
 }

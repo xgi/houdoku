@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import React, { useEffect } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { Typography, Button, Descriptions, Affix, Modal } from 'antd';
+import { Typography, Button, Descriptions, Affix, Modal, Select } from 'antd';
 import { ipcRenderer } from 'electron';
 import {
   ReloadOutlined,
@@ -39,11 +39,13 @@ import {
   reloadSeriesList,
   removeSeries,
   toggleChapterRead,
+  updateSeriesUserTags,
 } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
 import { RootState } from '../store';
 
 const { Title } = Typography;
+const { Option } = Select;
 const { confirm } = Modal;
 
 const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
@@ -54,6 +56,7 @@ if (!fs.existsSync(thumbnailsDir)) {
 const mapState = (state: RootState) => ({
   series: state.library.series,
   chapterList: state.library.chapterList,
+  userTags: state.library.userTags,
   seriesBannerUrl: state.library.seriesBannerUrl,
   chapterLanguages: state.settings.chapterLanguages,
 });
@@ -70,6 +73,11 @@ const mapDispatch = (dispatch: any) => ({
   removeSeries: (series: Series) => removeSeries(dispatch, series),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
+  updateSeriesUserTags: (
+    series: Series,
+    userTags: string[],
+    callback: () => void
+  ) => updateSeriesUserTags(series, userTags, callback),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
     dispatch(setSeriesBannerUrl(seriesBannerUrl)),
 });
@@ -182,9 +190,35 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             )
             .join('; ')}
         </Descriptions.Item>
+        <Descriptions.Item
+          className={styles.descriptionItem}
+          label="User Tags"
+          span={4}
+        >
+          <Select
+            mode="tags"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="Enter tags..."
+            value={series.userTags}
+            onChange={(userTags: string[]) =>
+              props.updateSeriesUserTags(series, userTags, () =>
+                props.setSeries({ ...series, userTags })
+              )
+            }
+          >
+            {props.userTags.map((userTag: string) => (
+              <Option key={userTag} value={userTag}>
+                {userTag}
+              </Option>
+            ))}
+          </Select>
+        </Descriptions.Item>
       </Descriptions>
     );
   };
+
+  if (props.series === undefined) return <></>;
 
   return (
     <div>
@@ -238,7 +272,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           </Paragraph>
         </div>
       </div>
-      {props.series !== undefined ? renderSeriesDescriptions(props.series) : ''}
+      {renderSeriesDescriptions(props.series)}
       <ChapterTable
         chapterList={props.chapterList}
         series={props.series}

@@ -215,6 +215,7 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
     originalLanguageKey: LANGUAGE_MAP[json.data.publication.language],
     numberUnread: 0,
     remoteCoverUrl: json.data.mainCover.split('?')[0],
+    userTags: [],
   };
   return series;
 };
