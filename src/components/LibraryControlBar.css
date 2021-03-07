@@ -28,6 +28,11 @@
   flex: 3;
 }
 
+.userTagsBadge {
+  margin-left: -6px !important;
+  margin-right: 7px !important;
+}
+
 .seriesFilter {
   flex: 4;
   margin-left: 2rem !important;

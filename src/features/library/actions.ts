@@ -11,6 +11,7 @@ import {
   SET_FILTER,
   SET_FILTER_PROGRESS,
   SET_FILTER_STATUS,
+  SET_FILTER_USER_TAGS,
   SET_SERIES,
   SET_SERIES_BANNER_URL,
   SET_SERIES_LIST,
@@ -75,6 +76,15 @@ export function setFilterProgress(progress: ProgressFilter): LibraryAction {
     type: SET_FILTER_PROGRESS,
     payload: {
       progress,
+    },
+  };
+}
+
+export function setFilterUserTags(userTags: string[]): LibraryAction {
+  return {
+    type: SET_FILTER_USER_TAGS,
+    payload: {
+      userTags,
     },
   };
 }

@@ -12,6 +12,7 @@ export const CHANGE_NUM_COLUMNS = 'CHANGE_NUM_COLUMNS';
 export const SET_FILTER = 'SET_FILTER';
 export const SET_FILTER_STATUS = 'SET_FILTER_STATUS';
 export const SET_FILTER_PROGRESS = 'SET_FILTER_PROGRESS';
+export const SET_FILTER_USER_TAGS = 'SET_FILTER_USER_TAGS';
 export const SET_SERIES_BANNER_URL = 'SET_SERIES_BANNER_URL';
 
 export interface LibraryState {
@@ -23,6 +24,7 @@ export interface LibraryState {
   filter: string;
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
+  filterUserTags: string[];
   seriesBannerUrl: string | null;
 }
 
@@ -75,6 +77,13 @@ interface SetFilterProgressAction {
   };
 }
 
+interface SetFilterUserTagsAction {
+  type: typeof SET_FILTER_USER_TAGS;
+  payload: {
+    userTags: string[];
+  };
+}
+
 interface SetSeriesBannerUrlAction {
   type: typeof SET_SERIES_BANNER_URL;
   payload: {
@@ -90,4 +99,5 @@ export type LibraryAction =
   | SetFilterAction
   | SetFilterStatusAction
   | SetFilterProgressAction
+  | SetFilterUserTagsAction
   | SetSeriesBannerUrlAction;

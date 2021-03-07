@@ -9,6 +9,7 @@ import {
   SET_CHAPTER_LIST,
   SET_FILTER_STATUS,
   SET_FILTER_PROGRESS,
+  SET_FILTER_USER_TAGS,
 } from './types';
 
 const initialState: LibraryState = {
@@ -20,6 +21,7 @@ const initialState: LibraryState = {
   filter: '',
   filterStatus: null,
   filterProgress: ProgressFilter.Unread,
+  filterUserTags: [],
   seriesBannerUrl: null,
 };
 
@@ -57,6 +59,8 @@ export default function library(
       return { ...state, filterStatus: action.payload.status };
     case SET_FILTER_PROGRESS:
       return { ...state, filterProgress: action.payload.progress };
+    case SET_FILTER_USER_TAGS:
+      return { ...state, filterUserTags: action.payload.userTags };
     case SET_SERIES_BANNER_URL:
       return { ...state, seriesBannerUrl: action.payload.seriesBannerUrl };
     default:

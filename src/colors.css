@@ -133,6 +133,11 @@ td.ant-table-column-sort {
   color: var(--color-link) !important;
 }
 
+.ant-badge-count {
+  background: var(--color-12);
+  color: var(--color-background-alt);
+}
+
 #window-controls .button:hover {
   background: rgba(255, 255, 255, 0.1);
 }

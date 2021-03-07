@@ -18,6 +18,7 @@ const mapState = (state: RootState) => ({
   filter: state.library.filter,
   filterStatus: state.library.filterStatus,
   filterProgress: state.library.filterProgress,
+  filterUserTags: state.library.filterUserTags,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -50,6 +51,7 @@ const Library: React.FC<Props> = (props: Props) => {
           filter={props.filter}
           filterStatus={props.filterStatus}
           filterProgress={props.filterProgress}
+          filterUserTags={props.filterUserTags}
           clickFunc={goToSeries}
           inLibraryFunc={undefined}
         />

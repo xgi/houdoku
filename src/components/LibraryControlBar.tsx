@@ -1,6 +1,15 @@
 /* eslint-disable react/jsx-boolean-value */
 import React, { useState } from 'react';
-import { Button, Slider, Input, Dropdown, Menu, Popover } from 'antd';
+import {
+  Button,
+  Slider,
+  Input,
+  Dropdown,
+  Menu,
+  Popover,
+  Select,
+  Badge,
+} from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
@@ -10,18 +19,23 @@ import {
   setFilter,
   setFilterProgress,
   setFilterStatus,
+  setFilterUserTags,
 } from '../features/library/actions';
 import { loadSeriesList, reloadSeriesList } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
 import { RootState } from '../store';
 import { ProgressFilter, SeriesStatus } from '../models/types';
 
+const { Option } = Select;
+
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
   columns: state.library.columns,
+  userTags: state.library.userTags,
   filter: state.library.filter,
   filterStatus: state.library.filterStatus,
   filterProgress: state.library.filterProgress,
+  filterUserTags: state.library.filterUserTags,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,6 +47,8 @@ const mapDispatch = (dispatch: any) => ({
   setFilterStatus: (status: SeriesStatus | null) =>
     dispatch(setFilterStatus(status)),
   setFilterProgress: (unread: boolean) => dispatch(setFilterProgress(unread)),
+  setFilterUserTags: (userTags: string[]) =>
+    dispatch(setFilterUserTags(userTags)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -43,6 +59,7 @@ type Props = PropsFromRedux & {};
 
 const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [showingColumnsPopover, setShowingColumnsPopover] = useState(false);
+  const [showingTagsPopover, setShowingTagsPopover] = useState(false);
 
   const getFilterStatusText = () => {
     const status = props.filterStatus;
@@ -101,6 +118,38 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           }
         >
           <Button>Columns</Button>
+        </Popover>
+        <Popover
+          content={
+            <Select
+              mode="tags"
+              allowClear
+              style={{ width: '100%' }}
+              placeholder="Enter tags..."
+              value={props.filterUserTags}
+              onChange={(userTags: string[]) =>
+                props.setFilterUserTags(userTags)
+              }
+            >
+              {props.userTags.map((userTag: string) => (
+                <Option key={userTag} value={userTag}>
+                  {userTag}
+                </Option>
+              ))}
+            </Select>
+          }
+          title="Filter by user tag"
+          trigger="click"
+          visible={showingTagsPopover}
+          onVisibleChange={(visible: boolean) => setShowingTagsPopover(visible)}
+        >
+          <Button>
+            <Badge
+              className={styles.userTagsBadge}
+              count={props.filterUserTags.length}
+            />
+            Filter Tags
+          </Button>
         </Popover>
         <Dropdown
           overlay={

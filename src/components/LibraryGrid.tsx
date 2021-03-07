@@ -22,6 +22,7 @@ type Props = {
   filter: string;
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
+  filterUserTags: string[];
   clickFunc: (series: Series, inLibrary: boolean | undefined) => void;
   inLibraryFunc: ((series: Series) => boolean) | undefined;
 };
@@ -42,18 +43,24 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
 
     return seriesList.filter((series: Series) => {
       if (!series.title.toLowerCase().includes(filter)) return false;
-      if (props.filterStatus !== null && series.status !== props.filterStatus)
+      if (props.filterStatus !== null && series.status !== props.filterStatus) {
         return false;
+      }
       if (
         props.filterProgress === ProgressFilter.Unread &&
         series.numberUnread === 0
-      )
+      ) {
         return false;
+      }
       if (
         props.filterProgress === ProgressFilter.Finished &&
         series.numberUnread > 0
-      )
+      ) {
         return false;
+      }
+      for (let i = 0; i < props.filterUserTags.length; i += 1) {
+        if (!series.userTags.includes(props.filterUserTags[i])) return false;
+      }
 
       return true;
     });
