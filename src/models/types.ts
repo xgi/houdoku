@@ -7,10 +7,10 @@ export type Series = {
   description: string;
   authors: string[];
   artists: string[];
-  genres: Genre[];
-  themes: Theme[];
-  contentWarnings: ContentWarning[];
-  formats: Format[];
+  genres: GenreKey[];
+  themes: ThemeKey[];
+  contentWarnings: ContentWarningKey[];
+  formats: FormatKey[];
   status: SeriesStatus;
   originalLanguageKey: LanguageKey;
   numberUnread: number;
@@ -80,48 +80,7 @@ export type Language = {
   flagCode: string;
 };
 
-export enum ProgressFilter {
-  All,
-  Unread,
-  Finished,
-}
-
-export enum GeneralSetting {
-  ChapterLanguages = 'ChapterLanguages',
-  RefreshOnStart = 'RefreshOnStart',
-}
-
-export enum ReaderSetting {
-  PageFit = 'PageFit',
-  LayoutDirection = 'LayoutDirection',
-  PageView = 'PageView',
-  PreloadAmount = 'PreloadAmount',
-}
-
-export enum PageFit {
-  Auto,
-  Width,
-  Height,
-}
-
-export enum LayoutDirection {
-  LeftToRight,
-  RightToLeft,
-}
-
-export enum PageView {
-  Single,
-  Double,
-  Double_OddStart,
-}
-
-export enum SeriesStatus {
-  ONGOING,
-  COMPLETED,
-  CANCELLED,
-}
-
-export enum Genre {
+export enum GenreKey {
   ACTION,
   ADVENTURE,
   COMEDY,
@@ -151,7 +110,12 @@ export enum Genre {
   WUXIA,
 }
 
-export enum Theme {
+export type Genre = {
+  key: GenreKey;
+  name: string;
+};
+
+export enum ThemeKey {
   COOKING,
   GYARU,
   HAREM,
@@ -191,7 +155,12 @@ export enum Theme {
   VILLAINESS,
 }
 
-export enum Format {
+export type Theme = {
+  key: ThemeKey;
+  name: string;
+};
+
+export enum FormatKey {
   YONKOMA,
   AWARD_WINNING,
   DOUJINSHI,
@@ -206,9 +175,60 @@ export enum Format {
   FAN_COLORED,
 }
 
-export enum ContentWarning {
+export type Format = {
+  key: FormatKey;
+  name: string;
+};
+
+export enum ContentWarningKey {
   ECCHI,
   SMUT,
   GORE,
   SEXUAL_VIOLENCE,
+}
+
+export type ContentWarning = {
+  key: ContentWarningKey;
+  name: string;
+};
+
+export enum ProgressFilter {
+  All,
+  Unread,
+  Finished,
+}
+
+export enum GeneralSetting {
+  ChapterLanguages = 'ChapterLanguages',
+  RefreshOnStart = 'RefreshOnStart',
+}
+
+export enum ReaderSetting {
+  PageFit = 'PageFit',
+  LayoutDirection = 'LayoutDirection',
+  PageView = 'PageView',
+  PreloadAmount = 'PreloadAmount',
+}
+
+export enum PageFit {
+  Auto,
+  Width,
+  Height,
+}
+
+export enum LayoutDirection {
+  LeftToRight,
+  RightToLeft,
+}
+
+export enum PageView {
+  Single,
+  Double,
+  Double_OddStart,
+}
+
+export enum SeriesStatus {
+  ONGOING,
+  COMPLETED,
+  CANCELLED,
 }
