@@ -69,11 +69,11 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
     else if (status === SeriesStatus.ONGOING) valueText = 'Ongoing';
     else if (status === SeriesStatus.COMPLETED) valueText = 'Completed';
     else if (status === SeriesStatus.CANCELLED) valueText = 'Cancelled';
-    return `Release Status: ${valueText}`;
+    return `Status: ${valueText}`;
   };
 
   const getFilterProgressText = () => {
-    const prefix = 'Showing: ';
+    const prefix = 'Progress: ';
 
     if (props.filterProgress === ProgressFilter.All) return `${prefix}All`;
     if (props.filterProgress === ProgressFilter.Unread)
