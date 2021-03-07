@@ -35,7 +35,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
       return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
     }
 
-    return series.remoteCoverUrl;
+    return series.remoteCoverUrl === '' ? blankCover : series.remoteCoverUrl;
   };
 
   const getFilteredList = (seriesList: Series[]): Series[] => {
