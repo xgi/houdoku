@@ -7,11 +7,12 @@ import { useLocation } from 'react-router-dom';
 import styles from './Search.css';
 import { ExtensionMetadata } from '../services/extensions/types';
 import {
+  EXTENSIONS,
   getExtensionMetadata,
-  getSearchableExtensions,
+  getSeries,
   search,
 } from '../services/extension';
-import { ProgressFilter, Series } from '../models/types';
+import { Genre, ProgressFilter, Series } from '../models/types';
 import LibraryGrid from './LibraryGrid';
 import {
   setAddModalSeries,
@@ -21,6 +22,8 @@ import {
 } from '../features/search/actions';
 import { RootState } from '../store';
 import AddSeriesModal from './AddSeriesModal';
+import Uploader from './Uploader';
+import filesystem from '../services/extensions/filesystem';
 
 const { info } = Modal;
 
@@ -28,6 +31,7 @@ const mapState = (state: RootState) => ({
   searchExtension: state.search.searchExtension,
   searchResults: state.search.searchResults,
   addModalSeries: state.search.addModalSeries,
+  addModalEditable: state.search.addModalEditable,
   showingAddModal: state.search.showingAddModal,
   seriesList: state.library.seriesList,
 });
@@ -40,7 +44,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setSearchResults(searchResults)),
   setAddModalSeries: (addModalSeries: Series) =>
     dispatch(setAddModalSeries(addModalSeries)),
-  toggleShowingAddModal: () => dispatch(toggleShowingAddModal()),
+  toggleShowingAddModal: (editable: boolean) =>
+    dispatch(toggleShowingAddModal(editable)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -48,6 +53,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type Props = PropsFromRedux & {
   importSeries: (extensionId: number, sourceId: string) => void;
+  importCustomSeries: (series: Series) => void;
 };
 
 const Search: React.FC<Props> = (props: Props) => {
@@ -79,6 +85,12 @@ const Search: React.FC<Props> = (props: Props) => {
     props.setSearchResults(seriesList);
   };
 
+  const handleSearchFilesystem = (path: string) => {
+    return getSeries(filesystem.METADATA.id, path).then((series: Series) =>
+      props.setSearchResults([series])
+    );
+  };
+
   const renderAlert = () => {
     const metadata: ExtensionMetadata = getExtensionMetadata(
       props.searchExtension
@@ -107,7 +119,7 @@ const Search: React.FC<Props> = (props: Props) => {
         props.setSearchExtension(parseInt(e.item.props['data-value'], 10))
       }
     >
-      {Object.values(getSearchableExtensions()).map((extension: any) => {
+      {Object.values(EXTENSIONS).map((extension: any) => {
         const { id } = extension.METADATA;
         return (
           <Menu.Item key={id} data-value={id}>
@@ -127,9 +139,9 @@ const Search: React.FC<Props> = (props: Props) => {
       <AddSeriesModal
         visible={props.showingAddModal}
         series={props.addModalSeries}
-        extensionId={props.searchExtension}
-        toggleVisible={props.toggleShowingAddModal}
-        importSeries={props.importSeries}
+        editable={props.addModalEditable}
+        toggleVisible={() => props.toggleShowingAddModal(false)}
+        importCustomSeries={props.importCustomSeries}
       />
       <div className={styles.searchBar}>
         <Dropdown className={styles.extensionDropdown} overlay={extensionMenu}>
@@ -138,12 +150,19 @@ const Search: React.FC<Props> = (props: Props) => {
             <DownOutlined />
           </Button>
         </Dropdown>
-        <Input
-          className={styles.searchField}
-          placeholder="Search for a series..."
-          onChange={(e) => setSearchText(e.target.value)}
-          onPressEnter={handleSearch}
-        />
+        {props.searchExtension === filesystem.METADATA.id ? (
+          <Uploader
+            className={styles.uploader}
+            callback={(path: string) => handleSearchFilesystem(path)}
+          />
+        ) : (
+          <Input
+            className={styles.searchField}
+            placeholder="Search for a series..."
+            onChange={(e) => setSearchText(e.target.value)}
+            onPressEnter={handleSearch}
+          />
+        )}
       </div>
       {renderAlert()}
       <LibraryGrid
@@ -152,6 +171,7 @@ const Search: React.FC<Props> = (props: Props) => {
         filter=""
         filterProgress={ProgressFilter.All}
         filterStatus={null}
+        filterUserTags={[]}
         clickFunc={(
           series: Series,
           isInLibrary: boolean | undefined = undefined
@@ -160,7 +180,9 @@ const Search: React.FC<Props> = (props: Props) => {
             showInLibraryMessage();
           } else {
             props.setAddModalSeries(series);
-            props.toggleShowingAddModal();
+            props.toggleShowingAddModal(
+              props.searchExtension === filesystem.METADATA.id
+            );
           }
         }}
         inLibraryFunc={inLibrary}

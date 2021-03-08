@@ -25,9 +25,12 @@ export function setSearchResults(searchResults: Series[]): SearchAction {
   };
 }
 
-export function toggleShowingAddModal(): SearchAction {
+export function toggleShowingAddModal(editable: boolean): SearchAction {
   return {
     type: TOGGLE_SHOWING_ADD_MODAL,
+    payload: {
+      editable,
+    },
   };
 }
 

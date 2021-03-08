@@ -2,6 +2,7 @@ import React from 'react';
 import path from 'path';
 
 type Props = {
+  className: string;
   callback: (path: string) => void;
 };
 
@@ -35,6 +36,7 @@ const Uploader: React.FC<Props> = (props: Props) => {
 
   return (
     <input
+      className={props.className}
       type="file"
       webkitdirectory="true"
       onChange={(e) => {

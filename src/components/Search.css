@@ -9,9 +9,9 @@
   flex: 1;
 }
 
-.searchField {
+.searchField, .uploader {
   flex: 5;
-  margin-left: 0.5rem !important;
+  margin-left: 0.5rem !important
 }
 
 .alert {

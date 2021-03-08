@@ -1,6 +1,5 @@
 import { Genre, GenreKey } from './types';
 
-// eslint-disable-next-line import/prefer-default-export
 export const Genres: { [key: string]: Genre } = {
   [GenreKey.ACTION]: { key: GenreKey.ACTION, name: 'Action' },
   [GenreKey.ADVENTURE]: { key: GenreKey.ADVENTURE, name: 'Adventure' },
@@ -41,4 +40,13 @@ export const Genres: { [key: string]: Genre } = {
   [GenreKey.SUPERHERO]: { key: GenreKey.SUPERHERO, name: 'Superhero' },
   [GenreKey.THRILLER]: { key: GenreKey.THRILLER, name: 'Thriller' },
   [GenreKey.WUXIA]: { key: GenreKey.WUXIA, name: 'Wuxia' },
+};
+
+export const genreKeysFromNames = (names: string[]) => {
+  return names.map((name: string) => {
+    const matching: Genre | undefined = Object.values(Genres).find(
+      (genre: Genre) => genre.name === name
+    );
+    return matching === undefined ? -1 : matching.key;
+  });
 };

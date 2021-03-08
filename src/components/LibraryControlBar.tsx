@@ -66,9 +66,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
 
     let valueText = '';
     if (status === null) valueText = 'Any';
-    else if (status === SeriesStatus.ONGOING) valueText = 'Ongoing';
-    else if (status === SeriesStatus.COMPLETED) valueText = 'Completed';
-    else if (status === SeriesStatus.CANCELLED) valueText = 'Cancelled';
+    else valueText = status;
     return `Status: ${valueText}`;
   };
 

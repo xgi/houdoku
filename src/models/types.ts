@@ -228,7 +228,7 @@ export enum PageView {
 }
 
 export enum SeriesStatus {
-  ONGOING,
-  COMPLETED,
-  CANCELLED,
+  ONGOING = 'Ongoing',
+  COMPLETED = 'Completed',
+  CANCELLED = 'Cancelled',
 }

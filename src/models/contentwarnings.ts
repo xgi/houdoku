@@ -10,3 +10,12 @@ export const ContentWarnings: { [key: string]: ContentWarning } = {
     name: 'Sexual Violence',
   },
 };
+
+export const contentWarningKeysFromNames = (names: string[]) => {
+  return names.map((name: string) => {
+    const matching: ContentWarning | undefined = Object.values(
+      ContentWarnings
+    ).find((contentWarning: ContentWarning) => contentWarning.name === name);
+    return matching === undefined ? -1 : matching.key;
+  });
+};

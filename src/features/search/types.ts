@@ -9,6 +9,7 @@ export interface SearchState {
   searchExtension: number;
   searchResults: Series[];
   addModalSeries: Series | undefined;
+  addModalEditable: boolean;
   showingAddModal: boolean;
 }
 
@@ -28,6 +29,9 @@ interface SetSearchResultsAction {
 
 interface ToggleShowingAddModalAction {
   type: typeof TOGGLE_SHOWING_ADD_MODAL;
+  payload: {
+    editable: boolean;
+  };
 }
 
 interface SetAddModalSeriesAction {

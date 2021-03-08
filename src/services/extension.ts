@@ -2,16 +2,10 @@ import filesystem from './extensions/filesystem';
 import mangadex from './extensions/mangadex';
 import { ExtensionMetadata, PageRequesterData } from './extensions/types';
 
-const EXTENSIONS = {
+export const EXTENSIONS = {
   [filesystem.METADATA.id]: filesystem,
   [mangadex.METADATA.id]: mangadex,
 };
-
-export function getSearchableExtensions() {
-  const searchableExtensions = { ...EXTENSIONS };
-  delete searchableExtensions[filesystem.METADATA.id];
-  return searchableExtensions;
-}
 
 export function getExtensionMetadata(extensionId: number): ExtensionMetadata {
   return EXTENSIONS[extensionId].METADATA;

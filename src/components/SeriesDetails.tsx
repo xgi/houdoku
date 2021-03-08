@@ -15,11 +15,15 @@ import ChapterTable from './ChapterTable';
 import {
   Chapter,
   ContentWarning,
+  ContentWarningKey,
   Format,
+  FormatKey,
   Genre,
+  GenreKey,
   Series,
   SeriesStatus,
   Theme,
+  ThemeKey,
 } from '../models/types';
 import { Languages } from '../models/languages';
 import styles from './SeriesDetails.css';
@@ -43,6 +47,10 @@ import {
 } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
 import { RootState } from '../store';
+import { Genres } from '../models/genres';
+import { Themes } from '../models/themes';
+import { Formats } from '../models/formats';
+import { ContentWarnings } from '../models/contentwarnings';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -141,13 +149,13 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     return (
       <Descriptions column={4}>
         <Descriptions.Item className={styles.descriptionItem} label="Author">
-          {series.authors.join(';')}
+          {series.authors.join('; ')}
         </Descriptions.Item>
         <Descriptions.Item className={styles.descriptionItem} label="Artist">
-          {series.artists.join(';')}
+          {series.artists.join('; ')}
         </Descriptions.Item>
         <Descriptions.Item className={styles.descriptionItem} label="Status">
-          {SeriesStatus[series.status].toLowerCase()}
+          {series.status}
         </Descriptions.Item>
         <Descriptions.Item className={styles.descriptionItem} label="Language">
           {Languages[series.originalLanguageKey].name}
@@ -158,7 +166,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           span={2}
         >
           {series.genres
-            .map((genre: Genre) => Genre[genre].toLowerCase())
+            .map((genreKey: GenreKey) => Genres[genreKey].name)
             .join('; ')}
         </Descriptions.Item>
         <Descriptions.Item
@@ -167,7 +175,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           span={2}
         >
           {series.themes
-            .map((theme: Theme) => Theme[theme].toLowerCase())
+            .map((themeKey: ThemeKey) => Themes[themeKey].name)
             .join('; ')}
         </Descriptions.Item>
         <Descriptions.Item
@@ -176,7 +184,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           span={2}
         >
           {series.formats
-            .map((format: Format) => Format[format].toLowerCase())
+            .map((formatKey: FormatKey) => Formats[formatKey].name)
             .join('; ')}
         </Descriptions.Item>
         <Descriptions.Item
@@ -185,8 +193,9 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           span={2}
         >
           {series.contentWarnings
-            .map((contentWarning: ContentWarning) =>
-              ContentWarning[contentWarning].toLowerCase()
+            .map(
+              (contentWarningKey: ContentWarningKey) =>
+                ContentWarnings[contentWarningKey].name
             )
             .join('; ')}
         </Descriptions.Item>

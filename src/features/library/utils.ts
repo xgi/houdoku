@@ -5,6 +5,7 @@ import { Chapter, Series } from '../../models/types';
 import { getChapters, getSeries } from '../../services/extension';
 import filesystem from '../../services/extensions/filesystem';
 import { deleteThumbnail } from '../../util/filesystem';
+import { downloadCover } from '../../util/download';
 
 export function loadSeriesList(dispatch: any) {
   db.fetchSerieses().then((response: any) => dispatch(setSeriesList(response)));
@@ -27,6 +28,36 @@ export function removeSeries(dispatch: any, series: Series) {
     deleteThumbnail(series);
     return loadSeriesList(dispatch);
   });
+}
+
+export async function importCustomSeries(
+  dispatch: any,
+  series: Series,
+  setStatusText: (text?: string) => void
+) {
+  const chapters: Chapter[] = await getChapters(
+    series.extensionId,
+    series.sourceId
+  );
+
+  const addResponse = await db.addSeries(series);
+  const addedSeries: Series = addResponse[0];
+  await db.addChapters(chapters, addedSeries);
+  await db.updateSeriesNumberUnread(addedSeries);
+  await loadSeriesList(dispatch);
+  downloadCover(addedSeries);
+
+  setStatusText(`Added "${addedSeries.title}" to your library.`);
+}
+
+export async function importSeries(
+  dispatch: any,
+  extensionId: number,
+  sourceId: string,
+  setStatusText: (text?: string) => void
+) {
+  const series: Series = await getSeries(extensionId, sourceId);
+  importCustomSeries(dispatch, series, setStatusText);
 }
 
 export function toggleChapterRead(

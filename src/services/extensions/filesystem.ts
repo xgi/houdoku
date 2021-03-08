@@ -54,7 +54,7 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
     formats: [],
     contentWarnings: [],
     status: SeriesStatus.COMPLETED,
-    originalLanguageKey: LanguageKey.ENGLISH,
+    originalLanguageKey: LanguageKey.JAPANESE,
     numberUnread: 0,
     remoteCoverUrl: '',
     userTags: [],

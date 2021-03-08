@@ -1,26 +1,86 @@
-import React from 'react';
-import { Button, Col, Dropdown, Input, Menu, Modal, Row } from 'antd';
-import { Format, Genre, Series, SeriesStatus, Theme } from '../models/types';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Dropdown, Input, Menu, Modal, Row, Select } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import {
+  ContentWarning,
+  ContentWarningKey,
+  Format,
+  FormatKey,
+  Genre,
+  GenreKey,
+  Language,
+  Series,
+  SeriesStatus,
+  Theme,
+  ThemeKey,
+} from '../models/types';
 import styles from './AddSeriesModal.css';
 import { Languages } from '../models/languages';
+import { genreKeysFromNames, Genres } from '../models/genres';
+import { themeKeysFromNames, Themes } from '../models/themes';
+import { formatKeysFromNames, Formats } from '../models/formats';
+import {
+  contentWarningKeysFromNames,
+  ContentWarnings,
+} from '../models/contentwarnings';
+
+const { Option } = Select;
+
+const genreOptions = Object.values(Genres)
+  .sort((a: Genre, b: Genre) => a.name.localeCompare(b.name))
+  .map((genre: Genre) => (
+    <Option key={genre.name} value={genre.name}>
+      {genre.name}
+    </Option>
+  ));
+
+const themeOptions = Object.values(Themes)
+  .sort((a: Theme, b: Theme) => a.name.localeCompare(b.name))
+  .map((theme: Theme) => (
+    <Option key={theme.name} value={theme.name}>
+      {theme.name}
+    </Option>
+  ));
+
+const formatOptions = Object.values(Formats)
+  .sort((a: Format, b: Format) => a.name.localeCompare(b.name))
+  .map((format: Format) => (
+    <Option key={format.name} value={format.name}>
+      {format.name}
+    </Option>
+  ));
+
+const contentWarningOptions = Object.values(ContentWarnings)
+  .sort((a: ContentWarning, b: ContentWarning) => a.name.localeCompare(b.name))
+  .map((contentWarning: ContentWarning) => (
+    <Option key={contentWarning.name} value={contentWarning.name}>
+      {contentWarning.name}
+    </Option>
+  ));
 
 type Props = {
   series: Series | undefined;
   visible: boolean;
-  extensionId: number;
-  importSeries: (extensionId: number, sourceId: string) => void;
+  editable: boolean | undefined;
+  importCustomSeries: (series: Series) => void;
   toggleVisible: () => void;
 };
 
 const AddSeriesModal: React.FC<Props> = (props: Props) => {
+  const [customSeries, setCustomSeries] = useState(props.series);
+
+  useEffect(() => {
+    setCustomSeries(props.series);
+  }, [props.series]);
+
   const handleAdd = () => {
-    if (props.series !== undefined) {
-      props.importSeries(props.extensionId, props.series.sourceId);
+    if (customSeries !== undefined) {
+      props.importCustomSeries(customSeries);
       props.toggleVisible();
     }
   };
 
-  if (props.series === undefined) return <></>;
+  if (props.series === undefined || customSeries === undefined) return <></>;
   return (
     <Modal
       title="Add Series to Library"
@@ -32,92 +92,211 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
         <Col span={10}>Title</Col>
         <Col span={14}>
           <Input
-            value={props.series.title}
-            title={props.series.title}
-            disabled
+            value={customSeries.title}
+            title={customSeries.title}
+            disabled={!props.editable}
           />
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Author(s)</Col>
         <Col span={14}>
-          <Input
-            value={props.series.authors.join(';')}
-            title={props.series.authors.join(';')}
-            disabled
+          <Select
+            mode="tags"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="Authors..."
+            value={customSeries.authors}
+            onChange={(value: string[]) =>
+              setCustomSeries({
+                ...customSeries,
+                authors: value,
+              })
+            }
+            disabled={!props.editable}
           />
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Artist(s)</Col>
         <Col span={14}>
-          <Input
-            value={props.series.artists.join(';')}
-            title={props.series.artists.join(';')}
-            disabled
+          <Select
+            mode="tags"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="Artists..."
+            value={customSeries.artists}
+            onChange={(value: string[]) =>
+              setCustomSeries({
+                ...customSeries,
+                artists: value,
+              })
+            }
+            disabled={!props.editable}
           />
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Genres</Col>
         <Col span={14}>
-          <Input
-            value={props.series.genres
-              .map((genre: Genre) => Genre[genre])
-              .join('; ')}
-            title={props.series.genres
-              .map((genre: Genre) => Genre[genre])
-              .join('; ')}
-            disabled
-          />
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="Genres..."
+            value={customSeries.genres.map(
+              (genreKey: GenreKey) => Genres[genreKey].name
+            )}
+            onChange={(value: string[]) =>
+              setCustomSeries({
+                ...customSeries,
+                genres: genreKeysFromNames(value),
+              })
+            }
+            disabled={!props.editable}
+          >
+            {genreOptions}
+          </Select>
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Themes</Col>
         <Col span={14}>
-          <Input
-            value={props.series.themes
-              .map((theme: Theme) => Theme[theme])
-              .join('; ')}
-            title={props.series.themes
-              .map((theme: Theme) => Theme[theme])
-              .join('; ')}
-            disabled
-          />
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="Themes..."
+            value={customSeries.themes.map(
+              (themeKey: ThemeKey) => Themes[themeKey].name
+            )}
+            onChange={(value: string[]) =>
+              setCustomSeries({
+                ...customSeries,
+                themes: themeKeysFromNames(value),
+              })
+            }
+            disabled={!props.editable}
+          >
+            {themeOptions}
+          </Select>
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Formats</Col>
         <Col span={14}>
-          <Input
-            value={props.series.formats
-              .map((format: Format) => Format[format])
-              .join('; ')}
-            title={props.series.formats
-              .map((format: Format) => Format[format])
-              .join('; ')}
-            disabled
-          />
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="Formats..."
+            value={customSeries.formats.map(
+              (formatKey: FormatKey) => Formats[formatKey].name
+            )}
+            onChange={(value: string[]) =>
+              setCustomSeries({
+                ...customSeries,
+                formats: formatKeysFromNames(value),
+              })
+            }
+            disabled={!props.editable}
+          >
+            {formatOptions}
+          </Select>
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Content Warnings</Col>
+        <Col span={14}>
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="Content warnings..."
+            value={customSeries.contentWarnings.map(
+              (contentWarningKey: ContentWarningKey) =>
+                ContentWarnings[contentWarningKey].name
+            )}
+            onChange={(value: string[]) =>
+              setCustomSeries({
+                ...customSeries,
+                contentWarnings: contentWarningKeysFromNames(value),
+              })
+            }
+            disabled={!props.editable}
+          >
+            {contentWarningOptions}
+          </Select>
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Original Language</Col>
         <Col span={14}>
-          <Input
-            value={Languages[props.series.originalLanguageKey].name}
-            title={Languages[props.series.originalLanguageKey].name}
-            disabled
-          />
+          <Dropdown
+            disabled={!props.editable}
+            overlay={
+              <Menu
+                onClick={(e) => {
+                  setCustomSeries({
+                    ...customSeries,
+                    originalLanguageKey: e.item.props['data-value'],
+                  });
+                }}
+              >
+                {Object.values(Languages).map((language: Language) => (
+                  <Menu.Item key={language.key} data-value={language.key}>
+                    {language.name}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
+          >
+            <Button>
+              {Languages[customSeries.originalLanguageKey].name}{' '}
+              <DownOutlined />
+            </Button>
+          </Dropdown>
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Release Status</Col>
         <Col span={14}>
-          <Input
-            value={SeriesStatus[props.series.status]}
-            title={SeriesStatus[props.series.status]}
-            disabled
-          />
+          <Dropdown
+            disabled={!props.editable}
+            overlay={
+              <Menu
+                onClick={(e) => {
+                  setCustomSeries({
+                    ...customSeries,
+                    status: e.item.props['data-value'],
+                  });
+                }}
+              >
+                <Menu.Item
+                  key={SeriesStatus.ONGOING}
+                  data-value={SeriesStatus.ONGOING}
+                >
+                  Ongoing
+                </Menu.Item>
+                <Menu.Item
+                  key={SeriesStatus.COMPLETED}
+                  data-value={SeriesStatus.COMPLETED}
+                >
+                  Completed
+                </Menu.Item>
+                <Menu.Item
+                  key={SeriesStatus.CANCELLED}
+                  data-value={SeriesStatus.CANCELLED}
+                >
+                  Cancelled
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button>
+              {customSeries.status} <DownOutlined />
+            </Button>
+          </Dropdown>
         </Col>
       </Row>
       <Row className={styles.buttonRow}>

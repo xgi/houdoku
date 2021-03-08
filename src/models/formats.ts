@@ -24,3 +24,12 @@ export const Formats: { [key: string]: Format } = {
   },
   [FormatKey.FAN_COLORED]: { key: FormatKey.FAN_COLORED, name: 'Fan Colored' },
 };
+
+export const formatKeysFromNames = (names: string[]) => {
+  return names.map((name: string) => {
+    const matching: Format | undefined = Object.values(Formats).find(
+      (format: Format) => format.name === name
+    );
+    return matching === undefined ? -1 : matching.key;
+  });
+};

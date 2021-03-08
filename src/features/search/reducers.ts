@@ -10,6 +10,7 @@ const initialState: SearchState = {
   searchExtension: 2,
   searchResults: [],
   addModalSeries: undefined,
+  addModalEditable: false,
   showingAddModal: false,
 };
 
@@ -24,7 +25,11 @@ export default function search(
     case SET_SEARCH_RESULTS:
       return { ...state, searchResults: action.payload.searchResults };
     case TOGGLE_SHOWING_ADD_MODAL:
-      return { ...state, showingAddModal: !state.showingAddModal };
+      return {
+        ...state,
+        showingAddModal: !state.showingAddModal,
+        addModalEditable: action.payload.editable,
+      };
     case SET_ADD_MODAL_SERIES:
       return { ...state, addModalSeries: action.payload.addModalSeries };
     default:

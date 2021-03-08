@@ -34,6 +34,11 @@ h4.ant-typography {
   align-items: center;
 }
 
+.ant-dropdown-menu {
+  max-height: 200px;
+  overflow: auto;
+}
+
 ::-webkit-scrollbar {
   width: 14px;
 }

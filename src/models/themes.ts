@@ -64,3 +64,12 @@ export const Themes: { [key: string]: Theme } = {
   [ThemeKey.MAFIA]: { key: ThemeKey.MAFIA, name: 'Mafia' },
   [ThemeKey.VILLAINESS]: { key: ThemeKey.VILLAINESS, name: 'Villainess' },
 };
+
+export const themeKeysFromNames = (names: string[]) => {
+  return names.map((name: string) => {
+    const matching: Theme | undefined = Object.values(Themes).find(
+      (theme: Theme) => theme.name === name
+    );
+    return matching === undefined ? -1 : matching.key;
+  });
+};

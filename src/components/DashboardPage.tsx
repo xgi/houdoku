@@ -20,20 +20,19 @@ import Search from './Search';
 import StatusBar from './StatusBar';
 import styles from './DashboardPage.css';
 import routes from '../constants/routes.json';
-import db from '../services/db';
 import {
+  importCustomSeries,
+  importSeries,
   loadChapterList,
   loadSeries,
   loadSeriesList,
   reloadSeriesList,
 } from '../features/library/utils';
 import * as database from '../db';
-import { Series, Chapter } from '../models/types';
-import { getSeries, getChapters } from '../services/extension';
-import { downloadCover } from '../util/download';
 import Settings from './Settings';
 import About from './About';
 import Library from './Library';
+import { Series } from '../models/types';
 
 const { Content, Sider } = Layout;
 
@@ -55,6 +54,10 @@ const mapDispatch = (dispatch: any) => ({
   loadSeriesList: () => loadSeriesList(dispatch),
   loadSeries: (id: number) => loadSeries(dispatch, id),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  importSeries: (extensionId: number, sourceId: string) =>
+    importSeries(dispatch, extensionId, sourceId, setStatusText),
+  importCustomSeries: (series: Series) =>
+    importCustomSeries(dispatch, series, setStatusText),
   setFilter: (filter: string) => dispatch(setFilter(filter)),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
     dispatch(setSeriesBannerUrl(seriesBannerUrl)),
@@ -87,20 +90,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       .catch((error) => console.log(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const importSeries = async (extensionId: number, sourceId: string) => {
-    const series: Series = await getSeries(extensionId, sourceId);
-    const chapters: Chapter[] = await getChapters(extensionId, sourceId);
-
-    const addResponse = await db.addSeries(series);
-    const addedSeries: Series = addResponse[0];
-    await db.addChapters(chapters, addedSeries);
-    await db.updateSeriesNumberUnread(addedSeries);
-    props.loadSeriesList();
-    downloadCover(addedSeries);
-
-    props.setStatusText(`Added "${addedSeries.title}" to your library.`);
-  };
 
   return (
     <Layout className={styles.pageLayout}>
@@ -136,7 +125,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               <About />
             </Route>
             <Route path={routes.SEARCH} exact>
-              <Search importSeries={importSeries} />
+              <Search
+                importSeries={props.importSeries}
+                importCustomSeries={props.importCustomSeries}
+              />
             </Route>
             <Route path={routes.LIBRARY}>
               <Library />
