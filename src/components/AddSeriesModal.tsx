@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Col, Dropdown, Input, Menu, Modal, Row, Select } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import {
   ContentWarning,
   ContentWarningKey,
@@ -23,6 +24,7 @@ import {
   contentWarningKeysFromNames,
   ContentWarnings,
 } from '../models/contentwarnings';
+import blankCover from '../img/blank_cover.png';
 
 const { Option } = Select;
 
@@ -88,6 +90,34 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
       footer={null}
       onCancel={props.toggleVisible}
     >
+      <Row className={styles.row}>
+        <Col span={2} />
+        <Col span={6}>
+          <img
+            className={styles.coverImage}
+            src={
+              customSeries.remoteCoverUrl === ''
+                ? blankCover
+                : customSeries.remoteCoverUrl
+            }
+            alt={customSeries.title}
+          />
+        </Col>
+        <Col span={2} />
+        <Col span={14}>
+          <Paragraph style={{ marginTop: '2rem' }}>Upload Cover Image</Paragraph>
+          <input
+            type="file"
+            onChange={(e) =>
+              setCustomSeries({
+                ...customSeries,
+                remoteCoverUrl: e.target.files[0].path,
+              })
+            }
+          />
+        </Col>
+      </Row>
+
       <Row className={styles.row}>
         <Col span={10}>Title</Col>
         <Col span={14}>

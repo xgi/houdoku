@@ -32,6 +32,9 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     let thumbnailPath: string;
     if (series.id !== undefined) {
       thumbnailPath = path.join(thumbnailsDir, `${series.id}.jpg`);
+      if (!fs.existsSync(thumbnailPath)) {
+        thumbnailPath = path.join(thumbnailsDir, `${series.id}.png`);
+      }
       return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
     }
 
