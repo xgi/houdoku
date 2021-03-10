@@ -5,8 +5,8 @@ import {
   CHANGE_PAGE_NUMBER,
   SET_PAGE_URLS,
   SET_SOURCE,
-  SET_CHAPTER_ID_LIST,
   TOGGLE_SHOWING_SETTINGS_MODAL,
+  SET_RELEVANT_CHAPTER_LIST,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -46,11 +46,13 @@ export function setSource(series?: Series, chapter?: Chapter): ReaderAction {
   };
 }
 
-export function setChapterIdList(chapterIdList: number[]): ReaderAction {
+export function setRelevantChapterList(
+  relevantChapterList: Chapter[]
+): ReaderAction {
   return {
-    type: SET_CHAPTER_ID_LIST,
+    type: SET_RELEVANT_CHAPTER_LIST,
     payload: {
-      chapterIdList,
+      relevantChapterList,
     },
   };
 }

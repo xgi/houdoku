@@ -5,7 +5,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
-import { Layout, Typography, Tooltip } from 'antd';
+import { Layout, Typography, Tooltip, Button, Dropdown, Menu } from 'antd';
 import {
   FullscreenOutlined,
   ColumnWidthOutlined,
@@ -31,7 +31,7 @@ import {
   setPageNumber,
   setPageUrls,
   setSource,
-  setChapterIdList,
+  setRelevantChapterList,
   toggleShowingSettingsModal,
 } from '../features/reader/actions';
 import styles from './ReaderPage.css';
@@ -98,7 +98,7 @@ const mapState = (state: RootState) => ({
   pageUrls: state.reader.pageUrls,
   series: state.reader.series,
   chapter: state.reader.chapter,
-  chapterIdList: state.reader.chapterIdList,
+  relevantChapterList: state.reader.relevantChapterList,
   showingSettingsModal: state.reader.showingSettingsModal,
   pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
@@ -122,8 +122,8 @@ const mapDispatch = (dispatch: any) => ({
   setPageUrls: (pageUrls: string[]) => dispatch(setPageUrls(pageUrls)),
   setSource: (series?: Series, chapter?: Chapter) =>
     dispatch(setSource(series, chapter)),
-  setChapterIdList: (chapterIdList: number[]) =>
-    dispatch(setChapterIdList(chapterIdList)),
+  setRelevantChapterList: (relevantChapterList: Chapter[]) =>
+    dispatch(setRelevantChapterList(relevantChapterList)),
   toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
@@ -140,10 +140,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const location = useLocation();
 
-  const createChapterIdList = async (series: Series, chapter: Chapter) => {
+  const createRelevantChapterList = async (
+    series: Series,
+    chapter: Chapter
+  ) => {
     if (series.id === undefined) return;
 
-    const chapterIdList: number[] = [];
+    const relevantChapterList: Chapter[] = [];
 
     const chapters: Chapter[] = await db.fetchChapters(series.id);
 
@@ -164,11 +167,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         curChapters
       );
       if (bestMatch !== null && bestMatch.id !== undefined) {
-        chapterIdList.push(bestMatch.id);
+        relevantChapterList.push(bestMatch);
       }
     });
 
-    props.setChapterIdList(chapterIdList);
+    props.setRelevantChapterList(relevantChapterList);
   };
 
   const loadChapterData = async (chapterId: number) => {
@@ -184,7 +187,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.setSource(series, chapter);
     if (!chapter.read) props.toggleChapterRead(chapter, series);
 
-    createChapterIdList(series, chapter);
+    createRelevantChapterList(series, chapter);
 
     const pageUrls: string[] = await getPageRequesterData(
       series.extensionId,
@@ -199,13 +202,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return `${props.pageNumber * -100 + 100}%`;
   };
 
-  const getChapterTitleDisplay = (): string => {
-    if (props.chapter === undefined) return 'Loading chapter title...';
+  const getChapterTitleDisplay = (chapter: Chapter | undefined): string => {
+    if (chapter === undefined) return 'Loading chapter title...';
 
-    if (props.chapter.title.length > 0) {
-      return `${props.chapter.chapterNumber} - ${props.chapter.title}`;
+    if (chapter.title.length > 0) {
+      return `${chapter.chapterNumber} - ${chapter.title}`;
     }
-    return `Chapter ${props.chapter.chapterNumber}`;
+    return `Chapter ${chapter.chapterNumber}`;
   };
 
   const renderPageImage = (pageNumber: number) => {
@@ -311,14 +314,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   /**
    * Get the ID of a chapter just before or after the current one.
    * @param previous whether to get the previous chapter (instead of the next one)
-   * @return the ID of the chapter, or -1 if none exists (or props.chapter or props.chapterIdList
-   *  have not been loaded)
+   * @return the ID of the chapter, or -1 if none exists (or props.chapter or
+   *  props.relevantChapterList have not been loaded)
    */
   const getAdjacentChapterId = (previous: boolean): number => {
     if (props.chapter === undefined) return -1;
 
-    const curChapterIndex: number = props.chapterIdList.findIndex(
-      (id: number) => id === props.chapter.id
+    const curChapterIndex: number = props.relevantChapterList.findIndex(
+      (chapter: Chapter) => chapter.id === props.chapter?.id
     );
     const newChapterIndex = previous
       ? curChapterIndex + 1
@@ -327,21 +330,25 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     if (
       curChapterIndex === -1 ||
       newChapterIndex < 0 ||
-      newChapterIndex >= props.chapterIdList.length
+      newChapterIndex >= props.relevantChapterList.length
     )
       return -1;
 
-    return props.chapterIdList[newChapterIndex];
+    const id = props.relevantChapterList[newChapterIndex]?.id;
+    return id === undefined ? -1 : id;
+  };
+
+  const setChapter = (id: number) => {
+    props.setPageNumber(1);
+    props.setPageUrls([]);
+
+    loadChapterData(id);
   };
 
   const changeChapter = (previous: boolean) => {
     const newChapterId = getAdjacentChapterId(previous);
     if (newChapterId === -1) return;
-
-    props.setPageNumber(1);
-    props.setPageUrls([]);
-
-    loadChapterData(newChapterId);
+    setChapter(newChapterId);
   };
 
   const removeKeybindings = () => {
@@ -355,7 +362,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const exitPage = () => {
     props.setPageNumber(1);
     props.setPageUrls([]);
-    props.setChapterIdList([]);
+    props.setRelevantChapterList([]);
     removeKeybindings();
 
     if (props.series !== undefined) {
@@ -419,7 +426,25 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               <ArrowLeftOutlined />
             </button>
           </Tooltip>
-          <Text className={styles.chapterName}>{getChapterTitleDisplay()}</Text>
+          <Dropdown
+            overlay={
+              <Menu
+                onClick={(e) => {
+                  setChapter(e.item.props['data-value']);
+                }}
+              >
+                {props.relevantChapterList.map((chapter: Chapter) => (
+                  <Menu.Item key={chapter.id} data-value={chapter.id}>
+                    {getChapterTitleDisplay(chapter)}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
+          >
+            <Text className={`${styles.chapterName}`}>
+              {getChapterTitleDisplay(props.chapter)}
+            </Text>
+          </Dropdown>
           <Tooltip title="Next Chapter (])">
             <button
               className={`${styles.chapterButton}
@@ -481,9 +506,28 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
               <LeftOutlined />
             </button>
           </Tooltip>
-          <Text className={styles.pageNumber}>
-            {`${props.pageNumber} / ${props.lastPageNumber}`}
-          </Text>
+          <Dropdown
+            overlay={
+              <Menu
+                onClick={(e) => {
+                  props.setPageNumber(e.item.props['data-value']);
+                }}
+              >
+                {Array.from(
+                  { length: props.lastPageNumber },
+                  (v, k) => k + 1
+                ).map((pageNumber: number) => (
+                  <Menu.Item key={pageNumber} data-value={pageNumber}>
+                    Page {pageNumber}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
+          >
+            <Text
+              className={`${styles.pageNumber}`}
+            >{`${props.pageNumber} / ${props.lastPageNumber}`}</Text>
+          </Dropdown>
           <Tooltip title="Next Page (→)">
             <button
               className={`${styles.pageButton}`}

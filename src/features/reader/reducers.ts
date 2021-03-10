@@ -4,8 +4,8 @@ import {
   SET_PAGE_NUMBER,
   SET_PAGE_URLS,
   SET_SOURCE,
-  SET_CHAPTER_ID_LIST,
   TOGGLE_SHOWING_SETTINGS_MODAL,
+  SET_RELEVANT_CHAPTER_LIST,
 } from './types';
 
 const initialState: ReaderState = {
@@ -14,7 +14,7 @@ const initialState: ReaderState = {
   pageUrls: [],
   series: undefined,
   chapter: undefined,
-  chapterIdList: [],
+  relevantChapterList: [],
   showingSettingsModal: false,
 };
 
@@ -71,10 +71,10 @@ export default function reader(
             ? state.chapter
             : action.payload.chapter,
       };
-    case SET_CHAPTER_ID_LIST:
+    case SET_RELEVANT_CHAPTER_LIST:
       return {
         ...state,
-        chapterIdList: action.payload.chapterIdList,
+        relevantChapterList: action.payload.relevantChapterList,
       };
     case TOGGLE_SHOWING_SETTINGS_MODAL:
       return { ...state, showingSettingsModal: !state.showingSettingsModal };

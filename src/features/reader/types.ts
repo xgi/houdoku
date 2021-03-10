@@ -4,7 +4,7 @@ export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 export const CHANGE_PAGE_NUMBER = 'CHANGE_PAGE_NUMBER';
 export const SET_PAGE_URLS = 'SET_PAGE_URLS';
 export const SET_SOURCE = 'SET_SOURCE';
-export const SET_CHAPTER_ID_LIST = 'SET_CHAPTER_ID_LIST';
+export const SET_RELEVANT_CHAPTER_LIST = 'SET_RELEVANT_CHAPTER_LIST';
 export const TOGGLE_SHOWING_SETTINGS_MODAL = 'TOGGLE_SHOWING_SETTINGS_MODAL';
 
 export interface ReaderState {
@@ -13,7 +13,7 @@ export interface ReaderState {
   pageUrls: string[];
   series?: Series;
   chapter?: Chapter;
-  chapterIdList: number[];
+  relevantChapterList: Chapter[];
   showingSettingsModal: boolean;
 }
 
@@ -46,10 +46,10 @@ interface SetSourceAction {
   };
 }
 
-interface SetChapterIdListAction {
-  type: typeof SET_CHAPTER_ID_LIST;
+interface SetRelevantChapterListAction {
+  type: typeof SET_RELEVANT_CHAPTER_LIST;
   payload: {
-    chapterIdList: number[];
+    relevantChapterList: Chapter[];
   };
 }
 
@@ -62,5 +62,5 @@ export type ReaderAction =
   | ChangePageNumberAction
   | SetPageUrlsAction
   | SetSourceAction
-  | SetChapterIdListAction
+  | SetRelevantChapterListAction
   | ToggleShowingSettingsModal;
