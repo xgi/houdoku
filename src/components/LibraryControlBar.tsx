@@ -9,8 +9,9 @@ import {
   Popover,
   Select,
   Badge,
+  Tooltip,
 } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
 import styles from './LibraryControlBar.css';
@@ -84,23 +85,24 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   return (
     <>
       <Header className={styles.header}>
-        <Button
-          className={styles.reloadButton}
-          onClick={() =>
-            reloadSeriesList(
-              props.seriesList,
-              props.setStatusText,
-              props.loadSeriesList
-            )
-          }
-        >
-          Refresh All Series
-        </Button>
+        <Tooltip title="Refresh library">
+          <Button
+            className={styles.reloadButton}
+            icon={<ReloadOutlined />}
+            onClick={() =>
+              reloadSeriesList(
+                props.seriesList,
+                props.setStatusText,
+                props.loadSeriesList
+              )
+            }
+          />
+        </Tooltip>
+        <div className={styles.divider} />
         <div className={styles.controlBarSpacer} />
         <Popover
           content={
             <Slider
-              className={styles.columnsSlider}
               min={2}
               max={8}
               step={2}
@@ -115,7 +117,9 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
             setShowingColumnsPopover(visible)
           }
         >
-          <Button>Columns</Button>
+          <Tooltip title="Change number of columns">
+            <Button className={styles.columnsButton}>Columns</Button>
+          </Tooltip>
         </Popover>
         <Popover
           content={
@@ -141,15 +145,18 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           visible={showingTagsPopover}
           onVisibleChange={(visible: boolean) => setShowingTagsPopover(visible)}
         >
-          <Button>
-            <Badge
-              className={styles.userTagsBadge}
-              count={props.filterUserTags.length}
-            />
-            Filter Tags
-          </Button>
+          <Tooltip title="Filter by user tag">
+            <Button className={styles.tagsButton}>
+              <Badge
+                className={styles.userTagsBadge}
+                count={props.filterUserTags.length}
+              />
+              Filter Tags
+            </Button>
+          </Tooltip>
         </Popover>
         <Dropdown
+          className={styles.progressDropdown}
           overlay={
             <Menu
               onClick={(e) =>
@@ -182,6 +189,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           </Button>
         </Dropdown>
         <Dropdown
+          className={styles.statusDropdown}
           overlay={
             <Menu
               onClick={(e) => props.setFilterStatus(e.item.props['data-value'])}

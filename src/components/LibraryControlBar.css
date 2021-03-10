@@ -24,16 +24,28 @@
   margin: 0 6px 0 0 !important;
 }
 
-.columnsSlider {
-  flex: 3;
-}
-
 .userTagsBadge {
   margin-left: -6px !important;
   margin-right: 7px !important;
 }
 
-.seriesFilter {
-  flex: 4;
-  margin-left: 2rem !important;
+.divider {
+  border-right: 1px solid var(--color-background);
+  margin-left: 0.75rem;
+  margin-right: 0.5rem;
+  height: 70%;
+  width: 0;
+}
+
+.reloadButton {
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.seriesFilter,
+.statusDropdown,
+.progressDropdown,
+.tagsButton,
+.columnsButton {
+  margin-left: 0.3rem !important;
 }

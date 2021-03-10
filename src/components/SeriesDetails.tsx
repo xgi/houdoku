@@ -14,15 +14,10 @@ import { connect, ConnectedProps } from 'react-redux';
 import ChapterTable from './ChapterTable';
 import {
   Chapter,
-  ContentWarning,
   ContentWarningKey,
-  Format,
   FormatKey,
-  Genre,
   GenreKey,
   Series,
-  SeriesStatus,
-  Theme,
   ThemeKey,
 } from '../models/types';
 import { Languages } from '../models/languages';
