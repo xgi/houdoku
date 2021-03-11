@@ -83,6 +83,7 @@ const fetchChapters: FetchChaptersFunc = (id: string) => {
 const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
   const chapters: Chapter[] = [];
 
+  let prevChapterNum = 0;
   json.imageDirectories.forEach((directory: string) => {
     const dirName: string = path.basename(directory);
     const matchChapterNum: RegExpMatchArray | null = dirName.match(
@@ -95,10 +96,10 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
       new RegExp(/\[.*\]/g)
     );
 
-    if (matchChapterNum === null) return;
-    const chapterNum: string = parseFloat(
-      matchChapterNum[0].replace('c', '')
-    ).toString();
+    const chapterNum: string =
+      matchChapterNum === null
+        ? Math.floor(prevChapterNum + 1).toString()
+        : parseFloat(matchChapterNum[0].replace('c', '')).toString();
     const volumeNum: string =
       matchVolumeNum === null
         ? ''
@@ -108,11 +109,12 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
         ? ''
         : matchGroup[0].replace('[', '').replace(']', '');
 
+    prevChapterNum = parseFloat(chapterNum);
     chapters.push({
       id: undefined,
       seriesId: undefined,
       sourceId: directory,
-      title: '',
+      title: dirName,
       chapterNumber: chapterNum,
       volumeNumber: volumeNum,
       languageKey: LanguageKey.ENGLISH,
