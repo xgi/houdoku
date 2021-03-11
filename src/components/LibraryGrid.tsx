@@ -44,29 +44,34 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
   const getFilteredList = (seriesList: Series[]): Series[] => {
     const filter = props.filter.toLowerCase();
 
-    return seriesList.filter((series: Series) => {
-      if (!series.title.toLowerCase().includes(filter)) return false;
-      if (props.filterStatus !== null && series.status !== props.filterStatus) {
-        return false;
-      }
-      if (
-        props.filterProgress === ProgressFilter.Unread &&
-        series.numberUnread === 0
-      ) {
-        return false;
-      }
-      if (
-        props.filterProgress === ProgressFilter.Finished &&
-        series.numberUnread > 0
-      ) {
-        return false;
-      }
-      for (let i = 0; i < props.filterUserTags.length; i += 1) {
-        if (!series.userTags.includes(props.filterUserTags[i])) return false;
-      }
+    return seriesList
+      .filter((series: Series) => {
+        if (!series.title.toLowerCase().includes(filter)) return false;
+        if (
+          props.filterStatus !== null &&
+          series.status !== props.filterStatus
+        ) {
+          return false;
+        }
+        if (
+          props.filterProgress === ProgressFilter.Unread &&
+          series.numberUnread === 0
+        ) {
+          return false;
+        }
+        if (
+          props.filterProgress === ProgressFilter.Finished &&
+          series.numberUnread > 0
+        ) {
+          return false;
+        }
+        for (let i = 0; i < props.filterUserTags.length; i += 1) {
+          if (!series.userTags.includes(props.filterUserTags[i])) return false;
+        }
 
-      return true;
-    });
+        return true;
+      })
+      .sort((a: Series, b: Series) => a.title.localeCompare(b.title));
   };
 
   const renderUnreadBadge = (series: Series) => {

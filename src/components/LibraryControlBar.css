@@ -38,8 +38,8 @@
 }
 
 .reloadButton {
-  padding-right: 0.5rem;
-  padding-left: 0.5rem;
+  padding-right: 0.5rem !important;
+  padding-left: 0.5rem !important;
 }
 
 .seriesFilter,
