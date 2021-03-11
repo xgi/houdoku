@@ -95,11 +95,21 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
     const matchGroup: RegExpMatchArray | null = dirName.match(
       new RegExp(/\[.*\]/g)
     );
+    const matchAnyNum: RegExpMatchArray | null = dirName.match(
+      new RegExp(/(\d)+/g)
+    );
 
-    const chapterNum: string =
-      matchChapterNum === null
-        ? Math.floor(prevChapterNum + 1).toString()
-        : parseFloat(matchChapterNum[0].replace('c', '')).toString();
+    let chapterNum = '';
+    if (matchChapterNum === null) {
+      if (matchAnyNum === null) {
+        chapterNum = Math.floor(prevChapterNum + 1).toString();
+      } else {
+        chapterNum = parseFloat(matchAnyNum[0]).toString();
+      }
+    } else {
+      chapterNum = parseFloat(matchChapterNum[0].replace('c', '')).toString();
+    }
+
     const volumeNum: string =
       matchVolumeNum === null
         ? ''
