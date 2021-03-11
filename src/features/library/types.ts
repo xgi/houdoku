@@ -14,6 +14,7 @@ export const SET_FILTER_STATUS = 'SET_FILTER_STATUS';
 export const SET_FILTER_PROGRESS = 'SET_FILTER_PROGRESS';
 export const SET_FILTER_USER_TAGS = 'SET_FILTER_USER_TAGS';
 export const SET_SERIES_BANNER_URL = 'SET_SERIES_BANNER_URL';
+export const SET_COMPLETED_START_RELOAD = 'SET_COMPLETED_START_RELOAD';
 
 export interface LibraryState {
   seriesList: Series[];
@@ -26,6 +27,7 @@ export interface LibraryState {
   filterProgress: ProgressFilter;
   filterUserTags: string[];
   seriesBannerUrl: string | null;
+  completedStartReload: boolean;
 }
 
 interface SetSeriesListAction {
@@ -91,6 +93,13 @@ interface SetSeriesBannerUrlAction {
   };
 }
 
+interface SetCompletedStartReloadAction {
+  type: typeof SET_COMPLETED_START_RELOAD;
+  payload: {
+    completedStartReload: boolean;
+  };
+}
+
 export type LibraryAction =
   | SetSeriesListAction
   | SetSeriesAction
@@ -100,4 +109,5 @@ export type LibraryAction =
   | SetFilterStatusAction
   | SetFilterProgressAction
   | SetFilterUserTagsAction
-  | SetSeriesBannerUrlAction;
+  | SetSeriesBannerUrlAction
+  | SetCompletedStartReloadAction;

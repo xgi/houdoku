@@ -73,6 +73,8 @@ const mapDispatch = (dispatch: any) => ({
   loadSeries: (id: number) => loadSeries(dispatch, id),
   loadSeriesList: () => loadSeriesList(dispatch),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
+    reloadSeriesList(dispatch, seriesList, callback),
   removeSeries: (series: Series) => removeSeries(dispatch, series),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
@@ -246,11 +248,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             icon={<ReloadOutlined />}
             onClick={() => {
               if (props.series !== undefined)
-                reloadSeriesList(
-                  [props.series],
-                  props.setStatusText,
-                  loadContent
-                );
+                props.reloadSeriesList([props.series], loadContent);
             }}
           >
             Refresh

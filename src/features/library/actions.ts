@@ -8,6 +8,7 @@ import {
   CHANGE_NUM_COLUMNS,
   LibraryAction,
   SET_CHAPTER_LIST,
+  SET_COMPLETED_START_RELOAD,
   SET_FILTER,
   SET_FILTER_PROGRESS,
   SET_FILTER_STATUS,
@@ -96,6 +97,17 @@ export function setSeriesBannerUrl(
     type: SET_SERIES_BANNER_URL,
     payload: {
       seriesBannerUrl,
+    },
+  };
+}
+
+export function setCompletedStartReload(
+  completedStartReload: boolean
+): LibraryAction {
+  return {
+    type: SET_COMPLETED_START_RELOAD,
+    payload: {
+      completedStartReload,
     },
   };
 }

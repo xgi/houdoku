@@ -10,6 +10,7 @@ import {
   SET_FILTER_STATUS,
   SET_FILTER_PROGRESS,
   SET_FILTER_USER_TAGS,
+  SET_COMPLETED_START_RELOAD,
 } from './types';
 
 const initialState: LibraryState = {
@@ -23,6 +24,7 @@ const initialState: LibraryState = {
   filterProgress: ProgressFilter.Unread,
   filterUserTags: [],
   seriesBannerUrl: null,
+  completedStartReload: false,
 };
 
 const parseUserTags = (seriesList: Series[]): string[] => {
@@ -63,6 +65,11 @@ export default function library(
       return { ...state, filterUserTags: action.payload.userTags };
     case SET_SERIES_BANNER_URL:
       return { ...state, seriesBannerUrl: action.payload.seriesBannerUrl };
+    case SET_COMPLETED_START_RELOAD:
+      return {
+        ...state,
+        completedStartReload: action.payload.completedStartReload,
+      };
     default:
       return state;
   }

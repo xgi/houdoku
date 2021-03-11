@@ -180,7 +180,7 @@ const Settings: React.FC<Props> = (props: Props) => {
         </Col>
       </Row>
       <Row className={styles.row}>
-        <Col span={10}>Refresh All Series on Startup</Col>
+        <Col span={10}>Refresh Library on Startup</Col>
         <Col span={14}>
           <Dropdown
             overlay={

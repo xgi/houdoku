@@ -1,11 +1,17 @@
 /* eslint-disable promise/catch-or-return */
-import { setSeriesList, setSeries, setChapterList } from './actions';
+import {
+  setSeriesList,
+  setSeries,
+  setChapterList,
+  setCompletedStartReload,
+} from './actions';
 import db from '../../services/db';
 import { Chapter, Series } from '../../models/types';
 import { getChapters, getSeries } from '../../services/extension';
 import filesystem from '../../services/extensions/filesystem';
 import { deleteThumbnail } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
+import { setStatusText } from '../statusbar/actions';
 
 export function loadSeriesList(dispatch: any) {
   db.fetchSerieses().then((response: any) => dispatch(setSeriesList(response)));
@@ -117,23 +123,29 @@ async function reloadSeries(series: Series) {
 }
 
 export async function reloadSeriesList(
+  dispatch: any,
   seriesList: Series[],
-  setStatusText: (text?: string) => void,
   callback?: () => void
 ) {
+  const sortedSeriesList = seriesList.sort((a: Series, b: Series) =>
+    a.title.localeCompare(b.title)
+  );
   let cur = 0;
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const series of seriesList) {
-    setStatusText(
-      `Reloading library (${cur}/${seriesList.length}) - ${series.title}`
+  for (const series of sortedSeriesList) {
+    dispatch(
+      setStatusText(
+        `Reloading library (${cur}/${seriesList.length}) - ${series.title}`
+      )
     );
     // eslint-disable-next-line no-await-in-loop
     await reloadSeries(series);
     cur += 1;
   }
 
-  setStatusText(`Reloaded ${cur} series`);
+  dispatch(setCompletedStartReload(true));
+  dispatch(setStatusText(`Reloaded ${cur} series`));
   if (callback !== undefined) callback();
 }
 

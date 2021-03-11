@@ -44,6 +44,7 @@ const mapState = (state: RootState) => ({
   columns: state.library.columns,
   filter: state.library.filter,
   seriesBannerUrl: state.library.seriesBannerUrl,
+  completedStartReload: state.library.completedStartReload,
   refreshOnStart: state.settings.refreshOnStart,
 });
 
@@ -54,6 +55,8 @@ const mapDispatch = (dispatch: any) => ({
   loadSeriesList: () => loadSeriesList(dispatch),
   loadSeries: (id: number) => loadSeries(dispatch, id),
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
+    reloadSeriesList(dispatch, seriesList, callback),
   importSeries: (extensionId: number, sourceId: string) =>
     importSeries(dispatch, extensionId, sourceId, setStatusText),
   importCustomSeries: (series: Series) =>
@@ -77,19 +80,20 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       .then(() => {
         props.loadSeriesList();
       })
-      .then(() => {
-        // eslint-disable-next-line promise/always-return
-        if (props.refreshOnStart) {
-          reloadSeriesList(
-            props.seriesList,
-            props.setStatusText,
-            props.loadSeriesList
-          );
-        }
-      })
       .catch((error) => console.log(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (
+      props.refreshOnStart &&
+      !props.completedStartReload &&
+      props.seriesList.length > 0
+    ) {
+      props.reloadSeriesList(props.seriesList, props.loadSeriesList);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.seriesList]);
 
   return (
     <Layout className={styles.pageLayout}>
