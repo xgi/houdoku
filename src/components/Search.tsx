@@ -12,7 +12,7 @@ import {
   getSeries,
   search,
 } from '../services/extension';
-import { Genre, ProgressFilter, Series } from '../models/types';
+import { ProgressFilter, Series } from '../models/types';
 import LibraryGrid from './LibraryGrid';
 import {
   setAddModalSeries,
@@ -52,7 +52,6 @@ const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type Props = PropsFromRedux & {
-  importSeries: (extensionId: number, sourceId: string) => void;
   importCustomSeries: (series: Series) => void;
 };
 
@@ -100,6 +99,18 @@ const Search: React.FC<Props> = (props: Props) => {
         <Alert
           className={styles.alert}
           message={`Notice: ${metadata.notice}`}
+          description={
+            metadata.noticeUrl.length > 0 ? (
+              <Paragraph>
+                For more information, see here:{' '}
+                <a href={metadata.noticeUrl} target="_blank" rel="noreferrer">
+                  {metadata.noticeUrl}
+                </a>
+              </Paragraph>
+            ) : (
+              ''
+            )
+          }
           type="warning"
         />
       );

@@ -28,7 +28,10 @@ const About: React.FC<Props> = (props: Props) => {
         Houdoku is open source! Check the link below to contribute.
       </Paragraph>
       <Paragraph className={styles.paragraph}>
-        Website: <a href={packageJson.homepage}>{packageJson.homepage}</a>
+        Website:{' '}
+        <a href={packageJson.homepage} target="_blank" rel="noreferrer">
+          {packageJson.homepage}
+        </a>
         <br />
         Maintainer: {packageJson.author.name} ({packageJson.author.email})
         <br />

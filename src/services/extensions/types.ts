@@ -4,6 +4,7 @@ export type ExtensionMetadata = {
   url: string;
   version: number;
   notice: string;
+  noticeUrl: string;
 };
 
 export type PageRequesterData = {

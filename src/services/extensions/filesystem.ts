@@ -19,7 +19,9 @@ const METADATA: ExtensionMetadata = {
   name: 'filesystem',
   url: '',
   version: 1,
-  notice: '',
+  notice:
+    'Add a series by selecting its directory above. Archives are not currently supported.',
+  noticeUrl: 'https://github.com/xgi/houdoku/wiki/Importing-Local-Series',
 };
 
 const fetchSeries: FetchSeriesFunc = (id: string) => {

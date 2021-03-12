@@ -39,6 +39,14 @@ h4.ant-typography {
   overflow: auto;
 }
 
+.ant-alert {
+  padding: 8px 15px !important;
+}
+
+.ant-alert-description > .ant-typography {
+  margin-bottom: 0 !important;
+}
+
 ::-webkit-scrollbar {
   width: 14px;
 }
