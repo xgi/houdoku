@@ -69,6 +69,14 @@ const deleteAllSeries = () => {
   db.database.delete().from(db.seriesTable).exec();
 };
 
+const deleteChapters = (series: Series) => {
+  return db.database
+    .delete()
+    .from(db.chapterTable)
+    .where(db.chapterTable.seriesId.eq(series.id))
+    .exec();
+};
+
 const updateSeriesNumberUnread = (series: Series) => {
   if (series.id !== undefined) {
     return fetchChapters(series.id).then((chapterList: Chapter[]) => {
@@ -91,5 +99,6 @@ export default {
   addChapters,
   deleteSeries,
   deleteAllSeries,
+  deleteChapters,
   updateSeriesNumberUnread,
 };

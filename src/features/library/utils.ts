@@ -8,7 +8,6 @@ import {
 import db from '../../services/db';
 import { Chapter, Series } from '../../models/types';
 import { getChapters, getSeries } from '../../services/extension';
-import filesystem from '../../services/extensions/filesystem';
 import { deleteThumbnail } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import { setStatusText } from '../statusbar/actions';
@@ -36,11 +35,7 @@ export function removeSeries(dispatch: any, series: Series) {
   });
 }
 
-export async function importCustomSeries(
-  dispatch: any,
-  series: Series,
-  setStatusText: (text?: string) => void
-) {
+export async function importCustomSeries(dispatch: any, series: Series) {
   const chapters: Chapter[] = await getChapters(
     series.extensionId,
     series.sourceId
@@ -59,11 +54,10 @@ export async function importCustomSeries(
 export async function importSeries(
   dispatch: any,
   extensionId: number,
-  sourceId: string,
-  setStatusText: (text?: string) => void
+  sourceId: string
 ) {
   const series: Series = await getSeries(extensionId, sourceId);
-  importCustomSeries(dispatch, series, setStatusText);
+  importCustomSeries(dispatch, series);
 }
 
 export function toggleChapterRead(
@@ -98,14 +92,11 @@ async function reloadSeries(series: Series) {
     series.sourceId
   );
 
-  if (series.extensionId !== filesystem.METADATA.id) {
-    newSeries.id = series.id;
-    newSeries.userTags = series.userTags;
-  } else {
-    // TODO: add logic to avoid overriding manual values for filesystem-sourced series
-  }
+  newSeries.id = series.id;
+  newSeries.userTags = series.userTags;
 
   const oldChapters: Chapter[] = await db.fetchChapters(series.id);
+
   const chapters: Chapter[] = newChapters.map((chapter: Chapter) => {
     const matchingChapter: Chapter | undefined = oldChapters.find(
       (c: Chapter) => c.sourceId === chapter.sourceId
@@ -127,7 +118,7 @@ export async function reloadSeriesList(
   seriesList: Series[],
   callback?: () => void
 ) {
-  const sortedSeriesList = seriesList.sort((a: Series, b: Series) =>
+  const sortedSeriesList = [...seriesList].sort((a: Series, b: Series) =>
     a.title.localeCompare(b.title)
   );
   let cur = 0;

@@ -25,7 +25,7 @@ import {
 import { loadSeriesList, reloadSeriesList } from '../features/library/utils';
 import { setStatusText } from '../features/statusbar/actions';
 import { RootState } from '../store';
-import { ProgressFilter, SeriesStatus } from '../models/types';
+import { ProgressFilter, Series, SeriesStatus } from '../models/types';
 
 const { Option } = Select;
 
@@ -44,6 +44,8 @@ const mapDispatch = (dispatch: any) => ({
   changeNumColumns: (columns: number) => dispatch(changeNumColumns(columns)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeriesList: () => loadSeriesList(dispatch),
+  reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
+    reloadSeriesList(dispatch, seriesList, callback),
   setFilter: (filter: string) => dispatch(setFilter(filter)),
   setFilterStatus: (status: SeriesStatus | null) =>
     dispatch(setFilterStatus(status)),
@@ -90,11 +92,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
             className={styles.reloadButton}
             icon={<ReloadOutlined />}
             onClick={() =>
-              reloadSeriesList(
-                props.seriesList,
-                props.setStatusText,
-                props.loadSeriesList
-              )
+              props.reloadSeriesList(props.seriesList, props.loadSeriesList)
             }
           />
         </Tooltip>
