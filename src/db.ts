@@ -8,6 +8,7 @@ schemaBuilder
   .addColumn('id', lf.Type.INTEGER)
   .addColumn('extensionId', lf.Type.INTEGER)
   .addColumn('sourceId', lf.Type.STRING)
+  .addColumn('sourceType', lf.Type.OBJECT)
   .addColumn('title', lf.Type.STRING)
   .addColumn('altTitles', lf.Type.OBJECT)
   .addColumn('description', lf.Type.STRING)

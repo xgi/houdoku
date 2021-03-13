@@ -1,24 +1,28 @@
-import { Chapter, Series } from '../../models/types';
+import { Chapter, Series, SeriesSourceType } from '../../models/types';
 import { PageRequesterData } from './types';
 
 export interface FetchSeriesFunc {
-  (id: string): Promise<Response>;
+  (sourceType: SeriesSourceType, id: string): Promise<Response>;
 }
 
 export interface ParseSeriesFunc {
-  (json: any): Series;
+  (sourceType: SeriesSourceType, json: any): Series;
 }
 
 export interface FetchChaptersFunc {
-  (id: string): Promise<Response>;
+  (sourceType: SeriesSourceType, id: string): Promise<Response>;
 }
 
 export interface ParseChaptersFunc {
-  (json: any): Chapter[];
+  (sourceType: SeriesSourceType, json: any): Chapter[];
 }
 
 export interface FetchPageRequesterDataFunc {
-  (chapter_id: string): Promise<Response>;
+  (
+    sourceType: SeriesSourceType,
+    seriesSourceId: string,
+    chapterSourceId: string
+  ): Promise<Response>;
 }
 
 export interface ParsePageRequesterDataFunc {
@@ -27,6 +31,10 @@ export interface ParsePageRequesterDataFunc {
 
 export interface GetPageUrlsFunction {
   (pageRequesterData: PageRequesterData): string[];
+}
+
+export interface GetPageDataFunction {
+  (series: Series, url: string): Promise<string>;
 }
 
 export interface FetchSearchFunc {

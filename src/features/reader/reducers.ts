@@ -6,12 +6,14 @@ import {
   SET_SOURCE,
   TOGGLE_SHOWING_SETTINGS_MODAL,
   SET_RELEVANT_CHAPTER_LIST,
+  SET_PAGE_DATA_LIST,
 } from './types';
 
 const initialState: ReaderState = {
   pageNumber: 1,
   lastPageNumber: 20,
   pageUrls: [],
+  pageDataList: [],
   series: undefined,
   chapter: undefined,
   relevantChapterList: [],
@@ -59,6 +61,8 @@ export default function reader(
         pageUrls: action.payload.pageUrls,
         lastPageNumber: action.payload.pageUrls.length,
       };
+    case SET_PAGE_DATA_LIST:
+      return { ...state, pageDataList: action.payload.pageDataList };
     case SET_SOURCE:
       return {
         ...state,

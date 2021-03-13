@@ -2,7 +2,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable consistent-return */
 /* eslint-disable promise/catch-or-return */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { Layout, Typography, Tooltip, Button, Dropdown, Menu } from 'antd';
@@ -33,6 +33,7 @@ import {
   setSource,
   setRelevantChapterList,
   toggleShowingSettingsModal,
+  setPageDataList,
 } from '../features/reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../constants/routes.json';
@@ -43,7 +44,11 @@ import {
   PageView,
   Series,
 } from '../models/types';
-import { getPageRequesterData, getPageUrls } from '../services/extension';
+import {
+  getPageData,
+  getPageRequesterData,
+  getPageUrls,
+} from '../services/extension';
 import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
 import { selectMostSimilarChapter } from '../util/comparison';
@@ -58,6 +63,7 @@ import {
   togglePageView,
 } from '../features/settings/actions';
 import { toggleChapterRead } from '../features/library/utils';
+import { useForceUpdate } from '../util/reactutil';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -96,6 +102,7 @@ const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
   lastPageNumber: state.reader.lastPageNumber,
   pageUrls: state.reader.pageUrls,
+  pageDataList: state.reader.pageDataList,
   series: state.reader.series,
   chapter: state.reader.chapter,
   relevantChapterList: state.reader.relevantChapterList,
@@ -120,6 +127,8 @@ const mapDispatch = (dispatch: any) => ({
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
   setPageUrls: (pageUrls: string[]) => dispatch(setPageUrls(pageUrls)),
+  setPageDataList: (pageDataList: string[]) =>
+    dispatch(setPageDataList(pageDataList)),
   setSource: (series?: Series, chapter?: Chapter) =>
     dispatch(setSource(series, chapter)),
   setRelevantChapterList: (relevantChapterList: Chapter[]) =>
@@ -139,6 +148,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const { chapter_id } = useParams();
   const history = useHistory();
   const location = useLocation();
+  const forceUpdate = useForceUpdate();
 
   const createRelevantChapterList = async (
     series: Series,
@@ -191,11 +201,25 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     const pageUrls: string[] = await getPageRequesterData(
       series.extensionId,
+      series.sourceType,
+      series.sourceId,
       chapter.sourceId
     ).then((pageRequesterData: PageRequesterData) =>
       getPageUrls(series.extensionId, pageRequesterData)
     );
     props.setPageUrls(pageUrls);
+
+    const curPageDataList: string[] = [];
+    for (let i = 0; i < pageUrls.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await getPageData(series.extensionId, series, pageUrls[i]).then(
+        (data: string) => {
+          curPageDataList[i] = data;
+          return props.setPageDataList([...curPageDataList]);
+        }
+      );
+      forceUpdate();
+    }
   };
 
   const getPageMargin = () => {
@@ -212,12 +236,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   const renderPageImage = (pageNumber: number) => {
+    if (props.series === undefined) return;
     if (props.pageUrls.length === 0) return;
 
     return pageNumber <= props.lastPageNumber && pageNumber > 0 ? (
       <img
         className={styles.pageImage}
-        src={props.pageUrls[pageNumber - 1]}
+        src={props.pageDataList[pageNumber - 1]}
         alt={`page${pageNumber}`}
         loading="lazy"
       />
@@ -250,6 +275,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   const renderPreloadContainer = (pageNumber: number) => {
+    if (props.series === undefined) return;
     if (props.pageUrls.length === 0) return;
 
     const images = [];
@@ -259,7 +285,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       i < props.lastPageNumber && i < pageNumber + props.preloadAmount;
       i += 1
     ) {
-      images.push(<img src={props.pageUrls[i]} alt="pagepreload" key={i} />);
+      images.push(
+        <img src={props.pageDataList[i]} alt="pagepreload" key={i} />
+      );
     }
 
     return <div className={styles.preloadContainer}>{images}</div>;
@@ -341,6 +369,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const setChapter = (id: number) => {
     props.setPageNumber(1);
     props.setPageUrls([]);
+    props.setPageDataList([]);
 
     loadChapterData(id);
   };
@@ -362,6 +391,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const exitPage = () => {
     props.setPageNumber(1);
     props.setPageUrls([]);
+    props.setPageDataList([]);
     props.setRelevantChapterList([]);
     removeKeybindings();
 

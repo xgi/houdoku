@@ -35,9 +35,10 @@ export function removeSeries(dispatch: any, series: Series) {
   });
 }
 
-export async function importCustomSeries(dispatch: any, series: Series) {
+export async function importSeries(dispatch: any, series: Series) {
   const chapters: Chapter[] = await getChapters(
     series.extensionId,
+    series.sourceType,
     series.sourceId
   );
 
@@ -49,15 +50,6 @@ export async function importCustomSeries(dispatch: any, series: Series) {
   downloadCover(addedSeries);
 
   setStatusText(`Added "${addedSeries.title}" to your library.`);
-}
-
-export async function importSeries(
-  dispatch: any,
-  extensionId: number,
-  sourceId: string
-) {
-  const series: Series = await getSeries(extensionId, sourceId);
-  importCustomSeries(dispatch, series);
 }
 
 export function toggleChapterRead(
@@ -85,10 +77,12 @@ async function reloadSeries(series: Series) {
 
   const newSeries: Series = await getSeries(
     series.extensionId,
+    series.sourceType,
     series.sourceId
   );
   const newChapters: Chapter[] = await getChapters(
     series.extensionId,
+    series.sourceType,
     series.sourceId
   );
 

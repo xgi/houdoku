@@ -2,6 +2,7 @@ export type Series = {
   id?: number;
   extensionId: number;
   sourceId: string;
+  sourceType: SeriesSourceType;
   title: string;
   altTitles: string[];
   description: string;
@@ -231,4 +232,9 @@ export enum SeriesStatus {
   ONGOING = 'Ongoing',
   COMPLETED = 'Completed',
   CANCELLED = 'Cancelled',
+}
+
+export enum SeriesSourceType {
+  STANDARD,
+  ARCHIVE,
 }

@@ -21,7 +21,6 @@ import StatusBar from './StatusBar';
 import styles from './DashboardPage.css';
 import routes from '../constants/routes.json';
 import {
-  importCustomSeries,
   importSeries,
   loadChapterList,
   loadSeries,
@@ -57,10 +56,7 @@ const mapDispatch = (dispatch: any) => ({
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
   reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
     reloadSeriesList(dispatch, seriesList, callback),
-  importSeries: (extensionId: number, sourceId: string) =>
-    importSeries(dispatch, extensionId, sourceId, setStatusText),
-  importCustomSeries: (series: Series) =>
-    importCustomSeries(dispatch, series, setStatusText),
+  importSeries: (series: Series) => importSeries(dispatch, series),
   setFilter: (filter: string) => dispatch(setFilter(filter)),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
     dispatch(setSeriesBannerUrl(seriesBannerUrl)),
@@ -129,10 +125,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               <About />
             </Route>
             <Route path={routes.SEARCH} exact>
-              <Search
-                importSeries={props.importSeries}
-                importCustomSeries={props.importCustomSeries}
-              />
+              <Search importSeries={props.importSeries} />
             </Route>
             <Route path={routes.LIBRARY}>
               <Library />

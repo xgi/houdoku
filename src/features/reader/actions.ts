@@ -7,6 +7,7 @@ import {
   SET_SOURCE,
   TOGGLE_SHOWING_SETTINGS_MODAL,
   SET_RELEVANT_CHAPTER_LIST,
+  SET_PAGE_DATA_LIST,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -32,6 +33,15 @@ export function setPageUrls(pageUrls: string[]): ReaderAction {
     type: SET_PAGE_URLS,
     payload: {
       pageUrls,
+    },
+  };
+}
+
+export function setPageDataList(pageDataList: string[]): ReaderAction {
+  return {
+    type: SET_PAGE_DATA_LIST,
+    payload: {
+      pageDataList,
     },
   };
 }

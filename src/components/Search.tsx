@@ -12,7 +12,7 @@ import {
   getSeries,
   search,
 } from '../services/extension';
-import { ProgressFilter, Series } from '../models/types';
+import { ProgressFilter, Series, SeriesSourceType } from '../models/types';
 import LibraryGrid from './LibraryGrid';
 import {
   setAddModalSeries,
@@ -52,7 +52,7 @@ const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type Props = PropsFromRedux & {
-  importCustomSeries: (series: Series) => void;
+  importSeries: (series: Series) => void;
 };
 
 const Search: React.FC<Props> = (props: Props) => {
@@ -84,10 +84,15 @@ const Search: React.FC<Props> = (props: Props) => {
     props.setSearchResults(seriesList);
   };
 
-  const handleSearchFilesystem = (path: string) => {
-    return getSeries(filesystem.METADATA.id, path).then((series: Series) =>
-      props.setSearchResults([series])
-    );
+  const handleSearchFilesystem = (
+    path: string,
+    sourceType: SeriesSourceType
+  ) => {
+    return getSeries(
+      filesystem.METADATA.id,
+      sourceType,
+      path
+    ).then((series: Series) => props.setSearchResults([series]));
   };
 
   const renderAlert = () => {
@@ -116,6 +121,28 @@ const Search: React.FC<Props> = (props: Props) => {
       );
     }
     return <></>;
+  };
+
+  const renderFilesystemInputs = () => {
+    return (
+      <>
+        <Uploader
+          className={styles.uploader}
+          callback={(path: string) =>
+            handleSearchFilesystem(path, SeriesSourceType.STANDARD)
+          }
+        />
+        <input
+          type="file"
+          onChange={(e) =>
+            handleSearchFilesystem(
+              e.target.files[0].path,
+              SeriesSourceType.ARCHIVE
+            )
+          }
+        />
+      </>
+    );
   };
 
   const showInLibraryMessage = () => {
@@ -152,7 +179,7 @@ const Search: React.FC<Props> = (props: Props) => {
         series={props.addModalSeries}
         editable={props.addModalEditable}
         toggleVisible={() => props.toggleShowingAddModal(false)}
-        importCustomSeries={props.importCustomSeries}
+        importSeries={props.importSeries}
       />
       <div className={styles.searchBar}>
         <Dropdown className={styles.extensionDropdown} overlay={extensionMenu}>
@@ -161,21 +188,23 @@ const Search: React.FC<Props> = (props: Props) => {
             <DownOutlined />
           </Button>
         </Dropdown>
-        {props.searchExtension === filesystem.METADATA.id ? (
-          <Uploader
-            className={styles.uploader}
-            callback={(path: string) => handleSearchFilesystem(path)}
-          />
-        ) : (
+        {props.searchExtension !== filesystem.METADATA.id ? (
           <Input
             className={styles.searchField}
             placeholder="Search for a series..."
             onChange={(e) => setSearchText(e.target.value)}
             onPressEnter={handleSearch}
           />
+        ) : (
+          <div className={styles.searchField} />
         )}
       </div>
       {renderAlert()}
+      {props.searchExtension === filesystem.METADATA.id ? (
+        renderFilesystemInputs()
+      ) : (
+        <></>
+      )}
       <LibraryGrid
         columns={4}
         seriesList={props.searchResults}

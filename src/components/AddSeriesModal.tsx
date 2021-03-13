@@ -64,7 +64,7 @@ type Props = {
   series: Series | undefined;
   visible: boolean;
   editable: boolean | undefined;
-  importCustomSeries: (series: Series) => void;
+  importSeries: (series: Series) => void;
   toggleVisible: () => void;
 };
 
@@ -77,7 +77,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
 
   const handleAdd = () => {
     if (customSeries !== undefined) {
-      props.importCustomSeries(customSeries);
+      props.importSeries(customSeries);
       props.toggleVisible();
     }
   };
@@ -105,7 +105,9 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
         </Col>
         <Col span={2} />
         <Col span={14}>
-          <Paragraph style={{ marginTop: '2rem' }}>Upload Cover Image</Paragraph>
+          <Paragraph style={{ marginTop: '2rem' }}>
+            Upload Cover Image
+          </Paragraph>
           <input
             type="file"
             onChange={(e) =>

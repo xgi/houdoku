@@ -1,6 +1,13 @@
 import { ipcRenderer } from 'electron';
 import path from 'path';
-import { Chapter, LanguageKey, Series, SeriesStatus } from '../../models/types';
+import {
+  Chapter,
+  LanguageKey,
+  Series,
+  SeriesSourceType,
+  SeriesStatus,
+} from '../../models/types';
+import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
 import {
   FetchSeriesFunc,
   FetchChaptersFunc,
@@ -11,6 +18,7 @@ import {
   GetPageUrlsFunction,
   FetchSearchFunc,
   ParseSearchFunc,
+  GetPageDataFunction,
 } from './interface';
 import { ExtensionMetadata, PageRequesterData } from './types';
 
@@ -24,7 +32,10 @@ const METADATA: ExtensionMetadata = {
   noticeUrl: 'https://github.com/xgi/houdoku/wiki/Importing-Local-Series',
 };
 
-const fetchSeries: FetchSeriesFunc = (id: string) => {
+const fetchSeries: FetchSeriesFunc = (
+  sourceType: SeriesSourceType,
+  id: string
+) => {
   return new Promise((resolve, reject) => {
     const data = { path: id };
     const blob = new Blob([JSON.stringify(data, null, 2)], {
@@ -35,7 +46,10 @@ const fetchSeries: FetchSeriesFunc = (id: string) => {
   });
 };
 
-const parseSeries: ParseSeriesFunc = (json: any): Series => {
+const parseSeries: ParseSeriesFunc = (
+  sourceType: SeriesSourceType,
+  json: any
+): Series => {
   const dirName = path.basename(json.path);
   const matchTitle: RegExpMatchArray | null = dirName.match(
     new RegExp(/(?:(?![v\d|c\d]).)*/g)
@@ -46,6 +60,7 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
     id: undefined,
     extensionId: METADATA.id,
     sourceId: json.path,
+    sourceType,
     title,
     altTitles: [],
     description: '',
@@ -64,8 +79,18 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
   return series;
 };
 
-const fetchChapters: FetchChaptersFunc = (id: string) => {
-  return ipcRenderer.invoke('get-all-files', id).then((fileList: string[]) => {
+const fetchChapters: FetchChaptersFunc = (
+  sourceType: SeriesSourceType,
+  id: string
+) => {
+  let fileListPromise;
+  if (sourceType === SeriesSourceType.STANDARD) {
+    fileListPromise = ipcRenderer.invoke('get-all-files', id);
+  } else {
+    fileListPromise = getArchiveFiles(id);
+  }
+
+  return fileListPromise.then((fileList: string[]) => {
     const imageDirectories: Set<string> = new Set();
     fileList.forEach((file: string) => {
       imageDirectories.add(path.dirname(file));
@@ -82,7 +107,10 @@ const fetchChapters: FetchChaptersFunc = (id: string) => {
   });
 };
 
-const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
+const parseChapters: ParseChaptersFunc = (
+  sourceType: SeriesSourceType,
+  json: any
+): Chapter[] => {
   const chapters: Chapter[] = [];
 
   let prevChapterNum = 0;
@@ -139,21 +167,31 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
 };
 
 const fetchPageRequesterData: FetchPageRequesterDataFunc = (
-  chapter_id: string
+  sourceType: SeriesSourceType,
+  seriesSourceId: string,
+  chapterSourceId: string
 ) => {
-  return ipcRenderer
-    .invoke('get-all-files', chapter_id)
-    .then((fileList: string[]) => {
-      const imageDirectories: Set<string> = new Set();
-      return new Promise((resolve, reject) => {
-        const data = { fileList };
-        const blob = new Blob([JSON.stringify(data, null, 2)], {
-          type: 'application/json',
-        });
-        const init = { status: 200 };
-        resolve(new Response(blob, init));
+  let fileListPromise;
+  if (sourceType === SeriesSourceType.STANDARD) {
+    fileListPromise = ipcRenderer.invoke('get-all-files', chapterSourceId);
+  } else {
+    fileListPromise = getArchiveFiles(
+      seriesSourceId
+    ).then((fileList: string[]) =>
+      fileList.filter((_path: string) => _path.startsWith(chapterSourceId))
+    );
+  }
+
+  return fileListPromise.then((fileList: string[]) => {
+    return new Promise((resolve, reject) => {
+      const data = { fileList };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
+        type: 'application/json',
       });
+      const init = { status: 200 };
+      resolve(new Response(blob, init));
     });
+  });
 };
 
 const parsePageRequesterData: ParsePageRequesterDataFunc = (
@@ -175,6 +213,19 @@ const getPageUrls: GetPageUrlsFunction = (
     pageUrls.push(`${pageRequesterData.pageFilenames[i]}`);
   }
   return pageUrls;
+};
+
+const getPageData: GetPageDataFunction = (series: Series, url: string) => {
+  if (series.sourceType === SeriesSourceType.ARCHIVE) {
+    const archiveFile = series.sourceId;
+    return getArchiveFileBase64(archiveFile, url).then(
+      (data: any) => `data:image/png;base64,${data}`
+    );
+  }
+
+  return new Promise((resolve, reject) => {
+    resolve(url);
+  });
 };
 
 const fetchSearch: FetchSearchFunc = (
@@ -204,6 +255,7 @@ export default {
   fetchPageRequesterData,
   parsePageRequesterData,
   getPageUrls,
+  getPageData,
   fetchSearch,
   parseSearch,
 };

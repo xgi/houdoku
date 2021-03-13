@@ -5,6 +5,7 @@ import {
   GenreKey,
   LanguageKey,
   Series,
+  SeriesSourceType,
   SeriesStatus,
   ThemeKey,
 } from '../../models/types';
@@ -18,6 +19,7 @@ import {
   GetPageUrlsFunction,
   FetchSearchFunc,
   ParseSearchFunc,
+  GetPageDataFunction,
 } from './interface';
 import { ExtensionMetadata, PageRequesterData } from './types';
 
@@ -173,12 +175,18 @@ const CONTENT_WARNING_MAP: { [key: number]: ContentWarningKey } = {
   50: ContentWarningKey.SEXUAL_VIOLENCE,
 };
 
-const fetchSeries: FetchSeriesFunc = (id: string) => {
+const fetchSeries: FetchSeriesFunc = (
+  sourceType: SeriesSourceType,
+  id: string
+) => {
   const promise = fetch(`https://mangadex.org/api/v2/manga/${id}`);
   return promise;
 };
 
-const parseSeries: ParseSeriesFunc = (json: any): Series => {
+const parseSeries: ParseSeriesFunc = (
+  sourceType: SeriesSourceType,
+  json: any
+): Series => {
   const genres: GenreKey[] = [];
   const themes: ThemeKey[] = [];
   const formats: FormatKey[] = [];
@@ -203,6 +211,7 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
     id: undefined,
     extensionId: METADATA.id,
     sourceId: json.data.id,
+    sourceType: SeriesSourceType.STANDARD,
     title: json.data.title,
     altTitles: json.data.altTitles,
     description: json.data.description,
@@ -221,12 +230,18 @@ const parseSeries: ParseSeriesFunc = (json: any): Series => {
   return series;
 };
 
-const fetchChapters: FetchChaptersFunc = (id: string) => {
+const fetchChapters: FetchChaptersFunc = (
+  sourceType: SeriesSourceType,
+  id: string
+) => {
   const promise = fetch(`https://mangadex.org/api/v2/manga/${id}/chapters`);
   return promise;
 };
 
-const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
+const parseChapters: ParseChaptersFunc = (
+  sourceType: SeriesSourceType,
+  json: any
+): Chapter[] => {
   const chapters: Chapter[] = [];
   const { groups } = json.data;
 
@@ -252,9 +267,13 @@ const parseChapters: ParseChaptersFunc = (json: any): Chapter[] => {
 };
 
 const fetchPageRequesterData: FetchPageRequesterDataFunc = (
-  chapter_id: string
+  sourceType: SeriesSourceType,
+  seriesSourceId: string,
+  chapterSourceId: string
 ) => {
-  const promise = fetch(`https://mangadex.org/api/v2/chapter/${chapter_id}`);
+  const promise = fetch(
+    `https://mangadex.org/api/v2/chapter/${chapterSourceId}`
+  );
   return promise;
 };
 
@@ -282,6 +301,12 @@ const getPageUrls: GetPageUrlsFunction = (
     );
   }
   return pageUrls;
+};
+
+const getPageData: GetPageDataFunction = (series: Series, url: string) => {
+  return new Promise((resolve, reject) => {
+    resolve(url);
+  });
 };
 
 const fetchSearch: FetchSearchFunc = (
@@ -320,7 +345,7 @@ const fetchSearch: FetchSearchFunc = (
 
 const parseSearch: ParseSearchFunc = (json: any) => {
   if (!('error' in json) && json.code === 200) {
-    return [parseSeries(json)];
+    return [parseSeries(SeriesSourceType.STANDARD, json)];
   }
   return [];
 };
@@ -334,6 +359,7 @@ export default {
   fetchPageRequesterData,
   parsePageRequesterData,
   getPageUrls,
+  getPageData,
   fetchSearch,
   parseSearch,
 };
