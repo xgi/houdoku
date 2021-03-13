@@ -6,7 +6,7 @@ import { PageRequesterData } from './types';
  *
  * @param sourceType the source type of the series
  * @param id the id of the series on the content source
- * @return Promise<Response> to be handled by ParseSeriesFunc
+ * @returns Promise<Response> to be handled by ParseSeriesFunc
  */
 export interface FetchSeriesFunc {
   (sourceType: SeriesSourceType, id: string): Promise<Response>;
@@ -17,7 +17,7 @@ export interface FetchSeriesFunc {
  *
  * @param sourceType the source type of the series
  * @param json the json content of the response
- * @return the series populated with fields from the content source, if available
+ * @returns the series populated with fields from the content source, if available
  */
 export interface ParseSeriesFunc {
   (sourceType: SeriesSourceType, json: any): Series;
@@ -28,7 +28,7 @@ export interface ParseSeriesFunc {
  *
  * @param sourceType the source type of the series
  * @param id the id of the series on the content source
- * @return Promise<Response> to be handled by ParseChaptersFunc
+ * @returns Promise<Response> to be handled by ParseChaptersFunc
  */
 export interface FetchChaptersFunc {
   (sourceType: SeriesSourceType, id: string): Promise<Response>;
@@ -39,7 +39,7 @@ export interface FetchChaptersFunc {
  *
  * @param sourceType the source type of the series
  * @param json the json content of the response
- * @return a list of chapters for the series, populated with fields from the content source
+ * @returns a list of chapters for the series, populated with fields from the content source
  */
 export interface ParseChaptersFunc {
   (sourceType: SeriesSourceType, json: any): Chapter[];
@@ -55,7 +55,7 @@ export interface ParseChaptersFunc {
  * @param sourceType the source type of the series
  * @param seriesSourceId
  * @param chapterSourceId
- * @return Promise<Response> to be handled by ParsePageRequesterDataFunc
+ * @returns Promise<Response> to be handled by ParsePageRequesterDataFunc
  */
 export interface FetchPageRequesterDataFunc {
   (
@@ -69,7 +69,7 @@ export interface FetchPageRequesterDataFunc {
  * Parse the response from FetchPageRequesterDataFunc
  *
  * @param json the json content of the response
- * @return the PageRequesterData for passing to any GetPageUrlsFunc call for the chapter
+ * @returns the PageRequesterData for passing to any GetPageUrlsFunc call for the chapter
  */
 export interface ParsePageRequesterDataFunc {
   (json: any): PageRequesterData;
@@ -84,7 +84,7 @@ export interface ParsePageRequesterDataFunc {
  * within the archive that need to be extracted separately.
  *
  * @param pageRequesterData
- * @return list of URLs that can be used to retrieve page data (using GetPageDataFunc)
+ * @returns list of URLs that can be used to retrieve page data (using GetPageDataFunc)
  */
 export interface GetPageUrlsFunc {
   (pageRequesterData: PageRequesterData): string[];
@@ -98,7 +98,7 @@ export interface GetPageUrlsFunc {
  *
  * @param series the series this page belongs to
  * @param url the url for this page from GetPageUrlsFunc
- * @return promise for the data for the page that can be put inside an <img> src
+ * @returns promise for the data for the page that can be put inside an <img> src
  */
 export interface GetPageDataFunc {
   (series: Series, url: string): Promise<string>;
@@ -110,7 +110,7 @@ export interface GetPageDataFunc {
  * @param text the user's search content, with any entered search params removed
  * @param params a map of user-specified parameters for searching. These are currently entered in
  * the form "key:value" like "author:oda" but this is not currently well-defined.
- * @return Promise<Response> to be handled by ParseSearchFunc
+ * @returns Promise<Response> to be handled by ParseSearchFunc
  */
 export interface FetchSearchFunc {
   (text: string, params: { [key: string]: string }): Promise<Response>;
@@ -120,7 +120,7 @@ export interface FetchSearchFunc {
  * Parse the response from FetchSearchFunc
  *
  * @param json the json content of the response
- * @return a list of series found from the content source, with fields set as available
+ * @returns a list of series found from the content source, with fields set as available
  */
 export interface ParseSearchFunc {
   (json: any): Series[];
