@@ -15,10 +15,10 @@ import {
   ParseChaptersFunc,
   ParsePageRequesterDataFunc,
   FetchPageRequesterDataFunc,
-  GetPageUrlsFunction,
+  GetPageUrlsFunc,
   FetchSearchFunc,
   ParseSearchFunc,
-  GetPageDataFunction,
+  GetPageDataFunc,
 } from './interface';
 import { ExtensionMetadata, PageRequesterData } from './types';
 
@@ -205,9 +205,7 @@ const parsePageRequesterData: ParsePageRequesterDataFunc = (
   };
 };
 
-const getPageUrls: GetPageUrlsFunction = (
-  pageRequesterData: PageRequesterData
-) => {
+const getPageUrls: GetPageUrlsFunc = (pageRequesterData: PageRequesterData) => {
   const pageUrls: string[] = [];
   for (let i = 0; i < pageRequesterData.numPages; i += 1) {
     pageUrls.push(`${pageRequesterData.pageFilenames[i]}`);
@@ -215,7 +213,7 @@ const getPageUrls: GetPageUrlsFunction = (
   return pageUrls;
 };
 
-const getPageData: GetPageDataFunction = (series: Series, url: string) => {
+const getPageData: GetPageDataFunc = (series: Series, url: string) => {
   if (series.sourceType === SeriesSourceType.ARCHIVE) {
     const archiveFile = series.sourceId;
     return getArchiveFileBase64(archiveFile, url).then(

@@ -16,10 +16,10 @@ import {
   ParseChaptersFunc,
   ParsePageRequesterDataFunc,
   FetchPageRequesterDataFunc,
-  GetPageUrlsFunction,
+  GetPageUrlsFunc,
   FetchSearchFunc,
   ParseSearchFunc,
-  GetPageDataFunction,
+  GetPageDataFunc,
 } from './interface';
 import { ExtensionMetadata, PageRequesterData } from './types';
 
@@ -291,9 +291,7 @@ const parsePageRequesterData: ParsePageRequesterDataFunc = (
   };
 };
 
-const getPageUrls: GetPageUrlsFunction = (
-  pageRequesterData: PageRequesterData
-) => {
+const getPageUrls: GetPageUrlsFunc = (pageRequesterData: PageRequesterData) => {
   const pageUrls: string[] = [];
   for (let i = 0; i < pageRequesterData.numPages; i += 1) {
     pageUrls.push(
@@ -303,7 +301,7 @@ const getPageUrls: GetPageUrlsFunction = (
   return pageUrls;
 };
 
-const getPageData: GetPageDataFunction = (series: Series, url: string) => {
+const getPageData: GetPageDataFunc = (series: Series, url: string) => {
   return new Promise((resolve, reject) => {
     resolve(url);
   });
