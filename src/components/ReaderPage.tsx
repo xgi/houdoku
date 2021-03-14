@@ -264,6 +264,29 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setChapter(newChapterId);
   };
 
+  const addKeybindings = () => {
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.previousPage, () => changePage(true));
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.firstPage, () => changePage(true, true));
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.nextPage, () => changePage(false));
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.lastPage, () => changePage(false, true));
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.previousChapter, () =>
+      changeChapter(true)
+    );
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.nextChapter, () => changeChapter(false));
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleLayoutDirection, () =>
+      props.toggleLayoutDirection()
+    );
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.togglePageView, () =>
+      props.togglePageView()
+    );
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.togglePageFit, () =>
+      props.togglePageFit()
+    );
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleShowingSettingsModal, () =>
+      props.toggleShowingSettingsModal()
+    );
+  };
+
   const removeKeybindings = () => {
     Mousetrap.unbind(Object.values(KEYBOARD_SHORTCUTS));
   };
@@ -290,37 +313,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     loadChapterData(chapter_id);
   }, [location]);
 
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.previousPage, () => changePage(true));
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.firstPage, () => changePage(true, true));
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.nextPage, () => changePage(false));
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.lastPage, () => changePage(false, true));
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.previousChapter, () => changeChapter(true));
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.nextChapter, () => changeChapter(false));
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleLayoutDirection, () =>
-    props.toggleLayoutDirection()
-  );
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.togglePageView, () =>
-    props.togglePageView()
-  );
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.togglePageFit, () => props.togglePageFit());
-  Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleShowingSettingsModal, () =>
-    props.toggleShowingSettingsModal()
-  );
+  addKeybindings();
 
   return (
     <Layout className={styles.pageLayout}>
-      <ReaderSettingsModal
-        visible={props.showingSettingsModal}
-        toggleVisible={props.toggleShowingSettingsModal}
-        layoutDirection={props.layoutDirection}
-        setLayoutDirection={props.setLayoutDirection}
-        pageView={props.pageView}
-        setPageView={props.setPageView}
-        pageFit={props.pageFit}
-        setPageFit={props.setPageFit}
-        preloadAmount={props.preloadAmount}
-        setPreloadAmount={props.setPreloadAmount}
-      />
+      <ReaderSettingsModal />
       <ReaderSidebar
         changePage={changePage}
         setChapter={setChapter}

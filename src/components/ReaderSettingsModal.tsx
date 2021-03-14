@@ -1,21 +1,17 @@
 import React from 'react';
 import { Button, Col, Dropdown, Menu, Modal, Row } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { connect, ConnectedProps } from 'react-redux';
 import { LayoutDirection, PageFit, PageView } from '../models/types';
 import styles from './ReaderSettingsModal.css';
-
-type Props = {
-  visible: boolean;
-  toggleVisible: () => void;
-  layoutDirection: LayoutDirection;
-  setLayoutDirection: (layoutDirection: LayoutDirection) => void;
-  pageView: PageView;
-  setPageView: (pageView: PageView) => void;
-  pageFit: PageFit;
-  setPageFit: (pageFit: PageFit) => void;
-  preloadAmount: number;
-  setPreloadAmount: (preloadAmount: number) => void;
-};
+import { RootState } from '../store';
+import {
+  setLayoutDirection,
+  setPageFit,
+  setPageView,
+  setPreloadAmount,
+} from '../features/settings/actions';
+import { toggleShowingSettingsModal } from '../features/reader/actions';
 
 const layoutDirectionText: { [key in LayoutDirection]: string } = {
   [LayoutDirection.LeftToRight]: 'Left-to-Right',
@@ -42,6 +38,31 @@ const preloadText: { [key: number]: string } = {
   4: '4 Pages',
   5: '5 Pages',
 };
+
+const mapState = (state: RootState) => ({
+  showingSettingsModal: state.reader.showingSettingsModal,
+  pageFit: state.settings.pageFit,
+  pageView: state.settings.pageView,
+  layoutDirection: state.settings.layoutDirection,
+  preloadAmount: state.settings.preloadAmount,
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapDispatch = (dispatch: any) => ({
+  setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
+  setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
+  setLayoutDirection: (layoutDirection: LayoutDirection) =>
+    dispatch(setLayoutDirection(layoutDirection)),
+  setPreloadAmount: (preloadAmount: number) =>
+    dispatch(setPreloadAmount(preloadAmount)),
+  toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = PropsFromRedux & {};
 
 const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
   const renderMenuItems = (textMap: { [key: number]: string }) => {
@@ -101,9 +122,9 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
   return (
     <Modal
       title="Reader Settings"
-      visible={props.visible}
+      visible={props.showingSettingsModal}
       footer={null}
-      onCancel={props.toggleVisible}
+      onCancel={props.toggleShowingSettingsModal}
     >
       <Row className={styles.settingRow}>
         <Col span={16}>Layout Direction</Col>
@@ -149,4 +170,4 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default ReaderSettingsModal;
+export default connector(ReaderSettingsModal);
