@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Houdoku</title>
+    <script>
+      (() => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = './dist/style.css';
+        // HACK: Writing the script path should be done with webpack
+        document.getElementsByTagName('head')[0].appendChild(link);
+      })();
+    </script>
+  </head>
+  <body>
+    <header id="titlebar">
+      <div id="drag-region">
+        <div id="window-title">
+          <span>Houdoku</span>
+        </div>
+        <div id="window-controls">
+          <div class="button" id="min-button">
+            <svg width="11" height="1" viewBox="0 0 11 1">
+              <path d="m11 0v1h-11v-1z" stroke-width=".26208"/>
+            </svg>
+          </div>
+          <div class="button" id="max-restore-button">
+            <svg width="10" height="10" viewBox="0 0 10 10">
+              <path d="m10-1.6667e-6v10h-10v-10zm-1.001 1.001h-7.998v7.998h7.998z" stroke-width=".25" />
+            </svg>
+          </div>
+          <div class="button" id="close-button">
+            <svg width="12" height="12" viewBox="0 0 12 12">
+              <path
+                d="m6.8496 6 5.1504 5.1504-0.84961 0.84961-5.1504-5.1504-5.1504 5.1504-0.84961-0.84961 5.1504-5.1504-5.1504-5.1504 0.84961-0.84961 5.1504 5.1504 5.1504-5.1504 0.84961 0.84961z"
+                stroke-width=".3" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="root"></div>
+    <script>
+      if (typeof process === 'object') {
+        const scripts = [];
+
+        if (process.env.NODE_ENV === 'development') {
+          // Dynamically insert the DLL script in development env in the
+          // renderer process
+          scripts.push('../.erb/dll/renderer.dev.dll.js');
+        
+          // Dynamically insert the bundled app script in the renderer process
+          const port = process.env.PORT || 1212;
+          scripts.push(`http://localhost:${port}/dist/renderer.dev.js`);
+        } else {
+          scripts.push('./dist/renderer.prod.js');
+        }
+
+        if (scripts.length) {
+          document.write(
+            scripts
+              .map((script) => `<script defer src="${script}"><\/script>`)
+              .join('')
+          );
+        }
+      }
+    </script>
+  </body>
+</html>

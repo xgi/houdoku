@@ -1,0 +1,11 @@
+.pageLayout {
+  min-height: 100vh;
+}
+
+.contentLayout {
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 24px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}

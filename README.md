@@ -1,7 +1,6 @@
 ![Houdoku Header](/res/houdoku_header.png)
 
-[![GitHub release](https://img.shields.io/github/release/xgi/houdoku.svg)](https://github.com/xgi/houdoku/releases) 
-[![CircleCI](https://circleci.com/gh/xgi/houdoku/tree/master.svg?style=svg)](https://circleci.com/gh/xgi/houdoku/tree/master)
+[![GitHub release](https://img.shields.io/github/release/xgi/houdoku.svg)](https://github.com/xgi/houdoku/releases)
 
 Houdoku is a manga reader and library manager for the desktop.
 
@@ -9,83 +8,49 @@ Houdoku is a manga reader and library manager for the desktop.
 
 # Features
 
-* Supports popular manga aggregators, including MangaDex, MangaHere, and more
-(see [houdoku-plugins](https://github.com/xgi/houdoku-plugins)).
-* Customizable reader interface with optional dark/night mode.
-* Tagging and filtering support to easily browse and manage large libraries.
-* Cross-platform!
+- Read manga from MangaDex or import ones from your collection. More extensions coming soon!
+- Customizable reader interface with multiple layouts and settings.
+- Tagging and filtering support to easily browse and manage large libraries.
+- Cross-platform!
 
 ---
 
-![Screenshots (light)](/res/screenshots_light.png)
-![Screenshots (dark)](/res/screenshots_dark.png)
+![Screenshots1](/res/screenshots1.png)
+![Screenshots2](/res/screenshots2.png)
 
 ---
 
 # Download
 
-Download Houdoku from [the releases page](https://github.com/xgi/houdoku/releases).
+~~Download Houdoku from [the releases page](https://github.com/xgi/houdoku/releases).~~
 
-For Windows users, a native .exe is provided. Users on other operating systems should download the
-.jar. Both options require a sufficient Java installation with JRE version 8 or later.
+Coming soon! Run the development version for now.
 
-The client can typically be run by simply double clicking the file. Alternatively, you may start
-the client via the command line:
+# Development
 
-```bash
-$ java -jar houdoku-x.y.z.jar
+Install dependencies:
+
+```
+yarn
+```
+
+Start the app in the dev environment:
+
+```
+yarn start
 ```
 
 # Plugins
 
-Support for 3rd party content sources (manga aggregators) is available via a plugin interface. You
-may install and update plugins by going to File->Settings->Plugins in the client.
+Houdoku uses 3rd-party content sources to provide access to manga.
+Currently, these are embedded in the client (one for MangaDex, and
+one for local imports). In the future, these will likely be separated
+into their own repository and updated from within Houdoku.
 
-For more information, and for an index of available plugins, see the
-[houdoku-plugins repository](https://github.com/xgi/houdoku-plugins).
+# History
 
-# Dependencies
-
-Running Houdoku requires Java (JRE) 8 or later.
-
-The project makes use of the following 3rd-party libraries, which are bundled with the application:
-
-* JSoup 1.11.3 -- Parse HTML documents
-* OkHttp3 3.10.0 -- Make HTTP requests
-* Gson 2.8.4 -- Object serialization
-* AppDirs 1.0.1 -- Determine OS-specific data directories
-* slf4j-simple (SimpleLogger) 1.7.25 -- Logging
-* JUnit 4.12 -- Unit testing
-* Mockito 2.19.1 -- Mocks for unit testing
-
-Libraries are downloaded from the Maven Central Repository -- see this project's [pom.xml](https://github.com/xgi/houdoku/blob/master/pom.xml).
-
-# Testing
-
-This project uses Maven for building and testing. Running unit tests is easy:
-
-```bash
-$ mvn test
-```
-
-To compile the executable JAR, use `mvn package`. The Houdoku artifact will be in
-`./out/artifacts`. This command may be useful for building & running the client (note the
-optional `skipTests`):
-
-```bash
-$ mvn package [-DskipTests] && \
-    java -jar ./out/artifacts/houdoku/Houdoku-*.jar
-```
-
-## Connecting to external clients
-
-Developers who want to test support for some 3rd-party services, such as the AniList API, will need
-to register external clients. Houdoku can run without enabling these services, but functionality
-may be limited.
-
-Credentials are stored in a properties file. See the
-[secret.properties template](https://github.com/xgi/houdoku/blob/master/src/main/resources/secret.properties.template) for instructions on
-creating credentials for each external client.
+Houdoku used to be a JavaFX application, but has been rebuilt in
+Electron (starting with v2.0.0). The JavaFX version is not supported.
 
 # License
 

@@ -1,0 +1,51 @@
+.header {
+  position: fixed;
+  z-index: 1;
+  width: calc(100vw - 180px);
+  height: 50px !important;
+  /* height: var(--header-height) !important; */
+  padding: 0 24px !important;
+  margin-left: -16px;
+  background: var(--color-background-alt) !important;
+  display: flex;
+  align-items: center;
+}
+
+.controlBar {
+  display: flex;
+  align-items: center;
+}
+
+.controlBarSpacer {
+  flex: 6;
+}
+
+.columnsText {
+  margin: 0 6px 0 0 !important;
+}
+
+.userTagsBadge {
+  margin-left: -6px !important;
+  margin-right: 7px !important;
+}
+
+.divider {
+  border-right: 1px solid var(--color-background);
+  margin-left: 0.75rem;
+  margin-right: 0.5rem;
+  height: 70%;
+  width: 0;
+}
+
+.reloadButton {
+  padding-right: 0.5rem !important;
+  padding-left: 0.5rem !important;
+}
+
+.seriesFilter,
+.statusDropdown,
+.progressDropdown,
+.tagsButton,
+.columnsButton {
+  margin-left: 0.3rem !important;
+}

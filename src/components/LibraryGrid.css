@@ -1,0 +1,42 @@
+.coverContainer {
+  display: flex;
+  align-items: center;
+  opacity: 0.8;
+  background-size: cover;
+}
+
+.seriesTitle {
+  position: absolute;
+  width: 85%;
+  bottom: 0px;
+  left: 12px;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+  user-select: none;
+  color: white !important;
+}
+
+.seriesUnreadCount {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 0 5px;
+  background-color: var(--color-exit);
+  user-select: none;
+  z-index: 1;
+}
+
+.seriesInLibrary {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 0 5px;
+  background-color: var(--color-success);
+  user-select: none;
+  z-index: 1;
+}
+
+.coverContainer:hover {
+  cursor: pointer;
+  opacity: 0.3;
+}

@@ -1,0 +1,65 @@
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+
+@import '~antd/dist/antd.dark.css';
+@import 'colors.css';
+@import 'titlebar.css';
+@import 'flags.css';
+
+body {
+  /* height: 100vh; */
+
+  overflow-y: hidden;
+  font-family: Arial, Helvetica, Helvetica Neue, serif;
+  font-size: 14px;
+}
+#root {
+  height: calc(100vh);
+  margin-top: 24px;
+  overflow-y: auto;
+}
+
+h4.ant-typography {
+  font-size: 18px;
+}
+
+.ant-table-thead > tr > th {
+  font-weight: bold;
+  user-select: none;
+}
+
+.ant-descriptions-item-container {
+  align-items: center;
+}
+
+.ant-dropdown-menu {
+  max-height: 200px;
+  overflow: auto;
+}
+
+.ant-alert {
+  padding: 8px 15px !important;
+}
+
+.ant-alert-message {
+  font-size: 14px !important;
+}
+
+.ant-alert-description > .ant-typography {
+  margin-bottom: 0 !important;
+}
+
+::-webkit-scrollbar {
+  width: 14px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-foreground-alt);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-foreground);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-7);
+}

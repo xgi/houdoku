@@ -1,0 +1,65 @@
+.backgroundContainer {
+  width: auto;
+  height: 180px;
+  overflow: hidden;
+  margin: 0 -16px 0 -16px;
+
+  background: linear-gradient(
+        135deg,
+        var(--color-background) 25%,
+        transparent 25%
+      ) -50px 0,
+    linear-gradient(225deg, var(--color-background) 25%, transparent 25%) -50px 0,
+    linear-gradient(315deg, var(--color-background) 25%, transparent 25%),
+    linear-gradient(45deg, var(--color-background) 25%, transparent 25%);
+  background-size: 100px 100px;
+  background-color: var(--color-background-alt);
+}
+
+.backgroundContainer > img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.headerContainer {
+  display: grid;
+  column-gap: 16px;
+  grid-template-columns: 150px auto;
+}
+
+.headerDetailsContainer {
+  padding-top: 15px;
+}
+
+.coverImage {
+  width: 100%;
+  margin-top: -70px;
+}
+
+.backButtonAffix {
+  position: absolute;
+  top: 29px;
+  z-index: 100;
+  background-color: var(--color-background-faded);
+}
+
+.controlButtonAffix {
+  position: absolute;
+  top: 29px;
+  right: 30px;
+  z-index: 100;
+}
+
+.removeButton {
+  margin-right: 1rem;
+  background-color: var(--color-background-faded) !important;
+}
+
+.refreshButton {
+  background-color: var(--color-background-faded) !important;
+}
+
+.descriptionItem {
+  text-transform: capitalize;
+}
