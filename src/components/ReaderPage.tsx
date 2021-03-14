@@ -44,6 +44,7 @@ import { toggleChapterRead } from '../features/library/utils';
 import { useForceUpdate } from '../util/reactutil';
 import ReaderSidebar from './ReaderSidebar';
 import ReaderViewer from './ReaderViewer';
+import ReaderPreloadContainer from './ReaderPreloadContainer';
 
 const KEYBOARD_SHORTCUTS = {
   previousPage: 'left',
@@ -182,25 +183,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const renderPreloadContainer = (pageNumber: number) => {
-    if (props.series === undefined) return <></>;
-    if (props.pageUrls.length === 0) return <></>;
-
-    const images = [];
-
-    for (
-      let i = pageNumber;
-      i < props.lastPageNumber && i < pageNumber + props.preloadAmount;
-      i += 1
-    ) {
-      images.push(
-        <img src={props.pageDataList[i]} alt="pagepreload" key={i} />
-      );
-    }
-
-    return <div className={styles.preloadContainer}>{images}</div>;
-  };
-
   const changePage = (left: boolean, toBound = false) => {
     if (toBound) {
       if (props.layoutDirection === LayoutDirection.LeftToRight) {
@@ -311,6 +293,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     loadChapterData(chapter_id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   addKeybindings();
@@ -326,7 +309,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         exitPage={exitPage}
       />
       <Layout className={`site-layout ${styles.contentLayout}`}>
-        {renderPreloadContainer(props.pageNumber)}
+        <ReaderPreloadContainer />
         <ReaderViewer />
       </Layout>
     </Layout>
