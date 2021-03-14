@@ -1,29 +1,7 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable react/button-has-type */
-/* eslint-disable consistent-return */
-/* eslint-disable promise/catch-or-return */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
-import { Layout, Typography, Tooltip, Button, Dropdown, Menu } from 'antd';
-import {
-  FullscreenOutlined,
-  ColumnWidthOutlined,
-  ColumnHeightOutlined,
-  PictureOutlined,
-  ReadOutlined,
-  ReadFilled,
-  RightSquareOutlined,
-  LeftSquareOutlined,
-  SettingOutlined,
-  ArrowRightOutlined,
-  ArrowLeftOutlined,
-  RightOutlined,
-  LeftOutlined,
-  VerticalLeftOutlined,
-  VerticalRightOutlined,
-  CloseOutlined,
-} from '@ant-design/icons';
+import { Layout } from 'antd';
 import Mousetrap from 'mousetrap';
 import { RootState } from '../store';
 import {
@@ -64,9 +42,9 @@ import {
 } from '../features/settings/actions';
 import { toggleChapterRead } from '../features/library/utils';
 import { useForceUpdate } from '../util/reactutil';
+import ReaderSidebar from './ReaderSidebar';
 
-const { Content, Sider } = Layout;
-const { Title, Text } = Typography;
+const { Content } = Layout;
 
 const KEYBOARD_SHORTCUTS = {
   previousPage: 'left',
@@ -79,23 +57,6 @@ const KEYBOARD_SHORTCUTS = {
   togglePageView: 'q',
   togglePageFit: 'f',
   toggleShowingSettingsModal: 'o',
-};
-
-const ICONS_PAGE_FIT = {
-  [PageFit.Auto]: <FullscreenOutlined />,
-  [PageFit.Width]: <ColumnWidthOutlined />,
-  [PageFit.Height]: <ColumnHeightOutlined />,
-};
-
-const ICONS_PAGE_VIEW = {
-  [PageView.Single]: <PictureOutlined />,
-  [PageView.Double]: <ReadOutlined />,
-  [PageView.Double_OddStart]: <ReadFilled />,
-};
-
-const ICONS_LAYOUT_DIRECTION = {
-  [LayoutDirection.LeftToRight]: <RightSquareOutlined />,
-  [LayoutDirection.RightToLeft]: <LeftSquareOutlined />,
 };
 
 const mapState = (state: RootState) => ({
@@ -226,18 +187,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return `${props.pageNumber * -100 + 100}%`;
   };
 
-  const getChapterTitleDisplay = (chapter: Chapter | undefined): string => {
-    if (chapter === undefined) return 'Loading chapter title...';
-
-    if (chapter.title.length > 0) {
-      return `${chapter.chapterNumber} - ${chapter.title}`;
-    }
-    return `Chapter ${chapter.chapterNumber}`;
-  };
-
   const renderPageImage = (pageNumber: number) => {
-    if (props.series === undefined) return;
-    if (props.pageUrls.length === 0) return;
+    if (props.series === undefined) return <></>;
+    if (props.pageUrls.length === 0) return <></>;
 
     return pageNumber <= props.lastPageNumber && pageNumber > 0 ? (
       <img
@@ -275,8 +227,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   const renderPreloadContainer = (pageNumber: number) => {
-    if (props.series === undefined) return;
-    if (props.pageUrls.length === 0) return;
+    if (props.series === undefined) return <></>;
+    if (props.pageUrls.length === 0) return <></>;
 
     const images = [];
 
@@ -437,148 +389,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         preloadAmount={props.preloadAmount}
         setPreloadAmount={props.setPreloadAmount}
       />
-      <Sider className={styles.sider}>
-        <div className={styles.siderHeader}>
-          <button className={styles.exitButton} onClick={() => exitPage()}>
-            <CloseOutlined />
-          </button>
-          <Title className={styles.seriesTitle} level={4}>
-            {props.series === undefined ? 'loading...' : props.series.title}
-          </Title>
-        </div>
-        <div className={styles.chapterHeader}>
-          <Tooltip title="Previous Chapter ([)">
-            <button
-              className={`${styles.chapterButton}
-            ${getAdjacentChapterId(true) === -1 ? styles.disabled : ''}`}
-              onClick={() => changeChapter(true)}
-            >
-              <ArrowLeftOutlined />
-            </button>
-          </Tooltip>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e) => {
-                  setChapter(e.item.props['data-value']);
-                }}
-              >
-                {props.relevantChapterList.map((chapter: Chapter) => (
-                  <Menu.Item key={chapter.id} data-value={chapter.id}>
-                    {getChapterTitleDisplay(chapter)}
-                  </Menu.Item>
-                ))}
-              </Menu>
-            }
-          >
-            <Text className={`${styles.chapterName}`}>
-              {getChapterTitleDisplay(props.chapter)}
-            </Text>
-          </Dropdown>
-          <Tooltip title="Next Chapter (])">
-            <button
-              className={`${styles.chapterButton}
-            ${getAdjacentChapterId(false) === -1 ? styles.disabled : ''}`}
-              onClick={() => changeChapter(false)}
-            >
-              <ArrowRightOutlined />
-            </button>
-          </Tooltip>
-        </div>
-        <div className={styles.settingsBar}>
-          <Tooltip title="Change page fit (f)">
-            <button
-              className={`${styles.settingsButton}`}
-              onClick={() => props.togglePageFit()}
-            >
-              {ICONS_PAGE_FIT[props.pageFit]}
-            </button>
-          </Tooltip>
-          <Tooltip title="Change two-page view (q)">
-            <button
-              className={`${styles.settingsButton}`}
-              onClick={() => props.togglePageView()}
-            >
-              {ICONS_PAGE_VIEW[props.pageView]}
-            </button>
-          </Tooltip>
-          <Tooltip title="Change reader direction (d)">
-            <button
-              className={`${styles.settingsButton}`}
-              onClick={() => props.toggleLayoutDirection()}
-            >
-              {ICONS_LAYOUT_DIRECTION[props.layoutDirection]}
-            </button>
-          </Tooltip>
-          <Tooltip title="Advanced Settings (o)">
-            <button
-              className={`${styles.settingsButton}`}
-              onClick={() => props.toggleShowingSettingsModal()}
-            >
-              <SettingOutlined />
-            </button>
-          </Tooltip>
-        </div>
-        <div className={styles.pageControlBar}>
-          <Tooltip title="First Page (ctrl+←)">
-            <button
-              className={`${styles.pageButton}`}
-              onClick={() => changePage(true, true)}
-            >
-              <VerticalRightOutlined />
-            </button>
-          </Tooltip>
-          <Tooltip title="Previous Page (←)">
-            <button
-              className={`${styles.pageButton}`}
-              onClick={() => changePage(true)}
-            >
-              <LeftOutlined />
-            </button>
-          </Tooltip>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e) => {
-                  props.setPageNumber(e.item.props['data-value']);
-                }}
-              >
-                {Array.from(
-                  { length: props.lastPageNumber },
-                  (v, k) => k + 1
-                ).map((pageNumber: number) => (
-                  <Menu.Item key={pageNumber} data-value={pageNumber}>
-                    Page {pageNumber}
-                  </Menu.Item>
-                ))}
-              </Menu>
-            }
-          >
-            <Text
-              className={`${styles.pageNumber}`}
-            >{`${props.pageNumber} / ${props.lastPageNumber}`}</Text>
-          </Dropdown>
-          <Tooltip title="Next Page (→)">
-            <button
-              className={`${styles.pageButton}`}
-              onClick={() => changePage(false)}
-            >
-              <RightOutlined />
-            </button>
-          </Tooltip>
-          <Tooltip title="Last Page (ctrl+→)">
-            <button
-              className={`${styles.pageButton}`}
-              onClick={() => changePage(false, true)}
-            >
-              <VerticalLeftOutlined />
-            </button>
-          </Tooltip>
-        </div>
-        <div className={styles.groupRow}>
-          <Text>Group: {props.chapter?.groupName}</Text>
-        </div>
-      </Sider>
+      <ReaderSidebar
+        changePage={changePage}
+        setChapter={setChapter}
+        changeChapter={changeChapter}
+        getAdjacentChapterId={getAdjacentChapterId}
+        exitPage={exitPage}
+      />
       <Layout className={`site-layout ${styles.contentLayout}`}>
         {renderPreloadContainer(props.pageNumber)}
         {renderViewer()}
