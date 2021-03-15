@@ -28,6 +28,16 @@ type Props = {
 };
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
+  /**
+   * Get the cover image source of a series.
+   * If the series id is non-undefined (i.e. it is in the user's library) we first try to find the
+   * downloaded thumbnail image. If it doesn't exist, we return the blankCover path.
+   * If the series id is undefined (i.e. it was included in search results, but is not yet in the
+   * library), we attempt to use the series.remoteCoverUrl (defaulting to blankCover if it
+   * isn't set).
+   * @param series
+   * @returns the cover image for a series, which can be put in an <img> tag
+   */
   const getImageSource = (series: Series) => {
     let thumbnailPath: string;
     if (series.id !== undefined) {
@@ -41,6 +51,11 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     return series.remoteCoverUrl === '' ? blankCover : series.remoteCoverUrl;
   };
 
+  /**
+   * Get a filtered (and sorted) list of series after applying the specified filters.
+   * @param seriesList the list of series to filter
+   * @returns a sorted list of series matching all filter props
+   */
   const getFilteredList = (seriesList: Series[]): Series[] => {
     const filter = props.filter.toLowerCase();
 
@@ -74,6 +89,15 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
       .sort((a: Series, b: Series) => a.title.localeCompare(b.title));
   };
 
+  /**
+   * Render the "Unread" badge on a series.
+   * This is a number in a red box at the top-left of the cover, showing the number of unread
+   * chapters. This is based on series.numberUnread, which is a fairly naive value obtained by
+   * subtracting the highest available chapter number by the latest read chapter number (rounded).
+   * See comparison.getNumberUnreadChapters for more details.
+   * @param series the series to generate the badge for
+   * @returns an element to include in the cover container div
+   */
   const renderUnreadBadge = (series: Series) => {
     if (series.numberUnread > 0) {
       return (
@@ -85,6 +109,12 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     return <></>;
   };
 
+  /**
+   * Render the "In Library" badge on a series.
+   * This is a checkmark in a green box at the top-right of the cover. It is used if we have been
+   * provided an inLibraryFund (particularly on the search page).
+   * @returns an element to include in the cover container div
+   */
   const renderInLibraryBadge = () => {
     return (
       <Title level={3} className={styles.seriesInLibrary}>

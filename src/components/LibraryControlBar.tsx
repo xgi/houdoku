@@ -64,6 +64,10 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [showingColumnsPopover, setShowingColumnsPopover] = useState(false);
   const [showingTagsPopover, setShowingTagsPopover] = useState(false);
 
+  /**
+   * Get a displayable string for the current filterStatus value.
+   * @returns a user-friendly representation of the filterStatus prop
+   */
   const getFilterStatusText = () => {
     const status = props.filterStatus;
 
@@ -73,6 +77,10 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
     return `Status: ${valueText}`;
   };
 
+  /**
+   * Get a displayable string for the current filterProgress value.
+   * @returns a user-friendly representation of the filterProgress prop
+   */
   const getFilterProgressText = () => {
     const prefix = 'Progress: ';
 
