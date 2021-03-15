@@ -49,7 +49,8 @@ const mapDispatch = (dispatch: any) => ({
   setFilter: (filter: string) => dispatch(setFilter(filter)),
   setFilterStatus: (status: SeriesStatus | null) =>
     dispatch(setFilterStatus(status)),
-  setFilterProgress: (unread: boolean) => dispatch(setFilterProgress(unread)),
+  setFilterProgress: (progressFilter: ProgressFilter) =>
+    dispatch(setFilterProgress(progressFilter)),
   setFilterUserTags: (userTags: string[]) =>
     dispatch(setFilterUserTags(userTags)),
 });
@@ -64,6 +65,10 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [showingColumnsPopover, setShowingColumnsPopover] = useState(false);
   const [showingTagsPopover, setShowingTagsPopover] = useState(false);
 
+  /**
+   * Get a displayable string for the current filterStatus value.
+   * @returns a user-friendly representation of the filterStatus prop
+   */
   const getFilterStatusText = () => {
     const status = props.filterStatus;
 
@@ -73,6 +78,10 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
     return `Status: ${valueText}`;
   };
 
+  /**
+   * Get a displayable string for the current filterProgress value.
+   * @returns a user-friendly representation of the filterProgress prop
+   */
   const getFilterProgressText = () => {
     const prefix = 'Progress: ';
 

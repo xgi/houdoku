@@ -13,23 +13,25 @@ import {
 } from '../features/settings/actions';
 import { toggleShowingSettingsModal } from '../features/reader/actions';
 
+/**
+ * Text maps for different settings values. These have keys from each possible value for the
+ * settings, and user-friendly strings representing the setting value. They are displayed to the
+ * user when selecting the options from drop-down menus.
+ */
 const layoutDirectionText: { [key in LayoutDirection]: string } = {
   [LayoutDirection.LeftToRight]: 'Left-to-Right',
   [LayoutDirection.RightToLeft]: 'Right-to-Left',
 };
-
 const pageViewText: { [key in PageView]: string } = {
   [PageView.Single]: 'Single',
   [PageView.Double]: 'Double (Even Start)',
   [PageView.Double_OddStart]: 'Double (Odd Start)',
 };
-
 const pageFitText: { [key in PageFit]: string } = {
   [PageFit.Auto]: 'Auto',
   [PageFit.Width]: 'Fit Width',
   [PageFit.Height]: 'Fit Height',
 };
-
 const preloadText: { [key: number]: string } = {
   0: 'Disabled',
   1: '1 Page',
@@ -65,6 +67,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
+  /**
+   * Generate menu item JSX elements for a setting.
+   * @param textMap the text map for the desired setting. See examples above.
+   * @returns an element containing <Menu.Item>'s for each option in the textMap.
+   */
   const renderMenuItems = (textMap: { [key: number]: string }) => {
     return (
       <>
@@ -88,7 +95,6 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
       {renderMenuItems(layoutDirectionText)}
     </Menu>
   );
-
   const pageViewMenu = (
     <Menu
       onClick={(e) => {
@@ -98,7 +104,6 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
       {renderMenuItems(pageViewText)}
     </Menu>
   );
-
   const pageFitMenu = (
     <Menu
       onClick={(e) =>
@@ -108,7 +113,6 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
       {renderMenuItems(pageFitText)}
     </Menu>
   );
-
   const preloadMenu = (
     <Menu
       onClick={(e) =>

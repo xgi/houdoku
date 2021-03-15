@@ -111,6 +111,16 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const location = useLocation();
   const forceUpdate = useForceUpdate();
 
+  /**
+   * Populate the relevantChapterList prop.
+   * This prop is used to identify the chapters shown in the selector dropdown (and which can be
+   * accessed by pressing next/previous chapter on the UI). There is one entry for each unique
+   * chapter number matching the current chapter's release language, as long as one exists. If there
+   * are multiple to choose from, we try to find one with the same group.
+   * See also comparison.selectMostSimilarChapter
+   * @param series the series to find relevant chapters for
+   * @param chapter the current chapter to find other chapters in relation to
+   */
   const createRelevantChapterList = async (
     series: Series,
     chapter: Chapter
@@ -145,6 +155,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.setRelevantChapterList(relevantChapterList);
   };
 
+  /**
+   * Populate the reader's props using the specified chapter.
+   * Despite being async, you cannot guarantee that all of the props will be set when this function
+   * resolves, since it does not wait for prop methods. However, it will eventually set all
+   * necessary props for the reader to properly show the chapter.
+   * @param chapterId the chapter to view. If it does not exist, this method returns immediately
+   */
   const loadChapterData = async (chapterId: number) => {
     const chapter: Chapter = await db
       .fetchChapter(chapterId)
@@ -183,28 +200,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const changePage = (left: boolean, toBound = false) => {
-    if (toBound) {
-      if (props.layoutDirection === LayoutDirection.LeftToRight) {
-        props.setPageNumber(left ? 0 : props.lastPageNumber);
-      } else {
-        props.setPageNumber(left ? props.lastPageNumber : 0);
-      }
-      return;
-    }
-
-    let delta = left ? -1 : 1;
-
-    if (props.layoutDirection === LayoutDirection.RightToLeft) {
-      delta = -delta;
-    }
-    if (props.pageView !== PageView.Single) {
-      delta *= 2;
-    }
-
-    props.changePageNumber(delta);
-  };
-
   /**
    * Get the ID of a chapter just before or after the current one.
    * @param previous whether to get the previous chapter (instead of the next one)
@@ -232,6 +227,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return id === undefined ? -1 : id;
   };
 
+  /**
+   * Change to the specified chapter.
+   * The chapter does not necessarily need to be included in relevantChapterList.
+   * @param id the chapter id
+   */
   const setChapter = (id: number) => {
     props.setPageNumber(1);
     props.setPageUrls([]);
@@ -240,12 +240,52 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     loadChapterData(id);
   };
 
+  /**
+   * Change to an adjacent chapter.
+   * Adjacent chapter is determined using getAdjacentChapterId. If not found, this method returns
+   * without doing anything.
+   * @param previous whether to get the previous chapter (as opposed to the next)
+   */
   const changeChapter = (previous: boolean) => {
     const newChapterId = getAdjacentChapterId(previous);
     if (newChapterId === -1) return;
     setChapter(newChapterId);
   };
 
+  /**
+   * Change the current viewed page.
+   * Note that even when the user is viewing in two-page mode, they still always have a single
+   * page number prop.
+   * This method takes the current reader direction into account.
+   * @param left whether to get the page to the left (as opposed to the right)
+   * @param toBound whether to get the final page in this direction (i.e. the first or last page)
+   */
+  const changePage = (left: boolean, toBound = false) => {
+    if (toBound) {
+      if (props.layoutDirection === LayoutDirection.LeftToRight) {
+        props.setPageNumber(left ? 0 : props.lastPageNumber);
+      } else {
+        props.setPageNumber(left ? props.lastPageNumber : 0);
+      }
+      return;
+    }
+
+    let delta = left ? -1 : 1;
+
+    if (props.layoutDirection === LayoutDirection.RightToLeft) {
+      delta = -delta;
+    }
+    if (props.pageView !== PageView.Single) {
+      delta *= 2;
+    }
+
+    props.changePageNumber(delta);
+  };
+
+  /**
+   * Add all keybindings to the window.
+   * These need to be removed (with removeKeybindings) when changing to another page.
+   */
   const addKeybindings = () => {
     Mousetrap.bind(KEYBOARD_SHORTCUTS.previousPage, () => changePage(true));
     Mousetrap.bind(KEYBOARD_SHORTCUTS.firstPage, () => changePage(true, true));
@@ -269,6 +309,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     );
   };
 
+  /**
+   * Remove all keybindings from the window.
+   */
   const removeKeybindings = () => {
     Mousetrap.unbind(Object.values(KEYBOARD_SHORTCUTS));
   };
@@ -292,11 +335,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
+    addKeybindings();
     loadChapterData(chapter_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
-
-  addKeybindings();
 
   return (
     <Layout className={styles.pageLayout}>
