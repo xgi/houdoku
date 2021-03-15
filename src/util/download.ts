@@ -2,6 +2,11 @@ import fs from 'fs';
 import { Series } from '../models/types';
 import { getThumbnailPath } from './filesystem';
 
+/**
+ * Download a series' cover to the filesystem.
+ * The cover is saved in the internal thumbnail directory; see getThumbnailPath.
+ * @param series the series to download cover for
+ */
 // eslint-disable-next-line import/prefer-default-export
 export async function downloadCover(series: Series) {
   const thumbnailPath = await getThumbnailPath(series);

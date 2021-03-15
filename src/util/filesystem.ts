@@ -3,6 +3,11 @@ import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import { Series } from '../models/types';
 
+/**
+ * Get a list of all file paths within a directory (recursively).
+ * @param directory the directory to start from
+ * @returns list of all full file paths
+ */
 export function walk(directory: string): string[] {
   let fileList: string[] = [];
 
@@ -20,6 +25,15 @@ export function walk(directory: string): string[] {
   return fileList;
 }
 
+/**
+ * Get the expected path for a saved series thumbnail.
+ * The thumbnail does not necessarily exist; this just provides the filename that it would/should
+ * exist at.
+ * When a series has an empty remoteCoverUrl value, it does not have a relevant thumbnail path. Thus
+ * we return null in that case.
+ * @param series the series to get the expected path for
+ * @returns a promise for the expected thumbnail path if the series has a remoteCoverUrl, else null
+ */
 export async function getThumbnailPath(series: Series): Promise<string | null> {
   if (series.remoteCoverUrl === '') return null;
 
@@ -32,6 +46,12 @@ export async function getThumbnailPath(series: Series): Promise<string | null> {
   return path.join(thumbnailsDir, `${series.id}.${ext}`);
 }
 
+/**
+ * Delete a series thumbnail from the filesystem.
+ * This does not necessarily require the thumbnail to exist; therefore this function can be simply
+ * used to ensure that a thumbnail does not exist.
+ * @param series the series to delete the thumbnail for
+ */
 export async function deleteThumbnail(series: Series) {
   const thumbnailPath = await getThumbnailPath(series);
   if (thumbnailPath === null) return;
