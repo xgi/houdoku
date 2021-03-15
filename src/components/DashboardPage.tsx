@@ -27,7 +27,7 @@ import {
   loadSeriesList,
   reloadSeriesList,
 } from '../features/library/utils';
-import * as database from '../db';
+import * as database from '../util/db';
 import Settings from './Settings';
 import About from './About';
 import Library from './Library';

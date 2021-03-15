@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-cycle
-import * as db from '../db';
+import * as db from '../util/db';
 import { Chapter, Series } from '../models/types';
 import { getNumberUnreadChapters } from '../util/comparison';
 

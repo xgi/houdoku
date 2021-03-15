@@ -1,4 +1,4 @@
-.flag { width: 16px; height: 16px; background: url(img/flags.png) no-repeat; }
+.flag { width: 16px; height: 16px; background: url(../img/flags.png) no-repeat; }
 .flag.flag-ad { background-position: 0 0 }
 .flag.flag-ae { background-position: -16px 0 }
 .flag.flag-af { background-position: -32px 0 }
