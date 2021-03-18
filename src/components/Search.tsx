@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Alert, Input, Dropdown, Menu, Modal } from 'antd';
+import { Button, Alert, Input, Dropdown, Menu, Modal, Col, Row } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
@@ -125,23 +125,29 @@ const Search: React.FC<Props> = (props: Props) => {
 
   const renderFilesystemInputs = () => {
     return (
-      <>
-        <Uploader
-          className={styles.uploader}
-          callback={(path: string) =>
-            handleSearchFilesystem(path, SeriesSourceType.STANDARD)
-          }
-        />
-        <input
-          type="file"
-          onChange={(e) =>
-            handleSearchFilesystem(
-              e.target.files[0].path,
-              SeriesSourceType.ARCHIVE
-            )
-          }
-        />
-      </>
+      <Row>
+        <Col span={12}>
+          <Paragraph>Upload Directory</Paragraph>
+          <Uploader
+            className={styles.uploader}
+            callback={(path: string) =>
+              handleSearchFilesystem(path, SeriesSourceType.STANDARD)
+            }
+          />
+        </Col>
+        <Col span={12}>
+          <Paragraph>Upload Archive</Paragraph>
+          <input
+            type="file"
+            onChange={(e) =>
+              handleSearchFilesystem(
+                e.target.files[0].path,
+                SeriesSourceType.ARCHIVE
+              )
+            }
+          />
+        </Col>
+      </Row>
     );
   };
 
@@ -170,6 +176,7 @@ const Search: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     props.setSearchResults([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   return (
