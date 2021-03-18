@@ -57,24 +57,25 @@ const addChapters = (chapters: Chapter[], series: Series) => {
     .exec();
 };
 
+const deleteAllSeries = () => {
+  db.database.delete().from(db.seriesTable).exec();
+};
+
+const deleteChapters = (seriesId: number) => {
+  return db.database
+    .delete()
+    .from(db.chapterTable)
+    .where(db.chapterTable.seriesId.eq(seriesId))
+    .exec();
+};
+
 const deleteSeries = (id: number) => {
   return db.database
     .delete()
     .from(db.seriesTable)
     .where(db.seriesTable.id.eq(id))
-    .exec();
-};
-
-const deleteAllSeries = () => {
-  db.database.delete().from(db.seriesTable).exec();
-};
-
-const deleteChapters = (series: Series) => {
-  return db.database
-    .delete()
-    .from(db.chapterTable)
-    .where(db.chapterTable.seriesId.eq(series.id))
-    .exec();
+    .exec()
+    .then(() => deleteChapters(id));
 };
 
 const updateSeriesNumberUnread = (series: Series) => {
