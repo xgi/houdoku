@@ -48,6 +48,7 @@ const Library: React.FC<Props> = (props: Props) => {
         <LibraryGrid
           columns={props.columns}
           seriesList={props.seriesList}
+          sorted
           filter={props.filter}
           filterStatus={props.filterStatus}
           filterProgress={props.filterProgress}

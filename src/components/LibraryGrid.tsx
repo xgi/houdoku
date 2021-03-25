@@ -19,6 +19,7 @@ if (!fs.existsSync(thumbnailsDir)) {
 type Props = {
   columns: number;
   seriesList: Series[];
+  sorted: boolean;
   filter: string;
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
@@ -59,34 +60,35 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
   const getFilteredList = (seriesList: Series[]): Series[] => {
     const filter = props.filter.toLowerCase();
 
-    return seriesList
-      .filter((series: Series) => {
-        if (!series.title.toLowerCase().includes(filter)) return false;
-        if (
-          props.filterStatus !== null &&
-          series.status !== props.filterStatus
-        ) {
-          return false;
-        }
-        if (
-          props.filterProgress === ProgressFilter.Unread &&
-          series.numberUnread === 0
-        ) {
-          return false;
-        }
-        if (
-          props.filterProgress === ProgressFilter.Finished &&
-          series.numberUnread > 0
-        ) {
-          return false;
-        }
-        for (let i = 0; i < props.filterUserTags.length; i += 1) {
-          if (!series.userTags.includes(props.filterUserTags[i])) return false;
-        }
+    const filteredList = seriesList.filter((series: Series) => {
+      if (!series.title.toLowerCase().includes(filter)) return false;
+      if (props.filterStatus !== null && series.status !== props.filterStatus) {
+        return false;
+      }
+      if (
+        props.filterProgress === ProgressFilter.Unread &&
+        series.numberUnread === 0
+      ) {
+        return false;
+      }
+      if (
+        props.filterProgress === ProgressFilter.Finished &&
+        series.numberUnread > 0
+      ) {
+        return false;
+      }
+      for (let i = 0; i < props.filterUserTags.length; i += 1) {
+        if (!series.userTags.includes(props.filterUserTags[i])) return false;
+      }
 
-        return true;
-      })
-      .sort((a: Series, b: Series) => a.title.localeCompare(b.title));
+      return true;
+    });
+
+    return props.sorted
+      ? filteredList.sort((a: Series, b: Series) =>
+          a.title.localeCompare(b.title)
+        )
+      : filteredList;
   };
 
   /**

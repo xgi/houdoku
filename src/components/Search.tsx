@@ -215,6 +215,7 @@ const Search: React.FC<Props> = (props: Props) => {
       <LibraryGrid
         columns={4}
         seriesList={props.searchResults}
+        sorted={false}
         filter=""
         filterProgress={ProgressFilter.All}
         filterStatus={null}
