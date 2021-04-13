@@ -25,6 +25,7 @@ import {
   ContentWarnings,
 } from '../models/contentwarnings';
 import blankCover from '../img/blank_cover.png';
+import { getSeries } from '../services/extension';
 
 const { Option } = Select;
 
@@ -69,10 +70,26 @@ type Props = {
 };
 
 const AddSeriesModal: React.FC<Props> = (props: Props) => {
-  const [customSeries, setCustomSeries] = useState(props.series);
+  const [customSeries, setCustomSeries] = useState<Series>();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setCustomSeries(props.series);
+    setLoading(true);
+
+    if (props.series !== undefined) {
+      // we can't guarantee the provided series has all of the available fields (since
+      // they are not usually included in the search results) so we explicitly retrieve
+      // all of the series data here
+
+      // eslint-disable-next-line promise/catch-or-return
+      getSeries(
+        props.series.extensionId,
+        props.series.sourceType,
+        props.series.sourceId
+      )
+        .then((series) => setCustomSeries(series))
+        .finally(() => setLoading(false));
+    }
   }, [props.series]);
 
   const handleAdd = () => {
