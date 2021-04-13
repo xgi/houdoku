@@ -159,9 +159,10 @@ const Search: React.FC<Props> = (props: Props) => {
 
   const extensionMenu = (
     <Menu
-      onClick={(e) =>
-        props.setSearchExtension(parseInt(e.item.props['data-value'], 10))
-      }
+      onClick={(e) => {
+        props.setSearchResults([]);
+        props.setSearchExtension(parseInt(e.item.props['data-value'], 10));
+      }}
     >
       {Object.values(EXTENSIONS).map((extension: any) => {
         const { id } = extension.METADATA;
