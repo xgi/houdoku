@@ -1,11 +1,13 @@
 import { Chapter, Series, SeriesSourceType } from '../models/types';
 import filesystem from './extensions/filesystem';
 import mangadex from './extensions/mangadex';
+import manganelo from './extensions/manganelo';
 import { ExtensionMetadata, PageRequesterData } from './extensions/types';
 
 export const EXTENSIONS = {
   [filesystem.METADATA.id]: filesystem,
   [mangadex.METADATA.id]: mangadex,
+  [manganelo.METADATA.id]: manganelo,
 };
 
 /**
@@ -37,7 +39,13 @@ export function getSeries(
   const extension = EXTENSIONS[extensionId];
   return extension
     .fetchSeries(sourceType, seriesId)
-    .then((response) => response.json())
+    .then((response) => {
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        return response.text();
+      }
+      return response.json();
+    })
     .then((data) => extension.parseSeries(sourceType, data));
 }
 
@@ -61,7 +69,13 @@ export function getChapters(
   const extension = EXTENSIONS[extensionId];
   return extension
     .fetchChapters(sourceType, seriesId)
-    .then((response) => response.json())
+    .then((response) => {
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        return response.text();
+      }
+      return response.json();
+    })
     .then((data) => extension.parseChapters(sourceType, data));
 }
 
@@ -86,7 +100,15 @@ export function getPageRequesterData(
   const extension = EXTENSIONS[extensionId];
   return extension
     .fetchPageRequesterData(sourceType, seriesSourceId, chapterSourceId)
-    .then((response) => response.json())
+    .then((response) => {
+      if (typeof response === 'string') return response;
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        return response.text();
+      }
+      return response.json();
+    })
     .then((data) => extension.parsePageRequesterData(data));
 }
 
@@ -154,6 +176,12 @@ export function search(extensionId: number, text: string): Promise<Series[]> {
   const extension = EXTENSIONS[extensionId];
   return extension
     .fetchSearch(adjustedText, params)
-    .then((response) => response.json())
+    .then((response) => {
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        return response.text();
+      }
+      return response.json();
+    })
     .then((data) => extension.parseSearch(data));
 }

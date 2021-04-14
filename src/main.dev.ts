@@ -11,7 +11,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, BrowserView } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { walk } from './util/filesystem';
@@ -151,4 +151,30 @@ ipcMain.handle('get-thumbnails-dir', (event) => {
 
 ipcMain.handle('get-all-files', (event, rootPath: string) => {
   return walk(rootPath);
+});
+
+ipcMain.handle('load-url-spoof', (event, url: string) => {
+  if (mainWindow !== null) {
+    const spoofView = new BrowserView();
+    mainWindow.setBrowserView(spoofView);
+    spoofView.setBounds({ x: 0, y: 0, width: 0, height: 0 });
+
+    spoofView.webContents.loadURL(url);
+    return new Promise<string>((resolve, reject) => {
+      if (spoofView === null) reject();
+      else {
+        spoofView.webContents.once('did-frame-finish-load', () => {
+          spoofView?.webContents
+            .executeJavaScript('document.body.innerHTML')
+            .then((value) => {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (spoofView as any).webContents.destroy();
+              // eslint-disable-next-line promise/always-return
+              mainWindow?.removeBrowserView(spoofView);
+              resolve(value);
+            });
+        });
+      }
+    });
+  }
 });
