@@ -10,7 +10,6 @@ const { Content } = Layout;
 const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
   lastPageNumber: state.reader.lastPageNumber,
-  pageUrls: state.reader.pageUrls,
   pageDataList: state.reader.pageDataList,
   series: state.reader.series,
   pageFit: state.settings.pageFit,
@@ -34,7 +33,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
 
   const renderPageImage = (pageNumber: number) => {
     if (props.series === undefined) return <></>;
-    if (props.pageUrls.length === 0) return <></>;
+    if (props.pageDataList.length === 0) return <></>;
 
     return pageNumber <= props.lastPageNumber && pageNumber > 0 ? (
       <img

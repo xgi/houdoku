@@ -32,6 +32,7 @@ const METADATA: ExtensionMetadata = {
     'This extension currently has limited search functionality. To add a series,' +
     ' either copy-paste the URL into the search field, or enter id:<series_id>',
   noticeUrl: '',
+  pageLoadMessage: '',
 };
 
 const SERIES_STATUS_MAP: { [key: number]: SeriesStatus } = {

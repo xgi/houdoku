@@ -29,6 +29,7 @@ const METADATA: ExtensionMetadata = {
   version: 1,
   notice: 'Add a series by selecting the directory or archive file below.',
   noticeUrl: 'https://github.com/xgi/houdoku/wiki/Importing-Local-Series',
+  pageLoadMessage: '',
 };
 
 const fetchSeries: FetchSeriesFunc = (

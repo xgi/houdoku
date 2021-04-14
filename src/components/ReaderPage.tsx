@@ -45,6 +45,7 @@ import { useForceUpdate } from '../util/reactutil';
 import ReaderSidebar from './ReaderSidebar';
 import ReaderViewer from './ReaderViewer';
 import ReaderPreloadContainer from './ReaderPreloadContainer';
+import ReaderLoader from './ReaderLoader';
 
 const KEYBOARD_SHORTCUTS = {
   previousPage: 'left',
@@ -351,8 +352,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         exitPage={exitPage}
       />
       <Layout className={`site-layout ${styles.contentLayout}`}>
-        <ReaderPreloadContainer />
-        <ReaderViewer />
+        {props.pageDataList.length === 0 ? (
+          <ReaderLoader extensionId={props.series?.extensionId} />
+        ) : (
+          <>
+            <ReaderPreloadContainer />
+            <ReaderViewer />
+          </>
+        )}
       </Layout>
     </Layout>
   );

@@ -32,6 +32,7 @@ const METADATA: ExtensionMetadata = {
   version: 1,
   notice: '',
   noticeUrl: '',
+  pageLoadMessage: 'Bypassing a Cloudflare filter, so this may take a few seconds.',
 };
 
 const SERIES_STATUS_MAP: { [key: string]: SeriesStatus } = {

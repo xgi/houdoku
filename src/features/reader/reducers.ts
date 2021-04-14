@@ -11,7 +11,7 @@ import {
 
 const initialState: ReaderState = {
   pageNumber: 1,
-  lastPageNumber: 20,
+  lastPageNumber: 0,
   pageUrls: [],
   pageDataList: [],
   series: undefined,

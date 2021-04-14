@@ -21,7 +21,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = PropsFromRedux & {};
 
-const ReaderPage: React.FC<Props> = (props: Props) => {
+const ReaderPreloadContainer: React.FC<Props> = (props: Props) => {
   const renderPreloadContainer = () => {
     if (props.series === undefined) return <></>;
     if (props.pageUrls.length === 0) return <></>;
@@ -44,4 +44,4 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   return <>{renderPreloadContainer()}</>;
 };
 
-export default connector(ReaderPage);
+export default connector(ReaderPreloadContainer);
