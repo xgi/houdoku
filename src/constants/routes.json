@@ -1,8 +1,9 @@
 {
+  "ABOUT": "/about",
+  "EXTENSIONS": "/extensions",
   "LIBRARY": "/",
-  "SERIES": "/series",
-  "SEARCH": "/search",
   "READER": "/reader",
-  "SETTINGS": "/settings",
-  "ABOUT": "/about"
+  "SEARCH": "/search",
+  "SERIES": "/series",
+  "SETTINGS": "/settings"
 }

@@ -6,6 +6,7 @@ import {
   BookOutlined,
   PlusSquareOutlined,
   SettingOutlined,
+  BuildOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import { RootState } from '../store';
@@ -32,6 +33,7 @@ import Settings from './Settings';
 import About from './About';
 import Library from './Library';
 import { Series } from '../models/types';
+import Extensions from './Extensions';
 
 const { Content, Sider } = Layout;
 
@@ -107,7 +109,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           <Menu.Item key="3" icon={<SettingOutlined />}>
             <Link to={routes.SETTINGS}>Settings</Link>
           </Menu.Item>
-          <Menu.Item key="4" icon={<InfoCircleOutlined />}>
+          <Menu.Item key="4" icon={<BuildOutlined />}>
+            <Link to={routes.EXTENSIONS}>Extensions</Link>
+          </Menu.Item>
+          <Menu.Item key="5" icon={<InfoCircleOutlined />}>
             <Link to={routes.ABOUT}>About</Link>
           </Menu.Item>
         </Menu>
@@ -126,6 +131,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
             </Route>
             <Route path={routes.SEARCH} exact>
               <Search importSeries={props.importSeries} />
+            </Route>
+            <Route path={routes.EXTENSIONS} exact>
+              <Extensions />
             </Route>
             <Route path={routes.LIBRARY}>
               <Library />
