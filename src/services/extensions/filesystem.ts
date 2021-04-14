@@ -1,14 +1,6 @@
 import { ipcRenderer } from 'electron';
 import path from 'path';
 import {
-  Chapter,
-  LanguageKey,
-  Series,
-  SeriesSourceType,
-  SeriesStatus,
-} from '../../models/types';
-import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
-import {
   FetchSeriesFunc,
   FetchChaptersFunc,
   ParseSeriesFunc,
@@ -19,8 +11,17 @@ import {
   FetchSearchFunc,
   ParseSearchFunc,
   GetPageDataFunc,
-} from './interface';
-import { ExtensionMetadata, PageRequesterData } from './types';
+  ExtensionMetadata,
+  PageRequesterData,
+} from 'houdoku-extension-lib';
+import {
+  Chapter,
+  LanguageKey,
+  Series,
+  SeriesSourceType,
+  SeriesStatus,
+} from '../../models/types';
+import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
 
 const METADATA: ExtensionMetadata = {
   id: 1,

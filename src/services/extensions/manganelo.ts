@@ -1,17 +1,6 @@
 /* eslint-disable no-continue */
 import { ipcRenderer } from 'electron';
 import {
-  Chapter,
-  ContentWarningKey,
-  FormatKey,
-  GenreKey,
-  LanguageKey,
-  Series,
-  SeriesSourceType,
-  SeriesStatus,
-  ThemeKey,
-} from '../../models/types';
-import {
   FetchSeriesFunc,
   FetchChaptersFunc,
   ParseSeriesFunc,
@@ -22,8 +11,20 @@ import {
   FetchSearchFunc,
   ParseSearchFunc,
   GetPageDataFunc,
-} from './interface';
-import { ExtensionMetadata, PageRequesterData } from './types';
+  ExtensionMetadata,
+  PageRequesterData,
+} from 'houdoku-extension-lib';
+import {
+  Chapter,
+  ContentWarningKey,
+  FormatKey,
+  GenreKey,
+  LanguageKey,
+  Series,
+  SeriesSourceType,
+  SeriesStatus,
+  ThemeKey,
+} from '../../models/types';
 
 const METADATA: ExtensionMetadata = {
   id: 3,
@@ -32,7 +33,8 @@ const METADATA: ExtensionMetadata = {
   version: 1,
   notice: '',
   noticeUrl: '',
-  pageLoadMessage: 'Bypassing a Cloudflare filter, so this may take a few seconds.',
+  pageLoadMessage:
+    'Bypassing a Cloudflare filter, so this may take a few seconds.',
 };
 
 const SERIES_STATUS_MAP: { [key: string]: SeriesStatus } = {

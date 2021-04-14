@@ -1,15 +1,4 @@
 import {
-  Chapter,
-  ContentWarningKey,
-  FormatKey,
-  GenreKey,
-  LanguageKey,
-  Series,
-  SeriesSourceType,
-  SeriesStatus,
-  ThemeKey,
-} from '../../models/types';
-import {
   FetchSeriesFunc,
   FetchChaptersFunc,
   ParseSeriesFunc,
@@ -20,8 +9,20 @@ import {
   FetchSearchFunc,
   ParseSearchFunc,
   GetPageDataFunc,
-} from './interface';
-import { ExtensionMetadata, PageRequesterData } from './types';
+  ExtensionMetadata,
+  PageRequesterData,
+} from 'houdoku-extension-lib';
+import {
+  Chapter,
+  ContentWarningKey,
+  FormatKey,
+  GenreKey,
+  LanguageKey,
+  Series,
+  SeriesSourceType,
+  SeriesStatus,
+  ThemeKey,
+} from '../../models/types';
 
 const METADATA: ExtensionMetadata = {
   id: 2,

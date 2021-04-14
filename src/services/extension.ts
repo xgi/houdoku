@@ -1,8 +1,8 @@
+import { ExtensionMetadata, PageRequesterData } from 'houdoku-extension-lib';
 import { Chapter, Series, SeriesSourceType } from '../models/types';
 import filesystem from './extensions/filesystem';
 import mangadex from './extensions/mangadex';
 import manganelo from './extensions/manganelo';
-import { ExtensionMetadata, PageRequesterData } from './extensions/types';
 
 export const EXTENSIONS = {
   [filesystem.METADATA.id]: filesystem,
