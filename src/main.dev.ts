@@ -14,7 +14,16 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain, BrowserView } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import aki from 'aki-plugin-manager';
 import { walk } from './util/filesystem';
+import {
+  createExtensionIpcHandlers,
+  loadExtensions,
+} from './services/extension';
+import { loadInWebView } from './util/webview';
+
+const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
+const pluginsDir = path.join(app.getPath('userData'), 'plugins');
 
 export default class AppUpdater {
   constructor() {
@@ -146,35 +155,22 @@ ipcMain.handle('window-close', (event) => {
 });
 
 ipcMain.handle('get-thumbnails-dir', (event) => {
-  return path.join(app.getPath('userData'), 'thumbnails');
+  return thumbnailsDir;
+});
+
+ipcMain.handle('get-plugins-dir', (event) => {
+  return pluginsDir;
 });
 
 ipcMain.handle('get-all-files', (event, rootPath: string) => {
   return walk(rootPath);
 });
 
-ipcMain.handle('load-url-spoof', (event, url: string) => {
-  if (mainWindow !== null) {
-    const spoofView = new BrowserView();
-    mainWindow.setBrowserView(spoofView);
-    spoofView.setBounds({ x: 0, y: 0, width: 0, height: 0 });
+// initialize plugin manager, which adds its own ipc handlers
+aki.manager(ipcMain, pluginsDir);
 
-    spoofView.webContents.loadURL(url);
-    return new Promise<string>((resolve, reject) => {
-      if (spoofView === null) reject();
-      else {
-        spoofView.webContents.once('did-frame-finish-load', () => {
-          spoofView?.webContents
-            .executeJavaScript('document.body.innerHTML')
-            .then((value) => {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (spoofView as any).webContents.destroy();
-              // eslint-disable-next-line promise/always-return
-              mainWindow?.removeBrowserView(spoofView);
-              resolve(value);
-            });
-        });
-      }
-    });
-  }
-});
+// create ipc handlers for specific extension functionality
+createExtensionIpcHandlers(ipcMain, pluginsDir, (url: string) =>
+  loadInWebView(mainWindow, url)
+);
+loadExtensions(pluginsDir);

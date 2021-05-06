@@ -3,6 +3,6 @@
 
 
 "@types/lovefield@^2.1.3":
-  "integrity" "sha512-LaMHENSO3MOcAgYD+iYsbuvEjDBQ0a5GmYyjca99MlHli0A5tcOTEy03UHiRk5cfubdPhVYCfCTXYN7/CLvnWA=="
-  "resolved" "https://registry.npmjs.org/@types/lovefield/-/lovefield-2.1.3.tgz"
-  "version" "2.1.3"
+  version "2.1.3"
+  resolved "https://registry.npmjs.org/@types/lovefield/-/lovefield-2.1.3.tgz"
+  integrity sha512-LaMHENSO3MOcAgYD+iYsbuvEjDBQ0a5GmYyjca99MlHli0A5tcOTEy03UHiRk5cfubdPhVYCfCTXYN7/CLvnWA==

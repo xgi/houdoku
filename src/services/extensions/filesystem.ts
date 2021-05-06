@@ -14,6 +14,7 @@ import {
   ExtensionMetadata,
   PageRequesterData,
 } from 'houdoku-extension-lib';
+import { Response } from 'node-fetch';
 import {
   Chapter,
   LanguageKey,
@@ -27,7 +28,7 @@ const METADATA: ExtensionMetadata = {
   id: 1,
   name: 'filesystem',
   url: '',
-  version: 1,
+  version: '1.0.0',
   notice: 'Add a series by selecting the directory or archive file below.',
   noticeUrl: 'https://github.com/xgi/houdoku/wiki/Importing-Local-Series',
   pageLoadMessage: '',
