@@ -193,6 +193,16 @@ export type ContentWarning = {
   name: string;
 };
 
+export type ExtensionTableRow = {
+  pkgName: string;
+  friendlyName: string;
+  id: number;
+  url: string;
+  availableVersion: string;
+  installedVersion: string | undefined;
+  canUpdate: boolean;
+};
+
 export enum ProgressFilter {
   All,
   Unread,

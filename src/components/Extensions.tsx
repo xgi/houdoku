@@ -1,13 +1,13 @@
-import React from 'react';
-import { Select, Col, Row, Menu, Dropdown, Button } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-import Title from 'antd/lib/typography/Title';
-import Paragraph from 'antd/lib/typography/Paragraph';
+import React, { useEffect, useState } from 'react';
+import aki, { RegistrySearchResults } from 'aki-plugin-manager';
+import { Col, Row, Button, Spin } from 'antd';
 import { connect, ConnectedProps } from 'react-redux';
-import styles from './Settings.css';
+import { useLocation } from 'react-router-dom';
+import Paragraph from 'antd/lib/typography/Paragraph';
+import Title from 'antd/lib/typography/Title';
+import styles from './Extensions.css';
 import { RootState } from '../store';
-
-const { Option } = Select;
+import ExtensionTable from './ExtensionTable';
 
 const mapState = (state: RootState) => ({
   chapterLanguages: state.settings.chapterLanguages,
@@ -28,17 +28,45 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const Extensions: React.FC<Props> = (props: Props) => {
+  const [searchResults, setSearchResults] = useState<RegistrySearchResults>();
+  const location = useLocation();
+
+  const doSearchRegistry = () => {
+    setSearchResults(undefined);
+    aki
+      .search({ text: 'extension', scope: 'houdoku' })
+      .then((results: RegistrySearchResults) => {
+        return setSearchResults(results);
+      })
+      .catch((e) => console.error(e));
+  };
+
+  useEffect(() => {
+    doSearchRegistry();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
+
   return (
     <>
-      {/* <Title className={styles.title} level={4}>
-        General
-      </Title> */}
+      <Title className={styles.title} level={4}>
+        Extensions
+      </Title>
       <Row className={styles.row}>
-        <Col span={10}>Languages in Chapter List</Col>
         <Col span={14}>
-          <Paragraph>Something</Paragraph>
+          <Button onClick={() => doSearchRegistry()}>
+            Reload Extension List
+          </Button>
         </Col>
       </Row>
+      {searchResults === undefined ? (
+        <div className={styles.loadingContainer}>
+          <Spin />
+          <Paragraph>Loading extension list...</Paragraph>
+          <Paragraph>This requires an internet connection.</Paragraph>
+        </div>
+      ) : (
+        <ExtensionTable registryResults={searchResults} />
+      )}
     </>
   );
 };

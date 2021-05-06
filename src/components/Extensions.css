@@ -5,3 +5,8 @@
 .row {
   margin-bottom: 8px !important;
 }
+
+.loadingContainer {
+  margin-top: 2rem;
+  text-align: center;
+}
