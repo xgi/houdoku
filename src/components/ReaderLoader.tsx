@@ -1,7 +1,8 @@
 import { Spin } from 'antd';
-import React from 'react';
+import { ipcRenderer } from 'electron';
+import { ExtensionMetadata } from 'houdoku-extension-lib';
+import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { EXTENSIONS } from '../services/extension';
 import { RootState } from '../store';
 import styles from './ReaderLoader.css';
 
@@ -19,21 +20,26 @@ type Props = PropsFromRedux & {
 };
 
 const ReaderLoader: React.FC<Props> = (props: Props) => {
-  const renderExtensionMessage = () => {
-    if (props.extensionId !== undefined) {
-      const message = EXTENSIONS[props.extensionId].METADATA.pageLoadMessage;
-      if (message !== '') {
-        return <p>{message}</p>;
-      }
-    }
-    return <></>;
-  };
+  const [extensionMessage, setExtensionMessage] = useState('');
+
+  useEffect(() => {
+    ipcRenderer
+      .invoke('extension-manager-get', props.extensionId)
+      .then((metadata: ExtensionMetadata | undefined) => {
+        // eslint-disable-next-line promise/always-return
+        if (metadata && metadata.pageLoadMessage !== '') {
+          setExtensionMessage(metadata.pageLoadMessage);
+        }
+      })
+      .catch((e) => console.error(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.extensionId]);
 
   return (
     <>
       <Spin />
       <p>Loading pages...</p>
-      {renderExtensionMessage()}
+      {extensionMessage ? <p>{extensionMessage}</p> : <></>}
     </>
   );
 };

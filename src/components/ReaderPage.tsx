@@ -3,6 +3,8 @@ import { connect, ConnectedProps } from 'react-redux';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
 import Mousetrap from 'mousetrap';
+import { ipcRenderer } from 'electron';
+import { PageRequesterData } from 'houdoku-extension-lib';
 import { RootState } from '../store';
 import {
   changePageNumber,
@@ -22,12 +24,6 @@ import {
   PageView,
   Series,
 } from '../models/types';
-import {
-  getPageData,
-  getPageRequesterData,
-  getPageUrls,
-} from '../services/extension';
-import { PageRequesterData } from '../services/extensions/types';
 import db from '../services/db';
 import { selectMostSimilarChapter } from '../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
@@ -178,25 +174,37 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     createRelevantChapterList(series, chapter);
 
-    const pageUrls: string[] = await getPageRequesterData(
-      series.extensionId,
-      series.sourceType,
-      series.sourceId,
-      chapter.sourceId
-    ).then((pageRequesterData: PageRequesterData) =>
-      getPageUrls(series.extensionId, pageRequesterData)
-    );
+    const pageUrls: string[] = await ipcRenderer
+      .invoke(
+        'extension-getPageRequesterData',
+        series.extensionId,
+        series.sourceType,
+        series.sourceId,
+        chapter.sourceId
+      )
+      .then((pageRequesterData: PageRequesterData) =>
+        ipcRenderer.invoke(
+          'extension-getPageUrls',
+          series.extensionId,
+          pageRequesterData
+        )
+      );
     props.setPageUrls(pageUrls);
 
     const curPageDataList: string[] = [];
     for (let i = 0; i < pageUrls.length; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      await getPageData(series.extensionId, series, pageUrls[i]).then(
-        (data: string) => {
+      await ipcRenderer
+        .invoke(
+          'extension-getPageData',
+          series.extensionId,
+          series,
+          pageUrls[i]
+        )
+        .then((data: string) => {
           curPageDataList[i] = data;
           return props.setPageDataList([...curPageDataList]);
-        }
-      );
+        });
       forceUpdate();
     }
   };

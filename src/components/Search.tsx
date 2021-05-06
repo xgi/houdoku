@@ -4,14 +4,9 @@ import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { useLocation } from 'react-router-dom';
+import { ExtensionMetadata } from 'houdoku-extension-lib';
+import { ipcRenderer } from 'electron';
 import styles from './Search.css';
-import { ExtensionMetadata } from '../services/extensions/types';
-import {
-  EXTENSIONS,
-  getExtensionMetadata,
-  getSeries,
-  search,
-} from '../services/extension';
 import { ProgressFilter, Series, SeriesSourceType } from '../models/types';
 import LibraryGrid from './LibraryGrid';
 import {
@@ -58,10 +53,12 @@ type Props = PropsFromRedux & {
 const Search: React.FC<Props> = (props: Props) => {
   const location = useLocation();
   const [searchText, setSearchText] = useState('');
+  const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
 
-  const getExtensionName = (extensionId: number) => {
-    const metadata: ExtensionMetadata = getExtensionMetadata(extensionId);
-    return metadata.name;
+  const getSearchExtensionMetadata = () => {
+    return extensionList.find(
+      (metadata: ExtensionMetadata) => metadata.id === props.searchExtension
+    );
   };
 
   const inLibrary = (series: Series): boolean => {
@@ -75,31 +72,26 @@ const Search: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const handleSearch = async () => {
-    const seriesList: Series[] = await search(
-      props.searchExtension,
-      searchText
-    );
-
-    props.setSearchResults(seriesList);
+  const handleSearch = () => {
+    ipcRenderer
+      .invoke('extension-search', props.searchExtension, searchText)
+      .then((seriesList: Series[]) => props.setSearchResults(seriesList))
+      .catch((e) => console.error(e));
   };
 
   const handleSearchFilesystem = (
     path: string,
     sourceType: SeriesSourceType
   ) => {
-    return getSeries(
-      filesystem.METADATA.id,
-      sourceType,
-      path
-    ).then((series: Series) => props.setSearchResults([series]));
+    ipcRenderer
+      .invoke('extension-getSeries', 1, sourceType, path)
+      .then((series: Series) => props.setSearchResults([series]))
+      .catch((e) => console.error(e));
   };
 
   const renderAlert = () => {
-    const metadata: ExtensionMetadata = getExtensionMetadata(
-      props.searchExtension
-    );
-    if (metadata.notice.length > 0) {
+    const metadata = getSearchExtensionMetadata();
+    if (metadata && metadata.notice.length > 0) {
       return (
         <Alert
           className={styles.alert}
@@ -151,34 +143,40 @@ const Search: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const renderExtensionMenu = () => {
+    return (
+      <Menu
+        onClick={(e) => {
+          props.setSearchResults([]);
+          props.setSearchExtension(parseInt(e.item.props['data-value'], 10));
+        }}
+      >
+        {extensionList.map((metadata: ExtensionMetadata) => (
+          <Menu.Item key={metadata.id} data-value={metadata.id}>
+            {metadata.name}
+          </Menu.Item>
+        ))}
+      </Menu>
+    );
+  };
+
   const showInLibraryMessage = () => {
     info({
       content: <Paragraph>This series is already in your library.</Paragraph>,
     });
   };
 
-  const extensionMenu = (
-    <Menu
-      onClick={(e) => {
-        props.setSearchResults([]);
-        props.setSearchExtension(parseInt(e.item.props['data-value'], 10));
-      }}
-    >
-      {Object.values(EXTENSIONS).map((extension: any) => {
-        const { id } = extension.METADATA;
-        return (
-          <Menu.Item key={id} data-value={id}>
-            {getExtensionName(id)}
-          </Menu.Item>
-        );
-      })}
-    </Menu>
-  );
+  const getExtensionList = async () => {
+    setExtensionList(await ipcRenderer.invoke('extension-manager-get-all'));
+  };
 
   useEffect(() => {
     props.setSearchResults([]);
+    getExtensionList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
+
+  if (extensionList.length === 0) return <></>;
 
   return (
     <>
@@ -190,10 +188,12 @@ const Search: React.FC<Props> = (props: Props) => {
         importSeries={props.importSeries}
       />
       <div className={styles.searchBar}>
-        <Dropdown className={styles.extensionDropdown} overlay={extensionMenu}>
+        <Dropdown
+          className={styles.extensionDropdown}
+          overlay={renderExtensionMenu()}
+        >
           <Button>
-            Extension: {getExtensionName(props.searchExtension)}{' '}
-            <DownOutlined />
+            Extension: {getSearchExtensionMetadata()?.name} <DownOutlined />
           </Button>
         </Dropdown>
         {props.searchExtension !== filesystem.METADATA.id ? (

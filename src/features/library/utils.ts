@@ -1,4 +1,5 @@
 /* eslint-disable promise/catch-or-return */
+import { ipcRenderer } from 'electron';
 import {
   setSeriesList,
   setSeries,
@@ -7,7 +8,6 @@ import {
 } from './actions';
 import db from '../../services/db';
 import { Chapter, Series } from '../../models/types';
-import { getChapters, getSeries } from '../../services/extension';
 import { deleteThumbnail } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import { setStatusText } from '../statusbar/actions';
@@ -36,7 +36,8 @@ export function removeSeries(dispatch: any, series: Series) {
 }
 
 export async function importSeries(dispatch: any, series: Series) {
-  const chapters: Chapter[] = await getChapters(
+  const chapters: Chapter[] = await ipcRenderer.invoke(
+    'extension-getChapters',
     series.extensionId,
     series.sourceType,
     series.sourceId
@@ -75,12 +76,15 @@ export function toggleChapterRead(
 async function reloadSeries(series: Series) {
   if (series.id === undefined) return;
 
-  const newSeries: Series = await getSeries(
+  const newSeries: Series = await ipcRenderer.invoke(
+    'extension-getSeries',
     series.extensionId,
     series.sourceType,
     series.sourceId
   );
-  const newChapters: Chapter[] = await getChapters(
+
+  const newChapters: Chapter[] = await ipcRenderer.invoke(
+    'extension-getChapters',
     series.extensionId,
     series.sourceType,
     series.sourceId

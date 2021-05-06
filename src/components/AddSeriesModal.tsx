@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Dropdown, Input, Menu, Modal, Row, Select } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
+import { ipcRenderer } from 'electron';
 import {
   ContentWarning,
   ContentWarningKey,
@@ -25,7 +26,6 @@ import {
   ContentWarnings,
 } from '../models/contentwarnings';
 import blankCover from '../img/blank_cover.png';
-import { getSeries } from '../services/extension';
 
 const { Option } = Select;
 
@@ -81,14 +81,16 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
       // they are not usually included in the search results) so we explicitly retrieve
       // all of the series data here
 
-      // eslint-disable-next-line promise/catch-or-return
-      getSeries(
-        props.series.extensionId,
-        props.series.sourceType,
-        props.series.sourceId
-      )
-        .then((series) => setCustomSeries(series))
-        .finally(() => setLoading(false));
+      ipcRenderer
+        .invoke(
+          'extension-getSeries',
+          props.series.extensionId,
+          props.series.sourceType,
+          props.series.sourceId
+        )
+        .then((series: Series) => setCustomSeries(series))
+        .finally(() => setLoading(false))
+        .catch((e) => console.error(e));
     }
   }, [props.series]);
 
