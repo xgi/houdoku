@@ -45,7 +45,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
 
           const descFields = pkg.description.split(' - ');
           const sourceName = descFields[0];
-          const extensionId = parseInt(descFields[1], 10);
+          const extensionId = descFields[1];
           const extensionUrl = descFields[2];
 
           let installedVersion;

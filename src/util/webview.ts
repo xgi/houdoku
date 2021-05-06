@@ -26,5 +26,7 @@ export const loadInWebView = (window: BrowserWindow | null, url: string) => {
     });
   }
 
-  return new Promise((resolve, reject) => reject());
+  return new Promise<string>((resolve, reject) =>
+    reject(new Error('Tried to load URL in a BrowserView, but window was null'))
+  );
 };

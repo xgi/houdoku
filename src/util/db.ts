@@ -6,7 +6,7 @@ const schemaBuilder = lf.schema.create('houdoku', 1);
 schemaBuilder
   .createTable('series')
   .addColumn('id', lf.Type.INTEGER)
-  .addColumn('extensionId', lf.Type.INTEGER)
+  .addColumn('extensionId', lf.Type.STRING)
   .addColumn('sourceId', lf.Type.STRING)
   .addColumn('sourceType', lf.Type.OBJECT)
   .addColumn('title', lf.Type.STRING)

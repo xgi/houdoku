@@ -6,7 +6,7 @@ export const TOGGLE_SHOWING_ADD_MODAL = 'TOGGLE_SHOWING_ADD_MODAL';
 export const SET_ADD_MODAL_SERIES = 'SET_ADD_MODAL_SERIES';
 
 export interface SearchState {
-  searchExtension: number;
+  searchExtension: string;
   searchResults: Series[];
   addModalSeries: Series | undefined;
   addModalEditable: boolean;
@@ -16,7 +16,7 @@ export interface SearchState {
 interface SetSearchExtensionAction {
   type: typeof SET_SEARCH_EXTENSION;
   payload: {
-    searchExtension: number;
+    searchExtension: string;
   };
 }
 

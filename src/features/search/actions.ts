@@ -7,7 +7,7 @@ import {
   TOGGLE_SHOWING_ADD_MODAL,
 } from './types';
 
-export function setSearchExtension(searchExtension: number): SearchAction {
+export function setSearchExtension(searchExtension: string): SearchAction {
   return {
     type: SET_SEARCH_EXTENSION,
     payload: {

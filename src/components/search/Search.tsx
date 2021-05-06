@@ -33,7 +33,7 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  setSearchExtension: (searchExtension: number) =>
+  setSearchExtension: (searchExtension: string) =>
     dispatch(setSearchExtension(searchExtension)),
   setSearchResults: (searchResults: Series[]) =>
     dispatch(setSearchResults(searchResults)),
@@ -148,7 +148,7 @@ const Search: React.FC<Props> = (props: Props) => {
       <Menu
         onClick={(e) => {
           props.setSearchResults([]);
-          props.setSearchExtension(parseInt(e.item.props['data-value'], 10));
+          props.setSearchExtension(e.item.props['data-value']);
         }}
       >
         {extensionList.map((metadata: ExtensionMetadata) => (

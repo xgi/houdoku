@@ -1,6 +1,6 @@
 export type Series = {
   id?: number;
-  extensionId: number;
+  extensionId: string;
   sourceId: string;
   sourceType: SeriesSourceType;
   title: string;
@@ -196,7 +196,7 @@ export type ContentWarning = {
 export type ExtensionTableRow = {
   pkgName: string;
   friendlyName: string;
-  id: number;
+  id: string;
   url: string;
   availableVersion: string;
   installedVersion: string | undefined;

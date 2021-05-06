@@ -13,9 +13,8 @@ const EXTENSIONS = {
 };
 
 export async function loadExtensions(pluginsDir: string) {
-  Object.keys(EXTENSIONS).forEach((key: string) => {
-    const extensionId = parseInt(key, 10);
-    if (extensionId !== 1) {
+  Object.keys(EXTENSIONS).forEach((extensionId: string) => {
+    if (extensionId !== filesystem.METADATA.id) {
       console.log(`Unloaded extension with ID ${extensionId}`);
       delete EXTENSIONS[extensionId];
     }
@@ -39,7 +38,7 @@ export async function loadExtensions(pluginsDir: string) {
  * @param extensionId
  * @returns the ExtensionMetadata defined for the extension
  */
-function getExtensionMetadata(extensionId: number): ExtensionMetadata {
+function getExtensionMetadata(extensionId: string): ExtensionMetadata {
   return EXTENSIONS[extensionId].METADATA;
 }
 
@@ -56,7 +55,7 @@ function getExtensionMetadata(extensionId: number): ExtensionMetadata {
  * @returns promise for the matching series
  */
 function getSeries(
-  extensionId: number,
+  extensionId: string,
   sourceType: SeriesSourceType,
   seriesId: string
 ): Promise<Series> {
@@ -86,7 +85,7 @@ function getSeries(
  * @returns promise for a list of chapters
  */
 function getChapters(
-  extensionId: number,
+  extensionId: string,
   sourceType: SeriesSourceType,
   seriesId: string
 ): Promise<Chapter[]> {
@@ -116,11 +115,11 @@ function getChapters(
  * @returns promise for the PageRequesterData for this chapter
  */
 function getPageRequesterData(
-  extensionId: number,
+  extensionId: string,
   sourceType: SeriesSourceType,
   seriesSourceId: string,
   chapterSourceId: string,
-  webviewFunc: (url: string) => void
+  webviewFunc: (url: string) => Promise<string>
 ): Promise<PageRequesterData> {
   const extension = EXTENSIONS[extensionId];
   return extension
@@ -154,7 +153,7 @@ function getPageRequesterData(
  * @returns a list of urls for this chapter which can be passed to getPageData
  */
 function getPageUrls(
-  extensionId: number,
+  extensionId: string,
   pageRequesterData: PageRequesterData
 ): string[] {
   return EXTENSIONS[extensionId].getPageUrls(pageRequesterData);
@@ -173,7 +172,7 @@ function getPageUrls(
  * @returns promise for page data that can be put inside an <img> src
  */
 async function getPageData(
-  extensionId: number,
+  extensionId: string,
   series: Series,
   url: string
 ): Promise<string> {
@@ -188,7 +187,7 @@ async function getPageData(
  * are utilized at the extension's discretion
  * @returns promise for a list of series found from the content source
  */
-function search(extensionId: number, text: string): Promise<Series[]> {
+function search(extensionId: string, text: string): Promise<Series[]> {
   let adjustedText: string = text;
 
   const paramsRegExp = new RegExp(/\S*:\S*/g);
@@ -220,7 +219,7 @@ function search(extensionId: number, text: string): Promise<Series[]> {
 export const createExtensionIpcHandlers = (
   ipcMain: IpcMain,
   pluginsDir: string,
-  webviewFunc: (url: string) => void
+  webviewFunc: (url: string) => Promise<string>
 ) => {
   ipcMain.handle('extension-manager-reload', (event) => {
     return loadExtensions(pluginsDir);
@@ -245,9 +244,14 @@ export const createExtensionIpcHandlers = (
   ipcMain.handle('extension-manager-list', async (event) => {
     return aki.list(pluginsDir);
   });
-  ipcMain.handle('extension-manager-get', async (event, id: number) => {
-    return id in EXTENSIONS ? EXTENSIONS[id].METADATA : undefined;
-  });
+  ipcMain.handle(
+    'extension-manager-get',
+    async (event, extensionId: string) => {
+      return extensionId in EXTENSIONS
+        ? EXTENSIONS[extensionId].METADATA
+        : undefined;
+    }
+  );
   ipcMain.handle('extension-manager-get-all', (event) => {
     return Object.values(EXTENSIONS).map((ext: any) => ext.METADATA);
   });
@@ -256,7 +260,7 @@ export const createExtensionIpcHandlers = (
     'extension-getSeries',
     (
       event,
-      extensionId: number,
+      extensionId: string,
       sourceType: SeriesSourceType,
       seriesId: string
     ) => {
@@ -267,7 +271,7 @@ export const createExtensionIpcHandlers = (
     'extension-getChapters',
     (
       event,
-      extensionId: number,
+      extensionId: string,
       sourceType: SeriesSourceType,
       seriesId: string
     ) => {
@@ -278,7 +282,7 @@ export const createExtensionIpcHandlers = (
     'extension-getPageRequesterData',
     (
       event,
-      extensionId: number,
+      extensionId: string,
       sourceType: SeriesSourceType,
       seriesSourceId: string,
       chapterSourceId: string
@@ -294,19 +298,19 @@ export const createExtensionIpcHandlers = (
   );
   ipcMain.handle(
     'extension-getPageUrls',
-    (event, extensionId: number, pageRequesterData: PageRequesterData) => {
+    (event, extensionId: string, pageRequesterData: PageRequesterData) => {
       return getPageUrls(extensionId, pageRequesterData);
     }
   );
   ipcMain.handle(
     'extension-getPageData',
-    (event, extensionId: number, series: Series, url: string) => {
+    (event, extensionId: string, series: Series, url: string) => {
       return getPageData(extensionId, series, url);
     }
   );
   ipcMain.handle(
     'extension-search',
-    (event, extensionId: number, text: string) => {
+    (event, extensionId: string, text: string) => {
       return search(extensionId, text);
     }
   );

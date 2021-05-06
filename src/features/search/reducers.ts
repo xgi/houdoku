@@ -1,3 +1,4 @@
+import filesystem from '../../services/extensions/filesystem';
 import {
   SearchState,
   SET_ADD_MODAL_SERIES,
@@ -7,7 +8,7 @@ import {
 } from './types';
 
 const initialState: SearchState = {
-  searchExtension: 2,
+  searchExtension: filesystem.METADATA.id,
   searchResults: [],
   addModalSeries: undefined,
   addModalEditable: false,
