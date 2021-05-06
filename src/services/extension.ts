@@ -140,7 +140,9 @@ function getPageRequesterData(
       }
       return response.json();
     })
-    .then((data) => extension.parsePageRequesterData(data, domParser));
+    .then((data) =>
+      extension.parsePageRequesterData(data, chapterSourceId, domParser)
+    );
 }
 
 /**
