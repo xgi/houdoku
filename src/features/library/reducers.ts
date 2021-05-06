@@ -21,7 +21,7 @@ const initialState: LibraryState = {
   columns: 6,
   filter: '',
   filterStatus: null,
-  filterProgress: ProgressFilter.Unread,
+  filterProgress: ProgressFilter.All,
   filterUserTags: [],
   seriesBannerUrl: null,
   completedStartReload: false,

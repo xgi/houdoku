@@ -64,8 +64,9 @@ const Library: React.FC<Props> = (props: Props) => {
     return (
       <div className={styles.emptyMessageContainer}>
         <Paragraph>
-          Your library is empty. Click the Add Series tab on the left to get
-          started.
+          Your library is empty. Install extensions from the tab on the left,
+          <br />
+          and then go to Add Series to start building your library.
         </Paragraph>
       </div>
     );
