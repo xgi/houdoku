@@ -19,18 +19,18 @@ import {
   GenreKey,
   Series,
   ThemeKey,
-} from '../models/types';
-import { Languages } from '../models/languages';
+} from '../../models/types';
+import { Languages } from '../../models/languages';
 import styles from './SeriesDetails.css';
-import blankCover from '../img/blank_cover.png';
-import routes from '../constants/routes.json';
-import db from '../services/db';
-import { getBannerImageUrl } from '../services/mediasource';
+import blankCover from '../../img/blank_cover.png';
+import routes from '../../constants/routes.json';
+import db from '../../services/db';
+import { getBannerImageUrl } from '../../services/mediasource';
 import {
   setChapterList,
   setSeries,
   setSeriesBannerUrl,
-} from '../features/library/actions';
+} from '../../features/library/actions';
 import {
   loadChapterList,
   loadSeries,
@@ -39,13 +39,13 @@ import {
   removeSeries,
   toggleChapterRead,
   updateSeriesUserTags,
-} from '../features/library/utils';
-import { setStatusText } from '../features/statusbar/actions';
-import { RootState } from '../store';
-import { Genres } from '../models/genres';
-import { Themes } from '../models/themes';
-import { Formats } from '../models/formats';
-import { ContentWarnings } from '../models/contentwarnings';
+} from '../../features/library/utils';
+import { setStatusText } from '../../features/statusbar/actions';
+import { RootState } from '../../store';
+import { Genres } from '../../models/genres';
+import { Themes } from '../../models/themes';
+import { Formats } from '../../models/formats';
+import { ContentWarnings } from '../../models/contentwarnings';
 
 const { Title } = Typography;
 const { Option } = Select;

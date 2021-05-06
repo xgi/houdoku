@@ -21,11 +21,11 @@ import {
   setFilterProgress,
   setFilterStatus,
   setFilterUserTags,
-} from '../features/library/actions';
-import { loadSeriesList, reloadSeriesList } from '../features/library/utils';
-import { setStatusText } from '../features/statusbar/actions';
-import { RootState } from '../store';
-import { ProgressFilter, Series, SeriesStatus } from '../models/types';
+} from '../../features/library/actions';
+import { loadSeriesList, reloadSeriesList } from '../../features/library/utils';
+import { setStatusText } from '../../features/statusbar/actions';
+import { RootState } from '../../store';
+import { ProgressFilter, Series, SeriesStatus } from '../../models/types';
 
 const { Option } = Select;
 

@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import Title from 'antd/lib/typography/Title';
 import styles from './Extensions.css';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 import ExtensionTable from './ExtensionTable';
 
 const mapState = (state: RootState) => ({

@@ -3,7 +3,7 @@ import { ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 import styles from './ReaderLoader.css';
 
 const mapState = (state: RootState) => ({});

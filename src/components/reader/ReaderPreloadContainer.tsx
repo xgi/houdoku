@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 import styles from './ReaderPreloadContainer.css';
 
 const mapState = (state: RootState) => ({

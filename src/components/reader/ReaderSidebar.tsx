@@ -20,7 +20,7 @@ import {
   VerticalRightOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 import {
   changePageNumber,
   setPageNumber,
@@ -29,7 +29,7 @@ import {
   setRelevantChapterList,
   toggleShowingSettingsModal,
   setPageDataList,
-} from '../features/reader/actions';
+} from '../../features/reader/actions';
 import styles from './ReaderSidebar.css';
 import {
   Chapter,
@@ -37,7 +37,7 @@ import {
   PageFit,
   PageView,
   Series,
-} from '../models/types';
+} from '../../models/types';
 import {
   setLayoutDirection,
   setPageFit,
@@ -46,8 +46,8 @@ import {
   toggleLayoutDirection,
   togglePageFit,
   togglePageView,
-} from '../features/settings/actions';
-import { toggleChapterRead } from '../features/library/utils';
+} from '../../features/settings/actions';
+import { toggleChapterRead } from '../../features/library/utils';
 
 const { Sider } = Layout;
 const { Title, Text } = Typography;

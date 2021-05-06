@@ -7,9 +7,9 @@ import { Row, Col } from 'antd';
 import { ipcRenderer } from 'electron';
 import Title from 'antd/lib/typography/Title';
 import { CheckOutlined } from '@ant-design/icons';
-import { ProgressFilter, Series, SeriesStatus } from '../models/types';
+import { ProgressFilter, Series, SeriesStatus } from '../../models/types';
 import styles from './LibraryGrid.css';
-import blankCover from '../img/blank_cover.png';
+import blankCover from '../../img/blank_cover.png';
 
 const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
 if (!fs.existsSync(thumbnailsDir)) {

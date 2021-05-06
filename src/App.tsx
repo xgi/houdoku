@@ -3,8 +3,8 @@ import { Provider } from 'react-redux';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import { configuredStore } from './store';
 import routes from './constants/routes.json';
-import DashboardPage from './components/DashboardPage';
-import ReaderPage from './components/ReaderPage';
+import DashboardPage from './components/general/DashboardPage';
+import ReaderPage from './components/reader/ReaderPage';
 
 const store = configuredStore();
 

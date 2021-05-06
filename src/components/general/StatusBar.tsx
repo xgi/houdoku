@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Layout } from 'antd';
-import { RootState } from '../store';
-import { setStatusText } from '../features/statusbar/actions';
+import { RootState } from '../../store';
+import { setStatusText } from '../../features/statusbar/actions';
 import styles from './StatusBar.css';
 
 const { Footer } = Layout;

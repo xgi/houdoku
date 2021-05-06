@@ -1,9 +1,9 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Layout } from 'antd';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 import styles from './ReaderViewer.css';
-import { LayoutDirection, PageFit, PageView } from '../models/types';
+import { LayoutDirection, PageFit, PageView } from '../../models/types';
 
 const { Content } = Layout;
 

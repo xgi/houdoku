@@ -15,17 +15,17 @@ import {
   SeriesStatus,
   Theme,
   ThemeKey,
-} from '../models/types';
+} from '../../models/types';
 import styles from './AddSeriesModal.css';
-import { Languages } from '../models/languages';
-import { genreKeysFromNames, Genres } from '../models/genres';
-import { themeKeysFromNames, Themes } from '../models/themes';
-import { formatKeysFromNames, Formats } from '../models/formats';
+import { Languages } from '../../models/languages';
+import { genreKeysFromNames, Genres } from '../../models/genres';
+import { themeKeysFromNames, Themes } from '../../models/themes';
+import { formatKeysFromNames, Formats } from '../../models/formats';
 import {
   contentWarningKeysFromNames,
   ContentWarnings,
-} from '../models/contentwarnings';
-import blankCover from '../img/blank_cover.png';
+} from '../../models/contentwarnings';
+import blankCover from '../../img/blank_cover.png';
 
 const { Option } = Select;
 

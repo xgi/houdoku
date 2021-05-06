@@ -5,7 +5,7 @@ import { Layout } from 'antd';
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import { PageRequesterData } from 'houdoku-extension-lib';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 import {
   changePageNumber,
   setPageNumber,
@@ -14,18 +14,18 @@ import {
   setRelevantChapterList,
   toggleShowingSettingsModal,
   setPageDataList,
-} from '../features/reader/actions';
+} from '../../features/reader/actions';
 import styles from './ReaderPage.css';
-import routes from '../constants/routes.json';
+import routes from '../../constants/routes.json';
 import {
   Chapter,
   LayoutDirection,
   PageFit,
   PageView,
   Series,
-} from '../models/types';
-import db from '../services/db';
-import { selectMostSimilarChapter } from '../util/comparison';
+} from '../../models/types';
+import db from '../../services/db';
+import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
 import {
   setLayoutDirection,
@@ -35,9 +35,9 @@ import {
   toggleLayoutDirection,
   togglePageFit,
   togglePageView,
-} from '../features/settings/actions';
-import { toggleChapterRead } from '../features/library/utils';
-import { useForceUpdate } from '../util/reactutil';
+} from '../../features/settings/actions';
+import { toggleChapterRead } from '../../features/library/utils';
+import { useForceUpdate } from '../../util/reactutil';
 import ReaderSidebar from './ReaderSidebar';
 import ReaderViewer from './ReaderViewer';
 import ReaderPreloadContainer from './ReaderPreloadContainer';

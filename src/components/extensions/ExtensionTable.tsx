@@ -8,9 +8,9 @@ import {
 import { gt } from 'semver';
 import { connect, ConnectedProps } from 'react-redux';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
-import { ExtensionTableRow } from '../models/types';
-import { RootState } from '../store';
-import { setStatusText } from '../features/statusbar/actions';
+import { ExtensionTableRow } from '../../models/types';
+import { RootState } from '../../store';
+import { setStatusText } from '../../features/statusbar/actions';
 
 const mapState = (state: RootState) => ({});
 

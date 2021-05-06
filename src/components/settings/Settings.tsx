@@ -4,7 +4,7 @@ import { DownOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import { connect, ConnectedProps } from 'react-redux';
 import styles from './Settings.css';
-import { Languages } from '../models/languages';
+import { Languages } from '../../models/languages';
 import {
   GeneralSetting,
   Language,
@@ -13,8 +13,8 @@ import {
   PageFit,
   PageView,
   ReaderSetting,
-} from '../models/types';
-import { RootState } from '../store';
+} from '../../models/types';
+import { RootState } from '../../store';
 import {
   setChapterLanguages,
   setLayoutDirection,
@@ -22,7 +22,7 @@ import {
   setPageView,
   setPreloadAmount,
   setRefreshOnStart,
-} from '../features/settings/actions';
+} from '../../features/settings/actions';
 
 const { Option } = Select;
 

@@ -7,18 +7,18 @@ import { useLocation } from 'react-router-dom';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import styles from './Search.css';
-import { ProgressFilter, Series, SeriesSourceType } from '../models/types';
-import LibraryGrid from './LibraryGrid';
+import { ProgressFilter, Series, SeriesSourceType } from '../../models/types';
+import LibraryGrid from '../library/LibraryGrid';
 import {
   setAddModalSeries,
   setSearchExtension,
   setSearchResults,
   toggleShowingAddModal,
-} from '../features/search/actions';
-import { RootState } from '../store';
+} from '../../features/search/actions';
+import { RootState } from '../../store';
 import AddSeriesModal from './AddSeriesModal';
 import Uploader from './Uploader';
-import filesystem from '../services/extensions/filesystem';
+import filesystem from '../../services/extensions/filesystem';
 
 const { info } = Modal;
 

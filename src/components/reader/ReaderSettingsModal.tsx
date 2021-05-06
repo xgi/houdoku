@@ -2,16 +2,16 @@ import React from 'react';
 import { Button, Col, Dropdown, Menu, Modal, Row } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
-import { LayoutDirection, PageFit, PageView } from '../models/types';
+import { LayoutDirection, PageFit, PageView } from '../../models/types';
 import styles from './ReaderSettingsModal.css';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 import {
   setLayoutDirection,
   setPageFit,
   setPageView,
   setPreloadAmount,
-} from '../features/settings/actions';
-import { toggleShowingSettingsModal } from '../features/reader/actions';
+} from '../../features/settings/actions';
+import { toggleShowingSettingsModal } from '../../features/reader/actions';
 
 /**
  * Text maps for different settings values. These have keys from each possible value for the

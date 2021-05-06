@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { Table, Checkbox, Button, Input, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Chapter, Language, LanguageKey, Series } from '../models/types';
-import routes from '../constants/routes.json';
-import { Languages } from '../models/languages';
+import { Chapter, Language, LanguageKey, Series } from '../../models/types';
+import routes from '../../constants/routes.json';
+import { Languages } from '../../models/languages';
 
 type Props = {
   chapterList: Chapter[];

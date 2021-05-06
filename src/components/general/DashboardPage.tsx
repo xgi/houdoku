@@ -9,31 +9,31 @@ import {
   BuildOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
-import { RootState } from '../store';
+import { RootState } from '../../store';
 import {
   changeNumColumns,
   setFilter,
   setSeriesBannerUrl,
-} from '../features/library/actions';
-import { setStatusText } from '../features/statusbar/actions';
-import SeriesDetails from './SeriesDetails';
-import Search from './Search';
+} from '../../features/library/actions';
+import { setStatusText } from '../../features/statusbar/actions';
+import SeriesDetails from '../library/SeriesDetails';
+import Search from '../search/Search';
 import StatusBar from './StatusBar';
 import styles from './DashboardPage.css';
-import routes from '../constants/routes.json';
+import routes from '../../constants/routes.json';
 import {
   importSeries,
   loadChapterList,
   loadSeries,
   loadSeriesList,
   reloadSeriesList,
-} from '../features/library/utils';
-import * as database from '../util/db';
-import Settings from './Settings';
-import About from './About';
-import Library from './Library';
-import { Series } from '../models/types';
-import Extensions from './Extensions';
+} from '../../features/library/utils';
+import * as database from '../../util/db';
+import Settings from '../settings/Settings';
+import About from '../about/About';
+import Library from '../library/Library';
+import { Series } from '../../models/types';
+import Extensions from '../extensions/Extensions';
 
 const { Content, Sider } = Layout;
 
