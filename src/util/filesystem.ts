@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import { Series } from '../models/types';
+import ipcChannels from '../constants/ipcChannels.json';
 
 /**
  * Get a list of all file paths within a directory (recursively).
@@ -37,7 +38,9 @@ export function walk(directory: string): string[] {
 export async function getThumbnailPath(series: Series): Promise<string | null> {
   if (series.remoteCoverUrl === '') return null;
 
-  const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
+  const thumbnailsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.THUMBNAILS_DIR
+  );
   if (!fs.existsSync(thumbnailsDir)) {
     fs.mkdirSync(thumbnailsDir);
   }

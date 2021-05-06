@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store';
 import styles from './ReaderLoader.css';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const mapState = (state: RootState) => ({});
 
@@ -24,7 +25,7 @@ const ReaderLoader: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     ipcRenderer
-      .invoke('extension-manager-get', props.extensionId)
+      .invoke(ipcChannels.EXTENSION_MANAGER.GET, props.extensionId)
       .then((metadata: ExtensionMetadata | undefined) => {
         // eslint-disable-next-line promise/always-return
         if (metadata && metadata.pageLoadMessage !== '') {

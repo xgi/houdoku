@@ -10,8 +10,11 @@ import { CheckOutlined } from '@ant-design/icons';
 import { ProgressFilter, Series, SeriesStatus } from '../../models/types';
 import styles from './LibraryGrid.css';
 import blankCover from '../../img/blank_cover.png';
+import ipcChannels from '../../constants/ipcChannels.json';
 
-const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
+const thumbnailsDir = await ipcRenderer.invoke(
+  ipcChannels.GET_PATH.THUMBNAILS_DIR
+);
 if (!fs.existsSync(thumbnailsDir)) {
   fs.mkdirSync(thumbnailsDir);
 }

@@ -1,0 +1,28 @@
+{
+  "WINDOW": {
+    "MINIMIZE": "window-minimize",
+    "MAX_RESTORE": "window-max-restore",
+    "CLOSE": "window-close"
+  },
+  "GET_PATH": {
+    "THUMBNAILS_DIR": "get-thumbnails-dir",
+    "PLUGINS_DIR": "get-plugins-dir"
+  },
+  "GET_ALL_FILES": "get-all-files",
+  "EXTENSION_MANAGER": {
+    "RELOAD": "extension-manager-reload",
+    "INSTALL": "extension-manager-install",
+    "UNINSTALL": "extension-manager-uninstall",
+    "LIST": "extension-manager-list",
+    "GET": "extension-manager-get",
+    "GET_ALL": "extension-manager-get-all"
+  },
+  "EXTENSION": {
+    "GET_SERIES": "extension-getSeries",
+    "GET_CHAPTERS": "extension-getChapters",
+    "GET_PAGE_REQUESTER_DATA": "extension-getPageRequesterData",
+    "GET_PAGE_URLS": "extension-getPageUrls",
+    "GET_PAGE_DATA": "extension-getPageData",
+    "SEARCH": "extension-search"
+  }
+}

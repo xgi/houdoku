@@ -46,12 +46,15 @@ import { Genres } from '../../models/genres';
 import { Themes } from '../../models/themes';
 import { Formats } from '../../models/formats';
 import { ContentWarnings } from '../../models/contentwarnings';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const { Title } = Typography;
 const { Option } = Select;
 const { confirm } = Modal;
 
-const thumbnailsDir = await ipcRenderer.invoke('get-thumbnails-dir');
+const thumbnailsDir = await ipcRenderer.invoke(
+  ipcChannels.GET_PATH.THUMBNAILS_DIR
+);
 if (!fs.existsSync(thumbnailsDir)) {
   fs.mkdirSync(thumbnailsDir);
 }

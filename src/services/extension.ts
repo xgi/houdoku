@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 import DOMParser from 'dom-parser';
 import { Chapter, Series, SeriesSourceType } from '../models/types';
 import filesystem from './extensions/filesystem';
+import ipcChannels from '../constants/ipcChannels.json';
 
 const domParser = new DOMParser();
 
@@ -221,11 +222,11 @@ export const createExtensionIpcHandlers = (
   pluginsDir: string,
   webviewFunc: (url: string) => Promise<string>
 ) => {
-  ipcMain.handle('extension-manager-reload', (event) => {
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, (event) => {
     return loadExtensions(pluginsDir);
   });
   ipcMain.handle(
-    'extension-manager-install',
+    ipcChannels.EXTENSION_MANAGER.INSTALL,
     (event, name: string, version: string) => {
       return new Promise<void>((resolve, reject) => {
         aki.install(name, version, pluginsDir, () => {
@@ -234,30 +235,33 @@ export const createExtensionIpcHandlers = (
       });
     }
   );
-  ipcMain.handle('extension-manager-uninstall', (event, name: string) => {
-    return new Promise<void>((resolve, reject) => {
-      aki.uninstall(name, pluginsDir, () => {
-        resolve();
+  ipcMain.handle(
+    ipcChannels.EXTENSION_MANAGER.UNINSTALL,
+    (event, name: string) => {
+      return new Promise<void>((resolve, reject) => {
+        aki.uninstall(name, pluginsDir, () => {
+          resolve();
+        });
       });
-    });
-  });
-  ipcMain.handle('extension-manager-list', async (event) => {
+    }
+  );
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.LIST, async (event) => {
     return aki.list(pluginsDir);
   });
   ipcMain.handle(
-    'extension-manager-get',
+    ipcChannels.EXTENSION_MANAGER.GET,
     async (event, extensionId: string) => {
       return extensionId in EXTENSIONS
         ? EXTENSIONS[extensionId].METADATA
         : undefined;
     }
   );
-  ipcMain.handle('extension-manager-get-all', (event) => {
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET_ALL, (event) => {
     return Object.values(EXTENSIONS).map((ext: any) => ext.METADATA);
   });
 
   ipcMain.handle(
-    'extension-getSeries',
+    ipcChannels.EXTENSION.GET_SERIES,
     (
       event,
       extensionId: string,
@@ -268,7 +272,7 @@ export const createExtensionIpcHandlers = (
     }
   );
   ipcMain.handle(
-    'extension-getChapters',
+    ipcChannels.EXTENSION.GET_CHAPTERS,
     (
       event,
       extensionId: string,
@@ -279,7 +283,7 @@ export const createExtensionIpcHandlers = (
     }
   );
   ipcMain.handle(
-    'extension-getPageRequesterData',
+    ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
     (
       event,
       extensionId: string,
@@ -297,19 +301,19 @@ export const createExtensionIpcHandlers = (
     }
   );
   ipcMain.handle(
-    'extension-getPageUrls',
+    ipcChannels.EXTENSION.GET_PAGE_URLS,
     (event, extensionId: string, pageRequesterData: PageRequesterData) => {
       return getPageUrls(extensionId, pageRequesterData);
     }
   );
   ipcMain.handle(
-    'extension-getPageData',
+    ipcChannels.EXTENSION.GET_PAGE_DATA,
     (event, extensionId: string, series: Series, url: string) => {
       return getPageData(extensionId, series, url);
     }
   );
   ipcMain.handle(
-    'extension-search',
+    ipcChannels.EXTENSION.SEARCH,
     (event, extensionId: string, text: string) => {
       return search(extensionId, text);
     }

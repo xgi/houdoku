@@ -11,6 +11,7 @@ import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { ExtensionTableRow } from '../../models/types';
 import { RootState } from '../../store';
 import { setStatusText } from '../../features/statusbar/actions';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const mapState = (state: RootState) => ({});
 
@@ -36,7 +37,9 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       return;
     }
 
-    const metadataList = await ipcRenderer.invoke('extension-manager-get-all');
+    const metadataList = await ipcRenderer.invoke(
+      ipcChannels.EXTENSION_MANAGER.GET_ALL
+    );
 
     setDataSource(
       props.registryResults.objects
@@ -91,9 +94,9 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
     props.setStatusText(`Installing extension ${friendlyName}@${version} ...`);
 
     ipcRenderer
-      .invoke('extension-manager-install', pkgName, version)
-      .then(() => ipcRenderer.invoke('extension-manager-reload'))
-      .then(() => ipcRenderer.invoke('extension-manager-list'))
+      .invoke(ipcChannels.EXTENSION_MANAGER.INSTALL, pkgName, version)
+      .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.RELOAD))
+      .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.LIST))
       .then((extensionDetailsList: [string, string][]) => {
         return (
           extensionDetailsList.find(
@@ -117,9 +120,9 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
     props.setStatusText(`Removing extension ${friendlyName}...`);
 
     ipcRenderer
-      .invoke('extension-manager-uninstall', pkgName)
-      .then(() => ipcRenderer.invoke('extension-manager-reload'))
-      .then(() => ipcRenderer.invoke('extension-manager-list'))
+      .invoke(ipcChannels.EXTENSION_MANAGER.UNINSTALL, pkgName)
+      .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.RELOAD))
+      .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.LIST))
       .then((extensionDetailsList: [string, string][]) => {
         return (
           extensionDetailsList.find(

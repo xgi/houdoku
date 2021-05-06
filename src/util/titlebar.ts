@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import ipcChannels from '../constants/ipcChannels.json';
 
 /**
  * Apply listeners to window-operation buttons.
@@ -12,19 +13,19 @@ export default async function createWindowControlListeners() {
 
   if (minButton != null) {
     minButton.addEventListener('click', () => {
-      ipcRenderer.invoke('window-minimize');
+      ipcRenderer.invoke(ipcChannels.WINDOW.MINIMIZE);
     });
   }
 
   if (maxRestoreButton != null) {
     maxRestoreButton.addEventListener('click', () => {
-      ipcRenderer.invoke('window-max-restore');
+      ipcRenderer.invoke(ipcChannels.WINDOW.MAX_RESTORE);
     });
   }
 
   if (closeButton != null) {
     closeButton.addEventListener('click', () => {
-      ipcRenderer.invoke('window-close');
+      ipcRenderer.invoke(ipcChannels.WINDOW.CLOSE);
     });
   }
 }

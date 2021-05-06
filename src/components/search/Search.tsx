@@ -19,6 +19,7 @@ import { RootState } from '../../store';
 import AddSeriesModal from './AddSeriesModal';
 import Uploader from './Uploader';
 import filesystem from '../../services/extensions/filesystem';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const { info } = Modal;
 
@@ -74,7 +75,7 @@ const Search: React.FC<Props> = (props: Props) => {
 
   const handleSearch = () => {
     ipcRenderer
-      .invoke('extension-search', props.searchExtension, searchText)
+      .invoke(ipcChannels.EXTENSION.SEARCH, props.searchExtension, searchText)
       .then((seriesList: Series[]) => props.setSearchResults(seriesList))
       .catch((e) => console.error(e));
   };
@@ -84,7 +85,12 @@ const Search: React.FC<Props> = (props: Props) => {
     sourceType: SeriesSourceType
   ) => {
     ipcRenderer
-      .invoke('extension-getSeries', 1, sourceType, path)
+      .invoke(
+        ipcChannels.EXTENSION.GET_SERIES,
+        filesystem.METADATA.id,
+        sourceType,
+        path
+      )
       .then((series: Series) => props.setSearchResults([series]))
       .catch((e) => console.error(e));
   };
@@ -167,7 +173,9 @@ const Search: React.FC<Props> = (props: Props) => {
   };
 
   const getExtensionList = async () => {
-    setExtensionList(await ipcRenderer.invoke('extension-manager-get-all'));
+    setExtensionList(
+      await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL)
+    );
   };
 
   useEffect(() => {

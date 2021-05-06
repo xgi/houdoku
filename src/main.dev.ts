@@ -21,6 +21,7 @@ import {
   loadExtensions,
 } from './services/extension';
 import { loadInWebView } from './util/webview';
+import ipcChannels from './constants/ipcChannels.json';
 
 const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
 const pluginsDir = path.join(app.getPath('userData'), 'plugins');
@@ -138,11 +139,11 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-ipcMain.handle('window-minimize', (event) => {
+ipcMain.handle(ipcChannels.WINDOW.MINIMIZE, (event) => {
   mainWindow?.minimize();
 });
 
-ipcMain.handle('window-max-restore', (event) => {
+ipcMain.handle(ipcChannels.WINDOW.MAX_RESTORE, (event) => {
   if (mainWindow?.isMaximized()) {
     mainWindow?.restore();
   } else {
@@ -150,19 +151,19 @@ ipcMain.handle('window-max-restore', (event) => {
   }
 });
 
-ipcMain.handle('window-close', (event) => {
+ipcMain.handle(ipcChannels.WINDOW.CLOSE, (event) => {
   mainWindow?.close();
 });
 
-ipcMain.handle('get-thumbnails-dir', (event) => {
+ipcMain.handle(ipcChannels.GET_PATH.THUMBNAILS_DIR, (event) => {
   return thumbnailsDir;
 });
 
-ipcMain.handle('get-plugins-dir', (event) => {
+ipcMain.handle(ipcChannels.GET_PATH.PLUGINS_DIR, (event) => {
   return pluginsDir;
 });
 
-ipcMain.handle('get-all-files', (event, rootPath: string) => {
+ipcMain.handle(ipcChannels.GET_ALL_FILES, (event, rootPath: string) => {
   return walk(rootPath);
 });
 

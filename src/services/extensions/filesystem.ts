@@ -23,6 +23,7 @@ import {
   SeriesStatus,
 } from '../../models/types';
 import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const METADATA: ExtensionMetadata = {
   id: '9ef3242e-b5a0-4f56-bf2f-5e0c9f6f50ab',
@@ -87,7 +88,7 @@ const fetchChapters: FetchChaptersFunc = (
 ) => {
   let fileListPromise;
   if (sourceType === SeriesSourceType.STANDARD) {
-    fileListPromise = ipcRenderer.invoke('get-all-files', id);
+    fileListPromise = ipcRenderer.invoke(ipcChannels.GET_ALL_FILES, id);
   } else {
     fileListPromise = getArchiveFiles(id);
   }
@@ -175,7 +176,10 @@ const fetchPageRequesterData: FetchPageRequesterDataFunc = (
 ) => {
   let fileListPromise;
   if (sourceType === SeriesSourceType.STANDARD) {
-    fileListPromise = ipcRenderer.invoke('get-all-files', chapterSourceId);
+    fileListPromise = ipcRenderer.invoke(
+      ipcChannels.GET_ALL_FILES,
+      chapterSourceId
+    );
   } else {
     fileListPromise = getArchiveFiles(
       seriesSourceId
