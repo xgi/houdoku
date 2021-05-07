@@ -88,7 +88,10 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
           props.series.sourceType,
           props.series.sourceId
         )
-        .then((series: Series) => setCustomSeries(series))
+        .then((series?: Series) => {
+          if (series !== undefined) setCustomSeries(series);
+          return series;
+        })
         .finally(() => setLoading(false))
         .catch((e) => console.error(e));
     }

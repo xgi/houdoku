@@ -58,12 +58,15 @@ function getExtensionMetadata(extensionId: string): ExtensionMetadata {
 function getSeries(
   extensionId: string,
   sourceType: SeriesSourceType,
-  seriesId: string
-): Promise<Series> {
+  seriesId: string,
+  webviewFunc: (url: string) => Promise<string>
+): Promise<Series | undefined> {
   const extension = EXTENSIONS[extensionId];
   return extension
-    .fetchSeries(sourceType, seriesId, fetch)
+    .fetchSeries(sourceType, seriesId, fetch, webviewFunc)
     .then((response) => {
+      if (typeof response === 'string') return response;
+
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         return response.text();
@@ -88,12 +91,15 @@ function getSeries(
 function getChapters(
   extensionId: string,
   sourceType: SeriesSourceType,
-  seriesId: string
+  seriesId: string,
+  webviewFunc: (url: string) => Promise<string>
 ): Promise<Chapter[]> {
   const extension = EXTENSIONS[extensionId];
   return extension
-    .fetchChapters(sourceType, seriesId, fetch)
+    .fetchChapters(sourceType, seriesId, fetch, webviewFunc)
     .then((response) => {
+      if (typeof response === 'string') return response;
+
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         return response.text();
@@ -190,7 +196,11 @@ async function getPageData(
  * are utilized at the extension's discretion
  * @returns promise for a list of series found from the content source
  */
-function search(extensionId: string, text: string): Promise<Series[]> {
+function search(
+  extensionId: string,
+  text: string,
+  webviewFunc: (url: string) => Promise<string>
+): Promise<Series[]> {
   let adjustedText: string = text;
 
   const paramsRegExp = new RegExp(/\S*:\S*/g);
@@ -208,8 +218,10 @@ function search(extensionId: string, text: string): Promise<Series[]> {
 
   const extension = EXTENSIONS[extensionId];
   return extension
-    .fetchSearch(adjustedText, params, fetch)
+    .fetchSearch(adjustedText, params, fetch, webviewFunc)
     .then((response) => {
+      if (typeof response === 'string') return response;
+
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         return response.text();
@@ -270,7 +282,7 @@ export const createExtensionIpcHandlers = (
       sourceType: SeriesSourceType,
       seriesId: string
     ) => {
-      return getSeries(extensionId, sourceType, seriesId);
+      return getSeries(extensionId, sourceType, seriesId, webviewFunc);
     }
   );
   ipcMain.handle(
@@ -281,7 +293,7 @@ export const createExtensionIpcHandlers = (
       sourceType: SeriesSourceType,
       seriesId: string
     ) => {
-      return getChapters(extensionId, sourceType, seriesId);
+      return getChapters(extensionId, sourceType, seriesId, webviewFunc);
     }
   );
   ipcMain.handle(
@@ -317,7 +329,7 @@ export const createExtensionIpcHandlers = (
   ipcMain.handle(
     ipcChannels.EXTENSION.SEARCH,
     (event, extensionId: string, text: string) => {
-      return search(extensionId, text);
+      return search(extensionId, text, webviewFunc);
     }
   );
 };

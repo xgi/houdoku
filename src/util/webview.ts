@@ -11,7 +11,12 @@ export const loadInWebView = (window: BrowserWindow | null, url: string) => {
     return new Promise<string>((resolve, reject) => {
       if (spoofView === null) reject();
       else {
-        spoofView.webContents.once('did-frame-finish-load', () => {
+        const handler = (lastChance: boolean) => {
+          if (spoofView.webContents.getTitle().includes('Just a moment...')) {
+            if (lastChance) reject();
+            return;
+          }
+
           spoofView?.webContents
             .executeJavaScript('document.body.innerHTML')
             .then((value) => {
@@ -21,7 +26,10 @@ export const loadInWebView = (window: BrowserWindow | null, url: string) => {
               window?.removeBrowserView(spoofView);
               resolve(value);
             });
-        });
+        };
+
+        spoofView.webContents.on('did-frame-finish-load', () => handler(false));
+        spoofView.webContents.on('did-finish-load', () => handler(true));
       }
     });
   }

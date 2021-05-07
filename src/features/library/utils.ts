@@ -76,12 +76,13 @@ export function toggleChapterRead(
 async function reloadSeries(series: Series) {
   if (series.id === undefined) return;
 
-  const newSeries: Series = await ipcRenderer.invoke(
+  const newSeries: Series | undefined = await ipcRenderer.invoke(
     'extension-getSeries',
     series.extensionId,
     series.sourceType,
     series.sourceId
   );
+  if (newSeries === undefined) return;
 
   const newChapters: Chapter[] = await ipcRenderer.invoke(
     'extension-getChapters',
