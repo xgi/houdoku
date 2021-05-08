@@ -3,7 +3,11 @@ import { BrowserView, BrowserWindow } from 'electron';
 // eslint-disable-next-line import/prefer-default-export
 export const loadInWebView = (window: BrowserWindow | null, url: string) => {
   if (window !== null) {
-    const spoofView = new BrowserView();
+    const spoofView = new BrowserView({
+      webPreferences: {
+        images: false,
+      },
+    });
     window.setBrowserView(spoofView);
     spoofView.setBounds({ x: 0, y: 0, width: 0, height: 0 });
 
