@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Dropdown, Input, Menu, Modal, Row, Select } from 'antd';
+import {
+  Button,
+  Col,
+  Dropdown,
+  Input,
+  Menu,
+  Modal,
+  Row,
+  Select,
+  Spin,
+} from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
@@ -105,6 +115,23 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
   };
 
   if (props.series === undefined || customSeries === undefined) return <></>;
+
+  if (loading) {
+    return (
+      <Modal
+        title="Add Series to Library"
+        visible={props.visible}
+        footer={null}
+        onCancel={props.toggleVisible}
+      >
+        <div className={styles.loaderContainer}>
+          <Spin />
+          <Paragraph>Loading series details...</Paragraph>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
     <Modal
       title="Add Series to Library"
