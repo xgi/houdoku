@@ -4,6 +4,20 @@
 
 .row {
   margin-bottom: 8px !important;
+  display: flex;
+}
+
+.spacer {
+  flex: 4;
+}
+
+.reloadButton {
+  flex: 1;
+}
+
+.filterInput {
+  align-self: flex-end;
+  flex: 2;
 }
 
 .loadingContainer {

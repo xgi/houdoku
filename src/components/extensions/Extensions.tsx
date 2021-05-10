@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import aki, { RegistrySearchResults } from 'aki-plugin-manager';
-import { Col, Row, Button, Spin } from 'antd';
+import { Row, Button, Spin, Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import Paragraph from 'antd/lib/typography/Paragraph';
@@ -29,6 +30,7 @@ type Props = PropsFromRedux & {};
 
 const Extensions: React.FC<Props> = (props: Props) => {
   const [searchResults, setSearchResults] = useState<RegistrySearchResults>();
+  const [filterText, setFilterText] = useState('');
   const location = useLocation();
 
   const doSearchRegistry = () => {
@@ -52,11 +54,19 @@ const Extensions: React.FC<Props> = (props: Props) => {
         Extensions
       </Title>
       <Row className={styles.row}>
-        <Col span={14}>
-          <Button onClick={() => doSearchRegistry()}>
-            Reload Extension List
-          </Button>
-        </Col>
+        <Button
+          className={styles.reloadButton}
+          onClick={() => doSearchRegistry()}
+        >
+          Reload Extension List
+        </Button>
+        <div className={styles.spacer} />
+        <Input
+          className={styles.filterInput}
+          placeholder="Filter extensions..."
+          suffix={<SearchOutlined />}
+          onChange={(e: any) => setFilterText(e.target.value)}
+        />
       </Row>
       {searchResults === undefined ? (
         <div className={styles.loadingContainer}>
@@ -65,7 +75,10 @@ const Extensions: React.FC<Props> = (props: Props) => {
           <Paragraph>This requires an internet connection.</Paragraph>
         </div>
       ) : (
-        <ExtensionTable registryResults={searchResults} />
+        <ExtensionTable
+          registryResults={searchResults}
+          filterText={filterText}
+        />
       )}
     </>
   );

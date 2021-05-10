@@ -26,6 +26,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = PropsFromRedux & {
   registryResults: RegistrySearchResults;
+  filterText: string;
 };
 
 const ExtensionTable: React.FC<Props> = (props: Props) => {
@@ -70,6 +71,13 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
             installedVersion,
             canUpdate,
           };
+        })
+        .filter((row: ExtensionTableRow) => {
+          if (props.filterText === '') return true;
+          return (
+            row.friendlyName.includes(props.filterText) ||
+            row.url.includes(props.filterText)
+          );
         })
         .sort((a: ExtensionTableRow, b: ExtensionTableRow) => {
           if (a.installedVersion !== undefined) {
@@ -145,7 +153,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     updateDataSource();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.registryResults]);
+  }, [props.registryResults, props.filterText]);
 
   const columns = [
     {
