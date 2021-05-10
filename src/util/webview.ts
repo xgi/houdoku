@@ -38,9 +38,7 @@ export const loadInWebView = (window: BrowserWindow | null, url: string) => {
             });
         };
 
-        spoofView.webContents.once('did-frame-finish-load', () =>
-          handler(false)
-        );
+        spoofView.webContents.on('did-frame-finish-load', () => handler(false));
         spoofView.webContents.once('did-finish-load', () => handler(true));
       }
     });
