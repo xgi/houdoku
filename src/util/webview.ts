@@ -13,11 +13,17 @@ export const loadInWebView = (window: BrowserWindow | null, url: string) => {
 
     spoofView.webContents.loadURL(url);
     return new Promise<string>((resolve, reject) => {
-      if (spoofView === null) reject();
+      if (spoofView === null)
+        reject(new Error('Failed to setup new BrowserView to load URL'));
       else {
         const handler = (lastChance: boolean) => {
           if (spoofView.webContents.getTitle().includes('Just a moment...')) {
-            if (lastChance) reject();
+            if (lastChance)
+              reject(
+                new Error(
+                  'BrowserView page finished loading but did not bypass Cloudflare'
+                )
+              );
             return;
           }
 
@@ -32,8 +38,10 @@ export const loadInWebView = (window: BrowserWindow | null, url: string) => {
             });
         };
 
-        spoofView.webContents.on('did-frame-finish-load', () => handler(false));
-        spoofView.webContents.on('did-finish-load', () => handler(true));
+        spoofView.webContents.once('did-frame-finish-load', () =>
+          handler(false)
+        );
+        spoofView.webContents.once('did-finish-load', () => handler(true));
       }
     });
   }
