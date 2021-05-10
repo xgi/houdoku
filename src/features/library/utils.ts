@@ -50,7 +50,7 @@ export async function importSeries(dispatch: any, series: Series) {
   await loadSeriesList(dispatch);
   downloadCover(addedSeries);
 
-  setStatusText(`Added "${addedSeries.title}" to your library.`);
+  dispatch(setStatusText(`Added "${addedSeries.title}" to your library.`));
 }
 
 export function toggleChapterRead(
