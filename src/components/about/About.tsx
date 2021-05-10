@@ -20,9 +20,10 @@ const About: React.FC<Props> = (props: Props) => {
       </Paragraph>
       <Paragraph className={styles.paragraph}>
         This app does not host manga; it retrieves them from public websites
-        (&quot;content sources&quot;). The content source for a series can be
-        selected with the dropdown on the Add Series page. Houdoku is not
-        affiliated with any content sources.
+        (&quot;content sources&quot;). Support for content sources is provided
+        through various extensions, which can be installed/updated from the
+        Extensions tab. You can select which content source to use for each
+        series on the Add Series page.
       </Paragraph>
       <Paragraph className={styles.paragraph}>
         Houdoku is open source! Check the link below to contribute.
@@ -35,7 +36,15 @@ const About: React.FC<Props> = (props: Props) => {
         <br />
         Maintainer: {packageJson.author.name} ({packageJson.author.email})
         <br />
-        License: {packageJson.license} (full text available at link above)
+        License: MIT (
+        <a
+          href={`${packageJson.homepage}/blob/master/LICENSE`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          view text
+        </a>
+        )
       </Paragraph>
     </>
   );
