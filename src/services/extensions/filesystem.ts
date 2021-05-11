@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron';
 import path from 'path';
 import {
   FetchSeriesFunc,
@@ -23,7 +22,7 @@ import {
   SeriesStatus,
 } from '../../models/types';
 import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
-import ipcChannels from '../../constants/ipcChannels.json';
+import { walk } from '../../util/filesystem';
 
 const METADATA: ExtensionMetadata = {
   id: '9ef3242e-b5a0-4f56-bf2f-5e0c9f6f50ab',
@@ -41,11 +40,11 @@ const fetchSeries: FetchSeriesFunc = (
 ) => {
   return new Promise((resolve, reject) => {
     const data = { path: id };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: 'application/json',
-    });
-    const init = { status: 200 };
-    resolve(new Response(blob, init));
+    const init = {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    };
+    resolve(new Response(JSON.stringify(data, null, 2), init));
   });
 };
 
@@ -88,7 +87,9 @@ const fetchChapters: FetchChaptersFunc = (
 ) => {
   let fileListPromise;
   if (sourceType === SeriesSourceType.STANDARD) {
-    fileListPromise = ipcRenderer.invoke(ipcChannels.GET_ALL_FILES, id);
+    fileListPromise = new Promise<string[]>((resolve, reject) => {
+      resolve(walk(id));
+    });
   } else {
     fileListPromise = getArchiveFiles(id);
   }
@@ -101,11 +102,11 @@ const fetchChapters: FetchChaptersFunc = (
 
     return new Promise((resolve, reject) => {
       const data = { imageDirectories: Array.from(imageDirectories) };
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
-        type: 'application/json',
-      });
-      const init = { status: 200 };
-      resolve(new Response(blob, init));
+      const init = {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      };
+      resolve(new Response(JSON.stringify(data, null, 2), init));
     });
   });
 };
@@ -176,10 +177,9 @@ const fetchPageRequesterData: FetchPageRequesterDataFunc = (
 ) => {
   let fileListPromise;
   if (sourceType === SeriesSourceType.STANDARD) {
-    fileListPromise = ipcRenderer.invoke(
-      ipcChannels.GET_ALL_FILES,
-      chapterSourceId
-    );
+    fileListPromise = new Promise<string[]>((resolve, reject) => {
+      resolve(walk(chapterSourceId));
+    });
   } else {
     fileListPromise = getArchiveFiles(
       seriesSourceId
@@ -191,11 +191,11 @@ const fetchPageRequesterData: FetchPageRequesterDataFunc = (
   return fileListPromise.then((fileList: string[]) => {
     return new Promise((resolve, reject) => {
       const data = { fileList };
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
-        type: 'application/json',
-      });
-      const init = { status: 200 };
-      resolve(new Response(blob, init));
+      const init = {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      };
+      resolve(new Response(JSON.stringify(data, null, 2), init));
     });
   });
 };
@@ -238,11 +238,11 @@ const fetchSearch: FetchSearchFunc = (
 ) => {
   return new Promise((resolve, reject) => {
     const data = { text, params };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: 'application/json',
-    });
-    const init = { status: 200 };
-    resolve(new Response(blob, init));
+    const init = {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    };
+    resolve(new Response(JSON.stringify(data, null, 2), init));
   });
 };
 
