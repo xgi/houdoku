@@ -231,6 +231,31 @@ function search(
     .then((data) => extension.parseSearch(data, domParser));
 }
 
+/**
+ * Get the directory for a content source (often the same as an empty search).
+ *
+ * @param extensionId
+ * @returns promise for a list of series found from the content source
+ */
+function directory(
+  extensionId: string,
+  webviewFunc: (url: string) => Promise<string>
+): Promise<Series[]> {
+  const extension = EXTENSIONS[extensionId];
+  return extension
+    .fetchDirectory(fetch, webviewFunc)
+    .then((response) => {
+      if (typeof response === 'string') return response;
+
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        return response.text();
+      }
+      return response.json();
+    })
+    .then((data) => extension.parseDirectory(data, domParser));
+}
+
 export const createExtensionIpcHandlers = (
   ipcMain: IpcMain,
   pluginsDir: string,
@@ -330,6 +355,12 @@ export const createExtensionIpcHandlers = (
     ipcChannels.EXTENSION.SEARCH,
     (event, extensionId: string, text: string) => {
       return search(extensionId, text, webviewFunc);
+    }
+  );
+  ipcMain.handle(
+    ipcChannels.EXTENSION.DIRECTORY,
+    (event, extensionId: string) => {
+      return directory(extensionId, webviewFunc);
     }
   );
 };

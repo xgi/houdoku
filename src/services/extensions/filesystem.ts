@@ -12,6 +12,8 @@ import {
   GetPageDataFunc,
   ExtensionMetadata,
   PageRequesterData,
+  FetchDirectoryFunc,
+  ParseDirectoryFunc,
 } from 'houdoku-extension-lib';
 import { Response } from 'node-fetch';
 import {
@@ -232,21 +234,19 @@ const getPageData: GetPageDataFunc = (series: Series, url: string) => {
   });
 };
 
-const fetchSearch: FetchSearchFunc = (
-  text: string,
-  params: { [key: string]: string }
-) => {
-  return new Promise((resolve, reject) => {
-    const data = { text, params };
-    const init = {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    };
-    resolve(new Response(JSON.stringify(data, null, 2), init));
-  });
+const fetchSearch: FetchSearchFunc = () => {
+  return new Promise<string>((resolve) => resolve(''));
 };
 
-const parseSearch: ParseSearchFunc = (json: any) => {
+const parseSearch: ParseSearchFunc = () => {
+  return [];
+};
+
+const fetchDirectory: FetchDirectoryFunc = () => {
+  return new Promise<string>((resolve) => resolve(''));
+};
+
+const parseDirectory: ParseDirectoryFunc = () => {
   return [];
 };
 
@@ -262,4 +262,6 @@ export default {
   getPageData,
   fetchSearch,
   parseSearch,
+  fetchDirectory,
+  parseDirectory,
 };

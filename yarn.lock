@@ -1170,15 +1170,6 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@houdoku/extension-manganelo@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@houdoku/extension-manganelo/-/extension-manganelo-0.2.2.tgz#dd9bfe93c4b86e210eaa332274b943a336f1f932"
-  integrity sha512-jn6ogWFdNfnm6r5+iFRKxIqb/YBvVolztFSjYHRvCZt85TR3kqXU80L23uY6COK0Zh1Hn4GlOA1zldagH95avg==
-  dependencies:
-    "@types/jsdom" "^16.2.10"
-    "@types/node-fetch" "^2.5.10"
-    houdoku-extension-lib "^1.1.11"
-
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -1686,15 +1677,6 @@
     jest-diff "^26.0.0"
     pretty-format "^26.0.0"
 
-"@types/jsdom@^16.2.10":
-  version "16.2.10"
-  resolved "https://registry.yarnpkg.com/@types/jsdom/-/jsdom-16.2.10.tgz#c05ea94682d035943ae2453b79d56178496b6653"
-  integrity sha512-q3aIjp3ehhVSXSbvNyuireAfvU2umRiZ2aLumyeZewCnoNaokrRDdTu5IvaeE9pzNtWHXrUnM9lb22Vl3W08EA==
-  dependencies:
-    "@types/node" "*"
-    "@types/parse5" "*"
-    "@types/tough-cookie" "*"
-
 "@types/json-schema@*", "@types/json-schema@^7.0.3", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.6":
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.6.tgz#f4c7ec43e81b319a9815115031709f26987891f0"
@@ -1754,11 +1736,6 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
-
-"@types/parse5@*":
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/@types/parse5/-/parse5-6.0.0.tgz#38590dc2c3cf5717154064e3ee9b6947ee21b299"
-  integrity sha512-oPwPSj4a1wu9rsXTEGIJz91ISU725t0BmSnUhb57sI+M8XEmvUop84lzuiYdq0Y5M6xLY8DBPg0C2xEQKLyvBA==
 
 "@types/prettier@^2.0.0":
   version "2.1.6"
@@ -1855,11 +1832,6 @@
   integrity sha512-ggn3ws+yRbOHog9GxnXiEZ/35Mow6YtPZpd7Z5mKDeZS/o7zx3yAle0ov/wjhVB5QT4N2Dt+GNoGCdqkBGCajQ==
   dependencies:
     "@types/jest" "*"
-
-"@types/tough-cookie@*":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-4.0.0.tgz#fef1904e4668b6e5ecee60c52cc6a078ffa6697d"
-  integrity sha512-I99sngh224D0M7XgW1s120zxCt3VYQ3IQsuw3P3jbq5GG4yc79+ZjyKznyOGIQrflfylLgcfekeZW/vk0yng6A==
 
 "@types/webpack-env@^1.15.2":
   version "1.16.0"
@@ -6170,10 +6142,10 @@ hosted-git-info@^3.0.5:
   dependencies:
     lru-cache "^6.0.0"
 
-houdoku-extension-lib@^1.1.11, houdoku-extension-lib@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/houdoku-extension-lib/-/houdoku-extension-lib-1.3.1.tgz#1b6a511a066fc8390bfa5ff894f50a512a70cb5c"
-  integrity sha512-FJYxiSC0oj9mr0eZmXx3AVNx7uhBhPbUBOiMR0S6XOW2W2hIP+ER+2DzG5x1+Bv7YQqdcv8y/WlcQShInJYklg==
+houdoku-extension-lib@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/houdoku-extension-lib/-/houdoku-extension-lib-1.3.3.tgz#674882a2fe0d0e40399eecaafc00cd96b588eb7d"
+  integrity sha512-uOwwhL2KQQ9Cq1Xg8wZ1baOXq6lWC0czDcPsVK3ZlsswwM3iPk/3XLTn5Ez3ccqyZsVePVnYh9LFxkq0h/vXZA==
 
 hpack.js@^2.1.6:
   version "2.1.6"

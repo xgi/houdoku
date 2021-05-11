@@ -23,6 +23,7 @@
     "GET_PAGE_REQUESTER_DATA": "extension-getPageRequesterData",
     "GET_PAGE_URLS": "extension-getPageUrls",
     "GET_PAGE_DATA": "extension-getPageData",
-    "SEARCH": "extension-search"
+    "SEARCH": "extension-search",
+    "DIRECTORY": "extension-directory"
   }
 }
