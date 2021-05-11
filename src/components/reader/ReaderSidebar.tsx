@@ -11,6 +11,7 @@ import {
   ReadFilled,
   RightSquareOutlined,
   LeftSquareOutlined,
+  DownSquareOutlined,
   SettingOutlined,
   ArrowRightOutlined,
   ArrowLeftOutlined,
@@ -67,6 +68,7 @@ const ICONS_PAGE_VIEW = {
 const ICONS_LAYOUT_DIRECTION = {
   [LayoutDirection.LeftToRight]: <RightSquareOutlined />,
   [LayoutDirection.RightToLeft]: <LeftSquareOutlined />,
+  [LayoutDirection.Vertical]: <DownSquareOutlined />,
 };
 
 const mapState = (state: RootState) => ({

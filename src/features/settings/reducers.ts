@@ -73,6 +73,9 @@ function nextLayoutDirection(
   if (layoutDirection === LayoutDirection.LeftToRight) {
     return LayoutDirection.RightToLeft;
   }
+  if (layoutDirection === LayoutDirection.RightToLeft) {
+    return LayoutDirection.Vertical;
+  }
   return LayoutDirection.LeftToRight;
 }
 

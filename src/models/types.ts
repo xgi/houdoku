@@ -230,6 +230,7 @@ export enum PageFit {
 export enum LayoutDirection {
   LeftToRight,
   RightToLeft,
+  Vertical,
 }
 
 export enum PageView {

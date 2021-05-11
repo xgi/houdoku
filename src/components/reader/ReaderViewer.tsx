@@ -28,7 +28,9 @@ type Props = PropsFromRedux & {};
 
 const ReaderViewer: React.FC<Props> = (props: Props) => {
   const getPageMargin = () => {
-    return `${props.pageNumber * -100 + 100}%`;
+    return props.layoutDirection === LayoutDirection.Vertical
+      ? 0
+      : `${props.pageNumber * -100 + 100}%`;
   };
 
   const renderPageImage = (pageNumber: number) => {
@@ -84,14 +86,25 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           `}
           style={{ marginLeft: i === 1 ? getPageMargin() : 0 }}
         >
-          {props.pageView === PageView.Single
+          {props.pageView === PageView.Single ||
+          props.layoutDirection === LayoutDirection.Vertical
             ? renderPageImage(i)
             : renderTwoPageLayout(i)}
         </Content>
       );
     }
 
-    return <div className={styles.viewerContainer}>{imageWrappers}</div>;
+    return (
+      <div
+        className={
+          props.layoutDirection === LayoutDirection.Vertical
+            ? styles.viewerContainerVertical
+            : styles.viewerContainer
+        }
+      >
+        {imageWrappers}
+      </div>
+    );
   };
 
   return <>{renderViewer()}</>;

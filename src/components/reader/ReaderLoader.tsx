@@ -17,7 +17,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = PropsFromRedux & {
-  extensionId: number | undefined;
+  extensionId: string | undefined;
 };
 
 const ReaderLoader: React.FC<Props> = (props: Props) => {
