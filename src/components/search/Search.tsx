@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Alert, Input, Dropdown, Menu, Modal, Col, Row } from 'antd';
+import {
+  Button,
+  Alert,
+  Input,
+  Dropdown,
+  Menu,
+  Modal,
+  Col,
+  Row,
+  Spin,
+} from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
@@ -53,7 +63,7 @@ type Props = PropsFromRedux & {
 
 const Search: React.FC<Props> = (props: Props) => {
   const location = useLocation();
-  const [searchText, setSearchText] = useState('');
+  const [loading, setLoading] = useState(false);
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
 
   const getSearchExtensionMetadata = () => {
@@ -73,11 +83,22 @@ const Search: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const handleSearch = () => {
-    ipcRenderer
-      .invoke(ipcChannels.EXTENSION.SEARCH, props.searchExtension, searchText)
-      .then((seriesList: Series[]) => props.setSearchResults(seriesList))
-      .catch((e) => console.error(e));
+  const handleSearch = (text?: string) => {
+    setLoading(true);
+
+    if (text && text.length === 0) {
+      ipcRenderer
+        .invoke(ipcChannels.EXTENSION.SEARCH, props.searchExtension, text)
+        .then((seriesList: Series[]) => props.setSearchResults(seriesList))
+        .finally(() => setLoading(false))
+        .catch((e) => console.error(e));
+    } else {
+      ipcRenderer
+        .invoke(ipcChannels.EXTENSION.DIRECTORY, props.searchExtension)
+        .then((seriesList: Series[]) => props.setSearchResults(seriesList))
+        .finally(() => setLoading(false))
+        .catch((e) => console.error(e));
+    }
   };
 
   const handleSearchFilesystem = (
@@ -137,7 +158,7 @@ const Search: React.FC<Props> = (props: Props) => {
           <Paragraph>Upload Archive</Paragraph>
           <input
             type="file"
-            onChange={(e) =>
+            onChange={(e: any) =>
               handleSearchFilesystem(
                 e.target.files[0].path,
                 SeriesSourceType.ARCHIVE
@@ -152,7 +173,7 @@ const Search: React.FC<Props> = (props: Props) => {
   const renderExtensionMenu = () => {
     return (
       <Menu
-        onClick={(e) => {
+        onClick={(e: any) => {
           props.setSearchResults([]);
           props.setSearchExtension(e.item.props['data-value']);
         }}
@@ -180,9 +201,14 @@ const Search: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     props.setSearchResults([]);
-    getExtensionList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
+
+  useEffect(() => {
+    // eslint-disable-next-line promise/catch-or-return
+    getExtensionList().then(() => handleSearch());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.searchExtension]);
 
   if (extensionList.length === 0) return <></>;
 
@@ -205,11 +231,11 @@ const Search: React.FC<Props> = (props: Props) => {
           </Button>
         </Dropdown>
         {props.searchExtension !== filesystem.METADATA.id ? (
-          <Input
+          <Input.Search
             className={styles.searchField}
             placeholder="Search for a series..."
-            onChange={(e) => setSearchText(e.target.value)}
-            onPressEnter={handleSearch}
+            allowClear
+            onSearch={(text: string) => handleSearch(text)}
           />
         ) : (
           <div className={styles.searchField} />
@@ -221,29 +247,36 @@ const Search: React.FC<Props> = (props: Props) => {
       ) : (
         <></>
       )}
-      <LibraryGrid
-        columns={4}
-        seriesList={props.searchResults}
-        sorted={false}
-        filter=""
-        filterProgress={ProgressFilter.All}
-        filterStatus={null}
-        filterUserTags={[]}
-        clickFunc={(
-          series: Series,
-          isInLibrary: boolean | undefined = undefined
-        ) => {
-          if (isInLibrary) {
-            showInLibraryMessage();
-          } else {
-            props.setAddModalSeries(series);
-            props.toggleShowingAddModal(
-              props.searchExtension === filesystem.METADATA.id
-            );
-          }
-        }}
-        inLibraryFunc={inLibrary}
-      />
+      {loading ? (
+        <div className={styles.loadingContainer}>
+          <Spin />
+          <Paragraph>Loading results...</Paragraph>
+        </div>
+      ) : (
+        <LibraryGrid
+          columns={4}
+          seriesList={props.searchResults}
+          sorted={false}
+          filter=""
+          filterProgress={ProgressFilter.All}
+          filterStatus={null}
+          filterUserTags={[]}
+          clickFunc={(
+            series: Series,
+            isInLibrary: boolean | undefined = undefined
+          ) => {
+            if (isInLibrary) {
+              showInLibraryMessage();
+            } else {
+              props.setAddModalSeries(series);
+              props.toggleShowingAddModal(
+                props.searchExtension === filesystem.METADATA.id
+              );
+            }
+          }}
+          inLibraryFunc={inLibrary}
+        />
+      )}
     </>
   );
 };

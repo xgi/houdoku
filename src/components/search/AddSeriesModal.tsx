@@ -159,7 +159,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
           </Paragraph>
           <input
             type="file"
-            onChange={(e) =>
+            onChange={(e: any) =>
               setCustomSeries({
                 ...customSeries,
                 remoteCoverUrl: e.target.files[0].path,
@@ -317,7 +317,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
             disabled={!props.editable}
             overlay={
               <Menu
-                onClick={(e) => {
+                onClick={(e: any) => {
                   setCustomSeries({
                     ...customSeries,
                     originalLanguageKey: e.item.props['data-value'],
@@ -346,7 +346,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
             disabled={!props.editable}
             overlay={
               <Menu
-                onClick={(e) => {
+                onClick={(e: any) => {
                   setCustomSeries({
                     ...customSeries,
                     status: e.item.props['data-value'],
