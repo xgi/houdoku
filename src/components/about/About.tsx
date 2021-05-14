@@ -38,7 +38,7 @@ const About: React.FC<Props> = (props: Props) => {
         <br />
         License: MIT (
         <a
-          href={`${packageJson.homepage}/blob/master/LICENSE`}
+          href={`${packageJson.homepage}/blob/master/LICENSE.txt`}
           target="_blank"
           rel="noreferrer"
         >
