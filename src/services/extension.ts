@@ -24,7 +24,12 @@ export async function loadExtensions(pluginsDir: string) {
   aki.list(pluginsDir).forEach((pluginDetails: [string, string]) => {
     const pluginName = pluginDetails[0];
     if (pluginName.startsWith('@houdoku/extension-')) {
-      const mod = aki.load(pluginsDir, pluginName, require as NodeRequire);
+      const mod = aki.load(
+        pluginsDir,
+        pluginName,
+        // eslint-disable-next-line no-eval
+        eval('require') as NodeRequire
+      );
 
       console.log(
         `Loaded extension "${pluginName}" version ${pluginDetails[1]}`
