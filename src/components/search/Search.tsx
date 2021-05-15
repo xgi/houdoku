@@ -85,16 +85,17 @@ const Search: React.FC<Props> = (props: Props) => {
 
   const handleSearch = (text?: string) => {
     setLoading(true);
+    props.setSearchResults([]);
 
-    if (text && text.length === 0) {
+    if (!text || text.length === 0) {
       ipcRenderer
-        .invoke(ipcChannels.EXTENSION.SEARCH, props.searchExtension, text)
+        .invoke(ipcChannels.EXTENSION.DIRECTORY, props.searchExtension)
         .then((seriesList: Series[]) => props.setSearchResults(seriesList))
         .finally(() => setLoading(false))
         .catch((e) => console.error(e));
     } else {
       ipcRenderer
-        .invoke(ipcChannels.EXTENSION.DIRECTORY, props.searchExtension)
+        .invoke(ipcChannels.EXTENSION.SEARCH, props.searchExtension, text)
         .then((seriesList: Series[]) => props.setSearchResults(seriesList))
         .finally(() => setLoading(false))
         .catch((e) => console.error(e));
