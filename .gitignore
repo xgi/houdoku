@@ -5,13 +5,13 @@ node_modules
 .eslintcache
 
 release
-app/main.prod.js
-app/main.prod.js.map
-app/main.prod.js.LICENSE.txt
-app/renderer.prod.js
-app/renderer.prod.js.map
-app/style.css
-app/style.css.map
+src/main.prod.js
+src/main.prod.js.map
+src/main.prod.js.LICENSE.txt
+src/renderer.prod.js
+src/renderer.prod.js.map
+src/style.css
+src/style.css.map
 dist
 dll
 main.js
