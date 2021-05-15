@@ -14,7 +14,6 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import aki from 'aki-plugin-manager';
 import { walk } from './util/filesystem';
 import {
   createExtensionIpcHandlers,
@@ -166,9 +165,6 @@ ipcMain.handle(ipcChannels.GET_PATH.PLUGINS_DIR, (event) => {
 ipcMain.handle(ipcChannels.GET_ALL_FILES, (event, rootPath: string) => {
   return walk(rootPath);
 });
-
-// initialize plugin manager, which adds its own ipc handlers
-aki.manager(ipcMain, pluginsDir);
 
 // create ipc handlers for specific extension functionality
 createExtensionIpcHandlers(ipcMain, pluginsDir, (url: string) =>
