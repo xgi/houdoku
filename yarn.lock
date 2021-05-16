@@ -2236,10 +2236,10 @@ ajv@^6.1.0, ajv@^6.10.0, ajv@^6.12.0, ajv@^6.12.3, ajv@^6.12.4, ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-aki-plugin-manager@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/aki-plugin-manager/-/aki-plugin-manager-1.3.0.tgz#1bc040635e5b59e0fa19f96335704a62214a4682"
-  integrity sha512-M+RaG5yXeg/kzle1E17k3yNUyrvPZUXMqzPFnQCHBj8G4Gfdt8xHiKS9FzgNxlJzAd5AWGu/za3nMiMY+LILvA==
+aki-plugin-manager@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/aki-plugin-manager/-/aki-plugin-manager-1.3.1.tgz#f4bbf06b6b4e366e9b3d8ef9e936c153439b1822"
+  integrity sha512-LLK6bC3aA0G1KcE/km8xnSWgxT9x+72j4fckBTmRdIa9gHgprDIdKnJOVJhE1bjBWYi8Cs1+mANKs8lLlTdTSg==
   dependencies:
     rimraf "^3.0.2"
     tar "^6.1.0"
