@@ -40,6 +40,7 @@ const refreshOnStartText: { [key: string]: string } = {
 const layoutDirectionText: { [key in LayoutDirection]: string } = {
   [LayoutDirection.LeftToRight]: 'Left-to-Right',
   [LayoutDirection.RightToLeft]: 'Right-to-Left',
+  [LayoutDirection.Vertical]: 'Vertical',
 };
 
 const pageViewText: { [key in PageView]: string } = {
@@ -145,7 +146,7 @@ const Settings: React.FC<Props> = (props: Props) => {
   ) => {
     return (
       <Menu
-        onClick={(e) => {
+        onClick={(e: any) => {
           updateReaderSetting(
             readerSetting,
             parseInt(e.item.props['data-value'], 10)
@@ -185,7 +186,7 @@ const Settings: React.FC<Props> = (props: Props) => {
           <Dropdown
             overlay={
               <Menu
-                onClick={(e) => {
+                onClick={(e: any) => {
                   updateGeneralSetting(
                     GeneralSetting.RefreshOnStart,
                     e.item.props['data-value'] === 'true'
