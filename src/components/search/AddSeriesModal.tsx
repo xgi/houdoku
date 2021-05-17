@@ -114,9 +114,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
     }
   };
 
-  if (props.series === undefined || customSeries === undefined) return <></>;
-
-  if (loading) {
+  if (loading || customSeries === undefined) {
     return (
       <Modal
         title="Add Series to Library"
