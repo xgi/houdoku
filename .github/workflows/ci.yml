@@ -21,3 +21,5 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: yarn install
       - run: yarn package
+        with:
+          github_token: ${{ secrets.github_token }}
