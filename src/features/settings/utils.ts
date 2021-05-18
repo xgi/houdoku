@@ -1,3 +1,4 @@
+import log from 'electron-log';
 import {
   GeneralSetting,
   LanguageKey,
@@ -44,6 +45,7 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
     settings[GeneralSetting.RefreshOnStart] = refreshOnStart === 'true';
   }
 
+  log.debug(`Using general settings: ${settings}`);
   return settings;
 }
 
@@ -75,13 +77,17 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   if (preloadAmount !== null) {
     settings[ReaderSetting.PreloadAmount] = parseInt(preloadAmount, 10);
   }
+
+  log.debug(`Using reader settings: ${settings}`);
   return settings;
 }
 
 export function saveGeneralSetting(key: GeneralSetting, value: any) {
   persistantStore.write(`${PREFIXES.general}${key}`, value);
+  log.info(`Set GeneralSetting ${key} to ${value}`);
 }
 
 export function saveReaderSetting(key: ReaderSetting, value: any) {
   persistantStore.write(`${PREFIXES.reader}${key}`, value);
+  log.info(`Set ReaderSetting ${key} to ${value}`);
 }

@@ -1,4 +1,5 @@
 import fs from 'fs';
+import log from 'electron-log';
 import { Series } from '../models/types';
 import { getThumbnailPath } from './filesystem';
 
@@ -12,13 +13,17 @@ export async function downloadCover(series: Series) {
   const thumbnailPath = await getThumbnailPath(series);
   if (thumbnailPath === null) return;
 
+  log.debug(
+    `Downloading cover for series ${series.id} (sourceId=${series.sourceId}, extId=${series.extensionId}) from ${series.remoteCoverUrl}`
+  );
+
   // eslint-disable-next-line promise/catch-or-return
   fetch(series.remoteCoverUrl)
     .then((response) => response.arrayBuffer())
     .then((buffer) => {
       fs.writeFile(thumbnailPath, Buffer.from(buffer), (err) => {
         if (err) {
-          console.error(err);
+          log.error(err);
         }
       });
       return true;

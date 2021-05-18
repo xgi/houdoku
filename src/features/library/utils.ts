@@ -1,5 +1,6 @@
 /* eslint-disable promise/catch-or-return */
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import {
   setSeriesList,
   setSeries,
@@ -36,6 +37,10 @@ export function removeSeries(dispatch: any, series: Series) {
 }
 
 export async function importSeries(dispatch: any, series: Series) {
+  log.debug(
+    `Importing series ${series.sourceId} from extension ${series.extensionId}`
+  );
+
   const chapters: Chapter[] = await ipcRenderer.invoke(
     'extension-getChapters',
     series.extensionId,
@@ -50,6 +55,7 @@ export async function importSeries(dispatch: any, series: Series) {
   await loadSeriesList(dispatch);
   downloadCover(addedSeries);
 
+  log.debug(`Imported series ${series.sourceId} with database ID ${series.id}`);
   dispatch(setStatusText(`Added "${addedSeries.title}" to your library.`));
 }
 
@@ -117,6 +123,8 @@ export async function reloadSeriesList(
   seriesList: Series[],
   callback?: () => void
 ) {
+  log.debug(`Reloading series list...`);
+
   const sortedSeriesList = [...seriesList].sort((a: Series, b: Series) =>
     a.title.localeCompare(b.title)
   );
@@ -134,6 +142,7 @@ export async function reloadSeriesList(
     cur += 1;
   }
 
+  log.info(`Reloaded ${cur} series`);
   dispatch(setCompletedStartReload(true));
   dispatch(setStatusText(`Reloaded ${cur} series`));
   if (callback !== undefined) callback();

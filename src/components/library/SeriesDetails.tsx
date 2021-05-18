@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix, Modal, Select } from 'antd';
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import {
   ReloadOutlined,
   LoadingOutlined,
@@ -96,13 +97,19 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = PropsFromRedux & {};
 
+interface ParamTypes {
+  id: string;
+}
+
 const SeriesDetails: React.FC<Props> = (props: Props) => {
-  const { id } = useParams();
+  const { id } = useParams<ParamTypes>();
   const history = useHistory();
 
   const loadContent = async () => {
+    log.debug(`Series page is loading details from database for series ${id}`);
+
     // eslint-disable-next-line promise/catch-or-return
-    db.fetchSeries(id)
+    db.fetchSeries(parseInt(id, 10))
       .then((response: any) => {
         props.setSeries(response[0]);
         return getBannerImageUrl(response[0]);
@@ -111,11 +118,12 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         props.setSeriesBannerUrl(seriesBannerUrl)
       );
 
-    props.loadChapterList(id);
+    props.loadChapterList(parseInt(id, 10));
   };
 
   useEffect(() => {
     loadContent();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (props.series === undefined) {
@@ -135,11 +143,14 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   };
 
   const handleRemove = () => {
+    log.debug(`Prompting to remove series ${props.series?.id}`);
+
     confirm({
       title: 'Remove this series from your library?',
       icon: <ExclamationCircleOutlined />,
       content: 'This action is irreversible.',
       onOk() {
+        log.info(`Removing series ${props.series?.id}`);
         if (props.series !== undefined) {
           props.removeSeries(props.series);
           history.push(routes.LIBRARY);

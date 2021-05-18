@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import aki, { RegistrySearchResults } from 'aki-plugin-manager';
 import { Row, Button, Spin, Input } from 'antd';
+import log from 'electron-log';
 import { SearchOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -34,13 +35,16 @@ const Extensions: React.FC<Props> = (props: Props) => {
   const location = useLocation();
 
   const doSearchRegistry = () => {
+    log.debug(`Searching extension registry...`);
+
     setSearchResults(undefined);
     aki
       .search({ text: 'extension', scope: 'houdoku' })
       .then((results: RegistrySearchResults) => {
+        log.debug(`Extension registry search found ${results.total} results`);
         return setSearchResults(results);
       })
-      .catch((e) => console.error(e));
+      .catch((e) => log.error(e));
   };
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { Spin } from 'antd';
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import React, { useEffect, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
@@ -32,7 +33,7 @@ const ReaderLoader: React.FC<Props> = (props: Props) => {
           setExtensionMessage(metadata.pageLoadMessage);
         }
       })
-      .catch((e) => console.error(e));
+      .catch((e) => log.error(e));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.extensionId]);
 

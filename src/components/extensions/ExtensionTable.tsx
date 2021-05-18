@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import { Table, Button } from 'antd';
 import {
   RegistrySearchResults,
@@ -121,7 +122,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
         return loaded;
       })
       .then(() => updateDataSource())
-      .catch((e) => console.error(e));
+      .catch((e) => log.error(e));
   };
 
   const handleRemove = (pkgName: string, friendlyName: string) => {
@@ -147,7 +148,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
         return loaded;
       })
       .then(() => updateDataSource())
-      .catch((e) => console.error(e));
+      .catch((e) => log.error(e));
   };
 
   useEffect(() => {

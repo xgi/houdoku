@@ -3,6 +3,7 @@ import aki from 'aki-plugin-manager';
 import { IpcMain } from 'electron';
 import fetch from 'node-fetch';
 import DOMParser from 'dom-parser';
+import log from 'electron-log';
 import { Chapter, Series, SeriesSourceType } from '../models/types';
 import filesystem from './extensions/filesystem';
 import ipcChannels from '../constants/ipcChannels.json';
@@ -14,6 +15,8 @@ const EXTENSIONS = {
 };
 
 export async function loadExtensions(pluginsDir: string) {
+  log.info('Loading extensions...');
+
   Object.keys(EXTENSIONS).forEach((extensionId: string) => {
     if (extensionId !== filesystem.METADATA.id) {
       const extMetadata = EXTENSIONS[extensionId].METADATA;
@@ -22,7 +25,7 @@ export async function loadExtensions(pluginsDir: string) {
         `@houdoku/extension-${extMetadata.name.toLowerCase()}`
       );
       delete EXTENSIONS[extensionId];
-      console.log(`Unloaded extension ${extMetadata.name} (ID ${extensionId})`);
+      log.info(`Unloaded extension ${extMetadata.name} (ID ${extensionId})`);
     }
   });
 
@@ -36,9 +39,7 @@ export async function loadExtensions(pluginsDir: string) {
         eval('require') as NodeRequire
       );
 
-      console.log(
-        `Loaded extension "${pluginName}" version ${pluginDetails[1]}`
-      );
+      log.info(`Loaded extension "${pluginName}" version ${pluginDetails[1]}`);
       EXTENSIONS[mod.METADATA.id] = mod;
     }
   });
@@ -72,6 +73,10 @@ function getSeries(
   webviewFunc: (url: string) => Promise<string>
 ): Promise<Series | undefined> {
   const extension = EXTENSIONS[extensionId];
+  log.info(
+    `Getting series ${seriesId} from extension ${extensionId} (v=${extension.METADATA.version})`
+  );
+
   return extension
     .fetchSeries(sourceType, seriesId, fetch, webviewFunc)
     .then((response) => {
@@ -105,6 +110,10 @@ function getChapters(
   webviewFunc: (url: string) => Promise<string>
 ): Promise<Chapter[]> {
   const extension = EXTENSIONS[extensionId];
+  log.info(
+    `Getting chapters for series ${seriesId} from extension ${extensionId} (v=${extension.METADATA.version})`
+  );
+
   return extension
     .fetchChapters(sourceType, seriesId, fetch, webviewFunc)
     .then((response) => {
@@ -139,6 +148,10 @@ function getPageRequesterData(
   webviewFunc: (url: string) => Promise<string>
 ): Promise<PageRequesterData> {
   const extension = EXTENSIONS[extensionId];
+  log.info(
+    `Getting page requester data for series ${seriesSourceId} chapter ${chapterSourceId} from extension ${extensionId} (v=${extension.METADATA.version})`
+  );
+
   return extension
     .fetchPageRequesterData(
       sourceType,
@@ -211,6 +224,11 @@ function search(
   text: string,
   webviewFunc: (url: string) => Promise<string>
 ): Promise<Series[]> {
+  const extension = EXTENSIONS[extensionId];
+  log.info(
+    `Searching for "${text}" from extension ${extensionId} (v=${extension.METADATA.version})`
+  );
+
   let adjustedText: string = text;
 
   const paramsRegExp = new RegExp(/\S*:\S*/g);
@@ -226,7 +244,6 @@ function search(
     adjustedText = text.replace(paramsRegExp, '');
   }
 
-  const extension = EXTENSIONS[extensionId];
   return extension
     .fetchSearch(adjustedText, params, fetch, webviewFunc)
     .then((response) => {
@@ -252,6 +269,10 @@ function directory(
   webviewFunc: (url: string) => Promise<string>
 ): Promise<Series[]> {
   const extension = EXTENSIONS[extensionId];
+  log.info(
+    `Getting directory from extension ${extensionId} (v=${extension.METADATA.version})`
+  );
+
   return extension
     .fetchDirectory(fetch, webviewFunc)
     .then((response) => {
@@ -271,6 +292,8 @@ export const createExtensionIpcHandlers = (
   pluginsDir: string,
   webviewFunc: (url: string) => Promise<string>
 ) => {
+  log.debug('Creating extension IPC handlers in main...');
+
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, (event) => {
     return loadExtensions(pluginsDir);
   });

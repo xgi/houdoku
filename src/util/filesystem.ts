@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import { Series } from '../models/types';
 import ipcChannels from '../constants/ipcChannels.json';
 
@@ -61,7 +62,7 @@ export async function deleteThumbnail(series: Series) {
 
   fs.unlink(thumbnailPath, (err) => {
     if (err) {
-      console.error(err);
+      log.error(err);
     }
   });
 }

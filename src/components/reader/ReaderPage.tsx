@@ -4,6 +4,7 @@ import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import { PageRequesterData } from 'houdoku-extension-lib';
 import { RootState } from '../../store';
 import {
@@ -102,8 +103,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = PropsFromRedux & {};
 
+interface ParamTypes {
+  chapter_id: string;
+}
+
 const ReaderPage: React.FC<Props> = (props: Props) => {
-  const { chapter_id } = useParams();
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { chapter_id } = useParams<ParamTypes>();
   const history = useHistory();
   const location = useLocation();
   const forceUpdate = useForceUpdate();
@@ -160,6 +166,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * @param chapterId the chapter to view. If it does not exist, this method returns immediately
    */
   const loadChapterData = async (chapterId: number) => {
+    log.debug(`Reader is loading chapter data for chapter ${chapterId}`);
+
     const chapter: Chapter = await db
       .fetchChapter(chapterId)
       .then((response: any) => response[0]);
@@ -345,7 +353,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     addKeybindings();
-    loadChapterData(chapter_id);
+    loadChapterData(parseInt(chapter_id, 10));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 

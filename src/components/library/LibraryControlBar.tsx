@@ -166,7 +166,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           className={styles.progressDropdown}
           overlay={
             <Menu
-              onClick={(e) =>
+              onClick={(e: any) =>
                 props.setFilterProgress(e.item.props['data-value'])
               }
             >
@@ -199,7 +199,9 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           className={styles.statusDropdown}
           overlay={
             <Menu
-              onClick={(e) => props.setFilterStatus(e.item.props['data-value'])}
+              onClick={(e: any) =>
+                props.setFilterStatus(e.item.props['data-value'])
+              }
             >
               <Menu.Item key={null} data-value={null}>
                 Any

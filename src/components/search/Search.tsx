@@ -16,6 +16,7 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { useLocation } from 'react-router-dom';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import styles from './Search.css';
 import { ProgressFilter, Series, SeriesSourceType } from '../../models/types';
 import LibraryGrid from '../library/LibraryGrid';
@@ -92,13 +93,13 @@ const Search: React.FC<Props> = (props: Props) => {
         .invoke(ipcChannels.EXTENSION.DIRECTORY, props.searchExtension)
         .then((seriesList: Series[]) => props.setSearchResults(seriesList))
         .finally(() => setLoading(false))
-        .catch((e) => console.error(e));
+        .catch((e) => log.error(e));
     } else {
       ipcRenderer
         .invoke(ipcChannels.EXTENSION.SEARCH, props.searchExtension, text)
         .then((seriesList: Series[]) => props.setSearchResults(seriesList))
         .finally(() => setLoading(false))
-        .catch((e) => console.error(e));
+        .catch((e) => log.error(e));
     }
   };
 
@@ -114,7 +115,7 @@ const Search: React.FC<Props> = (props: Props) => {
         path
       )
       .then((series: Series) => props.setSearchResults([series]))
-      .catch((e) => console.error(e));
+      .catch((e) => log.error(e));
   };
 
   const renderAlert = () => {

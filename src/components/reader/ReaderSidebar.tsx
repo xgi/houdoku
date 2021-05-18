@@ -155,7 +155,7 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
         <Dropdown
           overlay={
             <Menu
-              onClick={(e) => {
+              onClick={(e: any) => {
                 props.setChapter(e.item.props['data-value']);
               }}
             >
@@ -235,7 +235,7 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
         <Dropdown
           overlay={
             <Menu
-              onClick={(e) => {
+              onClick={(e: any) => {
                 props.setPageNumber(e.item.props['data-value']);
               }}
             >

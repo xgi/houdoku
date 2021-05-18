@@ -13,6 +13,7 @@ import {
 import { DownOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import {
   ContentWarning,
   ContentWarningKey,
@@ -91,6 +92,9 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
       // they are not usually included in the search results) so we explicitly retrieve
       // all of the series data here
 
+      log.debug(
+        `AddSeriesModal is retrieving details for series ${props.series.sourceId} from extension ${props.series.extensionId}`
+      );
       ipcRenderer
         .invoke(
           'extension-getSeries',
@@ -99,11 +103,16 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
           props.series.sourceId
         )
         .then((series?: Series) => {
-          if (series !== undefined) setCustomSeries(series);
+          if (series !== undefined) {
+            log.debug(
+              `AddSeriesModal found matching series ${series?.sourceId}`
+            );
+            setCustomSeries(series);
+          }
           return series;
         })
         .finally(() => setLoading(false))
-        .catch((e) => console.error(e));
+        .catch((e) => log.error(e));
     }
   }, [props.series]);
 

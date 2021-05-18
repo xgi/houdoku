@@ -21,6 +21,7 @@ import { toggleShowingSettingsModal } from '../../features/reader/actions';
 const layoutDirectionText: { [key in LayoutDirection]: string } = {
   [LayoutDirection.LeftToRight]: 'Left-to-Right',
   [LayoutDirection.RightToLeft]: 'Right-to-Left',
+  [LayoutDirection.Vertical]: 'Vertical',
 };
 const pageViewText: { [key in PageView]: string } = {
   [PageView.Single]: 'Single',
@@ -88,7 +89,7 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
 
   const layoutDirectionMenu = (
     <Menu
-      onClick={(e) =>
+      onClick={(e: any) =>
         props.setLayoutDirection(parseInt(e.item.props['data-value'], 10))
       }
     >
@@ -97,7 +98,7 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
   );
   const pageViewMenu = (
     <Menu
-      onClick={(e) => {
+      onClick={(e: any) => {
         props.setPageView(parseInt(e.item.props['data-value'], 10));
       }}
     >
@@ -106,7 +107,7 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
   );
   const pageFitMenu = (
     <Menu
-      onClick={(e) =>
+      onClick={(e: any) =>
         props.setPageFit(parseInt(e.item.props['data-value'], 10))
       }
     >
@@ -115,7 +116,7 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
   );
   const preloadMenu = (
     <Menu
-      onClick={(e) =>
+      onClick={(e: any) =>
         props.setPreloadAmount(parseInt(e.item.props['data-value'], 10))
       }
     >
