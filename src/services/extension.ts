@@ -16,8 +16,13 @@ const EXTENSIONS = {
 export async function loadExtensions(pluginsDir: string) {
   Object.keys(EXTENSIONS).forEach((extensionId: string) => {
     if (extensionId !== filesystem.METADATA.id) {
-      console.log(`Unloaded extension with ID ${extensionId}`);
+      const extMetadata = EXTENSIONS[extensionId].METADATA;
+      aki.unload(
+        pluginsDir,
+        `@houdoku/extension-${extMetadata.name.toLowerCase()}`
+      );
       delete EXTENSIONS[extensionId];
+      console.log(`Unloaded extension ${extMetadata.name} (ID ${extensionId})`);
     }
   });
 
