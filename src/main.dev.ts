@@ -28,6 +28,7 @@ import {
 } from './services/extension';
 import { loadInWebView } from './util/webview';
 import ipcChannels from './constants/ipcChannels.json';
+import packageJson from '../package.json';
 
 const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
 const pluginsDir = path.join(app.getPath('userData'), 'plugins');
@@ -189,6 +190,8 @@ ipcMain.handle('check-for-updates', (event) => {
   const MB = 10 ** -6;
   const round = (x: number) => Math.ceil(x * 100) / 100;
 
+  event.sender.send('set-status', `Checking for updates...`);
+
   autoUpdater.on('download-progress', (progress) => {
     log.debug(`Downloading update: ${progress.transferred}/${progress.total}`);
     event.sender.send(
@@ -227,19 +230,30 @@ ipcMain.handle('check-for-updates', (event) => {
     .checkForUpdates()
     // eslint-disable-next-line promise/always-return
     .then((result: UpdateCheckResult) => {
-      log.info(`Found update to version ${result.updateInfo.version}`);
+      if (result.updateInfo.version === packageJson.version) {
+        log.info(`Already up-to-date at version ${packageJson.version}`);
+        event.sender.send('set-status', `Houdoku is up-to-date.`);
+        return null;
+      }
 
-      const releaseDate = new Date(result.updateInfo.releaseDate);
-      const dateStr = `${releaseDate.getFullYear()}-${releaseDate.getMonth()}-${releaseDate.getDate()}`;
+      log.info(
+        `Found update to version ${result.updateInfo.version} (from ${packageJson.version})`
+      );
+      event.sender.send(
+        'set-status',
+        `Update available: version ${result.updateInfo.version}`
+      );
 
       return dialog.showMessageBox({
         type: 'info',
         title: 'Update Available',
-        message: `An update for Houdoku is available. Download it now?\n\nVersion: ${result.updateInfo.version}\nDate: ${dateStr}`,
+        message: `An update for Houdoku is available. Download it now?\n\nVersion: ${result.updateInfo.version}\nDate: ${result.updateInfo.releaseDate}`,
         buttons: ['Download Update', 'No'],
       });
     })
-    .then((value: MessageBoxReturnValue) => {
+    .then((value: MessageBoxReturnValue | null) => {
+      if (value === null) return null;
+
       if (value.response === 0) {
         return autoUpdater.downloadUpdate();
       }
