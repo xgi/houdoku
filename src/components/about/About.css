@@ -5,3 +5,7 @@
 .paragraph {
   font-size: 1rem;
 }
+
+.updateButton {
+  margin-bottom: 8px;
+}

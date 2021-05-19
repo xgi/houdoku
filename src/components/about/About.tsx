@@ -1,6 +1,8 @@
 import React from 'react';
 import Title from 'antd/lib/typography/Title';
 import Paragraph from 'antd/lib/typography/Paragraph';
+import { Button } from 'antd';
+import { ipcRenderer } from 'electron';
 import styles from './About.css';
 import packageJson from '../../../package.json';
 
@@ -8,11 +10,18 @@ import packageJson from '../../../package.json';
 type Props = {};
 
 const About: React.FC<Props> = (props: Props) => {
+  const handleUpdateCheck = () => {
+    ipcRenderer.invoke('check-for-updates');
+  };
+
   return (
     <>
       <Title level={4} className={styles.title}>
         {packageJson.productName} v{packageJson.version}
       </Title>
+      <Button className={styles.updateButton} onClick={handleUpdateCheck}>
+        Check for Updates
+      </Button>
       <Paragraph className={styles.paragraph}>
         Houdoku is a manga reader and library manager for the desktop. To add a
         series to your library, click the &quot;Add Series&quot; tab on the left
