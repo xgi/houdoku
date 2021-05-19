@@ -10,6 +10,7 @@ import {
   BuildOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
+import { ipcRenderer } from 'electron';
 import { RootState } from '../../store';
 import {
   changeNumColumns,
@@ -80,6 +81,11 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         props.loadSeriesList();
       })
       .catch((error) => log.error(error));
+
+    ipcRenderer.on('set-status', (e, text) => {
+      props.setStatusText(text);
+    });
+    ipcRenderer.invoke('check-for-updates');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

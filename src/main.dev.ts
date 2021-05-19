@@ -11,8 +11,15 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
-import { autoUpdater } from 'electron-updater';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  dialog,
+  MessageBoxReturnValue,
+} from 'electron';
+import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import log from 'electron-log';
 import { walk } from './util/filesystem';
 import {
@@ -25,13 +32,13 @@ import ipcChannels from './constants/ipcChannels.json';
 const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
 const pluginsDir = path.join(app.getPath('userData'), 'plugins');
 
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
-  }
-}
+// export default class AppUpdater {
+//   constructor() {
+//     log.transports.file.level = 'info';
+//     autoUpdater.logger = log;
+//     autoUpdater.checkForUpdatesAndNotify();
+//   }
+// }
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -115,7 +122,7 @@ const createWindow = async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater();
+  // new AppUpdater();
 };
 
 /**
@@ -164,6 +171,81 @@ ipcMain.handle(ipcChannels.GET_PATH.PLUGINS_DIR, (event) => {
 
 ipcMain.handle(ipcChannels.GET_ALL_FILES, (event, rootPath: string) => {
   return walk(rootPath);
+});
+
+ipcMain.handle('check-for-updates', (event) => {
+  log.debug('Handling check for updates request...');
+  if (
+    process.env.NODE_ENV === 'development' ||
+    process.env.DEBUG_PROD === 'true'
+  ) {
+    log.info('Skipping update check because we are in dev environment');
+    return;
+  }
+
+  autoUpdater.logger = log;
+  autoUpdater.autoDownload = false;
+
+  const MB = 10 ** -6;
+  const round = (x: number) => Math.ceil(x * 100) / 100;
+
+  autoUpdater.on('download-progress', (progress) => {
+    log.debug(`Downloading update: ${progress.transferred}/${progress.total}`);
+    event.sender.send(
+      'set-status',
+      `Downloading update: ${round(progress.percent)}% (${round(
+        progress.transferred * MB
+      )}/${round(progress.total * MB)} MB) - ${round(
+        progress.bytesPerSecond * MB
+      )} MB/sec`
+    );
+  });
+
+  autoUpdater.on('update-downloaded', () => {
+    log.debug(`Finished update download`);
+    event.sender.send(
+      'set-status',
+      `Downloaded update successfully. Please restart Houdoku.`
+    );
+    dialog
+      .showMessageBox({
+        type: 'info',
+        title: 'Restart to Update',
+        message: `Houdoku needs to be restarted in order to install the update. Restart now?`,
+        buttons: ['Restart Houdoku', 'No'],
+      })
+      .then((value: MessageBoxReturnValue) => {
+        // eslint-disable-next-line promise/always-return
+        if (value.response === 0) {
+          autoUpdater.quitAndInstall();
+        }
+      })
+      .catch((err) => log.error(err));
+  });
+
+  autoUpdater
+    .checkForUpdates()
+    // eslint-disable-next-line promise/always-return
+    .then((result: UpdateCheckResult) => {
+      log.info(`Found update to version ${result.updateInfo.version}`);
+
+      const releaseDate = new Date(result.updateInfo.releaseDate);
+      const dateStr = `${releaseDate.getFullYear()}-${releaseDate.getMonth()}-${releaseDate.getDate()}`;
+
+      return dialog.showMessageBox({
+        type: 'info',
+        title: 'Update Available',
+        message: `An update for Houdoku is available. Download it now?\n\nVersion: ${result.updateInfo.version}\nDate: ${dateStr}`,
+        buttons: ['Download Update', 'No'],
+      });
+    })
+    .then((value: MessageBoxReturnValue) => {
+      if (value.response === 0) {
+        return autoUpdater.downloadUpdate();
+      }
+      return null;
+    })
+    .catch((e) => log.error(e));
 });
 
 // create ipc handlers for specific extension functionality
