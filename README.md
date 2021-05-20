@@ -1,32 +1,40 @@
-![Houdoku Header](/res/houdoku_header.png)
+![Houdoku Header](res/houdoku_header.png)
 
-[![GitHub release](https://img.shields.io/github/release/xgi/houdoku.svg)](https://github.com/xgi/houdoku/releases)
+[![GitHub release](https://img.shields.io/github/v/release/xgi/houdoku?style=flat-square)](https://github.com/xgi/houdoku/releases)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xgi/houdoku/CI?style=flat-square)
 
-Houdoku is a manga reader and library manager for the desktop.
+Houdoku is a free and open source manga reader for the desktop.
 
 ---
 
-# Features
+## Features
 
-- Read manga from MangaDex or import ones from your collection. More extensions coming soon!
+- Read manga from popular websites or import ones from your filesystem,
+  all in one place.
 - Customizable reader interface with multiple layouts and settings.
 - Tagging and filtering support to easily browse and manage large libraries.
 - Cross-platform!
 
 ---
 
-![Screenshots1](/res/screenshots1.png)
-![Screenshots2](/res/screenshots2.png)
+![Screenshots1](res/screenshots1.png)
+![Screenshots2](res/screenshots2.png)
 
 ---
 
-# Download
+## Download
 
-~~Download Houdoku from [the releases page](https://github.com/xgi/houdoku/releases).~~
+Download Houdoku from
+[the releases page](https://github.com/xgi/houdoku/releases).
 
-Coming soon! Run the development version for now.
+- **Windows**: Use the `.exe` installer.
+- **macOS**: Use the `.dmg`.
+- **Linux**: Use the `.AppImage`. Releases may be available on your
+  package manager, but are not officially maintained.
 
-# Development
+The application can check for and download updates automatically.
+
+## Development
 
 Install dependencies:
 
@@ -40,18 +48,32 @@ Start the app in the dev environment:
 yarn start
 ```
 
-# Plugins
+## Stack
 
-Houdoku uses 3rd-party content sources to provide access to manga.
-Currently, these are embedded in the client (one for MangaDex, and
-one for local imports). In the future, these will likely be separated
-into their own repository and updated from within Houdoku.
+**Application**: This is an Electron application. The majority of the functionality is performed in the renderer thread. Exceptions are for cases like accessing the window class (i.e. to support minimizing the window), locating application directories, and for working with extensions. The renderer can invoke these functions through ipc.
 
-# History
+**UI**: The interface uses React components. Most base components (text, buttons, links, etc.) come from the [antd](https://ant.design)
+framework. Each component has a CSS file for custom styles.
 
-Houdoku used to be a JavaFX application, but has been rebuilt in
-Electron (starting with v2.0.0). The JavaFX version is not supported.
+**State**: Redux (and react-redux) is used for state management. There are several defined "features" (located in `src/features/`) which encompass the majority of user-initiated functionality. Using React Hooks is acceptable, but discouraged, for small components. This is a convenience; preferably all state should be handled by Redux.
 
-# License
+**Database**: Library data is stored with
+[Lovefield](https://google.github.io/lovefield). Miscellaneous data,
+including user settings, is saved with `localStorage`.
+
+**Plugins/Extensions**: See the [houdoku-extensions](https://github.com/xgi/houdoku-extensions) repo. Dynamic loading is handled by [aki-plugin-manager](https://github.com/xgi/aki-plugin-manager).
+
+## Extensions
+
+Houdoku does not host any material and is not affiliated with any
+content source. There are no "recommended extensions", but you
+should feel free to try several and mix-and-match according to which
+ones work well for you.
+
+If you would like to request support for a website or report an issue with
+an existing extension, please go to the
+[houdoku-extensions](https://github.com/xgi/houdoku-extensions) repo.
+
+## License
 
 [MIT License](https://github.com/xgi/houdoku/blob/master/LICENSE)
