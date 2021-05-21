@@ -37,6 +37,7 @@ import {
   ContentWarnings,
 } from '../../models/contentwarnings';
 import blankCover from '../../img/blank_cover.png';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const { Option } = Select;
 
@@ -97,7 +98,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
       );
       ipcRenderer
         .invoke(
-          'extension-getSeries',
+          ipcChannels.EXTENSION.GET_SERIES,
           props.series.extensionId,
           props.series.sourceType,
           props.series.sourceId

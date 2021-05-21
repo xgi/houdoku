@@ -10,6 +10,7 @@ import Title from 'antd/lib/typography/Title';
 import styles from './Extensions.css';
 import { RootState } from '../../store';
 import ExtensionTable from './ExtensionTable';
+import InstalledExtensionsModal from './InstalledExtensionsModal';
 
 const mapState = (state: RootState) => ({
   chapterLanguages: state.settings.chapterLanguages,
@@ -32,6 +33,7 @@ type Props = PropsFromRedux & {};
 const Extensions: React.FC<Props> = (props: Props) => {
   const [searchResults, setSearchResults] = useState<RegistrySearchResults>();
   const [filterText, setFilterText] = useState('');
+  const [showingModal, setShowingModal] = useState(false);
   const location = useLocation();
 
   const doSearchRegistry = () => {
@@ -54,6 +56,10 @@ const Extensions: React.FC<Props> = (props: Props) => {
 
   return (
     <>
+      <InstalledExtensionsModal
+        visible={showingModal}
+        toggleVisible={() => setShowingModal(!showingModal)}
+      />
       <Title className={styles.title} level={4}>
         Extensions
       </Title>
@@ -62,7 +68,10 @@ const Extensions: React.FC<Props> = (props: Props) => {
           className={styles.reloadButton}
           onClick={() => doSearchRegistry()}
         >
-          Reload Extension List
+          Refresh Extension List
+        </Button>
+        <Button onClick={() => setShowingModal(true)}>
+          View Installed Extensions
         </Button>
         <div className={styles.spacer} />
         <Input

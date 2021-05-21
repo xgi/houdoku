@@ -1,0 +1,18 @@
+.loaderContainer {
+  text-align: center;
+}
+
+.listItemTitle {
+  margin-bottom: 0 !important;
+}
+
+.controlRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reloadButton {
+  margin-bottom: 8px;
+}
