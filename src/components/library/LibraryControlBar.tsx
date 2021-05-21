@@ -99,14 +99,14 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
         <Tooltip title="Refresh library">
           <Button
             className={styles.reloadButton}
-            icon={<ReloadOutlined />}
+            type="primary"
             onClick={() =>
               props.reloadSeriesList(props.seriesList, props.loadSeriesList)
             }
-          />
+          >
+            Refresh
+          </Button>
         </Tooltip>
-        <div className={styles.divider} />
-        <div className={styles.controlBarSpacer} />
         <Popover
           content={
             <Slider
