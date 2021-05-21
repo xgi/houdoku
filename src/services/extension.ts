@@ -255,7 +255,9 @@ function search(
       }
       return response.json();
     })
-    .then((data) => extension.parseSearch(data, domParser));
+    .then((data) =>
+      extension.parseSearch(data, adjustedText, params, domParser)
+    );
 }
 
 /**
