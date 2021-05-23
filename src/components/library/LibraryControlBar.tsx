@@ -11,7 +11,7 @@ import {
   Badge,
   Tooltip,
 } from 'antd';
-import { DownOutlined, ReloadOutlined } from '@ant-design/icons';
+import { DownOutlined, SyncOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
 import styles from './LibraryControlBar.css';
@@ -31,6 +31,7 @@ const { Option } = Select;
 
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
+  reloadingSeriesList: state.library.reloadingSeriesList,
   columns: state.library.columns,
   userTags: state.library.userTags,
   filter: state.library.filter,
@@ -100,11 +101,13 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           <Button
             className={styles.reloadButton}
             type="primary"
-            onClick={() =>
-              props.reloadSeriesList(props.seriesList, props.loadSeriesList)
-            }
+            onClick={() => {
+              if (!props.reloadingSeriesList) {
+                props.reloadSeriesList(props.seriesList, props.loadSeriesList);
+              }
+            }}
           >
-            Refresh
+            {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
           </Button>
         </Tooltip>
         <Popover

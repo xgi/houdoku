@@ -7,7 +7,7 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import {
   ReloadOutlined,
-  LoadingOutlined,
+  SyncOutlined,
   ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
@@ -63,6 +63,7 @@ if (!fs.existsSync(thumbnailsDir)) {
 const mapState = (state: RootState) => ({
   series: state.library.series,
   chapterList: state.library.chapterList,
+  reloadingSeriesList: state.library.reloadingSeriesList,
   userTags: state.library.userTags,
   seriesBannerUrl: state.library.seriesBannerUrl,
   chapterLanguages: state.settings.chapterLanguages,
@@ -259,13 +260,12 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           </Button>
           <Button
             className={styles.refreshButton}
-            icon={<ReloadOutlined />}
             onClick={() => {
-              if (props.series !== undefined)
+              if (props.series !== undefined && !props.reloadingSeriesList)
                 props.reloadSeriesList([props.series], loadContent);
             }}
           >
-            Refresh
+            {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
           </Button>
         </>
       </Affix>

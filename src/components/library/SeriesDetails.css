@@ -58,6 +58,7 @@
 
 .refreshButton {
   background-color: var(--color-background-faded) !important;
+  min-width: 5.2rem;
 }
 
 .descriptionItem {

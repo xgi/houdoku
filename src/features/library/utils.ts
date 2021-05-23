@@ -6,6 +6,7 @@ import {
   setSeries,
   setChapterList,
   setCompletedStartReload,
+  setReloadingSeriesList,
 } from './actions';
 import db from '../../services/db';
 import { Chapter, Series } from '../../models/types';
@@ -125,6 +126,8 @@ export async function reloadSeriesList(
 ) {
   log.debug(`Reloading series list...`);
 
+  dispatch(setReloadingSeriesList(true));
+
   const sortedSeriesList = [...seriesList].sort((a: Series, b: Series) =>
     a.title.localeCompare(b.title)
   );
@@ -143,6 +146,7 @@ export async function reloadSeriesList(
   }
 
   log.info(`Reloaded ${cur} series`);
+  dispatch(setReloadingSeriesList(false));
   dispatch(setCompletedStartReload(true));
   dispatch(setStatusText(`Reloaded ${cur} series`));
   if (callback !== undefined) callback();

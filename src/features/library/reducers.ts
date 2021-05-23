@@ -11,12 +11,14 @@ import {
   SET_FILTER_PROGRESS,
   SET_FILTER_USER_TAGS,
   SET_COMPLETED_START_RELOAD,
+  SET_RELOADING_SERIES_LIST,
 } from './types';
 
 const initialState: LibraryState = {
   seriesList: [],
   series: undefined,
   chapterList: [],
+  reloadingSeriesList: false,
   userTags: [],
   columns: 6,
   filter: '',
@@ -53,6 +55,11 @@ export default function library(
       return { ...state, series: action.payload.series };
     case SET_CHAPTER_LIST:
       return { ...state, chapterList: action.payload.chapterList };
+    case SET_RELOADING_SERIES_LIST:
+      return {
+        ...state,
+        reloadingSeriesList: action.payload.reloadingSeriesList,
+      };
     case CHANGE_NUM_COLUMNS:
       return { ...state, columns: action.payload.columns };
     case SET_FILTER:

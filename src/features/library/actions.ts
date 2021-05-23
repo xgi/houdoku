@@ -13,6 +13,7 @@ import {
   SET_FILTER_PROGRESS,
   SET_FILTER_STATUS,
   SET_FILTER_USER_TAGS,
+  SET_RELOADING_SERIES_LIST,
   SET_SERIES,
   SET_SERIES_BANNER_URL,
   SET_SERIES_LIST,
@@ -41,6 +42,17 @@ export function setChapterList(chapterList: Chapter[]): LibraryAction {
     type: SET_CHAPTER_LIST,
     payload: {
       chapterList,
+    },
+  };
+}
+
+export function setReloadingSeriesList(
+  reloadingSeriesList: boolean
+): LibraryAction {
+  return {
+    type: SET_RELOADING_SERIES_LIST,
+    payload: {
+      reloadingSeriesList,
     },
   };
 }
