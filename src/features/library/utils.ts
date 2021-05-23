@@ -145,10 +145,15 @@ export async function reloadSeriesList(
     cur += 1;
   }
 
-  log.info(`Reloaded ${cur} series`);
+  const statusMessage =
+    cur === 1
+      ? `Reloaded series "${seriesList[0].title}"`
+      : `Reloaded ${cur} series`;
+
+  log.info(statusMessage);
   dispatch(setReloadingSeriesList(false));
   dispatch(setCompletedStartReload(true));
-  dispatch(setStatusText(`Reloaded ${cur} series`));
+  dispatch(setStatusText(statusMessage));
   if (callback !== undefined) callback();
 }
 
