@@ -30,16 +30,12 @@ import { loadInWebView } from './util/webview';
 import ipcChannels from './constants/ipcChannels.json';
 import packageJson from '../package.json';
 
+log.info(
+  `Starting Houdoku main process (client version ${packageJson.version})`
+);
+
 const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
 const pluginsDir = path.join(app.getPath('userData'), 'plugins');
-
-// export default class AppUpdater {
-//   constructor() {
-//     log.transports.file.level = 'info';
-//     autoUpdater.logger = log;
-//     autoUpdater.checkForUpdatesAndNotify();
-//   }
-// }
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -120,15 +116,7 @@ const createWindow = async () => {
     event.preventDefault();
     shell.openExternal(url);
   });
-
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  // new AppUpdater();
 };
-
-/**
- * Add event listeners...
- */
 
 app.on('window-all-closed', () => {
   // Respect the OSX convention of having the application in memory even
