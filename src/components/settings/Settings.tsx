@@ -3,9 +3,8 @@ import { Select, Col, Row, Menu, Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import { connect, ConnectedProps } from 'react-redux';
-import { Language, LanguageKey } from 'houdoku-extension-lib';
+import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
 import styles from './Settings.css';
-import { Languages } from '../../models/languages';
 import {
   GeneralSetting,
   LayoutDirection,

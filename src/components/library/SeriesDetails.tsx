@@ -15,9 +15,13 @@ import {
   GenreKey,
   Series,
   ThemeKey,
+  Languages,
+  Genres,
+  Themes,
+  Formats,
+  ContentWarnings,
 } from 'houdoku-extension-lib';
 import ChapterTable from './ChapterTable';
-import { Languages } from '../../models/languages';
 import styles from './SeriesDetails.css';
 import blankCover from '../../img/blank_cover.png';
 import routes from '../../constants/routes.json';
@@ -39,10 +43,6 @@ import {
 } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
-import { Genres } from '../../models/genres';
-import { Themes } from '../../models/themes';
-import { Formats } from '../../models/formats';
-import { ContentWarnings } from '../../models/contentwarnings';
 import ipcChannels from '../../constants/ipcChannels.json';
 
 const { Title } = Typography;

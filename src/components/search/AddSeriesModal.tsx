@@ -26,16 +26,17 @@ import {
   SeriesStatus,
   Theme,
   ThemeKey,
+  Languages,
+  Genres,
+  Themes,
+  Formats,
+  ContentWarnings,
+  genreKeysFromNames,
+  themeKeysFromNames,
+  formatKeysFromNames,
+  contentWarningKeysFromNames,
 } from 'houdoku-extension-lib';
 import styles from './AddSeriesModal.css';
-import { Languages } from '../../models/languages';
-import { genreKeysFromNames, Genres } from '../../models/genres';
-import { themeKeysFromNames, Themes } from '../../models/themes';
-import { formatKeysFromNames, Formats } from '../../models/formats';
-import {
-  contentWarningKeysFromNames,
-  ContentWarnings,
-} from '../../models/contentwarnings';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
 
