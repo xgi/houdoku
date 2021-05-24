@@ -132,11 +132,15 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   }
 
   const getThumbnailPath = (seriesId?: number) => {
-    let thumbnailPath = path.join(thumbnailsDir, `${seriesId}.jpg`);
-    if (!fs.existsSync(thumbnailPath)) {
-      thumbnailPath = path.join(thumbnailsDir, `${seriesId}.png`);
+    const fileExtensions = ['jpg', 'png', 'jpeg'];
+    for (let i = 0; i < fileExtensions.length; i += 1) {
+      const thumbnailPath = path.join(
+        thumbnailsDir,
+        `${seriesId}.${fileExtensions[i]}`
+      );
+      if (fs.existsSync(thumbnailPath)) return thumbnailPath;
     }
-    return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
+    return blankCover;
   };
 
   const handleRemove = () => {

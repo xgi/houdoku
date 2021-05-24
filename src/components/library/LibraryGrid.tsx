@@ -44,13 +44,16 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
    * @returns the cover image for a series, which can be put in an <img> tag
    */
   const getImageSource = (series: Series) => {
-    let thumbnailPath: string;
     if (series.id !== undefined) {
-      thumbnailPath = path.join(thumbnailsDir, `${series.id}.jpg`);
-      if (!fs.existsSync(thumbnailPath)) {
-        thumbnailPath = path.join(thumbnailsDir, `${series.id}.png`);
+      const fileExtensions = ['jpg', 'png', 'jpeg'];
+      for (let i = 0; i < fileExtensions.length; i += 1) {
+        const thumbnailPath = path.join(
+          thumbnailsDir,
+          `${series.id}.${fileExtensions[i]}`
+        );
+        if (fs.existsSync(thumbnailPath)) return thumbnailPath;
       }
-      return fs.existsSync(thumbnailPath) ? thumbnailPath : blankCover;
+      return blankCover;
     }
 
     return series.remoteCoverUrl === '' ? blankCover : series.remoteCoverUrl;
