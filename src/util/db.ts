@@ -18,6 +18,7 @@ schemaBuilder
   .addColumn('themes', lf.Type.OBJECT)
   .addColumn('contentWarnings', lf.Type.OBJECT)
   .addColumn('formats', lf.Type.OBJECT)
+  .addColumn('demographic', lf.Type.OBJECT)
   .addColumn('status', lf.Type.OBJECT)
   .addColumn('originalLanguageKey', lf.Type.OBJECT)
   .addColumn('numberUnread', lf.Type.INTEGER)
