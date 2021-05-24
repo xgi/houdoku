@@ -35,6 +35,8 @@ import {
   themeKeysFromNames,
   formatKeysFromNames,
   contentWarningKeysFromNames,
+  Demographics,
+  Demographic,
 } from 'houdoku-extension-lib';
 import styles from './AddSeriesModal.css';
 import blankCover from '../../img/blank_cover.png';
@@ -317,6 +319,34 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
           >
             {contentWarningOptions}
           </Select>
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Demographic</Col>
+        <Col span={14}>
+          <Dropdown
+            disabled={!props.editable}
+            overlay={
+              <Menu
+                onClick={(e: any) => {
+                  setCustomSeries({
+                    ...customSeries,
+                    demographic: e.item.props['data-value'],
+                  });
+                }}
+              >
+                {Object.values(Demographics).map((demographic: Demographic) => (
+                  <Menu.Item key={demographic.key} data-value={demographic.key}>
+                    {demographic.name}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            }
+          >
+            <Button>
+              {Demographics[customSeries.demographic].name} <DownOutlined />
+            </Button>
+          </Dropdown>
         </Col>
       </Row>
       <Row className={styles.row}>

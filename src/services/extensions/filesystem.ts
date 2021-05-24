@@ -14,6 +14,7 @@ import {
   Series,
   SeriesSourceType,
   SeriesStatus,
+  DemographicKey,
 } from 'houdoku-extension-lib';
 import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
 import { walk } from '../../util/filesystem';
@@ -49,6 +50,7 @@ const getSeries: GetSeriesFunc = (sourceType: SeriesSourceType, id: string) => {
     themes: [],
     formats: [],
     contentWarnings: [],
+    demographic: DemographicKey.UNCERTAIN,
     status: SeriesStatus.COMPLETED,
     originalLanguageKey: LanguageKey.JAPANESE,
     numberUnread: 0,
