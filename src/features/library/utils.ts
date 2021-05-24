@@ -41,6 +41,7 @@ export async function importSeries(dispatch: any, series: Series) {
   log.debug(
     `Importing series ${series.sourceId} from extension ${series.extensionId}`
   );
+  dispatch(setStatusText(`Adding "${series.title}" to your library...`));
 
   const chapters: Chapter[] = await ipcRenderer.invoke(
     'extension-getChapters',
