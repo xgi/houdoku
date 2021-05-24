@@ -5,7 +5,7 @@ import { Layout } from 'antd';
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { PageRequesterData } from 'houdoku-extension-lib';
+import { PageRequesterData, Chapter, Series } from 'houdoku-extension-lib';
 import { RootState } from '../../store';
 import {
   changePageNumber,
@@ -18,13 +18,7 @@ import {
 } from '../../features/reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
-import {
-  Chapter,
-  LayoutDirection,
-  PageFit,
-  PageView,
-  Series,
-} from '../../models/types';
+import { LayoutDirection, PageFit, PageView } from '../../models/types';
 import db from '../../services/db';
 import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';

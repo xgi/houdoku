@@ -11,6 +11,7 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import { ipcRenderer } from 'electron';
+import { Series } from 'houdoku-extension-lib';
 import { RootState } from '../../store';
 import {
   changeNumColumns,
@@ -34,7 +35,6 @@ import * as database from '../../util/db';
 import Settings from '../settings/Settings';
 import About from '../about/About';
 import Library from '../library/Library';
-import { Series } from '../../models/types';
 import Extensions from '../extensions/Extensions';
 
 const { Content, Sider } = Layout;

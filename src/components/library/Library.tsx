@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
-import { Series } from '../../models/types';
+import { Series } from 'houdoku-extension-lib';
 import styles from './Library.css';
 import routes from '../../constants/routes.json';
 import { changeNumColumns, setFilter } from '../../features/library/actions';

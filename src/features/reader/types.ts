@@ -1,4 +1,4 @@
-import { Chapter, Series } from '../../models/types';
+import { Chapter, Series } from 'houdoku-extension-lib';
 
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 export const CHANGE_PAGE_NUMBER = 'CHANGE_PAGE_NUMBER';

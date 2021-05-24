@@ -1,6 +1,7 @@
 /* eslint-disable promise/catch-or-return */
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
+import { Chapter, Series } from 'houdoku-extension-lib';
 import {
   setSeriesList,
   setSeries,
@@ -9,7 +10,6 @@ import {
   setReloadingSeriesList,
 } from './actions';
 import db from '../../services/db';
-import { Chapter, Series } from '../../models/types';
 import { deleteThumbnail } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import { setStatusText } from '../statusbar/actions';

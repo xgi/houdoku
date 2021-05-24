@@ -1,4 +1,4 @@
-import { Theme, ThemeKey } from './types';
+import { Theme, ThemeKey } from 'houdoku-extension-lib';
 
 // eslint-disable-next-line import/prefer-default-export
 export const Themes: { [key: string]: Theme } = {

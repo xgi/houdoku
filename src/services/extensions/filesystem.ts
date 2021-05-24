@@ -9,14 +9,12 @@ import {
   ExtensionMetadata,
   PageRequesterData,
   GetDirectoryFunc,
-} from 'houdoku-extension-lib';
-import {
   Chapter,
   LanguageKey,
   Series,
   SeriesSourceType,
   SeriesStatus,
-} from '../../models/types';
+} from 'houdoku-extension-lib';
 import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
 import { walk } from '../../util/filesystem';
 

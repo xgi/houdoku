@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-cycle
+import { Chapter, Series } from 'houdoku-extension-lib';
 import * as db from '../util/db';
-import { Chapter, Series } from '../models/types';
 import { getNumberUnreadChapters } from '../util/comparison';
 
 const fetchSerieses = () => {

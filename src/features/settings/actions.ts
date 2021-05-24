@@ -1,9 +1,5 @@
-import {
-  LanguageKey,
-  LayoutDirection,
-  PageFit,
-  PageView,
-} from '../../models/types';
+import { LanguageKey } from 'houdoku-extension-lib';
+import { LayoutDirection, PageFit, PageView } from '../../models/types';
 import {
   SET_PAGE_FIT,
   TOGGLE_PAGE_FIT,

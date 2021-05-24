@@ -1,4 +1,4 @@
-import { Series } from '../../models/types';
+import { Series } from 'houdoku-extension-lib';
 
 export const SET_SEARCH_EXTENSION = 'SET_SEARCH_EXTENSION';
 export const SET_SEARCH_RESULTS = 'SET_SEARCH_RESULTS';

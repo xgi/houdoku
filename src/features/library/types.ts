@@ -1,9 +1,5 @@
-import {
-  Chapter,
-  ProgressFilter,
-  Series,
-  SeriesStatus,
-} from '../../models/types';
+import { Chapter, Series, SeriesStatus } from 'houdoku-extension-lib';
+import { ProgressFilter } from '../../models/types';
 
 export const SET_SERIES_LIST = 'SET_SERIES_LIST';
 export const SET_SERIES = 'SET_SERIES';

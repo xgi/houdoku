@@ -1,4 +1,4 @@
-import { Format, FormatKey } from './types';
+import { Format, FormatKey } from 'houdoku-extension-lib';
 
 // eslint-disable-next-line import/prefer-default-export
 export const Formats: { [key: string]: Format } = {

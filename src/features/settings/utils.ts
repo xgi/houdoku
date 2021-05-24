@@ -1,7 +1,7 @@
 import log from 'electron-log';
+import { LanguageKey } from 'houdoku-extension-lib';
 import {
   GeneralSetting,
-  LanguageKey,
   LayoutDirection,
   PageFit,
   PageView,

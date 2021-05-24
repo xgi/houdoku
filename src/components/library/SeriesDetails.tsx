@@ -5,14 +5,9 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix, Modal, Select } from 'antd';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import {
-  ReloadOutlined,
-  SyncOutlined,
-  ExclamationCircleOutlined,
-} from '@ant-design/icons';
+import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { connect, ConnectedProps } from 'react-redux';
-import ChapterTable from './ChapterTable';
 import {
   Chapter,
   ContentWarningKey,
@@ -20,7 +15,8 @@ import {
   GenreKey,
   Series,
   ThemeKey,
-} from '../../models/types';
+} from 'houdoku-extension-lib';
+import ChapterTable from './ChapterTable';
 import { Languages } from '../../models/languages';
 import styles from './SeriesDetails.css';
 import blankCover from '../../img/blank_cover.png';

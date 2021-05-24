@@ -21,6 +21,7 @@ import {
   VerticalRightOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
+import { Chapter, Series } from 'houdoku-extension-lib';
 import { RootState } from '../../store';
 import {
   changePageNumber,
@@ -32,13 +33,7 @@ import {
   setPageDataList,
 } from '../../features/reader/actions';
 import styles from './ReaderSidebar.css';
-import {
-  Chapter,
-  LayoutDirection,
-  PageFit,
-  PageView,
-  Series,
-} from '../../models/types';
+import { LayoutDirection, PageFit, PageView } from '../../models/types';
 import {
   setLayoutDirection,
   setPageFit,

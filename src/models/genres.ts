@@ -1,4 +1,4 @@
-import { Genre, GenreKey } from './types';
+import { Genre, GenreKey } from 'houdoku-extension-lib';
 
 export const Genres: { [key: string]: Genre } = {
   [GenreKey.ACTION]: { key: GenreKey.ACTION, name: 'Action' },

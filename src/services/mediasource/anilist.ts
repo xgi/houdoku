@@ -1,4 +1,4 @@
-import { Series } from '../../models/types';
+import { Series } from 'houdoku-extension-lib';
 import { FetchBannerImageUrlFunc, ParseBannerImageUrlFunc } from './interface';
 
 const fetchBannerImageUrl: FetchBannerImageUrlFunc = (series: Series) => {

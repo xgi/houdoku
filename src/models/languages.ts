@@ -1,4 +1,4 @@
-import { Language, LanguageKey } from './types';
+import { Language, LanguageKey } from 'houdoku-extension-lib';
 
 // eslint-disable-next-line import/prefer-default-export
 export const Languages: { [key: string]: Language } = {

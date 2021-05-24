@@ -26,7 +26,7 @@ import {
   SeriesStatus,
   Theme,
   ThemeKey,
-} from '../../models/types';
+} from 'houdoku-extension-lib';
 import styles from './AddSeriesModal.css';
 import { Languages } from '../../models/languages';
 import { genreKeysFromNames, Genres } from '../../models/genres';

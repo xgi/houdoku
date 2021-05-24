@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Series } from '../models/types';
+import { Series } from 'houdoku-extension-lib';
 import ipcChannels from '../constants/ipcChannels.json';
 
 /**

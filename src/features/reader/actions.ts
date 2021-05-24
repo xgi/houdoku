@@ -1,4 +1,4 @@
-import { Chapter, Series } from '../../models/types';
+import { Chapter, Series } from 'houdoku-extension-lib';
 import {
   ReaderAction,
   SET_PAGE_NUMBER,

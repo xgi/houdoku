@@ -14,11 +14,15 @@ import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { useLocation } from 'react-router-dom';
-import { ExtensionMetadata } from 'houdoku-extension-lib';
+import {
+  ExtensionMetadata,
+  Series,
+  SeriesSourceType,
+} from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import styles from './Search.css';
-import { ProgressFilter, Series, SeriesSourceType } from '../../models/types';
+import { ProgressFilter } from '../../models/types';
 import LibraryGrid from '../library/LibraryGrid';
 import {
   setAddModalSeries,

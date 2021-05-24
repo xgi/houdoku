@@ -1,5 +1,5 @@
 /* eslint-disable no-lonely-if */
-import { Chapter } from '../models/types';
+import { Chapter } from 'houdoku-extension-lib';
 
 /**
  * Find a similar chapter from a list.

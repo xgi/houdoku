@@ -1,9 +1,5 @@
-import {
-  LanguageKey,
-  LayoutDirection,
-  PageFit,
-  PageView,
-} from '../../models/types';
+import { LanguageKey } from 'houdoku-extension-lib';
+import { LayoutDirection, PageFit, PageView } from '../../models/types';
 
 export const SET_CHAPTER_LANGUAGES = 'SET_CHAPTER_LANGUAGES';
 export const SET_PAGE_FIT = 'SET_PAGE_FIT';

@@ -1,4 +1,4 @@
-import { ContentWarning, ContentWarningKey } from './types';
+import { ContentWarning, ContentWarningKey } from 'houdoku-extension-lib';
 
 // eslint-disable-next-line import/prefer-default-export
 export const ContentWarnings: { [key: string]: ContentWarning } = {

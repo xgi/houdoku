@@ -1,4 +1,4 @@
-import { Series } from '../../models/types';
+import { Series } from 'houdoku-extension-lib';
 
 /**
  * Request a banner image URL from the media source.

@@ -1,4 +1,4 @@
-import { Series } from '../../models/types';
+import { Series } from 'houdoku-extension-lib';
 import {
   SearchAction,
   SET_ADD_MODAL_SERIES,

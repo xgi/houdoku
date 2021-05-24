@@ -1,10 +1,15 @@
-import { ExtensionMetadata, PageRequesterData } from 'houdoku-extension-lib';
+import {
+  ExtensionMetadata,
+  PageRequesterData,
+  Chapter,
+  Series,
+  SeriesSourceType,
+} from 'houdoku-extension-lib';
 import aki from 'aki-plugin-manager';
 import { IpcMain } from 'electron';
 import fetch from 'node-fetch';
 import DOMParser from 'dom-parser';
 import log from 'electron-log';
-import { Chapter, Series, SeriesSourceType } from '../models/types';
 import filesystem from './extensions/filesystem';
 import ipcChannels from '../constants/ipcChannels.json';
 

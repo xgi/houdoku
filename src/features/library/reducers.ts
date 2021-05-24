@@ -1,4 +1,5 @@
-import { ProgressFilter, Series } from '../../models/types';
+import { Series } from 'houdoku-extension-lib';
+import { ProgressFilter } from '../../models/types';
 import {
   LibraryState,
   CHANGE_NUM_COLUMNS,

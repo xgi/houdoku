@@ -14,6 +14,7 @@ import {
 import { DownOutlined, SyncOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
+import { Series, SeriesStatus } from 'houdoku-extension-lib';
 import styles from './LibraryControlBar.css';
 import {
   changeNumColumns,
@@ -25,7 +26,7 @@ import {
 import { loadSeriesList, reloadSeriesList } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
-import { ProgressFilter, Series, SeriesStatus } from '../../models/types';
+import { ProgressFilter } from '../../models/types';
 
 const { Option } = Select;
 
