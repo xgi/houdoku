@@ -1,21 +1,15 @@
 import path from 'path';
 import {
-  FetchSeriesFunc,
-  FetchChaptersFunc,
-  ParseSeriesFunc,
-  ParseChaptersFunc,
-  ParsePageRequesterDataFunc,
-  FetchPageRequesterDataFunc,
+  GetSeriesFunc,
+  GetChaptersFunc,
+  GetPageRequesterDataFunc,
   GetPageUrlsFunc,
-  FetchSearchFunc,
-  ParseSearchFunc,
+  GetSearchFunc,
   GetPageDataFunc,
   ExtensionMetadata,
   PageRequesterData,
-  FetchDirectoryFunc,
-  ParseDirectoryFunc,
+  GetDirectoryFunc,
 } from 'houdoku-extension-lib';
-import { Response } from 'node-fetch';
 import {
   Chapter,
   LanguageKey,
@@ -36,34 +30,17 @@ const METADATA: ExtensionMetadata = {
   pageLoadMessage: '',
 };
 
-const fetchSeries: FetchSeriesFunc = (
-  sourceType: SeriesSourceType,
-  id: string
-) => {
-  return new Promise((resolve, reject) => {
-    const data = { path: id };
-    const init = {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    };
-    resolve(new Response(JSON.stringify(data, null, 2), init));
-  });
-};
-
-const parseSeries: ParseSeriesFunc = (
-  sourceType: SeriesSourceType,
-  json: any
-): Series => {
-  const dirName = path.basename(json.path);
+const getSeries: GetSeriesFunc = (sourceType: SeriesSourceType, id: string) => {
+  const dirName = path.basename(id);
   const matchTitle: RegExpMatchArray | null = dirName.match(
     new RegExp(/(?:(?![v\d|c\d]).)*/g)
   );
-  const title: string = matchTitle === null ? json.path : matchTitle[0];
+  const title: string = matchTitle === null ? id : matchTitle[0];
 
   const series: Series = {
     id: undefined,
     extensionId: METADATA.id,
-    sourceId: json.path,
+    sourceId: id,
     sourceType,
     title,
     altTitles: [],
@@ -80,16 +57,19 @@ const parseSeries: ParseSeriesFunc = (
     remoteCoverUrl: '',
     userTags: [],
   };
-  return series;
+
+  return new Promise((resolve) => {
+    resolve(series);
+  });
 };
 
-const fetchChapters: FetchChaptersFunc = (
+const getChapters: GetChaptersFunc = (
   sourceType: SeriesSourceType,
   id: string
 ) => {
   let fileListPromise;
   if (sourceType === SeriesSourceType.STANDARD) {
-    fileListPromise = new Promise<string[]>((resolve, reject) => {
+    fileListPromise = new Promise<string[]>((resolve) => {
       resolve(walk(id));
     });
   } else {
@@ -102,77 +82,63 @@ const fetchChapters: FetchChaptersFunc = (
       imageDirectories.add(path.dirname(file));
     });
 
-    return new Promise((resolve, reject) => {
-      const data = { imageDirectories: Array.from(imageDirectories) };
-      const init = {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      };
-      resolve(new Response(JSON.stringify(data, null, 2), init));
-    });
-  });
-};
+    const chapters: Chapter[] = [];
 
-const parseChapters: ParseChaptersFunc = (
-  sourceType: SeriesSourceType,
-  json: any
-): Chapter[] => {
-  const chapters: Chapter[] = [];
+    let prevChapterNum = 0;
+    Array.from(imageDirectories).forEach((directory: string) => {
+      const dirName: string = path.basename(directory);
+      const matchChapterNum: RegExpMatchArray | null = dirName.match(
+        new RegExp(/c(\d)+/g)
+      );
+      const matchVolumeNum: RegExpMatchArray | null = dirName.match(
+        new RegExp(/v(\d)+/g)
+      );
+      const matchGroup: RegExpMatchArray | null = dirName.match(
+        new RegExp(/\[.*\]/g)
+      );
+      const matchAnyNum: RegExpMatchArray | null = dirName.match(
+        new RegExp(/(\d)+/g)
+      );
 
-  let prevChapterNum = 0;
-  json.imageDirectories.forEach((directory: string) => {
-    const dirName: string = path.basename(directory);
-    const matchChapterNum: RegExpMatchArray | null = dirName.match(
-      new RegExp(/c(\d)+/g)
-    );
-    const matchVolumeNum: RegExpMatchArray | null = dirName.match(
-      new RegExp(/v(\d)+/g)
-    );
-    const matchGroup: RegExpMatchArray | null = dirName.match(
-      new RegExp(/\[.*\]/g)
-    );
-    const matchAnyNum: RegExpMatchArray | null = dirName.match(
-      new RegExp(/(\d)+/g)
-    );
-
-    let chapterNum = '';
-    if (matchChapterNum === null) {
-      if (matchAnyNum === null) {
-        chapterNum = Math.floor(prevChapterNum + 1).toString();
+      let chapterNum = '';
+      if (matchChapterNum === null) {
+        if (matchAnyNum === null) {
+          chapterNum = Math.floor(prevChapterNum + 1).toString();
+        } else {
+          chapterNum = parseFloat(matchAnyNum[0]).toString();
+        }
       } else {
-        chapterNum = parseFloat(matchAnyNum[0]).toString();
+        chapterNum = parseFloat(matchChapterNum[0].replace('c', '')).toString();
       }
-    } else {
-      chapterNum = parseFloat(matchChapterNum[0].replace('c', '')).toString();
-    }
 
-    const volumeNum: string =
-      matchVolumeNum === null
-        ? ''
-        : parseFloat(matchVolumeNum[0].replace('v', '')).toString();
-    const group: string =
-      matchGroup === null
-        ? ''
-        : matchGroup[0].replace('[', '').replace(']', '');
+      const volumeNum: string =
+        matchVolumeNum === null
+          ? ''
+          : parseFloat(matchVolumeNum[0].replace('v', '')).toString();
+      const group: string =
+        matchGroup === null
+          ? ''
+          : matchGroup[0].replace('[', '').replace(']', '');
 
-    prevChapterNum = parseFloat(chapterNum);
-    chapters.push({
-      id: undefined,
-      seriesId: undefined,
-      sourceId: directory,
-      title: dirName,
-      chapterNumber: chapterNum,
-      volumeNumber: volumeNum,
-      languageKey: LanguageKey.ENGLISH,
-      groupName: group,
-      time: new Date().getTime(),
-      read: false,
+      prevChapterNum = parseFloat(chapterNum);
+      chapters.push({
+        id: undefined,
+        seriesId: undefined,
+        sourceId: directory,
+        title: dirName,
+        chapterNumber: chapterNum,
+        volumeNumber: volumeNum,
+        languageKey: LanguageKey.ENGLISH,
+        groupName: group,
+        time: new Date().getTime(),
+        read: false,
+      });
     });
+    return chapters;
   });
-  return chapters;
 };
 
-const fetchPageRequesterData: FetchPageRequesterDataFunc = (
+const getPageRequesterData: GetPageRequesterDataFunc = (
   sourceType: SeriesSourceType,
   seriesSourceId: string,
   chapterSourceId: string
@@ -191,26 +157,15 @@ const fetchPageRequesterData: FetchPageRequesterDataFunc = (
   }
 
   return fileListPromise.then((fileList: string[]) => {
-    return new Promise((resolve, reject) => {
-      const data = { fileList };
-      const init = {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      };
-      resolve(new Response(JSON.stringify(data, null, 2), init));
+    return new Promise((resolve) => {
+      resolve({
+        server: '',
+        hash: '',
+        numPages: fileList.length,
+        pageFilenames: fileList,
+      });
     });
   });
-};
-
-const parsePageRequesterData: ParsePageRequesterDataFunc = (
-  json: any
-): PageRequesterData => {
-  return {
-    server: '',
-    hash: '',
-    numPages: json.fileList.length,
-    pageFilenames: json.fileList,
-  };
 };
 
 const getPageUrls: GetPageUrlsFunc = (pageRequesterData: PageRequesterData) => {
@@ -229,39 +184,26 @@ const getPageData: GetPageDataFunc = (series: Series, url: string) => {
     );
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     resolve(url);
   });
 };
 
-const fetchSearch: FetchSearchFunc = () => {
-  return new Promise<string>((resolve) => resolve(''));
+const getSearch: GetSearchFunc = () => {
+  return new Promise<Series[]>((resolve) => resolve([]));
 };
 
-const parseSearch: ParseSearchFunc = () => {
-  return [];
-};
-
-const fetchDirectory: FetchDirectoryFunc = () => {
-  return new Promise<string>((resolve) => resolve(''));
-};
-
-const parseDirectory: ParseDirectoryFunc = () => {
-  return [];
+const getDirectory: GetDirectoryFunc = () => {
+  return new Promise<Series[]>((resolve) => resolve([]));
 };
 
 export default {
   METADATA,
-  fetchSeries,
-  parseSeries,
-  fetchChapters,
-  parseChapters,
-  fetchPageRequesterData,
-  parsePageRequesterData,
+  getSeries,
+  getChapters,
+  getPageRequesterData,
   getPageUrls,
   getPageData,
-  fetchSearch,
-  parseSearch,
-  fetchDirectory,
-  parseDirectory,
+  getSearch,
+  getDirectory,
 };

@@ -73,22 +73,18 @@ function getSeries(
   webviewFunc: (url: string) => Promise<string>
 ): Promise<Series | undefined> {
   const extension = EXTENSIONS[extensionId];
+  log.info(extensionId);
   log.info(
     `Getting series ${seriesId} from extension ${extensionId} (v=${extension.METADATA.version})`
   );
 
-  return extension
-    .fetchSeries(sourceType, seriesId, fetch, webviewFunc)
-    .then((response) => {
-      if (typeof response === 'string') return response;
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        return response.text();
-      }
-      return response.json();
-    })
-    .then((data) => extension.parseSeries(sourceType, data, domParser));
+  return extension.getSeries(
+    sourceType,
+    seriesId,
+    fetch,
+    webviewFunc,
+    domParser
+  );
 }
 
 /**
@@ -114,18 +110,13 @@ function getChapters(
     `Getting chapters for series ${seriesId} from extension ${extensionId} (v=${extension.METADATA.version})`
   );
 
-  return extension
-    .fetchChapters(sourceType, seriesId, fetch, webviewFunc)
-    .then((response) => {
-      if (typeof response === 'string') return response;
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        return response.text();
-      }
-      return response.json();
-    })
-    .then((data) => extension.parseChapters(sourceType, data, domParser));
+  return extension.getChapters(
+    sourceType,
+    seriesId,
+    fetch,
+    webviewFunc,
+    domParser
+  );
 }
 
 /**
@@ -152,26 +143,14 @@ function getPageRequesterData(
     `Getting page requester data for series ${seriesSourceId} chapter ${chapterSourceId} from extension ${extensionId} (v=${extension.METADATA.version})`
   );
 
-  return extension
-    .fetchPageRequesterData(
-      sourceType,
-      seriesSourceId,
-      chapterSourceId,
-      fetch,
-      webviewFunc
-    )
-    .then((response) => {
-      if (typeof response === 'string') return response;
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        return response.text();
-      }
-      return response.json();
-    })
-    .then((data) =>
-      extension.parsePageRequesterData(data, chapterSourceId, domParser)
-    );
+  return extension.getPageRequesterData(
+    sourceType,
+    seriesSourceId,
+    chapterSourceId,
+    fetch,
+    webviewFunc,
+    domParser
+  );
 }
 
 /**
@@ -244,20 +223,13 @@ function search(
     adjustedText = text.replace(paramsRegExp, '');
   }
 
-  return extension
-    .fetchSearch(adjustedText, params, fetch, webviewFunc)
-    .then((response) => {
-      if (typeof response === 'string') return response;
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        return response.text();
-      }
-      return response.json();
-    })
-    .then((data) =>
-      extension.parseSearch(data, adjustedText, params, domParser)
-    );
+  return extension.getSearch(
+    adjustedText,
+    params,
+    fetch,
+    webviewFunc,
+    domParser
+  );
 }
 
 /**
@@ -275,18 +247,7 @@ function directory(
     `Getting directory from extension ${extensionId} (v=${extension.METADATA.version})`
   );
 
-  return extension
-    .fetchDirectory(fetch, webviewFunc)
-    .then((response) => {
-      if (typeof response === 'string') return response;
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        return response.text();
-      }
-      return response.json();
-    })
-    .then((data) => extension.parseDirectory(data, domParser));
+  return extension.getDirectory(fetch, webviewFunc, domParser);
 }
 
 export const createExtensionIpcHandlers = (
