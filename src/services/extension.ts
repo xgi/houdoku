@@ -261,8 +261,6 @@ function setSettings(
     })`
   );
   return extension.setSettings(settings);
-
-  // TODO: save extension.getSettings() to store
 }
 
 export const createExtensionIpcHandlers = (

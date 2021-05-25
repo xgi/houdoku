@@ -5,6 +5,7 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import styles from './ExtensionSettingsModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
+import persistantStore from '../../util/persistantStore';
 
 type Props = {
   visible: boolean;
@@ -39,6 +40,10 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
       ipcChannels.EXTENSION.SET_SETTINGS,
       props.extensionId,
       extensionSettings
+    );
+    persistantStore.write(
+      `extension-settings-${props.extensionId}`,
+      JSON.stringify(extensionSettings)
     );
     props.toggleVisible();
   };

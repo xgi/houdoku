@@ -11,7 +11,7 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import { ipcRenderer } from 'electron';
-import { Series } from 'houdoku-extension-lib';
+import { ExtensionMetadata, Series } from 'houdoku-extension-lib';
 import { RootState } from '../../store';
 import {
   changeNumColumns,
@@ -36,6 +36,8 @@ import Settings from '../settings/Settings';
 import About from '../about/About';
 import Library from '../library/Library';
 import Extensions from '../extensions/Extensions';
+import ipcChannels from '../../constants/ipcChannels.json';
+import persistantStore from '../../util/persistantStore';
 
 const { Content, Sider } = Layout;
 
@@ -81,6 +83,27 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         props.loadSeriesList();
       })
       .catch((error) => log.error(error));
+
+    // load stored extension settings
+    ipcRenderer
+      .invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL)
+      // eslint-disable-next-line promise/always-return
+      .then((metadataList: ExtensionMetadata[]) => {
+        metadataList.forEach((metadata: ExtensionMetadata) => {
+          const extSettings: string | null = persistantStore.read(
+            `extension-settings-${metadata.id}`
+          );
+          if (extSettings !== null) {
+            log.debug(`Found stored settings for extension ${metadata.id}`);
+            ipcRenderer.invoke(
+              ipcChannels.EXTENSION.SET_SETTINGS,
+              metadata.id,
+              JSON.parse(extSettings)
+            );
+          }
+        });
+      })
+      .catch((e: Error) => log.error(e));
 
     ipcRenderer.on('set-status', (e, text) => {
       props.setStatusText(text);
