@@ -98,6 +98,19 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
     );
   }
 
+  if (Object.keys(extensionSettings).length === 0) {
+    return (
+      <Modal
+        title="Extension Settings"
+        visible={props.visible}
+        footer={null}
+        onCancel={props.toggleVisible}
+      >
+        <Paragraph>This extension does not provide any settings.</Paragraph>
+      </Modal>
+    );
+  }
+
   return (
     <Modal
       title="Extension Settings"
@@ -107,7 +120,14 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
     >
       {renderRows()}
       <Row className={styles.buttonRow}>
-        <Button className={styles.button} onClick={saveExtensionSettings}>
+        <Button className={styles.button} onClick={props.toggleVisible}>
+          Cancel
+        </Button>
+        <Button
+          className={styles.button}
+          type="primary"
+          onClick={saveExtensionSettings}
+        >
           Save Settings
         </Button>
       </Row>
