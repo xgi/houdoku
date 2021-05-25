@@ -16,6 +16,8 @@ import {
   SeriesStatus,
   DemographicKey,
   ExtensionClientAbstract,
+  GetSettingsFunc,
+  SetSettingsFunc,
 } from 'houdoku-extension-lib';
 import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
 import { walk } from '../../util/filesystem';
@@ -201,4 +203,10 @@ export class FSExtensionClient extends ExtensionClientAbstract {
   getDirectory: GetDirectoryFunc = () => {
     return new Promise<Series[]>((resolve) => resolve([]));
   };
+
+  getSettings: GetSettingsFunc = () => {
+    return {};
+  };
+
+  setSettings: SetSettingsFunc = () => {};
 }

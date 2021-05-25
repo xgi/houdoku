@@ -72,7 +72,6 @@ function getSeries(
   seriesId: string
 ): Promise<Series | undefined> {
   const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(extensionId);
   log.info(
     `Getting series ${seriesId} from extension ${extensionId} (v=${
       extension.getMetadata().version
@@ -229,6 +228,43 @@ function directory(extensionId: string): Promise<Series[]> {
   return extension.getDirectory();
 }
 
+/**
+ * Get settings for the extension.
+ *
+ * @param extensionId
+ * @returns map of settings from the extension, with default/initial values set
+ */
+function getSettings(extensionId: string): { [key: string]: any } {
+  const extension = EXTENSION_CLIENTS[extensionId];
+  log.info(
+    `Getting settings from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
+  );
+  return extension.getSettings();
+}
+
+/**
+ * Set the settings for an extension.
+ *
+ * @param extensionId
+ * @param settings a map of settings for the extension
+ */
+function setSettings(
+  extensionId: string,
+  settings: { [key: string]: any }
+): void {
+  const extension = EXTENSION_CLIENTS[extensionId];
+  log.info(
+    `Setting settings from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
+  );
+  return extension.setSettings(settings);
+
+  // TODO: save extension.getSettings() to store
+}
+
 export const createExtensionIpcHandlers = (
   ipcMain: IpcMain,
   pluginsDir: string,
@@ -337,6 +373,18 @@ export const createExtensionIpcHandlers = (
     ipcChannels.EXTENSION.DIRECTORY,
     (_event, extensionId: string) => {
       return directory(extensionId);
+    }
+  );
+  ipcMain.handle(
+    ipcChannels.EXTENSION.GET_SETTINGS,
+    (_event, extensionId: string) => {
+      return getSettings(extensionId);
+    }
+  );
+  ipcMain.handle(
+    ipcChannels.EXTENSION.SET_SETTINGS,
+    (_event, extensionId: string, settings: { [key: string]: any }) => {
+      return setSettings(extensionId, settings);
     }
   );
 };

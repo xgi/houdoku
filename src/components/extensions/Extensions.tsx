@@ -11,6 +11,7 @@ import styles from './Extensions.css';
 import { RootState } from '../../store';
 import ExtensionTable from './ExtensionTable';
 import InstalledExtensionsModal from './InstalledExtensionsModal';
+import ExtensionSettingsModal from './ExtensionSettingsModal';
 
 const mapState = (state: RootState) => ({
   chapterLanguages: state.settings.chapterLanguages,
@@ -33,7 +34,9 @@ type Props = PropsFromRedux & {};
 const Extensions: React.FC<Props> = (props: Props) => {
   const [searchResults, setSearchResults] = useState<RegistrySearchResults>();
   const [filterText, setFilterText] = useState('');
-  const [showingModal, setShowingModal] = useState(false);
+  const [showingInstalledModal, setShowingInstalledModal] = useState(false);
+  const [showingSettingsModal, setShowingSettingsModal] = useState(false);
+  const [settingsModalExtension, setSettingsModalExtension] = useState('');
   const location = useLocation();
 
   const doSearchRegistry = () => {
@@ -49,6 +52,11 @@ const Extensions: React.FC<Props> = (props: Props) => {
       .catch((e) => log.error(e));
   };
 
+  const showSettingsModal = (extensionId: string) => {
+    setSettingsModalExtension(extensionId);
+    setShowingSettingsModal(true);
+  };
+
   useEffect(() => {
     doSearchRegistry();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,8 +65,13 @@ const Extensions: React.FC<Props> = (props: Props) => {
   return (
     <>
       <InstalledExtensionsModal
-        visible={showingModal}
-        toggleVisible={() => setShowingModal(!showingModal)}
+        visible={showingInstalledModal}
+        toggleVisible={() => setShowingInstalledModal(!showingInstalledModal)}
+      />
+      <ExtensionSettingsModal
+        visible={showingSettingsModal}
+        toggleVisible={() => setShowingSettingsModal(!showingSettingsModal)}
+        extensionId={settingsModalExtension}
       />
       <Title className={styles.title} level={4}>
         Extensions
@@ -70,7 +83,7 @@ const Extensions: React.FC<Props> = (props: Props) => {
         >
           Refresh Extension List
         </Button>
-        <Button onClick={() => setShowingModal(true)}>
+        <Button onClick={() => setShowingSettingsModal(true)}>
           View Installed Extensions
         </Button>
         <div className={styles.spacer} />
@@ -91,6 +104,9 @@ const Extensions: React.FC<Props> = (props: Props) => {
         <ExtensionTable
           registryResults={searchResults}
           filterText={filterText}
+          showExtensionSettingsModal={(extensionId: string) =>
+            showSettingsModal(extensionId)
+          }
         />
       )}
     </>
