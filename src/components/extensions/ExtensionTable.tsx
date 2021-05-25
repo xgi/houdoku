@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Table, Button } from 'antd';
+import { Table, Button, Tooltip } from 'antd';
+import { SettingOutlined } from '@ant-design/icons';
 import {
   RegistrySearchResults,
   RegistrySearchPackage,
@@ -28,6 +29,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {
   registryResults: RegistrySearchResults;
   filterText: string;
+  showExtensionSettingsModal: (extensionId: string) => void;
 };
 
 const ExtensionTable: React.FC<Props> = (props: Props) => {
@@ -167,7 +169,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       title: 'URL',
       dataIndex: 'url',
       key: 'url',
-      width: '30%',
+      width: '29%',
     },
     {
       title: 'Available Ver.',
@@ -186,7 +188,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
     {
       title: '',
       key: 'removeButton',
-      width: '10%',
+      width: '8%',
       align: 'center',
       render: function render(text: any, record: ExtensionTableRow) {
         return record.installedVersion === undefined ? (
@@ -205,7 +207,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
     {
       title: '',
       key: 'installUpdateButton',
-      width: '10%',
+      width: '8%',
       align: 'center',
       render: function render(text: any, record: ExtensionTableRow) {
         if (record.installedVersion === undefined) {
@@ -238,6 +240,26 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
           </Button>
         ) : (
           <></>
+        );
+      },
+    },
+    {
+      title: '',
+      key: 'settingsButton',
+      width: '5%',
+      align: 'center',
+      render: function render(text: any, record: ExtensionTableRow) {
+        return record.installedVersion === undefined ? (
+          <></>
+        ) : (
+          <Button
+            shape="circle"
+            icon={
+              <SettingOutlined
+                onClick={() => props.showExtensionSettingsModal(record.id)}
+              />
+            }
+          />
         );
       },
     },
