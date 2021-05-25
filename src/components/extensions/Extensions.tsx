@@ -83,7 +83,7 @@ const Extensions: React.FC<Props> = (props: Props) => {
         >
           Refresh Extension List
         </Button>
-        <Button onClick={() => setShowingSettingsModal(true)}>
+        <Button onClick={() => setShowingInstalledModal(true)}>
           View Installed Extensions
         </Button>
         <div className={styles.spacer} />
