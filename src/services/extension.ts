@@ -1,5 +1,4 @@
 import {
-  ExtensionMetadata,
   PageRequesterData,
   Chapter,
   Series,
@@ -53,15 +52,6 @@ export async function loadExtensions(
       EXTENSION_CLIENTS[client.getMetadata().id] = client;
     }
   });
-}
-
-/**
- * Get the metadata for an extension
- * @param extensionId
- * @returns the ExtensionMetadata defined for the extension
- */
-function getExtensionMetadata(extensionId: string): ExtensionMetadata {
-  return EXTENSION_CLIENTS[extensionId].getMetadata();
 }
 
 /**
@@ -246,13 +236,13 @@ export const createExtensionIpcHandlers = (
 ) => {
   log.debug('Creating extension IPC handlers in main...');
 
-  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, (event) => {
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, () => {
     return loadExtensions(pluginsDir, webviewFn);
   });
   ipcMain.handle(
     ipcChannels.EXTENSION_MANAGER.INSTALL,
-    (event, name: string, version: string) => {
-      return new Promise<void>((resolve, reject) => {
+    (_event, name: string, version: string) => {
+      return new Promise<void>((resolve) => {
         aki.install(name, version, pluginsDir, () => {
           resolve();
         });
@@ -261,35 +251,35 @@ export const createExtensionIpcHandlers = (
   );
   ipcMain.handle(
     ipcChannels.EXTENSION_MANAGER.UNINSTALL,
-    (event, name: string) => {
-      return new Promise<void>((resolve, reject) => {
+    (_event, name: string) => {
+      return new Promise<void>((resolve) => {
         aki.uninstall(name, pluginsDir, () => {
           resolve();
         });
       });
     }
   );
-  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.LIST, async (event) => {
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.LIST, async () => {
     return aki.list(pluginsDir);
   });
   ipcMain.handle(
     ipcChannels.EXTENSION_MANAGER.GET,
-    async (event, extensionId: string) => {
+    async (_event, extensionId: string) => {
       return extensionId in EXTENSION_CLIENTS
         ? EXTENSION_CLIENTS[extensionId].getMetadata()
         : undefined;
     }
   );
-  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET_ALL, (event) => {
-    return Object.values(EXTENSION_CLIENTS).map((ext: any) =>
-      ext.getMetadata()
-    );
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET_ALL, () => {
+    return Object.values(
+      EXTENSION_CLIENTS
+    ).map((client: ExtensionClientInterface) => client.getMetadata());
   });
 
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_SERIES,
     (
-      event,
+      _event,
       extensionId: string,
       sourceType: SeriesSourceType,
       seriesId: string
@@ -300,7 +290,7 @@ export const createExtensionIpcHandlers = (
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_CHAPTERS,
     (
-      event,
+      _event,
       extensionId: string,
       sourceType: SeriesSourceType,
       seriesId: string
@@ -311,7 +301,7 @@ export const createExtensionIpcHandlers = (
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
     (
-      event,
+      _event,
       extensionId: string,
       sourceType: SeriesSourceType,
       seriesSourceId: string,
@@ -327,25 +317,25 @@ export const createExtensionIpcHandlers = (
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_PAGE_URLS,
-    (event, extensionId: string, pageRequesterData: PageRequesterData) => {
+    (_event, extensionId: string, pageRequesterData: PageRequesterData) => {
       return getPageUrls(extensionId, pageRequesterData);
     }
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_PAGE_DATA,
-    (event, extensionId: string, series: Series, url: string) => {
+    (_event, extensionId: string, series: Series, url: string) => {
       return getPageData(extensionId, series, url);
     }
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.SEARCH,
-    (event, extensionId: string, text: string) => {
+    (_event, extensionId: string, text: string) => {
       return search(extensionId, text);
     }
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.DIRECTORY,
-    (event, extensionId: string) => {
+    (_event, extensionId: string) => {
       return directory(extensionId);
     }
   );

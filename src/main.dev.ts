@@ -134,11 +134,11 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-ipcMain.handle(ipcChannels.WINDOW.MINIMIZE, (event) => {
+ipcMain.handle(ipcChannels.WINDOW.MINIMIZE, () => {
   mainWindow?.minimize();
 });
 
-ipcMain.handle(ipcChannels.WINDOW.MAX_RESTORE, (event) => {
+ipcMain.handle(ipcChannels.WINDOW.MAX_RESTORE, () => {
   if (mainWindow?.isMaximized()) {
     mainWindow?.restore();
   } else {
@@ -146,19 +146,19 @@ ipcMain.handle(ipcChannels.WINDOW.MAX_RESTORE, (event) => {
   }
 });
 
-ipcMain.handle(ipcChannels.WINDOW.CLOSE, (event) => {
+ipcMain.handle(ipcChannels.WINDOW.CLOSE, () => {
   mainWindow?.close();
 });
 
-ipcMain.handle(ipcChannels.GET_PATH.THUMBNAILS_DIR, (event) => {
+ipcMain.handle(ipcChannels.GET_PATH.THUMBNAILS_DIR, () => {
   return thumbnailsDir;
 });
 
-ipcMain.handle(ipcChannels.GET_PATH.PLUGINS_DIR, (event) => {
+ipcMain.handle(ipcChannels.GET_PATH.PLUGINS_DIR, () => {
   return pluginsDir;
 });
 
-ipcMain.handle(ipcChannels.GET_ALL_FILES, (event, rootPath: string) => {
+ipcMain.handle(ipcChannels.GET_ALL_FILES, (_event, rootPath: string) => {
   return walk(rootPath);
 });
 
