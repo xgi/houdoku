@@ -251,7 +251,6 @@ ipcMain.handle('check-for-updates', (event) => {
 });
 
 // create ipc handlers for specific extension functionality
-createExtensionIpcHandlers(ipcMain, pluginsDir, (url: string) =>
-  loadInWebView(mainWindow, url)
-);
-loadExtensions(pluginsDir);
+const webviewFn = (url: string) => loadInWebView(mainWindow, url);
+createExtensionIpcHandlers(ipcMain, pluginsDir, webviewFn);
+loadExtensions(pluginsDir, webviewFn);

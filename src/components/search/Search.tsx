@@ -33,7 +33,7 @@ import {
 import { RootState } from '../../store';
 import AddSeriesModal from './AddSeriesModal';
 import Uploader from './Uploader';
-import filesystem from '../../services/extensions/filesystem';
+import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 
 const { info } = Modal;
@@ -114,7 +114,7 @@ const Search: React.FC<Props> = (props: Props) => {
     ipcRenderer
       .invoke(
         ipcChannels.EXTENSION.GET_SERIES,
-        filesystem.METADATA.id,
+        FS_METADATA.id,
         sourceType,
         path
       )
@@ -236,7 +236,7 @@ const Search: React.FC<Props> = (props: Props) => {
             Extension: {getSearchExtensionMetadata()?.name} <DownOutlined />
           </Button>
         </Dropdown>
-        {props.searchExtension !== filesystem.METADATA.id ? (
+        {props.searchExtension !== FS_METADATA.id ? (
           <Input.Search
             className={styles.searchField}
             placeholder="Search for a series..."
@@ -248,7 +248,7 @@ const Search: React.FC<Props> = (props: Props) => {
         )}
       </div>
       {renderAlert()}
-      {props.searchExtension === filesystem.METADATA.id ? (
+      {props.searchExtension === FS_METADATA.id ? (
         renderFilesystemInputs()
       ) : (
         <></>
@@ -276,7 +276,7 @@ const Search: React.FC<Props> = (props: Props) => {
             } else {
               props.setAddModalSeries(series);
               props.toggleShowingAddModal(
-                props.searchExtension === filesystem.METADATA.id
+                props.searchExtension === FS_METADATA.id
               );
             }
           }}

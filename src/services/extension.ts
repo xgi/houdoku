@@ -4,35 +4,39 @@ import {
   Chapter,
   Series,
   SeriesSourceType,
+  WebviewFunc,
+  ExtensionClientInterface,
 } from 'houdoku-extension-lib';
 import aki from 'aki-plugin-manager';
 import { IpcMain } from 'electron';
 import fetch from 'node-fetch';
 import DOMParser from 'dom-parser';
 import log from 'electron-log';
-import filesystem from './extensions/filesystem';
+import { FSExtensionClient } from './extensions/filesystem';
 import ipcChannels from '../constants/ipcChannels.json';
 
 const domParser = new DOMParser();
 
-const EXTENSIONS = {
-  [filesystem.METADATA.id]: filesystem,
-};
+const EXTENSION_CLIENTS: { [key: string]: ExtensionClientInterface } = {};
 
-export async function loadExtensions(pluginsDir: string) {
+export async function loadExtensions(
+  pluginsDir: string,
+  webviewFn: WebviewFunc
+) {
   log.info('Loading extensions...');
 
-  Object.keys(EXTENSIONS).forEach((extensionId: string) => {
-    if (extensionId !== filesystem.METADATA.id) {
-      const extMetadata = EXTENSIONS[extensionId].METADATA;
-      aki.unload(
-        pluginsDir,
-        `@houdoku/extension-${extMetadata.name.toLowerCase()}`
-      );
-      delete EXTENSIONS[extensionId];
-      log.info(`Unloaded extension ${extMetadata.name} (ID ${extensionId})`);
-    }
+  Object.keys(EXTENSION_CLIENTS).forEach((extensionId: string) => {
+    const extMetadata = EXTENSION_CLIENTS[extensionId].getMetadata();
+    aki.unload(
+      pluginsDir,
+      `@houdoku/extension-${extMetadata.name.toLowerCase()}`
+    );
+    delete EXTENSION_CLIENTS[extensionId];
+    log.info(`Unloaded extension ${extMetadata.name} (ID ${extensionId})`);
   });
+
+  const fsExtensionClient = new FSExtensionClient(fetch, webviewFn, domParser);
+  EXTENSION_CLIENTS[fsExtensionClient.getMetadata().id] = fsExtensionClient;
 
   aki.list(pluginsDir).forEach((pluginDetails: [string, string]) => {
     const pluginName = pluginDetails[0];
@@ -43,9 +47,10 @@ export async function loadExtensions(pluginsDir: string) {
         // eslint-disable-next-line no-eval
         eval('require') as NodeRequire
       );
+      const client = new mod.ExtensionClient(fetch, webviewFn, domParser);
 
       log.info(`Loaded extension "${pluginName}" version ${pluginDetails[1]}`);
-      EXTENSIONS[mod.METADATA.id] = mod;
+      EXTENSION_CLIENTS[client.getMetadata().id] = client;
     }
   });
 }
@@ -56,7 +61,7 @@ export async function loadExtensions(pluginsDir: string) {
  * @returns the ExtensionMetadata defined for the extension
  */
 function getExtensionMetadata(extensionId: string): ExtensionMetadata {
-  return EXTENSIONS[extensionId].METADATA;
+  return EXTENSION_CLIENTS[extensionId].getMetadata();
 }
 
 /**
@@ -74,22 +79,17 @@ function getExtensionMetadata(extensionId: string): ExtensionMetadata {
 function getSeries(
   extensionId: string,
   sourceType: SeriesSourceType,
-  seriesId: string,
-  webviewFunc: (url: string) => Promise<string>
+  seriesId: string
 ): Promise<Series | undefined> {
-  const extension = EXTENSIONS[extensionId];
+  const extension = EXTENSION_CLIENTS[extensionId];
   log.info(extensionId);
   log.info(
-    `Getting series ${seriesId} from extension ${extensionId} (v=${extension.METADATA.version})`
+    `Getting series ${seriesId} from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
   );
 
-  return extension.getSeries(
-    sourceType,
-    seriesId,
-    fetch,
-    webviewFunc,
-    domParser
-  );
+  return extension.getSeries(sourceType, seriesId);
 }
 
 /**
@@ -107,21 +107,16 @@ function getSeries(
 function getChapters(
   extensionId: string,
   sourceType: SeriesSourceType,
-  seriesId: string,
-  webviewFunc: (url: string) => Promise<string>
+  seriesId: string
 ): Promise<Chapter[]> {
-  const extension = EXTENSIONS[extensionId];
+  const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
-    `Getting chapters for series ${seriesId} from extension ${extensionId} (v=${extension.METADATA.version})`
+    `Getting chapters for series ${seriesId} from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
   );
 
-  return extension.getChapters(
-    sourceType,
-    seriesId,
-    fetch,
-    webviewFunc,
-    domParser
-  );
+  return extension.getChapters(sourceType, seriesId);
 }
 
 /**
@@ -140,21 +135,19 @@ function getPageRequesterData(
   extensionId: string,
   sourceType: SeriesSourceType,
   seriesSourceId: string,
-  chapterSourceId: string,
-  webviewFunc: (url: string) => Promise<string>
+  chapterSourceId: string
 ): Promise<PageRequesterData> {
-  const extension = EXTENSIONS[extensionId];
+  const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
-    `Getting page requester data for series ${seriesSourceId} chapter ${chapterSourceId} from extension ${extensionId} (v=${extension.METADATA.version})`
+    `Getting page requester data for series ${seriesSourceId} chapter ${chapterSourceId} from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
   );
 
   return extension.getPageRequesterData(
     sourceType,
     seriesSourceId,
-    chapterSourceId,
-    fetch,
-    webviewFunc,
-    domParser
+    chapterSourceId
   );
 }
 
@@ -172,7 +165,7 @@ function getPageUrls(
   extensionId: string,
   pageRequesterData: PageRequesterData
 ): string[] {
-  return EXTENSIONS[extensionId].getPageUrls(pageRequesterData);
+  return EXTENSION_CLIENTS[extensionId].getPageUrls(pageRequesterData);
 }
 
 /**
@@ -192,7 +185,7 @@ async function getPageData(
   series: Series,
   url: string
 ): Promise<string> {
-  return EXTENSIONS[extensionId].getPageData(series, url);
+  return EXTENSION_CLIENTS[extensionId].getPageData(series, url);
 }
 
 /**
@@ -203,14 +196,12 @@ async function getPageData(
  * are utilized at the extension's discretion
  * @returns promise for a list of series found from the content source
  */
-function search(
-  extensionId: string,
-  text: string,
-  webviewFunc: (url: string) => Promise<string>
-): Promise<Series[]> {
-  const extension = EXTENSIONS[extensionId];
+function search(extensionId: string, text: string): Promise<Series[]> {
+  const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
-    `Searching for "${text}" from extension ${extensionId} (v=${extension.METADATA.version})`
+    `Searching for "${text}" from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
   );
 
   let adjustedText: string = text;
@@ -228,13 +219,7 @@ function search(
     adjustedText = text.replace(paramsRegExp, '');
   }
 
-  return extension.getSearch(
-    adjustedText,
-    params,
-    fetch,
-    webviewFunc,
-    domParser
-  );
+  return extension.getSearch(adjustedText, params);
 }
 
 /**
@@ -243,27 +228,26 @@ function search(
  * @param extensionId
  * @returns promise for a list of series found from the content source
  */
-function directory(
-  extensionId: string,
-  webviewFunc: (url: string) => Promise<string>
-): Promise<Series[]> {
-  const extension = EXTENSIONS[extensionId];
+function directory(extensionId: string): Promise<Series[]> {
+  const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
-    `Getting directory from extension ${extensionId} (v=${extension.METADATA.version})`
+    `Getting directory from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
   );
 
-  return extension.getDirectory(fetch, webviewFunc, domParser);
+  return extension.getDirectory();
 }
 
 export const createExtensionIpcHandlers = (
   ipcMain: IpcMain,
   pluginsDir: string,
-  webviewFunc: (url: string) => Promise<string>
+  webviewFn: (url: string) => Promise<string>
 ) => {
   log.debug('Creating extension IPC handlers in main...');
 
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, (event) => {
-    return loadExtensions(pluginsDir);
+    return loadExtensions(pluginsDir, webviewFn);
   });
   ipcMain.handle(
     ipcChannels.EXTENSION_MANAGER.INSTALL,
@@ -291,13 +275,15 @@ export const createExtensionIpcHandlers = (
   ipcMain.handle(
     ipcChannels.EXTENSION_MANAGER.GET,
     async (event, extensionId: string) => {
-      return extensionId in EXTENSIONS
-        ? EXTENSIONS[extensionId].METADATA
+      return extensionId in EXTENSION_CLIENTS
+        ? EXTENSION_CLIENTS[extensionId].getMetadata()
         : undefined;
     }
   );
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET_ALL, (event) => {
-    return Object.values(EXTENSIONS).map((ext: any) => ext.METADATA);
+    return Object.values(EXTENSION_CLIENTS).map((ext: any) =>
+      ext.getMetadata()
+    );
   });
 
   ipcMain.handle(
@@ -308,7 +294,7 @@ export const createExtensionIpcHandlers = (
       sourceType: SeriesSourceType,
       seriesId: string
     ) => {
-      return getSeries(extensionId, sourceType, seriesId, webviewFunc);
+      return getSeries(extensionId, sourceType, seriesId);
     }
   );
   ipcMain.handle(
@@ -319,7 +305,7 @@ export const createExtensionIpcHandlers = (
       sourceType: SeriesSourceType,
       seriesId: string
     ) => {
-      return getChapters(extensionId, sourceType, seriesId, webviewFunc);
+      return getChapters(extensionId, sourceType, seriesId);
     }
   );
   ipcMain.handle(
@@ -335,8 +321,7 @@ export const createExtensionIpcHandlers = (
         extensionId,
         sourceType,
         seriesSourceId,
-        chapterSourceId,
-        webviewFunc
+        chapterSourceId
       );
     }
   );
@@ -355,13 +340,13 @@ export const createExtensionIpcHandlers = (
   ipcMain.handle(
     ipcChannels.EXTENSION.SEARCH,
     (event, extensionId: string, text: string) => {
-      return search(extensionId, text, webviewFunc);
+      return search(extensionId, text);
     }
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.DIRECTORY,
     (event, extensionId: string) => {
-      return directory(extensionId, webviewFunc);
+      return directory(extensionId);
     }
   );
 };

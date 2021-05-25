@@ -1,4 +1,4 @@
-import filesystem from '../../services/extensions/filesystem';
+import { FS_METADATA } from '../../services/extensions/filesystem';
 import {
   SearchState,
   SET_ADD_MODAL_SERIES,
@@ -8,7 +8,7 @@ import {
 } from './types';
 
 const initialState: SearchState = {
-  searchExtension: filesystem.METADATA.id,
+  searchExtension: FS_METADATA.id,
   searchResults: [],
   addModalSeries: undefined,
   addModalEditable: false,
