@@ -1,9 +1,13 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Layout } from 'antd';
+import log from 'electron-log';
 import { RootState } from '../../store';
 import styles from './ReaderViewer.css';
 import { LayoutDirection, PageFit, PageView } from '../../models/types';
+import { changePageNumber } from '../../features/reader/actions';
 
 const { Content } = Layout;
 
@@ -18,7 +22,9 @@ const mapState = (state: RootState) => ({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
+const mapDispatch = (dispatch: any) => ({
+  changePageNumber: (delta: number) => dispatch(changePageNumber(delta)),
+});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -107,7 +113,37 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     );
   };
 
-  return <>{renderViewer()}</>;
+  const renderPageClickControls = () => {
+    if (props.layoutDirection === LayoutDirection.Vertical) return <></>;
+
+    return (
+      <div className={styles.moveControlsContainer}>
+        <div
+          className={styles.moveControl}
+          onClick={() =>
+            props.changePageNumber(
+              props.layoutDirection === LayoutDirection.LeftToRight ? -1 : 1
+            )
+          }
+        />
+        <div
+          className={styles.moveControl}
+          onClick={() =>
+            props.changePageNumber(
+              props.layoutDirection === LayoutDirection.LeftToRight ? 1 : -1
+            )
+          }
+        />
+      </div>
+    );
+  };
+
+  return (
+    <>
+      {renderPageClickControls()}
+      {renderViewer()}
+    </>
+  );
 };
 
 export default connector(ReaderViewer);
