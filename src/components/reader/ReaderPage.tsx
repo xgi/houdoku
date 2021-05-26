@@ -278,9 +278,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const changePage = (left: boolean, toBound = false) => {
     if (toBound) {
       if (props.layoutDirection === LayoutDirection.LeftToRight) {
-        props.setPageNumber(left ? 0 : props.lastPageNumber);
+        props.setPageNumber(left ? 1 : props.lastPageNumber);
       } else {
-        props.setPageNumber(left ? props.lastPageNumber : 0);
+        props.setPageNumber(left ? props.lastPageNumber : 1);
       }
       return;
     }
@@ -364,7 +364,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     removeKeybindings();
     addKeybindings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.chapter]);
+  }, [props.chapter, props.lastPageNumber]);
 
   useEffect(() => {
     addKeybindings();
