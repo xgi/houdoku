@@ -84,28 +84,37 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       })
       .catch((error) => log.error(error));
 
-    // load stored extension settings
-    ipcRenderer
-      .invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL)
-      // eslint-disable-next-line promise/always-return
-      .then((metadataList: ExtensionMetadata[]) => {
-        metadataList.forEach((metadata: ExtensionMetadata) => {
-          const extSettings: string | null = persistantStore.read(
-            `extension-settings-${metadata.id}`
-          );
-          if (extSettings !== null) {
-            log.debug(`Found stored settings for extension ${metadata.id}`);
-            ipcRenderer.invoke(
-              ipcChannels.EXTENSION.SET_SETTINGS,
-              metadata.id,
-              JSON.parse(extSettings)
-            );
-          }
-        });
-      })
-      .catch((e: Error) => log.error(e));
+    const loadStoredExtensionSettings = () => {
+      log.info('Loading stored extension settings...');
+      return (
+        ipcRenderer
+          .invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL)
+          // eslint-disable-next-line promise/always-return
+          .then((metadataList: ExtensionMetadata[]) => {
+            metadataList.forEach((metadata: ExtensionMetadata) => {
+              const extSettings: string | null = persistantStore.read(
+                `extension-settings-${metadata.id}`
+              );
+              if (extSettings !== null) {
+                log.debug(`Found stored settings for extension ${metadata.id}`);
+                ipcRenderer.invoke(
+                  ipcChannels.EXTENSION.SET_SETTINGS,
+                  metadata.id,
+                  JSON.parse(extSettings)
+                );
+              }
+            });
+          })
+          .catch((e: Error) => log.error(e))
+      );
+    };
 
-    ipcRenderer.on('set-status', (e, text) => {
+    loadStoredExtensionSettings();
+
+    ipcRenderer.on('load-stored-extension-settings', () => {
+      loadStoredExtensionSettings();
+    });
+    ipcRenderer.on('set-status', (_event, text) => {
       props.setStatusText(text);
     });
     ipcRenderer.invoke('check-for-updates');
