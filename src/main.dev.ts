@@ -214,6 +214,14 @@ ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
       .catch((err) => log.error(err));
   });
 
+  autoUpdater.on('error', (err: Error) => {
+    log.error(`Updater encountered error: ${err}`);
+    event.sender.send(
+      ipcChannels.APP.SET_STATUS,
+      `Error while updating: ${err}`
+    );
+  });
+
   autoUpdater
     .checkForUpdates()
     // eslint-disable-next-line promise/always-return
