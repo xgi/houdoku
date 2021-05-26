@@ -289,7 +289,7 @@ export const createExtensionIpcHandlers = (
 
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, (event) => {
     return loadExtensions(pluginsDir, webviewFn).then(() =>
-      event.sender.send('load-stored-extension-settings')
+      event.sender.send(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS)
     );
   });
   ipcMain.handle(

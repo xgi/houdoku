@@ -1,4 +1,9 @@
 {
+  "APP": {
+    "CHECK_FOR_UPDATES": "check-for-updates",
+    "SET_STATUS": "set-status",
+    "LOAD_STORED_EXTENSION_SETTINGS": "load-stored-extension-settings"
+  },
   "WINDOW": {
     "MINIMIZE": "window-minimize",
     "MAX_RESTORE": "window-max-restore",

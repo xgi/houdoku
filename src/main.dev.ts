@@ -162,7 +162,7 @@ ipcMain.handle(ipcChannels.GET_ALL_FILES, (_event, rootPath: string) => {
   return walk(rootPath);
 });
 
-ipcMain.handle('check-for-updates', (event) => {
+ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
   log.debug('Handling check for updates request...');
   if (
     process.env.NODE_ENV === 'development' ||
@@ -178,12 +178,12 @@ ipcMain.handle('check-for-updates', (event) => {
   const MB = 10 ** -6;
   const round = (x: number) => Math.ceil(x * 100) / 100;
 
-  event.sender.send('set-status', `Checking for updates...`);
+  event.sender.send(ipcChannels.APP.SET_STATUS, `Checking for updates...`);
 
   autoUpdater.on('download-progress', (progress) => {
     log.debug(`Downloading update: ${progress.transferred}/${progress.total}`);
     event.sender.send(
-      'set-status',
+      ipcChannels.APP.SET_STATUS,
       `Downloading update: ${round(progress.percent)}% (${round(
         progress.transferred * MB
       )}/${round(progress.total * MB)} MB) - ${round(
@@ -195,7 +195,7 @@ ipcMain.handle('check-for-updates', (event) => {
   autoUpdater.on('update-downloaded', () => {
     log.debug(`Finished update download`);
     event.sender.send(
-      'set-status',
+      ipcChannels.APP.SET_STATUS,
       `Downloaded update successfully. Please restart Houdoku.`
     );
     dialog
@@ -220,7 +220,7 @@ ipcMain.handle('check-for-updates', (event) => {
     .then((result: UpdateCheckResult) => {
       if (result.updateInfo.version === packageJson.version) {
         log.info(`Already up-to-date at version ${packageJson.version}`);
-        event.sender.send('set-status', `Houdoku is up-to-date.`);
+        event.sender.send(ipcChannels.APP.SET_STATUS, `Houdoku is up-to-date.`);
         return null;
       }
 
@@ -228,7 +228,7 @@ ipcMain.handle('check-for-updates', (event) => {
         `Found update to version ${result.updateInfo.version} (from ${packageJson.version})`
       );
       event.sender.send(
-        'set-status',
+        ipcChannels.APP.SET_STATUS,
         `Update available: version ${result.updateInfo.version}`
       );
 

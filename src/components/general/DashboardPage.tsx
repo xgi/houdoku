@@ -111,13 +111,13 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
 
     loadStoredExtensionSettings();
 
-    ipcRenderer.on('load-stored-extension-settings', () => {
+    ipcRenderer.on(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS, () => {
       loadStoredExtensionSettings();
     });
-    ipcRenderer.on('set-status', (_event, text) => {
+    ipcRenderer.on(ipcChannels.APP.SET_STATUS, (_event, text) => {
       props.setStatusText(text);
     });
-    ipcRenderer.invoke('check-for-updates');
+    ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
