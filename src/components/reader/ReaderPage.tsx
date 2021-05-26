@@ -258,11 +258,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * Adjacent chapter is determined using getAdjacentChapterId. If not found, this method returns
    * without doing anything.
    * @param previous whether to get the previous chapter (as opposed to the next)
+   * @return whether the chapter was actually changed or not
    */
   const changeChapter = (previous: boolean) => {
     const newChapterId = getAdjacentChapterId(previous);
-    if (newChapterId === -1) return;
+    if (newChapterId === -1) return false;
     setChapter(newChapterId);
+    return true;
   };
 
   /**
@@ -346,6 +348,17 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       history.push(routes.LIBRARY);
     }
   };
+
+  useEffect(() => {
+    if (props.pageNumber > props.lastPageNumber && props.lastPageNumber !== 0) {
+      const changed = changeChapter(false);
+      if (!changed) props.setPageNumber(props.lastPageNumber);
+    } else if (props.pageNumber <= 0) {
+      const changed = changeChapter(true);
+      if (!changed) props.setPageNumber(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.pageNumber]);
 
   useEffect(() => {
     removeKeybindings();

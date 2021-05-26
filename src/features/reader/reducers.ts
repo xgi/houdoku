@@ -20,19 +20,6 @@ const initialState: ReaderState = {
   showingSettingsModal: false,
 };
 
-function sanitizedPageNumber(
-  pageNumber: number,
-  lastPageNumber: number
-): number {
-  if (pageNumber < 1) {
-    return 1;
-  }
-  if (pageNumber > lastPageNumber) {
-    return lastPageNumber;
-  }
-  return pageNumber;
-}
-
 export default function reader(
   state = initialState,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -42,18 +29,12 @@ export default function reader(
     case SET_PAGE_NUMBER:
       return {
         ...state,
-        pageNumber: sanitizedPageNumber(
-          action.payload.pageNumber,
-          state.lastPageNumber
-        ),
+        pageNumber: action.payload.pageNumber,
       };
     case CHANGE_PAGE_NUMBER:
       return {
         ...state,
-        pageNumber: sanitizedPageNumber(
-          state.pageNumber + action.payload.delta,
-          state.lastPageNumber
-        ),
+        pageNumber: state.pageNumber + action.payload.delta,
       };
     case SET_PAGE_URLS:
       return {
