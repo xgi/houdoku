@@ -1,11 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Modal, Row, Spin, Switch } from 'antd';
+import { Button, Col, Modal, Row, Select, Spin, Switch } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
+import {
+  Language,
+  LanguageKey,
+  Languages,
+  SettingType,
+} from 'houdoku-extension-lib';
 import styles from './ExtensionSettingsModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 import persistantStore from '../../util/persistantStore';
+
+const { Option } = Select;
+
+const languageOptions = Object.values(Languages).map((language: Language) => (
+  <Option key={language.key} value={language.key}>
+    {language.name}
+  </Option>
+));
 
 type Props = {
   visible: boolean;
@@ -15,6 +29,9 @@ type Props = {
 
 const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(true);
+  const [extensionSettingTypes, setExtensionSettingTypes] = useState<{
+    [key: string]: SettingType;
+  }>({});
   const [extensionSettings, setExtensionSettings] = useState<{
     [key: string]: any;
   }>({});
@@ -26,6 +43,12 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
       `Extension settings modal loading client for ${extensionSettings}`
     );
 
+    setExtensionSettingTypes(
+      await ipcRenderer.invoke(
+        ipcChannels.EXTENSION.GET_SETTING_TYPES,
+        props.extensionId
+      )
+    );
     setExtensionSettings(
       await ipcRenderer.invoke(
         ipcChannels.EXTENSION.GET_SETTINGS,
@@ -48,16 +71,36 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
     props.toggleVisible();
   };
 
-  const renderControl = (curVal: any, onChangeFn: (newValue: any) => void) => {
-    if (typeof curVal === 'boolean') {
-      return (
-        <Switch
-          defaultChecked={curVal}
-          onChange={(e: boolean) => onChangeFn(e)}
-        />
-      );
+  const renderControl = (
+    settingType: SettingType,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    curVal: any,
+    onChangeFn: (newValue: unknown) => void
+  ) => {
+    switch (settingType) {
+      case SettingType.BOOLEAN:
+        return (
+          <Switch
+            defaultChecked={curVal}
+            onChange={(value: boolean) => onChangeFn(value)}
+          />
+        );
+      case SettingType.LANGUAGE_KEY_ARRAY:
+        return (
+          <Select
+            mode="multiple"
+            allowClear
+            style={{ width: '100%' }}
+            placeholder="Select languages..."
+            defaultValue={curVal}
+            onChange={(value: LanguageKey[]) => onChangeFn(value)}
+          >
+            {languageOptions}
+          </Select>
+        );
+      default:
+        return <Paragraph>(no control for this setting)</Paragraph>;
     }
-    return <Paragraph>(no control for this setting)</Paragraph>;
   };
 
   const renderRows = () => {
@@ -66,8 +109,11 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
         <Row key={key} className={styles.row}>
           <Col span={14}>{key}</Col>
           <Col span={10}>
-            {renderControl(extensionSettings[key], (newValue: any) =>
-              setExtensionSettings({ ...extensionSettings, [key]: newValue })
+            {renderControl(
+              extensionSettingTypes[key],
+              extensionSettings[key],
+              (newValue: unknown) =>
+                setExtensionSettings({ ...extensionSettings, [key]: newValue })
             )}
           </Col>
         </Row>

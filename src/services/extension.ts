@@ -5,6 +5,7 @@ import {
   SeriesSourceType,
   WebviewFunc,
   ExtensionClientInterface,
+  SettingType,
 } from 'houdoku-extension-lib';
 import aki from 'aki-plugin-manager';
 import { IpcMain } from 'electron';
@@ -229,6 +230,22 @@ function directory(extensionId: string): Promise<Series[]> {
 }
 
 /**
+ * Get types for an extension's settings.
+ *
+ * @param extensionId
+ * @returns map of settings from the extension to their SettingType
+ */
+function getSettingTypes(extensionId: string): { [key: string]: SettingType } {
+  const extension = EXTENSION_CLIENTS[extensionId];
+  log.info(
+    `Getting setting types from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
+  );
+  return extension.getSettingTypes();
+}
+
+/**
  * Get settings for the extension.
  *
  * @param extensionId
@@ -371,6 +388,12 @@ export const createExtensionIpcHandlers = (
     ipcChannels.EXTENSION.DIRECTORY,
     (_event, extensionId: string) => {
       return directory(extensionId);
+    }
+  );
+  ipcMain.handle(
+    ipcChannels.EXTENSION.GET_SETTING_TYPES,
+    (_event, extensionId: string) => {
+      return getSettingTypes(extensionId);
     }
   );
   ipcMain.handle(

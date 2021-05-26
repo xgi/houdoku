@@ -25,6 +25,7 @@
     "GET_PAGE_DATA": "extension-getPageData",
     "SEARCH": "extension-search",
     "DIRECTORY": "extension-directory",
+    "GET_SETTING_TYPES": "extension-getSettingTypes",
     "GET_SETTINGS": "extension-getSettings",
     "SET_SETTINGS": "extension-setSettings"
   }
