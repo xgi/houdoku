@@ -171,10 +171,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       .fetchSeries(chapter.seriesId)
       .then((response: any) => response[0]);
 
+    if (props.relevantChapterList.length === 0) {
+      await createRelevantChapterList(series, chapter);
+    }
+
     props.setSource(series, chapter);
     if (!chapter.read) props.toggleChapterRead(chapter, series);
-
-    createRelevantChapterList(series, chapter);
 
     const pageUrls: string[] = await ipcRenderer
       .invoke(
@@ -344,6 +346,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       history.push(routes.LIBRARY);
     }
   };
+
+  useEffect(() => {
+    removeKeybindings();
+    addKeybindings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.chapter]);
 
   useEffect(() => {
     addKeybindings();
