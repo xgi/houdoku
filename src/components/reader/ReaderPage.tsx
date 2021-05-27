@@ -277,7 +277,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    */
   const changePage = (left: boolean, toBound = false) => {
     if (toBound) {
-      if (props.layoutDirection === LayoutDirection.LeftToRight) {
+      if (
+        props.layoutDirection === LayoutDirection.LeftToRight ||
+        props.layoutDirection === LayoutDirection.Vertical
+      ) {
         props.setPageNumber(left ? 1 : props.lastPageNumber);
       } else {
         props.setPageNumber(left ? props.lastPageNumber : 1);
