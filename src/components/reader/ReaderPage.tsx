@@ -51,6 +51,8 @@ const KEYBOARD_SHORTCUTS = {
   togglePageFit: 'f',
   toggleShowingSettingsModal: 'o',
   toggleShowingSidebar: 's',
+  exit: 'backspace',
+  escape: 'escape',
 };
 
 const mapState = (state: RootState) => ({
@@ -305,6 +307,31 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   /**
+   * Remove all keybindings from the window.
+   */
+  const removeKeybindings = () => {
+    Mousetrap.unbind(Object.values(KEYBOARD_SHORTCUTS));
+  };
+
+  /**
+   * Exit the reader page.
+   * If the series prop is loaded, go to its series detail page. Otherwise, go to the library.
+   */
+  const exitPage = () => {
+    props.setPageNumber(1);
+    props.setPageUrls([]);
+    props.setPageDataList([]);
+    props.setRelevantChapterList([]);
+    removeKeybindings();
+
+    if (props.series !== undefined) {
+      history.push(`${routes.SERIES}/${props.series.id}`);
+    } else {
+      history.push(routes.LIBRARY);
+    }
+  };
+
+  /**
    * Add all keybindings to the window.
    * These need to be removed (with removeKeybindings) when changing to another page.
    */
@@ -332,31 +359,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleShowingSidebar, () =>
       props.toggleShowingSidebar()
     );
-  };
-
-  /**
-   * Remove all keybindings from the window.
-   */
-  const removeKeybindings = () => {
-    Mousetrap.unbind(Object.values(KEYBOARD_SHORTCUTS));
-  };
-
-  /**
-   * Exit the reader page.
-   * If the series prop is loaded, go to its series detail page. Otherwise, go to the library.
-   */
-  const exitPage = () => {
-    props.setPageNumber(1);
-    props.setPageUrls([]);
-    props.setPageDataList([]);
-    props.setRelevantChapterList([]);
-    removeKeybindings();
-
-    if (props.series !== undefined) {
-      history.push(`${routes.SERIES}/${props.series.id}`);
-    } else {
-      history.push(routes.LIBRARY);
-    }
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.exit, () => exitPage());
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.escape, () => {
+      if (!props.showingSidebar) props.toggleShowingSidebar();
+      else exitPage();
+    });
   };
 
   useEffect(() => {
@@ -374,7 +381,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     removeKeybindings();
     addKeybindings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.chapter, props.lastPageNumber]);
+  }, [props.chapter, props.lastPageNumber, props.showingSidebar]);
 
   useEffect(() => {
     addKeybindings();

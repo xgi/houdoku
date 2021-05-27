@@ -20,6 +20,7 @@ import {
   VerticalLeftOutlined,
   VerticalRightOutlined,
   CloseOutlined,
+  ProfileOutlined,
 } from '@ant-design/icons';
 import { Chapter, Series } from 'houdoku-extension-lib';
 import { RootState } from '../../store';
@@ -201,6 +202,14 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             onClick={() => props.toggleLayoutDirection()}
           >
             {ICONS_LAYOUT_DIRECTION[props.layoutDirection]}
+          </button>
+        </Tooltip>
+        <Tooltip title="Toggle sidebar (s)">
+          <button
+            className={`${styles.settingsButton}`}
+            onClick={() => props.toggleShowingSidebar()}
+          >
+            <ProfileOutlined />
           </button>
         </Tooltip>
         <Tooltip title="Advanced Settings (o)">
