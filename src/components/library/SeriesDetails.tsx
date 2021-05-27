@@ -295,7 +295,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       <ChapterTable
         chapterList={props.chapterList}
         series={props.series}
-        defaultChapterLanguages={props.chapterLanguages}
+        chapterLanguages={props.chapterLanguages}
         toggleChapterRead={props.toggleChapterRead}
       />
     </div>

@@ -1,95 +1,37 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable react/display-name */
 import React, { useState } from 'react';
-import { Table, Checkbox, Button, Input, Space } from 'antd';
+import { Table, Checkbox, Button, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import {
-  Chapter,
-  Language,
-  LanguageKey,
-  Series,
-  Languages,
-} from 'houdoku-extension-lib';
+import { Chapter, Series, Languages, LanguageKey } from 'houdoku-extension-lib';
 import routes from '../../constants/routes.json';
 
 type Props = {
   chapterList: Chapter[];
   series: Series;
-  defaultChapterLanguages: LanguageKey[];
+  chapterLanguages: LanguageKey[];
   toggleChapterRead: (chapter: Chapter, series: Series) => void;
 };
 
-let searchInput: Input | null;
-
 const ChapterTable: React.FC<Props> = (props: Props) => {
-  const [chapterLanguages, setChapterLanguages] = useState(
-    props.defaultChapterLanguages
-  );
-
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-  };
-
-  const handleReset = (clearFilters) => {
-    clearFilters();
-  };
+  const [filterTitle, setFilterTitle] = useState('');
+  const [filterGroup, setFilterGroup] = useState('');
 
   const getColumnSearchProps = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }) => (
+    filterDropdown: () => (
       <div style={{ padding: 8 }}>
         <Input
-          ref={(node) => {
-            searchInput = node;
-          }}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
+          placeholder={`Filter ${dataIndex}...`}
+          allowClear
           onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
+            dataIndex === 'title'
+              ? setFilterTitle(e.target.value)
+              : setFilterGroup(e.target.value)
           }
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ width: 188, marginBottom: 8, display: 'block' }}
         />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => handleReset(clearFilters)}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Reset
-          </Button>
-        </Space>
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
-    onFilter: (value: string, record: any) =>
-      record[dataIndex]
-        ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        : '',
-    onFilterDropdownVisibleChange: (visible: boolean) => {
-      if (visible) {
-        setTimeout(() => searchInput?.select(), 100);
-      }
-    },
+    filterIcon: () => <SearchOutlined />,
   });
 
   const columns = [
@@ -98,7 +40,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'read',
       key: 'read',
       width: '5%',
-      render: function render(text: any, record: any) {
+      render: function render(_text: any, record: any) {
         return (
           <Checkbox
             checked={record.read}
@@ -112,13 +54,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'language',
       key: 'language',
       width: '6%',
-      filters: Object.values(Languages).map((language: Language) => {
-        return { text: language.name, value: language.key };
-      }),
-      filteredValue: chapterLanguages,
-      onFilter: (value: string | number | boolean, record: Chapter) =>
-        record.languageKey === value,
-      render: function render(text: any, record: any) {
+      render: function render(_text: any, record: any) {
         return Languages[record.languageKey] === undefined ? (
           <></>
         ) : (
@@ -132,8 +68,15 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      width: '50%',
+      width: '35%',
       ...getColumnSearchProps('title'),
+    },
+    {
+      title: 'Group',
+      dataIndex: 'groupName',
+      key: 'groupName',
+      width: '15%',
+      ...getColumnSearchProps('groupName'),
     },
     {
       title: 'Volume',
@@ -163,7 +106,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       key: 'readButton',
       width: '15%',
       align: 'center',
-      render: function render(text: any, record: any) {
+      render: function render(_text: any, record: any) {
         return (
           <Link to={`${routes.READER}/${record.id}`}>
             <Button>Read</Button>
@@ -175,13 +118,16 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
 
   return (
     <Table
-      dataSource={props.chapterList}
+      dataSource={props.chapterList.filter(
+        (chapter: Chapter) =>
+          props.chapterLanguages.includes(chapter.languageKey) &&
+          chapter.title.toLowerCase().includes(filterTitle) &&
+          chapter.groupName.toLowerCase().includes(filterGroup)
+      )}
+      // @ts-expect-error cleanup column render types
       columns={columns}
       rowKey="id"
       size="small"
-      onChange={(pagination, filters, sorter) => {
-        setChapterLanguages(filters.language as LanguageKey[]);
-      }}
     />
   );
 };
