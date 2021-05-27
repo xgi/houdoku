@@ -65,10 +65,13 @@ including user settings, is saved with `localStorage`.
 
 ## Extensions
 
-Houdoku does not host any material and is not affiliated with any
-content source. There are no "recommended extensions", but you
-should feel free to try several and mix-and-match according to which
-ones work well for you.
+Houdoku does not host any material; it retrieves media from public websites
+("content sources"). Support for content sources is provided through
+various extensions which can be installed/updated from the Extensions tab
+within the client. Houdoku is not affiliated with any content source.
+
+There are no "recommended extensions", but you should feel free to
+try several and mix-and-match according to which ones work well for you.
 
 If you would like to request support for a website or report an issue with
 an existing extension, please go to the
