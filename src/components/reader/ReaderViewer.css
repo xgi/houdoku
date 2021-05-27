@@ -48,7 +48,8 @@
   width: 50%;
 }
 
-.moveControlsContainer {
+.moveControlsContainer,
+.moveControlsContainerNoSidebar {
   width: calc(100vw - var(--sider-width));
   height: calc(100vh - 24px);
   position: absolute;
@@ -56,6 +57,10 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.moveControlsContainerNoSidebar {
+  width: calc(100vw);
 }
 
 .moveControl {

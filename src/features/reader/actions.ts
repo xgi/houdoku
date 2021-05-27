@@ -8,6 +8,7 @@ import {
   TOGGLE_SHOWING_SETTINGS_MODAL,
   SET_RELEVANT_CHAPTER_LIST,
   SET_PAGE_DATA_LIST,
+  TOGGLE_SHOWING_SIDEBAR,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -70,5 +71,11 @@ export function setRelevantChapterList(
 export function toggleShowingSettingsModal(): ReaderAction {
   return {
     type: TOGGLE_SHOWING_SETTINGS_MODAL,
+  };
+}
+
+export function toggleShowingSidebar(): ReaderAction {
+  return {
+    type: TOGGLE_SHOWING_SIDEBAR,
   };
 }

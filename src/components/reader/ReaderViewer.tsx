@@ -16,6 +16,7 @@ const mapState = (state: RootState) => ({
   lastPageNumber: state.reader.lastPageNumber,
   pageDataList: state.reader.pageDataList,
   series: state.reader.series,
+  showingSidebar: state.reader.showingSidebar,
   pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
@@ -117,7 +118,13 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     if (props.layoutDirection === LayoutDirection.Vertical) return <></>;
 
     return (
-      <div className={styles.moveControlsContainer}>
+      <div
+        className={
+          props.showingSidebar
+            ? styles.moveControlsContainer
+            : styles.moveControlsContainerNoSidebar
+        }
+      >
         <div
           className={styles.moveControl}
           onClick={() =>

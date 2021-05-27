@@ -31,6 +31,7 @@ import {
   setRelevantChapterList,
   toggleShowingSettingsModal,
   setPageDataList,
+  toggleShowingSidebar,
 } from '../../features/reader/actions';
 import styles from './ReaderSidebar.css';
 import { LayoutDirection, PageFit, PageView } from '../../models/types';
@@ -102,6 +103,7 @@ const mapDispatch = (dispatch: any) => ({
   setRelevantChapterList: (relevantChapterList: Chapter[]) =>
     dispatch(setRelevantChapterList(relevantChapterList)),
   toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
+  toggleShowingSidebar: () => dispatch(toggleShowingSidebar()),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
 });

@@ -7,6 +7,7 @@ import {
   TOGGLE_SHOWING_SETTINGS_MODAL,
   SET_RELEVANT_CHAPTER_LIST,
   SET_PAGE_DATA_LIST,
+  TOGGLE_SHOWING_SIDEBAR,
 } from './types';
 
 const initialState: ReaderState = {
@@ -18,6 +19,7 @@ const initialState: ReaderState = {
   chapter: undefined,
   relevantChapterList: [],
   showingSettingsModal: false,
+  showingSidebar: true,
 };
 
 export default function reader(
@@ -63,6 +65,8 @@ export default function reader(
       };
     case TOGGLE_SHOWING_SETTINGS_MODAL:
       return { ...state, showingSettingsModal: !state.showingSettingsModal };
+    case TOGGLE_SHOWING_SIDEBAR:
+      return { ...state, showingSidebar: !state.showingSidebar };
     default:
       return state;
   }

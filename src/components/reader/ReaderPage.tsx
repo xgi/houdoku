@@ -15,6 +15,7 @@ import {
   setRelevantChapterList,
   toggleShowingSettingsModal,
   setPageDataList,
+  toggleShowingSidebar,
 } from '../../features/reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
@@ -49,6 +50,7 @@ const KEYBOARD_SHORTCUTS = {
   togglePageView: 'q',
   togglePageFit: 'f',
   toggleShowingSettingsModal: 'o',
+  toggleShowingSidebar: 's',
 };
 
 const mapState = (state: RootState) => ({
@@ -60,6 +62,7 @@ const mapState = (state: RootState) => ({
   chapter: state.reader.chapter,
   relevantChapterList: state.reader.relevantChapterList,
   showingSettingsModal: state.reader.showingSettingsModal,
+  showingSidebar: state.reader.showingSidebar,
   pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
@@ -87,6 +90,7 @@ const mapDispatch = (dispatch: any) => ({
   setRelevantChapterList: (relevantChapterList: Chapter[]) =>
     dispatch(setRelevantChapterList(relevantChapterList)),
   toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
+  toggleShowingSidebar: () => dispatch(toggleShowingSidebar()),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
 });
@@ -325,6 +329,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleShowingSettingsModal, () =>
       props.toggleShowingSettingsModal()
     );
+    Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleShowingSidebar, () =>
+      props.toggleShowingSidebar()
+    );
   };
 
   /**
@@ -378,13 +385,17 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   return (
     <Layout className={styles.pageLayout}>
       <ReaderSettingsModal />
-      <ReaderSidebar
-        changePage={changePage}
-        setChapter={setChapter}
-        changeChapter={changeChapter}
-        getAdjacentChapterId={getAdjacentChapterId}
-        exitPage={exitPage}
-      />
+      {props.showingSidebar ? (
+        <ReaderSidebar
+          changePage={changePage}
+          setChapter={setChapter}
+          changeChapter={changeChapter}
+          getAdjacentChapterId={getAdjacentChapterId}
+          exitPage={exitPage}
+        />
+      ) : (
+        <></>
+      )}
       <Layout className={`site-layout ${styles.contentLayout}`}>
         {props.pageDataList.length === 0 ? (
           <ReaderLoader extensionId={props.series?.extensionId} />

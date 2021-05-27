@@ -7,6 +7,7 @@ export const SET_PAGE_DATA_LIST = 'SET_PAGE_DATA_LIST';
 export const SET_SOURCE = 'SET_SOURCE';
 export const SET_RELEVANT_CHAPTER_LIST = 'SET_RELEVANT_CHAPTER_LIST';
 export const TOGGLE_SHOWING_SETTINGS_MODAL = 'TOGGLE_SHOWING_SETTINGS_MODAL';
+export const TOGGLE_SHOWING_SIDEBAR = 'TOGGLE_SHOWING_SIDEBAR';
 
 export interface ReaderState {
   pageNumber: number;
@@ -17,6 +18,7 @@ export interface ReaderState {
   chapter?: Chapter;
   relevantChapterList: Chapter[];
   showingSettingsModal: boolean;
+  showingSidebar: boolean;
 }
 
 interface SetPageNumberAction {
@@ -66,6 +68,10 @@ interface ToggleShowingSettingsModal {
   type: typeof TOGGLE_SHOWING_SETTINGS_MODAL;
 }
 
+interface ToggleShowingSidebarAction {
+  type: typeof TOGGLE_SHOWING_SIDEBAR;
+}
+
 export type ReaderAction =
   | SetPageNumberAction
   | ChangePageNumberAction
@@ -73,4 +79,5 @@ export type ReaderAction =
   | SetPageDataListAction
   | SetSourceAction
   | SetRelevantChapterListAction
-  | ToggleShowingSettingsModal;
+  | ToggleShowingSettingsModal
+  | ToggleShowingSidebarAction;
