@@ -1,7 +1,14 @@
 /* eslint-disable react/button-has-type */
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import { Layout, Typography, Tooltip, Dropdown, Menu } from 'antd';
+import {
+  Layout,
+  Typography,
+  Tooltip,
+  Dropdown,
+  Menu,
+  notification,
+} from 'antd';
 import {
   FullscreenOutlined,
   ColumnWidthOutlined,
@@ -104,7 +111,14 @@ const mapDispatch = (dispatch: any) => ({
   setRelevantChapterList: (relevantChapterList: Chapter[]) =>
     dispatch(setRelevantChapterList(relevantChapterList)),
   toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
-  toggleShowingSidebar: () => dispatch(toggleShowingSidebar()),
+  toggleShowingSidebar: () => {
+    notification.open({
+      message: 'Sidebar Closed',
+      description: 'Press [s] or [ESC] to re-open the sidebar',
+      placement: 'bottomLeft',
+    });
+    dispatch(toggleShowingSidebar());
+  },
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
 });
