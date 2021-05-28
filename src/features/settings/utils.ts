@@ -24,6 +24,7 @@ export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.PageView]: PageView.Single,
   [ReaderSetting.PageFit]: PageFit.Auto,
   [ReaderSetting.PreloadAmount]: 2,
+  [ReaderSetting.OverlayPageNumber]: false,
 };
 
 export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
@@ -64,6 +65,9 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   const preloadAmount: string | null = persistantStore.read(
     `${PREFIXES.reader}${ReaderSetting.PreloadAmount}`
   );
+  const overlayPageNumber: string | null = persistantStore.read(
+    `${PREFIXES.reader}${ReaderSetting.OverlayPageNumber}`
+  );
 
   if (layoutDirection !== null) {
     settings[ReaderSetting.LayoutDirection] = parseInt(layoutDirection, 10);
@@ -76,6 +80,9 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   }
   if (preloadAmount !== null) {
     settings[ReaderSetting.PreloadAmount] = parseInt(preloadAmount, 10);
+  }
+  if (overlayPageNumber !== null) {
+    settings[ReaderSetting.OverlayPageNumber] = overlayPageNumber === 'true';
   }
 
   log.debug(`Using reader settings: ${settings}`);

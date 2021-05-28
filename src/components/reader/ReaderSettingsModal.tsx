@@ -7,6 +7,7 @@ import styles from './ReaderSettingsModal.css';
 import { RootState } from '../../store';
 import {
   setLayoutDirection,
+  setOverlayPageNumber,
   setPageFit,
   setPageView,
   setPreloadAmount,
@@ -41,6 +42,10 @@ const preloadText: { [key: number]: string } = {
   4: '4 Pages',
   5: '5 Pages',
 };
+const overlayPageNumberText: { [key: string]: string } = {
+  true: 'Yes',
+  false: 'No',
+};
 
 const mapState = (state: RootState) => ({
   showingSettingsModal: state.reader.showingSettingsModal,
@@ -48,6 +53,7 @@ const mapState = (state: RootState) => ({
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
+  overlayPageNumber: state.settings.overlayPageNumber,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,6 +64,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setLayoutDirection(layoutDirection)),
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
+  setOverlayPageNumber: (overlayPageNumber: boolean) =>
+    dispatch(setOverlayPageNumber(overlayPageNumber)),
   toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
 });
 
@@ -123,6 +131,15 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
       {renderMenuItems(preloadText)}
     </Menu>
   );
+  const overlayPageNumberMenu = (
+    <Menu
+      onClick={(e: any) =>
+        props.setOverlayPageNumber(e.item.props['data-value'] === 'true')
+      }
+    >
+      {renderMenuItems(overlayPageNumberText)}
+    </Menu>
+  );
 
   return (
     <Modal
@@ -167,6 +184,17 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
           <Dropdown overlay={preloadMenu}>
             <Button>
               {preloadText[props.preloadAmount]} <DownOutlined />
+            </Button>
+          </Dropdown>
+        </Col>
+      </Row>
+      <Row className={styles.settingRow}>
+        <Col span={16}>Overlay Page Number</Col>
+        <Col span={8}>
+          <Dropdown overlay={overlayPageNumberMenu}>
+            <Button>
+              {overlayPageNumberText[props.overlayPageNumber.toString()]}{' '}
+              <DownOutlined />
             </Button>
           </Dropdown>
         </Col>

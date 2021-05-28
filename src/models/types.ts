@@ -24,6 +24,7 @@ export enum ReaderSetting {
   LayoutDirection = 'LayoutDirection',
   PageView = 'PageView',
   PreloadAmount = 'PreloadAmount',
+  OverlayPageNumber = 'OverlayPageNumber',
 }
 
 export enum PageFit {

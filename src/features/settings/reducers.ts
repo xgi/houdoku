@@ -17,6 +17,7 @@ import {
   SET_PAGE_VIEW,
   SET_CHAPTER_LANGUAGES,
   SET_REFRESH_ON_START,
+  SET_OVERLAY_PAGE_NUMBER,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -55,6 +56,10 @@ const initialState: SettingsState = {
     storedReaderSettings.PreloadAmount === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.PreloadAmount]
       : storedReaderSettings.PreloadAmount,
+  overlayPageNumber:
+    storedReaderSettings.OverlayPageNumber === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.OverlayPageNumber]
+      : storedReaderSettings.OverlayPageNumber,
 };
 
 function nextPageFit(pageFit: PageFit): PageFit {
@@ -142,6 +147,12 @@ export default function settings(
         action.payload.preloadAmount
       );
       return { ...state, preloadAmount: action.payload.preloadAmount };
+    case SET_OVERLAY_PAGE_NUMBER:
+      saveReaderSetting(
+        ReaderSetting.OverlayPageNumber,
+        action.payload.overlayPageNumber
+      );
+      return { ...state, overlayPageNumber: action.payload.overlayPageNumber };
     default:
       return state;
   }

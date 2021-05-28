@@ -72,3 +72,23 @@
 .moveControl:hover {
   cursor: pointer;
 }
+
+.pageNumberOverlayContainer {
+  position: absolute;
+  z-index: 20;
+  right: 25px;
+  bottom: 10px;
+}
+
+.pageNumberOverlayText {
+  font-size: 1.2em;
+  margin-bottom: 0 !important;
+  /* color: var(--color-background); */
+  /* -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: #333; */
+  text-shadow: -1px -1px 0 var(--color-background),
+    0 -1px 0 var(--color-background), 1px -1px 0 var(--color-background),
+    1px 0 0 var(--color-background), 1px 1px 0 var(--color-background),
+    0 1px 0 var(--color-background), -1px 1px 0 var(--color-background),
+    -1px 0 0 var(--color-background);
+}

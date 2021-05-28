@@ -16,6 +16,7 @@ import { RootState } from '../../store';
 import {
   setChapterLanguages,
   setLayoutDirection,
+  setOverlayPageNumber,
   setPageFit,
   setPageView,
   setPreloadAmount,
@@ -34,25 +35,21 @@ const refreshOnStartText: { [key: string]: string } = {
   true: 'Yes',
   false: 'No',
 };
-
 const layoutDirectionText: { [key in LayoutDirection]: string } = {
   [LayoutDirection.LeftToRight]: 'Left-to-Right',
   [LayoutDirection.RightToLeft]: 'Right-to-Left',
   [LayoutDirection.Vertical]: 'Vertical',
 };
-
 const pageViewText: { [key in PageView]: string } = {
   [PageView.Single]: 'Single',
   [PageView.Double]: 'Double (Even Start)',
   [PageView.Double_OddStart]: 'Double (Odd Start)',
 };
-
 const pageFitText: { [key in PageFit]: string } = {
   [PageFit.Auto]: 'Auto',
   [PageFit.Width]: 'Fit Width',
   [PageFit.Height]: 'Fit Height',
 };
-
 const preloadText: { [key: number]: string } = {
   0: 'Disabled',
   1: '1 Page',
@@ -60,6 +57,10 @@ const preloadText: { [key: number]: string } = {
   3: '3 Pages',
   4: '4 Pages',
   5: '5 Pages',
+};
+const overlayPageNumberText: { [key: string]: string } = {
+  true: 'Yes',
+  false: 'No',
 };
 
 const mapState = (state: RootState) => ({
@@ -69,6 +70,7 @@ const mapState = (state: RootState) => ({
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
+  overlayPageNumber: state.settings.overlayPageNumber,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,6 +85,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setLayoutDirection(layoutDirection)),
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
+  setOverlayPageNumber: (overlayPageNumber: boolean) =>
+    dispatch(setOverlayPageNumber(overlayPageNumber)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -118,6 +122,9 @@ const Settings: React.FC<Props> = (props: Props) => {
         break;
       case ReaderSetting.PreloadAmount:
         props.setPreloadAmount(value);
+        break;
+      case ReaderSetting.OverlayPageNumber:
+        props.setOverlayPageNumber(value);
         break;
       default:
         break;
@@ -253,6 +260,35 @@ const Settings: React.FC<Props> = (props: Props) => {
           >
             <Button>
               {preloadText[props.preloadAmount]} <DownOutlined />
+            </Button>
+          </Dropdown>
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Overlay Page Number</Col>
+        <Col span={14}>
+          <Dropdown
+            overlay={
+              <Menu
+                onClick={(e: any) => {
+                  updateReaderSetting(
+                    ReaderSetting.OverlayPageNumber,
+                    e.item.props['data-value'] === 'true'
+                  );
+                }}
+              >
+                <Menu.Item key={1} data-value="true">
+                  Yes
+                </Menu.Item>
+                <Menu.Item key={2} data-value="false">
+                  No
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button>
+              {overlayPageNumberText[props.overlayPageNumber.toString()]}{' '}
+              <DownOutlined />
             </Button>
           </Dropdown>
         </Col>

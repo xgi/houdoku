@@ -11,6 +11,7 @@ import {
   SET_LAYOUT_DIRECTION,
   SET_CHAPTER_LANGUAGES,
   SET_REFRESH_ON_START,
+  SET_OVERLAY_PAGE_NUMBER,
 } from './types';
 
 export function setChapterLanguages(
@@ -85,6 +86,17 @@ export function setPreloadAmount(preloadAmount: number): SettingsAction {
     type: SET_PRELOAD_AMOUNT,
     payload: {
       preloadAmount,
+    },
+  };
+}
+
+export function setOverlayPageNumber(
+  overlayPageNumber: boolean
+): SettingsAction {
+  return {
+    type: SET_OVERLAY_PAGE_NUMBER,
+    payload: {
+      overlayPageNumber,
     },
   };
 }

@@ -3,7 +3,7 @@
 import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Layout } from 'antd';
-import log from 'electron-log';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import { RootState } from '../../store';
 import styles from './ReaderViewer.css';
 import { LayoutDirection, PageFit, PageView } from '../../models/types';
@@ -20,6 +20,7 @@ const mapState = (state: RootState) => ({
   pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
+  overlayPageNumber: state.settings.overlayPageNumber,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -114,6 +115,16 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const renderPageNumberOverlay = () => {
+    return (
+      <div className={styles.pageNumberOverlayContainer}>
+        <Paragraph className={styles.pageNumberOverlayText}>
+          {props.pageNumber}/{props.lastPageNumber}
+        </Paragraph>
+      </div>
+    );
+  };
+
   const renderPageClickControls = () => {
     if (props.layoutDirection === LayoutDirection.Vertical) return <></>;
 
@@ -148,6 +159,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   return (
     <>
       {renderPageClickControls()}
+      {props.overlayPageNumber ? renderPageNumberOverlay() : <></>}
       {renderViewer()}
     </>
   );
