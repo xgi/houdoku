@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react';
+import React, { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Layout } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
@@ -39,6 +39,21 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     return props.layoutDirection === LayoutDirection.Vertical
       ? 0
       : `${props.pageNumber * -100 + 100}%`;
+  };
+
+  const viewerContainerClickHandler = (e: any) => {
+    const rect: DOMRect = e.target.getBoundingClientRect();
+    const relX = e.clientX - rect.left;
+
+    if (relX > rect.width * 0.6) {
+      props.changePageNumber(
+        props.layoutDirection === LayoutDirection.LeftToRight ? 1 : -1
+      );
+    } else if (relX < rect.width * 0.4) {
+      props.changePageNumber(
+        props.layoutDirection === LayoutDirection.LeftToRight ? -1 : 1
+      );
+    }
   };
 
   const renderPageImage = (pageNumber: number) => {
@@ -109,6 +124,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
             ? styles.viewerContainerVertical
             : styles.viewerContainer
         }
+        onClick={viewerContainerClickHandler}
       >
         {imageWrappers}
       </div>
@@ -125,40 +141,8 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const renderPageClickControls = () => {
-    if (props.layoutDirection === LayoutDirection.Vertical) return <></>;
-
-    return (
-      <div
-        className={
-          props.showingSidebar
-            ? styles.moveControlsContainer
-            : styles.moveControlsContainerNoSidebar
-        }
-      >
-        <div
-          className={styles.moveControl}
-          onClick={() =>
-            props.changePageNumber(
-              props.layoutDirection === LayoutDirection.LeftToRight ? -1 : 1
-            )
-          }
-        />
-        <div
-          className={styles.moveControl}
-          onClick={() =>
-            props.changePageNumber(
-              props.layoutDirection === LayoutDirection.LeftToRight ? 1 : -1
-            )
-          }
-        />
-      </div>
-    );
-  };
-
   return (
     <>
-      {renderPageClickControls()}
       {props.overlayPageNumber ? renderPageNumberOverlay() : <></>}
       {renderViewer()}
     </>
