@@ -23,7 +23,7 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import styles from './Search.css';
 import { ProgressFilter } from '../../models/types';
-import LibraryGrid from '../library/LibraryGrid';
+import SeriesGrid from '../general/SeriesGrid';
 import {
   setAddModalSeries,
   setSearchExtension,
@@ -259,7 +259,7 @@ const Search: React.FC<Props> = (props: Props) => {
           <Paragraph>Loading results...</Paragraph>
         </div>
       ) : (
-        <LibraryGrid
+        <SeriesGrid
           columns={4}
           seriesList={props.searchResults}
           sorted={false}

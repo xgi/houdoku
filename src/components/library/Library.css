@@ -2,7 +2,7 @@
   --header-height: 50px;
 }
 
-.libraryGrid {
+.seriesGrid {
   margin-top: var(--header-height);
   margin-right: -16px;
   padding-top: 16px;

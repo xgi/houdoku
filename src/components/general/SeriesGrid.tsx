@@ -9,7 +9,7 @@ import Title from 'antd/lib/typography/Title';
 import { CheckOutlined } from '@ant-design/icons';
 import { Series, SeriesStatus } from 'houdoku-extension-lib';
 import { ProgressFilter } from '../../models/types';
-import styles from './LibraryGrid.css';
+import styles from './SeriesGrid.css';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
 
@@ -32,7 +32,7 @@ type Props = {
   inLibraryFunc: ((series: Series) => boolean) | undefined;
 };
 
-const LibraryGrid: React.FC<Props> = (props: Props) => {
+const SeriesGrid: React.FC<Props> = (props: Props) => {
   /**
    * Get the cover image source of a series.
    * If the series id is non-undefined (i.e. it is in the user's library) we first try to find the
@@ -166,4 +166,4 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default LibraryGrid;
+export default SeriesGrid;

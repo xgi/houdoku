@@ -9,7 +9,7 @@ import { changeNumColumns, setFilter } from '../../features/library/actions';
 import { loadSeriesList } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
-import LibraryGrid from './LibraryGrid';
+import SeriesGrid from '../general/SeriesGrid';
 import LibraryControlBar from './LibraryControlBar';
 
 const mapState = (state: RootState) => ({
@@ -42,10 +42,10 @@ const Library: React.FC<Props> = (props: Props) => {
     if (series.id !== undefined) history.push(`${routes.SERIES}/${series.id}`);
   };
 
-  const renderLibraryGrid = () => {
+  const renderSeriesGrid = () => {
     return (
-      <div className={styles.libraryGrid}>
-        <LibraryGrid
+      <div className={styles.seriesGrid}>
+        <SeriesGrid
           columns={props.columns}
           seriesList={props.seriesList}
           sorted
@@ -75,7 +75,7 @@ const Library: React.FC<Props> = (props: Props) => {
   return (
     <>
       <LibraryControlBar />
-      {props.seriesList.length > 0 ? renderLibraryGrid() : renderEmptyMessage()}
+      {props.seriesList.length > 0 ? renderSeriesGrid() : renderEmptyMessage()}
     </>
   );
 };
