@@ -76,6 +76,15 @@ a.ant-typography:hover,
   color: var(--color-link);
 }
 
+.ant-input:hover,
+.ant-input:focus,
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):focus,
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--color-link);
+  box-shadow: none;
+}
+
 .ant-table {
   background-color: var(--color-background);
   color: var(--color-foreground);
