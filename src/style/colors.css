@@ -70,8 +70,8 @@ a.ant-typography:hover,
   color: var(--color-link-highlight);
 }
 
-.ant-btn:hover :not(.ant-btn-primary:hover),
-.ant-btn:focus :not(.ant-btn-primary:focus) {
+.ant-btn:hover:not(.ant-btn-primary:hover),
+.ant-btn:focus:not(.ant-btn-primary:focus) {
   border-color: var(--color-link);
   color: var(--color-link);
 }
