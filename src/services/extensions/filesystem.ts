@@ -27,6 +27,7 @@ export const FS_METADATA: ExtensionMetadata = {
   name: 'filesystem',
   url: '',
   version: '1.0.0',
+  translatedLanguage: undefined,
   notice: 'Add a series by selecting the directory or archive file below.',
   noticeUrl: 'https://github.com/xgi/houdoku/wiki/Importing-Local-Series',
   pageLoadMessage: '',
@@ -156,10 +157,9 @@ export class FSExtensionClient extends ExtensionClientAbstract {
         resolve(walk(chapterSourceId));
       });
     } else {
-      fileListPromise = getArchiveFiles(
-        seriesSourceId
-      ).then((fileList: string[]) =>
-        fileList.filter((_path: string) => _path.startsWith(chapterSourceId))
+      fileListPromise = getArchiveFiles(seriesSourceId).then(
+        (fileList: string[]) =>
+          fileList.filter((_path: string) => _path.startsWith(chapterSourceId))
       );
     }
 
