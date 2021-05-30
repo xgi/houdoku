@@ -242,7 +242,9 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
             onChange={(value: string[]) =>
               setCustomSeries({
                 ...customSeries,
-                genres: genreKeysFromNames(value),
+                genres: genreKeysFromNames(value).filter(
+                  (entry) => entry !== null
+                ) as GenreKey[],
               })
             }
             disabled={!props.editable}
@@ -265,7 +267,9 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
             onChange={(value: string[]) =>
               setCustomSeries({
                 ...customSeries,
-                themes: themeKeysFromNames(value),
+                themes: themeKeysFromNames(value).filter(
+                  (entry) => entry !== null
+                ) as ThemeKey[],
               })
             }
             disabled={!props.editable}
@@ -288,7 +292,9 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
             onChange={(value: string[]) =>
               setCustomSeries({
                 ...customSeries,
-                formats: formatKeysFromNames(value),
+                formats: formatKeysFromNames(value).filter(
+                  (entry) => entry !== null
+                ) as FormatKey[],
               })
             }
             disabled={!props.editable}
@@ -312,7 +318,9 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
             onChange={(value: string[]) =>
               setCustomSeries({
                 ...customSeries,
-                contentWarnings: contentWarningKeysFromNames(value),
+                contentWarnings: contentWarningKeysFromNames(value).filter(
+                  (entry) => entry !== null
+                ) as ContentWarningKey[],
               })
             }
             disabled={!props.editable}
