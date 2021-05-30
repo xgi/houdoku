@@ -108,20 +108,31 @@ async function reloadSeries(series: Series) {
   }
 
   const oldChapters: Chapter[] = await db.fetchChapters(series.id);
+  const orphanedChapterIds: number[] = oldChapters.map(
+    (chapter: Chapter) => chapter.id || -1
+  );
 
   const chapters: Chapter[] = newChapters.map((chapter: Chapter) => {
     const matchingChapter: Chapter | undefined = oldChapters.find(
       (c: Chapter) => c.sourceId === chapter.sourceId
     );
-    if (matchingChapter !== undefined) {
+    if (matchingChapter !== undefined && matchingChapter.id !== undefined) {
       chapter.id = matchingChapter.id;
       chapter.read = matchingChapter.read;
+
+      orphanedChapterIds.splice(
+        orphanedChapterIds.indexOf(matchingChapter.id),
+        1
+      );
     }
     return chapter;
   });
 
   await db.addSeries(newSeries);
   await db.addChapters(chapters, newSeries);
+  if (orphanedChapterIds.length > 0) {
+    await db.deleteChaptersById(orphanedChapterIds);
+  }
   await db.updateSeriesNumberUnread(newSeries);
 }
 

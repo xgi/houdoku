@@ -61,12 +61,24 @@ const deleteAllSeries = () => {
   db.database.delete().from(db.seriesTable).exec();
 };
 
-const deleteChapters = (seriesId: number) => {
+const deleteChaptersBySeries = (seriesId: number) => {
   return db.database
     .delete()
     .from(db.chapterTable)
     .where(db.chapterTable.seriesId.eq(seriesId))
     .exec();
+};
+
+const deleteChaptersById = (chapterIds: number[]) => {
+  if (chapterIds.length === 0) return;
+
+  // eslint-disable-next-line consistent-return
+  return db.database
+    .delete()
+    .from(db.chapterTable)
+    .where(db.chapterTable.id.eq(chapterIds[0]))
+    .exec()
+    .then(() => deleteChaptersById(chapterIds.slice(1)));
 };
 
 const deleteSeries = (id: number) => {
@@ -75,7 +87,7 @@ const deleteSeries = (id: number) => {
     .from(db.seriesTable)
     .where(db.seriesTable.id.eq(id))
     .exec()
-    .then(() => deleteChapters(id));
+    .then(() => deleteChaptersBySeries(id));
 };
 
 const updateSeriesNumberUnread = (series: Series) => {
@@ -100,6 +112,7 @@ export default {
   addChapters,
   deleteSeries,
   deleteAllSeries,
-  deleteChapters,
+  deleteChaptersBySeries,
+  deleteChaptersById,
   updateSeriesNumberUnread,
 };
