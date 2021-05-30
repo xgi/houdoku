@@ -186,6 +186,12 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
           <Input
             value={customSeries.title}
             title={customSeries.title}
+            onChange={(e) =>
+              setCustomSeries({
+                ...customSeries,
+                title: e.target.value,
+              })
+            }
             disabled={!props.editable}
           />
         </Col>

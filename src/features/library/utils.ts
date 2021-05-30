@@ -13,6 +13,7 @@ import db from '../../services/db';
 import { deleteThumbnail } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import { setStatusText } from '../statusbar/actions';
+import { FS_METADATA } from '../../services/extensions/filesystem';
 
 export function loadSeriesList(dispatch: any) {
   db.fetchSerieses().then((response: any) => dispatch(setSeriesList(response)));
@@ -84,7 +85,7 @@ export function toggleChapterRead(
 async function reloadSeries(series: Series) {
   if (series.id === undefined) return;
 
-  const newSeries: Series | undefined = await ipcRenderer.invoke(
+  let newSeries: Series | undefined = await ipcRenderer.invoke(
     'extension-getSeries',
     series.extensionId,
     series.sourceType,
@@ -99,8 +100,12 @@ async function reloadSeries(series: Series) {
     series.sourceId
   );
 
-  newSeries.id = series.id;
-  newSeries.userTags = series.userTags;
+  if (series.extensionId === FS_METADATA.id) {
+    newSeries = { ...series };
+  } else {
+    newSeries.id = series.id;
+    newSeries.userTags = series.userTags;
+  }
 
   const oldChapters: Chapter[] = await db.fetchChapters(series.id);
 
