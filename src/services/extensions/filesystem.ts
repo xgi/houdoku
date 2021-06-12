@@ -94,7 +94,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       Array.from(imageDirectories).forEach((directory: string) => {
         const dirName: string = path.basename(directory);
         const matchChapterNum: RegExpMatchArray | null = dirName.match(
-          new RegExp(/c(\d)+/g)
+          new RegExp(/c(\d)+(\.(\d)+)?/g)
         );
         const matchVolumeNum: RegExpMatchArray | null = dirName.match(
           new RegExp(/v(\d)+/g)
