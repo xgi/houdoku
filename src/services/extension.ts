@@ -12,7 +12,7 @@ import { IpcMain } from 'electron';
 import fetch from 'node-fetch';
 import DOMParser from 'dom-parser';
 import log from 'electron-log';
-import { FSExtensionClient } from './extensions/filesystem';
+import { FSExtensionClient, FS_METADATA } from './extensions/filesystem';
 import ipcChannels from '../constants/ipcChannels.json';
 
 const domParser = new DOMParser();
@@ -27,10 +27,16 @@ export async function loadExtensions(
 
   Object.keys(EXTENSION_CLIENTS).forEach((extensionId: string) => {
     const extMetadata = EXTENSION_CLIENTS[extensionId].getMetadata();
-    aki.unload(
-      pluginsDir,
-      `@houdoku/extension-${extMetadata.name.toLowerCase()}`
-    );
+    if (extMetadata.id !== FS_METADATA.id) {
+      aki.unload(
+        pluginsDir,
+        `@houdoku/extension-${extMetadata.name
+          .toLowerCase()
+          .replaceAll(' ', '')}`,
+        // eslint-disable-next-line no-eval
+        eval('require') as NodeRequire
+      );
+    }
     delete EXTENSION_CLIENTS[extensionId];
     log.info(`Unloaded extension ${extMetadata.name} (ID ${extensionId})`);
   });
@@ -287,10 +293,12 @@ export const createExtensionIpcHandlers = (
 ) => {
   log.debug('Creating extension IPC handlers in main...');
 
-  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, (event) => {
-    return loadExtensions(pluginsDir, webviewFn).then(() =>
-      event.sender.send(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS)
-    );
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, async (event) => {
+    console.log('here');
+    console.log(webviewFn);
+    console.log(pluginsDir);
+    await loadExtensions(pluginsDir, webviewFn);
+    return event.sender.send(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS);
   });
   ipcMain.handle(
     ipcChannels.EXTENSION_MANAGER.INSTALL,
@@ -324,9 +332,9 @@ export const createExtensionIpcHandlers = (
     }
   );
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET_ALL, () => {
-    return Object.values(
-      EXTENSION_CLIENTS
-    ).map((client: ExtensionClientInterface) => client.getMetadata());
+    return Object.values(EXTENSION_CLIENTS).map(
+      (client: ExtensionClientInterface) => client.getMetadata()
+    );
   });
 
   ipcMain.handle(
