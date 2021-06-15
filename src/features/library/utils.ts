@@ -14,6 +14,7 @@ import { deleteThumbnail } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import { setStatusText } from '../statusbar/actions';
 import { FS_METADATA } from '../../services/extensions/filesystem';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 export function loadSeriesList(dispatch: any) {
   db.fetchSerieses().then((response: any) => dispatch(setSeriesList(response)));
@@ -45,7 +46,7 @@ export async function importSeries(dispatch: any, series: Series) {
   dispatch(setStatusText(`Adding "${series.title}" to your library...`));
 
   const chapters: Chapter[] = await ipcRenderer.invoke(
-    'extension-getChapters',
+    ipcChannels.EXTENSION.GET_CHAPTERS,
     series.extensionId,
     series.sourceType,
     series.sourceId
@@ -85,8 +86,17 @@ export function toggleChapterRead(
 async function reloadSeries(series: Series) {
   if (series.id === undefined) return;
 
+  if (
+    (await ipcRenderer.invoke(
+      ipcChannels.EXTENSION_MANAGER.GET,
+      series.extensionId
+    )) === undefined
+  ) {
+    return;
+  }
+
   let newSeries: Series | undefined = await ipcRenderer.invoke(
-    'extension-getSeries',
+    ipcChannels.EXTENSION.GET_SERIES,
     series.extensionId,
     series.sourceType,
     series.sourceId
@@ -94,7 +104,7 @@ async function reloadSeries(series: Series) {
   if (newSeries === undefined) return;
 
   const newChapters: Chapter[] = await ipcRenderer.invoke(
-    'extension-getChapters',
+    ipcChannels.EXTENSION.GET_CHAPTERS,
     series.extensionId,
     series.sourceType,
     series.sourceId
