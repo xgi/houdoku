@@ -17,6 +17,24 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const [filterTitle, setFilterTitle] = useState('');
   const [filterGroup, setFilterGroup] = useState('');
 
+  const getFilteredList = () => {
+    return props.chapterList.filter(
+      (chapter: Chapter) =>
+        props.chapterLanguages.includes(chapter.languageKey) &&
+        chapter.title.toLowerCase().includes(filterTitle) &&
+        chapter.groupName.toLowerCase().includes(filterGroup)
+    );
+  };
+
+  const getNextUnreadChapter = () => {
+    return getFilteredList()
+      .sort(
+        (a: Chapter, b: Chapter) =>
+          parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
+      )
+      .find((chapter: Chapter) => !chapter.read);
+  };
+
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: () => (
       <div style={{ padding: 8 }}>
@@ -102,7 +120,16 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       },
     },
     {
-      title: '',
+      title: () => {
+        const nextChapter: Chapter | undefined = getNextUnreadChapter();
+        if (nextChapter === undefined) return <></>;
+
+        return (
+          <Link to={`${routes.READER}/${nextChapter.id}`}>
+            <Button type="primary">Continue</Button>
+          </Link>
+        );
+      },
       key: 'readButton',
       width: '15%',
       align: 'center',
@@ -118,12 +145,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
 
   return (
     <Table
-      dataSource={props.chapterList.filter(
-        (chapter: Chapter) =>
-          props.chapterLanguages.includes(chapter.languageKey) &&
-          chapter.title.toLowerCase().includes(filterTitle) &&
-          chapter.groupName.toLowerCase().includes(filterGroup)
-      )}
+      dataSource={getFilteredList()}
       // @ts-expect-error cleanup column render types
       columns={columns}
       rowKey="id"
