@@ -294,9 +294,6 @@ export const createExtensionIpcHandlers = (
   log.debug('Creating extension IPC handlers in main...');
 
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, async (event) => {
-    console.log('here');
-    console.log(webviewFn);
-    console.log(pluginsDir);
     await loadExtensions(pluginsDir, webviewFn);
     return event.sender.send(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS);
   });

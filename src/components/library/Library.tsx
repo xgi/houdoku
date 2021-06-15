@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { Series } from 'houdoku-extension-lib';
+import { ipcRenderer } from 'electron';
+import { Modal } from 'antd';
 import styles from './Library.css';
 import routes from '../../constants/routes.json';
 import { changeNumColumns, setFilter } from '../../features/library/actions';
@@ -11,6 +13,9 @@ import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import SeriesGrid from '../general/SeriesGrid';
 import LibraryControlBar from './LibraryControlBar';
+import ipcChannels from '../../constants/ipcChannels.json';
+
+const { confirm } = Modal;
 
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
@@ -38,8 +43,40 @@ type Props = PropsFromRedux & {};
 const Library: React.FC<Props> = (props: Props) => {
   const history = useHistory();
 
-  const goToSeries = (series: Series) => {
-    if (series.id !== undefined) history.push(`${routes.SERIES}/${series.id}`);
+  const goToSeries = async (series: Series) => {
+    if (series.id !== undefined) {
+      if (
+        (await ipcRenderer.invoke(
+          ipcChannels.EXTENSION_MANAGER.GET,
+          series.extensionId
+        )) === undefined
+      ) {
+        confirm({
+          okType: 'primary',
+          okText: 'Remove Series',
+          okButtonProps: {
+            danger: true,
+          },
+          maskClosable: true,
+          content: (
+            <>
+              <Paragraph>
+                The extension for this series was not found.
+              </Paragraph>
+              <Paragraph>
+                To access the series, please reinstall the extension. Or, you
+                may remove it from your library now.
+              </Paragraph>
+              <Paragraph type="secondary">
+                (extension: {series.extensionId})
+              </Paragraph>
+            </>
+          ),
+        });
+      } else {
+        history.push(`${routes.SERIES}/${series.id}`);
+      }
+    }
   };
 
   const renderSeriesGrid = () => {
