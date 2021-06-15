@@ -58,7 +58,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'read',
       key: 'read',
       width: '5%',
-      render: function render(_text: any, record: any) {
+      render: function render(_text: string, record: Chapter) {
         return (
           <Checkbox
             checked={record.read}
@@ -72,7 +72,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'language',
       key: 'language',
       width: '6%',
-      render: function render(_text: any, record: any) {
+      render: function render(_text: string, record: Chapter) {
         return Languages[record.languageKey] === undefined ? (
           <></>
         ) : (
@@ -103,7 +103,8 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       width: '12%',
       align: 'center',
       sorter: {
-        compare: (a: any, b: any) => a.volumeNumber - b.volumeNumber,
+        compare: (a: Chapter, b: Chapter) =>
+          parseFloat(a.volumeNumber) - parseFloat(b.volumeNumber),
         multiple: 2,
       },
     },
@@ -115,7 +116,8 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       width: '12%',
       align: 'center',
       sorter: {
-        compare: (a: any, b: any) => a.chapterNumber - b.chapterNumber,
+        compare: (a: Chapter, b: Chapter) =>
+          parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber),
         multiple: 1,
       },
     },
@@ -133,7 +135,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       key: 'readButton',
       width: '15%',
       align: 'center',
-      render: function render(_text: any, record: any) {
+      render: function render(_text: string, record: Chapter) {
         return (
           <Link to={`${routes.READER}/${record.id}`}>
             <Button>Read</Button>
