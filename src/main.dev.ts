@@ -29,6 +29,7 @@ import {
 import { loadInWebView } from './util/webview';
 import ipcChannels from './constants/ipcChannels.json';
 import packageJson from '../package.json';
+import { createTrackerIpcHandlers } from './services/tracker';
 
 log.info(
   `Starting Houdoku main process (client version ${packageJson.version})`
@@ -263,3 +264,5 @@ ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
 const webviewFn = (url: string) => loadInWebView(mainWindow, url);
 createExtensionIpcHandlers(ipcMain, pluginsDir, webviewFn);
 loadExtensions(pluginsDir, webviewFn);
+
+createTrackerIpcHandlers(ipcMain);

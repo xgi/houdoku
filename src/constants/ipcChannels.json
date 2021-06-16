@@ -33,5 +33,13 @@
     "GET_SETTING_TYPES": "extension-getSettingTypes",
     "GET_SETTINGS": "extension-getSettings",
     "SET_SETTINGS": "extension-setSettings"
+  },
+  "TRACKER_MANAGER": {
+    "GET_ALL": "tracker-manager-get-alls"
+  },
+  "TRACKER": {
+    "GET_AUTH_URL": "tracker-getAuthUrl",
+    "GET_USERNAME": "tracker-getUsername",
+    "SET_ACCESS_TOKEN": "tracker-setAccessToken"
   }
 }

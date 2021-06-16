@@ -8,6 +8,12 @@ export type ExtensionTableRow = {
   canUpdate: boolean;
 };
 
+export type TrackerMetadata = {
+  id: string;
+  name: string;
+  url: string;
+};
+
 export enum ProgressFilter {
   All,
   Unread,
