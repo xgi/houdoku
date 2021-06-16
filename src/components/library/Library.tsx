@@ -8,7 +8,7 @@ import { Modal } from 'antd';
 import styles from './Library.css';
 import routes from '../../constants/routes.json';
 import { changeNumColumns, setFilter } from '../../features/library/actions';
-import { loadSeriesList } from '../../features/library/utils';
+import { loadSeriesList, removeSeries } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import SeriesGrid from '../general/SeriesGrid';
@@ -29,6 +29,7 @@ const mapState = (state: RootState) => ({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
   changeNumColumns: (columns: number) => dispatch(changeNumColumns(columns)),
+  removeSeries: (series: Series) => removeSeries(dispatch, series),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeriesList: () => loadSeriesList(dispatch),
   setFilter: (filter: string) => dispatch(setFilter(filter)),
@@ -56,6 +57,9 @@ const Library: React.FC<Props> = (props: Props) => {
           okText: 'Remove Series',
           okButtonProps: {
             danger: true,
+          },
+          onOk: () => {
+            props.removeSeries(series);
           },
           maskClosable: true,
           content: (
