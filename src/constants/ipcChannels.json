@@ -40,6 +40,10 @@
   "TRACKER": {
     "GET_AUTH_URL": "tracker-getAuthUrl",
     "GET_USERNAME": "tracker-getUsername",
+    "SEARCH": "tracker-search",
+    "GET_LIBRARY_ENTRY": "tracker-getLibraryEntry",
+    "ADD_LIBRARY_ENTRY": "tracker-addLibraryEntry",
+    "UPDATE_LIBRARY_ENTRY": "tracker-updateLibraryEntry",
     "SET_ACCESS_TOKEN": "tracker-setAccessToken"
   }
 }
