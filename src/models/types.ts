@@ -14,6 +14,32 @@ export type TrackerMetadata = {
   url: string;
 };
 
+export type TrackerSeries = {
+  id: string;
+  title: string;
+  description: string;
+  coverUrl: string;
+};
+
+export enum TrackStatus {
+  Reading = 'Reading',
+  Planning = 'Planning',
+  Completed = 'Completed',
+  Dropped = 'Dropped',
+  Paused = 'Paused',
+}
+
+export type TrackEntry = {
+  id?: string;
+  seriesId: string;
+  title?: string;
+  description?: string;
+  coverUrl?: string;
+  score?: number;
+  progress: number;
+  status: TrackStatus;
+};
+
 export enum ProgressFilter {
   All,
   Unread,
