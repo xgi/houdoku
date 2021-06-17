@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Select, Col, Row, Menu, Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
@@ -22,6 +22,7 @@ import {
   setPreloadAmount,
   setRefreshOnStart,
 } from '../../features/settings/actions';
+import AniListConfigureModal from '../tracker/AniListConfigureModal';
 
 const { Option } = Select;
 
@@ -96,6 +97,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const Settings: React.FC<Props> = (props: Props) => {
+  const [showingAniListModal, setShowingAniListModal] = useState(false);
+
   const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
     switch (generalSetting) {
       case GeneralSetting.ChapterLanguages:
@@ -165,6 +168,10 @@ const Settings: React.FC<Props> = (props: Props) => {
 
   return (
     <>
+      <AniListConfigureModal
+        visible={showingAniListModal}
+        toggleVisible={() => setShowingAniListModal(!showingAniListModal)}
+      />
       <Title className={styles.title} level={4}>
         General
       </Title>
@@ -291,6 +298,17 @@ const Settings: React.FC<Props> = (props: Props) => {
               <DownOutlined />
             </Button>
           </Dropdown>
+        </Col>
+      </Row>
+      <Title className={styles.title} level={4}>
+        Trackers
+      </Title>
+      <Row className={styles.row}>
+        <Col span={10}>AniList</Col>
+        <Col span={14}>
+          <Button onClick={() => setShowingAniListModal(true)}>
+            Configure
+          </Button>
         </Col>
       </Row>
     </>
