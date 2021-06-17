@@ -253,22 +253,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           </Button>
         </Affix>
       </Link>
-      <Affix className={styles.controlButtonAffix}>
-        <>
-          <Button className={styles.removeButton} onClick={handleRemove}>
-            Remove Series
-          </Button>
-          <Button
-            className={styles.refreshButton}
-            onClick={() => {
-              if (props.series !== undefined && !props.reloadingSeriesList)
-                props.reloadSeriesList([props.series], loadContent);
-            }}
-          >
-            {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
-          </Button>
-        </>
-      </Affix>
       <div className={styles.backgroundContainer}>
         {props.seriesBannerUrl === null ? (
           <></>
@@ -285,7 +269,24 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           />
         </div>
         <div className={styles.headerDetailsContainer}>
-          <Title level={4}>{props.series.title}</Title>
+          <div className={styles.headerTitleRow}>
+            <Title level={4}>{props.series.title}</Title>
+            <div className={styles.headerTitleSpacer} />
+            <Button className={styles.removeButton} onClick={handleRemove}>
+              Remove Series
+            </Button>
+            <Button>Tracker Config</Button>
+            <Button
+              type="primary"
+              className={styles.refreshButton}
+              onClick={() => {
+                if (props.series !== undefined && !props.reloadingSeriesList)
+                  props.reloadSeriesList([props.series], loadContent);
+              }}
+            >
+              {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
+            </Button>
+          </div>
           <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
             {props.series.description}
           </Paragraph>
