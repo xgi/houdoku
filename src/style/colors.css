@@ -147,6 +147,25 @@ td.ant-table-column-sort {
   color: var(--color-background-alt);
 }
 
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--color-link);
+}
+
+.ant-tabs-tab:hover {
+  color: var(--color-link);
+}
+
+.ant-tabs-tab-btn:focus,
+.ant-tabs-tab-remove:focus,
+.ant-tabs-tab-btn:active,
+.ant-tabs-tab-remove:active {
+  color: var(--color-link);
+}
+
+.ant-tabs-ink-bar {
+  background: var(--color-link);
+}
+
 #window-controls .button:hover {
   background: rgba(255, 255, 255, 0.1);
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Select, Col, Row, Menu, Dropdown, Button } from 'antd';
+import { Select, Col, Row, Menu, Dropdown, Button, Tabs } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Title from 'antd/lib/typography/Title';
 import { connect, ConnectedProps } from 'react-redux';
@@ -26,6 +26,7 @@ import TrackerConfigureModal from '../tracker/TrackerConfigureModal';
 import { AniListTrackerMetadata } from '../../services/trackers/anilist';
 
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 const languageOptions = Object.values(Languages).map((language: Language) => (
   <Option key={language.key} value={language.key}>
@@ -174,145 +175,150 @@ const Settings: React.FC<Props> = (props: Props) => {
         visible={trackerModalId !== ''}
         toggleVisible={() => setTrackerModalId('')}
       />
-      <Title className={styles.title} level={4}>
-        General
-      </Title>
-      <Row className={styles.row}>
-        <Col span={10}>Languages in Chapter List</Col>
-        <Col span={14}>
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: '100%' }}
-            placeholder="Select languages..."
-            defaultValue={props.chapterLanguages}
-            onChange={(value) =>
-              updateGeneralSetting(GeneralSetting.ChapterLanguages, value)
-            }
-          >
-            {languageOptions}
-          </Select>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Refresh Library on Startup</Col>
-        <Col span={14}>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  updateGeneralSetting(
-                    GeneralSetting.RefreshOnStart,
-                    e.item.props['data-value'] === 'true'
-                  );
-                }}
+      <Tabs defaultActiveKey="1" tabPosition="top">
+        <TabPane tab="General" key={1}>
+          <Row className={styles.row}>
+            <Col span={10}>Languages in Chapter List</Col>
+            <Col span={14}>
+              <Select
+                mode="multiple"
+                allowClear
+                style={{ width: '100%' }}
+                placeholder="Select languages..."
+                defaultValue={props.chapterLanguages}
+                onChange={(value) =>
+                  updateGeneralSetting(GeneralSetting.ChapterLanguages, value)
+                }
               >
-                <Menu.Item key={1} data-value="true">
-                  Yes
-                </Menu.Item>
-                <Menu.Item key={2} data-value="false">
-                  No
-                </Menu.Item>
-              </Menu>
-            }
-          >
-            <Button>
-              {refreshOnStartText[props.refreshOnStart.toString()]}{' '}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Title className={styles.title} level={4}>
-        Reader
-      </Title>
-      <Row className={styles.row}>
-        <Col span={10}>Layout Direction</Col>
-        <Col span={14}>
-          <Dropdown
-            overlay={renderMenu(
-              ReaderSetting.LayoutDirection,
-              layoutDirectionText
-            )}
-          >
-            <Button>
-              {layoutDirectionText[props.layoutDirection]} <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Page View</Col>
-        <Col span={14}>
-          <Dropdown overlay={renderMenu(ReaderSetting.PageView, pageViewText)}>
-            <Button>
-              {pageViewText[props.pageView]} <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Page Fit</Col>
-        <Col span={14}>
-          <Dropdown overlay={renderMenu(ReaderSetting.PageFit, pageFitText)}>
-            <Button>
-              {pageFitText[props.pageFit]} <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Image Preloading</Col>
-        <Col span={14}>
-          <Dropdown
-            overlay={renderMenu(ReaderSetting.PreloadAmount, preloadText)}
-          >
-            <Button>
-              {preloadText[props.preloadAmount]} <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Overlay Page Number</Col>
-        <Col span={14}>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  updateReaderSetting(
-                    ReaderSetting.OverlayPageNumber,
-                    e.item.props['data-value'] === 'true'
-                  );
-                }}
+                {languageOptions}
+              </Select>
+            </Col>
+          </Row>
+          <Row className={styles.row}>
+            <Col span={10}>Refresh Library on Startup</Col>
+            <Col span={14}>
+              <Dropdown
+                overlay={
+                  <Menu
+                    onClick={(e: any) => {
+                      updateGeneralSetting(
+                        GeneralSetting.RefreshOnStart,
+                        e.item.props['data-value'] === 'true'
+                      );
+                    }}
+                  >
+                    <Menu.Item key={1} data-value="true">
+                      Yes
+                    </Menu.Item>
+                    <Menu.Item key={2} data-value="false">
+                      No
+                    </Menu.Item>
+                  </Menu>
+                }
               >
-                <Menu.Item key={1} data-value="true">
-                  Yes
-                </Menu.Item>
-                <Menu.Item key={2} data-value="false">
-                  No
-                </Menu.Item>
-              </Menu>
-            }
-          >
-            <Button>
-              {overlayPageNumberText[props.overlayPageNumber.toString()]}{' '}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Title className={styles.title} level={4}>
-        Trackers
-      </Title>
-      <Row className={styles.row}>
-        <Col span={10}>AniList</Col>
-        <Col span={14}>
-          <Button onClick={() => setTrackerModalId(AniListTrackerMetadata.id)}>
-            Configure
-          </Button>
-        </Col>
-      </Row>
+                <Button>
+                  {refreshOnStartText[props.refreshOnStart.toString()]}{' '}
+                  <DownOutlined />
+                </Button>
+              </Dropdown>
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tab="Reader" key={2}>
+          <Row className={styles.row}>
+            <Col span={10}>Layout Direction</Col>
+            <Col span={14}>
+              <Dropdown
+                overlay={renderMenu(
+                  ReaderSetting.LayoutDirection,
+                  layoutDirectionText
+                )}
+              >
+                <Button>
+                  {layoutDirectionText[props.layoutDirection]} <DownOutlined />
+                </Button>
+              </Dropdown>
+            </Col>
+          </Row>
+          <Row className={styles.row}>
+            <Col span={10}>Page View</Col>
+            <Col span={14}>
+              <Dropdown
+                overlay={renderMenu(ReaderSetting.PageView, pageViewText)}
+              >
+                <Button>
+                  {pageViewText[props.pageView]} <DownOutlined />
+                </Button>
+              </Dropdown>
+            </Col>
+          </Row>
+          <Row className={styles.row}>
+            <Col span={10}>Page Fit</Col>
+            <Col span={14}>
+              <Dropdown
+                overlay={renderMenu(ReaderSetting.PageFit, pageFitText)}
+              >
+                <Button>
+                  {pageFitText[props.pageFit]} <DownOutlined />
+                </Button>
+              </Dropdown>
+            </Col>
+          </Row>
+          <Row className={styles.row}>
+            <Col span={10}>Image Preloading</Col>
+            <Col span={14}>
+              <Dropdown
+                overlay={renderMenu(ReaderSetting.PreloadAmount, preloadText)}
+              >
+                <Button>
+                  {preloadText[props.preloadAmount]} <DownOutlined />
+                </Button>
+              </Dropdown>
+            </Col>
+          </Row>
+          <Row className={styles.row}>
+            <Col span={10}>Overlay Page Number</Col>
+            <Col span={14}>
+              <Dropdown
+                overlay={
+                  <Menu
+                    onClick={(e: any) => {
+                      updateReaderSetting(
+                        ReaderSetting.OverlayPageNumber,
+                        e.item.props['data-value'] === 'true'
+                      );
+                    }}
+                  >
+                    <Menu.Item key={1} data-value="true">
+                      Yes
+                    </Menu.Item>
+                    <Menu.Item key={2} data-value="false">
+                      No
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <Button>
+                  {overlayPageNumberText[props.overlayPageNumber.toString()]}{' '}
+                  <DownOutlined />
+                </Button>
+              </Dropdown>
+            </Col>
+          </Row>
+        </TabPane>
+        <TabPane tab="Trackers" key={3}>
+          <Row className={styles.row}>
+            <Col span={10}>AniList</Col>
+            <Col span={14}>
+              <Button
+                onClick={() => setTrackerModalId(AniListTrackerMetadata.id)}
+              >
+                Configure
+              </Button>
+            </Col>
+          </Row>
+        </TabPane>
+      </Tabs>
     </>
   );
 };
