@@ -71,6 +71,12 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
 
   return (
     <>
+      <Paragraph>
+        Houdoku allows you to sync your account on list-tracking websites and
+        automatically upload your progress as you read. After authenticating
+        below, click the &quot;Trackers&quot; button on a series page to link it
+        with an entry on your list.
+      </Paragraph>
       <Title level={4}>AniList</Title>
       <Row className={styles.row}>
         <Col span={10}>1) Open the authentication page in your browser</Col>
