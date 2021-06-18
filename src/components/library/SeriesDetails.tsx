@@ -40,6 +40,7 @@ import {
   removeSeries,
   toggleChapterRead,
   updateSeriesUserTags,
+  updateSeriesTrackerKeys,
 } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
@@ -84,6 +85,11 @@ const mapDispatch = (dispatch: any) => ({
     userTags: string[],
     callback: () => void
   ) => updateSeriesUserTags(series, userTags, callback),
+  updateSeriesTrackerKeys: (
+    series: Series,
+    trackerKeys: { [trackerId: string]: string } | undefined,
+    callback: () => void
+  ) => updateSeriesTrackerKeys(series, trackerKeys, callback),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
     dispatch(setSeriesBannerUrl(seriesBannerUrl)),
 });
@@ -111,7 +117,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         props.setSeries(response[0]);
         return getBannerImageUrl(response[0]);
       })
-      .then((seriesBannerUrl: string) =>
+      .then((seriesBannerUrl: string | null) =>
         props.setSeriesBannerUrl(seriesBannerUrl)
       );
 
