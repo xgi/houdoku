@@ -178,7 +178,7 @@ const Settings: React.FC<Props> = (props: Props) => {
       <Tabs defaultActiveKey="1" tabPosition="top">
         <TabPane tab="General" key={1}>
           <Row className={styles.row}>
-            <Col span={10}>Languages in Chapter List</Col>
+            <Col span={10}>Chapter Languages</Col>
             <Col span={14}>
               <Select
                 mode="multiple"

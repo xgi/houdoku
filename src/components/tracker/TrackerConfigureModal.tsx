@@ -8,6 +8,7 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import styles from './TrackerConfigureModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
+import storeKeys from '../../constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
 
 type Props = {
@@ -42,7 +43,7 @@ const TrackerConfigureModal: React.FC<Props> = (props: Props) => {
     setLoading(true);
 
     persistantStore.write(
-      `tracker-access-token-${props.trackerId}`,
+      `${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${props.trackerId}`,
       _accessToken
     );
     await ipcRenderer

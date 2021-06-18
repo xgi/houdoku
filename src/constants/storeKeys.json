@@ -1,0 +1,8 @@
+{
+  "EXTENSION_SETTINGS_PREFIX": "extension-settings-",
+  "TRACKER_ACCESS_TOKEN_PREFIX": "tracker-access-token-",
+  "SETTINGS": {
+    "GENERAL_PREFIX": "general-",
+    "READER_PREFIX": "reader-"
+  }
+}
