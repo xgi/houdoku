@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route } from 'react-router-dom';
-import { Layout, Menu } from 'antd';
+import { Button, Layout, Menu } from 'antd';
 import log from 'electron-log';
 import {
   BookOutlined,
@@ -37,7 +37,9 @@ import About from '../about/About';
 import Library from '../library/Library';
 import Extensions from '../extensions/Extensions';
 import ipcChannels from '../../constants/ipcChannels.json';
+import storeKeys from '../../constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
+import { TrackerMetadata } from '../../models/types';
 
 const { Content, Sider } = Layout;
 
@@ -93,7 +95,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           .then((metadataList: ExtensionMetadata[]) => {
             metadataList.forEach((metadata: ExtensionMetadata) => {
               const extSettings: string | null = persistantStore.read(
-                `extension-settings-${metadata.id}`
+                `${storeKeys.EXTENSION_SETTINGS_PREFIX}${metadata.id}`
               );
               if (extSettings !== null) {
                 log.debug(`Found stored settings for extension ${metadata.id}`);
@@ -109,7 +111,33 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       );
     };
 
+    const loadStoredTrackerTokens = () => {
+      log.info('Loading stored tracker tokens...');
+      return (
+        ipcRenderer
+          .invoke(ipcChannels.TRACKER_MANAGER.GET_ALL)
+          // eslint-disable-next-line promise/always-return
+          .then((metadataList: TrackerMetadata[]) => {
+            metadataList.forEach((metadata: TrackerMetadata) => {
+              const token: string | null = persistantStore.read(
+                `${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${metadata.id}`
+              );
+              if (token !== null) {
+                log.debug(`Found stored token for tracker ${metadata.id}`);
+                ipcRenderer.invoke(
+                  ipcChannels.TRACKER.SET_ACCESS_TOKEN,
+                  metadata.id,
+                  token
+                );
+              }
+            });
+          })
+          .catch((e: Error) => log.error(e))
+      );
+    };
+
     loadStoredExtensionSettings();
+    loadStoredTrackerTokens();
 
     ipcRenderer.on(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS, () => {
       loadStoredExtensionSettings();
