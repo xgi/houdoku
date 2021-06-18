@@ -6,17 +6,17 @@ import { Button, Col, Input, Modal, Row, Spin } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import styles from './AniListConfigureModal.css';
+import styles from './TrackerConfigureModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
-import { AniListTrackerMetadata } from '../../services/trackers/anilist';
 import persistantStore from '../../util/persistantStore';
 
 type Props = {
+  trackerId: string;
   visible: boolean;
   toggleVisible: () => void;
 };
 
-const AniListConfigureModal: React.FC<Props> = (props: Props) => {
+const TrackerConfigureModal: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState('');
   const [authUrl, setAuthUrl] = useState<string>('');
@@ -26,12 +26,12 @@ const AniListConfigureModal: React.FC<Props> = (props: Props) => {
     setLoading(true);
 
     await ipcRenderer
-      .invoke(ipcChannels.TRACKER.GET_AUTH_URL, AniListTrackerMetadata.id)
+      .invoke(ipcChannels.TRACKER.GET_AUTH_URL, props.trackerId)
       .then((_authUrl: string) => setAuthUrl(_authUrl))
       .catch((e) => log.error(e));
 
     await ipcRenderer
-      .invoke(ipcChannels.TRACKER.GET_USERNAME, AniListTrackerMetadata.id)
+      .invoke(ipcChannels.TRACKER.GET_USERNAME, props.trackerId)
       .then((_username) => setUsername(_username))
       .catch((e) => log.error(e));
 
@@ -42,13 +42,13 @@ const AniListConfigureModal: React.FC<Props> = (props: Props) => {
     setLoading(true);
 
     persistantStore.write(
-      `tracker-access-token-${AniListTrackerMetadata.id}`,
+      `tracker-access-token-${props.trackerId}`,
       _accessToken
     );
     await ipcRenderer
       .invoke(
         ipcChannels.TRACKER.SET_ACCESS_TOKEN,
-        AniListTrackerMetadata.id,
+        props.trackerId,
         _accessToken
       )
       .catch((e) => log.error(e));
@@ -56,13 +56,16 @@ const AniListConfigureModal: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    loadTrackerDetails();
-  }, []);
+    if (props.trackerId !== '') {
+      loadTrackerDetails();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.trackerId]);
 
   if (loading) {
     return (
       <Modal
-        title="Configure AniList"
+        title="Configure Tracker"
         visible={props.visible}
         footer={null}
         onCancel={props.toggleVisible}
@@ -77,7 +80,7 @@ const AniListConfigureModal: React.FC<Props> = (props: Props) => {
 
   return (
     <Modal
-      title="Configure AniList"
+      title="Configure Tracker"
       visible={props.visible}
       footer={null}
       onCancel={props.toggleVisible}
@@ -122,4 +125,4 @@ const AniListConfigureModal: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default AniListConfigureModal;
+export default TrackerConfigureModal;

@@ -22,7 +22,8 @@ import {
   setPreloadAmount,
   setRefreshOnStart,
 } from '../../features/settings/actions';
-import AniListConfigureModal from '../tracker/AniListConfigureModal';
+import TrackerConfigureModal from '../tracker/TrackerConfigureModal';
+import { AniListTrackerMetadata } from '../../services/trackers/anilist';
 
 const { Option } = Select;
 
@@ -97,7 +98,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const Settings: React.FC<Props> = (props: Props) => {
-  const [showingAniListModal, setShowingAniListModal] = useState(false);
+  const [trackerModalId, setTrackerModalId] = useState('');
 
   const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
     switch (generalSetting) {
@@ -168,9 +169,10 @@ const Settings: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <AniListConfigureModal
-        visible={showingAniListModal}
-        toggleVisible={() => setShowingAniListModal(!showingAniListModal)}
+      <TrackerConfigureModal
+        trackerId={trackerModalId}
+        visible={trackerModalId !== ''}
+        toggleVisible={() => setTrackerModalId('')}
       />
       <Title className={styles.title} level={4}>
         General
@@ -306,7 +308,7 @@ const Settings: React.FC<Props> = (props: Props) => {
       <Row className={styles.row}>
         <Col span={10}>AniList</Col>
         <Col span={14}>
-          <Button onClick={() => setShowingAniListModal(true)}>
+          <Button onClick={() => setTrackerModalId(AniListTrackerMetadata.id)}>
             Configure
           </Button>
         </Col>
