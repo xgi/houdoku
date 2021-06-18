@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Select, Col, Row, Menu, Dropdown, Button, Tabs } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
@@ -165,143 +165,139 @@ const Settings: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <>
-      <Tabs defaultActiveKey="1" tabPosition="top">
-        <TabPane tab="General" key={1}>
-          <Row className={styles.row}>
-            <Col span={10}>Chapter Languages</Col>
-            <Col span={14}>
-              <Select
-                mode="multiple"
-                allowClear
-                style={{ width: '100%' }}
-                placeholder="Select languages..."
-                defaultValue={props.chapterLanguages}
-                onChange={(value) =>
-                  updateGeneralSetting(GeneralSetting.ChapterLanguages, value)
-                }
-              >
-                {languageOptions}
-              </Select>
-            </Col>
-          </Row>
-          <Row className={styles.row}>
-            <Col span={10}>Refresh Library on Startup</Col>
-            <Col span={14}>
-              <Dropdown
-                overlay={
-                  <Menu
-                    onClick={(e: any) => {
-                      updateGeneralSetting(
-                        GeneralSetting.RefreshOnStart,
-                        e.item.props['data-value'] === 'true'
-                      );
-                    }}
-                  >
-                    <Menu.Item key={1} data-value="true">
-                      Yes
-                    </Menu.Item>
-                    <Menu.Item key={2} data-value="false">
-                      No
-                    </Menu.Item>
-                  </Menu>
-                }
-              >
-                <Button>
-                  {refreshOnStartText[props.refreshOnStart.toString()]}{' '}
-                  <DownOutlined />
-                </Button>
-              </Dropdown>
-            </Col>
-          </Row>
-        </TabPane>
-        <TabPane tab="Reader" key={2}>
-          <Row className={styles.row}>
-            <Col span={10}>Layout Direction</Col>
-            <Col span={14}>
-              <Dropdown
-                overlay={renderMenu(
-                  ReaderSetting.LayoutDirection,
-                  layoutDirectionText
-                )}
-              >
-                <Button>
-                  {layoutDirectionText[props.layoutDirection]} <DownOutlined />
-                </Button>
-              </Dropdown>
-            </Col>
-          </Row>
-          <Row className={styles.row}>
-            <Col span={10}>Page View</Col>
-            <Col span={14}>
-              <Dropdown
-                overlay={renderMenu(ReaderSetting.PageView, pageViewText)}
-              >
-                <Button>
-                  {pageViewText[props.pageView]} <DownOutlined />
-                </Button>
-              </Dropdown>
-            </Col>
-          </Row>
-          <Row className={styles.row}>
-            <Col span={10}>Page Fit</Col>
-            <Col span={14}>
-              <Dropdown
-                overlay={renderMenu(ReaderSetting.PageFit, pageFitText)}
-              >
-                <Button>
-                  {pageFitText[props.pageFit]} <DownOutlined />
-                </Button>
-              </Dropdown>
-            </Col>
-          </Row>
-          <Row className={styles.row}>
-            <Col span={10}>Image Preloading</Col>
-            <Col span={14}>
-              <Dropdown
-                overlay={renderMenu(ReaderSetting.PreloadAmount, preloadText)}
-              >
-                <Button>
-                  {preloadText[props.preloadAmount]} <DownOutlined />
-                </Button>
-              </Dropdown>
-            </Col>
-          </Row>
-          <Row className={styles.row}>
-            <Col span={10}>Overlay Page Number</Col>
-            <Col span={14}>
-              <Dropdown
-                overlay={
-                  <Menu
-                    onClick={(e: any) => {
-                      updateReaderSetting(
-                        ReaderSetting.OverlayPageNumber,
-                        e.item.props['data-value'] === 'true'
-                      );
-                    }}
-                  >
-                    <Menu.Item key={1} data-value="true">
-                      Yes
-                    </Menu.Item>
-                    <Menu.Item key={2} data-value="false">
-                      No
-                    </Menu.Item>
-                  </Menu>
-                }
-              >
-                <Button>
-                  {overlayPageNumberText[props.overlayPageNumber.toString()]}{' '}
-                  <DownOutlined />
-                </Button>
-              </Dropdown>
-            </Col>
-          </Row>
-        </TabPane>
-        <TabPane tab="Trackers" key={3}>
-          <TrackerSettings />
-        </TabPane>
-      </Tabs>
-    </>
+    <Tabs defaultActiveKey="1" tabPosition="top">
+      <TabPane tab="General" key={1}>
+        <Row className={styles.row}>
+          <Col span={10}>Chapter Languages</Col>
+          <Col span={14}>
+            <Select
+              mode="multiple"
+              allowClear
+              style={{ width: '100%' }}
+              placeholder="Select languages..."
+              defaultValue={props.chapterLanguages}
+              onChange={(value) =>
+                updateGeneralSetting(GeneralSetting.ChapterLanguages, value)
+              }
+            >
+              {languageOptions}
+            </Select>
+          </Col>
+        </Row>
+        <Row className={styles.row}>
+          <Col span={10}>Refresh Library on Startup</Col>
+          <Col span={14}>
+            <Dropdown
+              overlay={
+                <Menu
+                  onClick={(e: any) => {
+                    updateGeneralSetting(
+                      GeneralSetting.RefreshOnStart,
+                      e.item.props['data-value'] === 'true'
+                    );
+                  }}
+                >
+                  <Menu.Item key={1} data-value="true">
+                    Yes
+                  </Menu.Item>
+                  <Menu.Item key={2} data-value="false">
+                    No
+                  </Menu.Item>
+                </Menu>
+              }
+            >
+              <Button>
+                {refreshOnStartText[props.refreshOnStart.toString()]}{' '}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+      </TabPane>
+      <TabPane tab="Reader" key={2}>
+        <Row className={styles.row}>
+          <Col span={10}>Layout Direction</Col>
+          <Col span={14}>
+            <Dropdown
+              overlay={renderMenu(
+                ReaderSetting.LayoutDirection,
+                layoutDirectionText
+              )}
+            >
+              <Button>
+                {layoutDirectionText[props.layoutDirection]} <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+        <Row className={styles.row}>
+          <Col span={10}>Page View</Col>
+          <Col span={14}>
+            <Dropdown
+              overlay={renderMenu(ReaderSetting.PageView, pageViewText)}
+            >
+              <Button>
+                {pageViewText[props.pageView]} <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+        <Row className={styles.row}>
+          <Col span={10}>Page Fit</Col>
+          <Col span={14}>
+            <Dropdown overlay={renderMenu(ReaderSetting.PageFit, pageFitText)}>
+              <Button>
+                {pageFitText[props.pageFit]} <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+        <Row className={styles.row}>
+          <Col span={10}>Image Preloading</Col>
+          <Col span={14}>
+            <Dropdown
+              overlay={renderMenu(ReaderSetting.PreloadAmount, preloadText)}
+            >
+              <Button>
+                {preloadText[props.preloadAmount]} <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+        <Row className={styles.row}>
+          <Col span={10}>Overlay Page Number</Col>
+          <Col span={14}>
+            <Dropdown
+              overlay={
+                <Menu
+                  onClick={(e: any) => {
+                    updateReaderSetting(
+                      ReaderSetting.OverlayPageNumber,
+                      e.item.props['data-value'] === 'true'
+                    );
+                  }}
+                >
+                  <Menu.Item key={1} data-value="true">
+                    Yes
+                  </Menu.Item>
+                  <Menu.Item key={2} data-value="false">
+                    No
+                  </Menu.Item>
+                </Menu>
+              }
+            >
+              <Button>
+                {overlayPageNumberText[props.overlayPageNumber.toString()]}{' '}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+      </TabPane>
+      <TabPane tab="Trackers" key={3}>
+        <TrackerSettings />
+      </TabPane>
+    </Tabs>
   );
 };
 

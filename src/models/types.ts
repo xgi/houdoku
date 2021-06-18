@@ -36,8 +36,8 @@ export type TrackEntry = {
   description?: string;
   coverUrl?: string;
   score?: number;
-  progress: number;
-  status: TrackStatus;
+  progress?: number;
+  status?: TrackStatus;
 };
 
 export enum ProgressFilter {

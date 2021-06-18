@@ -130,7 +130,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
         return data.data.Page.media.map((media: any) => ({
           id: media.id,
           title: media.title.romaji,
-          description: media.description,
+          description: media.description === null ? '' : media.description,
           coverUrl: media.coverImage.large,
         }));
       })
@@ -184,7 +184,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((response: Response) => response.json())
       .then((data: any) => {
         if ('errors' in data) {
-          log.error(
+          log.warn(
             `Error getting library entry for series ${seriesId} from tracker from tracker ${
               AniListTrackerMetadata.id
             }: ${data.errors.map((error: any) => error.message).join('; ')}`
@@ -272,7 +272,10 @@ export class AniListTrackerClient extends TrackerClientAbstract {
     if (this.userId === '') return null;
 
     const prevEntry = await this.getLibraryEntry(trackEntry.seriesId);
-    if (prevEntry === null) return this.addLibraryEntry(trackEntry);
+    if (prevEntry === null)
+      return this.addLibraryEntry(trackEntry).then(() =>
+        this.updateLibraryEntry(trackEntry)
+      );
 
     trackEntry.id = prevEntry.id;
     if (trackEntry.progress === undefined) {

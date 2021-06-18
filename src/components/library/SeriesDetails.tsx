@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix, Modal, Select } from 'antd';
 import { ipcRenderer } from 'electron';
@@ -45,6 +45,7 @@ import {
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import ipcChannels from '../../constants/ipcChannels.json';
+import SeriesTrackerModal from './SeriesTrackerModal';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -107,6 +108,7 @@ interface ParamTypes {
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams<ParamTypes>();
   const history = useHistory();
+  const [showingTrackerModal, setShowingTrackerModal] = useState(false);
 
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
@@ -251,7 +253,12 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   if (props.series === undefined) return <></>;
 
   return (
-    <div>
+    <>
+      <SeriesTrackerModal
+        series={props.series}
+        visible={showingTrackerModal}
+        toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
+      />
       <Link to={routes.LIBRARY}>
         <Affix className={styles.backButtonAffix}>
           <Button onClick={() => props.loadSeriesList()}>
@@ -281,7 +288,9 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             <Button className={styles.removeButton} onClick={handleRemove}>
               Remove Series
             </Button>
-            <Button>Tracker Config</Button>
+            <Button onClick={() => setShowingTrackerModal(true)}>
+              Trackers
+            </Button>
             <Button
               type="primary"
               className={styles.refreshButton}
@@ -305,7 +314,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         chapterLanguages={props.chapterLanguages}
         toggleChapterRead={props.toggleChapterRead}
       />
-    </div>
+    </>
   );
 };
 
