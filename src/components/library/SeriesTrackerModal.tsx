@@ -1,9 +1,11 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import {
   Button,
   Col,
   Dropdown,
-  Input,
   InputNumber,
   List,
   Menu,
@@ -27,12 +29,14 @@ const { TabPane } = Tabs;
 
 type Props = {
   series: Series;
+  loadSeriesContent: () => void;
   visible: boolean;
   toggleVisible: () => void;
 };
 
 const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
   const [trackerKey, setTrackerKey] = useState('');
   const [trackerSeriesList, setTrackerSeriesList] = useState<TrackerSeries[]>(
     []
@@ -64,15 +68,33 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
       .catch((e) => log.error(e));
   };
 
+  const loadTrackerSeriesList = () => {
+    setLoading(true);
+
+    ipcRenderer
+      .invoke(
+        ipcChannels.TRACKER.SEARCH,
+        AniListTrackerMetadata.id,
+        props.series.title
+      )
+      .then((_seriesList: TrackerSeries[]) =>
+        setTrackerSeriesList(_seriesList.slice(0, 5))
+      )
+      .catch((e) => log.error(e))
+      .finally(() => setLoading(false))
+      .catch((e) => log.error(e));
+  };
+
   const applySeriesTrackerKey = (key: string) => {
     const newTrackerKeys = {
       ...props.series.trackerKeys,
       [AniListTrackerMetadata.id]: key,
     };
 
-    updateSeriesTrackerKeys(props.series, newTrackerKeys, () =>
-      setTrackerKey(key)
-    );
+    updateSeriesTrackerKeys(props.series, newTrackerKeys, () => {
+      setTrackerKey(key);
+      props.loadSeriesContent();
+    });
   };
 
   const renderTrackerSeriesList = () => {
@@ -210,8 +232,31 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
             </Dropdown>
           </Col>
         </Row>
+        <Paragraph className={styles.unlinkText}>
+          <a
+            onClick={() => {
+              applySeriesTrackerKey('');
+              loadTrackerSeriesList();
+            }}
+          >
+            Unlink this series.
+          </a>
+        </Paragraph>
       </>
     );
+  };
+
+  const renderTrackerContent = () => {
+    if (!authenticated) {
+      return (
+        <Paragraph>
+          In order to track this series, please link your AniList account
+          through the Settings tab on the left.
+        </Paragraph>
+      );
+    }
+
+    return trackerKey === '' ? renderTrackerSeriesList() : renderTrackEntry();
   };
 
   useEffect(() => {
@@ -244,33 +289,35 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   }, [trackerKey]);
 
   useEffect(() => {
-    setLoading(true);
     setTrackerKey('');
     setTrackerSeriesList([]);
 
     if (props.visible) {
-      if (
-        props.series.trackerKeys !== undefined &&
-        Object.keys(props.series.trackerKeys).includes(
-          AniListTrackerMetadata.id
-        )
-      ) {
-        setTrackerKey(props.series.trackerKeys[AniListTrackerMetadata.id]);
-        setLoading(false);
-      } else {
-        ipcRenderer
-          .invoke(
-            ipcChannels.TRACKER.SEARCH,
-            AniListTrackerMetadata.id,
-            props.series.title
-          )
-          .then((_seriesList: TrackerSeries[]) =>
-            setTrackerSeriesList(_seriesList.slice(0, 5))
-          )
-          .catch((e) => log.error(e))
-          .finally(() => setLoading(false))
-          .catch((e) => log.error(e));
-      }
+      ipcRenderer
+        .invoke(ipcChannels.TRACKER.GET_USERNAME, AniListTrackerMetadata.id)
+        .then((username: string | null) => {
+          const isAuth = username !== null;
+          setAuthenticated(isAuth);
+          return isAuth;
+        })
+        .then((isAuth: boolean) => {
+          // eslint-disable-next-line promise/always-return
+          if (isAuth) {
+            if (
+              props.series.trackerKeys !== undefined &&
+              Object.keys(props.series.trackerKeys).includes(
+                AniListTrackerMetadata.id
+              )
+            ) {
+              const key = props.series.trackerKeys[AniListTrackerMetadata.id];
+              setTrackerKey(key);
+              if (key === '') loadTrackerSeriesList();
+            } else {
+              loadTrackerSeriesList();
+            }
+          }
+        })
+        .catch((e) => log.error(e));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.series, props.visible]);
@@ -300,8 +347,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     >
       <Tabs defaultActiveKey="1" tabPosition="top" className={styles.tabs}>
         <TabPane tab="AniList" key={1}>
-          {trackerKey === '' ? renderTrackerSeriesList() : renderTrackEntry()}
-          {}
+          {renderTrackerContent()}
         </TabPane>
       </Tabs>
     </Modal>

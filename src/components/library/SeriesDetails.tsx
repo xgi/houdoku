@@ -255,6 +255,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   return (
     <>
       <SeriesTrackerModal
+        loadSeriesContent={() => loadContent()}
         series={props.series}
         visible={showingTrackerModal}
         toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
