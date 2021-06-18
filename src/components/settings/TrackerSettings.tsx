@@ -2,22 +2,21 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Input, Modal, Row, Spin } from 'antd';
+import { Button, Col, Input, Row, Spin } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import styles from './TrackerConfigureModal.css';
+import Title from 'antd/lib/typography/Title';
+import styles from './TrackerSettings.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 import storeKeys from '../../constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
+import { AniListTrackerMetadata } from '../../services/trackers/anilist';
 
-type Props = {
-  trackerId: string;
-  visible: boolean;
-  toggleVisible: () => void;
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = {};
 
-const TrackerConfigureModal: React.FC<Props> = (props: Props) => {
+const TrackerSettings: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState('');
   const [authUrl, setAuthUrl] = useState<string>('');
@@ -27,12 +26,12 @@ const TrackerConfigureModal: React.FC<Props> = (props: Props) => {
     setLoading(true);
 
     await ipcRenderer
-      .invoke(ipcChannels.TRACKER.GET_AUTH_URL, props.trackerId)
+      .invoke(ipcChannels.TRACKER.GET_AUTH_URL, AniListTrackerMetadata.id)
       .then((_authUrl: string) => setAuthUrl(_authUrl))
       .catch((e) => log.error(e));
 
     await ipcRenderer
-      .invoke(ipcChannels.TRACKER.GET_USERNAME, props.trackerId)
+      .invoke(ipcChannels.TRACKER.GET_USERNAME, AniListTrackerMetadata.id)
       .then((_username) => setUsername(_username))
       .catch((e) => log.error(e));
 
@@ -43,13 +42,13 @@ const TrackerConfigureModal: React.FC<Props> = (props: Props) => {
     setLoading(true);
 
     persistantStore.write(
-      `${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${props.trackerId}`,
+      `${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${AniListTrackerMetadata.id}`,
       _accessToken
     );
     await ipcRenderer
       .invoke(
         ipcChannels.TRACKER.SET_ACCESS_TOKEN,
-        props.trackerId,
+        AniListTrackerMetadata.id,
         _accessToken
       )
       .catch((e) => log.error(e));
@@ -57,41 +56,30 @@ const TrackerConfigureModal: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    if (props.trackerId !== '') {
-      loadTrackerDetails();
-    }
+    loadTrackerDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.trackerId]);
+  }, []);
 
   if (loading) {
     return (
-      <Modal
-        title="Configure Tracker"
-        visible={props.visible}
-        footer={null}
-        onCancel={props.toggleVisible}
-      >
-        <div className={styles.loaderContainer}>
-          <Spin />
-          <Paragraph>Reloading tracker details</Paragraph>
-        </div>
-      </Modal>
+      <div className={styles.loaderContainer}>
+        <Spin />
+        <Paragraph>Reloading tracker details</Paragraph>
+      </div>
     );
   }
 
   return (
-    <Modal
-      title="Configure Tracker"
-      visible={props.visible}
-      footer={null}
-      onCancel={props.toggleVisible}
-    >
+    <>
+      <Title level={4}>AniList</Title>
       <Row className={styles.row}>
         <Col span={10}>1) Open the authentication page in your browser</Col>
         <Col span={14}>
-          <a href={authUrl} target="_blank" rel="noreferrer">
-            {authUrl}
-          </a>
+          <Paragraph>
+            <a href={authUrl} target="_blank" rel="noreferrer">
+              {authUrl}
+            </a>
+          </Paragraph>
         </Col>
       </Row>
       <Row className={styles.row}>
@@ -122,8 +110,8 @@ const TrackerConfigureModal: React.FC<Props> = (props: Props) => {
           <a onClick={() => saveTrackerDetails('')}>Unlink</a>.
         </Paragraph>
       )}
-    </Modal>
+    </>
   );
 };
 
-export default TrackerConfigureModal;
+export default TrackerSettings;

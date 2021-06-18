@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Select, Col, Row, Menu, Dropdown, Button, Tabs } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import Title from 'antd/lib/typography/Title';
 import { connect, ConnectedProps } from 'react-redux';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
 import styles from './Settings.css';
@@ -22,8 +21,7 @@ import {
   setPreloadAmount,
   setRefreshOnStart,
 } from '../../features/settings/actions';
-import TrackerConfigureModal from '../tracker/TrackerConfigureModal';
-import { AniListTrackerMetadata } from '../../services/trackers/anilist';
+import TrackerSettings from './TrackerSettings';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -99,8 +97,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const Settings: React.FC<Props> = (props: Props) => {
-  const [trackerModalId, setTrackerModalId] = useState('');
-
   const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
     switch (generalSetting) {
       case GeneralSetting.ChapterLanguages:
@@ -170,11 +166,6 @@ const Settings: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <TrackerConfigureModal
-        trackerId={trackerModalId}
-        visible={trackerModalId !== ''}
-        toggleVisible={() => setTrackerModalId('')}
-      />
       <Tabs defaultActiveKey="1" tabPosition="top">
         <TabPane tab="General" key={1}>
           <Row className={styles.row}>
@@ -307,16 +298,7 @@ const Settings: React.FC<Props> = (props: Props) => {
           </Row>
         </TabPane>
         <TabPane tab="Trackers" key={3}>
-          <Row className={styles.row}>
-            <Col span={10}>AniList</Col>
-            <Col span={14}>
-              <Button
-                onClick={() => setTrackerModalId(AniListTrackerMetadata.id)}
-              >
-                Configure
-              </Button>
-            </Col>
-          </Row>
+          <TrackerSettings />
         </TabPane>
       </Tabs>
     </>
