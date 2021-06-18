@@ -315,6 +315,8 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
             } else {
               loadTrackerSeriesList();
             }
+          } else {
+            setLoading(false);
           }
         })
         .catch((e) => log.error(e));
