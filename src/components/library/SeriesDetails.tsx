@@ -65,6 +65,7 @@ const mapState = (state: RootState) => ({
   userTags: state.library.userTags,
   seriesBannerUrl: state.library.seriesBannerUrl,
   chapterLanguages: state.settings.chapterLanguages,
+  trackerAutoUpdate: state.settings.trackerAutoUpdate,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -314,6 +315,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         series={props.series}
         chapterLanguages={props.chapterLanguages}
         toggleChapterRead={props.toggleChapterRead}
+        trackerAutoUpdate={props.trackerAutoUpdate}
       />
     </>
   );

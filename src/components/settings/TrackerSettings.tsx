@@ -2,25 +2,53 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Input, Row, Spin } from 'antd';
+import { Button, Col, Dropdown, Input, Menu, Row, Spin } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import Title from 'antd/lib/typography/Title';
+import { connect, ConnectedProps } from 'react-redux';
 import styles from './TrackerSettings.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 import storeKeys from '../../constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
 import { AniListTrackerMetadata } from '../../services/trackers/anilist';
+import { TrackerSetting } from '../../models/types';
+import { setTrackerAutoUpdate } from '../../features/settings/actions';
+import { RootState } from '../../store';
+
+const mapState = (state: RootState) => ({
+  trackerAutoUpdate: state.settings.trackerAutoUpdate,
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapDispatch = (dispatch: any) => ({
+  setTrackerAutoUpdate: (trackerAutoUpdate: boolean) =>
+    dispatch(setTrackerAutoUpdate(trackerAutoUpdate)),
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+type Props = PropsFromRedux & {};
 
 const TrackerSettings: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(true);
   const [accessToken, setAccessToken] = useState('');
   const [authUrl, setAuthUrl] = useState<string>('');
   const [username, setUsername] = useState<string | null>(null);
+
+  const updateTrackerSetting = (trackerSetting: TrackerSetting, value: any) => {
+    switch (trackerSetting) {
+      case TrackerSetting.TrackerAutoUpdate:
+        props.setTrackerAutoUpdate(value);
+        break;
+      default:
+        break;
+    }
+  };
 
   const loadTrackerDetails = async () => {
     setLoading(true);
@@ -77,6 +105,35 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
         below, click the &quot;Trackers&quot; button on a series page to link it
         with an entry on your list.
       </Paragraph>
+      <Row className={styles.row}>
+        <Col span={10}>Update Progress Automatically</Col>
+        <Col span={14}>
+          <Dropdown
+            overlay={
+              <Menu
+                onClick={(e: any) => {
+                  updateTrackerSetting(
+                    TrackerSetting.TrackerAutoUpdate,
+                    e.item.props['data-value'] === 'true'
+                  );
+                }}
+              >
+                <Menu.Item key={1} data-value="true">
+                  Yes
+                </Menu.Item>
+                <Menu.Item key={2} data-value="false">
+                  No
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button>
+              {props.trackerAutoUpdate ? 'Yes' : 'No'}
+              <DownOutlined />
+            </Button>
+          </Dropdown>
+        </Col>
+      </Row>
       <Title level={4}>AniList</Title>
       <Row className={styles.row}>
         <Col span={10}>1) Open the authentication page in your browser</Col>
@@ -120,4 +177,4 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default TrackerSettings;
+export default connector(TrackerSettings);

@@ -6,6 +6,7 @@ import {
   PageFit,
   PageView,
   ReaderSetting,
+  TrackerSetting,
 } from '../../models/types';
 import persistantStore from '../../util/persistantStore';
 import storeKeys from '../../constants/storeKeys.json';
@@ -21,6 +22,10 @@ export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.PageFit]: PageFit.Auto,
   [ReaderSetting.PreloadAmount]: 2,
   [ReaderSetting.OverlayPageNumber]: false,
+};
+
+export const DEFAULT_TRACKER_SETTINGS = {
+  [TrackerSetting.TrackerAutoUpdate]: true,
 };
 
 export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
@@ -85,6 +90,21 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   return settings;
 }
 
+export function getStoredTrackerSettings(): { [key in TrackerSetting]?: any } {
+  const settings: { [key in TrackerSetting]?: any } = {};
+
+  const trackerAutoUpdate: string | null = persistantStore.read(
+    `${storeKeys.SETTINGS.TRACKER_PREFIX}${TrackerSetting.TrackerAutoUpdate}`
+  );
+
+  if (trackerAutoUpdate !== null) {
+    settings[TrackerSetting.TrackerAutoUpdate] = trackerAutoUpdate === 'true';
+  }
+
+  log.debug(`Using tracker settings: ${settings}`);
+  return settings;
+}
+
 export function saveGeneralSetting(key: GeneralSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.GENERAL_PREFIX}${key}`, value);
   log.info(`Set GeneralSetting ${key} to ${value}`);
@@ -93,4 +113,9 @@ export function saveGeneralSetting(key: GeneralSetting, value: any) {
 export function saveReaderSetting(key: ReaderSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.READER_PREFIX}${key}`, value);
   log.info(`Set ReaderSetting ${key} to ${value}`);
+}
+
+export function saveTrackerSetting(key: TrackerSetting, value: any) {
+  persistantStore.write(`${storeKeys.SETTINGS.TRACKER_PREFIX}${key}`, value);
+  log.info(`Set TrackerSetting ${key} to ${value}`);
 }

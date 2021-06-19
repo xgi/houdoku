@@ -12,6 +12,7 @@ type Props = {
   series: Series;
   chapterLanguages: LanguageKey[];
   toggleChapterRead: (chapter: Chapter, series: Series) => void;
+  trackerAutoUpdate: boolean;
 };
 
 const ChapterTable: React.FC<Props> = (props: Props) => {
@@ -65,7 +66,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
             checked={record.read}
             onChange={() => {
               props.toggleChapterRead(record, props.series);
-              if (!record.read) {
+              if (!record.read && props.trackerAutoUpdate) {
                 sendProgressToTrackers(record, props.series);
               }
             }}

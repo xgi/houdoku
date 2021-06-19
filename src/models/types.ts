@@ -59,6 +59,10 @@ export enum ReaderSetting {
   OverlayPageNumber = 'OverlayPageNumber',
 }
 
+export enum TrackerSetting {
+  TrackerAutoUpdate = 'TrackerAutoUpdate',
+}
+
 export enum PageFit {
   Auto,
   Width,

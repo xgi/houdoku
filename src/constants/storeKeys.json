@@ -3,6 +3,7 @@
   "TRACKER_ACCESS_TOKEN_PREFIX": "tracker-access-token-",
   "SETTINGS": {
     "GENERAL_PREFIX": "general-",
-    "READER_PREFIX": "reader-"
+    "READER_PREFIX": "reader-",
+    "TRACKER_PREFIX": "tracker-"
   }
 }

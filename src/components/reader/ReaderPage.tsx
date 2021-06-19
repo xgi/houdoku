@@ -70,6 +70,7 @@ const mapState = (state: RootState) => ({
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
+  trackerAutoUpdate: state.settings.trackerAutoUpdate,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -188,7 +189,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     props.setSource(series, chapter);
     if (!chapter.read) props.toggleChapterRead(chapter, series);
-    props.sendProgressToTrackers(chapter, series);
+    if (props.trackerAutoUpdate) props.sendProgressToTrackers(chapter, series);
 
     const pageUrls: string[] = await ipcRenderer
       .invoke(
