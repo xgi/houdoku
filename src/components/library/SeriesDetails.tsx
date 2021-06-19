@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { Typography, Button, Descriptions, Affix, Modal, Select } from 'antd';
 import { ipcRenderer } from 'electron';
@@ -40,10 +40,12 @@ import {
   removeSeries,
   toggleChapterRead,
   updateSeriesUserTags,
+  updateSeriesTrackerKeys,
 } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import ipcChannels from '../../constants/ipcChannels.json';
+import SeriesTrackerModal from './SeriesTrackerModal';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -63,6 +65,7 @@ const mapState = (state: RootState) => ({
   userTags: state.library.userTags,
   seriesBannerUrl: state.library.seriesBannerUrl,
   chapterLanguages: state.settings.chapterLanguages,
+  trackerAutoUpdate: state.settings.trackerAutoUpdate,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,6 +87,11 @@ const mapDispatch = (dispatch: any) => ({
     userTags: string[],
     callback: () => void
   ) => updateSeriesUserTags(series, userTags, callback),
+  updateSeriesTrackerKeys: (
+    series: Series,
+    trackerKeys: { [trackerId: string]: string } | undefined,
+    callback: () => void
+  ) => updateSeriesTrackerKeys(series, trackerKeys, callback),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
     dispatch(setSeriesBannerUrl(seriesBannerUrl)),
 });
@@ -101,6 +109,7 @@ interface ParamTypes {
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams<ParamTypes>();
   const history = useHistory();
+  const [showingTrackerModal, setShowingTrackerModal] = useState(false);
 
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
@@ -111,7 +120,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         props.setSeries(response[0]);
         return getBannerImageUrl(response[0]);
       })
-      .then((seriesBannerUrl: string) =>
+      .then((seriesBannerUrl: string | null) =>
         props.setSeriesBannerUrl(seriesBannerUrl)
       );
 
@@ -245,7 +254,13 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   if (props.series === undefined) return <></>;
 
   return (
-    <div>
+    <>
+      <SeriesTrackerModal
+        loadSeriesContent={() => loadContent()}
+        series={props.series}
+        visible={showingTrackerModal}
+        toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
+      />
       <Link to={routes.LIBRARY}>
         <Affix className={styles.backButtonAffix}>
           <Button onClick={() => props.loadSeriesList()}>
@@ -253,22 +268,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           </Button>
         </Affix>
       </Link>
-      <Affix className={styles.controlButtonAffix}>
-        <>
-          <Button className={styles.removeButton} onClick={handleRemove}>
-            Remove Series
-          </Button>
-          <Button
-            className={styles.refreshButton}
-            onClick={() => {
-              if (props.series !== undefined && !props.reloadingSeriesList)
-                props.reloadSeriesList([props.series], loadContent);
-            }}
-          >
-            {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
-          </Button>
-        </>
-      </Affix>
       <div className={styles.backgroundContainer}>
         {props.seriesBannerUrl === null ? (
           <></>
@@ -285,7 +284,26 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           />
         </div>
         <div className={styles.headerDetailsContainer}>
-          <Title level={4}>{props.series.title}</Title>
+          <div className={styles.headerTitleRow}>
+            <Title level={4}>{props.series.title}</Title>
+            <div className={styles.headerTitleSpacer} />
+            <Button className={styles.removeButton} onClick={handleRemove}>
+              Remove Series
+            </Button>
+            <Button onClick={() => setShowingTrackerModal(true)}>
+              Trackers
+            </Button>
+            <Button
+              type="primary"
+              className={styles.refreshButton}
+              onClick={() => {
+                if (props.series !== undefined && !props.reloadingSeriesList)
+                  props.reloadSeriesList([props.series], loadContent);
+              }}
+            >
+              {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
+            </Button>
+          </div>
           <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
             {props.series.description}
           </Paragraph>
@@ -297,8 +315,9 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         series={props.series}
         chapterLanguages={props.chapterLanguages}
         toggleChapterRead={props.toggleChapterRead}
+        trackerAutoUpdate={props.trackerAutoUpdate}
       />
-    </div>
+    </>
   );
 };
 

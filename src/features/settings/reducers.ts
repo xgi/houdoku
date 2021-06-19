@@ -5,6 +5,7 @@ import {
   PageFit,
   PageView,
   ReaderSetting,
+  TrackerSetting,
 } from '../../models/types';
 import {
   SettingsState,
@@ -18,18 +19,23 @@ import {
   SET_CHAPTER_LANGUAGES,
   SET_REFRESH_ON_START,
   SET_OVERLAY_PAGE_NUMBER,
+  SET_TRACKER_AUTO_UPDATE,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
   DEFAULT_READER_SETTINGS,
+  DEFAULT_TRACKER_SETTINGS,
   getStoredGeneralSettings,
   getStoredReaderSettings,
+  getStoredTrackerSettings,
   saveGeneralSetting,
   saveReaderSetting,
+  saveTrackerSetting,
 } from './utils';
 
 const storedGeneralSettings = getStoredGeneralSettings();
 const storedReaderSettings = getStoredReaderSettings();
+const storedTrackerSettings = getStoredTrackerSettings();
 
 const initialState: SettingsState = {
   chapterLanguages:
@@ -60,6 +66,10 @@ const initialState: SettingsState = {
     storedReaderSettings.OverlayPageNumber === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.OverlayPageNumber]
       : storedReaderSettings.OverlayPageNumber,
+  trackerAutoUpdate:
+    storedTrackerSettings.TrackerAutoUpdate === undefined
+      ? DEFAULT_TRACKER_SETTINGS[TrackerSetting.TrackerAutoUpdate]
+      : storedTrackerSettings.TrackerAutoUpdate,
 };
 
 function nextPageFit(pageFit: PageFit): PageFit {
@@ -153,6 +163,12 @@ export default function settings(
         action.payload.overlayPageNumber
       );
       return { ...state, overlayPageNumber: action.payload.overlayPageNumber };
+    case SET_TRACKER_AUTO_UPDATE:
+      saveTrackerSetting(
+        TrackerSetting.TrackerAutoUpdate,
+        action.payload.trackerAutoUpdate
+      );
+      return { ...state, trackerAutoUpdate: action.payload.trackerAutoUpdate };
     default:
       return state;
   }

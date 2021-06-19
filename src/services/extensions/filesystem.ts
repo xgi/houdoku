@@ -65,6 +65,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       numberUnread: 0,
       remoteCoverUrl: '',
       userTags: [],
+      trackerKeys: {},
     };
 
     return new Promise((resolve) => {

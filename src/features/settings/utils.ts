@@ -6,13 +6,10 @@ import {
   PageFit,
   PageView,
   ReaderSetting,
+  TrackerSetting,
 } from '../../models/types';
 import persistantStore from '../../util/persistantStore';
-
-const PREFIXES = {
-  general: 'general-',
-  reader: 'reader-',
-};
+import storeKeys from '../../constants/storeKeys.json';
 
 export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.ChapterLanguages]: [LanguageKey.ENGLISH],
@@ -27,20 +24,24 @@ export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.OverlayPageNumber]: false,
 };
 
+export const DEFAULT_TRACKER_SETTINGS = {
+  [TrackerSetting.TrackerAutoUpdate]: true,
+};
+
 export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   const settings: { [key in GeneralSetting]?: any } = {};
 
   const chapterListLanguages: string | null = persistantStore.read(
-    `${PREFIXES.general}${GeneralSetting.ChapterLanguages}`
+    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.ChapterLanguages}`
   );
   const refreshOnStart: string | null = persistantStore.read(
-    `${PREFIXES.general}${GeneralSetting.RefreshOnStart}`
+    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.RefreshOnStart}`
   );
 
   if (chapterListLanguages !== null) {
-    settings[GeneralSetting.ChapterLanguages] = chapterListLanguages
-      .split(',')
-      .map((value: string) => parseInt(value, 10)) as LanguageKey[];
+    settings[GeneralSetting.ChapterLanguages] = chapterListLanguages.split(
+      ','
+    ) as LanguageKey[];
   }
   if (refreshOnStart !== null) {
     settings[GeneralSetting.RefreshOnStart] = refreshOnStart === 'true';
@@ -54,19 +55,19 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   const settings: { [key in ReaderSetting]?: any } = {};
 
   const layoutDirection: string | null = persistantStore.read(
-    `${PREFIXES.reader}${ReaderSetting.LayoutDirection}`
+    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.LayoutDirection}`
   );
   const pageFit: string | null = persistantStore.read(
-    `${PREFIXES.reader}${ReaderSetting.PageFit}`
+    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.PageFit}`
   );
   const pageView: string | null = persistantStore.read(
-    `${PREFIXES.reader}${ReaderSetting.PageView}`
+    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.PageView}`
   );
   const preloadAmount: string | null = persistantStore.read(
-    `${PREFIXES.reader}${ReaderSetting.PreloadAmount}`
+    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.PreloadAmount}`
   );
   const overlayPageNumber: string | null = persistantStore.read(
-    `${PREFIXES.reader}${ReaderSetting.OverlayPageNumber}`
+    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.OverlayPageNumber}`
   );
 
   if (layoutDirection !== null) {
@@ -89,12 +90,32 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   return settings;
 }
 
+export function getStoredTrackerSettings(): { [key in TrackerSetting]?: any } {
+  const settings: { [key in TrackerSetting]?: any } = {};
+
+  const trackerAutoUpdate: string | null = persistantStore.read(
+    `${storeKeys.SETTINGS.TRACKER_PREFIX}${TrackerSetting.TrackerAutoUpdate}`
+  );
+
+  if (trackerAutoUpdate !== null) {
+    settings[TrackerSetting.TrackerAutoUpdate] = trackerAutoUpdate === 'true';
+  }
+
+  log.debug(`Using tracker settings: ${settings}`);
+  return settings;
+}
+
 export function saveGeneralSetting(key: GeneralSetting, value: any) {
-  persistantStore.write(`${PREFIXES.general}${key}`, value);
+  persistantStore.write(`${storeKeys.SETTINGS.GENERAL_PREFIX}${key}`, value);
   log.info(`Set GeneralSetting ${key} to ${value}`);
 }
 
 export function saveReaderSetting(key: ReaderSetting, value: any) {
-  persistantStore.write(`${PREFIXES.reader}${key}`, value);
+  persistantStore.write(`${storeKeys.SETTINGS.READER_PREFIX}${key}`, value);
   log.info(`Set ReaderSetting ${key} to ${value}`);
+}
+
+export function saveTrackerSetting(key: TrackerSetting, value: any) {
+  persistantStore.write(`${storeKeys.SETTINGS.TRACKER_PREFIX}${key}`, value);
+  log.info(`Set TrackerSetting ${key} to ${value}`);
 }

@@ -1,7 +1,7 @@
 /* eslint-disable import/no-mutable-exports */
 import lf from 'lovefield';
 
-const schemaBuilder = lf.schema.create('houdoku', 1);
+const schemaBuilder = lf.schema.create('houdoku', 2);
 
 schemaBuilder
   .createTable('series')
@@ -24,6 +24,7 @@ schemaBuilder
   .addColumn('numberUnread', lf.Type.INTEGER)
   .addColumn('remoteCoverUrl', lf.Type.STRING)
   .addColumn('userTags', lf.Type.OBJECT)
+  .addColumn('trackerKeys', lf.Type.OBJECT)
   .addPrimaryKey(['id'], true);
 
 schemaBuilder

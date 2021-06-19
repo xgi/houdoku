@@ -8,6 +8,38 @@ export type ExtensionTableRow = {
   canUpdate: boolean;
 };
 
+export type TrackerMetadata = {
+  id: string;
+  name: string;
+  url: string;
+};
+
+export type TrackerSeries = {
+  id: string;
+  title: string;
+  description: string;
+  coverUrl: string;
+};
+
+export enum TrackStatus {
+  Reading = 'Reading',
+  Planning = 'Planning',
+  Completed = 'Completed',
+  Dropped = 'Dropped',
+  Paused = 'Paused',
+}
+
+export type TrackEntry = {
+  id?: string;
+  seriesId: string;
+  title?: string;
+  description?: string;
+  coverUrl?: string;
+  score?: number;
+  progress?: number;
+  status?: TrackStatus;
+};
+
 export enum ProgressFilter {
   All,
   Unread,
@@ -25,6 +57,10 @@ export enum ReaderSetting {
   PageView = 'PageView',
   PreloadAmount = 'PreloadAmount',
   OverlayPageNumber = 'OverlayPageNumber',
+}
+
+export enum TrackerSetting {
+  TrackerAutoUpdate = 'TrackerAutoUpdate',
 }
 
 export enum PageFit {

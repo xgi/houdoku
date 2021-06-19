@@ -12,6 +12,7 @@ import {
   SET_CHAPTER_LANGUAGES,
   SET_REFRESH_ON_START,
   SET_OVERLAY_PAGE_NUMBER,
+  SET_TRACKER_AUTO_UPDATE,
 } from './types';
 
 export function setChapterLanguages(
@@ -97,6 +98,17 @@ export function setOverlayPageNumber(
     type: SET_OVERLAY_PAGE_NUMBER,
     payload: {
       overlayPageNumber,
+    },
+  };
+}
+
+export function setTrackerAutoUpdate(
+  trackerAutoUpdate: boolean
+): SettingsAction {
+  return {
+    type: SET_TRACKER_AUTO_UPDATE,
+    payload: {
+      trackerAutoUpdate,
     },
   };
 }

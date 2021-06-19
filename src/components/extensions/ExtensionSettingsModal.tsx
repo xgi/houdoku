@@ -11,6 +11,7 @@ import {
 } from 'houdoku-extension-lib';
 import styles from './ExtensionSettingsModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
+import storeKeys from '../../constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
 
 const { Option } = Select;
@@ -65,7 +66,7 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
       extensionSettings
     );
     persistantStore.write(
-      `extension-settings-${props.extensionId}`,
+      `${storeKeys.EXTENSION_SETTINGS_PREFIX}${props.extensionId}`,
       JSON.stringify(extensionSettings)
     );
     props.toggleVisible();

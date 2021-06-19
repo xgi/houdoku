@@ -11,6 +11,7 @@ export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
 export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 export const SET_REFRESH_ON_START = 'SET_REFRESH_ON_START';
 export const SET_OVERLAY_PAGE_NUMBER = 'SET_OVERLAY_PAGE_NUMBER';
+export const SET_TRACKER_AUTO_UPDATE = 'SET_TRACKER_AUTO_UPDATE';
 
 export interface SettingsState {
   chapterLanguages: LanguageKey[];
@@ -20,6 +21,7 @@ export interface SettingsState {
   layoutDirection: LayoutDirection;
   preloadAmount: number;
   overlayPageNumber: boolean;
+  trackerAutoUpdate: boolean;
 }
 
 interface SetChapterLanguagesAction {
@@ -83,6 +85,13 @@ interface SetOverlayPageNumberAction {
   };
 }
 
+interface SetTrackerAutoUpdateAction {
+  type: typeof SET_TRACKER_AUTO_UPDATE;
+  payload: {
+    trackerAutoUpdate: boolean;
+  };
+}
+
 export type SettingsAction =
   | SetChapterLanguagesAction
   | SetPageFitAction
@@ -93,4 +102,5 @@ export type SettingsAction =
   | ToggleLayoutDirectionAction
   | SetPreloadAmountAction
   | SetRefreshOnStartAction
-  | SetOverlayPageNumberAction;
+  | SetOverlayPageNumberAction
+  | SetTrackerAutoUpdateAction;

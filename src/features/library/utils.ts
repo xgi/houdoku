@@ -53,7 +53,7 @@ export async function importSeries(dispatch: any, series: Series) {
   );
 
   const addResponse = await db.addSeries(series);
-  const addedSeries: Series = addResponse[0];
+  const addedSeries: Series = addResponse[0] as Series;
   await db.addChapters(chapters, addedSeries);
   await db.updateSeriesNumberUnread(addedSeries);
   await loadSeriesList(dispatch);
@@ -68,6 +68,10 @@ export function toggleChapterRead(
   chapter: Chapter,
   series: Series
 ) {
+  log.debug(
+    `Toggling chapter read status for series ${series.title} chapterNum ${chapter.chapterNumber}`
+  );
+
   const newChapter: Chapter = { ...chapter, read: !chapter.read };
 
   if (series.id !== undefined) {
@@ -117,7 +121,9 @@ async function reloadSeries(series: Series) {
     newSeries.userTags = series.userTags;
   }
 
-  const oldChapters: Chapter[] = await db.fetchChapters(series.id);
+  const oldChapters: Chapter[] = (await db.fetchChapters(
+    series.id
+  )) as Chapter[];
   const orphanedChapterIds: number[] = oldChapters.map(
     (chapter: Chapter) => chapter.id || -1
   );
@@ -190,6 +196,16 @@ export async function updateSeriesUserTags(
   callback?: () => void
 ) {
   const newSeries: Series = { ...series, userTags };
+  await db.addSeries(newSeries);
+  if (callback !== undefined) callback();
+}
+
+export async function updateSeriesTrackerKeys(
+  series: Series,
+  trackerKeys: { [trackerId: string]: string } | undefined,
+  callback?: () => void
+) {
+  const newSeries: Series = { ...series, trackerKeys };
   await db.addSeries(newSeries);
   if (callback !== undefined) callback();
 }

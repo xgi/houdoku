@@ -1,0 +1,12 @@
+.row {
+  margin-left: 16px !important;
+  margin-bottom: 8px !important;
+}
+
+.loaderContainer {
+  text-align: center;
+}
+
+.statusText {
+  text-align: center;
+}
