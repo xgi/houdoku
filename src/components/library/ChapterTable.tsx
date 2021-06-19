@@ -5,6 +5,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Chapter, Series, Languages, LanguageKey } from 'houdoku-extension-lib';
 import routes from '../../constants/routes.json';
+import { sendProgressToTrackers } from '../../features/tracker/utils';
 
 type Props = {
   chapterList: Chapter[];
@@ -62,7 +63,12 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         return (
           <Checkbox
             checked={record.read}
-            onChange={() => props.toggleChapterRead(record, props.series)}
+            onChange={() => {
+              props.toggleChapterRead(record, props.series);
+              if (!record.read) {
+                sendProgressToTrackers(record, props.series);
+              }
+            }}
           />
         );
       },
