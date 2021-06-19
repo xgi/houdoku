@@ -304,7 +304,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
           // eslint-disable-next-line promise/always-return
           if (isAuth) {
             if (
-              props.series.trackerKeys !== undefined &&
+              props.series.trackerKeys &&
               Object.keys(props.series.trackerKeys).includes(
                 AniListTrackerMetadata.id
               )

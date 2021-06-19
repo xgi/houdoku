@@ -38,6 +38,7 @@ import ReaderSidebar from './ReaderSidebar';
 import ReaderViewer from './ReaderViewer';
 import ReaderPreloadContainer from './ReaderPreloadContainer';
 import ReaderLoader from './ReaderLoader';
+import { sendProgressToTrackers } from '../../features/tracker/utils';
 
 const KEYBOARD_SHORTCUTS = {
   previousPage: 'left',
@@ -95,6 +96,8 @@ const mapDispatch = (dispatch: any) => ({
   toggleShowingSidebar: () => dispatch(toggleShowingSidebar()),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
+  sendProgressToTrackers: (chapter: Chapter, series: Series) =>
+    sendProgressToTrackers(chapter, series),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -132,7 +135,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     const relevantChapterList: Chapter[] = [];
 
-    const chapters: Chapter[] = await db.fetchChapters(series.id);
+    const chapters: Chapter[] = (await db.fetchChapters(
+      series.id
+    )) as Chapter[];
 
     const chapterNumbersSet: Set<string> = new Set();
     chapters.forEach((c: Chapter) => chapterNumbersSet.add(c.chapterNumber));
@@ -183,6 +188,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     props.setSource(series, chapter);
     if (!chapter.read) props.toggleChapterRead(chapter, series);
+    props.sendProgressToTrackers(chapter, series);
 
     const pageUrls: string[] = await ipcRenderer
       .invoke(

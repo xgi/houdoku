@@ -68,6 +68,10 @@ export function toggleChapterRead(
   chapter: Chapter,
   series: Series
 ) {
+  log.debug(
+    `Toggling chapter read status for series ${series.title} chapterNum ${chapter.chapterNumber}`
+  );
+
   const newChapter: Chapter = { ...chapter, read: !chapter.read };
 
   if (series.id !== undefined) {
