@@ -215,13 +215,11 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
                     });
                   }}
                 >
-                  {Array.from({ length: 5 }, (v, k) => k + 1).map(
-                    (value: number) => (
-                      <Menu.Item key={value} data-value={value}>
-                        {value}
-                      </Menu.Item>
-                    )
-                  )}
+                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value: number) => (
+                    <Menu.Item key={value} data-value={value}>
+                      {value}
+                    </Menu.Item>
+                  ))}
                 </Menu>
               }
             >
