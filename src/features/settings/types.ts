@@ -12,6 +12,7 @@ export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 export const SET_REFRESH_ON_START = 'SET_REFRESH_ON_START';
 export const SET_OVERLAY_PAGE_NUMBER = 'SET_OVERLAY_PAGE_NUMBER';
 export const SET_TRACKER_AUTO_UPDATE = 'SET_TRACKER_AUTO_UPDATE';
+export const SET_DISCORD_PRESENCE_ENABLED = 'SET_DISCORD_PRESENCE_ENABLED';
 
 export interface SettingsState {
   chapterLanguages: LanguageKey[];
@@ -22,6 +23,7 @@ export interface SettingsState {
   preloadAmount: number;
   overlayPageNumber: boolean;
   trackerAutoUpdate: boolean;
+  discordPresenceEnabled: boolean;
 }
 
 interface SetChapterLanguagesAction {
@@ -92,6 +94,13 @@ interface SetTrackerAutoUpdateAction {
   };
 }
 
+interface SetDiscordPresenceEnabledAction {
+  type: typeof SET_DISCORD_PRESENCE_ENABLED;
+  payload: {
+    discordPresenceEnabled: boolean;
+  };
+}
+
 export type SettingsAction =
   | SetChapterLanguagesAction
   | SetPageFitAction
@@ -103,4 +112,5 @@ export type SettingsAction =
   | SetPreloadAmountAction
   | SetRefreshOnStartAction
   | SetOverlayPageNumberAction
-  | SetTrackerAutoUpdateAction;
+  | SetTrackerAutoUpdateAction
+  | SetDiscordPresenceEnabledAction;

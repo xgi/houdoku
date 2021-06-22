@@ -4,6 +4,7 @@
   "SETTINGS": {
     "GENERAL_PREFIX": "general-",
     "READER_PREFIX": "reader-",
-    "TRACKER_PREFIX": "tracker-"
+    "TRACKER_PREFIX": "tracker-",
+    "INTEGRATION_PREFIX": "integration-"
   }
 }
