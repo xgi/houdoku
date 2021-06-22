@@ -318,7 +318,7 @@ const Settings: React.FC<Props> = (props: Props) => {
       </TabPane>
       <TabPane tab="Integrations" key={4}>
         <Row className={styles.row}>
-          <Col span={10}>Discord Rich Presence</Col>
+          <Col span={10}>Use Discord Rich Presence</Col>
           <Col span={14}>
             <Dropdown
               overlay={
