@@ -13,6 +13,7 @@ import {
   SET_REFRESH_ON_START,
   SET_OVERLAY_PAGE_NUMBER,
   SET_TRACKER_AUTO_UPDATE,
+  SET_DISCORD_PRESENCE_ENABLED,
 } from './types';
 
 export function setChapterLanguages(
@@ -109,6 +110,17 @@ export function setTrackerAutoUpdate(
     type: SET_TRACKER_AUTO_UPDATE,
     payload: {
       trackerAutoUpdate,
+    },
+  };
+}
+
+export function setDiscordPresenceEnabled(
+  discordPresenceEnabled: boolean
+): SettingsAction {
+  return {
+    type: SET_DISCORD_PRESENCE_ENABLED,
+    payload: {
+      discordPresenceEnabled,
     },
   };
 }

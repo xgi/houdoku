@@ -1,6 +1,7 @@
 /* eslint-disable no-case-declarations */
 import {
   GeneralSetting,
+  IntegrationSetting,
   LayoutDirection,
   PageFit,
   PageView,
@@ -20,15 +21,19 @@ import {
   SET_REFRESH_ON_START,
   SET_OVERLAY_PAGE_NUMBER,
   SET_TRACKER_AUTO_UPDATE,
+  SET_DISCORD_PRESENCE_ENABLED,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
+  DEFAULT_INTEGRATION_SETTINGS,
   DEFAULT_READER_SETTINGS,
   DEFAULT_TRACKER_SETTINGS,
   getStoredGeneralSettings,
+  getStoredIntegrationSettings,
   getStoredReaderSettings,
   getStoredTrackerSettings,
   saveGeneralSetting,
+  saveIntegrationSetting,
   saveReaderSetting,
   saveTrackerSetting,
 } from './utils';
@@ -36,6 +41,7 @@ import {
 const storedGeneralSettings = getStoredGeneralSettings();
 const storedReaderSettings = getStoredReaderSettings();
 const storedTrackerSettings = getStoredTrackerSettings();
+const storedIntegrationSettings = getStoredIntegrationSettings();
 
 const initialState: SettingsState = {
   chapterLanguages:
@@ -70,6 +76,10 @@ const initialState: SettingsState = {
     storedTrackerSettings.TrackerAutoUpdate === undefined
       ? DEFAULT_TRACKER_SETTINGS[TrackerSetting.TrackerAutoUpdate]
       : storedTrackerSettings.TrackerAutoUpdate,
+  discordPresenceEnabled:
+    storedIntegrationSettings.DiscordPresenceEnabled === undefined
+      ? DEFAULT_INTEGRATION_SETTINGS[IntegrationSetting.DiscordPresenceEnabled]
+      : storedIntegrationSettings.DiscordPresenceEnabled,
 };
 
 function nextPageFit(pageFit: PageFit): PageFit {
@@ -169,6 +179,15 @@ export default function settings(
         action.payload.trackerAutoUpdate
       );
       return { ...state, trackerAutoUpdate: action.payload.trackerAutoUpdate };
+    case SET_DISCORD_PRESENCE_ENABLED:
+      saveIntegrationSetting(
+        IntegrationSetting.DiscordPresenceEnabled,
+        action.payload.discordPresenceEnabled
+      );
+      return {
+        ...state,
+        discordPresenceEnabled: action.payload.discordPresenceEnabled,
+      };
     default:
       return state;
   }

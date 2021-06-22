@@ -63,6 +63,10 @@ export enum TrackerSetting {
   TrackerAutoUpdate = 'TrackerAutoUpdate',
 }
 
+export enum IntegrationSetting {
+  DiscordPresenceEnabled = 'DiscordPresenceEnabled',
+}
+
 export enum PageFit {
   Auto,
   Width,

@@ -3,9 +3,11 @@ import { Select, Col, Row, Menu, Dropdown, Button, Tabs } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './Settings.css';
 import {
   GeneralSetting,
+  IntegrationSetting,
   LayoutDirection,
   PageFit,
   PageView,
@@ -14,6 +16,7 @@ import {
 import { RootState } from '../../store';
 import {
   setChapterLanguages,
+  setDiscordPresenceEnabled,
   setLayoutDirection,
   setOverlayPageNumber,
   setPageFit,
@@ -72,6 +75,7 @@ const mapState = (state: RootState) => ({
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
   overlayPageNumber: state.settings.overlayPageNumber,
+  discordPresenceEnabled: state.settings.discordPresenceEnabled,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -88,6 +92,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setPreloadAmount(preloadAmount)),
   setOverlayPageNumber: (overlayPageNumber: boolean) =>
     dispatch(setOverlayPageNumber(overlayPageNumber)),
+  setDiscordPresenceEnabled: (discordPresenceEnabled: boolean) =>
+    dispatch(setDiscordPresenceEnabled(discordPresenceEnabled)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -126,6 +132,19 @@ const Settings: React.FC<Props> = (props: Props) => {
         break;
       case ReaderSetting.OverlayPageNumber:
         props.setOverlayPageNumber(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const updateIntegrationSetting = (
+    integrationSetting: IntegrationSetting,
+    value: any
+  ) => {
+    switch (integrationSetting) {
+      case IntegrationSetting.DiscordPresenceEnabled:
+        props.setDiscordPresenceEnabled(value);
         break;
       default:
         break;
@@ -296,6 +315,46 @@ const Settings: React.FC<Props> = (props: Props) => {
       </TabPane>
       <TabPane tab="Trackers" key={3}>
         <TrackerSettings />
+      </TabPane>
+      <TabPane tab="Integrations" key={4}>
+        <Row className={styles.row}>
+          <Col span={10}>Discord Rich Presence</Col>
+          <Col span={14}>
+            <Dropdown
+              overlay={
+                <Menu
+                  onClick={(e: any) => {
+                    updateIntegrationSetting(
+                      IntegrationSetting.DiscordPresenceEnabled,
+                      e.item.props['data-value'] === 'true'
+                    );
+                  }}
+                >
+                  <Menu.Item key={1} data-value="true">
+                    Yes
+                  </Menu.Item>
+                  <Menu.Item key={2} data-value="false">
+                    No
+                  </Menu.Item>
+                </Menu>
+              }
+            >
+              <Button>
+                {props.discordPresenceEnabled ? 'Yes' : 'No'}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+        <Row className={styles.row}>
+          <Col span={20}>
+            <Paragraph>
+              To use Discord Rich Presence, make sure &quot;Display current
+              activity as a status message&quot; is enabled in your Discord
+              settings (under the Activity Status tab).
+            </Paragraph>
+          </Col>
+        </Row>
       </TabPane>
     </Tabs>
   );

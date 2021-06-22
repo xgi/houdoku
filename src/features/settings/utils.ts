@@ -2,6 +2,7 @@ import log from 'electron-log';
 import { LanguageKey } from 'houdoku-extension-lib';
 import {
   GeneralSetting,
+  IntegrationSetting,
   LayoutDirection,
   PageFit,
   PageView,
@@ -26,6 +27,10 @@ export const DEFAULT_READER_SETTINGS = {
 
 export const DEFAULT_TRACKER_SETTINGS = {
   [TrackerSetting.TrackerAutoUpdate]: true,
+};
+
+export const DEFAULT_INTEGRATION_SETTINGS = {
+  [IntegrationSetting.DiscordPresenceEnabled]: false,
 };
 
 export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
@@ -105,6 +110,24 @@ export function getStoredTrackerSettings(): { [key in TrackerSetting]?: any } {
   return settings;
 }
 
+export function getStoredIntegrationSettings(): {
+  [key in IntegrationSetting]?: any;
+} {
+  const settings: { [key in IntegrationSetting]?: any } = {};
+
+  const discordPresenceEnabled: string | null = persistantStore.read(
+    `${storeKeys.SETTINGS.INTEGRATION_PREFIX}${IntegrationSetting.DiscordPresenceEnabled}`
+  );
+
+  if (discordPresenceEnabled !== null) {
+    settings[IntegrationSetting.DiscordPresenceEnabled] =
+      discordPresenceEnabled === 'true';
+  }
+
+  log.debug(`Using integration settings: ${settings}`);
+  return settings;
+}
+
 export function saveGeneralSetting(key: GeneralSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.GENERAL_PREFIX}${key}`, value);
   log.info(`Set GeneralSetting ${key} to ${value}`);
@@ -118,4 +141,12 @@ export function saveReaderSetting(key: ReaderSetting, value: any) {
 export function saveTrackerSetting(key: TrackerSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.TRACKER_PREFIX}${key}`, value);
   log.info(`Set TrackerSetting ${key} to ${value}`);
+}
+
+export function saveIntegrationSetting(key: IntegrationSetting, value: any) {
+  persistantStore.write(
+    `${storeKeys.SETTINGS.INTEGRATION_PREFIX}${key}`,
+    value
+  );
+  log.info(`Set IntegrationSetting ${key} to ${value}`);
 }

@@ -39,6 +39,7 @@ import ReaderViewer from './ReaderViewer';
 import ReaderPreloadContainer from './ReaderPreloadContainer';
 import ReaderLoader from './ReaderLoader';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const KEYBOARD_SHORTCUTS = {
   previousPage: 'left',
@@ -71,6 +72,7 @@ const mapState = (state: RootState) => ({
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
+  discordPresenceEnabled: state.settings.discordPresenceEnabled,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -190,6 +192,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.setSource(series, chapter);
     if (!chapter.read) props.toggleChapterRead(chapter, series);
     if (props.trackerAutoUpdate) props.sendProgressToTrackers(chapter, series);
+    if (props.discordPresenceEnabled) {
+      ipcRenderer.invoke(
+        ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY,
+        series,
+        chapter
+      );
+    }
 
     const pageUrls: string[] = await ipcRenderer
       .invoke(
@@ -330,6 +339,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.setPageDataList([]);
     props.setRelevantChapterList([]);
     removeKeybindings();
+
+    if (props.discordPresenceEnabled) {
+      ipcRenderer.invoke(ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY);
+    }
 
     if (props.series !== undefined) {
       history.push(`${routes.SERIES}/${props.series.id}`);
