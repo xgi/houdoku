@@ -3,6 +3,7 @@ import { Select, Col, Row, Menu, Dropdown, Button, Tabs } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './Settings.css';
 import {
   GeneralSetting,
@@ -343,6 +344,15 @@ const Settings: React.FC<Props> = (props: Props) => {
                 <DownOutlined />
               </Button>
             </Dropdown>
+          </Col>
+        </Row>
+        <Row className={styles.row}>
+          <Col span={20}>
+            <Paragraph>
+              To use Discord Rich Presence, make sure &quot;Display current
+              activity as a status message&quot; is enabled in your Discord
+              settings (under the Activity Status tab).
+            </Paragraph>
           </Col>
         </Row>
       </TabPane>
