@@ -30,6 +30,7 @@ import { loadInWebView } from './util/webview';
 import ipcChannels from './constants/ipcChannels.json';
 import packageJson from '../package.json';
 import { createTrackerIpcHandlers } from './services/tracker';
+import { createDiscordIpcHandlers } from './services/discord';
 
 log.info(
   `Starting Houdoku main process (client version ${packageJson.version})`
@@ -266,3 +267,4 @@ createExtensionIpcHandlers(ipcMain, pluginsDir, webviewFn);
 loadExtensions(pluginsDir, webviewFn);
 
 createTrackerIpcHandlers(ipcMain);
+createDiscordIpcHandlers(ipcMain);

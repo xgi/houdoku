@@ -1644,6 +1644,11 @@
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.5.tgz#b14efa8852b7768d898906613c23f688713e02cd"
   integrity sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ==
 
+"@types/discord-rpc@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@types/discord-rpc/-/discord-rpc-3.0.5.tgz#16f03fb6ca9a111e4e1f69571e966d1ddf893160"
+  integrity sha512-rgv9W0XNZt437MoUrQfS6OPjTn1MI3Oix9l5aKyzma5Xf4MAiXbHTPUrL62HlHx6WuFMI58bQpJqoXjz+fHCuQ==
+
 "@types/dom-parser@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@types/dom-parser/-/dom-parser-0.1.1.tgz#e72d5b2846ce8c2b48b12314c73af458fcbde5df"
@@ -2902,7 +2907,7 @@ binaryextensions@^4.15.0:
   resolved "https://registry.yarnpkg.com/binaryextensions/-/binaryextensions-4.15.0.tgz#c63a502e0078ff1b0e9b00a9f74d3c2b0f8bd32e"
   integrity sha512-MkUl3szxXolQ2scI1PM14WOT951KnaTNJ0eMKg7WzOI4kvSxyNo/Cygx4LOBNhwyINhAuSQpJW1rYD9aBSxGaw==
 
-bindings@^1.5.0:
+bindings@^1.3.0, bindings@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
   integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
@@ -4171,6 +4176,16 @@ discontinuous-range@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/discontinuous-range/-/discontinuous-range-1.0.0.tgz#e38331f0844bba49b9a9cb71c771585aab1bc65a"
   integrity sha1-44Mx8IRLukm5qctxx3FYWqsbxlo=
+
+discord-rpc@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/discord-rpc/-/discord-rpc-4.0.1.tgz#a89aa04a048aa83ad4f347d53fa0162501eae0d8"
+  integrity sha512-HOvHpbq5STRZJjQIBzwoKnQ0jHplbEWFWlPDwXXKm/bILh4nzjcg7mNqll0UY7RsjFoaXA7e/oYb/4lvpda2zA==
+  dependencies:
+    node-fetch "^2.6.1"
+    ws "^7.3.1"
+  optionalDependencies:
+    register-scheme "github:devsnek/node-register-scheme"
 
 dmg-builder@22.10.5:
   version "22.10.5"
@@ -8109,7 +8124,7 @@ node-abi@^2.19.2:
   dependencies:
     semver "^5.4.1"
 
-node-addon-api@^1.6.0, node-addon-api@^1.6.3:
+node-addon-api@^1.3.0, node-addon-api@^1.6.0, node-addon-api@^1.6.3:
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.7.2.tgz#3df30b95720b53c24e59948b49532b662444f54d"
   integrity sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==
@@ -9980,6 +9995,13 @@ regexpu-core@^4.7.1:
     regjsparser "^0.6.4"
     unicode-match-property-ecmascript "^1.0.4"
     unicode-match-property-value-ecmascript "^1.2.0"
+
+"register-scheme@github:devsnek/node-register-scheme":
+  version "0.0.2"
+  resolved "https://codeload.github.com/devsnek/node-register-scheme/tar.gz/e7cc9a63a1f512565da44cb57316d9fb10750e17"
+  dependencies:
+    bindings "^1.3.0"
+    node-addon-api "^1.3.0"
 
 registry-auth-token@^4.0.0:
   version "4.2.1"
