@@ -15,6 +15,7 @@ import storeKeys from '../../constants/storeKeys.json';
 export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.ChapterLanguages]: [LanguageKey.ENGLISH],
   [GeneralSetting.RefreshOnStart]: true,
+  [GeneralSetting.AutoCheckForUpdates]: true,
 };
 
 export const DEFAULT_READER_SETTINGS = {
@@ -42,6 +43,9 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   const refreshOnStart: string | null = persistantStore.read(
     `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.RefreshOnStart}`
   );
+  const autoCheckForUpdates: string | null = persistantStore.read(
+    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.AutoCheckForUpdates}`
+  );
 
   if (chapterListLanguages !== null) {
     settings[GeneralSetting.ChapterLanguages] = chapterListLanguages.split(
@@ -50,6 +54,10 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   }
   if (refreshOnStart !== null) {
     settings[GeneralSetting.RefreshOnStart] = refreshOnStart === 'true';
+  }
+  if (autoCheckForUpdates !== null) {
+    settings[GeneralSetting.AutoCheckForUpdates] =
+      autoCheckForUpdates === 'true';
   }
 
   log.debug(`Using general settings: ${settings}`);

@@ -10,6 +10,7 @@ export const SET_LAYOUT_DIRECTION = 'SET_LAYOUT_DIRECTION';
 export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
 export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 export const SET_REFRESH_ON_START = 'SET_REFRESH_ON_START';
+export const SET_AUTO_CHECK_FOR_UPDATES = 'SET_AUTO_CHECK_FOR_UPDATES';
 export const SET_OVERLAY_PAGE_NUMBER = 'SET_OVERLAY_PAGE_NUMBER';
 export const SET_TRACKER_AUTO_UPDATE = 'SET_TRACKER_AUTO_UPDATE';
 export const SET_DISCORD_PRESENCE_ENABLED = 'SET_DISCORD_PRESENCE_ENABLED';
@@ -17,6 +18,7 @@ export const SET_DISCORD_PRESENCE_ENABLED = 'SET_DISCORD_PRESENCE_ENABLED';
 export interface SettingsState {
   chapterLanguages: LanguageKey[];
   refreshOnStart: boolean;
+  autoCheckForUpdates: boolean;
   pageFit: PageFit;
   pageView: PageView;
   layoutDirection: LayoutDirection;
@@ -80,6 +82,13 @@ interface SetRefreshOnStartAction {
   };
 }
 
+interface SetAutoCheckForUpdatesAction {
+  type: typeof SET_AUTO_CHECK_FOR_UPDATES;
+  payload: {
+    autoCheckForUpdates: boolean;
+  };
+}
+
 interface SetOverlayPageNumberAction {
   type: typeof SET_OVERLAY_PAGE_NUMBER;
   payload: {
@@ -111,6 +120,7 @@ export type SettingsAction =
   | ToggleLayoutDirectionAction
   | SetPreloadAmountAction
   | SetRefreshOnStartAction
+  | SetAutoCheckForUpdatesAction
   | SetOverlayPageNumberAction
   | SetTrackerAutoUpdateAction
   | SetDiscordPresenceEnabledAction;

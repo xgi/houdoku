@@ -22,6 +22,7 @@ import {
   SET_OVERLAY_PAGE_NUMBER,
   SET_TRACKER_AUTO_UPDATE,
   SET_DISCORD_PRESENCE_ENABLED,
+  SET_AUTO_CHECK_FOR_UPDATES,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -52,6 +53,10 @@ const initialState: SettingsState = {
     storedGeneralSettings.RefreshOnStart === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.RefreshOnStart]
       : storedGeneralSettings.RefreshOnStart,
+  autoCheckForUpdates:
+    storedGeneralSettings.AutoCheckForUpdates === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.AutoCheckForUpdates]
+      : storedGeneralSettings.AutoCheckForUpdates,
   pageFit:
     storedReaderSettings.PageFit === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.PageFit]
@@ -132,6 +137,15 @@ export default function settings(
         action.payload.refreshOnStart
       );
       return { ...state, refreshOnStart: action.payload.refreshOnStart };
+    case SET_AUTO_CHECK_FOR_UPDATES:
+      saveGeneralSetting(
+        GeneralSetting.AutoCheckForUpdates,
+        action.payload.autoCheckForUpdates
+      );
+      return {
+        ...state,
+        autoCheckForUpdates: action.payload.autoCheckForUpdates,
+      };
     case SET_PAGE_FIT:
       saveReaderSetting(ReaderSetting.PageFit, action.payload.pageFit);
       return { ...state, pageFit: action.payload.pageFit };

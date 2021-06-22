@@ -49,6 +49,7 @@ export enum ProgressFilter {
 export enum GeneralSetting {
   ChapterLanguages = 'ChapterLanguages',
   RefreshOnStart = 'RefreshOnStart',
+  AutoCheckForUpdates = 'AutoCheckForUpdates',
 }
 
 export enum ReaderSetting {

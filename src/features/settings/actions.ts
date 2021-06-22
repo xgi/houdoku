@@ -14,6 +14,7 @@ import {
   SET_OVERLAY_PAGE_NUMBER,
   SET_TRACKER_AUTO_UPDATE,
   SET_DISCORD_PRESENCE_ENABLED,
+  SET_AUTO_CHECK_FOR_UPDATES,
 } from './types';
 
 export function setChapterLanguages(
@@ -32,6 +33,17 @@ export function setRefreshOnStart(refreshOnStart: boolean): SettingsAction {
     type: SET_REFRESH_ON_START,
     payload: {
       refreshOnStart,
+    },
+  };
+}
+
+export function setAutoCheckForUpdates(
+  autoCheckForUpdates: boolean
+): SettingsAction {
+  return {
+    type: SET_AUTO_CHECK_FOR_UPDATES,
+    payload: {
+      autoCheckForUpdates,
     },
   };
 }

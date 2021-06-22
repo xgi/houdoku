@@ -53,6 +53,7 @@ const mapState = (state: RootState) => ({
   seriesBannerUrl: state.library.seriesBannerUrl,
   completedStartReload: state.library.completedStartReload,
   refreshOnStart: state.settings.refreshOnStart,
+  autoCheckForUpdates: state.settings.autoCheckForUpdates,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -145,7 +146,12 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
     ipcRenderer.on(ipcChannels.APP.SET_STATUS, (_event, text) => {
       props.setStatusText(text);
     });
-    ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
+
+    if (props.autoCheckForUpdates) {
+      ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
+    } else {
+      log.debug('Skipping update check, autoCheckForUpdates is disabled');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

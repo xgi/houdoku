@@ -15,6 +15,7 @@ import {
 } from '../../models/types';
 import { RootState } from '../../store';
 import {
+  setAutoCheckForUpdates,
   setChapterLanguages,
   setDiscordPresenceEnabled,
   setLayoutDirection,
@@ -36,6 +37,10 @@ const languageOptions = Object.values(Languages).map((language: Language) => (
 ));
 
 const refreshOnStartText: { [key: string]: string } = {
+  true: 'Yes',
+  false: 'No',
+};
+const autoCheckForUpdatesText: { [key: string]: string } = {
   true: 'Yes',
   false: 'No',
 };
@@ -70,6 +75,7 @@ const overlayPageNumberText: { [key: string]: string } = {
 const mapState = (state: RootState) => ({
   chapterLanguages: state.settings.chapterLanguages,
   refreshOnStart: state.settings.refreshOnStart,
+  autoCheckForUpdates: state.settings.autoCheckForUpdates,
   pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
@@ -84,6 +90,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setChapterLanguages(chapterLanguages)),
   setRefreshOnStart: (refreshOnStart: boolean) =>
     dispatch(setRefreshOnStart(refreshOnStart)),
+  setAutoCheckForUpdates: (autoCheckForUpdates: boolean) =>
+    dispatch(setAutoCheckForUpdates(autoCheckForUpdates)),
   setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
   setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
   setLayoutDirection: (layoutDirection: LayoutDirection) =>
@@ -110,6 +118,9 @@ const Settings: React.FC<Props> = (props: Props) => {
         break;
       case GeneralSetting.RefreshOnStart:
         props.setRefreshOnStart(value);
+        break;
+      case GeneralSetting.AutoCheckForUpdates:
+        props.setAutoCheckForUpdates(value);
         break;
       default:
         break;
@@ -227,6 +238,35 @@ const Settings: React.FC<Props> = (props: Props) => {
             >
               <Button>
                 {refreshOnStartText[props.refreshOnStart.toString()]}{' '}
+                <DownOutlined />
+              </Button>
+            </Dropdown>
+          </Col>
+        </Row>
+        <Row className={styles.row}>
+          <Col span={10}>Check For Updates Automatically</Col>
+          <Col span={14}>
+            <Dropdown
+              overlay={
+                <Menu
+                  onClick={(e: any) => {
+                    updateGeneralSetting(
+                      GeneralSetting.AutoCheckForUpdates,
+                      e.item.props['data-value'] === 'true'
+                    );
+                  }}
+                >
+                  <Menu.Item key={1} data-value="true">
+                    Yes
+                  </Menu.Item>
+                  <Menu.Item key={2} data-value="false">
+                    No
+                  </Menu.Item>
+                </Menu>
+              }
+            >
+              <Button>
+                {autoCheckForUpdatesText[props.autoCheckForUpdates.toString()]}{' '}
                 <DownOutlined />
               </Button>
             </Dropdown>
