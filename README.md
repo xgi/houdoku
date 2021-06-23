@@ -79,4 +79,4 @@ an existing extension, please go to the
 
 ## License
 
-[MIT License](https://github.com/xgi/houdoku/blob/master/LICENSE)
+[MIT License](https://github.com/xgi/houdoku/blob/master/LICENSE.txt)
