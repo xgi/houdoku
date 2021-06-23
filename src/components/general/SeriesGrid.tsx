@@ -133,7 +133,7 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div>
+    <>
       <Row gutter={[16, 16]}>
         {getFilteredList(props.seriesList).map((series: Series) => {
           const coverSource = getImageSource(series).replaceAll('\\', '/');
@@ -162,7 +162,7 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
           );
         })}
       </Row>
-    </div>
+    </>
   );
 };
 

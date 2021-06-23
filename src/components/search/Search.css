@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   margin-top: 1rem;
-  margin-bottom: 0.5rem;
 }
 
 .extensionDropdown {
@@ -12,14 +11,20 @@
 .searchField,
 .uploader {
   flex: 5;
-  margin-left: 0.5rem !important;
+  margin-left: 16px !important;
 }
 
 .alert {
-  margin-bottom: 0.5rem !important;
+  margin-top: 16px !important;
+  margin-bottom: 16px !important;
 }
 
 .loadingContainer {
   margin-top: 2rem;
   text-align: center;
+}
+
+.seriesGrid {
+  padding-top: 16px;
+  padding-bottom: 16px;
 }

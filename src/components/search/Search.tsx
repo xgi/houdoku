@@ -122,6 +122,12 @@ const Search: React.FC<Props> = (props: Props) => {
       .catch((e) => log.error(e));
   };
 
+  const showInLibraryMessage = () => {
+    info({
+      content: <Paragraph>This series is already in your library.</Paragraph>,
+    });
+  };
+
   const renderAlert = () => {
     const metadata = getSearchExtensionMetadata();
     if (metadata && metadata.notice.length > 0) {
@@ -193,10 +199,34 @@ const Search: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const showInLibraryMessage = () => {
-    info({
-      content: <Paragraph>This series is already in your library.</Paragraph>,
-    });
+  const renderSeriesGrid = () => {
+    return (
+      <div className={styles.seriesGrid}>
+        <SeriesGrid
+          columns={4}
+          seriesList={props.searchResults}
+          sorted={false}
+          filter=""
+          filterProgress={ProgressFilter.All}
+          filterStatus={null}
+          filterUserTags={[]}
+          clickFunc={(
+            series: Series,
+            isInLibrary: boolean | undefined = undefined
+          ) => {
+            if (isInLibrary) {
+              showInLibraryMessage();
+            } else {
+              props.setAddModalSeries(series);
+              props.toggleShowingAddModal(
+                props.searchExtension === FS_METADATA.id
+              );
+            }
+          }}
+          inLibraryFunc={inLibrary}
+        />
+      </div>
+    );
   };
 
   const getExtensionList = async () => {
@@ -259,29 +289,7 @@ const Search: React.FC<Props> = (props: Props) => {
           <Paragraph>Loading results...</Paragraph>
         </div>
       ) : (
-        <SeriesGrid
-          columns={4}
-          seriesList={props.searchResults}
-          sorted={false}
-          filter=""
-          filterProgress={ProgressFilter.All}
-          filterStatus={null}
-          filterUserTags={[]}
-          clickFunc={(
-            series: Series,
-            isInLibrary: boolean | undefined = undefined
-          ) => {
-            if (isInLibrary) {
-              showInLibraryMessage();
-            } else {
-              props.setAddModalSeries(series);
-              props.toggleShowingAddModal(
-                props.searchExtension === FS_METADATA.id
-              );
-            }
-          }}
-          inLibraryFunc={inLibrary}
-        />
+        renderSeriesGrid()
       )}
     </>
   );

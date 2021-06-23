@@ -6,6 +6,7 @@
   margin-top: var(--header-height);
   margin-right: -16px;
   padding-top: 16px;
+  padding-bottom: 16px;
   padding-right: 16px;
   overflow-y: scroll;
   height: calc(100vh - 24px - 24px - var(--header-height));
