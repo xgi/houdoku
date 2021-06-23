@@ -1,4 +1,4 @@
-![Houdoku Header](res/houdoku_header.png)
+[![Houdoku Header](res/houdoku_header.png)](https://houdoku.org)
 
 [![GitHub release](https://img.shields.io/github/v/release/xgi/houdoku?style=flat-square)](https://github.com/xgi/houdoku/releases)
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xgi/houdoku/CI?style=flat-square)
@@ -24,15 +24,15 @@ Houdoku is a free and open source manga reader for the desktop.
 
 ## Download
 
-Download Houdoku from
-[the releases page](https://github.com/xgi/houdoku/releases).
+Download Houdoku from [the official website](https://houdoku.org/download).
 
-- **Windows**: Use the `.exe` installer.
-- **macOS**: Use the `.dmg`.
-- **Linux**: Use the `.AppImage`. Releases may be available on your
-  package manager, but are not officially maintained.
+Alternatively, you can download manually from the
+[GitHub releases page](https://github.com/xgi/houdoku/releases).
 
-The application can check for and download updates automatically.
+## Documentation
+
+User guides and documentation are available on
+[houdoku.org](https://houdoku.org).
 
 ## Development
 
