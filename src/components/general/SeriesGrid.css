@@ -18,7 +18,7 @@
 
 .seriesUnreadCount {
   position: absolute;
-  top: 8px;
+  top: 0px;
   left: 8px;
   padding: 0 5px;
   background-color: var(--color-exit);
@@ -28,7 +28,7 @@
 
 .seriesInLibrary {
   position: absolute;
-  top: 8px;
+  top: 0px;
   right: 8px;
   padding: 0 5px;
   background-color: var(--color-success);
