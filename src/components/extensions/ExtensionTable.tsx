@@ -41,7 +41,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       return;
     }
 
-    const metadataList = await ipcRenderer.invoke(
+    const metadataList: ExtensionMetadata[] = await ipcRenderer.invoke(
       ipcChannels.EXTENSION_MANAGER.GET_ALL
     );
 
@@ -73,6 +73,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
             url: extensionUrl,
             installedVersion,
             canUpdate,
+            hasSettings: metadata ? metadata.hasSettings : false,
           };
         })
         .filter((row: ExtensionTableRow) => {
@@ -249,7 +250,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       width: '5%',
       align: 'center',
       render: function render(text: any, record: ExtensionTableRow) {
-        return record.installedVersion === undefined ? (
+        return record.installedVersion === undefined || !record.hasSettings ? (
           <></>
         ) : (
           <Button
@@ -268,6 +269,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
   return (
     <Table
       dataSource={dataSource}
+      // @ts-expect-error cleanup column render types
       columns={columns}
       rowKey="pkgName"
       size="small"
