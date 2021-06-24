@@ -18,6 +18,7 @@ import {
   ExtensionClientAbstract,
   GetSettingsFunc,
   SetSettingsFunc,
+  GetSettingTypesFunc,
 } from 'houdoku-extension-lib';
 import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
 import { walk } from '../../util/filesystem';
@@ -28,6 +29,7 @@ export const FS_METADATA: ExtensionMetadata = {
   url: '',
   version: '1.0.0',
   translatedLanguage: undefined,
+  hasSettings: false,
   notice: 'Add a series by selecting the directory or archive file below.',
   noticeUrl: 'https://github.com/xgi/houdoku/wiki/Importing-Local-Series',
   pageLoadMessage: '',
@@ -203,6 +205,10 @@ export class FSExtensionClient extends ExtensionClientAbstract {
 
   getDirectory: GetDirectoryFunc = () => {
     return new Promise<Series[]>((resolve) => resolve([]));
+  };
+
+  getSettingTypes: GetSettingTypesFunc = () => {
+    return {};
   };
 
   getSettings: GetSettingsFunc = () => {

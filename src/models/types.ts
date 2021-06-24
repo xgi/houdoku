@@ -6,6 +6,7 @@ export type ExtensionTableRow = {
   availableVersion: string;
   installedVersion: string | undefined;
   canUpdate: boolean;
+  hasSettings: boolean;
 };
 
 export type TrackerMetadata = {
