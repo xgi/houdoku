@@ -43,11 +43,16 @@ const About: React.FC<Props> = (props: Props) => {
           {packageJson.homepage}
         </a>
         <br />
+        Repository:{' '}
+        <a href={packageJson.repository.url} target="_blank" rel="noreferrer">
+          {packageJson.repository.url}
+        </a>
+        <br />
         Maintainer: {packageJson.author.name} ({packageJson.author.email})
         <br />
         License: MIT (
         <a
-          href={`${packageJson.homepage}/blob/master/LICENSE.txt`}
+          href={`${packageJson.repository.url}/blob/master/LICENSE.txt`}
           target="_blank"
           rel="noreferrer"
         >

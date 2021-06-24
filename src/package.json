@@ -6,7 +6,8 @@
   "main": "./main.prod.js",
   "author": {
     "name": "Jake Robertson",
-    "email": "jake@faltro.com"
+    "email": "jake@faltro.com",
+    "url": "https://faltro.com"
   },
   "scripts": {
     "electron-rebuild": "node -r ../.erb/scripts/BabelRegister.js ../.erb/scripts/ElectronRebuild.js",
