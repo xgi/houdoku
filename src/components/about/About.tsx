@@ -5,13 +5,14 @@ import { Button } from 'antd';
 import { ipcRenderer } from 'electron';
 import styles from './About.css';
 import packageJson from '../../../package.json';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
 const About: React.FC<Props> = (props: Props) => {
   const handleUpdateCheck = () => {
-    ipcRenderer.invoke('check-for-updates');
+    ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
   };
 
   return (

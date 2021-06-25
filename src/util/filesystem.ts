@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from 'houdoku-extension-lib';
 import ipcChannels from '../constants/ipcChannels.json';
 
 /**
@@ -48,6 +48,31 @@ export async function getThumbnailPath(series: Series): Promise<string | null> {
 
   const ext = series.remoteCoverUrl.split('.').pop();
   return path.join(thumbnailsDir, `${series.id}.${ext}`);
+}
+
+export async function getChapterDownloadPath(
+  series: Series,
+  chapter: Chapter
+): Promise<string> {
+  const downloadsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.DOWNLOADS_DIR
+  );
+
+  return path.join(downloadsDir, `${series.id}`, `${chapter.id}`);
+}
+
+export async function getDownloadedPages(
+  series: Series,
+  chapter: Chapter
+): Promise<string[]> {
+  if (series.id === undefined || chapter.id === undefined) return [];
+
+  const chapterPath = await getChapterDownloadPath(series, chapter);
+
+  if (!fs.existsSync(chapterPath)) {
+    return [];
+  }
+  return walk(chapterPath);
 }
 
 /**
