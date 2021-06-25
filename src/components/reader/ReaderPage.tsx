@@ -202,7 +202,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     const pageUrls: string[] = await ipcRenderer
       .invoke(
-        'extension-getPageRequesterData',
+        ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
         series.extensionId,
         series.sourceType,
         series.sourceId,
@@ -210,7 +210,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       )
       .then((pageRequesterData: PageRequesterData) =>
         ipcRenderer.invoke(
-          'extension-getPageUrls',
+          ipcChannels.EXTENSION.GET_PAGE_URLS,
           series.extensionId,
           pageRequesterData
         )
@@ -222,7 +222,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       // eslint-disable-next-line no-await-in-loop
       await ipcRenderer
         .invoke(
-          'extension-getPageData',
+          ipcChannels.EXTENSION.GET_PAGE_DATA,
           series.extensionId,
           series,
           pageUrls[i]
