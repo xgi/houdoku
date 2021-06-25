@@ -1,4 +1,4 @@
-import { DownloadTask } from '../../services/downloader';
+import { DownloadError, DownloadTask } from '../../services/downloader';
 
 export const DOWNLOAD_CHAPTERS = 'DOWNLOAD_CHAPTERS';
 export const PAUSE_DOWNLOADER = 'PAUSE_DOWNLOADER';
@@ -8,6 +8,7 @@ export const INTERNAL_COPY_CLIENT_STATE = 'INTERNAL_COPY_CLIENT_STATE';
 export interface DownloaderState {
   running: boolean;
   queue: DownloadTask[];
+  downloadErrors: DownloadError[];
 }
 
 interface DownloadChaptersAction {
