@@ -1,5 +1,6 @@
 import fs from 'fs';
 import log from 'electron-log';
+import { Series } from 'houdoku-extension-lib';
 import { getThumbnailPath } from './filesystem';
 
 /**
