@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route } from 'react-router-dom';
-import { Button, Layout, Menu } from 'antd';
+import { Layout, Menu } from 'antd';
 import log from 'electron-log';
 import {
   BookOutlined,
@@ -10,8 +10,7 @@ import {
   BuildOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
-import { ipcRenderer } from 'electron';
-import { ExtensionMetadata, Series } from 'houdoku-extension-lib';
+import { Series } from 'houdoku-extension-lib';
 import { RootState } from '../../store';
 import {
   changeNumColumns,
@@ -36,10 +35,6 @@ import Settings from '../settings/Settings';
 import About from '../about/About';
 import Library from '../library/Library';
 import Extensions from '../extensions/Extensions';
-import ipcChannels from '../../constants/ipcChannels.json';
-import storeKeys from '../../constants/storeKeys.json';
-import persistantStore from '../../util/persistantStore';
-import { TrackerMetadata } from '../../models/types';
 
 const { Content, Sider } = Layout;
 
@@ -86,72 +81,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         props.loadSeriesList();
       })
       .catch((error) => log.error(error));
-
-    const loadStoredExtensionSettings = () => {
-      log.info('Loading stored extension settings...');
-      return (
-        ipcRenderer
-          .invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL)
-          // eslint-disable-next-line promise/always-return
-          .then((metadataList: ExtensionMetadata[]) => {
-            metadataList.forEach((metadata: ExtensionMetadata) => {
-              const extSettings: string | null = persistantStore.read(
-                `${storeKeys.EXTENSION_SETTINGS_PREFIX}${metadata.id}`
-              );
-              if (extSettings !== null) {
-                log.debug(`Found stored settings for extension ${metadata.id}`);
-                ipcRenderer.invoke(
-                  ipcChannels.EXTENSION.SET_SETTINGS,
-                  metadata.id,
-                  JSON.parse(extSettings)
-                );
-              }
-            });
-          })
-          .catch((e: Error) => log.error(e))
-      );
-    };
-
-    const loadStoredTrackerTokens = () => {
-      log.info('Loading stored tracker tokens...');
-      return (
-        ipcRenderer
-          .invoke(ipcChannels.TRACKER_MANAGER.GET_ALL)
-          // eslint-disable-next-line promise/always-return
-          .then((metadataList: TrackerMetadata[]) => {
-            metadataList.forEach((metadata: TrackerMetadata) => {
-              const token: string | null = persistantStore.read(
-                `${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${metadata.id}`
-              );
-              if (token !== null) {
-                log.debug(`Found stored token for tracker ${metadata.id}`);
-                ipcRenderer.invoke(
-                  ipcChannels.TRACKER.SET_ACCESS_TOKEN,
-                  metadata.id,
-                  token
-                );
-              }
-            });
-          })
-          .catch((e: Error) => log.error(e))
-      );
-    };
-
-    loadStoredExtensionSettings();
-    loadStoredTrackerTokens();
-
-    ipcRenderer.on(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS, () => {
-      loadStoredExtensionSettings();
-    });
-    ipcRenderer.on(ipcChannels.APP.SET_STATUS, (_event, text) => {
-      props.setStatusText(text);
-    });
-
-    if (props.autoCheckForUpdates) {
-      ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
-    } else {
-      log.debug('Skipping update check, autoCheckForUpdates is disabled');
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
