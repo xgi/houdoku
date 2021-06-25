@@ -8,6 +8,7 @@ export const INTERNAL_COPY_CLIENT_STATE = 'INTERNAL_COPY_CLIENT_STATE';
 export interface DownloaderState {
   running: boolean;
   queue: DownloadTask[];
+  currentTask: DownloadTask | null;
   downloadErrors: DownloadError[];
 }
 

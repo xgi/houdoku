@@ -15,6 +15,7 @@ const downloaderClient = new DownloaderClient();
 const initialState: DownloaderState = {
   running: false,
   queue: [],
+  currentTask: null,
   downloadErrors: [],
 };
 
@@ -43,6 +44,7 @@ export default function downloader(
     ...state,
     running: downloaderClient.running,
     queue: [...downloaderClient.queue],
+    currentTask: downloaderClient.currentTask,
     downloadErrors: [...downloaderClient.downloadErrors],
   };
 }

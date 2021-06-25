@@ -16,7 +16,7 @@ export type DownloadTask = {
 export type DownloadError = {
   chapter: Chapter;
   series: Series;
-  error: Error;
+  errorStr: string;
 };
 
 export default class DownloaderClient {
@@ -28,11 +28,14 @@ export default class DownloaderClient {
 
   queue: DownloadTask[] = [];
 
+  currentTask: DownloadTask | null = null;
+
   downloadErrors: DownloadError[] = [];
 
   _handleDownloadError = (downloadError: DownloadError) => {
-    log.error(downloadError.error);
+    log.error(downloadError.errorStr);
     this.running = false;
+    this.currentTask = null;
     this.downloadErrors.push(downloadError);
 
     if (this.copyClientState) this.copyClientState();
@@ -52,6 +55,8 @@ export default class DownloaderClient {
       if (task === undefined) {
         break;
       }
+
+      this.currentTask = { series: task.series, chapter: task.chapter };
 
       // eslint-disable-next-line no-await-in-loop
       const chapterPath = await getChapterDownloadPath(
@@ -85,8 +90,12 @@ export default class DownloaderClient {
             pageUrl.startsWith('http://') || pageUrl.startsWith('https://')
         )
       ) {
-        // TODO: send status message saying 'found non-http page; can only download chapters using http'
-        return;
+        this._handleDownloadError({
+          chapter: task.chapter,
+          series: task.series,
+          errorStr: `Chapter contains invalid page URL(s) that cannot be downloaded`,
+        } as DownloadError);
+        break;
       }
 
       log.debug(
@@ -121,7 +130,7 @@ export default class DownloaderClient {
                 this._handleDownloadError({
                   chapter: task.chapter,
                   series: task.series,
-                  error: err,
+                  errorStr: `${err.name}: ${err.message}`,
                 } as DownloadError);
             });
           })
@@ -129,9 +138,16 @@ export default class DownloaderClient {
             this._handleDownloadError({
               chapter: task.chapter,
               series: task.series,
-              error: err,
+              errorStr: `${err.name}: ${err.message}`,
             } as DownloadError);
           });
+
+        this.currentTask = {
+          series: task.series,
+          chapter: task.chapter,
+          page: i,
+        };
+        if (this.copyClientState) this.copyClientState();
       }
 
       if (!this.running) {
@@ -151,6 +167,7 @@ export default class DownloaderClient {
     }
 
     this.running = false;
+    this.currentTask = null;
     if (this.copyClientState) this.copyClientState();
   };
 
