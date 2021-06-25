@@ -1,3 +1,4 @@
+import log from 'electron-log';
 import { StatusState, SET_STATUS_TEXT } from './types';
 
 const initialState: StatusState = {
@@ -11,6 +12,7 @@ export default function status(
 ): StatusState {
   switch (action.type) {
     case SET_STATUS_TEXT:
+      log.debug(`statusbar: ${action.payload.text}`);
       return { ...state, text: action.payload.text };
     default:
       return state;
