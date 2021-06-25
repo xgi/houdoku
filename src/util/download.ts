@@ -1,6 +1,5 @@
 import fs from 'fs';
 import log from 'electron-log';
-import { Series } from 'houdoku-extension-lib';
 import { getThumbnailPath } from './filesystem';
 
 /**
@@ -17,7 +16,6 @@ export async function downloadCover(series: Series) {
     `Downloading cover for series ${series.id} (sourceId=${series.sourceId}, extId=${series.extensionId}) from ${series.remoteCoverUrl}`
   );
 
-  // eslint-disable-next-line promise/catch-or-return
   fetch(series.remoteCoverUrl)
     .then((response) => response.arrayBuffer())
     .then((buffer) => {
@@ -27,5 +25,6 @@ export async function downloadCover(series: Series) {
         }
       });
       return true;
-    });
+    })
+    .catch((e: Error) => log.error(e));
 }
