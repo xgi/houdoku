@@ -11,6 +11,7 @@ export type DownloadTask = {
   chapter: Chapter;
   series: Series;
   page?: number;
+  totalPages?: number;
 };
 
 export type DownloadError = {
@@ -146,6 +147,7 @@ export default class DownloaderClient {
           series: task.series,
           chapter: task.chapter,
           page: i,
+          totalPages: pageUrls.length,
         };
         if (this.copyClientState) this.copyClientState();
       }

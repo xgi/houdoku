@@ -1,0 +1,38 @@
+.errorCollapse {
+  margin-bottom: 4px !important;
+}
+
+.currentTaskCard {
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.queueCard {
+  margin-top: 4px !important;
+}
+
+.currentTaskCard .taskTitle {
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+.currentTaskCard .taskDetails {
+  margin-bottom: 0;
+}
+
+.queueCard > div {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.queueCard .taskTitle {
+  margin-bottom: 0;
+}
+
+.queueCard .taskDetails {
+  margin-bottom: 0;
+}
+
+.clearButton {
+  margin-left: 4px;
+}
