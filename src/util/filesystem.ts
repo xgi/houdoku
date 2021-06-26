@@ -75,6 +75,30 @@ export async function getDownloadedPages(
   return walk(chapterPath);
 }
 
+export async function getAllDownloadedChapterPaths(): Promise<string[]> {
+  const downloadsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.DOWNLOADS_DIR
+  );
+
+  if (!fs.existsSync(downloadsDir)) {
+    return [];
+  }
+
+  const chapterPaths: Set<string> = new Set();
+
+  fs.readdirSync(downloadsDir).forEach((seriesDirName: string) => {
+    const seriesPath = path.join(downloadsDir, seriesDirName);
+    if (fs.statSync(seriesPath).isDirectory()) {
+      fs.readdirSync(seriesPath).forEach((chapterDirName: string) => {
+        const chapterPath = path.join(seriesPath, chapterDirName);
+        chapterPaths.add(chapterPath);
+      });
+    }
+  });
+
+  return Array.from(chapterPaths);
+}
+
 /**
  * Delete a series thumbnail from the filesystem.
  * This does not necessarily require the thumbnail to exist; therefore this function can be simply

@@ -1,0 +1,12 @@
+.collapse {
+  margin-top: 6px !important;
+}
+
+.flag {
+  display: inline-block;
+}
+
+.loadingContainer {
+  margin-top: 2rem;
+  text-align: center;
+}

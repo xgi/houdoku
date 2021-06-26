@@ -2,8 +2,6 @@ import React from 'react';
 import { Button, Tabs } from 'antd';
 import { connect, ConnectedProps } from 'react-redux';
 import { Chapter, Series } from 'houdoku-extension-lib';
-import Paragraph from 'antd/lib/typography/Paragraph';
-import styles from './Downloads.css';
 import { RootState } from '../../store';
 import { DownloadTask } from '../../services/downloader';
 import db from '../../services/db';
@@ -13,6 +11,7 @@ import {
   startDownloader,
 } from '../../features/downloader/actions';
 import DownloadsStatus from './DownloadsStatus';
+import MyDownloads from './MyDownloads';
 
 const { TabPane } = Tabs;
 
@@ -64,11 +63,11 @@ const Downloads: React.FC<Props> = (props: Props) => {
         <DownloadsStatus />
       </TabPane>
       <TabPane tab="My Downloads" key={2}>
-        <Paragraph>You do not have any downloads.</Paragraph>
+        <MyDownloads />
       </TabPane>
       <TabPane tab="temp" key={3}>
         <Button onClick={() => tempAdd(502)}>add 502 to queue + start</Button>
-        <Button onClick={() => tempAdd(503)}>add 503 to queue + start</Button>
+        <Button onClick={() => tempAdd(3)}>add 3 to queue + start</Button>
         <Button onClick={() => tempPause()}>pause downloader</Button>
         <Button onClick={() => tempStart()}>start downloader</Button>
       </TabPane>
