@@ -5,11 +5,13 @@ import {
   CaretRightOutlined,
   CheckOutlined,
   DownloadOutlined,
+  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Chapter, Series } from 'houdoku-extension-lib';
 import { connect, ConnectedProps } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import { useHistory } from 'react-router-dom';
+import { Modal } from 'antd';
 import styles from './ChapterTableContextMenu.css';
 import { downloadChapters } from '../../features/downloader/actions';
 import { DownloadTask } from '../../services/downloader';
@@ -18,6 +20,8 @@ import { toggleChapterRead } from '../../features/library/utils';
 import { getChapterDownloadedSync } from '../../util/filesystem';
 import routes from '../../constants/routes.json';
 import ipcChannels from '../../constants/ipcChannels.json';
+
+const { confirm } = Modal;
 
 const downloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DOWNLOADS_DIR
@@ -75,12 +79,29 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
         queue.push(chapter);
       }
     }
-    props.downloadChapters(
-      queue.map(
-        (chapter: Chapter) =>
-          ({ chapter, series: props.series } as DownloadTask)
-      )
-    );
+
+    const func = () => {
+      props.downloadChapters(
+        queue.map(
+          (chapter: Chapter) =>
+            ({ chapter, series: props.series } as DownloadTask)
+        )
+      );
+    };
+
+    if (queue.length >= 3) {
+      confirm({
+        title: `Download ${queue.length} chapters?`,
+        icon: <ExclamationCircleOutlined />,
+        content:
+          'You can view, pause, or cancel from the Downloads tab on the left.',
+        onOk() {
+          func();
+        },
+      });
+    } else {
+      func();
+    }
   };
 
   const handleDownload = () => {
