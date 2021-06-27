@@ -14,8 +14,8 @@ export async function getDownloadedList(): Promise<{
     [seriesId: number]: { series: Series; chapters: Chapter[] };
   } = {};
 
-  const seriesList: Series[] = [];
-  const chapterList: Chapter[] = [];
+  const seriesSet: Set<Series> = new Set();
+  const chapterSet: Set<Chapter> = new Set();
 
   await Promise.all(
     downloadedChapterPaths.map(async (chapterPath: string) => {
@@ -28,7 +28,7 @@ export async function getDownloadedList(): Promise<{
         const cachedChapter = cache[seriesId].chapters.find(
           (chapter: Chapter) => chapter.id === chapterId
         );
-        if (cachedChapter !== undefined) chapterList.push(cachedChapter);
+        if (cachedChapter !== undefined) chapterSet.add(cachedChapter);
       } else {
         const series = (await db.fetchSeries(seriesId))[0] as Series;
         const chapters = await db.fetchChapters(seriesId);
@@ -38,12 +38,15 @@ export async function getDownloadedList(): Promise<{
           chapters,
         };
 
-        seriesList.push(series);
+        seriesSet.add(series);
         const chapter = chapters.find((c: Chapter) => c.id === chapterId);
-        if (chapter !== undefined) chapterList.push(chapter);
+        if (chapter !== undefined) chapterSet.add(chapter);
       }
     })
   );
 
-  return { seriesList, chapterList };
+  return {
+    seriesList: Array.from(seriesSet),
+    chapterList: Array.from(chapterSet),
+  };
 }

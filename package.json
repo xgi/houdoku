@@ -182,6 +182,7 @@
     "@types/react-redux": "^7.1.16",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-test-renderer": "^17.0.1",
+    "@types/rimraf": "^3.0.0",
     "@types/semver": "^7.3.6",
     "@types/webpack-env": "^1.15.2",
     "@typescript-eslint/eslint-plugin": "^4.25.0",

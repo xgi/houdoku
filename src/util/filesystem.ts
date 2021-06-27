@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import rimraf from 'rimraf';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Chapter, Series } from 'houdoku-extension-lib';
@@ -97,6 +98,25 @@ export async function getAllDownloadedChapterPaths(): Promise<string[]> {
   });
 
   return Array.from(chapterPaths);
+}
+
+export async function deleteDownloadedChapter(
+  series: Series,
+  chapter: Chapter
+): Promise<void> {
+  log.debug(
+    `Deleting from disk chapter ${chapter.id} from series ${series.id}`
+  );
+  if (series.id === undefined || chapter.id === undefined)
+    return new Promise((resolve) => resolve());
+
+  const chapterDownloadPath = await getChapterDownloadPath(series, chapter);
+  if (fs.existsSync(chapterDownloadPath)) {
+    return new Promise((resolve) =>
+      rimraf(chapterDownloadPath, () => resolve())
+    );
+  }
+  return new Promise((resolve) => resolve());
 }
 
 /**

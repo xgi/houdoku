@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Badge, Button, Collapse, List, Row, Spin, Tabs } from 'antd';
+import { Button, Collapse, Row, Spin, Tree } from 'antd';
 import { connect, ConnectedProps } from 'react-redux';
 import log from 'electron-log';
 import { Chapter, Languages, Series } from 'houdoku-extension-lib';
@@ -7,13 +7,15 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './MyDownloads.css';
 import { RootState } from '../../store';
 import { getDownloadedList } from '../../features/downloader/utils';
-
-const { Panel } = Collapse;
+import { deleteDownloadedChapter } from '../../util/filesystem';
+import { setStatusText } from '../../features/statusbar/actions';
 
 const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
+const mapDispatch = (dispatch: any) => ({
+  setStatusText: (text?: string) => dispatch(setStatusText(text)),
+});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -23,9 +25,10 @@ type Props = PropsFromRedux & {};
 
 const MyDownloads: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(false);
-  const [entries, setEntries] = useState<{
-    [seriesId: number]: { series: Series; chapters: Chapter[] };
-  }>({});
+  const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
+  const [cacheSeriesList, setCacheSeriesList] = useState<Series[]>([]);
+  const [cacheChapterList, setCacheChapterList] = useState<Chapter[]>([]);
+  const [treeData, setTreeData] = useState<any[]>([]);
 
   const loadDownloads = async () => {
     setLoading(true);
@@ -33,24 +36,64 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
     getDownloadedList()
       // eslint-disable-next-line promise/always-return
       .then(({ seriesList, chapterList }) => {
-        const tempEntries: {
-          [seriesId: number]: { series: Series; chapters: Chapter[] };
-        } = {};
+        const tempTreeData = seriesList.map((series) => {
+          const chapters = chapterList.filter(
+            (chapter) => chapter.seriesId === series.id
+          );
 
-        seriesList.forEach((series: Series) => {
-          if (series.id !== undefined)
-            tempEntries[series.id] = { series, chapters: [] };
-        });
-        chapterList.forEach((chapter: Chapter) => {
-          if (chapter.seriesId !== undefined)
-            tempEntries[chapter.seriesId].chapters.push(chapter);
+          return {
+            title: series.title,
+            key: `series-${series.id}`,
+            children: chapters.map((chapter) => {
+              const groupStr =
+                chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
+
+              return {
+                title: (
+                  <>
+                    <div
+                      className={`${styles.flag} flag flag-${
+                        Languages[chapter.languageKey].flagCode
+                      }`}
+                    />
+                    Chapter {chapter.chapterNumber}
+                    {groupStr}
+                  </>
+                ),
+                key: `chapter-${chapter.id}`,
+              };
+            }),
+          };
         });
 
-        setEntries(tempEntries);
+        setTreeData(tempTreeData);
+        setCacheChapterList(chapterList);
+        setCacheSeriesList(seriesList);
       })
       .catch((err) => log.error(err))
       .finally(() => setLoading(false))
       .catch((err) => log.error(err));
+  };
+
+  const deleteSelected = async () => {
+    const count = checkedChapters.length;
+    await Promise.all(
+      checkedChapters.map(async (key: string) => {
+        const chapterIdStr = key.split('-').pop();
+        if (chapterIdStr === undefined) return;
+        const chapterId = parseInt(chapterIdStr, 10);
+
+        const chapter = cacheChapterList.find((c) => c.id === chapterId);
+        if (chapter === undefined || chapter.seriesId === undefined) return;
+        const series = cacheSeriesList.find((s) => s.id === chapter.seriesId);
+        if (series === undefined) return;
+
+        await deleteDownloadedChapter(series, chapter);
+      })
+    );
+
+    props.setStatusText(`Deleted ${count} downloaded chapter(s)`);
+    loadDownloads();
   };
 
   useEffect(() => {
@@ -69,46 +112,24 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Button onClick={() => loadDownloads()}>Refresh Downloads</Button>
-      <Collapse className={styles.collapse}>
-        {Object.values(entries).map((entry) => (
-          <Panel
-            header={
-              <>
-                <Badge count={entry.chapters.length} /> {entry.series.title}
-              </>
-            }
-            key={
-              entry.series.id === undefined ? Math.random() : entry.series.id
-            }
-          >
-            <List
-              size="small"
-              bordered
-              dataSource={entry.chapters}
-              renderItem={(chapter: Chapter) => {
-                const groupStr =
-                  chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
-
-                return (
-                  <List.Item>
-                    <List.Item.Meta
-                      avatar={
-                        <div
-                          className={`${styles.flag} flag flag-${
-                            Languages[chapter.languageKey].flagCode
-                          }`}
-                        />
-                      }
-                      title={`Chapter ${chapter.chapterNumber}${groupStr}`}
-                    />
-                  </List.Item>
-                );
-              }}
-            />
-          </Panel>
-        ))}
-      </Collapse>
+      <Row>
+        <Button onClick={() => loadDownloads()}>Refresh Downloads</Button>
+        <Button onClick={() => deleteSelected()}>Delete Selected</Button>
+      </Row>
+      {treeData.length > 0 ? (
+        <Tree
+          checkable
+          selectable={false}
+          onCheck={(keys: any) =>
+            setCheckedChapters(
+              keys.filter((key: string) => key.startsWith('chapter-'))
+            )
+          }
+          treeData={treeData}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };
