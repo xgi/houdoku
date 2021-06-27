@@ -51,6 +51,14 @@ export async function getThumbnailPath(series: Series): Promise<string | null> {
   return path.join(thumbnailsDir, `${series.id}.${ext}`);
 }
 
+export function getChapterDownloadPathSync(
+  series: Series,
+  chapter: Chapter,
+  downloadsDir: string
+): string {
+  return path.join(downloadsDir, `${series.id}`, `${chapter.id}`);
+}
+
 export async function getChapterDownloadPath(
   series: Series,
   chapter: Chapter
@@ -58,22 +66,18 @@ export async function getChapterDownloadPath(
   const downloadsDir = await ipcRenderer.invoke(
     ipcChannels.GET_PATH.DOWNLOADS_DIR
   );
-
-  return path.join(downloadsDir, `${series.id}`, `${chapter.id}`);
+  return getChapterDownloadPathSync(series, chapter, downloadsDir);
 }
 
-export async function getDownloadedPages(
+export function getChapterDownloadedSync(
   series: Series,
-  chapter: Chapter
-): Promise<string[]> {
-  if (series.id === undefined || chapter.id === undefined) return [];
-
-  const chapterPath = await getChapterDownloadPath(series, chapter);
-
-  if (!fs.existsSync(chapterPath)) {
-    return [];
-  }
-  return walk(chapterPath);
+  chapter: Chapter,
+  downloadsDir: string
+): boolean {
+  const chapterPath = getChapterDownloadPathSync(series, chapter, downloadsDir);
+  return fs.existsSync(chapterPath)
+    ? fs.readdirSync(chapterPath).length > 0
+    : false;
 }
 
 export async function getAllDownloadedChapterPaths(): Promise<string[]> {
@@ -116,7 +120,7 @@ export async function deleteDownloadedChapter(
       rimraf(chapterDownloadPath, () => {
         const seriesDir = path.dirname(chapterDownloadPath);
         if (walk(seriesDir).length === 0) {
-          fs.rmdirSync(seriesDir);
+          fs.rmdirSync(chapterDownloadPath);
         }
         resolve();
       })

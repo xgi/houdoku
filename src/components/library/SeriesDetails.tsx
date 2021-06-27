@@ -310,13 +310,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </div>
       </div>
       {renderSeriesDescriptions(props.series)}
-      <ChapterTable
-        chapterList={props.chapterList}
-        series={props.series}
-        chapterLanguages={props.chapterLanguages}
-        toggleChapterRead={props.toggleChapterRead}
-        trackerAutoUpdate={props.trackerAutoUpdate}
-      />
+      <ChapterTable series={props.series} />
     </>
   );
 };
