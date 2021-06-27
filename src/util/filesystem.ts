@@ -119,8 +119,8 @@ export async function deleteDownloadedChapter(
     return new Promise((resolve) =>
       rimraf(chapterDownloadPath, () => {
         const seriesDir = path.dirname(chapterDownloadPath);
-        if (walk(seriesDir).length === 0) {
-          fs.rmdirSync(chapterDownloadPath);
+        if (fs.readdirSync(seriesDir).length === 0) {
+          fs.rmdirSync(seriesDir);
         }
         resolve();
       })
