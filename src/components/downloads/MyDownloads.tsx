@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Collapse, Row, Spin, Tree } from 'antd';
+import { Button, Modal, Row, Tree } from 'antd';
+import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import log from 'electron-log';
 import { Chapter, Languages, Series } from 'houdoku-extension-lib';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './MyDownloads.css';
 import { RootState } from '../../store';
 import { getDownloadedList } from '../../features/downloader/utils';
 import { deleteDownloadedChapter } from '../../util/filesystem';
 import { setStatusText } from '../../features/statusbar/actions';
+
+const { confirm } = Modal;
 
 const mapState = (state: RootState) => ({});
 
@@ -77,23 +79,37 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   const deleteSelected = async () => {
     const count = checkedChapters.length;
-    await Promise.all(
-      checkedChapters.map(async (key: string) => {
-        const chapterIdStr = key.split('-').pop();
-        if (chapterIdStr === undefined) return;
-        const chapterId = parseInt(chapterIdStr, 10);
+    log.debug(`Prompting to delete ${count} downloaded chapters`);
 
-        const chapter = cacheChapterList.find((c) => c.id === chapterId);
-        if (chapter === undefined || chapter.seriesId === undefined) return;
-        const series = cacheSeriesList.find((s) => s.id === chapter.seriesId);
-        if (series === undefined) return;
+    confirm({
+      title: 'Delete the selected chapters?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'This action is irreversible.',
+      onOk() {
+        Promise.all(
+          checkedChapters.map(async (key: string) => {
+            const chapterIdStr = key.split('-').pop();
+            if (chapterIdStr === undefined) return;
+            const chapterId = parseInt(chapterIdStr, 10);
 
-        await deleteDownloadedChapter(series, chapter);
-      })
-    );
+            const chapter = cacheChapterList.find((c) => c.id === chapterId);
+            if (chapter === undefined || chapter.seriesId === undefined) return;
+            const series = cacheSeriesList.find(
+              (s) => s.id === chapter.seriesId
+            );
+            if (series === undefined) return;
 
-    props.setStatusText(`Deleted ${count} downloaded chapter(s)`);
-    loadDownloads();
+            await deleteDownloadedChapter(series, chapter);
+          })
+        )
+          // eslint-disable-next-line promise/always-return
+          .then(() => {
+            props.setStatusText(`Deleted ${count} downloaded chapter(s)`);
+            loadDownloads();
+          })
+          .catch((err) => log.error(err));
+      },
+    });
   };
 
   useEffect(() => {
@@ -101,20 +117,18 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (loading) {
-    return (
-      <div className={styles.loadingContainer}>
-        <Spin />
-        <Paragraph>Loading downloads...</Paragraph>
-      </div>
-    );
-  }
-
   return (
     <>
-      <Row>
-        <Button onClick={() => loadDownloads()}>Refresh Downloads</Button>
-        <Button onClick={() => deleteSelected()}>Delete Selected</Button>
+      <Row className={styles.controlRow}>
+        <Button
+          className={styles.refreshButton}
+          onClick={() => loadDownloads()}
+        >
+          {loading ? <SyncOutlined spin /> : 'Refresh Downloads'}
+        </Button>
+        <Button type="primary" danger onClick={() => deleteSelected()}>
+          Delete Selected
+        </Button>
       </Row>
       {treeData.length > 0 ? (
         <Tree

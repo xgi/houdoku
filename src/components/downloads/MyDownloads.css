@@ -8,7 +8,10 @@
   margin-right: 8px;
 }
 
-.loadingContainer {
-  margin-top: 2rem;
-  text-align: center;
+.controlRow {
+  margin-bottom: 8px;
+}
+
+.refreshButton {
+  margin-right: 8px;
 }
