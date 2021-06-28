@@ -69,6 +69,19 @@ export async function getChapterDownloadPath(
   return getChapterDownloadPathSync(series, chapter, downloadsDir);
 }
 
+export async function getChapterDownloaded(
+  series: Series,
+  chapter: Chapter
+): Promise<boolean> {
+  const downloadsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.DOWNLOADS_DIR
+  );
+  const chapterPath = getChapterDownloadPathSync(series, chapter, downloadsDir);
+  return fs.existsSync(chapterPath)
+    ? fs.readdirSync(chapterPath).length > 0
+    : false;
+}
+
 export function getChapterDownloadedSync(
   series: Series,
   chapter: Chapter,
