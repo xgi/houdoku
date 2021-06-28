@@ -85,7 +85,10 @@ function getSeries(
     })`
   );
 
-  return extension.getSeries(sourceType, seriesId);
+  return extension.getSeries(sourceType, seriesId).catch((err: Error) => {
+    log.error(err);
+    return undefined;
+  });
 }
 
 /**
@@ -112,7 +115,10 @@ function getChapters(
     })`
   );
 
-  return extension.getChapters(sourceType, seriesId);
+  return extension.getChapters(sourceType, seriesId).catch((err: Error) => {
+    log.error(err);
+    return [];
+  });
 }
 
 /**
@@ -140,11 +146,12 @@ function getPageRequesterData(
     })`
   );
 
-  return extension.getPageRequesterData(
-    sourceType,
-    seriesSourceId,
-    chapterSourceId
-  );
+  return extension
+    .getPageRequesterData(sourceType, seriesSourceId, chapterSourceId)
+    .catch((err: Error) => {
+      log.error(err);
+      return { server: '', hash: '', numPages: 0, pageFilenames: [] };
+    });
 }
 
 /**
@@ -161,7 +168,13 @@ function getPageUrls(
   extensionId: string,
   pageRequesterData: PageRequesterData
 ): string[] {
-  return EXTENSION_CLIENTS[extensionId].getPageUrls(pageRequesterData);
+  try {
+    const pageUrls =
+      EXTENSION_CLIENTS[extensionId].getPageUrls(pageRequesterData);
+    return pageUrls;
+  } catch (err) {
+    return [];
+  }
 }
 
 /**
@@ -181,7 +194,12 @@ async function getPageData(
   series: Series,
   url: string
 ): Promise<string> {
-  return EXTENSION_CLIENTS[extensionId].getPageData(series, url);
+  return EXTENSION_CLIENTS[extensionId]
+    .getPageData(series, url)
+    .catch((err: Error) => {
+      log.error(err);
+      return '';
+    });
 }
 
 /**
@@ -215,7 +233,10 @@ function search(extensionId: string, text: string): Promise<Series[]> {
     adjustedText = text.replace(paramsRegExp, '');
   }
 
-  return extension.getSearch(adjustedText, params);
+  return extension.getSearch(adjustedText, params).catch((err: Error) => {
+    log.error(err);
+    return [];
+  });
 }
 
 /**
@@ -232,7 +253,10 @@ function directory(extensionId: string): Promise<Series[]> {
     })`
   );
 
-  return extension.getDirectory();
+  return extension.getDirectory().catch((err: Error) => {
+    log.error(err);
+    return [];
+  });
 }
 
 /**
@@ -248,7 +272,13 @@ function getSettingTypes(extensionId: string): { [key: string]: SettingType } {
       extension.getMetadata().version
     })`
   );
-  return extension.getSettingTypes();
+
+  try {
+    return extension.getSettingTypes();
+  } catch (err) {
+    log.error(err);
+    return {};
+  }
 }
 
 /**
@@ -257,14 +287,20 @@ function getSettingTypes(extensionId: string): { [key: string]: SettingType } {
  * @param extensionId
  * @returns map of settings from the extension, with default/initial values set
  */
-function getSettings(extensionId: string): { [key: string]: any } {
+function getSettings(extensionId: string): { [key: string]: unknown } {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
     `Getting settings from extension ${extensionId} (v=${
       extension.getMetadata().version
     })`
   );
-  return extension.getSettings();
+
+  try {
+    return extension.getSettings();
+  } catch (err) {
+    log.error(err);
+    return {};
+  }
 }
 
 /**
@@ -275,7 +311,7 @@ function getSettings(extensionId: string): { [key: string]: any } {
  */
 function setSettings(
   extensionId: string,
-  settings: { [key: string]: any }
+  settings: { [key: string]: unknown }
 ): void {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
@@ -283,7 +319,12 @@ function setSettings(
       extension.getMetadata().version
     })`
   );
-  return extension.setSettings(settings);
+
+  try {
+    extension.setSettings(settings);
+  } catch (err) {
+    log.error(err);
+  }
 }
 
 export const createExtensionIpcHandlers = (
@@ -411,7 +452,7 @@ export const createExtensionIpcHandlers = (
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.SET_SETTINGS,
-    (_event, extensionId: string, settings: { [key: string]: any }) => {
+    (_event, extensionId: string, settings: { [key: string]: unknown }) => {
       return setSettings(extensionId, settings);
     }
   );

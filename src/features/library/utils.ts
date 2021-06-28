@@ -93,8 +93,11 @@ export function toggleChapterRead(
   }
 }
 
-async function reloadSeries(series: Series) {
-  if (series.id === undefined) return;
+async function reloadSeries(series: Series): Promise<Error | void> {
+  if (series.id === undefined)
+    return new Promise((resolve) =>
+      resolve(Error('Series does not have database ID'))
+    );
 
   if (
     (await ipcRenderer.invoke(
@@ -102,7 +105,9 @@ async function reloadSeries(series: Series) {
       series.extensionId
     )) === undefined
   ) {
-    return;
+    return new Promise((resolve) =>
+      resolve(Error('Could not retrieve extension data'))
+    );
   }
 
   let newSeries: Series | undefined = await ipcRenderer.invoke(
@@ -111,7 +116,10 @@ async function reloadSeries(series: Series) {
     series.sourceType,
     series.sourceId
   );
-  if (newSeries === undefined) return;
+  if (newSeries === undefined)
+    return new Promise((resolve) =>
+      resolve(Error('Could not get series from extension'))
+    );
 
   const newChapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
@@ -156,6 +164,8 @@ async function reloadSeries(series: Series) {
     await db.deleteChaptersById(orphanedChapterIds);
   }
   await db.updateSeriesNumberUnread(newSeries);
+
+  return new Promise((resolve) => resolve());
 }
 
 export async function reloadSeriesList(
@@ -171,6 +181,7 @@ export async function reloadSeriesList(
     a.title.localeCompare(b.title)
   );
   let cur = 0;
+  let errs = 0;
 
   // eslint-disable-next-line no-restricted-syntax
   for (const series of sortedSeriesList) {
@@ -180,16 +191,27 @@ export async function reloadSeriesList(
       )
     );
     // eslint-disable-next-line no-await-in-loop
-    await reloadSeries(series);
+    const ret = await reloadSeries(series);
+    if (ret instanceof Error) {
+      log.error(ret);
+      errs += 1;
+    }
     cur += 1;
   }
 
-  const statusMessage =
-    cur === 1
-      ? `Reloaded series "${seriesList[0].title}"`
-      : `Reloaded ${cur} series`;
+  let statusMessage = '';
+  if (cur === 1) {
+    statusMessage =
+      errs > 0
+        ? `Error occurred while reloading series "${seriesList[0].title}"`
+        : `Reloaded series "${seriesList[0].title}"`;
+  } else {
+    statusMessage =
+      errs > 0
+        ? `Reloaded ${cur} series with ${errs} errors`
+        : `Reloaded ${cur} series`;
+  }
 
-  log.info(statusMessage);
   dispatch(setReloadingSeriesList(false));
   dispatch(setCompletedStartReload(true));
   dispatch(setStatusText(statusMessage));
