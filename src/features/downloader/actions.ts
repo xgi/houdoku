@@ -5,6 +5,7 @@ import {
   PAUSE_DOWNLOADER,
   INTERNAL_COPY_CLIENT_STATE,
   START_DOWNLOADER,
+  CLEAR_DOWNLOADER_QUEUE,
 } from './types';
 
 export function downloadChapters(tasks: DownloadTask[]): DownloaderAction {
@@ -25,6 +26,12 @@ export function pauseDownloader(): DownloaderAction {
 export function startDownloader(): DownloaderAction {
   return {
     type: START_DOWNLOADER,
+  };
+}
+
+export function clearDownloaderQueue(): DownloaderAction {
+  return {
+    type: CLEAR_DOWNLOADER_QUEUE,
   };
 }
 

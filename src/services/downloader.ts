@@ -109,7 +109,7 @@ export default class DownloaderClient {
       let i = startPage;
       for (i; i <= pageUrls.length && this.running; i += 1) {
         const pageUrl = pageUrls[i - 1];
-        const ext = pageUrl.split('.').pop();
+        const ext = pageUrl.split('.').pop()?.split('?v')[0];
         const pagePath = path.join(chapterPath, `${i}.${ext}`);
 
         if (this.setStatusText) {
@@ -182,7 +182,7 @@ export default class DownloaderClient {
   };
 
   clear = () => {
-    this.queue = [];
+    this.queue.length = 0;
   };
 
   setCopyClientStateFunc = (copyClientState: () => void) => {

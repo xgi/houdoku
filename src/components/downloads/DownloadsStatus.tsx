@@ -12,6 +12,7 @@ import styles from './DownloadsStatus.css';
 import { RootState } from '../../store';
 import { DownloadError, DownloadTask } from '../../services/downloader';
 import {
+  clearDownloaderQueue,
   downloadChapters,
   pauseDownloader,
   startDownloader,
@@ -31,6 +32,7 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(downloadChapters(tasks)),
   pauseDownloader: () => dispatch(pauseDownloader()),
   startDownloader: () => dispatch(startDownloader()),
+  clearDownloaderQueue: () => dispatch(clearDownloaderQueue()),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -110,7 +112,11 @@ const DownloadsStatus: React.FC<Props> = (props: Props) => {
             >
               Resume Download
             </Button>
-            <Button icon={<CloseOutlined />} className={styles.clearButton}>
+            <Button
+              icon={<CloseOutlined />}
+              className={styles.clearButton}
+              onClick={() => props.clearDownloaderQueue()}
+            >
               Clear Queue
             </Button>
           </Row>
@@ -127,7 +133,11 @@ const DownloadsStatus: React.FC<Props> = (props: Props) => {
         >
           Pause Download
         </Button>
-        <Button icon={<CloseOutlined />} className={styles.clearButton}>
+        <Button
+          icon={<CloseOutlined />}
+          className={styles.clearButton}
+          onClick={() => props.clearDownloaderQueue()}
+        >
           Clear Queue
         </Button>
       </Row>

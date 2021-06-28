@@ -1,5 +1,5 @@
 import { EnhancedStore } from '@reduxjs/toolkit';
-import DownloaderClient, { DownloadTask } from '../../services/downloader';
+import DownloaderClient from '../../services/downloader';
 import { setStatusText } from '../statusbar/actions';
 import { internalCopyClientState } from './actions';
 import {
@@ -8,6 +8,7 @@ import {
   PAUSE_DOWNLOADER,
   INTERNAL_COPY_CLIENT_STATE,
   START_DOWNLOADER,
+  CLEAR_DOWNLOADER_QUEUE,
 } from './types';
 
 const downloaderClient = new DownloaderClient();
@@ -34,6 +35,9 @@ export default function downloader(
       break;
     case START_DOWNLOADER:
       downloaderClient.start();
+      break;
+    case CLEAR_DOWNLOADER_QUEUE:
+      downloaderClient.clear();
       break;
     case INTERNAL_COPY_CLIENT_STATE:
       break;
