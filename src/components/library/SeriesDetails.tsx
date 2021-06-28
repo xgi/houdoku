@@ -114,7 +114,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
 
-    // eslint-disable-next-line promise/catch-or-return
     db.fetchSeries(parseInt(id, 10))
       .then((response: any) => {
         props.setSeries(response[0]);
@@ -122,7 +121,8 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       })
       .then((seriesBannerUrl: string | null) =>
         props.setSeriesBannerUrl(seriesBannerUrl)
-      );
+      )
+      .catch((err: Error) => log.error(err));
 
     props.loadChapterList(parseInt(id, 10));
   };

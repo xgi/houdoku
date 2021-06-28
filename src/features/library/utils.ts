@@ -1,4 +1,3 @@
-/* eslint-disable promise/catch-or-return */
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Chapter, Series } from 'houdoku-extension-lib';
@@ -17,26 +16,32 @@ import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 
 export function loadSeriesList(dispatch: any) {
-  db.fetchSerieses().then((response: any) => dispatch(setSeriesList(response)));
+  db.fetchSerieses()
+    .then((response: any) => dispatch(setSeriesList(response)))
+    .catch((err: Error) => log.error(err));
 }
 
 export function loadSeries(dispatch: any, id: number) {
-  db.fetchSeries(id).then((response: any) => dispatch(setSeries(response[0])));
+  db.fetchSeries(id)
+    .then((response: any) => dispatch(setSeries(response[0])))
+    .catch((err: Error) => log.error(err));
 }
 
 export function loadChapterList(dispatch: any, seriesId: number) {
-  db.fetchChapters(seriesId).then((response: any) =>
-    dispatch(setChapterList(response))
-  );
+  db.fetchChapters(seriesId)
+    .then((response: any) => dispatch(setChapterList(response)))
+    .catch((err: Error) => log.error(err));
 }
 
 export function removeSeries(dispatch: any, series: Series) {
   if (series.id === undefined) return;
 
-  db.deleteSeries(series.id).then((response: any) => {
-    deleteThumbnail(series);
-    return loadSeriesList(dispatch);
-  });
+  db.deleteSeries(series.id)
+    .then((response: any) => {
+      deleteThumbnail(series);
+      return loadSeriesList(dispatch);
+    })
+    .catch((err: Error) => log.error(err));
 }
 
 export async function importSeries(dispatch: any, series: Series) {
@@ -83,7 +88,8 @@ export function toggleChapterRead(
           loadSeries(dispatch, series.id);
         }
         return true;
-      });
+      })
+      .catch((err: Error) => log.error(err));
   }
 }
 
