@@ -4,11 +4,14 @@ import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import log from 'electron-log';
 import { Chapter, Languages, Series } from 'houdoku-extension-lib';
+import { ipcRenderer } from 'electron';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './MyDownloads.css';
 import { RootState } from '../../store';
 import { getDownloadedList } from '../../features/downloader/utils';
 import { deleteDownloadedChapter } from '../../util/filesystem';
 import { setStatusText } from '../../features/statusbar/actions';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const { confirm } = Modal;
 
@@ -27,6 +30,7 @@ type Props = PropsFromRedux & {};
 
 const MyDownloads: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(false);
+  const [downloadsDir, setDownloadsDir] = useState('');
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
   const [cacheSeriesList, setCacheSeriesList] = useState<Series[]>([]);
   const [cacheChapterList, setCacheChapterList] = useState<Chapter[]>([]);
@@ -34,6 +38,10 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   const loadDownloads = async () => {
     setLoading(true);
+
+    setDownloadsDir(
+      await ipcRenderer.invoke(ipcChannels.GET_PATH.DOWNLOADS_DIR)
+    );
 
     getDownloadedList()
       // eslint-disable-next-line promise/always-return
@@ -44,7 +52,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
           );
 
           return {
-            title: series.title,
+            title: `${series.title} [id:${series.id}]`,
             key: `series-${series.id}`,
             children: chapters.map((chapter) => {
               const groupStr =
@@ -59,7 +67,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
                       }`}
                     />
                     Chapter {chapter.chapterNumber}
-                    {groupStr}
+                    {groupStr} [id:{chapter.id}]
                   </>
                 ),
                 key: `chapter-${chapter.id}`,
@@ -130,6 +138,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
           Delete Selected
         </Button>
       </Row>
+      <Paragraph>Your downloads are saved in {downloadsDir}</Paragraph>
       {treeData.length > 0 ? (
         <Tree
           checkable
