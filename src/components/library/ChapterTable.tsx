@@ -89,7 +89,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
 
   const columns = [
     {
-      title: 'Read',
+      title: 'Rd',
       dataIndex: 'read',
       key: 'read',
       width: '5%',

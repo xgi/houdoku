@@ -27,8 +27,8 @@ const downloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DOWNLOADS_DIR
 );
 
-const WIDTH = 140;
-const HEIGHT = 150;
+const WIDTH = 150;
+const HEIGHT = 180;
 
 const mapState = (state: RootState) => ({
   queue: state.downloader.queue,
@@ -137,10 +137,10 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const handleMarkPreviousRead = () => {
+  const handleMarkPrevious = (read: boolean) => {
     props.close();
     getPreviousChapters().forEach((chapter: Chapter) => {
-      if (!chapter.read) {
+      if ((read && !chapter.read) || (!read && chapter.read)) {
         props.toggleChapterRead(chapter, props.series);
       }
     });
@@ -172,9 +172,15 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
       </button>
       <button
         className={styles.button}
-        onClick={() => handleMarkPreviousRead()}
+        onClick={() => handleMarkPrevious(true)}
       >
         Mark previous read
+      </button>
+      <button
+        className={styles.button}
+        onClick={() => handleMarkPrevious(false)}
+      >
+        Mark previous unread
       </button>
       <hr className={styles.divider} />
       <button className={styles.button} onClick={() => handleDownload()}>
