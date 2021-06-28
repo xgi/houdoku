@@ -149,7 +149,15 @@ const DownloadsStatus: React.FC<Props> = (props: Props) => {
     props.queue.length === 0 &&
     props.downloadErrors.length === 0
   ) {
-    return <Paragraph>There are no downloads queued.</Paragraph>;
+    return (
+      <>
+        <Paragraph>There are no downloads queued.</Paragraph>
+        <Paragraph>
+          To download chapters for offline reading, right click the table on a
+          series page and select a download option.
+        </Paragraph>
+      </>
+    );
   }
 
   return (
