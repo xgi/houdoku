@@ -81,8 +81,10 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       fileListPromise = new Promise<string[]>((resolve) => {
         resolve(walk(id));
       });
-    } else {
+    } else if (sourceType === SeriesSourceType.ARCHIVE) {
       fileListPromise = getArchiveFiles(id);
+    } else {
+      return new Promise((resolve) => resolve([]));
     }
 
     return fileListPromise.then((fileList: string[]) => {
@@ -156,14 +158,16 @@ export class FSExtensionClient extends ExtensionClientAbstract {
   ) => {
     let fileListPromise;
     if (sourceType === SeriesSourceType.STANDARD) {
-      fileListPromise = new Promise<string[]>((resolve, reject) => {
-        resolve(walk(chapterSourceId));
-      });
-    } else {
+      fileListPromise = new Promise<string[]>((resolve) =>
+        resolve(walk(chapterSourceId))
+      );
+    } else if (sourceType === SeriesSourceType.ARCHIVE) {
       fileListPromise = getArchiveFiles(seriesSourceId).then(
         (fileList: string[]) =>
           fileList.filter((_path: string) => _path.startsWith(chapterSourceId))
       );
+    } else {
+      throw new Error('invalid series source type');
     }
 
     return fileListPromise.then((fileList: string[]) => {
