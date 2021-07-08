@@ -1,11 +1,12 @@
 import log from 'electron-log';
-import { LanguageKey } from 'houdoku-extension-lib';
+import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
   GeneralSetting,
   IntegrationSetting,
   LayoutDirection,
   PageFit,
   PageView,
+  ProgressFilter,
   ReaderSetting,
   TrackerSetting,
 } from '../../models/types';
@@ -17,6 +18,9 @@ export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.RefreshOnStart]: true,
   [GeneralSetting.AutoCheckForUpdates]: true,
   [GeneralSetting.LibraryColumns]: 6,
+  [GeneralSetting.LibraryFilterStatus]: null,
+  [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
+  [GeneralSetting.LibraryFilterUserTags]: [],
 };
 
 export const DEFAULT_READER_SETTINGS = {
@@ -50,6 +54,15 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   const libraryColumns: string | null = persistantStore.read(
     `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.LibraryColumns}`
   );
+  const libraryFilterStatus: string | null = persistantStore.read(
+    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.LibraryFilterStatus}`
+  );
+  const libraryFilterProgress: string | null = persistantStore.read(
+    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.LibraryFilterProgress}`
+  );
+  const libraryFilterUserTags: string | null = persistantStore.read(
+    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.LibraryFilterUserTags}`
+  );
 
   if (chapterListLanguages !== null) {
     settings[GeneralSetting.ChapterLanguages] = chapterListLanguages.split(
@@ -65,6 +78,20 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   }
   if (libraryColumns !== null) {
     settings[GeneralSetting.LibraryColumns] = parseInt(libraryColumns, 10);
+  }
+  if (libraryFilterStatus !== null && libraryFilterStatus !== 'null') {
+    settings[GeneralSetting.LibraryFilterStatus] =
+      libraryFilterStatus as SeriesStatus;
+  }
+  if (libraryFilterProgress !== null) {
+    settings[GeneralSetting.LibraryFilterProgress] =
+      libraryFilterProgress as ProgressFilter;
+  }
+  if (libraryFilterUserTags !== null) {
+    const tags = libraryFilterUserTags.split(',');
+    if (tags.every((tag: string) => tag !== '')) {
+      settings[GeneralSetting.LibraryFilterUserTags] = tags;
+    }
   }
 
   log.debug(`Using general settings: ${settings}`);

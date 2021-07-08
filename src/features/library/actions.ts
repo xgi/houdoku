@@ -1,13 +1,9 @@
-import { Chapter, Series, SeriesStatus } from 'houdoku-extension-lib';
-import { ProgressFilter } from '../../models/types';
+import { Chapter, Series } from 'houdoku-extension-lib';
 import {
   LibraryAction,
   SET_CHAPTER_LIST,
   SET_COMPLETED_START_RELOAD,
   SET_FILTER,
-  SET_FILTER_PROGRESS,
-  SET_FILTER_STATUS,
-  SET_FILTER_USER_TAGS,
   SET_RELOADING_SERIES_LIST,
   SET_SERIES,
   SET_SERIES_BANNER_URL,
@@ -57,33 +53,6 @@ export function setFilter(filter: string): LibraryAction {
     type: SET_FILTER,
     payload: {
       filter,
-    },
-  };
-}
-
-export function setFilterStatus(status: SeriesStatus | null): LibraryAction {
-  return {
-    type: SET_FILTER_STATUS,
-    payload: {
-      status,
-    },
-  };
-}
-
-export function setFilterProgress(progress: ProgressFilter): LibraryAction {
-  return {
-    type: SET_FILTER_PROGRESS,
-    payload: {
-      progress,
-    },
-  };
-}
-
-export function setFilterUserTags(userTags: string[]): LibraryAction {
-  return {
-    type: SET_FILTER_USER_TAGS,
-    payload: {
-      userTags,
     },
   };
 }

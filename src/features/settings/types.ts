@@ -1,5 +1,10 @@
-import { LanguageKey } from 'houdoku-extension-lib';
-import { LayoutDirection, PageFit, PageView } from '../../models/types';
+import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
+import {
+  LayoutDirection,
+  PageFit,
+  PageView,
+  ProgressFilter,
+} from '../../models/types';
 
 export const SET_CHAPTER_LANGUAGES = 'SET_CHAPTER_LANGUAGES';
 export const SET_PAGE_FIT = 'SET_PAGE_FIT';
@@ -12,6 +17,9 @@ export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 export const SET_REFRESH_ON_START = 'SET_REFRESH_ON_START';
 export const SET_AUTO_CHECK_FOR_UPDATES = 'SET_AUTO_CHECK_FOR_UPDATES';
 export const SET_LIBRARY_COLUMNS = 'SET_LIBRARY_COLUMNS';
+export const SET_LIBRARY_FILTER_STATUS = 'SET_LIBRARY_FILTER_STATUS';
+export const SET_LIBRARY_FILTER_PROGRESS = 'SET_LIBRARY_FILTER_PROGRESS';
+export const SET_LIBRARY_FILTER_USER_TAGS = 'SET_LIBRARY_FILTER_USER_TAGS';
 export const SET_OVERLAY_PAGE_NUMBER = 'SET_OVERLAY_PAGE_NUMBER';
 export const SET_TRACKER_AUTO_UPDATE = 'SET_TRACKER_AUTO_UPDATE';
 export const SET_DISCORD_PRESENCE_ENABLED = 'SET_DISCORD_PRESENCE_ENABLED';
@@ -21,6 +29,9 @@ export interface SettingsState {
   refreshOnStart: boolean;
   autoCheckForUpdates: boolean;
   libraryColumns: number;
+  libraryFilterStatus: SeriesStatus | null;
+  libraryFilterProgress: ProgressFilter;
+  libraryFilterUserTags: string[];
   pageFit: PageFit;
   pageView: PageView;
   layoutDirection: LayoutDirection;
@@ -98,6 +109,27 @@ interface SetLibraryColumnsAction {
   };
 }
 
+interface SetLibraryFilterStatusAction {
+  type: typeof SET_LIBRARY_FILTER_STATUS;
+  payload: {
+    status: SeriesStatus | null;
+  };
+}
+
+interface SetLibraryFilterProgressAction {
+  type: typeof SET_LIBRARY_FILTER_PROGRESS;
+  payload: {
+    progress: ProgressFilter;
+  };
+}
+
+interface SetLibraryFilterUserTagsAction {
+  type: typeof SET_LIBRARY_FILTER_USER_TAGS;
+  payload: {
+    userTags: string[];
+  };
+}
+
 interface SetOverlayPageNumberAction {
   type: typeof SET_OVERLAY_PAGE_NUMBER;
   payload: {
@@ -131,6 +163,9 @@ export type SettingsAction =
   | SetRefreshOnStartAction
   | SetAutoCheckForUpdatesAction
   | SetLibraryColumnsAction
+  | SetLibraryFilterStatusAction
+  | SetLibraryFilterProgressAction
+  | SetLibraryFilterUserTagsAction
   | SetOverlayPageNumberAction
   | SetTrackerAutoUpdateAction
   | SetDiscordPresenceEnabledAction;

@@ -20,9 +20,9 @@ const { confirm } = Modal;
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
   filter: state.library.filter,
-  filterStatus: state.library.filterStatus,
-  filterProgress: state.library.filterProgress,
-  filterUserTags: state.library.filterUserTags,
+  libraryFilterStatus: state.settings.libraryFilterStatus,
+  libraryFilterProgress: state.settings.libraryFilterProgress,
+  libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
 });
 
@@ -90,9 +90,9 @@ const Library: React.FC<Props> = (props: Props) => {
           seriesList={props.seriesList}
           sorted
           filter={props.filter}
-          filterStatus={props.filterStatus}
-          filterProgress={props.filterProgress}
-          filterUserTags={props.filterUserTags}
+          filterStatus={props.libraryFilterStatus}
+          filterProgress={props.libraryFilterProgress}
+          filterUserTags={props.libraryFilterUserTags}
           clickFunc={goToSeries}
           inLibraryFunc={undefined}
         />

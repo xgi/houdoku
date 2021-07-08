@@ -42,9 +42,9 @@ export type TrackEntry = {
 };
 
 export enum ProgressFilter {
-  All,
-  Unread,
-  Finished,
+  All = 'All',
+  Unread = 'Unread',
+  Finished = 'Finished',
 }
 
 export enum GeneralSetting {
@@ -52,6 +52,9 @@ export enum GeneralSetting {
   RefreshOnStart = 'RefreshOnStart',
   AutoCheckForUpdates = 'AutoCheckForUpdates',
   LibraryColumns = 'LibraryColumns',
+  LibraryFilterStatus = 'LibraryFilterStatus',
+  LibraryFilterProgress = 'LibraryFilterProgress',
+  LibraryFilterUserTags = 'LibraryFilterUserTags',
 }
 
 export enum ReaderSetting {

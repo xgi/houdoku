@@ -24,6 +24,9 @@ import {
   SET_DISCORD_PRESENCE_ENABLED,
   SET_AUTO_CHECK_FOR_UPDATES,
   SET_LIBRARY_COLUMNS,
+  SET_LIBRARY_FILTER_STATUS,
+  SET_LIBRARY_FILTER_PROGRESS,
+  SET_LIBRARY_FILTER_USER_TAGS,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -62,6 +65,18 @@ const initialState: SettingsState = {
     storedGeneralSettings.LibraryColumns === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryColumns]
       : storedGeneralSettings.LibraryColumns,
+  libraryFilterStatus:
+    storedGeneralSettings.LibraryFilterStatus === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterStatus]
+      : storedGeneralSettings.LibraryFilterStatus,
+  libraryFilterProgress:
+    storedGeneralSettings.LibraryFilterProgress === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterProgress]
+      : storedGeneralSettings.LibraryFilterProgress,
+  libraryFilterUserTags:
+    storedGeneralSettings.LibraryFilterUserTags === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterUserTags]
+      : storedGeneralSettings.LibraryFilterUserTags,
   pageFit:
     storedReaderSettings.PageFit === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.PageFit]
@@ -159,6 +174,33 @@ export default function settings(
       return {
         ...state,
         libraryColumns: action.payload.libraryColumns,
+      };
+    case SET_LIBRARY_FILTER_STATUS:
+      saveGeneralSetting(
+        GeneralSetting.LibraryFilterStatus,
+        action.payload.status
+      );
+      return {
+        ...state,
+        libraryFilterStatus: action.payload.status,
+      };
+    case SET_LIBRARY_FILTER_PROGRESS:
+      saveGeneralSetting(
+        GeneralSetting.LibraryFilterProgress,
+        action.payload.progress
+      );
+      return {
+        ...state,
+        libraryFilterProgress: action.payload.progress,
+      };
+    case SET_LIBRARY_FILTER_USER_TAGS:
+      saveGeneralSetting(
+        GeneralSetting.LibraryFilterUserTags,
+        action.payload.userTags
+      );
+      return {
+        ...state,
+        libraryFilterUserTags: action.payload.userTags,
       };
     case SET_PAGE_FIT:
       saveReaderSetting(ReaderSetting.PageFit, action.payload.pageFit);

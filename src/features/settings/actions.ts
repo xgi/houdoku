@@ -1,5 +1,10 @@
-import { LanguageKey } from 'houdoku-extension-lib';
-import { LayoutDirection, PageFit, PageView } from '../../models/types';
+import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
+import {
+  LayoutDirection,
+  PageFit,
+  PageView,
+  ProgressFilter,
+} from '../../models/types';
 import {
   SET_PAGE_FIT,
   TOGGLE_PAGE_FIT,
@@ -16,6 +21,9 @@ import {
   SET_DISCORD_PRESENCE_ENABLED,
   SET_AUTO_CHECK_FOR_UPDATES,
   SET_LIBRARY_COLUMNS,
+  SET_LIBRARY_FILTER_STATUS,
+  SET_LIBRARY_FILTER_PROGRESS,
+  SET_LIBRARY_FILTER_USER_TAGS,
 } from './types';
 
 export function setChapterLanguages(
@@ -54,6 +62,37 @@ export function setLibraryColumns(libraryColumns: number): SettingsAction {
     type: SET_LIBRARY_COLUMNS,
     payload: {
       libraryColumns,
+    },
+  };
+}
+
+export function setLibraryFilterStatus(
+  status: SeriesStatus | null
+): SettingsAction {
+  return {
+    type: SET_LIBRARY_FILTER_STATUS,
+    payload: {
+      status,
+    },
+  };
+}
+
+export function setLibraryFilterProgress(
+  progress: ProgressFilter
+): SettingsAction {
+  return {
+    type: SET_LIBRARY_FILTER_PROGRESS,
+    payload: {
+      progress,
+    },
+  };
+}
+
+export function setLibraryFilterUserTags(userTags: string[]): SettingsAction {
+  return {
+    type: SET_LIBRARY_FILTER_USER_TAGS,
+    payload: {
+      userTags,
     },
   };
 }

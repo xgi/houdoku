@@ -16,17 +16,17 @@ import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
 import { Series, SeriesStatus } from 'houdoku-extension-lib';
 import styles from './LibraryControlBar.css';
-import {
-  setFilter,
-  setFilterProgress,
-  setFilterStatus,
-  setFilterUserTags,
-} from '../../features/library/actions';
+import { setFilter } from '../../features/library/actions';
 import { loadSeriesList, reloadSeriesList } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import { ProgressFilter } from '../../models/types';
-import { setLibraryColumns } from '../../features/settings/actions';
+import {
+  setLibraryColumns,
+  setLibraryFilterProgress,
+  setLibraryFilterStatus,
+  setLibraryFilterUserTags,
+} from '../../features/settings/actions';
 
 const { Option } = Select;
 
@@ -35,9 +35,9 @@ const mapState = (state: RootState) => ({
   reloadingSeriesList: state.library.reloadingSeriesList,
   userTags: state.library.userTags,
   filter: state.library.filter,
-  filterStatus: state.library.filterStatus,
-  filterProgress: state.library.filterProgress,
-  filterUserTags: state.library.filterUserTags,
+  libraryFilterStatus: state.settings.libraryFilterStatus,
+  libraryFilterProgress: state.settings.libraryFilterProgress,
+  libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
 });
 
@@ -48,12 +48,12 @@ const mapDispatch = (dispatch: any) => ({
   reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
     reloadSeriesList(dispatch, seriesList, callback),
   setFilter: (filter: string) => dispatch(setFilter(filter)),
-  setFilterStatus: (status: SeriesStatus | null) =>
-    dispatch(setFilterStatus(status)),
-  setFilterProgress: (progressFilter: ProgressFilter) =>
-    dispatch(setFilterProgress(progressFilter)),
+  setLibraryFilterStatus: (status: SeriesStatus | null) =>
+    dispatch(setLibraryFilterStatus(status)),
+  setLibraryFilterProgress: (progressFilter: ProgressFilter) =>
+    dispatch(setLibraryFilterProgress(progressFilter)),
   setFilterUserTags: (userTags: string[]) =>
-    dispatch(setFilterUserTags(userTags)),
+    dispatch(setLibraryFilterUserTags(userTags)),
   setLibraryColumns: (libraryColumns: number) =>
     dispatch(setLibraryColumns(libraryColumns)),
 });
@@ -73,7 +73,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
    * @returns a user-friendly representation of the filterStatus prop
    */
   const getFilterStatusText = () => {
-    const status = props.filterStatus;
+    const status = props.libraryFilterStatus;
 
     let valueText = '';
     if (status === null) valueText = 'Any';
@@ -88,10 +88,11 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const getFilterProgressText = () => {
     const prefix = 'Progress: ';
 
-    if (props.filterProgress === ProgressFilter.All) return `${prefix}All`;
-    if (props.filterProgress === ProgressFilter.Unread)
+    if (props.libraryFilterProgress === ProgressFilter.All)
+      return `${prefix}All`;
+    if (props.libraryFilterProgress === ProgressFilter.Unread)
       return `${prefix}Unread`;
-    if (props.filterProgress === ProgressFilter.Finished)
+    if (props.libraryFilterProgress === ProgressFilter.Finished)
       return `${prefix}Finished`;
     return prefix;
   };
@@ -140,7 +141,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               allowClear
               style={{ width: '100%' }}
               placeholder="Enter tags..."
-              value={props.filterUserTags}
+              value={props.libraryFilterUserTags}
               onChange={(userTags: string[]) =>
                 props.setFilterUserTags(userTags)
               }
@@ -161,7 +162,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
             <Button className={styles.tagsButton}>
               <Badge
                 className={styles.userTagsBadge}
-                count={props.filterUserTags.length}
+                count={props.libraryFilterUserTags.length}
               />
               Filter Tags
             </Button>
@@ -172,7 +173,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           overlay={
             <Menu
               onClick={(e: any) =>
-                props.setFilterProgress(e.item.props['data-value'])
+                props.setLibraryFilterProgress(e.item.props['data-value'])
               }
             >
               <Menu.Item
@@ -205,7 +206,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           overlay={
             <Menu
               onClick={(e: any) =>
-                props.setFilterStatus(e.item.props['data-value'])
+                props.setLibraryFilterStatus(e.item.props['data-value'])
               }
             >
               <Menu.Item key={null} data-value={null}>
