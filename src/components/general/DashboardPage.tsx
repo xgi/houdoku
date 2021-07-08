@@ -12,11 +12,7 @@ import {
 } from '@ant-design/icons';
 import { Series } from 'houdoku-extension-lib';
 import { RootState } from '../../store';
-import {
-  changeNumColumns,
-  setFilter,
-  setSeriesBannerUrl,
-} from '../../features/library/actions';
+import { setFilter, setSeriesBannerUrl } from '../../features/library/actions';
 import { setStatusText } from '../../features/statusbar/actions';
 import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
@@ -43,7 +39,6 @@ const mapState = (state: RootState) => ({
   series: state.library.series,
   chapterList: state.library.chapterList,
   userTags: state.library.userTags,
-  columns: state.library.columns,
   filter: state.library.filter,
   seriesBannerUrl: state.library.seriesBannerUrl,
   completedStartReload: state.library.completedStartReload,
@@ -53,7 +48,6 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  changeNumColumns: (columns: number) => dispatch(changeNumColumns(columns)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeriesList: () => loadSeriesList(dispatch),
   loadSeries: (id: number) => loadSeries(dispatch, id),

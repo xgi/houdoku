@@ -1,7 +1,6 @@
 import { Chapter, Series, SeriesStatus } from 'houdoku-extension-lib';
 import { ProgressFilter } from '../../models/types';
 import {
-  CHANGE_NUM_COLUMNS,
   LibraryAction,
   SET_CHAPTER_LIST,
   SET_COMPLETED_START_RELOAD,
@@ -49,15 +48,6 @@ export function setReloadingSeriesList(
     type: SET_RELOADING_SERIES_LIST,
     payload: {
       reloadingSeriesList,
-    },
-  };
-}
-
-export function changeNumColumns(columns: number): LibraryAction {
-  return {
-    type: CHANGE_NUM_COLUMNS,
-    payload: {
-      columns,
     },
   };
 }

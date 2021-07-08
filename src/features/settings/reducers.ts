@@ -23,6 +23,7 @@ import {
   SET_TRACKER_AUTO_UPDATE,
   SET_DISCORD_PRESENCE_ENABLED,
   SET_AUTO_CHECK_FOR_UPDATES,
+  SET_LIBRARY_COLUMNS,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -57,6 +58,10 @@ const initialState: SettingsState = {
     storedGeneralSettings.AutoCheckForUpdates === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.AutoCheckForUpdates]
       : storedGeneralSettings.AutoCheckForUpdates,
+  libraryColumns:
+    storedGeneralSettings.LibraryColumns === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryColumns]
+      : storedGeneralSettings.LibraryColumns,
   pageFit:
     storedReaderSettings.PageFit === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.PageFit]
@@ -145,6 +150,15 @@ export default function settings(
       return {
         ...state,
         autoCheckForUpdates: action.payload.autoCheckForUpdates,
+      };
+    case SET_LIBRARY_COLUMNS:
+      saveGeneralSetting(
+        GeneralSetting.LibraryColumns,
+        action.payload.libraryColumns
+      );
+      return {
+        ...state,
+        libraryColumns: action.payload.libraryColumns,
       };
     case SET_PAGE_FIT:
       saveReaderSetting(ReaderSetting.PageFit, action.payload.pageFit);

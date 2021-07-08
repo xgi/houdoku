@@ -5,7 +5,6 @@ export const SET_SERIES_LIST = 'SET_SERIES_LIST';
 export const SET_SERIES = 'SET_SERIES';
 export const SET_CHAPTER_LIST = 'SET_CHAPTER_LIST';
 export const SET_RELOADING_SERIES_LIST = 'SET_RELOADING_SERIES_LIST';
-export const CHANGE_NUM_COLUMNS = 'CHANGE_NUM_COLUMNS';
 export const SET_FILTER = 'SET_FILTER';
 export const SET_FILTER_STATUS = 'SET_FILTER_STATUS';
 export const SET_FILTER_PROGRESS = 'SET_FILTER_PROGRESS';
@@ -19,7 +18,6 @@ export interface LibraryState {
   chapterList: Chapter[];
   reloadingSeriesList: boolean;
   userTags: string[];
-  columns: number;
   filter: string;
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
@@ -53,13 +51,6 @@ interface SetReloadingSeriesListAction {
   type: typeof SET_RELOADING_SERIES_LIST;
   payload: {
     reloadingSeriesList: boolean;
-  };
-}
-
-interface ChangeNumColumnsAction {
-  type: typeof CHANGE_NUM_COLUMNS;
-  payload: {
-    columns: number;
   };
 }
 
@@ -110,7 +101,6 @@ export type LibraryAction =
   | SetSeriesAction
   | SetChapterListAction
   | SetReloadingSeriesListAction
-  | ChangeNumColumnsAction
   | SetFilterAction
   | SetFilterStatusAction
   | SetFilterProgressAction

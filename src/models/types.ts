@@ -51,6 +51,7 @@ export enum GeneralSetting {
   ChapterLanguages = 'ChapterLanguages',
   RefreshOnStart = 'RefreshOnStart',
   AutoCheckForUpdates = 'AutoCheckForUpdates',
+  LibraryColumns = 'LibraryColumns',
 }
 
 export enum ReaderSetting {

@@ -2,7 +2,6 @@ import { Series } from 'houdoku-extension-lib';
 import { ProgressFilter } from '../../models/types';
 import {
   LibraryState,
-  CHANGE_NUM_COLUMNS,
   SET_FILTER,
   SET_SERIES_BANNER_URL,
   SET_SERIES_LIST,
@@ -21,7 +20,6 @@ const initialState: LibraryState = {
   chapterList: [],
   reloadingSeriesList: false,
   userTags: [],
-  columns: 6,
   filter: '',
   filterStatus: null,
   filterProgress: ProgressFilter.All,
@@ -61,8 +59,6 @@ export default function library(
         ...state,
         reloadingSeriesList: action.payload.reloadingSeriesList,
       };
-    case CHANGE_NUM_COLUMNS:
-      return { ...state, columns: action.payload.columns };
     case SET_FILTER:
       return { ...state, filter: action.payload.filter };
     case SET_FILTER_STATUS:

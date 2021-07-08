@@ -7,7 +7,7 @@ import { ipcRenderer } from 'electron';
 import { Modal } from 'antd';
 import styles from './Library.css';
 import routes from '../../constants/routes.json';
-import { changeNumColumns, setFilter } from '../../features/library/actions';
+import { setFilter } from '../../features/library/actions';
 import { loadSeriesList, removeSeries } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
@@ -19,16 +19,15 @@ const { confirm } = Modal;
 
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
-  columns: state.library.columns,
   filter: state.library.filter,
   filterStatus: state.library.filterStatus,
   filterProgress: state.library.filterProgress,
   filterUserTags: state.library.filterUserTags,
+  libraryColumns: state.settings.libraryColumns,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  changeNumColumns: (columns: number) => dispatch(changeNumColumns(columns)),
   removeSeries: (series: Series) => removeSeries(dispatch, series),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeriesList: () => loadSeriesList(dispatch),
@@ -87,7 +86,7 @@ const Library: React.FC<Props> = (props: Props) => {
     return (
       <div className={styles.seriesGrid}>
         <SeriesGrid
-          columns={props.columns}
+          columns={props.libraryColumns}
           seriesList={props.seriesList}
           sorted
           filter={props.filter}

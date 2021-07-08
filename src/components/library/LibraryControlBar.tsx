@@ -17,7 +17,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { Series, SeriesStatus } from 'houdoku-extension-lib';
 import styles from './LibraryControlBar.css';
 import {
-  changeNumColumns,
   setFilter,
   setFilterProgress,
   setFilterStatus,
@@ -27,23 +26,23 @@ import { loadSeriesList, reloadSeriesList } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import { ProgressFilter } from '../../models/types';
+import { setLibraryColumns } from '../../features/settings/actions';
 
 const { Option } = Select;
 
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
   reloadingSeriesList: state.library.reloadingSeriesList,
-  columns: state.library.columns,
   userTags: state.library.userTags,
   filter: state.library.filter,
   filterStatus: state.library.filterStatus,
   filterProgress: state.library.filterProgress,
   filterUserTags: state.library.filterUserTags,
+  libraryColumns: state.settings.libraryColumns,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  changeNumColumns: (columns: number) => dispatch(changeNumColumns(columns)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeriesList: () => loadSeriesList(dispatch),
   reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
@@ -55,6 +54,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setFilterProgress(progressFilter)),
   setFilterUserTags: (userTags: string[]) =>
     dispatch(setFilterUserTags(userTags)),
+  setLibraryColumns: (libraryColumns: number) =>
+    dispatch(setLibraryColumns(libraryColumns)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -117,8 +118,8 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               min={2}
               max={8}
               step={2}
-              value={props.columns}
-              onChange={(value: number) => props.changeNumColumns(value)}
+              value={props.libraryColumns}
+              onChange={(value: number) => props.setLibraryColumns(value)}
             />
           }
           title="Change number of columns"

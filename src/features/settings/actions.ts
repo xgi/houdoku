@@ -15,6 +15,7 @@ import {
   SET_TRACKER_AUTO_UPDATE,
   SET_DISCORD_PRESENCE_ENABLED,
   SET_AUTO_CHECK_FOR_UPDATES,
+  SET_LIBRARY_COLUMNS,
 } from './types';
 
 export function setChapterLanguages(
@@ -44,6 +45,15 @@ export function setAutoCheckForUpdates(
     type: SET_AUTO_CHECK_FOR_UPDATES,
     payload: {
       autoCheckForUpdates,
+    },
+  };
+}
+
+export function setLibraryColumns(libraryColumns: number): SettingsAction {
+  return {
+    type: SET_LIBRARY_COLUMNS,
+    payload: {
+      libraryColumns,
     },
   };
 }
