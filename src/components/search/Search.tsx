@@ -241,8 +241,9 @@ const Search: React.FC<Props> = (props: Props) => {
   }, [location]);
 
   useEffect(() => {
-    // eslint-disable-next-line promise/catch-or-return
-    getExtensionList().then(() => handleSearch());
+    getExtensionList()
+      .then(() => handleSearch())
+      .catch((err: Error) => log.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.searchExtension]);
 

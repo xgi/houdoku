@@ -15,6 +15,7 @@ import storeKeys from './constants/storeKeys.json';
 import { TrackerMetadata } from './models/types';
 import { setStatusText } from './features/statusbar/actions';
 import { loadSeriesList } from './features/library/utils';
+import { linkDownloaderClientFunctions } from './features/downloader/reducers';
 
 const store = configuredStore();
 
@@ -92,6 +93,10 @@ if (store.getState().settings.autoCheckForUpdates) {
 } else {
   log.debug('Skipping update check, autoCheckForUpdates is disabled');
 }
+
+// the downloader requires access to some other actions/parts of the
+// state, so they are manually linked here
+linkDownloaderClientFunctions(store);
 
 export default function App() {
   return (

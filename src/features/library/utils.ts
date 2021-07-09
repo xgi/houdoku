@@ -1,4 +1,3 @@
-/* eslint-disable promise/catch-or-return */
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Chapter, Series } from 'houdoku-extension-lib';
@@ -17,26 +16,32 @@ import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 
 export function loadSeriesList(dispatch: any) {
-  db.fetchSerieses().then((response: any) => dispatch(setSeriesList(response)));
+  db.fetchSerieses()
+    .then((response: any) => dispatch(setSeriesList(response)))
+    .catch((err: Error) => log.error(err));
 }
 
 export function loadSeries(dispatch: any, id: number) {
-  db.fetchSeries(id).then((response: any) => dispatch(setSeries(response[0])));
+  db.fetchSeries(id)
+    .then((response: any) => dispatch(setSeries(response[0])))
+    .catch((err: Error) => log.error(err));
 }
 
 export function loadChapterList(dispatch: any, seriesId: number) {
-  db.fetchChapters(seriesId).then((response: any) =>
-    dispatch(setChapterList(response))
-  );
+  db.fetchChapters(seriesId)
+    .then((response: any) => dispatch(setChapterList(response)))
+    .catch((err: Error) => log.error(err));
 }
 
 export function removeSeries(dispatch: any, series: Series) {
   if (series.id === undefined) return;
 
-  db.deleteSeries(series.id).then((response: any) => {
-    deleteThumbnail(series);
-    return loadSeriesList(dispatch);
-  });
+  db.deleteSeries(series.id)
+    .then((response: any) => {
+      deleteThumbnail(series);
+      return loadSeriesList(dispatch);
+    })
+    .catch((err: Error) => log.error(err));
 }
 
 export async function importSeries(dispatch: any, series: Series) {
@@ -83,12 +88,16 @@ export function toggleChapterRead(
           loadSeries(dispatch, series.id);
         }
         return true;
-      });
+      })
+      .catch((err: Error) => log.error(err));
   }
 }
 
-async function reloadSeries(series: Series) {
-  if (series.id === undefined) return;
+async function reloadSeries(series: Series): Promise<Error | void> {
+  if (series.id === undefined)
+    return new Promise((resolve) =>
+      resolve(Error('Series does not have database ID'))
+    );
 
   if (
     (await ipcRenderer.invoke(
@@ -96,7 +105,9 @@ async function reloadSeries(series: Series) {
       series.extensionId
     )) === undefined
   ) {
-    return;
+    return new Promise((resolve) =>
+      resolve(Error('Could not retrieve extension data'))
+    );
   }
 
   let newSeries: Series | undefined = await ipcRenderer.invoke(
@@ -105,7 +116,10 @@ async function reloadSeries(series: Series) {
     series.sourceType,
     series.sourceId
   );
-  if (newSeries === undefined) return;
+  if (newSeries === undefined)
+    return new Promise((resolve) =>
+      resolve(Error('Could not get series from extension'))
+    );
 
   const newChapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
@@ -150,6 +164,8 @@ async function reloadSeries(series: Series) {
     await db.deleteChaptersById(orphanedChapterIds);
   }
   await db.updateSeriesNumberUnread(newSeries);
+
+  return new Promise((resolve) => resolve());
 }
 
 export async function reloadSeriesList(
@@ -165,6 +181,7 @@ export async function reloadSeriesList(
     a.title.localeCompare(b.title)
   );
   let cur = 0;
+  let errs = 0;
 
   // eslint-disable-next-line no-restricted-syntax
   for (const series of sortedSeriesList) {
@@ -174,16 +191,27 @@ export async function reloadSeriesList(
       )
     );
     // eslint-disable-next-line no-await-in-loop
-    await reloadSeries(series);
+    const ret = await reloadSeries(series);
+    if (ret instanceof Error) {
+      log.error(ret);
+      errs += 1;
+    }
     cur += 1;
   }
 
-  const statusMessage =
-    cur === 1
-      ? `Reloaded series "${seriesList[0].title}"`
-      : `Reloaded ${cur} series`;
+  let statusMessage = '';
+  if (cur === 1) {
+    statusMessage =
+      errs > 0
+        ? `Error occurred while reloading series "${seriesList[0].title}"`
+        : `Reloaded series "${seriesList[0].title}"`;
+  } else {
+    statusMessage =
+      errs > 0
+        ? `Reloaded ${cur} series with ${errs} errors`
+        : `Reloaded ${cur} series`;
+  }
 
-  log.info(statusMessage);
   dispatch(setReloadingSeriesList(false));
   dispatch(setCompletedStartReload(true));
   dispatch(setStatusText(statusMessage));

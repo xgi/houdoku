@@ -5,7 +5,12 @@ import { Layout } from 'antd';
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { PageRequesterData, Chapter, Series } from 'houdoku-extension-lib';
+import {
+  PageRequesterData,
+  Chapter,
+  Series,
+  SeriesSourceType,
+} from 'houdoku-extension-lib';
 import { RootState } from '../../store';
 import {
   changePageNumber,
@@ -40,6 +45,11 @@ import ReaderPreloadContainer from './ReaderPreloadContainer';
 import ReaderLoader from './ReaderLoader';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
 import ipcChannels from '../../constants/ipcChannels.json';
+import { FS_METADATA } from '../../services/extensions/filesystem';
+import {
+  getChapterDownloaded,
+  getChapterDownloadPath,
+} from '../../util/filesystem';
 
 const KEYBOARD_SHORTCUTS = {
   previousPage: 'left',
@@ -166,6 +176,51 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.setRelevantChapterList(relevantChapterList);
   };
 
+  const loadDownloadedChapterData = async (
+    series: Series,
+    chapter: Chapter
+  ) => {
+    log.debug(
+      `Reader is loading downloaded chapter data for chapter ${chapter.id}`
+    );
+
+    const pageUrls: string[] = await getChapterDownloadPath(series, chapter)
+      .then((chapterPath: string) =>
+        ipcRenderer.invoke(
+          ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
+          FS_METADATA.id,
+          SeriesSourceType.STANDARD,
+          '',
+          chapterPath
+        )
+      )
+      .then((pageRequesterData: PageRequesterData) =>
+        ipcRenderer.invoke(
+          ipcChannels.EXTENSION.GET_PAGE_URLS,
+          FS_METADATA.id,
+          pageRequesterData
+        )
+      );
+    props.setPageUrls(pageUrls);
+
+    const curPageDataList: string[] = [];
+    for (let i = 0; i < pageUrls.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await ipcRenderer
+        .invoke(
+          ipcChannels.EXTENSION.GET_PAGE_DATA,
+          FS_METADATA.id,
+          series,
+          pageUrls[i]
+        )
+        .then((data: string) => {
+          curPageDataList[i] = data;
+          return props.setPageDataList([...curPageDataList]);
+        });
+      forceUpdate();
+    }
+  };
+
   /**
    * Populate the reader's props using the specified chapter.
    * Despite being async, you cannot guarantee that all of the props will be set when this function
@@ -200,9 +255,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       );
     }
 
+    if (await getChapterDownloaded(series, chapter)) {
+      loadDownloadedChapterData(series, chapter);
+      return;
+    }
+
     const pageUrls: string[] = await ipcRenderer
       .invoke(
-        'extension-getPageRequesterData',
+        ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
         series.extensionId,
         series.sourceType,
         series.sourceId,
@@ -210,7 +270,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       )
       .then((pageRequesterData: PageRequesterData) =>
         ipcRenderer.invoke(
-          'extension-getPageUrls',
+          ipcChannels.EXTENSION.GET_PAGE_URLS,
           series.extensionId,
           pageRequesterData
         )
@@ -222,7 +282,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       // eslint-disable-next-line no-await-in-loop
       await ipcRenderer
         .invoke(
-          'extension-getPageData',
+          ipcChannels.EXTENSION.GET_PAGE_DATA,
           series.extensionId,
           series,
           pageUrls[i]

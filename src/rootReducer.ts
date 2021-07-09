@@ -6,6 +6,7 @@ import status from './features/statusbar/reducers';
 import reader from './features/reader/reducers';
 import search from './features/search/reducers';
 import settings from './features/settings/reducers';
+import downloader from './features/downloader/reducers';
 
 export default function createRootReducer(history: History) {
   return combineReducers({
@@ -15,5 +16,6 @@ export default function createRootReducer(history: History) {
     reader,
     search,
     settings,
+    downloader,
   });
 }

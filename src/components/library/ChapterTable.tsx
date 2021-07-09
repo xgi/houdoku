@@ -3,19 +3,52 @@ import React, { useState } from 'react';
 import { Table, Checkbox, Button, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
-import { Chapter, Series, Languages, LanguageKey } from 'houdoku-extension-lib';
+import { Chapter, Series, Languages } from 'houdoku-extension-lib';
+import { ipcRenderer } from 'electron';
+import { connect, ConnectedProps } from 'react-redux';
 import routes from '../../constants/routes.json';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
+import ChapterTableContextMenu from './ChapterTableContextMenu';
+import { getChapterDownloadedSync } from '../../util/filesystem';
+import ipcChannels from '../../constants/ipcChannels.json';
+import { RootState } from '../../store';
+import { toggleChapterRead } from '../../features/library/utils';
 
-type Props = {
-  chapterList: Chapter[];
+const downloadsDir = await ipcRenderer.invoke(
+  ipcChannels.GET_PATH.DOWNLOADS_DIR
+);
+
+const mapState = (state: RootState) => ({
+  chapterList: state.library.chapterList,
+  chapterLanguages: state.settings.chapterLanguages,
+  trackerAutoUpdate: state.settings.trackerAutoUpdate,
+  currentTask: state.downloader.currentTask,
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const mapDispatch = (dispatch: any) => ({
+  toggleChapterRead: (chapter: Chapter, series: Series) =>
+    toggleChapterRead(dispatch, chapter, series),
+});
+
+const connector = connect(mapState, mapDispatch);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type Props = PropsFromRedux & {
   series: Series;
-  chapterLanguages: LanguageKey[];
-  toggleChapterRead: (chapter: Chapter, series: Series) => void;
-  trackerAutoUpdate: boolean;
 };
 
 const ChapterTable: React.FC<Props> = (props: Props) => {
+  const [showingContextMenu, setShowingContextMenu] = useState(false);
+  const [contextMenuLocation, setContextMenuLocation] = useState<{
+    x: number;
+    y: number;
+  }>({
+    x: 0,
+    y: 0,
+  });
+  const [contextMenuChapter, setContextMenuChapter] =
+    useState<Chapter | undefined>();
   const [filterTitle, setFilterTitle] = useState('');
   const [filterGroup, setFilterGroup] = useState('');
 
@@ -56,7 +89,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
 
   const columns = [
     {
-      title: 'Read',
+      title: 'Rd',
       dataIndex: 'read',
       key: 'read',
       width: '5%',
@@ -75,10 +108,28 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       },
     },
     {
+      title: 'DL',
+      dataIndex: 'downloaded',
+      key: 'downloaded',
+      width: '5%',
+      render: function render(_text: string, record: Chapter) {
+        return (
+          <Checkbox
+            checked={getChapterDownloadedSync(
+              props.series,
+              record,
+              downloadsDir
+            )}
+            disabled
+          />
+        );
+      },
+    },
+    {
       title: '',
       dataIndex: 'language',
       key: 'language',
-      width: '6%',
+      width: '5%',
       render: function render(_text: string, record: Chapter) {
         return Languages[record.languageKey] === undefined ? (
           <></>
@@ -93,21 +144,21 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      width: '35%',
+      width: '33%',
       ...getColumnSearchProps('title'),
     },
     {
       title: 'Group',
       dataIndex: 'groupName',
       key: 'groupName',
-      width: '15%',
+      width: '22%',
       ...getColumnSearchProps('groupName'),
     },
     {
-      title: 'Volume',
+      title: 'Vol',
       dataIndex: 'volumeNumber',
       key: 'volumeNumber',
-      width: '12%',
+      width: '8%',
       align: 'center',
       sorter: {
         compare: (a: Chapter, b: Chapter) =>
@@ -116,11 +167,11 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       },
     },
     {
-      title: 'Chapter',
+      title: 'Ch',
       dataIndex: 'chapterNumber',
       key: 'chapterNumber',
       defaultSortOrder: 'descend',
-      width: '12%',
+      width: '7%',
       align: 'center',
       sorter: {
         compare: (a: Chapter, b: Chapter) =>
@@ -152,15 +203,38 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
     },
   ];
 
+  const filteredList = getFilteredList();
   return (
-    <Table
-      dataSource={getFilteredList()}
-      // @ts-expect-error cleanup column render types
-      columns={columns}
-      rowKey="id"
-      size="small"
-    />
+    <>
+      <ChapterTableContextMenu
+        location={contextMenuLocation}
+        visible={showingContextMenu}
+        series={props.series}
+        chapter={contextMenuChapter}
+        chapterList={filteredList}
+        close={() => setShowingContextMenu(false)}
+      />
+      <Table
+        onRow={(record, _rowIndex) => {
+          return {
+            onClick: () => {
+              setShowingContextMenu(false);
+            },
+            onContextMenu: (event) => {
+              setContextMenuLocation({ x: event.clientX, y: event.clientY });
+              setContextMenuChapter(record);
+              setShowingContextMenu(true);
+            },
+          };
+        }}
+        dataSource={filteredList}
+        // @ts-expect-error cleanup column render types
+        columns={columns}
+        rowKey="id"
+        size="small"
+      />
+    </>
   );
 };
 
-export default ChapterTable;
+export default connector(ChapterTable);

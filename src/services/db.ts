@@ -3,16 +3,16 @@ import { Chapter, Series } from 'houdoku-extension-lib';
 import * as db from '../util/db';
 import { getNumberUnreadChapters } from '../util/comparison';
 
-const fetchSerieses = () => {
-  return db.database.select().from(db.seriesTable).exec();
+const fetchSerieses = (): Promise<Series[]> => {
+  return db.database.select().from(db.seriesTable).exec() as Promise<Series[]>;
 };
 
-const fetchChapters = (seriesId: number) => {
+const fetchChapters = (seriesId: number): Promise<Chapter[]> => {
   return db.database
     .select()
     .from(db.chapterTable)
     .where(db.chapterTable.seriesId.eq(seriesId))
-    .exec();
+    .exec() as Promise<Chapter[]>;
 };
 
 const fetchSeries = (id: number) => {
@@ -69,8 +69,8 @@ const deleteChaptersBySeries = (seriesId: number) => {
     .exec();
 };
 
-const deleteChaptersById = (chapterIds: number[]) => {
-  if (chapterIds.length === 0) return;
+const deleteChaptersById = (chapterIds: number[]): Promise<void> => {
+  if (chapterIds.length === 0) return new Promise((resolve) => resolve());
 
   // eslint-disable-next-line consistent-return
   return db.database

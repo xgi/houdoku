@@ -8,6 +8,7 @@ import {
   PlusSquareOutlined,
   SettingOutlined,
   BuildOutlined,
+  DownloadOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import { Series } from 'houdoku-extension-lib';
@@ -31,6 +32,7 @@ import Settings from '../settings/Settings';
 import About from '../about/About';
 import Library from '../library/Library';
 import Extensions from '../extensions/Extensions';
+import Downloads from '../downloads/Downloads';
 
 const { Content, Sider } = Layout;
 
@@ -108,7 +110,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
           <Menu.Item key="4" icon={<BuildOutlined />}>
             <Link to={routes.EXTENSIONS}>Extensions</Link>
           </Menu.Item>
-          <Menu.Item key="5" icon={<InfoCircleOutlined />}>
+          <Menu.Item key="5" icon={<DownloadOutlined />}>
+            <Link to={routes.DOWNLOADS}>Downloads</Link>
+          </Menu.Item>
+          <Menu.Item key="6" icon={<InfoCircleOutlined />}>
             <Link to={routes.ABOUT}>About</Link>
           </Menu.Item>
         </Menu>
@@ -130,6 +135,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
             </Route>
             <Route path={routes.EXTENSIONS} exact>
               <Extensions />
+            </Route>
+            <Route path={routes.DOWNLOADS} exact>
+              <Downloads />
             </Route>
             <Route path={routes.LIBRARY}>
               <Library />

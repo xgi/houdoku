@@ -1,8 +1,9 @@
 import path from 'path';
 import fs from 'fs';
+import rimraf from 'rimraf';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from 'houdoku-extension-lib';
 import ipcChannels from '../constants/ipcChannels.json';
 
 /**
@@ -48,6 +49,97 @@ export async function getThumbnailPath(series: Series): Promise<string | null> {
 
   const ext = series.remoteCoverUrl.split('.').pop();
   return path.join(thumbnailsDir, `${series.id}.${ext}`);
+}
+
+export function getChapterDownloadPathSync(
+  series: Series,
+  chapter: Chapter,
+  downloadsDir: string
+): string {
+  return path.join(downloadsDir, `${series.id}`, `${chapter.id}`);
+}
+
+export async function getChapterDownloadPath(
+  series: Series,
+  chapter: Chapter
+): Promise<string> {
+  const downloadsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.DOWNLOADS_DIR
+  );
+  return getChapterDownloadPathSync(series, chapter, downloadsDir);
+}
+
+export async function getChapterDownloaded(
+  series: Series,
+  chapter: Chapter
+): Promise<boolean> {
+  const downloadsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.DOWNLOADS_DIR
+  );
+  const chapterPath = getChapterDownloadPathSync(series, chapter, downloadsDir);
+  return fs.existsSync(chapterPath)
+    ? fs.readdirSync(chapterPath).length > 0
+    : false;
+}
+
+export function getChapterDownloadedSync(
+  series: Series,
+  chapter: Chapter,
+  downloadsDir: string
+): boolean {
+  const chapterPath = getChapterDownloadPathSync(series, chapter, downloadsDir);
+  return fs.existsSync(chapterPath)
+    ? fs.readdirSync(chapterPath).length > 0
+    : false;
+}
+
+export async function getAllDownloadedChapterPaths(): Promise<string[]> {
+  const downloadsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.DOWNLOADS_DIR
+  );
+
+  if (!fs.existsSync(downloadsDir)) {
+    return [];
+  }
+
+  const chapterPaths: Set<string> = new Set();
+
+  fs.readdirSync(downloadsDir).forEach((seriesDirName: string) => {
+    const seriesPath = path.join(downloadsDir, seriesDirName);
+    if (fs.statSync(seriesPath).isDirectory()) {
+      fs.readdirSync(seriesPath).forEach((chapterDirName: string) => {
+        const chapterPath = path.join(seriesPath, chapterDirName);
+        chapterPaths.add(chapterPath);
+      });
+    }
+  });
+
+  return Array.from(chapterPaths);
+}
+
+export async function deleteDownloadedChapter(
+  series: Series,
+  chapter: Chapter
+): Promise<void> {
+  log.debug(
+    `Deleting from disk chapter ${chapter.id} from series ${series.id}`
+  );
+  if (series.id === undefined || chapter.id === undefined)
+    return new Promise((resolve) => resolve());
+
+  const chapterDownloadPath = await getChapterDownloadPath(series, chapter);
+  if (fs.existsSync(chapterDownloadPath)) {
+    return new Promise((resolve) =>
+      rimraf(chapterDownloadPath, () => {
+        const seriesDir = path.dirname(chapterDownloadPath);
+        if (fs.readdirSync(seriesDir).length === 0) {
+          fs.rmdirSync(seriesDir);
+        }
+        resolve();
+      })
+    );
+  }
+  return new Promise((resolve) => resolve());
 }
 
 /**
