@@ -47,6 +47,10 @@
   background-color: var(--color-background);
 }
 
+.ant-menu.ant-menu-root:focus-visible {
+  box-shadow: none;
+}
+
 .ant-typography {
   color: var(--color-foreground);
 }
