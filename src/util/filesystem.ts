@@ -142,6 +142,27 @@ export async function deleteDownloadedChapter(
   return new Promise((resolve) => resolve());
 }
 
+export async function deleteAllDownloadedChapters(
+  series: Series
+): Promise<void> {
+  log.debug(`Deleting from disk all chapters for series ${series.id}`);
+  if (series.id === undefined) return new Promise((resolve) => resolve());
+
+  const downloadsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.DOWNLOADS_DIR
+  );
+  const seriesDownloadPath = path.join(downloadsDir, `${series.id}`);
+
+  if (fs.existsSync(seriesDownloadPath)) {
+    return new Promise((resolve) =>
+      rimraf(seriesDownloadPath, () => {
+        resolve();
+      })
+    );
+  }
+  return new Promise((resolve) => resolve());
+}
+
 /**
  * Delete a series thumbnail from the filesystem.
  * This does not necessarily require the thumbnail to exist; therefore this function can be simply

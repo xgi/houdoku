@@ -9,7 +9,10 @@ import {
   setReloadingSeriesList,
 } from './actions';
 import db from '../../services/db';
-import { deleteThumbnail } from '../../util/filesystem';
+import {
+  deleteAllDownloadedChapters,
+  deleteThumbnail,
+} from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import { setStatusText } from '../statusbar/actions';
 import { FS_METADATA } from '../../services/extensions/filesystem';
@@ -33,13 +36,21 @@ export function loadChapterList(dispatch: any, seriesId: number) {
     .catch((err: Error) => log.error(err));
 }
 
-export function removeSeries(dispatch: any, series: Series) {
+export function removeSeries(
+  dispatch: any,
+  series: Series,
+  deleteDownloadedChapters = false
+) {
   if (series.id === undefined) return;
 
   db.deleteSeries(series.id)
-    .then((response: any) => {
+    .then(() => {
       deleteThumbnail(series);
-      return loadSeriesList(dispatch);
+      // eslint-disable-next-line promise/always-return
+      if (deleteDownloadedChapters) {
+        deleteAllDownloadedChapters(series);
+      }
+      loadSeriesList(dispatch);
     })
     .catch((err: Error) => log.error(err));
 }

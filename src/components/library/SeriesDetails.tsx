@@ -2,7 +2,16 @@ import fs from 'fs';
 import path from 'path';
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { Typography, Button, Descriptions, Affix, Modal, Select } from 'antd';
+import {
+  Typography,
+  Button,
+  Descriptions,
+  Affix,
+  Modal,
+  Select,
+  Checkbox,
+  Form,
+} from 'antd';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
@@ -49,7 +58,6 @@ import SeriesTrackerModal from './SeriesTrackerModal';
 
 const { Title } = Typography;
 const { Option } = Select;
-const { confirm } = Modal;
 
 const thumbnailsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.THUMBNAILS_DIR
@@ -79,7 +87,8 @@ const mapDispatch = (dispatch: any) => ({
   loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
   reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
     reloadSeriesList(dispatch, seriesList, callback),
-  removeSeries: (series: Series) => removeSeries(dispatch, series),
+  removeSeries: (series: Series, deleteDownloadedChapters: boolean) =>
+    removeSeries(dispatch, series, deleteDownloadedChapters),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
   updateSeriesUserTags: (
@@ -110,6 +119,8 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams<ParamTypes>();
   const history = useHistory();
   const [showingTrackerModal, setShowingTrackerModal] = useState(false);
+  const [showingRemoveModal, setShowingRemoveModal] = useState(false);
+  const [removalForm] = Form.useForm();
 
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
@@ -150,23 +161,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       if (fs.existsSync(thumbnailPath)) return thumbnailPath;
     }
     return blankCover;
-  };
-
-  const handleRemove = () => {
-    log.debug(`Prompting to remove series ${props.series?.id}`);
-
-    confirm({
-      title: 'Remove this series from your library?',
-      icon: <ExclamationCircleOutlined />,
-      content: 'This action is irreversible.',
-      onOk() {
-        log.info(`Removing series ${props.series?.id}`);
-        if (props.series !== undefined) {
-          props.removeSeries(props.series);
-          history.push(routes.LIBRARY);
-        }
-      },
-    });
   };
 
   const renderSeriesDescriptions = (series: Series) => {
@@ -261,6 +255,43 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         visible={showingTrackerModal}
         toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
       />
+      <Modal
+        visible={showingRemoveModal}
+        title="Remove this series from your library?"
+        onCancel={() => setShowingRemoveModal(false)}
+        okText="Remove"
+        okButtonProps={{ danger: true }}
+        onOk={() => {
+          removalForm
+            .validateFields()
+            .then((values) => {
+              // eslint-disable-next-line promise/always-return
+              if (props.series !== undefined) {
+                log.info(`Removing series ${props.series.id}`);
+                props.removeSeries(props.series, values.deleteDownloads);
+                history.push(routes.LIBRARY);
+              }
+            })
+            .catch((info) => {
+              log.error(info);
+            });
+        }}
+      >
+        <Form
+          form={removalForm}
+          name="removal_form"
+          initialValues={{ deleteDownloads: false }}
+        >
+          <Paragraph>This action is irreversible.</Paragraph>
+          <Form.Item
+            className={styles.formItem}
+            name="deleteDownloads"
+            valuePropName="checked"
+          >
+            <Checkbox>Delete downloaded episodes</Checkbox>
+          </Form.Item>
+        </Form>
+      </Modal>
       <Link to={routes.LIBRARY}>
         <Affix className={styles.backButtonAffix}>
           <Button onClick={() => props.loadSeriesList()}>
@@ -287,7 +318,10 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           <div className={styles.headerTitleRow}>
             <Title level={4}>{props.series.title}</Title>
             <div className={styles.headerTitleSpacer} />
-            <Button className={styles.removeButton} onClick={handleRemove}>
+            <Button
+              className={styles.removeButton}
+              onClick={() => setShowingRemoveModal(true)}
+            >
               Remove Series
             </Button>
             <Button onClick={() => setShowingTrackerModal(true)}>
