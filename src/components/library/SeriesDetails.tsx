@@ -288,7 +288,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             name="deleteDownloads"
             valuePropName="checked"
           >
-            <Checkbox>Delete downloaded episodes</Checkbox>
+            <Checkbox>Delete downloaded chapters</Checkbox>
           </Form.Item>
         </Form>
       </Modal>
