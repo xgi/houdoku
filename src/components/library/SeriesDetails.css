@@ -1,4 +1,13 @@
 .backgroundContainer {
+  display: grid;
+}
+
+.backgroundContainer > * {
+  grid-row-start: 1;
+  grid-column-start: 1;
+}
+
+.backgroundImageContainer {
   width: auto;
   height: 180px;
   overflow: hidden;
@@ -16,10 +25,20 @@
   background-color: var(--color-background-alt);
 }
 
-.backgroundContainer > img {
+.backgroundImageContainer > img {
   object-fit: cover;
   height: 100%;
   width: 100%;
+}
+
+.controlContainer {
+  position: relative;
+}
+
+.controlRow {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
 }
 
 .headerContainer {
@@ -54,13 +73,15 @@
   background-color: var(--color-background-faded);
 }
 
-.removeButton {
-  margin-right: 0.5rem;
+.removeButton,
+.trackerButton {
+  margin-left: 0.3rem;
+  background-color: var(--color-background) !important;
 }
 
 .refreshButton {
   min-width: 5.2rem;
-  margin-left: 0.5rem;
+  margin-left: 0.3rem;
 }
 
 .descriptionItem {

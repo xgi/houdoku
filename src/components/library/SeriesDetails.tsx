@@ -300,31 +300,25 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </Affix>
       </Link>
       <div className={styles.backgroundContainer}>
-        {props.seriesBannerUrl === null ? (
-          <></>
-        ) : (
-          <img src={props.seriesBannerUrl} alt={props.series.title} />
-        )}
-      </div>
-      <div className={styles.headerContainer}>
-        <div>
-          <img
-            className={styles.coverImage}
-            src={getThumbnailPath(props.series.id)}
-            alt={props.series.title}
-          />
+        <div className={styles.backgroundImageContainer}>
+          {props.seriesBannerUrl === null ? (
+            <></>
+          ) : (
+            <img src={props.seriesBannerUrl} alt={props.series.title} />
+          )}
         </div>
-        <div className={styles.headerDetailsContainer}>
-          <div className={styles.headerTitleRow}>
-            <Title level={4}>{props.series.title}</Title>
-            <div className={styles.headerTitleSpacer} />
+        <div className={styles.controlContainer}>
+          <div className={styles.controlRow}>
             <Button
               className={styles.removeButton}
               onClick={() => setShowingRemoveModal(true)}
             >
               Remove Series
             </Button>
-            <Button onClick={() => setShowingTrackerModal(true)}>
+            <Button
+              className={styles.trackerButton}
+              onClick={() => setShowingTrackerModal(true)}
+            >
               Trackers
             </Button>
             <Button
@@ -337,6 +331,20 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             >
               {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
             </Button>
+          </div>
+        </div>
+      </div>
+      <div className={styles.headerContainer}>
+        <div>
+          <img
+            className={styles.coverImage}
+            src={getThumbnailPath(props.series.id)}
+            alt={props.series.title}
+          />
+        </div>
+        <div className={styles.headerDetailsContainer}>
+          <div className={styles.headerTitleRow}>
+            <Title level={4}>{props.series.title}</Title>
           </div>
           <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
             {props.series.description}
