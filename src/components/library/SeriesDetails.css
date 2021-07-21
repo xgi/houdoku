@@ -74,7 +74,8 @@
 }
 
 .removeButton,
-.trackerButton {
+.trackerButton,
+.editButton {
   margin-left: 0.3rem;
   background-color: var(--color-background) !important;
 }

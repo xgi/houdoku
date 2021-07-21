@@ -14,7 +14,7 @@ import {
 } from 'antd';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { SyncOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { connect, ConnectedProps } from 'react-redux';
 import {
@@ -55,6 +55,8 @@ import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesTrackerModal from './SeriesTrackerModal';
+import { FS_METADATA } from '../../services/extensions/filesystem';
+import EditSeriesModal from './EditSeriesModal';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -120,6 +122,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const [showingTrackerModal, setShowingTrackerModal] = useState(false);
   const [showingRemoveModal, setShowingRemoveModal] = useState(false);
+  const [showingEditModal, setShowingEditModal] = useState(false);
   const [removalForm] = Form.useForm();
 
   const loadContent = async () => {
@@ -255,6 +258,13 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         visible={showingTrackerModal}
         toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
       />
+      <EditSeriesModal
+        series={props.series}
+        visible={showingEditModal}
+        editable
+        toggleVisible={() => setShowingEditModal(!showingEditModal)}
+        saveCallback={(series) => props.setSeries(series)}
+      />
       <Modal
         visible={showingRemoveModal}
         title="Remove this series from your library?"
@@ -315,6 +325,16 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             >
               Remove Series
             </Button>
+            {props.series.extensionId === FS_METADATA.id ? (
+              <Button
+                className={styles.editButton}
+                onClick={() => setShowingEditModal(true)}
+              >
+                Edit Details
+              </Button>
+            ) : (
+              ''
+            )}
             <Button
               className={styles.trackerButton}
               onClick={() => setShowingTrackerModal(true)}

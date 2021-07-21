@@ -229,6 +229,10 @@ export async function reloadSeriesList(
   if (callback !== undefined) callback();
 }
 
+export function updateSeries(series: Series) {
+  return db.addSeries(series).then(() => downloadCover(series));
+}
+
 export async function updateSeriesUserTags(
   series: Series,
   userTags: string[],
