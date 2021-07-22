@@ -119,6 +119,22 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Col>
       </Row>
       <Row className={styles.row}>
+        <Col span={10}>Description</Col>
+        <Col span={14}>
+          <Input
+            value={props.series.description}
+            title={props.series.description}
+            onChange={(e) =>
+              props.setSeries({
+                ...props.series,
+                description: e.target.value,
+              })
+            }
+            disabled={!props.editable}
+          />
+        </Col>
+      </Row>
+      <Row className={styles.row}>
         <Col span={10}>Author(s)</Col>
         <Col span={14}>
           <Select
