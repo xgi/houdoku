@@ -29,6 +29,7 @@ import {
   Themes,
   Formats,
   ContentWarnings,
+  ExtensionMetadata,
 } from 'houdoku-extension-lib';
 import ChapterTable from './ChapterTable';
 import styles from './SeriesDetails.css';
@@ -120,6 +121,8 @@ interface ParamTypes {
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams<ParamTypes>();
   const history = useHistory();
+  const [extensionMetadata, setExtensionMetadata] =
+    useState<ExtensionMetadata | undefined>();
   const [showingTrackerModal, setShowingTrackerModal] = useState(false);
   const [showingRemoveModal, setShowingRemoveModal] = useState(false);
   const [showingEditModal, setShowingEditModal] = useState(false);
@@ -130,8 +133,21 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
 
     db.fetchSeries(parseInt(id, 10))
       .then((response: any) => {
-        props.setSeries(response[0]);
-        return getBannerImageUrl(response[0]);
+        const series: Series = response[0];
+        props.setSeries(series);
+        return series;
+      })
+      .then(async (series: Series) => {
+        setExtensionMetadata(
+          await ipcRenderer.invoke(
+            ipcChannels.EXTENSION_MANAGER.GET,
+            series.extensionId
+          )
+        );
+        return series;
+      })
+      .then((series: Series) => {
+        return getBannerImageUrl(series);
       })
       .then((seriesBannerUrl: string | null) =>
         props.setSeriesBannerUrl(seriesBannerUrl)
@@ -365,6 +381,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         <div className={styles.headerDetailsContainer}>
           <div className={styles.headerTitleRow}>
             <Title level={4}>{props.series.title}</Title>
+            {extensionMetadata !== undefined ? (
+              <Paragraph>{extensionMetadata.name}</Paragraph>
+            ) : (
+              ''
+            )}
           </div>
           <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
             {props.series.description}
