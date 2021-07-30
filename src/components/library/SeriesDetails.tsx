@@ -168,7 +168,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
 
   const renderSeriesDescriptions = (series: Series) => {
     return (
-      <Descriptions column={4}>
+      <Descriptions className={styles.descriptions} column={4}>
         <Descriptions.Item className={styles.descriptionItem} label="Author">
           {series.authors.join('; ')}
         </Descriptions.Item>

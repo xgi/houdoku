@@ -85,6 +85,10 @@
   margin-left: 0.3rem;
 }
 
+.descriptions {
+  margin-top: 0.5rem;
+}
+
 .descriptionItem {
   text-transform: capitalize;
 }
