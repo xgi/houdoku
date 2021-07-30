@@ -49,16 +49,12 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       props.registryResults.objects
         .map((object: any) => {
           const pkg: RegistrySearchPackage = object.package;
-
-          const descFields = pkg.description.split(' - ');
-          const sourceName = descFields[0];
-          const extensionId = descFields[1];
-          const extensionUrl = descFields[2];
+          const description = JSON.parse(pkg.description);
 
           let installedVersion;
           let canUpdate = false;
           const metadata = metadataList.find(
-            (_metadata: ExtensionMetadata) => _metadata.id === extensionId
+            (_metadata: ExtensionMetadata) => _metadata.id === description.id
           );
           if (metadata !== undefined) {
             installedVersion = metadata.version;
@@ -67,10 +63,10 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
 
           return {
             pkgName: pkg.name,
-            friendlyName: sourceName,
-            id: extensionId,
+            friendlyName: description.name,
+            id: description.id,
             availableVersion: pkg.version,
-            url: extensionUrl,
+            url: description.url,
             installedVersion,
             canUpdate,
             hasSettings: metadata ? metadata.hasSettings : false,
