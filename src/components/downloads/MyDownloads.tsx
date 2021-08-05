@@ -138,7 +138,14 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
           Delete Selected
         </Button>
       </Row>
-      <Paragraph>Your downloads are saved in {downloadsDir}</Paragraph>
+      <Paragraph>
+        Your downloads are saved in{' '}
+        <span className={styles.linkText}>
+          <a href={`file:///${downloadsDir}`} target="_blank" rel="noreferrer">
+            {downloadsDir}
+          </a>
+        </span>
+      </Paragraph>
       {treeData.length > 0 ? (
         <Tree
           checkable

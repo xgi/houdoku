@@ -15,3 +15,8 @@
 .refreshButton {
   margin-right: 8px;
 }
+
+.linkText {
+  padding: 3px;
+  background-color: var(--color-background-alt);
+}
