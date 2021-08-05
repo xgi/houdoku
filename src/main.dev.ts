@@ -39,6 +39,7 @@ log.info(
 const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
 const pluginsDir = path.join(app.getPath('userData'), 'plugins');
 const downloadsDir = path.join(app.getPath('userData'), 'downloads');
+const logsDir = path.join(app.getPath('userData'), 'logs');
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -166,6 +167,10 @@ ipcMain.handle(ipcChannels.GET_PATH.PLUGINS_DIR, () => {
 
 ipcMain.handle(ipcChannels.GET_PATH.DOWNLOADS_DIR, () => {
   return downloadsDir;
+});
+
+ipcMain.handle(ipcChannels.GET_PATH.LOGS_DIR, () => {
+  return logsDir;
 });
 
 ipcMain.handle(ipcChannels.GET_ALL_FILES, (_event, rootPath: string) => {

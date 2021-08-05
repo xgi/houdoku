@@ -1,0 +1,23 @@
+.spaceContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4em;
+}
+
+.container {
+  max-width: 500px;
+}
+
+.list {
+  margin-left: 1em;
+}
+
+.highlightedText {
+  padding: 3px;
+  background-color: var(--color-background-alt);
+}
+
+.errorCollapse {
+  margin-bottom: 4em;
+}
