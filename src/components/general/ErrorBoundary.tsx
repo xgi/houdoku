@@ -11,13 +11,14 @@ import ipcChannels from '../../constants/ipcChannels.json';
 
 const { Panel } = Collapse;
 
+const LOGS_DIR = await ipcRenderer.invoke(ipcChannels.GET_PATH.LOGS_DIR);
+
 interface Props {
   children: ReactNode;
 }
 
 interface State {
   error: Error | null;
-  logsDir: string;
 }
 
 // eslint-disable-next-line import/prefer-default-export
@@ -26,21 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
     super(props);
     this.state = {
       error: null,
-      logsDir: '',
     };
-  }
-
-  componentDidMount() {
-    console.log('MOUNT');
-    ipcRenderer
-      .invoke(ipcChannels.GET_PATH.LOGS_DIR)
-      // eslint-disable-next-line promise/always-return
-      .then((logsDir: string) => {
-        console.log('here');
-        console.log(logsDir);
-        this.setState({ logsDir });
-      })
-      .catch((err: Error) => log.error(err));
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -49,9 +36,8 @@ export class ErrorBoundary extends Component<Props, State> {
     log.error(error, errorInfo);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  getDerivedStateFromError(error: Error): State {
-    return { ...this.state, error };
+  public static getDerivedStateFromError(error: Error): State {
+    return { error };
   }
 
   render() {
@@ -94,11 +80,11 @@ export class ErrorBoundary extends Component<Props, State> {
               Additional logs in{' '}
               <span className={styles.highlightedText}>
                 <a
-                  href={`file:///${this.state.logsDir}`}
+                  href={`file:///${LOGS_DIR}`}
                   target="_blank"
                   rel="noreferrer"
                 >
-                  {this.state.logsDir}
+                  {LOGS_DIR}
                 </a>
               </span>
             </Paragraph>
