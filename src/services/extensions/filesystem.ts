@@ -31,7 +31,7 @@ export const FS_METADATA: ExtensionMetadata = {
   translatedLanguage: undefined,
   hasSettings: false,
   notice: 'Add a series by selecting the directory or archive file below.',
-  noticeUrl: 'https://github.com/xgi/houdoku/wiki/Importing-Local-Series',
+  noticeUrl: 'https://houdoku.org/docs/adding-manga/adding-local-series',
   pageLoadMessage: '',
 };
 
