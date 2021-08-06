@@ -108,6 +108,7 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
           <Input
             value={props.series.title}
             title={props.series.title}
+            placeholder="Title..."
             onChange={(e) =>
               props.setSeries({
                 ...props.series,
@@ -124,6 +125,7 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
           <Input
             value={props.series.description}
             title={props.series.description}
+            placeholder="Description..."
             onChange={(e) =>
               props.setSeries({
                 ...props.series,
