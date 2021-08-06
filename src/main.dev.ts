@@ -21,6 +21,7 @@ import {
 } from 'electron';
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import log from 'electron-log';
+import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { walk } from './util/filesystem';
 import {
   createExtensionIpcHandlers,
@@ -272,6 +273,32 @@ ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
     })
     .catch((e) => log.error(e));
 });
+
+ipcMain.handle(
+  ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG,
+  (
+    _event,
+    updates: {
+      [key: string]: { metadata: ExtensionMetadata; newVersion: string };
+    }
+  ) => {
+    log.info('Showing extension update dialog...');
+
+    const updatesStr = Object.values(updates)
+      .map(
+        (update) =>
+          `- ${update.metadata.name} (${update.metadata.version}→${update.newVersion})`
+      )
+      .join('\n');
+
+    dialog.showMessageBox({
+      type: 'info',
+      title: 'Extension Updates Available',
+      message: `Updates are available for the following extensions:\n\n${updatesStr}\n\nPlease go to the Extensions tab to update.\nYou can disable this message in the settings.`,
+      buttons: ['OK'],
+    });
+  }
+);
 
 // create ipc handlers for specific extension functionality
 const webviewFn = (url: string) => loadInWebView(mainWindow, url);

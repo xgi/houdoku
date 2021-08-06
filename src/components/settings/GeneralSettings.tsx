@@ -7,6 +7,7 @@ import styles from './GeneralSettings.css';
 import { GeneralSetting } from '../../models/types';
 import { RootState } from '../../store';
 import {
+  setAutoCheckForExtensionUpdates,
   setAutoCheckForUpdates,
   setChapterLanguages,
   setRefreshOnStart,
@@ -24,6 +25,7 @@ const mapState = (state: RootState) => ({
   chapterLanguages: state.settings.chapterLanguages,
   refreshOnStart: state.settings.refreshOnStart,
   autoCheckForUpdates: state.settings.autoCheckForUpdates,
+  autoCheckForExtensionUpdates: state.settings.autoCheckForExtensionUpdates,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,6 +36,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setRefreshOnStart(refreshOnStart)),
   setAutoCheckForUpdates: (autoCheckForUpdates: boolean) =>
     dispatch(setAutoCheckForUpdates(autoCheckForUpdates)),
+  setAutoCheckForExtensionUpdates: (autoCheckForExtensionUpdates: boolean) =>
+    dispatch(setAutoCheckForExtensionUpdates(autoCheckForExtensionUpdates)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -53,6 +57,9 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         break;
       case GeneralSetting.AutoCheckForUpdates:
         props.setAutoCheckForUpdates(value);
+        break;
+      case GeneralSetting.AutoCheckForExtensionUpdates:
+        props.setAutoCheckForExtensionUpdates(value);
         break;
       default:
         break;
@@ -108,7 +115,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         </Col>
       </Row>
       <Row className={styles.row}>
-        <Col span={10}>Check For Updates Automatically</Col>
+        <Col span={10}>Check For Client Updates Automatically</Col>
         <Col span={14}>
           <Dropdown
             overlay={
@@ -131,6 +138,35 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
           >
             <Button>
               {props.autoCheckForUpdates ? 'Yes' : 'No'}
+              <DownOutlined />
+            </Button>
+          </Dropdown>
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Check For Extension Updates Automatically</Col>
+        <Col span={14}>
+          <Dropdown
+            overlay={
+              <Menu
+                onClick={(e: any) => {
+                  updateGeneralSetting(
+                    GeneralSetting.AutoCheckForExtensionUpdates,
+                    e.item.props['data-value'] === 'true'
+                  );
+                }}
+              >
+                <Menu.Item key={1} data-value="true">
+                  Yes
+                </Menu.Item>
+                <Menu.Item key={2} data-value="false">
+                  No
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button>
+              {props.autoCheckForExtensionUpdates ? 'Yes' : 'No'}
               <DownOutlined />
             </Button>
           </Dropdown>

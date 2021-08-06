@@ -2,7 +2,8 @@
   "APP": {
     "CHECK_FOR_UPDATES": "check-for-updates",
     "SET_STATUS": "set-status",
-    "LOAD_STORED_EXTENSION_SETTINGS": "load-stored-extension-settings"
+    "LOAD_STORED_EXTENSION_SETTINGS": "load-stored-extension-settings",
+    "SHOW_EXTENSION_UPDATE_DIALOG": "show-extension-update-dialog"
   },
   "WINDOW": {
     "MINIMIZE": "window-minimize",
@@ -22,7 +23,8 @@
     "UNINSTALL": "extension-manager-uninstall",
     "LIST": "extension-manager-list",
     "GET": "extension-manager-get",
-    "GET_ALL": "extension-manager-get-all"
+    "GET_ALL": "extension-manager-get-all",
+    "CHECK_FOR_UPDATESS": "extension-manager-check-for-updates"
   },
   "EXTENSION": {
     "GET_SERIES": "extension-getSeries",

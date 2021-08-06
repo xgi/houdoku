@@ -51,6 +51,7 @@ export enum GeneralSetting {
   ChapterLanguages = 'ChapterLanguages',
   RefreshOnStart = 'RefreshOnStart',
   AutoCheckForUpdates = 'AutoCheckForUpdates',
+  AutoCheckForExtensionUpdates = 'AutoCheckForExtensionUpdates',
   LibraryColumns = 'LibraryColumns',
   LibraryFilterStatus = 'LibraryFilterStatus',
   LibraryFilterProgress = 'LibraryFilterProgress',

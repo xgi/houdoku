@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import log from 'electron-log';
-import { ipcRenderer } from 'electron';
+import { dialog, ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { configuredStore } from './store';
 import persistantStore from './util/persistantStore';
@@ -92,6 +92,29 @@ if (store.getState().settings.autoCheckForUpdates) {
   ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
 } else {
   log.debug('Skipping update check, autoCheckForUpdates is disabled');
+}
+
+if (store.getState().settings.autoCheckForExtensionUpdates) {
+  ipcRenderer
+    .invoke(ipcChannels.EXTENSION_MANAGER.CHECK_FOR_UPDATESS)
+    .then(
+      (updates: {
+        [key: string]: { metadata: ExtensionMetadata; newVersion: string };
+      }) => {
+        // eslint-disable-next-line promise/always-return
+        if (Object.values(updates).length > 0) {
+          ipcRenderer.invoke(
+            ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG,
+            updates
+          );
+        }
+      }
+    )
+    .catch((err: Error) => log.error(err));
+} else {
+  log.debug(
+    'Skipping extension update check, autoCheckForExtensionUpdates is disabled'
+  );
 }
 
 // the downloader requires access to some other actions/parts of the

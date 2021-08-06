@@ -20,6 +20,7 @@ import {
   SET_TRACKER_AUTO_UPDATE,
   SET_DISCORD_PRESENCE_ENABLED,
   SET_AUTO_CHECK_FOR_UPDATES,
+  SET_AUTO_CHECK_FOR_EXTENSION_UPDATES,
   SET_LIBRARY_COLUMNS,
   SET_LIBRARY_FILTER_STATUS,
   SET_LIBRARY_FILTER_PROGRESS,
@@ -53,6 +54,17 @@ export function setAutoCheckForUpdates(
     type: SET_AUTO_CHECK_FOR_UPDATES,
     payload: {
       autoCheckForUpdates,
+    },
+  };
+}
+
+export function setAutoCheckForExtensionUpdates(
+  autoCheckForExtensionUpdates: boolean
+): SettingsAction {
+  return {
+    type: SET_AUTO_CHECK_FOR_EXTENSION_UPDATES,
+    payload: {
+      autoCheckForExtensionUpdates,
     },
   };
 }

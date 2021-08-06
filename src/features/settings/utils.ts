@@ -17,6 +17,7 @@ export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.ChapterLanguages]: [LanguageKey.ENGLISH],
   [GeneralSetting.RefreshOnStart]: true,
   [GeneralSetting.AutoCheckForUpdates]: true,
+  [GeneralSetting.AutoCheckForExtensionUpdates]: true,
   [GeneralSetting.LibraryColumns]: 6,
   [GeneralSetting.LibraryFilterStatus]: null,
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
@@ -51,6 +52,9 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   const autoCheckForUpdates: string | null = persistantStore.read(
     `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.AutoCheckForUpdates}`
   );
+  const autoCheckForExtensionUpdates: string | null = persistantStore.read(
+    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.AutoCheckForExtensionUpdates}`
+  );
   const libraryColumns: string | null = persistantStore.read(
     `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.LibraryColumns}`
   );
@@ -75,6 +79,10 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   if (autoCheckForUpdates !== null) {
     settings[GeneralSetting.AutoCheckForUpdates] =
       autoCheckForUpdates === 'true';
+  }
+  if (autoCheckForExtensionUpdates !== null) {
+    settings[GeneralSetting.AutoCheckForExtensionUpdates] =
+      autoCheckForExtensionUpdates === 'true';
   }
   if (libraryColumns !== null) {
     settings[GeneralSetting.LibraryColumns] = parseInt(libraryColumns, 10);

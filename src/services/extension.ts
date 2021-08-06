@@ -6,12 +6,17 @@ import {
   WebviewFunc,
   ExtensionClientInterface,
   SettingType,
+  ExtensionMetadata,
 } from 'houdoku-extension-lib';
-import aki from 'aki-plugin-manager';
+import aki, {
+  RegistrySearchPackage,
+  RegistrySearchResults,
+} from 'aki-plugin-manager';
 import { IpcMain } from 'electron';
 import fetch from 'node-fetch';
 import DOMParser from 'dom-parser';
 import log from 'electron-log';
+import { gt } from 'semver';
 import { FSExtensionClient, FS_METADATA } from './extensions/filesystem';
 import ipcChannels from '../constants/ipcChannels.json';
 
@@ -373,6 +378,39 @@ export const createExtensionIpcHandlers = (
     return Object.values(EXTENSION_CLIENTS).map(
       (client: ExtensionClientInterface) => client.getMetadata()
     );
+  });
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.CHECK_FOR_UPDATESS, async () => {
+    if (Object.values(EXTENSION_CLIENTS).length <= 1) return {};
+    log.debug('Checking for extension updates...');
+
+    const availableUpdates: {
+      [key: string]: { metadata: ExtensionMetadata; newVersion: string };
+    } = {};
+    const registryResults: RegistrySearchResults = await aki.search({
+      text: 'extension',
+      scope: 'houdoku',
+    });
+    registryResults.objects.forEach((registryResult) => {
+      const pkg: RegistrySearchPackage = registryResult.package;
+      const description = JSON.parse(pkg.description);
+
+      if (description.id in EXTENSION_CLIENTS) {
+        const metadata = EXTENSION_CLIENTS[description.id].getMetadata();
+        if (gt(pkg.version, metadata.version)) {
+          availableUpdates[metadata.id] = {
+            metadata,
+            newVersion: pkg.version,
+          };
+        }
+      }
+    });
+
+    log.debug(
+      `Found ${
+        Object.values(availableUpdates).length
+      } available extension updates`
+    );
+    return availableUpdates;
   });
 
   ipcMain.handle(

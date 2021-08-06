@@ -16,6 +16,8 @@ export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
 export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 export const SET_REFRESH_ON_START = 'SET_REFRESH_ON_START';
 export const SET_AUTO_CHECK_FOR_UPDATES = 'SET_AUTO_CHECK_FOR_UPDATES';
+export const SET_AUTO_CHECK_FOR_EXTENSION_UPDATES =
+  'SET_AUTO_CHECK_FOR_EXTENSION_UPDATES';
 export const SET_LIBRARY_COLUMNS = 'SET_LIBRARY_COLUMNS';
 export const SET_LIBRARY_FILTER_STATUS = 'SET_LIBRARY_FILTER_STATUS';
 export const SET_LIBRARY_FILTER_PROGRESS = 'SET_LIBRARY_FILTER_PROGRESS';
@@ -28,6 +30,7 @@ export interface SettingsState {
   chapterLanguages: LanguageKey[];
   refreshOnStart: boolean;
   autoCheckForUpdates: boolean;
+  autoCheckForExtensionUpdates: boolean;
   libraryColumns: number;
   libraryFilterStatus: SeriesStatus | null;
   libraryFilterProgress: ProgressFilter;
@@ -102,6 +105,13 @@ interface SetAutoCheckForUpdatesAction {
   };
 }
 
+interface SetAutoCheckForExtensionUpdatesAction {
+  type: typeof SET_AUTO_CHECK_FOR_EXTENSION_UPDATES;
+  payload: {
+    autoCheckForExtensionUpdates: boolean;
+  };
+}
+
 interface SetLibraryColumnsAction {
   type: typeof SET_LIBRARY_COLUMNS;
   payload: {
@@ -162,6 +172,7 @@ export type SettingsAction =
   | SetPreloadAmountAction
   | SetRefreshOnStartAction
   | SetAutoCheckForUpdatesAction
+  | SetAutoCheckForExtensionUpdatesAction
   | SetLibraryColumnsAction
   | SetLibraryFilterStatusAction
   | SetLibraryFilterProgressAction

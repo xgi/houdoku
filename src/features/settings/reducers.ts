@@ -27,6 +27,7 @@ import {
   SET_LIBRARY_FILTER_STATUS,
   SET_LIBRARY_FILTER_PROGRESS,
   SET_LIBRARY_FILTER_USER_TAGS,
+  SET_AUTO_CHECK_FOR_EXTENSION_UPDATES,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -61,6 +62,10 @@ const initialState: SettingsState = {
     storedGeneralSettings.AutoCheckForUpdates === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.AutoCheckForUpdates]
       : storedGeneralSettings.AutoCheckForUpdates,
+  autoCheckForExtensionUpdates:
+    storedGeneralSettings.AutoCheckForExtensionUpdates === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.AutoCheckForExtensionUpdates]
+      : storedGeneralSettings.AutoCheckForExtensionUpdates,
   libraryColumns:
     storedGeneralSettings.LibraryColumns === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryColumns]
@@ -165,6 +170,16 @@ export default function settings(
       return {
         ...state,
         autoCheckForUpdates: action.payload.autoCheckForUpdates,
+      };
+    case SET_AUTO_CHECK_FOR_EXTENSION_UPDATES:
+      saveGeneralSetting(
+        GeneralSetting.AutoCheckForExtensionUpdates,
+        action.payload.autoCheckForExtensionUpdates
+      );
+      return {
+        ...state,
+        autoCheckForExtensionUpdates:
+          action.payload.autoCheckForExtensionUpdates,
       };
     case SET_LIBRARY_COLUMNS:
       saveGeneralSetting(
