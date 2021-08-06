@@ -183,6 +183,10 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   };
 
   const renderSeriesDescriptions = (series: Series) => {
+    const language = Languages[series.originalLanguageKey];
+    const languageStr =
+      language !== undefined && 'name' in language ? language.name : '';
+
     return (
       <Descriptions className={styles.descriptions} column={4}>
         <Descriptions.Item className={styles.descriptionItem} label="Author">
@@ -195,7 +199,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           {series.status}
         </Descriptions.Item>
         <Descriptions.Item className={styles.descriptionItem} label="Language">
-          {Languages[series.originalLanguageKey].name}
+          {languageStr}
         </Descriptions.Item>
         <Descriptions.Item
           className={styles.descriptionItem}
@@ -203,7 +207,10 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           span={2}
         >
           {series.genres
-            .map((genreKey: GenreKey) => Genres[genreKey].name)
+            .map((genreKey: GenreKey) => {
+              const genre = Genres[genreKey];
+              return genre !== undefined && 'name' in genre ? genre.name : '';
+            })
             .join('; ')}
         </Descriptions.Item>
         <Descriptions.Item
@@ -212,7 +219,10 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           span={2}
         >
           {series.themes
-            .map((themeKey: ThemeKey) => Themes[themeKey].name)
+            .map((themeKey: ThemeKey) => {
+              const theme = Themes[themeKey];
+              return theme !== undefined && 'name' in theme ? theme.name : '';
+            })
             .join('; ')}
         </Descriptions.Item>
         <Descriptions.Item
@@ -221,7 +231,12 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           span={2}
         >
           {series.formats
-            .map((formatKey: FormatKey) => Formats[formatKey].name)
+            .map((formatKey: FormatKey) => {
+              const format = Formats[formatKey];
+              return format !== undefined && 'name' in format
+                ? format.name
+                : '';
+            })
             .join('; ')}
         </Descriptions.Item>
         <Descriptions.Item
@@ -230,10 +245,12 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           span={2}
         >
           {series.contentWarnings
-            .map(
-              (contentWarningKey: ContentWarningKey) =>
-                ContentWarnings[contentWarningKey].name
-            )
+            .map((contentWarningKey: ContentWarningKey) => {
+              const contentWarning = ContentWarnings[contentWarningKey];
+              return contentWarning !== undefined && 'name' in contentWarning
+                ? contentWarning.name
+                : '';
+            })
             .join('; ')}
         </Descriptions.Item>
         <Descriptions.Item
@@ -381,7 +398,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         <div className={styles.headerDetailsContainer}>
           <div className={styles.headerTitleRow}>
             <Title level={4}>{props.series.title}</Title>
-            {extensionMetadata !== undefined ? (
+            {extensionMetadata !== undefined && 'name' in extensionMetadata ? (
               <Paragraph>{extensionMetadata.name}</Paragraph>
             ) : (
               ''

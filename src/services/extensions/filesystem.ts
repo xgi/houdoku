@@ -42,17 +42,20 @@ export class FSExtensionClient extends ExtensionClientAbstract {
 
   getSeries: GetSeriesFunc = (sourceType: SeriesSourceType, id: string) => {
     const dirName = path.basename(id);
-    const matchTitle: RegExpMatchArray | null = dirName.match(
-      new RegExp(/(?:(?![v\d|c\d]).)*/g)
-    );
-    const title: string = matchTitle === null ? id : matchTitle[0];
+
+    let title = dirName.trim();
+    ['zip', 'rar', 'cbz', 'cbr'].forEach((ext) => {
+      if (title.endsWith(`.${ext}`)) {
+        title = title.substr(0, title.lastIndexOf('.'));
+      }
+    });
 
     const series: Series = {
       id: undefined,
       extensionId: FS_METADATA.id,
       sourceId: id,
       sourceType,
-      title: title.trim(),
+      title,
       altTitles: [],
       description: '',
       authors: [],
