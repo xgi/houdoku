@@ -18,6 +18,7 @@ import {
   ipcMain,
   dialog,
   MessageBoxReturnValue,
+  OpenDialogReturnValue,
 } from 'electron';
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import log from 'electron-log';
@@ -273,6 +274,37 @@ ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
     })
     .catch((e) => log.error(e));
 });
+
+ipcMain.handle(
+  ipcChannels.APP.SHOW_OPEN_DIALOG,
+  (
+    _event,
+    directory = false,
+    filters: { name: string; extensions: string[] }[] = [],
+    title: string
+  ) => {
+    log.info(
+      `Showing open dialog directory=${directory} filters=${filters.join(';')}`
+    );
+
+    if (mainWindow === null) {
+      log.error('Aborting open dialog, mainWindow is null');
+      return [];
+    }
+
+    return dialog
+      .showOpenDialog(mainWindow, {
+        properties: [directory ? 'openDirectory' : 'openFile'],
+        filters,
+        title,
+      })
+      .then((value: OpenDialogReturnValue) => {
+        if (value.canceled) return [];
+        return value.filePaths;
+      })
+      .catch((e) => log.error(e));
+  }
+);
 
 ipcMain.handle(
   ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG,

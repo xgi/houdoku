@@ -28,3 +28,11 @@
   padding-top: 16px;
   padding-bottom: 16px;
 }
+
+.fsInputContainer {
+  margin: auto;
+  max-width: 200px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}

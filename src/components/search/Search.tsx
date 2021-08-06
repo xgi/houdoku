@@ -6,9 +6,8 @@ import {
   Dropdown,
   Menu,
   Modal,
-  Col,
-  Row,
   Spin,
+  Divider,
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
@@ -32,7 +31,6 @@ import {
 } from '../../features/search/actions';
 import { RootState } from '../../store';
 import AddSeriesModal from './AddSeriesModal';
-import Uploader from './Uploader';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 
@@ -156,29 +154,55 @@ const Search: React.FC<Props> = (props: Props) => {
 
   const renderFilesystemInputs = () => {
     return (
-      <Row>
-        <Col span={12}>
-          <Paragraph>Upload Directory</Paragraph>
-          <Uploader
-            className={styles.uploader}
-            callback={(path: string) =>
-              handleSearchFilesystem(path, SeriesSourceType.STANDARD)
-            }
-          />
-        </Col>
-        <Col span={12}>
-          <Paragraph>Upload Archive</Paragraph>
-          <input
-            type="file"
-            onChange={(e: any) =>
-              handleSearchFilesystem(
-                e.target.files[0].path,
-                SeriesSourceType.ARCHIVE
+      <div className={styles.fsInputContainer}>
+        <Button
+          onClick={() =>
+            ipcRenderer
+              .invoke(
+                ipcChannels.APP.SHOW_OPEN_DIALOG,
+                true,
+                [],
+                'Select Series Directory'
               )
-            }
-          />
-        </Col>
-      </Row>
+              .then((fileList: string) => {
+                // eslint-disable-next-line promise/always-return
+                if (fileList.length > 0) {
+                  handleSearchFilesystem(
+                    fileList[0],
+                    SeriesSourceType.STANDARD
+                  );
+                }
+              })
+          }
+        >
+          Select Directory
+        </Button>
+        <Divider>or</Divider>
+        <Button
+          onClick={() =>
+            ipcRenderer
+              .invoke(
+                ipcChannels.APP.SHOW_OPEN_DIALOG,
+                false,
+                [
+                  {
+                    name: 'Archives',
+                    extensions: ['zip', 'rar', 'cbz', 'cbr'],
+                  },
+                ],
+                'Select Series Archive'
+              )
+              .then((fileList: string) => {
+                // eslint-disable-next-line promise/always-return
+                if (fileList.length > 0) {
+                  handleSearchFilesystem(fileList[0], SeriesSourceType.ARCHIVE);
+                }
+              })
+          }
+        >
+          Select Archive File
+        </Button>
+      </div>
     );
   };
 
