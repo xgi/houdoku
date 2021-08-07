@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Row, Tree } from 'antd';
+import { Button, Modal, Row, Tree, Typography } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import log from 'electron-log';
 import { Chapter, Languages, Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './MyDownloads.css';
 import { RootState } from '../../store';
 import { getDownloadedList } from '../../features/downloader/utils';
@@ -13,6 +12,7 @@ import { deleteDownloadedChapter } from '../../util/filesystem';
 import { setStatusText } from '../../features/statusbar/actions';
 import ipcChannels from '../../constants/ipcChannels.json';
 
+const { Text, Paragraph } = Typography;
 const { confirm } = Modal;
 
 const mapState = (state: RootState) => ({});
@@ -140,11 +140,11 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
       </Row>
       <Paragraph>
         Your downloads are saved in{' '}
-        <span className={styles.linkText}>
+        <Text code>
           <a href={`file:///${downloadsDir}`} target="_blank" rel="noreferrer">
             {downloadsDir}
           </a>
-        </span>
+        </Text>
       </Paragraph>
       {treeData.length > 0 ? (
         <Tree

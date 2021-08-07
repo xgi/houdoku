@@ -13,11 +13,6 @@
   margin-left: 1em;
 }
 
-.highlightedText {
-  padding: 3px;
-  background-color: var(--color-background-alt);
-}
-
 .errorCollapse {
   margin-bottom: 4em;
 }

@@ -1,14 +1,14 @@
 /* eslint-disable react/prefer-stateless-function */
 import Title from 'antd/lib/typography/Title';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
 import React, { ReactNode, Component, ErrorInfo } from 'react';
-import { Collapse } from 'antd';
+import { Collapse, Typography } from 'antd';
 import styles from './ErrorBoundary.css';
 import packageJson from '../../../package.json';
 import ipcChannels from '../../constants/ipcChannels.json';
 
+const { Text, Paragraph } = Typography;
 const { Panel } = Collapse;
 
 const LOGS_DIR = await ipcRenderer.invoke(ipcChannels.GET_PATH.LOGS_DIR);
@@ -54,13 +54,12 @@ export class ErrorBoundary extends Component<Props, State> {
             <Title level={4}>What to do</Title>
             <div className={styles.list}>
               <Paragraph>
-                - Press <span className={styles.highlightedText}>Ctrl + R</span>{' '}
-                to reload the client.
+                - Press <Text keyboard>Ctrl + R</Text> to reload the client.
               </Paragraph>
               <Paragraph>
                 - You can open the console by pressing{' '}
-                <span className={styles.highlightedText}>Ctrl + Shift + I</span>
-                , which may contain additional information about the error.
+                <Text keyboard>Ctrl + Shift + I</Text>, which may contain
+                additional information about the error.
               </Paragraph>
               <Paragraph>
                 -{' '}
@@ -78,7 +77,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <Title level={4}>Error details</Title>
             <Paragraph>
               Additional logs in{' '}
-              <span className={styles.highlightedText}>
+              <Text code>
                 <a
                   href={`file:///${LOGS_DIR}`}
                   target="_blank"
@@ -86,7 +85,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 >
                   {LOGS_DIR}
                 </a>
-              </span>
+              </Text>
             </Paragraph>
             <Collapse className={styles.errorCollapse} defaultActiveKey={[]}>
               <Panel
