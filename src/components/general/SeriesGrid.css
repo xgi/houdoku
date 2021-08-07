@@ -10,8 +10,8 @@
   width: 85%;
   bottom: 0px;
   left: 12px;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
-    1px 1px 0 #000;
+  text-shadow: #000 0 0 4px !important;
+  font-size: 14px !important;
   user-select: none;
   color: white !important;
 }
