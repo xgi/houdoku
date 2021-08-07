@@ -1,8 +1,11 @@
+import { LanguageKey } from 'houdoku-extension-lib';
+
 export type ExtensionTableRow = {
   pkgName: string;
   friendlyName: string;
   id: string;
   url: string;
+  languageKey: LanguageKey;
   availableVersion: string;
   installedVersion: string | undefined;
   canUpdate: boolean;

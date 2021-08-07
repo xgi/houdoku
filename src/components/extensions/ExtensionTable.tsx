@@ -9,7 +9,12 @@ import {
 } from 'aki-plugin-manager';
 import { gt } from 'semver';
 import { connect, ConnectedProps } from 'react-redux';
-import { ExtensionMetadata } from 'houdoku-extension-lib';
+import {
+  ExtensionMetadata,
+  Language,
+  LanguageKey,
+  Languages,
+} from 'houdoku-extension-lib';
 import { ExtensionTableRow } from '../../models/types';
 import { RootState } from '../../store';
 import { setStatusText } from '../../features/statusbar/actions';
@@ -67,6 +72,11 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
             id: description.id,
             availableVersion: pkg.version,
             url: description.url,
+            languageKey:
+              !('translatedLanguage' in description) ||
+              description.translatedLanguage === ''
+                ? undefined
+                : description.translatedLanguage,
             installedVersion,
             canUpdate,
             hasSettings: metadata ? metadata.hasSettings : false,
@@ -157,6 +167,32 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
 
   const columns = [
     {
+      title: '◇',
+      dataIndex: 'language',
+      key: 'language',
+      width: '5%',
+      filters: Object.values(Languages).map((language: Language) => {
+        return { text: language.name, value: language.key };
+      }),
+      filteredValue: undefined,
+      onFilter: (value: string | number | boolean, record: ExtensionTableRow) =>
+        value === undefined || record.languageKey === value,
+      render: function render(_text: string, record: ExtensionTableRow) {
+        if (
+          record.languageKey === undefined ||
+          Languages[record.languageKey] === undefined ||
+          record.languageKey === LanguageKey.MULTI
+        ) {
+          return <></>;
+        }
+        return (
+          <div
+            className={`flag flag-${Languages[record.languageKey].flagCode}`}
+          />
+        );
+      },
+    },
+    {
       title: 'Name',
       dataIndex: 'friendlyName',
       key: 'friendlyName',
@@ -166,26 +202,26 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       title: 'URL',
       dataIndex: 'url',
       key: 'url',
-      width: '29%',
+      width: '30%',
     },
     {
-      title: 'Available Ver.',
+      title: 'Latest',
       dataIndex: 'availableVersion',
       key: 'availableVersion',
-      width: '15%',
+      width: '10%',
       align: 'center',
     },
     {
-      title: 'Installed Ver.',
+      title: 'Current',
       dataIndex: 'installedVersion',
       key: 'installedVersion',
-      width: '15%',
+      width: '10%',
       align: 'center',
     },
     {
       title: '',
       key: 'removeButton',
-      width: '8%',
+      width: '10%',
       align: 'center',
       render: function render(text: any, record: ExtensionTableRow) {
         return record.installedVersion === undefined ? (
@@ -204,7 +240,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
     {
       title: '',
       key: 'installUpdateButton',
-      width: '8%',
+      width: '10%',
       align: 'center',
       render: function render(text: any, record: ExtensionTableRow) {
         if (record.installedVersion === undefined) {
