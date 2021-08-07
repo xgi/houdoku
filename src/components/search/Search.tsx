@@ -8,10 +8,10 @@ import {
   Modal,
   Spin,
   Divider,
+  Typography,
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { useLocation } from 'react-router-dom';
 import {
   ExtensionMetadata,
@@ -34,6 +34,7 @@ import AddSeriesModal from './AddSeriesModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 
+const { Text, Paragraph } = Typography;
 const { info } = Modal;
 
 const mapState = (state: RootState) => ({
@@ -86,6 +87,30 @@ const Search: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const showInLibraryMessage = (series: Series) => {
+    info({
+      content: (
+        <>
+          <Paragraph>
+            &quot;{series.title}&quot; is already in your library.
+          </Paragraph>
+
+          <Paragraph>
+            <Text type="secondary">Source ID:</Text>{' '}
+            <Text type="secondary" code>
+              {series.sourceId}
+            </Text>
+            <br />
+            <Text type="secondary">Extension:</Text>{' '}
+            <Text type="secondary" code>
+              {series.extensionId}
+            </Text>
+          </Paragraph>
+        </>
+      ),
+    });
+  };
+
   const handleSearch = (text?: string) => {
     setLoading(true);
     props.setSearchResults([]);
@@ -116,14 +141,16 @@ const Search: React.FC<Props> = (props: Props) => {
         sourceType,
         path
       )
-      .then((series: Series) => props.setSearchResults([series]))
+      .then((series: Series) => {
+        // eslint-disable-next-line promise/always-return
+        if (inLibrary(series)) {
+          showInLibraryMessage(series);
+        } else {
+          props.setAddModalSeries(series);
+          props.toggleShowingAddModal(props.searchExtension === FS_METADATA.id);
+        }
+      })
       .catch((e) => log.error(e));
-  };
-
-  const showInLibraryMessage = () => {
-    info({
-      content: <Paragraph>This series is already in your library.</Paragraph>,
-    });
   };
 
   const renderAlert = () => {
@@ -239,7 +266,7 @@ const Search: React.FC<Props> = (props: Props) => {
             isInLibrary: boolean | undefined = undefined
           ) => {
             if (isInLibrary) {
-              showInLibraryMessage();
+              showInLibraryMessage(series);
             } else {
               props.setAddModalSeries(series);
               props.toggleShowingAddModal(
