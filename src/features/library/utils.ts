@@ -176,6 +176,12 @@ async function reloadSeries(series: Series): Promise<Error | void> {
   }
   await db.updateSeriesNumberUnread(newSeries);
 
+  if (newSeries.remoteCoverUrl !== series.remoteCoverUrl) {
+    log.debug(`Updating cover for series ${newSeries.id}`);
+    deleteThumbnail(series);
+    downloadCover(newSeries);
+  }
+
   return new Promise((resolve) => resolve());
 }
 

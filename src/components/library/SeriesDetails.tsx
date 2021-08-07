@@ -58,6 +58,8 @@ import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesTrackerModal from './SeriesTrackerModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import EditSeriesModal from './EditSeriesModal';
+import { deleteThumbnail } from '../../util/filesystem';
+import { downloadCover } from '../../util/download';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -296,7 +298,14 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         visible={showingEditModal}
         editable
         toggleVisible={() => setShowingEditModal(!showingEditModal)}
-        saveCallback={(series) => props.setSeries(series)}
+        saveCallback={(series) => {
+          if (series.remoteCoverUrl !== props.series?.remoteCoverUrl) {
+            log.debug(`Updating cover for series ${props.series?.id}`);
+            deleteThumbnail(series);
+            downloadCover(series);
+          }
+          props.setSeries(series);
+        }}
       />
       <Modal
         visible={showingRemoveModal}

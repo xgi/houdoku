@@ -170,12 +170,22 @@ export async function deleteAllDownloadedChapters(
  * @param series the series to delete the thumbnail for
  */
 export async function deleteThumbnail(series: Series) {
-  const thumbnailPath = await getThumbnailPath(series);
-  if (thumbnailPath === null) return;
+  const thumbnailsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.THUMBNAILS_DIR
+  );
+  if (!fs.existsSync(thumbnailsDir)) return;
 
-  fs.unlink(thumbnailPath, (err) => {
-    if (err) {
-      log.error(err);
+  const files = fs.readdirSync(thumbnailsDir);
+  // eslint-disable-next-line no-restricted-syntax
+  for (const file of files) {
+    if (file.startsWith(`${series.id}.`)) {
+      const curPath = path.join(thumbnailsDir, file);
+      log.debug(`Deleting thumbnail at ${curPath}`);
+      fs.unlink(curPath, (err) => {
+        if (err) {
+          log.error(err);
+        }
+      });
     }
-  });
+  }
 }
