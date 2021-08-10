@@ -11,6 +11,7 @@ import {
   Select,
   Checkbox,
   Form,
+  Tag,
 } from 'antd';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
@@ -208,52 +209,67 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           label="Genres"
           span={2}
         >
-          {series.genres
-            .map((genreKey: GenreKey) => {
+          <div>
+            {series.genres.map((genreKey: GenreKey) => {
               const genre = Genres[genreKey];
-              return genre !== undefined && 'name' in genre ? genre.name : '';
-            })
-            .join('; ')}
+              return genre !== undefined && 'name' in genre ? (
+                <Tag>{genre.name}</Tag>
+              ) : (
+                ''
+              );
+            })}
+          </div>
         </Descriptions.Item>
         <Descriptions.Item
           className={styles.descriptionItem}
           label="Themes"
           span={2}
         >
-          {series.themes
-            .map((themeKey: ThemeKey) => {
+          <div>
+            {series.themes.map((themeKey: ThemeKey) => {
               const theme = Themes[themeKey];
-              return theme !== undefined && 'name' in theme ? theme.name : '';
-            })
-            .join('; ')}
+              return theme !== undefined && 'name' in theme ? (
+                <Tag>{theme.name}</Tag>
+              ) : (
+                ''
+              );
+            })}
+          </div>
         </Descriptions.Item>
         <Descriptions.Item
           className={styles.descriptionItem}
           label="Formats"
           span={2}
         >
-          {series.formats
-            .map((formatKey: FormatKey) => {
+          <div>
+            {series.formats.map((formatKey: FormatKey) => {
               const format = Formats[formatKey];
-              return format !== undefined && 'name' in format
-                ? format.name
-                : '';
-            })
-            .join('; ')}
+              return format !== undefined && 'name' in format ? (
+                <Tag>{format.name}</Tag>
+              ) : (
+                ''
+              );
+            })}
+          </div>
         </Descriptions.Item>
         <Descriptions.Item
           className={styles.descriptionItem}
           label="Content Warnings"
           span={2}
         >
-          {series.contentWarnings
-            .map((contentWarningKey: ContentWarningKey) => {
-              const contentWarning = ContentWarnings[contentWarningKey];
-              return contentWarning !== undefined && 'name' in contentWarning
-                ? contentWarning.name
-                : '';
-            })
-            .join('; ')}
+          <div>
+            {series.contentWarnings.map(
+              (contentWarningKey: ContentWarningKey) => {
+                const contentWarning = ContentWarnings[contentWarningKey];
+                return contentWarning !== undefined &&
+                  'name' in contentWarning ? (
+                  <Tag>{contentWarning.name}</Tag>
+                ) : (
+                  ''
+                );
+              }
+            )}
+          </div>
         </Descriptions.Item>
         <Descriptions.Item
           className={styles.descriptionItem}
