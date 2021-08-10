@@ -26,8 +26,10 @@ import {
   Demographics,
   Demographic,
 } from 'houdoku-extension-lib';
+import { ipcRenderer } from 'electron';
 import styles from './SeriesEditControls.css';
 import blankCover from '../../img/blank_cover.png';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const { Option } = Select;
 
@@ -87,18 +89,34 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Col>
         <Col span={2} />
         <Col span={14}>
-          <Paragraph style={{ marginTop: '2rem' }}>
-            Upload Cover Image
-          </Paragraph>
-          <input
-            type="file"
-            onChange={(e: any) =>
-              props.setSeries({
-                ...props.series,
-                remoteCoverUrl: e.target.files[0].path,
-              })
+          <Button
+            style={{ marginTop: '3em' }}
+            onClick={() =>
+              ipcRenderer
+                .invoke(
+                  ipcChannels.APP.SHOW_OPEN_DIALOG,
+                  false,
+                  [
+                    {
+                      name: 'Image',
+                      extensions: ['jpg', 'png', 'jpeg'],
+                    },
+                  ],
+                  'Select Series Cover'
+                )
+                .then((fileList: string) => {
+                  // eslint-disable-next-line promise/always-return
+                  if (fileList.length > 0) {
+                    props.setSeries({
+                      ...props.series,
+                      remoteCoverUrl: fileList[0],
+                    });
+                  }
+                })
             }
-          />
+          >
+            Select Cover Image
+          </Button>
         </Col>
       </Row>
 
