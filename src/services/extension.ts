@@ -7,6 +7,7 @@ import {
   ExtensionClientInterface,
   SettingType,
   ExtensionMetadata,
+  SeriesListResponse,
 } from 'houdoku-extension-lib';
 import aki, {
   RegistrySearchPackage,
@@ -213,9 +214,14 @@ async function getPageData(
  * @param extensionId
  * @param text the user's search input; this can contain parameters in the form "key:value" which
  * are utilized at the extension's discretion
- * @returns promise for a list of series found from the content source
+ * @returns promise for SeriesListResponse
  */
-function search(extensionId: string, text: string): Promise<Series[]> {
+function search(
+  extensionId: string,
+  text: string,
+  pageOffset: number,
+  pageSize: number
+): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
     `Searching for "${text}" from extension ${extensionId} (v=${
@@ -238,19 +244,25 @@ function search(extensionId: string, text: string): Promise<Series[]> {
     adjustedText = text.replace(paramsRegExp, '');
   }
 
-  return extension.getSearch(adjustedText, params).catch((err: Error) => {
-    log.error(err);
-    return [];
-  });
+  return extension
+    .getSearch(adjustedText, params, pageOffset, pageSize)
+    .catch((err: Error) => {
+      log.error(err);
+      return { seriesList: [], total: 0, hasMore: false, nextOffset: 0 };
+    });
 }
 
 /**
  * Get the directory for a content source (often the same as an empty search).
  *
  * @param extensionId
- * @returns promise for a list of series found from the content source
+ * @returns promise for SeriesListResponse
  */
-function directory(extensionId: string): Promise<Series[]> {
+function directory(
+  extensionId: string,
+  pageOffset: number,
+  pageSize: number
+): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
     `Getting directory from extension ${extensionId} (v=${
@@ -258,9 +270,9 @@ function directory(extensionId: string): Promise<Series[]> {
     })`
   );
 
-  return extension.getDirectory().catch((err: Error) => {
+  return extension.getDirectory(pageOffset, pageSize).catch((err: Error) => {
     log.error(err);
-    return [];
+    return { seriesList: [], total: 0, hasMore: false, nextOffset: 0 };
   });
 }
 
@@ -466,14 +478,20 @@ export const createExtensionIpcHandlers = (
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.SEARCH,
-    (_event, extensionId: string, text: string) => {
-      return search(extensionId, text);
+    (
+      _event,
+      extensionId: string,
+      text: string,
+      pageOffset: number,
+      pageSize: number
+    ) => {
+      return search(extensionId, text, pageOffset, pageSize);
     }
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.DIRECTORY,
-    (_event, extensionId: string) => {
-      return directory(extensionId);
+    (_event, extensionId: string, pageOffset: number, pageSize: number) => {
+      return directory(extensionId, pageOffset, pageSize);
     }
   );
   ipcMain.handle(

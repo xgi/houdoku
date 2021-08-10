@@ -1,7 +1,14 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - 24px - 24px - 8px);
+}
+
 .searchBar {
   display: flex;
   align-items: center;
-  margin-top: 1rem;
+  padding-top: 0.5em;
 }
 
 .extensionDropdown {
@@ -35,4 +42,9 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+
+.paginationContainer {
+  text-align: center;
+  padding-bottom: 0.5em;
 }

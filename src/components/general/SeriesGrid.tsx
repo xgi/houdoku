@@ -68,6 +68,8 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
     const filter = props.filter.toLowerCase();
 
     const filteredList = seriesList.filter((series: Series) => {
+      if (!series) return false;
+
       if (!series.title.toLowerCase().includes(filter)) return false;
       if (props.filterStatus !== null && series.status !== props.filterStatus) {
         return false;

@@ -19,6 +19,7 @@ import {
   GetSettingsFunc,
   SetSettingsFunc,
   GetSettingTypesFunc,
+  SeriesListResponse,
 } from 'houdoku-extension-lib';
 import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
 import { walk } from '../../util/filesystem';
@@ -207,11 +208,15 @@ export class FSExtensionClient extends ExtensionClientAbstract {
   };
 
   getSearch: GetSearchFunc = () => {
-    return new Promise<Series[]>((resolve) => resolve([]));
+    return new Promise<SeriesListResponse>((resolve) =>
+      resolve({ seriesList: [], total: 0, hasMore: false, nextOffset: 0 })
+    );
   };
 
   getDirectory: GetDirectoryFunc = () => {
-    return new Promise<Series[]>((resolve) => resolve([]));
+    return new Promise<SeriesListResponse>((resolve) =>
+      resolve({ seriesList: [], total: 0, hasMore: false, nextOffset: 0 })
+    );
   };
 
   getSettingTypes: GetSettingTypesFunc = () => {
