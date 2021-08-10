@@ -7,6 +7,10 @@
   text-align: center;
 }
 
+.infoAlert {
+  margin-bottom: 1em !important;
+}
+
 .statusText {
   text-align: center;
 }

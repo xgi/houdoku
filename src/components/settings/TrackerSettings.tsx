@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Dropdown, Input, Menu, Row, Spin } from 'antd';
+import { Alert, Button, Col, Dropdown, Input, Menu, Row, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
@@ -99,12 +99,14 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Paragraph>
-        Houdoku allows you to sync your account on list-tracking websites and
+      <Alert
+        className={styles.infoAlert}
+        type="info"
+        message='Houdoku allows you to sync your account on list-tracking websites and
         automatically upload your progress as you read. After authenticating
-        below, click the &quot;Trackers&quot; button on a series page to link it
-        with an entry on your list.
-      </Paragraph>
+        below, click the "Trackers" button on a series page to link it
+        with an entry on your list.'
+      />
       <Row className={styles.row}>
         <Col span={10}>Update Progress Automatically</Col>
         <Col span={14}>
