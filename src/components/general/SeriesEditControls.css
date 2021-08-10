@@ -5,3 +5,10 @@
 .coverImage {
   width: 100%;
 }
+
+.coverControlContainer {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

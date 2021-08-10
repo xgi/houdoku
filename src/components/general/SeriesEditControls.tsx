@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Col, Dropdown, Input, Menu, Row, Select } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
-import Paragraph from 'antd/lib/typography/Paragraph';
+import { DownOutlined, UploadOutlined } from '@ant-design/icons';
 import {
   ContentWarning,
   ContentWarningKey,
@@ -75,8 +74,8 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
   return (
     <>
       <Row className={styles.row}>
-        <Col span={2} />
-        <Col span={6}>
+        <Col span={3} />
+        <Col span={5}>
           <img
             className={styles.coverImage}
             src={
@@ -89,34 +88,49 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Col>
         <Col span={2} />
         <Col span={14}>
-          <Button
-            style={{ marginTop: '3em' }}
-            onClick={() =>
-              ipcRenderer
-                .invoke(
-                  ipcChannels.APP.SHOW_OPEN_DIALOG,
-                  false,
-                  [
-                    {
-                      name: 'Image',
-                      extensions: ['jpg', 'png', 'jpeg'],
-                    },
-                  ],
-                  'Select Series Cover'
-                )
-                .then((fileList: string) => {
-                  // eslint-disable-next-line promise/always-return
-                  if (fileList.length > 0) {
-                    props.setSeries({
-                      ...props.series,
-                      remoteCoverUrl: fileList[0],
-                    });
+          <div className={styles.coverControlContainer}>
+            Cover Image
+            <Row>
+              <Col span={20}>
+                <Input
+                  value={props.series.remoteCoverUrl}
+                  title={props.series.remoteCoverUrl}
+                  placeholder="Cover URL..."
+                  disabled
+                />
+              </Col>
+              <Col span={1} />
+              <Col span={2}>
+                <Button
+                  icon={<UploadOutlined />}
+                  disabled={!props.editable}
+                  onClick={() =>
+                    ipcRenderer
+                      .invoke(
+                        ipcChannels.APP.SHOW_OPEN_DIALOG,
+                        false,
+                        [
+                          {
+                            name: 'Image',
+                            extensions: ['jpg', 'png', 'jpeg'],
+                          },
+                        ],
+                        'Select Series Cover'
+                      )
+                      .then((fileList: string) => {
+                        // eslint-disable-next-line promise/always-return
+                        if (fileList.length > 0) {
+                          props.setSeries({
+                            ...props.series,
+                            remoteCoverUrl: fileList[0],
+                          });
+                        }
+                      })
                   }
-                })
-            }
-          >
-            Select Cover Image
-          </Button>
+                />
+              </Col>
+            </Row>
+          </div>
         </Col>
       </Row>
 
