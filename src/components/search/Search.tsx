@@ -9,6 +9,7 @@ import {
   Divider,
   Typography,
   Pagination,
+  Spin,
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
@@ -383,28 +384,49 @@ const Search: React.FC<Props> = (props: Props) => {
             <></>
           )}
         </div>
-        {props.searchResults.length === 0 ? (
+
+        {props.searchExtension === FS_METADATA.id ? (
           <></>
         ) : (
           <>
-            {renderSeriesGrid()}
-            <div className={styles.paginationContainer}>
-              <Pagination
-                total={totalResults}
-                showTotal={(total) => <Paragraph>{total} results</Paragraph>}
-                showSizeChanger={false}
-                current={curViewingPage}
-                onChange={(page) => {
-                  if (
-                    props.searchResults[RESULTS_PAGE_SIZE * (page - 1)] ===
-                    undefined
-                  ) {
-                    handleSearch(searchParams, page - 1, true);
-                  }
-                  setCurViewingPage(page);
-                }}
-              />
-            </div>
+            {props.searchResults.length === 0 ? (
+              <>
+                {loading ? (
+                  <div className={styles.loadingText}>
+                    <Spin />
+                    <Paragraph>Searching from extension...</Paragraph>
+                  </div>
+                ) : (
+                  <Paragraph className={styles.loadingText}>
+                    Sorry, no series were found with the current settings.
+                  </Paragraph>
+                )}
+                <div />
+              </>
+            ) : (
+              <>
+                {renderSeriesGrid()}
+                <div className={styles.paginationContainer}>
+                  <Pagination
+                    total={totalResults}
+                    showTotal={(total) => (
+                      <Paragraph>{total} results</Paragraph>
+                    )}
+                    showSizeChanger={false}
+                    current={curViewingPage}
+                    onChange={(page) => {
+                      if (
+                        props.searchResults[RESULTS_PAGE_SIZE * (page - 1)] ===
+                        undefined
+                      ) {
+                        handleSearch(searchParams, page - 1, true);
+                      }
+                      setCurViewingPage(page);
+                    }}
+                  />
+                </div>
+              </>
+            )}
           </>
         )}
       </div>
