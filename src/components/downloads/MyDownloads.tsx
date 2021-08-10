@@ -139,7 +139,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
         </Button>
       </Row>
       <Paragraph>
-        Your downloads are saved in{' '}
+        Your downloaded chapters are saved in{' '}
         <Text code>
           <a href={`file:///${downloadsDir}`} target="_blank" rel="noreferrer">
             {downloadsDir}
