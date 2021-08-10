@@ -79,6 +79,7 @@ const Search: React.FC<Props> = (props: Props) => {
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
   const [searchParams, setSearchParams] = useState<SearchParams>({});
   const [totalResults, setTotalResults] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
   const [curViewingPage, setCurViewingPage] = useState(1);
 
   const getSearchExtensionMetadata = () => {
@@ -163,6 +164,7 @@ const Search: React.FC<Props> = (props: Props) => {
 
         props.setSearchResults(adjustedSearchResults);
         setTotalResults(resp.total);
+        setHasMore(resp.hasMore);
       })
       .finally(() => setLoading(false))
       .catch((e) => log.error(e));
@@ -330,6 +332,10 @@ const Search: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     props.setSearchResults([]);
+    setTotalResults(0);
+    setHasMore(false);
+    setCurViewingPage(1);
+    setSearchParams({});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
@@ -409,6 +415,7 @@ const Search: React.FC<Props> = (props: Props) => {
                 <div className={styles.paginationContainer}>
                   <Pagination
                     total={totalResults}
+                    pageSize={RESULTS_PAGE_SIZE}
                     showTotal={(total) => (
                       <Paragraph>{total} results</Paragraph>
                     )}
@@ -416,10 +423,23 @@ const Search: React.FC<Props> = (props: Props) => {
                     current={curViewingPage}
                     onChange={(page) => {
                       if (
-                        props.searchResults[RESULTS_PAGE_SIZE * (page - 1)] ===
-                        undefined
+                        hasMore ||
+                        page !== Math.ceil(totalResults / RESULTS_PAGE_SIZE)
                       ) {
-                        handleSearch(searchParams, page - 1, true);
+                        const startIndex = RESULTS_PAGE_SIZE * (page - 1);
+                        const indexArr = Array.from(
+                          {
+                            length: RESULTS_PAGE_SIZE,
+                          },
+                          (_v, k) => k + startIndex
+                        );
+                        if (
+                          indexArr.some(
+                            (idx) => props.searchResults[idx] === undefined
+                          )
+                        ) {
+                          handleSearch(searchParams, page - 1, true);
+                        }
                       }
                       setCurViewingPage(page);
                     }}
