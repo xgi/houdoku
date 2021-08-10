@@ -209,13 +209,13 @@ export class FSExtensionClient extends ExtensionClientAbstract {
 
   getSearch: GetSearchFunc = () => {
     return new Promise<SeriesListResponse>((resolve) =>
-      resolve({ seriesList: [], total: 0, hasMore: false, nextOffset: 0 })
+      resolve({ seriesList: [], total: 0, hasMore: false })
     );
   };
 
   getDirectory: GetDirectoryFunc = () => {
     return new Promise<SeriesListResponse>((resolve) =>
-      resolve({ seriesList: [], total: 0, hasMore: false, nextOffset: 0 })
+      resolve({ seriesList: [], total: 0, hasMore: false })
     );
   };
 
