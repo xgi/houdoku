@@ -74,7 +74,7 @@ type Props = PropsFromRedux & {
 
 const Search: React.FC<Props> = (props: Props) => {
   const location = useLocation();
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
   const [searchParams, setSearchParams] = useState<SearchParams>({});
   const [totalResults, setTotalResults] = useState(0);
@@ -126,7 +126,7 @@ const Search: React.FC<Props> = (props: Props) => {
     pageOffset = 0,
     changingPage = false
   ) => {
-    // setLoading(true);
+    setLoading(true);
     if (!changingPage) {
       props.setSearchResults([]);
       setCurViewingPage(1);
@@ -150,7 +150,9 @@ const Search: React.FC<Props> = (props: Props) => {
 
     await respPromise
       .then((resp: SeriesListResponse) => {
-        const adjustedSearchResults = [...props.searchResults];
+        const adjustedSearchResults = changingPage
+          ? [...props.searchResults]
+          : [];
 
         // eslint-disable-next-line promise/always-return
         for (let i = 0; i < resp.seriesList.length; i += 1) {
@@ -161,7 +163,7 @@ const Search: React.FC<Props> = (props: Props) => {
         props.setSearchResults(adjustedSearchResults);
         setTotalResults(resp.total);
       })
-      // .finally(() => setLoading(false))
+      .finally(() => setLoading(false))
       .catch((e) => log.error(e));
   };
 
