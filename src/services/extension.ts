@@ -219,8 +219,7 @@ async function getPageData(
 function search(
   extensionId: string,
   text: string,
-  pageOffset: number,
-  pageSize: number
+  page: number
 ): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
@@ -244,12 +243,10 @@ function search(
     adjustedText = text.replace(paramsRegExp, '');
   }
 
-  return extension
-    .getSearch(adjustedText, params, pageOffset, pageSize)
-    .catch((err: Error) => {
-      log.error(err);
-      return { seriesList: [], total: 0, hasMore: false, nextOffset: 0 };
-    });
+  return extension.getSearch(adjustedText, params, page).catch((err: Error) => {
+    log.error(err);
+    return { seriesList: [], hasMore: false };
+  });
 }
 
 /**
@@ -260,8 +257,7 @@ function search(
  */
 function directory(
   extensionId: string,
-  pageOffset: number,
-  pageSize: number
+  page: number
 ): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
@@ -270,9 +266,9 @@ function directory(
     })`
   );
 
-  return extension.getDirectory(pageOffset, pageSize).catch((err: Error) => {
+  return extension.getDirectory(page).catch((err: Error) => {
     log.error(err);
-    return { seriesList: [], total: 0, hasMore: false, nextOffset: 0 };
+    return { seriesList: [], hasMore: false };
   });
 }
 
@@ -478,20 +474,14 @@ export const createExtensionIpcHandlers = (
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.SEARCH,
-    (
-      _event,
-      extensionId: string,
-      text: string,
-      pageOffset: number,
-      pageSize: number
-    ) => {
-      return search(extensionId, text, pageOffset, pageSize);
+    (_event, extensionId: string, text: string, page: number) => {
+      return search(extensionId, text, page);
     }
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.DIRECTORY,
-    (_event, extensionId: string, pageOffset: number, pageSize: number) => {
-      return directory(extensionId, pageOffset, pageSize);
+    (_event, extensionId: string, page: number) => {
+      return directory(extensionId, page);
     }
   );
   ipcMain.handle(

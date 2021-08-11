@@ -78,9 +78,9 @@ const Search: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
   const [searchParams, setSearchParams] = useState<SearchParams>({});
-  const [totalResults, setTotalResults] = useState(0);
-  const [hasMore, setHasMore] = useState(false);
   const [curViewingPage, setCurViewingPage] = useState(1);
+  const [nextSourcePage, setNextSourcePage] = useState(1);
+  const [sourceHasMore, setSourceHasMore] = useState(false);
 
   const getSearchExtensionMetadata = () => {
     return extensionList.find(
@@ -125,11 +125,11 @@ const Search: React.FC<Props> = (props: Props) => {
 
   const handleSearch = async (
     params: SearchParams,
-    pageOffset = 0,
-    changingPage = false
+    page = 1,
+    loadingMore = false
   ) => {
     setLoading(true);
-    if (!changingPage) {
+    if (!loadingMore) {
       props.setSearchResults([]);
       setCurViewingPage(1);
     }
@@ -139,32 +139,25 @@ const Search: React.FC<Props> = (props: Props) => {
         ? ipcRenderer.invoke(
             ipcChannels.EXTENSION.DIRECTORY,
             props.searchExtension,
-            pageOffset,
-            RESULTS_PAGE_SIZE
+            page
           )
         : ipcRenderer.invoke(
             ipcChannels.EXTENSION.SEARCH,
             props.searchExtension,
             params.text,
-            pageOffset,
-            RESULTS_PAGE_SIZE
+            page
           );
 
     await respPromise
       .then((resp: SeriesListResponse) => {
-        const adjustedSearchResults = changingPage
-          ? [...props.searchResults]
-          : [];
-
-        // eslint-disable-next-line promise/always-return
-        for (let i = 0; i < resp.seriesList.length; i += 1) {
-          adjustedSearchResults[RESULTS_PAGE_SIZE * pageOffset + i] =
-            resp.seriesList[i];
-        }
-
-        props.setSearchResults(adjustedSearchResults);
-        setTotalResults(resp.total);
-        setHasMore(resp.hasMore);
+        props.setSearchResults(
+          // eslint-disable-next-line promise/always-return
+          loadingMore
+            ? props.searchResults.concat(resp.seriesList)
+            : resp.seriesList
+        );
+        setSourceHasMore(resp.hasMore);
+        setNextSourcePage(page + 1);
       })
       .finally(() => setLoading(false))
       .catch((e) => log.error(e));
@@ -278,6 +271,7 @@ const Search: React.FC<Props> = (props: Props) => {
       <Menu
         onClick={(e: any) => {
           props.setSearchResults([]);
+          setSearchParams({});
           props.setSearchExtension(e.item.props['data-value']);
         }}
       >
@@ -291,14 +285,13 @@ const Search: React.FC<Props> = (props: Props) => {
   };
 
   const renderSeriesGrid = () => {
-    const startIndex = (curViewingPage - 1) * RESULTS_PAGE_SIZE;
     return (
       <div className={styles.seriesGrid}>
         <SeriesGrid
           columns={4}
           seriesList={props.searchResults.slice(
-            startIndex,
-            startIndex + RESULTS_PAGE_SIZE
+            0,
+            curViewingPage * RESULTS_PAGE_SIZE
           )}
           sorted={false}
           filter=""
@@ -332,8 +325,8 @@ const Search: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     props.setSearchResults([]);
-    setTotalResults(0);
-    setHasMore(false);
+    setSourceHasMore(false);
+    setNextSourcePage(1);
     setCurViewingPage(1);
     setSearchParams({});
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -357,99 +350,86 @@ const Search: React.FC<Props> = (props: Props) => {
         toggleVisible={() => props.toggleShowingAddModal(false)}
         importSeries={props.importSeries}
       />
-      <div className={styles.container}>
-        <div>
-          <div className={styles.searchBar}>
-            <Dropdown
-              className={styles.extensionDropdown}
-              overlay={renderExtensionMenu()}
-            >
-              <Button>
-                Extension: {getSearchExtensionMetadata()?.name} <DownOutlined />
-              </Button>
-            </Dropdown>
-            {props.searchExtension !== FS_METADATA.id ? (
-              <Input
-                className={styles.searchField}
-                placeholder="Search for a series..."
-                allowClear
-                value={searchParams.text}
-                onChange={(e) =>
-                  setSearchParams({ ...searchParams, text: e.target.value })
-                }
-                onPressEnter={() => handleSearch(searchParams)}
-              />
-            ) : (
-              <div className={styles.searchField} />
-            )}
-          </div>
-          {renderAlert()}
-          {props.searchExtension === FS_METADATA.id ? (
-            renderFilesystemInputs()
+      <div>
+        <div className={styles.searchBar}>
+          <Dropdown
+            className={styles.extensionDropdown}
+            overlay={renderExtensionMenu()}
+          >
+            <Button>
+              Extension: {getSearchExtensionMetadata()?.name} <DownOutlined />
+            </Button>
+          </Dropdown>
+          {props.searchExtension !== FS_METADATA.id ? (
+            <Input
+              className={styles.searchField}
+              placeholder="Search for a series..."
+              allowClear
+              value={searchParams.text}
+              onChange={(e) =>
+                setSearchParams({ ...searchParams, text: e.target.value })
+              }
+              onPressEnter={() => handleSearch(searchParams)}
+            />
           ) : (
-            <></>
+            <div className={styles.searchField} />
           )}
         </div>
-
+        {renderAlert()}
         {props.searchExtension === FS_METADATA.id ? (
-          <></>
+          renderFilesystemInputs()
         ) : (
-          <>
-            {props.searchResults.length === 0 ? (
-              <>
-                {loading ? (
-                  <div className={styles.loadingText}>
-                    <Spin />
-                    <Paragraph>Searching from extension...</Paragraph>
-                  </div>
-                ) : (
-                  <Paragraph className={styles.loadingText}>
-                    Sorry, no series were found with the current settings.
-                  </Paragraph>
-                )}
-                <div />
-              </>
-            ) : (
-              <>
-                {renderSeriesGrid()}
-                <div className={styles.paginationContainer}>
-                  <Pagination
-                    total={totalResults}
-                    pageSize={RESULTS_PAGE_SIZE}
-                    showTotal={(total) => (
-                      <Paragraph>{total} results</Paragraph>
-                    )}
-                    showSizeChanger={false}
-                    current={curViewingPage}
-                    onChange={(page) => {
-                      if (
-                        hasMore ||
-                        page !== Math.ceil(totalResults / RESULTS_PAGE_SIZE)
-                      ) {
-                        const startIndex = RESULTS_PAGE_SIZE * (page - 1);
-                        const indexArr = Array.from(
-                          {
-                            length: RESULTS_PAGE_SIZE,
-                          },
-                          (_v, k) => k + startIndex
-                        );
-                        if (
-                          indexArr.some(
-                            (idx) => props.searchResults[idx] === undefined
-                          )
-                        ) {
-                          handleSearch(searchParams, page - 1, true);
-                        }
-                      }
-                      setCurViewingPage(page);
-                    }}
-                  />
-                </div>
-              </>
-            )}
-          </>
+          <></>
         )}
       </div>
+
+      {props.searchExtension === FS_METADATA.id ? (
+        <></>
+      ) : (
+        <>
+          {props.searchResults.length === 0 ? (
+            <div className={styles.loadingContainer}>
+              {loading ? (
+                <>
+                  <Spin />
+                  <Paragraph>Searching from extension...</Paragraph>
+                </>
+              ) : (
+                <Paragraph>
+                  Sorry, no series were found with the current settings.
+                </Paragraph>
+              )}
+            </div>
+          ) : (
+            <>
+              {renderSeriesGrid()}
+              <div className={styles.footerContainer}>
+                {sourceHasMore ||
+                props.searchResults.length >
+                  curViewingPage * RESULTS_PAGE_SIZE ? (
+                  <Button
+                    className={styles.loadMoreButton}
+                    onClick={() => {
+                      if (
+                        sourceHasMore &&
+                        props.searchResults.length <
+                          (curViewingPage + 1) * RESULTS_PAGE_SIZE
+                      ) {
+                        handleSearch(searchParams, nextSourcePage, true);
+                      }
+                      setCurViewingPage(curViewingPage + 1);
+                    }}
+                  >
+                    Load More
+                  </Button>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </>
+          )}
+        </>
+      )}
     </>
   );
 };
