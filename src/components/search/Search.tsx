@@ -271,6 +271,7 @@ const Search: React.FC<Props> = (props: Props) => {
       <Menu
         onClick={(e: any) => {
           props.setSearchResults([]);
+          setNextSourcePage(1);
           setSearchParams({});
           props.setSearchExtension(e.item.props['data-value']);
         }}
