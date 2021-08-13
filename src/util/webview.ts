@@ -1,7 +1,11 @@
 import { BrowserView, BrowserWindow } from 'electron';
+import { WebviewResponse } from 'houdoku-extension-lib';
 
 // eslint-disable-next-line import/prefer-default-export
-export const loadInWebView = (window: BrowserWindow | null, url: string) => {
+export const loadInWebView = (
+  window: BrowserWindow | null,
+  url: string
+): Promise<WebviewResponse> => {
   if (window !== null) {
     const spoofView = new BrowserView({
       webPreferences: {
@@ -9,10 +13,10 @@ export const loadInWebView = (window: BrowserWindow | null, url: string) => {
       },
     });
     window.setBrowserView(spoofView);
-    spoofView.setBounds({ x: 0, y: 0, width: 0, height: 0 });
+    spoofView.setBounds({ x: 0, y: 200, width: 500, height: 500 });
 
     spoofView.webContents.loadURL(url);
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<WebviewResponse>((resolve, reject) => {
       if (spoofView === null)
         reject(new Error('Failed to setup new BrowserView to load URL'));
       else {
@@ -30,11 +34,14 @@ export const loadInWebView = (window: BrowserWindow | null, url: string) => {
           spoofView?.webContents
             .executeJavaScript('document.body.innerHTML')
             .then((value) => {
+              const pageUrl = spoofView.webContents.getURL();
+              const pageTitle = spoofView.webContents.getTitle();
+
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               (spoofView as any).webContents.destroy();
               // eslint-disable-next-line promise/always-return
               window?.removeBrowserView(spoofView);
-              resolve(value);
+              resolve({ text: value, url: pageUrl, title: pageTitle });
             });
         };
 
@@ -44,7 +51,7 @@ export const loadInWebView = (window: BrowserWindow | null, url: string) => {
     });
   }
 
-  return new Promise<string>((resolve, reject) =>
+  return new Promise<WebviewResponse>((resolve, reject) =>
     reject(new Error('Tried to load URL in a BrowserView, but window was null'))
   );
 };

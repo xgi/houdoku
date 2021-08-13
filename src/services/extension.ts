@@ -8,6 +8,7 @@ import {
   SettingType,
   ExtensionMetadata,
   SeriesListResponse,
+  WebviewResponse,
 } from 'houdoku-extension-lib';
 import aki, {
   RegistrySearchPackage,
@@ -343,7 +344,7 @@ function setSettings(
 export const createExtensionIpcHandlers = (
   ipcMain: IpcMain,
   pluginsDir: string,
-  webviewFn: (url: string) => Promise<string>
+  webviewFn: (url: string) => Promise<WebviewResponse>
 ) => {
   log.debug('Creating extension IPC handlers in main...');
 
