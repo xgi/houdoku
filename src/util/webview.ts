@@ -13,7 +13,7 @@ export const loadInWebView = (
       },
     });
     window.setBrowserView(spoofView);
-    spoofView.setBounds({ x: 0, y: 200, width: 500, height: 500 });
+    spoofView.setBounds({ x: 0, y: 0, width: 0, height: 0 });
 
     spoofView.webContents.loadURL(url);
     return new Promise<WebviewResponse>((resolve, reject) => {

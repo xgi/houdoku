@@ -161,7 +161,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     chapterNumbers.forEach((chapterNumber: number) => {
       const curChapters: Chapter[] = chapters.filter(
-        (c: Chapter) => c.chapterNumber === chapterNumber.toString()
+        (c: Chapter) => parseFloat(c.chapterNumber) === chapterNumber
       );
 
       const bestMatch: Chapter | null = selectMostSimilarChapter(
