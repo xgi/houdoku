@@ -95,6 +95,6 @@ export enum PageView {
   Double_OddStart,
 }
 
-export enum AppLoadSteps {
+export enum AppLoadStep {
   DatabaseInit = 'DatabaseInit',
 }

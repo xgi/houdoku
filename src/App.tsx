@@ -12,7 +12,7 @@ import ReaderPage from './components/reader/ReaderPage';
 import * as database from './util/db';
 import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
-import { AppLoadSteps, TrackerMetadata } from './models/types';
+import { AppLoadStep, TrackerMetadata } from './models/types';
 import { setStatusText } from './features/statusbar/actions';
 import { loadSeriesList } from './features/library/utils';
 import { linkDownloaderClientFunctions } from './features/downloader/reducers';
@@ -120,7 +120,6 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     log.debug('Performing database init and loading series list');
-    setLoading(true);
     database
       .init()
       // eslint-disable-next-line promise/always-return
@@ -135,7 +134,7 @@ export default function App() {
   });
 
   if (database.database === undefined) {
-    return <AppLoading step={AppLoadSteps.DatabaseInit} />;
+    return <AppLoading step={AppLoadStep.DatabaseInit} />;
   }
 
   return (

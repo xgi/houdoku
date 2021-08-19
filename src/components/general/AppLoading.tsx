@@ -2,11 +2,11 @@ import React from 'react';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { Spin } from 'antd';
 import styles from './AppLoading.css';
-import { AppLoadSteps } from '../../models/types';
+import { AppLoadStep } from '../../models/types';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {
-  step: AppLoadSteps;
+  step: AppLoadStep | null;
 };
 
 const AppLoading: React.FC<Props> = (props: Props) => {
@@ -14,7 +14,7 @@ const AppLoading: React.FC<Props> = (props: Props) => {
     <div className={styles.container}>
       <Spin />
       <Paragraph className={styles.paragraph}>
-        {props.step === AppLoadSteps.DatabaseInit
+        {props.step === AppLoadStep.DatabaseInit
           ? 'Initializing database...'
           : ''}
       </Paragraph>
