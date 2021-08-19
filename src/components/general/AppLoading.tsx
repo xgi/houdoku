@@ -1,8 +1,10 @@
 import React from 'react';
 import Paragraph from 'antd/lib/typography/Paragraph';
-import { Spin } from 'antd';
+import { Image } from 'antd';
+import Title from 'antd/lib/typography/Title';
 import styles from './AppLoading.css';
 import { AppLoadStep } from '../../models/types';
+import logo from '../../img/logo.svg';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {
@@ -12,15 +14,14 @@ type Props = {
 const AppLoading: React.FC<Props> = (props: Props) => {
   return (
     <div className={styles.container}>
-      <Spin />
+      <Image className={styles.logo} src={logo} width={96} height={96} />
+      <Title level={5} className={styles.title}>
+        {props.step === AppLoadStep.DatabaseInit ? 'initializing database' : ''}
+      </Title>
       <Paragraph className={styles.paragraph}>
-        {props.step === AppLoadStep.DatabaseInit
-          ? 'Initializing database...'
-          : ''}
-      </Paragraph>
-      <Paragraph className={styles.paragraph}>
-        If this message does not disappear automatically, please restart the
-        client.
+        If this message does not disappear automatically,
+        <br />
+        please restart the client.
       </Paragraph>
     </div>
   );
