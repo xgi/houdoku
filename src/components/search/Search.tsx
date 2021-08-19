@@ -362,16 +362,19 @@ const Search: React.FC<Props> = (props: Props) => {
             </Button>
           </Dropdown>
           {props.searchExtension !== FS_METADATA.id ? (
-            <Input
-              className={styles.searchField}
-              placeholder="Search for a series..."
-              allowClear
-              value={searchParams.text}
-              onChange={(e) =>
-                setSearchParams({ ...searchParams, text: e.target.value })
-              }
-              onPressEnter={() => handleSearch(searchParams)}
-            />
+            <>
+              <Input
+                className={styles.searchField}
+                placeholder="Search for a series..."
+                allowClear
+                value={searchParams.text}
+                onChange={(e) =>
+                  setSearchParams({ ...searchParams, text: e.target.value })
+                }
+                onPressEnter={() => handleSearch(searchParams)}
+              />
+              <Button onClick={() => handleSearch(searchParams)}>Search</Button>
+            </>
           ) : (
             <div className={styles.searchField} />
           )}
