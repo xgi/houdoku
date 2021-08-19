@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import log from 'electron-log';
-import { dialog, ipcRenderer } from 'electron';
+import { ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { configuredStore } from './store';
 import persistantStore from './util/persistantStore';
@@ -12,20 +12,13 @@ import ReaderPage from './components/reader/ReaderPage';
 import * as database from './util/db';
 import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
-import { TrackerMetadata } from './models/types';
+import { AppLoadSteps, TrackerMetadata } from './models/types';
 import { setStatusText } from './features/statusbar/actions';
 import { loadSeriesList } from './features/library/utils';
 import { linkDownloaderClientFunctions } from './features/downloader/reducers';
+import AppLoading from './components/general/AppLoading';
 
 const store = configuredStore();
-
-log.debug('Performing database init and loading series list');
-database
-  .init()
-  .then(() => {
-    return loadSeriesList(store.dispatch);
-  })
-  .catch((error) => log.error(error));
 
 const loadStoredExtensionSettings = () => {
   log.info('Loading stored extension settings...');
@@ -122,6 +115,29 @@ if (store.getState().settings.autoCheckForExtensionUpdates) {
 linkDownloaderClientFunctions(store);
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    log.debug('Performing database init and loading series list');
+    setLoading(true);
+    database
+      .init()
+      // eslint-disable-next-line promise/always-return
+      .then(() => {
+        setLoading(false);
+      })
+      // eslint-disable-next-line promise/always-return
+      .then(() => {
+        loadSeriesList(store.dispatch);
+      })
+      .catch((error) => log.error(error));
+  });
+
+  if (database.database === undefined) {
+    return <AppLoading step={AppLoadSteps.DatabaseInit} />;
+  }
+
   return (
     <Provider store={store}>
       <Router>

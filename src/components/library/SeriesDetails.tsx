@@ -163,7 +163,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     loadContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   if (props.series === undefined) {
     return (

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
-import log from 'electron-log';
 import {
   BookOutlined,
   PlusSquareOutlined,
@@ -27,7 +26,6 @@ import {
   loadSeriesList,
   reloadSeriesList,
 } from '../../features/library/utils';
-import * as database from '../../util/db';
 import Settings from '../settings/Settings';
 import About from '../about/About';
 import Library from '../library/Library';
@@ -69,17 +67,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
-  useEffect(() => {
-    database
-      .init()
-      // eslint-disable-next-line promise/always-return
-      .then(() => {
-        props.loadSeriesList();
-      })
-      .catch((error) => log.error(error));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   useEffect(() => {
     if (
       props.refreshOnStart &&
