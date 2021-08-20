@@ -44,7 +44,7 @@ const Extensions: React.FC<Props> = (props: Props) => {
 
     setSearchResults(undefined);
     aki
-      .search({ text: 'extension', scope: 'houdoku' })
+      .search('extension', 'houdoku', 100)
       .then((results: RegistrySearchResults) => {
         log.debug(`Extension registry search found ${results.total} results`);
         return setSearchResults(results);
