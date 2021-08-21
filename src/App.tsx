@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import log from 'electron-log';
@@ -9,14 +9,13 @@ import persistantStore from './util/persistantStore';
 import routes from './constants/routes.json';
 import DashboardPage from './components/general/DashboardPage';
 import ReaderPage from './components/reader/ReaderPage';
-import * as database from './util/db';
 import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
-import { AppLoadStep, TrackerMetadata } from './models/types';
+import { TrackerMetadata } from './models/types';
 import { setStatusText } from './features/statusbar/actions';
 import { loadSeriesList } from './features/library/utils';
 import { linkDownloaderClientFunctions } from './features/downloader/reducers';
-import AppLoading from './components/general/AppLoading';
+import { performMigration } from './util/migrateDatabase';
 
 const store = configuredStore();
 
@@ -115,27 +114,15 @@ if (store.getState().settings.autoCheckForExtensionUpdates) {
 linkDownloaderClientFunctions(store);
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     log.debug('Performing database init and loading series list');
-    database
-      .init()
-      // eslint-disable-next-line promise/always-return
-      .then(() => {
-        setLoading(false);
-      })
-      // eslint-disable-next-line promise/always-return
-      .then(() => {
-        loadSeriesList(store.dispatch);
-      })
-      .catch((error) => log.error(error));
+
+    performMigration();
+    loadSeriesList(store.dispatch);
   });
 
-  if (database.database === undefined) {
-    return <AppLoading step={AppLoadStep.DatabaseInit} />;
-  }
+  // return <AppLoading step={AppLoadStep.DatabaseInit} />;
 
   return (
     <Provider store={store}>
