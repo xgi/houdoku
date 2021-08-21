@@ -126,7 +126,9 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   const handleRead = () => {
     props.close();
     if (props.chapter !== undefined) {
-      history.push(`${routes.READER}/${props.chapter.id}`);
+      history.push(
+        `${routes.READER}/${props.chapter.seriesId}/${props.chapter.id}`
+      );
     }
   };
 

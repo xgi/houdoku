@@ -5,9 +5,7 @@ import storeKeys from '../constants/storeKeys.json';
 
 const fetchSeriesList = (): Series[] => {
   const val = persistantStore.read(`${storeKeys.LIBRARY.SERIES_LIST}`);
-  const x = val === null ? [] : JSON.parse(val);
-  console.log(x);
-  return x;
+  return val === null ? [] : JSON.parse(val);
 };
 
 const fetchSeries = (seriesId: string): Series | null => {

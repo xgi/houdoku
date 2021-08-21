@@ -142,7 +142,7 @@ export default function App() {
       <Router>
         <Switch>
           <Route
-            path={`${routes.READER}/:chapter_id`}
+            path={`${routes.READER}/:series_id/:chapter_id`}
             exact
             component={ReaderPage}
           />
