@@ -185,9 +185,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         if (nextChapter === undefined) return <></>;
 
         return (
-          <Link
-            to={`${routes.READER}/${nextChapter.seriesId}/${nextChapter.id}`}
-          >
+          <Link to={`${routes.READER}/${props.series.id}/${nextChapter.id}`}>
             <Button type="primary">Continue</Button>
           </Link>
         );
@@ -197,7 +195,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       align: 'center',
       render: function render(_text: string, record: Chapter) {
         return (
-          <Link to={`${routes.READER}/${record.seriesId}/${record.id}`}>
+          <Link to={`${routes.READER}/${props.series.id}/${record.id}`}>
             <Button>Read</Button>
           </Link>
         );
