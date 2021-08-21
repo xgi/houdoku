@@ -150,7 +150,7 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
                 className={styles.coverContainer}
                 onClick={() => props.clickFunc(series, inLibrary)}
                 style={{
-                  backgroundImage: `linear-gradient(0deg, #000000cc, #00000000 40%, #00000000), url(${coverSource})`,
+                  backgroundImage: `linear-gradient(0deg, #000000cc, #00000000 40%, #00000000), url("${coverSource}")`,
                   height: `calc(105vw / ${props.columns})`,
                 }}
               >
