@@ -17,6 +17,17 @@ import { setStatusText } from '../statusbar/actions';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
+import { getNumberUnreadChapters } from '../../util/comparison';
+
+const updateSeriesNumberUnread = (series: Series) => {
+  if (series.id !== undefined) {
+    const chapters: Chapter[] = library.fetchChapters(series.id);
+    library.upsertSeries({
+      ...series,
+      numberUnread: getNumberUnreadChapters(chapters),
+    });
+  }
+};
 
 export function loadSeriesList(dispatch: any) {
   const seriesList: Series[] = library.fetchSeriesList();
@@ -65,7 +76,7 @@ export async function importSeries(dispatch: any, series: Series) {
 
   const addedSeries = library.upsertSeries(series);
   library.upsertChapters(chapters, addedSeries);
-  // await db.updateSeriesNumberUnread(addedSeries);
+  updateSeriesNumberUnread(addedSeries);
   await loadSeriesList(dispatch);
   downloadCover(addedSeries);
 
@@ -86,7 +97,7 @@ export function toggleChapterRead(
 
   if (series.id !== undefined) {
     library.upsertChapters([newChapter], series);
-    // db.updateSeriesNumberUnread(series))
+    updateSeriesNumberUnread(series);
     if (series.id !== undefined) {
       loadChapterList(dispatch, series.id);
       loadSeries(dispatch, series.id);
@@ -162,7 +173,8 @@ async function reloadSeries(series: Series): Promise<Error | void> {
   if (orphanedChapterIds.length > 0 && newSeries.id !== undefined) {
     library.removeChapters(orphanedChapterIds, newSeries.id);
   }
-  // await db.updateSeriesNumberUnread(newSeries);
+
+  updateSeriesNumberUnread(newSeries);
 
   if (newSeries.remoteCoverUrl !== series.remoteCoverUrl) {
     log.debug(`Updating cover for series ${newSeries.id}`);
