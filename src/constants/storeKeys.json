@@ -1,7 +1,6 @@
 {
   "LIBRARY": {
     "SERIES_LIST": "library-series-list",
-    "SERIES_PREFIX": "library-series-",
     "CHAPTER_LIST_PREFIX": "library-chapters-"
   },
   "EXTENSION_SETTINGS_PREFIX": "extension-settings-",

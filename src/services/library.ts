@@ -5,14 +5,16 @@ import storeKeys from '../constants/storeKeys.json';
 
 const fetchSeriesList = (): Series[] => {
   const val = persistantStore.read(`${storeKeys.LIBRARY.SERIES_LIST}`);
-  return val === null ? [] : JSON.parse(val);
+  const x = val === null ? [] : JSON.parse(val);
+  console.log(x);
+  return x;
 };
 
 const fetchSeries = (seriesId: string): Series | null => {
-  const val = persistantStore.read(
-    `${storeKeys.LIBRARY.SERIES_PREFIX}${seriesId}`
+  const series: Series | undefined = fetchSeriesList().find(
+    (s) => s.id === seriesId
   );
-  return val === null ? null : JSON.parse(val);
+  return series || null;
 };
 
 const fetchChapters = (seriesId: string): Chapter[] => {
@@ -33,9 +35,13 @@ const upsertSeries = (series: Series): Series => {
   const seriesId = series.id ? series.id : uuidv4();
   const newSeries: Series = { ...series, id: seriesId };
 
+  const existingList = fetchSeriesList().filter(
+    (s: Series) => s.id !== newSeries.id
+  );
+
   persistantStore.write(
-    `${storeKeys.LIBRARY.SERIES_PREFIX}${seriesId}`,
-    JSON.stringify(newSeries)
+    `${storeKeys.LIBRARY.SERIES_LIST}`,
+    JSON.stringify([...existingList, newSeries])
   );
   return newSeries;
 };
@@ -64,13 +70,39 @@ const upsertChapters = (chapters: Chapter[], series: Series): void => {
   );
 };
 
-const removeSeries = (series: Series, preserveChapters = false): void => {
-  if (series.id === undefined) return;
+const removeSeries = (seriesId: string, preserveChapters = false): void => {
+  persistantStore.write(
+    `${storeKeys.LIBRARY.SERIES_LIST}`,
+    JSON.stringify(fetchSeriesList().filter((s: Series) => s.id !== seriesId))
+  );
 
-  persistantStore.remove(`${storeKeys.LIBRARY.SERIES_PREFIX}${series.id}`);
   if (!preserveChapters) {
     persistantStore.remove(
-      `${storeKeys.LIBRARY.CHAPTER_LIST_PREFIX}${series.id}`
+      `${storeKeys.LIBRARY.CHAPTER_LIST_PREFIX}${seriesId}`
     );
   }
+};
+
+const removeChapters = (chapterIds: string[], seriesId: string): void => {
+  const chapters = fetchChapters(seriesId);
+  const filteredChapters: Chapter[] = chapters.filter(
+    (chapter: Chapter) =>
+      chapter.id !== undefined && !chapterIds.includes(chapter.id)
+  );
+
+  persistantStore.write(
+    `${storeKeys.LIBRARY.CHAPTER_LIST_PREFIX}${seriesId}`,
+    JSON.stringify(Object.values(filteredChapters))
+  );
+};
+
+export default {
+  fetchSeriesList,
+  fetchSeries,
+  fetchChapters,
+  fetchChapter,
+  upsertSeries,
+  upsertChapters,
+  removeSeries,
+  removeChapters,
 };

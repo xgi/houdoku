@@ -91,10 +91,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
       [AniListTrackerMetadata.id]: key,
     };
 
-    updateSeriesTrackerKeys(props.series, newTrackerKeys, () => {
-      setTrackerKey(key);
-      props.loadSeriesContent();
-    });
+    updateSeriesTrackerKeys(props.series, newTrackerKeys);
+    setTrackerKey(key);
+    props.loadSeriesContent();
   };
 
   const renderTrackerSeriesList = () => {

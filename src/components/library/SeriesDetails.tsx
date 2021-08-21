@@ -36,7 +36,6 @@ import ChapterTable from './ChapterTable';
 import styles from './SeriesDetails.css';
 import blankCover from '../../img/blank_cover.png';
 import routes from '../../constants/routes.json';
-import db from '../../services/db';
 import { getBannerImageUrl } from '../../services/mediasource';
 import {
   setChapterList,
@@ -51,7 +50,6 @@ import {
   removeSeries,
   toggleChapterRead,
   updateSeriesUserTags,
-  updateSeriesTrackerKeys,
 } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
@@ -61,6 +59,7 @@ import { FS_METADATA } from '../../services/extensions/filesystem';
 import EditSeriesModal from './EditSeriesModal';
 import { deleteThumbnail } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
+import library from '../../services/library';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -88,25 +87,17 @@ const mapDispatch = (dispatch: any) => ({
   setChapterList: (chapterList: Chapter[]) =>
     dispatch(setChapterList(chapterList)),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
-  loadSeries: (id: number) => loadSeries(dispatch, id),
+  loadSeries: (seriesId: string) => loadSeries(dispatch, seriesId),
   loadSeriesList: () => loadSeriesList(dispatch),
-  loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
+  loadChapterList: (seriesId: string) => loadChapterList(dispatch, seriesId),
   reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
     reloadSeriesList(dispatch, seriesList, callback),
   removeSeries: (series: Series, deleteDownloadedChapters: boolean) =>
     removeSeries(dispatch, series, deleteDownloadedChapters),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
-  updateSeriesUserTags: (
-    series: Series,
-    userTags: string[],
-    callback: () => void
-  ) => updateSeriesUserTags(series, userTags, callback),
-  updateSeriesTrackerKeys: (
-    series: Series,
-    trackerKeys: { [trackerId: string]: string } | undefined,
-    callback: () => void
-  ) => updateSeriesTrackerKeys(series, trackerKeys, callback),
+  updateSeriesUserTags: (series: Series, userTags: string[]) =>
+    updateSeriesUserTags(series, userTags),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
     dispatch(setSeriesBannerUrl(seriesBannerUrl)),
 });
@@ -134,30 +125,24 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
 
-    db.fetchSeries(parseInt(id, 10))
-      .then((response: any) => {
-        const series: Series = response[0];
-        props.setSeries(series);
-        return series;
-      })
-      .then(async (series: Series) => {
-        setExtensionMetadata(
-          await ipcRenderer.invoke(
-            ipcChannels.EXTENSION_MANAGER.GET,
-            series.extensionId
-          )
-        );
-        return series;
-      })
-      .then((series: Series) => {
-        return getBannerImageUrl(series);
-      })
+    const series: Series | null = library.fetchSeries(id);
+    if (series === null) return;
+
+    props.setSeries(series);
+    props.loadChapterList(id);
+
+    setExtensionMetadata(
+      await ipcRenderer.invoke(
+        ipcChannels.EXTENSION_MANAGER.GET,
+        series.extensionId
+      )
+    );
+
+    getBannerImageUrl(series)
       .then((seriesBannerUrl: string | null) =>
         props.setSeriesBannerUrl(seriesBannerUrl)
       )
       .catch((err: Error) => log.error(err));
-
-    props.loadChapterList(parseInt(id, 10));
   };
 
   useEffect(() => {
@@ -173,7 +158,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     );
   }
 
-  const getThumbnailPath = (seriesId?: number) => {
+  const getThumbnailPath = (seriesId?: string) => {
     const fileExtensions = ['jpg', 'png', 'jpeg'];
     for (let i = 0; i < fileExtensions.length; i += 1) {
       const thumbnailPath = path.join(
@@ -282,11 +267,10 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             style={{ width: '100%' }}
             placeholder="Enter tags..."
             value={series.userTags}
-            onChange={(userTags: string[]) =>
-              props.updateSeriesUserTags(series, userTags, () =>
-                props.setSeries({ ...series, userTags })
-              )
-            }
+            onChange={(userTags: string[]) => {
+              props.updateSeriesUserTags(series, userTags);
+              props.setSeries({ ...series, userTags });
+            }}
           >
             {props.userTags.map((userTag: string) => (
               <Option key={userTag} value={userTag}>
