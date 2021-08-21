@@ -131,8 +131,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const location = useLocation();
   const forceUpdate = useForceUpdate();
 
-  console.log(`current reader ids: series=${series_id} chapter=${chapter_id}`);
-
   /**
    * Populate the relevantChapterList prop.
    * This prop is used to identify the chapters shown in the selector dropdown (and which can be
@@ -230,10 +228,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     log.debug(`Reader is loading chapter data for chapter ${chapterId}`);
 
     const chapter: Chapter | null = library.fetchChapter(seriesId, chapterId);
-    if (chapter === null || chapter.seriesId === undefined) return;
-
     const series: Series | null = library.fetchSeries(seriesId);
-    if (series === null) return;
+    if (chapter === null || series === null) return;
 
     if (props.relevantChapterList.length === 0) {
       createRelevantChapterList(series, chapter);

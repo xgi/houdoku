@@ -151,7 +151,7 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
           <CloseOutlined />
         </button>
         <Title className={styles.seriesTitle} level={4}>
-          {props.series === undefined ? 'loading...' : props.series.title}
+          {props.series === undefined ? 'Loading title...' : props.series.title}
         </Title>
       </div>
       <div className={styles.chapterHeader}>
