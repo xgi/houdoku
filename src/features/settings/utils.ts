@@ -40,123 +40,150 @@ export const DEFAULT_INTEGRATION_SETTINGS = {
   [IntegrationSetting.DiscordPresenceEnabled]: false,
 };
 
+const getStoreValues = (
+  storePrefix: string,
+  settingEnum:
+    | typeof GeneralSetting
+    | typeof ReaderSetting
+    | typeof TrackerSetting
+    | typeof IntegrationSetting
+): {
+  [key in
+    | GeneralSetting
+    | ReaderSetting
+    | TrackerSetting
+    | IntegrationSetting]?: string | null;
+} => {
+  const values: {
+    [key in
+      | GeneralSetting
+      | ReaderSetting
+      | TrackerSetting
+      | IntegrationSetting]?: string | null;
+  } = {};
+  Object.values(settingEnum).forEach(
+    (
+      setting:
+        | GeneralSetting
+        | ReaderSetting
+        | TrackerSetting
+        | IntegrationSetting
+    ) => {
+      values[setting] = persistantStore.read(`${storePrefix}${setting}`);
+    }
+  );
+
+  return values;
+};
+
 export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   const settings: { [key in GeneralSetting]?: any } = {};
-
-  const chapterListLanguages: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.ChapterLanguages}`
-  );
-  const refreshOnStart: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.RefreshOnStart}`
-  );
-  const autoCheckForUpdates: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.AutoCheckForUpdates}`
-  );
-  const autoCheckForExtensionUpdates: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.AutoCheckForExtensionUpdates}`
-  );
-  const libraryColumns: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.LibraryColumns}`
-  );
-  const libraryFilterStatus: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.LibraryFilterStatus}`
-  );
-  const libraryFilterProgress: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.LibraryFilterProgress}`
-  );
-  const libraryFilterUserTags: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.GENERAL_PREFIX}${GeneralSetting.LibraryFilterUserTags}`
+  const storeValues = getStoreValues(
+    storeKeys.SETTINGS.GENERAL_PREFIX,
+    GeneralSetting
   );
 
-  if (chapterListLanguages !== null) {
-    settings[GeneralSetting.ChapterLanguages] = chapterListLanguages.split(
-      ','
-    ) as LanguageKey[];
+  if (storeValues[GeneralSetting.ChapterLanguages] !== null) {
+    settings[GeneralSetting.ChapterLanguages] = storeValues[
+      GeneralSetting.ChapterLanguages
+    ]?.split(',') as LanguageKey[];
   }
-  if (refreshOnStart !== null) {
-    settings[GeneralSetting.RefreshOnStart] = refreshOnStart === 'true';
+  if (storeValues[GeneralSetting.RefreshOnStart] !== null) {
+    settings[GeneralSetting.RefreshOnStart] =
+      storeValues[GeneralSetting.RefreshOnStart] === 'true';
   }
-  if (autoCheckForUpdates !== null) {
+  if (storeValues[GeneralSetting.AutoCheckForUpdates] !== null) {
     settings[GeneralSetting.AutoCheckForUpdates] =
-      autoCheckForUpdates === 'true';
+      storeValues[GeneralSetting.AutoCheckForUpdates] === 'true';
   }
-  if (autoCheckForExtensionUpdates !== null) {
+  if (storeValues[GeneralSetting.AutoCheckForExtensionUpdates] !== null) {
     settings[GeneralSetting.AutoCheckForExtensionUpdates] =
-      autoCheckForExtensionUpdates === 'true';
+      storeValues[GeneralSetting.AutoCheckForExtensionUpdates] === 'true';
   }
-  if (libraryColumns !== null) {
-    settings[GeneralSetting.LibraryColumns] = parseInt(libraryColumns, 10);
+  if (storeValues[GeneralSetting.LibraryColumns] !== null) {
+    settings[GeneralSetting.LibraryColumns] = parseInt(
+      storeValues[GeneralSetting.LibraryColumns] as string,
+      10
+    );
   }
-  if (libraryFilterStatus !== null && libraryFilterStatus !== 'null') {
-    settings[GeneralSetting.LibraryFilterStatus] =
-      libraryFilterStatus as SeriesStatus;
+  if (
+    storeValues[GeneralSetting.LibraryFilterStatus] !== null &&
+    storeValues[GeneralSetting.LibraryFilterStatus] !== 'null'
+  ) {
+    settings[GeneralSetting.LibraryFilterStatus] = storeValues[
+      GeneralSetting.LibraryFilterStatus
+    ] as SeriesStatus;
   }
-  if (libraryFilterProgress !== null) {
-    settings[GeneralSetting.LibraryFilterProgress] =
-      libraryFilterProgress as ProgressFilter;
+  if (storeValues[GeneralSetting.LibraryFilterProgress] !== null) {
+    settings[GeneralSetting.LibraryFilterProgress] = storeValues[
+      GeneralSetting.LibraryFilterProgress
+    ] as ProgressFilter;
   }
-  if (libraryFilterUserTags !== null) {
-    const tags = libraryFilterUserTags.split(',');
+  if (storeValues[GeneralSetting.LibraryFilterUserTags] !== null) {
+    const tags =
+      storeValues[GeneralSetting.LibraryFilterUserTags]?.split(',') || [];
     if (tags.every((tag: string) => tag !== '')) {
       settings[GeneralSetting.LibraryFilterUserTags] = tags;
     }
   }
 
-  log.debug(`Using general settings: ${settings}`);
+  log.debug(`Using general settings: ${JSON.stringify(settings)}`);
   return settings;
 }
 
 export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   const settings: { [key in ReaderSetting]?: any } = {};
-
-  const layoutDirection: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.LayoutDirection}`
-  );
-  const pageFit: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.PageFit}`
-  );
-  const pageView: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.PageView}`
-  );
-  const preloadAmount: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.PreloadAmount}`
-  );
-  const overlayPageNumber: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.READER_PREFIX}${ReaderSetting.OverlayPageNumber}`
+  const storeValues = getStoreValues(
+    storeKeys.SETTINGS.READER_PREFIX,
+    ReaderSetting
   );
 
-  if (layoutDirection !== null) {
-    settings[ReaderSetting.LayoutDirection] = parseInt(layoutDirection, 10);
+  if (storeValues[ReaderSetting.LayoutDirection] !== null) {
+    settings[ReaderSetting.LayoutDirection] = parseInt(
+      storeValues[ReaderSetting.LayoutDirection] as string,
+      10
+    );
   }
-  if (pageFit !== null) {
-    settings[ReaderSetting.PageFit] = parseInt(pageFit, 10);
+  if (storeValues[ReaderSetting.PageFit] !== null) {
+    settings[ReaderSetting.PageFit] = parseInt(
+      storeValues[ReaderSetting.PageFit] as string,
+      10
+    );
   }
-  if (pageView !== null) {
-    settings[ReaderSetting.PageView] = parseInt(pageView, 10);
+  if (storeValues[ReaderSetting.PageView] !== null) {
+    settings[ReaderSetting.PageView] = parseInt(
+      storeValues[ReaderSetting.PageView] as string,
+      10
+    );
   }
-  if (preloadAmount !== null) {
-    settings[ReaderSetting.PreloadAmount] = parseInt(preloadAmount, 10);
+  if (storeValues[ReaderSetting.PreloadAmount] !== null) {
+    settings[ReaderSetting.PreloadAmount] = parseInt(
+      storeValues[ReaderSetting.PreloadAmount] as string,
+      10
+    );
   }
-  if (overlayPageNumber !== null) {
-    settings[ReaderSetting.OverlayPageNumber] = overlayPageNumber === 'true';
+  if (storeValues[ReaderSetting.OverlayPageNumber] !== null) {
+    settings[ReaderSetting.OverlayPageNumber] =
+      storeValues[ReaderSetting.OverlayPageNumber] === 'true';
   }
 
-  log.debug(`Using reader settings: ${settings}`);
+  log.debug(`Using reader settings: ${JSON.stringify(settings)}`);
   return settings;
 }
 
 export function getStoredTrackerSettings(): { [key in TrackerSetting]?: any } {
   const settings: { [key in TrackerSetting]?: any } = {};
-
-  const trackerAutoUpdate: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.TRACKER_PREFIX}${TrackerSetting.TrackerAutoUpdate}`
+  const storeValues = getStoreValues(
+    storeKeys.SETTINGS.TRACKER_PREFIX,
+    TrackerSetting
   );
 
-  if (trackerAutoUpdate !== null) {
-    settings[TrackerSetting.TrackerAutoUpdate] = trackerAutoUpdate === 'true';
+  if (storeValues[TrackerSetting.TrackerAutoUpdate] !== null) {
+    settings[TrackerSetting.TrackerAutoUpdate] =
+      storeValues[TrackerSetting.TrackerAutoUpdate] === 'true';
   }
 
-  log.debug(`Using tracker settings: ${settings}`);
+  log.debug(`Using tracker settings: ${JSON.stringify(settings)}`);
   return settings;
 }
 
@@ -164,17 +191,17 @@ export function getStoredIntegrationSettings(): {
   [key in IntegrationSetting]?: any;
 } {
   const settings: { [key in IntegrationSetting]?: any } = {};
-
-  const discordPresenceEnabled: string | null = persistantStore.read(
-    `${storeKeys.SETTINGS.INTEGRATION_PREFIX}${IntegrationSetting.DiscordPresenceEnabled}`
+  const storeValues = getStoreValues(
+    storeKeys.SETTINGS.INTEGRATION_PREFIX,
+    IntegrationSetting
   );
 
-  if (discordPresenceEnabled !== null) {
+  if (storeValues[IntegrationSetting.DiscordPresenceEnabled] !== null) {
     settings[IntegrationSetting.DiscordPresenceEnabled] =
-      discordPresenceEnabled === 'true';
+      storeValues[IntegrationSetting.DiscordPresenceEnabled] === 'true';
   }
 
-  log.debug(`Using integration settings: ${settings}`);
+  log.debug(`Using integration settings: ${JSON.stringify(settings)}`);
   return settings;
 }
 
