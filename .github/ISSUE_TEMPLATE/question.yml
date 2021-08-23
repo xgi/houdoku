@@ -1,6 +1,6 @@
 name: 🤔 Question
 description: Ask a question about Houdoku
-labels: [feature request]
+labels: [question]
 body:
   - type: checkboxes
     id: acknowledgements
