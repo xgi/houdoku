@@ -102,6 +102,58 @@ const initialState: SettingsState = {
     storedReaderSettings.OverlayPageNumber === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.OverlayPageNumber]
       : storedReaderSettings.OverlayPageNumber,
+  keyPreviousPage:
+    storedReaderSettings.KeyPreviousPage === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyPreviousPage]
+      : storedReaderSettings.KeyPreviousPage,
+  keyFirstPage:
+    storedReaderSettings.KeyFirstPage === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyFirstPage]
+      : storedReaderSettings.KeyFirstPage,
+  keyNextPage:
+    storedReaderSettings.KeyNextPage === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyNextPage]
+      : storedReaderSettings.KeyNextPage,
+  keyLastPage:
+    storedReaderSettings.KeyLastPage === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyLastPage]
+      : storedReaderSettings.KeyLastPage,
+  keyPreviousChapter:
+    storedReaderSettings.KeyPreviousChapter === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyPreviousChapter]
+      : storedReaderSettings.KeyPreviousChapter,
+  keyNextChapter:
+    storedReaderSettings.KeyNextChapter === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyNextChapter]
+      : storedReaderSettings.KeyNextChapter,
+  keyToggleLayoutDirection:
+    storedReaderSettings.KeyToggleLayoutDirection === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleLayoutDirection]
+      : storedReaderSettings.KeyToggleLayoutDirection,
+  keyTogglePageView:
+    storedReaderSettings.KeyTogglePageView === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyTogglePageView]
+      : storedReaderSettings.KeyTogglePageView,
+  keyTogglePageFit:
+    storedReaderSettings.KeyTogglePageFit === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyTogglePageFit]
+      : storedReaderSettings.KeyTogglePageFit,
+  keyToggleShowingSettingsModal:
+    storedReaderSettings.KeyToggleShowingSettingsModal === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingSettingsModal]
+      : storedReaderSettings.KeyToggleShowingSettingsModal,
+  keyToggleShowingSidebar:
+    storedReaderSettings.KeyToggleShowingSidebar === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingSidebar]
+      : storedReaderSettings.KeyToggleShowingSidebar,
+  keyExit:
+    storedReaderSettings.KeyExit === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyExit]
+      : storedReaderSettings.KeyExit,
+  keyCloseOrBack:
+    storedReaderSettings.KeyCloseOrBack === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyCloseOrBack]
+      : storedReaderSettings.KeyCloseOrBack,
   trackerAutoUpdate:
     storedTrackerSettings.TrackerAutoUpdate === undefined
       ? DEFAULT_TRACKER_SETTINGS[TrackerSetting.TrackerAutoUpdate]

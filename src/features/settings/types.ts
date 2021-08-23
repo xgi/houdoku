@@ -42,6 +42,19 @@ export interface SettingsState {
   overlayPageNumber: boolean;
   trackerAutoUpdate: boolean;
   discordPresenceEnabled: boolean;
+  keyPreviousPage: string;
+  keyFirstPage: string;
+  keyNextPage: string;
+  keyLastPage: string;
+  keyPreviousChapter: string;
+  keyNextChapter: string;
+  keyToggleLayoutDirection: string;
+  keyTogglePageView: string;
+  keyTogglePageFit: string;
+  keyToggleShowingSettingsModal: string;
+  keyToggleShowingSidebar: string;
+  keyExit: string;
+  keyCloseOrBack: string;
 }
 
 interface SetChapterLanguagesAction {

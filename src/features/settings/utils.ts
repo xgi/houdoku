@@ -30,6 +30,19 @@ export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.PageFit]: PageFit.Auto,
   [ReaderSetting.PreloadAmount]: 2,
   [ReaderSetting.OverlayPageNumber]: false,
+  [ReaderSetting.KeyPreviousPage]: 'left',
+  [ReaderSetting.KeyFirstPage]: 'ctrl+left',
+  [ReaderSetting.KeyNextPage]: 'right',
+  [ReaderSetting.KeyLastPage]: 'ctrl+right',
+  [ReaderSetting.KeyPreviousChapter]: '[',
+  [ReaderSetting.KeyNextChapter]: ']',
+  [ReaderSetting.KeyToggleLayoutDirection]: 'd',
+  [ReaderSetting.KeyTogglePageView]: 'q',
+  [ReaderSetting.KeyTogglePageFit]: 'f',
+  [ReaderSetting.KeyToggleShowingSettingsModal]: 'o',
+  [ReaderSetting.KeyToggleShowingSidebar]: 's',
+  [ReaderSetting.KeyExit]: 'backspace',
+  [ReaderSetting.KeyCloseOrBack]: 'escape',
 };
 
 export const DEFAULT_TRACKER_SETTINGS = {
@@ -165,6 +178,57 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   if (storeValues[ReaderSetting.OverlayPageNumber] !== null) {
     settings[ReaderSetting.OverlayPageNumber] =
       storeValues[ReaderSetting.OverlayPageNumber] === 'true';
+  }
+  if (storeValues[ReaderSetting.KeyPreviousPage] !== null) {
+    settings[ReaderSetting.KeyPreviousPage] =
+      storeValues[ReaderSetting.KeyPreviousPage];
+  }
+  if (storeValues[ReaderSetting.KeyFirstPage] !== null) {
+    settings[ReaderSetting.KeyFirstPage] =
+      storeValues[ReaderSetting.KeyFirstPage];
+  }
+  if (storeValues[ReaderSetting.KeyNextPage] !== null) {
+    settings[ReaderSetting.KeyNextPage] =
+      storeValues[ReaderSetting.KeyNextPage];
+  }
+  if (storeValues[ReaderSetting.KeyLastPage] !== null) {
+    settings[ReaderSetting.KeyLastPage] =
+      storeValues[ReaderSetting.KeyLastPage];
+  }
+  if (storeValues[ReaderSetting.KeyPreviousChapter] !== null) {
+    settings[ReaderSetting.KeyPreviousChapter] =
+      storeValues[ReaderSetting.KeyPreviousChapter];
+  }
+  if (storeValues[ReaderSetting.KeyNextChapter] !== null) {
+    settings[ReaderSetting.KeyNextChapter] =
+      storeValues[ReaderSetting.KeyNextChapter];
+  }
+  if (storeValues[ReaderSetting.KeyToggleLayoutDirection] !== null) {
+    settings[ReaderSetting.KeyToggleLayoutDirection] =
+      storeValues[ReaderSetting.KeyToggleLayoutDirection];
+  }
+  if (storeValues[ReaderSetting.KeyTogglePageView] !== null) {
+    settings[ReaderSetting.KeyTogglePageView] =
+      storeValues[ReaderSetting.KeyTogglePageView];
+  }
+  if (storeValues[ReaderSetting.KeyTogglePageFit] !== null) {
+    settings[ReaderSetting.KeyTogglePageFit] =
+      storeValues[ReaderSetting.KeyTogglePageFit];
+  }
+  if (storeValues[ReaderSetting.KeyToggleShowingSettingsModal] !== null) {
+    settings[ReaderSetting.KeyToggleShowingSettingsModal] =
+      storeValues[ReaderSetting.KeyToggleShowingSettingsModal];
+  }
+  if (storeValues[ReaderSetting.KeyToggleShowingSidebar] !== null) {
+    settings[ReaderSetting.KeyToggleShowingSidebar] =
+      storeValues[ReaderSetting.KeyToggleShowingSidebar];
+  }
+  if (storeValues[ReaderSetting.KeyExit] !== null) {
+    settings[ReaderSetting.KeyExit] = storeValues[ReaderSetting.KeyExit];
+  }
+  if (storeValues[ReaderSetting.KeyCloseOrBack] !== null) {
+    settings[ReaderSetting.KeyCloseOrBack] =
+      storeValues[ReaderSetting.KeyCloseOrBack];
   }
 
   log.debug(`Using reader settings: ${JSON.stringify(settings)}`);
