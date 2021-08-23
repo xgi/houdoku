@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🔗 Extensions repository
+    url: https://github.com/xgi/houdoku-extensions/issues/new/choose
+    about: Reports/requests for extensions should be opened in the extensions repository
+  - name: 🖥️ Houdoku website
+    url: https://houdoku.org
+    about: Documentation for using Houdoku
