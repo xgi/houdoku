@@ -70,7 +70,7 @@ body:
           - Mac: ~/Library/Application Support/Houdoku/logs
           - Linux: $XDG_CONFIG_HOME/Houdoku/logs OR ~/.config/Houdoku/logs
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: additional-info
