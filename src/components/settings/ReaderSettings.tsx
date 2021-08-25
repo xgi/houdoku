@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Row, Menu, Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
+import Title from 'antd/lib/typography/Title';
 import styles from './ReaderSettings.css';
 import {
   LayoutDirection,
@@ -48,6 +49,19 @@ const mapState = (state: RootState) => ({
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
   overlayPageNumber: state.settings.overlayPageNumber,
+  keyPreviousPage: state.settings.keyPreviousPage,
+  keyFirstPage: state.settings.keyFirstPage,
+  keyNextPage: state.settings.keyNextPage,
+  keyLastPage: state.settings.keyLastPage,
+  keyPreviousChapter: state.settings.keyPreviousChapter,
+  keyNextChapter: state.settings.keyNextChapter,
+  keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
+  keyTogglePageView: state.settings.keyTogglePageView,
+  keyTogglePageFit: state.settings.keyTogglePageFit,
+  keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
+  keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
+  keyExit: state.settings.keyExit,
+  keyCloseOrBack: state.settings.keyCloseOrBack,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -199,6 +213,51 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
               <DownOutlined />
             </Button>
           </Dropdown>
+        </Col>
+      </Row>
+      <Title level={4} className={styles.heading}>
+        Keyboard Shortcuts
+      </Title>
+      <Row className={styles.row}>
+        <Col span={10}>Next Page</Col>
+        <Col span={14}>
+          {/* <Button onClick={() => setShowingKeySelectModal(true)}>change</Button> */}
+          <Button
+            className={styles.shortcutButton}
+            onKeyDownCapture={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+
+              if (
+                ![
+                  'Control',
+                  'Shift',
+                  'Meta',
+                  'Command',
+                  'Alt',
+                  'Option',
+                ].includes(e.key)
+              ) {
+                const metaStr = `${e.metaKey ? 'meta+' : ''}`;
+                const ctrlStr = `${e.ctrlKey ? 'meta+' : ''}`;
+                const altStr = `${e.altKey ? 'alt+' : ''}`;
+                const shiftStr = `${e.shiftKey ? 'shift+' : ''}`;
+
+                const key = e.key
+                  .toLowerCase()
+                  .replace('arrow', '')
+                  .replace('insert', 'ins')
+                  .replace('delete', 'del')
+                  .replace(' ', 'space')
+                  .replace('+', 'plus');
+
+                const keyStr = `${metaStr}${ctrlStr}${altStr}${shiftStr}${key}`;
+                console.log(keyStr);
+              }
+            }}
+          >
+            {props.keyNextChapter}
+          </Button>
         </Col>
       </Row>
     </>
