@@ -144,6 +144,7 @@ async function reloadSeries(series: Series): Promise<Error | void> {
   } else {
     newSeries.id = series.id;
     newSeries.userTags = series.userTags;
+    newSeries.trackerKeys = series.trackerKeys;
   }
 
   const oldChapters: Chapter[] = (await db.fetchChapters(
