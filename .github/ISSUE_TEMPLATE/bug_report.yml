@@ -28,6 +28,15 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system
+      placeholder: |
+        Example: "Windows 10, macOS 11.5.2"
+    validations:
+      required: true
+
   - type: textarea
     id: reproduce-steps
     attributes:
