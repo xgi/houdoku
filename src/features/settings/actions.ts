@@ -4,6 +4,7 @@ import {
   PageFit,
   PageView,
   ProgressFilter,
+  ReaderSetting,
 } from '../../models/types';
 import {
   SET_PAGE_FIT,
@@ -25,6 +26,7 @@ import {
   SET_LIBRARY_FILTER_STATUS,
   SET_LIBRARY_FILTER_PROGRESS,
   SET_LIBRARY_FILTER_USER_TAGS,
+  SET_KEYBINDING,
 } from './types';
 
 export function setChapterLanguages(
@@ -194,6 +196,19 @@ export function setDiscordPresenceEnabled(
     type: SET_DISCORD_PRESENCE_ENABLED,
     payload: {
       discordPresenceEnabled,
+    },
+  };
+}
+
+export function setKeybinding(
+  keySetting: ReaderSetting,
+  value: string
+): SettingsAction {
+  return {
+    type: SET_KEYBINDING,
+    payload: {
+      keySetting,
+      value,
     },
   };
 }
