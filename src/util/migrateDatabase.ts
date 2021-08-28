@@ -1,6 +1,11 @@
+/* eslint-disable no-restricted-syntax */
 import { Chapter, Series } from 'houdoku-extension-lib';
 import lf from 'lovefield';
+import path from 'path';
+import fs from 'fs';
+import { ipcRenderer } from 'electron';
 import library from '../services/library';
+import ipcChannels from '../constants/ipcChannels.json';
 
 const createSchemaBuilder = (): lf.schema.Builder => {
   const schemaBuilder = lf.schema.create('houdoku', 2);
@@ -58,11 +63,46 @@ export const performMigration = async () => {
     Chapter[]
   >);
 
+  const downloadsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.DOWNLOADS_DIR
+  );
+
   seriesList.forEach((series: Series) => {
-    library.upsertSeries(series);
-    library.upsertChapters(
-      chapterList.filter((chapter) => chapter.seriesId === series.id),
-      series
+    if (!series.id) return;
+
+    const chapters = chapterList.filter(
+      (chapter) => chapter.seriesId === series.id
     );
+
+    const newSeries = library.upsertSeries(series);
+    library.upsertChapters(chapters, series);
+    if (newSeries.id === undefined) return;
+    const newChapters = library.fetchChapters(newSeries.id);
+
+    const seriesDirPath = path.join(downloadsDir, series.id.toString());
+    if (fs.existsSync(seriesDirPath)) {
+      for (const chapterDirName of fs.readdirSync(seriesDirPath)) {
+        if (!Number.isNaN(chapterDirName)) {
+          const existingChapter = chapters.find((c) => c.id === chapterDirName);
+          if (!existingChapter) return;
+
+          const newChapter = newChapters.find(
+            (c) =>
+              c.chapterNumber === existingChapter.chapterNumber &&
+              c.languageKey === existingChapter.languageKey &&
+              c.groupName === existingChapter.groupName &&
+              c.title === existingChapter.title
+          );
+          if (!newChapter || !newChapter.id) return;
+
+          fs.renameSync(
+            path.join(seriesDirPath, chapterDirName),
+            path.join(seriesDirPath, newChapter.id)
+          );
+        }
+      }
+
+      fs.renameSync(seriesDirPath, path.join(downloadsDir, newSeries.id));
+    }
   });
 };
