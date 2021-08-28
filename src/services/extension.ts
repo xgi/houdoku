@@ -395,10 +395,11 @@ export const createExtensionIpcHandlers = (
     const availableUpdates: {
       [key: string]: { metadata: ExtensionMetadata; newVersion: string };
     } = {};
-    const registryResults: RegistrySearchResults = await aki.search({
-      text: 'extension',
-      scope: 'houdoku',
-    });
+    const registryResults: RegistrySearchResults = await aki.search(
+      'extension',
+      'houdoku',
+      100
+    );
     registryResults.objects.forEach((registryResult) => {
       const pkg: RegistrySearchPackage = registryResult.package;
       const description = JSON.parse(pkg.description);
