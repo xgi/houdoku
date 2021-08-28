@@ -28,6 +28,7 @@ import {
   SET_LIBRARY_FILTER_PROGRESS,
   SET_LIBRARY_FILTER_USER_TAGS,
   SET_AUTO_CHECK_FOR_EXTENSION_UPDATES,
+  SET_KEYBINDING,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -102,6 +103,58 @@ const initialState: SettingsState = {
     storedReaderSettings.OverlayPageNumber === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.OverlayPageNumber]
       : storedReaderSettings.OverlayPageNumber,
+  keyPreviousPage:
+    storedReaderSettings.KeyPreviousPage === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyPreviousPage]
+      : storedReaderSettings.KeyPreviousPage,
+  keyFirstPage:
+    storedReaderSettings.KeyFirstPage === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyFirstPage]
+      : storedReaderSettings.KeyFirstPage,
+  keyNextPage:
+    storedReaderSettings.KeyNextPage === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyNextPage]
+      : storedReaderSettings.KeyNextPage,
+  keyLastPage:
+    storedReaderSettings.KeyLastPage === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyLastPage]
+      : storedReaderSettings.KeyLastPage,
+  keyPreviousChapter:
+    storedReaderSettings.KeyPreviousChapter === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyPreviousChapter]
+      : storedReaderSettings.KeyPreviousChapter,
+  keyNextChapter:
+    storedReaderSettings.KeyNextChapter === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyNextChapter]
+      : storedReaderSettings.KeyNextChapter,
+  keyToggleLayoutDirection:
+    storedReaderSettings.KeyToggleLayoutDirection === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleLayoutDirection]
+      : storedReaderSettings.KeyToggleLayoutDirection,
+  keyTogglePageView:
+    storedReaderSettings.KeyTogglePageView === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyTogglePageView]
+      : storedReaderSettings.KeyTogglePageView,
+  keyTogglePageFit:
+    storedReaderSettings.KeyTogglePageFit === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyTogglePageFit]
+      : storedReaderSettings.KeyTogglePageFit,
+  keyToggleShowingSettingsModal:
+    storedReaderSettings.KeyToggleShowingSettingsModal === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingSettingsModal]
+      : storedReaderSettings.KeyToggleShowingSettingsModal,
+  keyToggleShowingSidebar:
+    storedReaderSettings.KeyToggleShowingSidebar === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingSidebar]
+      : storedReaderSettings.KeyToggleShowingSidebar,
+  keyExit:
+    storedReaderSettings.KeyExit === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyExit]
+      : storedReaderSettings.KeyExit,
+  keyCloseOrBack:
+    storedReaderSettings.KeyCloseOrBack === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyCloseOrBack]
+      : storedReaderSettings.KeyCloseOrBack,
   trackerAutoUpdate:
     storedTrackerSettings.TrackerAutoUpdate === undefined
       ? DEFAULT_TRACKER_SETTINGS[TrackerSetting.TrackerAutoUpdate]
@@ -273,6 +326,41 @@ export default function settings(
         ...state,
         discordPresenceEnabled: action.payload.discordPresenceEnabled,
       };
+    case SET_KEYBINDING:
+      saveReaderSetting(action.payload.keySetting, action.payload.value);
+      switch (action.payload.keySetting) {
+        case ReaderSetting.KeyPreviousPage:
+          return { ...state, keyPreviousPage: action.payload.value };
+        case ReaderSetting.KeyFirstPage:
+          return { ...state, keyFirstPage: action.payload.value };
+        case ReaderSetting.KeyNextPage:
+          return { ...state, keyNextPage: action.payload.value };
+        case ReaderSetting.KeyLastPage:
+          return { ...state, keyLastPage: action.payload.value };
+        case ReaderSetting.KeyPreviousChapter:
+          return { ...state, keyPreviousChapter: action.payload.value };
+        case ReaderSetting.KeyNextChapter:
+          return { ...state, keyNextChapter: action.payload.value };
+        case ReaderSetting.KeyToggleLayoutDirection:
+          return { ...state, keyToggleLayoutDirection: action.payload.value };
+        case ReaderSetting.KeyTogglePageView:
+          return { ...state, keyTogglePageView: action.payload.value };
+        case ReaderSetting.KeyTogglePageFit:
+          return { ...state, keyTogglePageFit: action.payload.value };
+        case ReaderSetting.KeyToggleShowingSettingsModal:
+          return {
+            ...state,
+            keyToggleShowingSettingsModal: action.payload.value,
+          };
+        case ReaderSetting.KeyToggleShowingSidebar:
+          return { ...state, keyToggleShowingSidebar: action.payload.value };
+        case ReaderSetting.KeyExit:
+          return { ...state, keyExit: action.payload.value };
+        case ReaderSetting.KeyCloseOrBack:
+          return { ...state, keyCloseOrBack: action.payload.value };
+        default:
+          return state;
+      }
     default:
       return state;
   }

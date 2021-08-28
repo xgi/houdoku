@@ -4,6 +4,7 @@ import {
   PageFit,
   PageView,
   ProgressFilter,
+  ReaderSetting,
 } from '../../models/types';
 
 export const SET_CHAPTER_LANGUAGES = 'SET_CHAPTER_LANGUAGES';
@@ -25,6 +26,7 @@ export const SET_LIBRARY_FILTER_USER_TAGS = 'SET_LIBRARY_FILTER_USER_TAGS';
 export const SET_OVERLAY_PAGE_NUMBER = 'SET_OVERLAY_PAGE_NUMBER';
 export const SET_TRACKER_AUTO_UPDATE = 'SET_TRACKER_AUTO_UPDATE';
 export const SET_DISCORD_PRESENCE_ENABLED = 'SET_DISCORD_PRESENCE_ENABLED';
+export const SET_KEYBINDING = 'SET_KEYBINDING';
 
 export interface SettingsState {
   chapterLanguages: LanguageKey[];
@@ -42,6 +44,19 @@ export interface SettingsState {
   overlayPageNumber: boolean;
   trackerAutoUpdate: boolean;
   discordPresenceEnabled: boolean;
+  keyPreviousPage: string;
+  keyFirstPage: string;
+  keyNextPage: string;
+  keyLastPage: string;
+  keyPreviousChapter: string;
+  keyNextChapter: string;
+  keyToggleLayoutDirection: string;
+  keyTogglePageView: string;
+  keyTogglePageFit: string;
+  keyToggleShowingSettingsModal: string;
+  keyToggleShowingSidebar: string;
+  keyExit: string;
+  keyCloseOrBack: string;
 }
 
 interface SetChapterLanguagesAction {
@@ -161,6 +176,14 @@ interface SetDiscordPresenceEnabledAction {
   };
 }
 
+interface SetKeybindingAction {
+  type: typeof SET_KEYBINDING;
+  payload: {
+    keySetting: ReaderSetting;
+    value: string;
+  };
+}
+
 export type SettingsAction =
   | SetChapterLanguagesAction
   | SetPageFitAction
@@ -179,4 +202,5 @@ export type SettingsAction =
   | SetLibraryFilterUserTagsAction
   | SetOverlayPageNumberAction
   | SetTrackerAutoUpdateAction
-  | SetDiscordPresenceEnabledAction;
+  | SetDiscordPresenceEnabledAction
+  | SetKeybindingAction;

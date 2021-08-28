@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Row, Menu, Dropdown, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
+import Title from 'antd/lib/typography/Title';
 import styles from './ReaderSettings.css';
 import {
   LayoutDirection,
@@ -11,6 +12,7 @@ import {
 } from '../../models/types';
 import { RootState } from '../../store';
 import {
+  setKeybinding,
   setLayoutDirection,
   setOverlayPageNumber,
   setPageFit,
@@ -48,6 +50,19 @@ const mapState = (state: RootState) => ({
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
   overlayPageNumber: state.settings.overlayPageNumber,
+  keyPreviousPage: state.settings.keyPreviousPage,
+  keyFirstPage: state.settings.keyFirstPage,
+  keyNextPage: state.settings.keyNextPage,
+  keyLastPage: state.settings.keyLastPage,
+  keyPreviousChapter: state.settings.keyPreviousChapter,
+  keyNextChapter: state.settings.keyNextChapter,
+  keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
+  keyTogglePageView: state.settings.keyTogglePageView,
+  keyTogglePageFit: state.settings.keyTogglePageFit,
+  keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
+  keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
+  keyExit: state.settings.keyExit,
+  keyCloseOrBack: state.settings.keyCloseOrBack,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,6 +75,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setPreloadAmount(preloadAmount)),
   setOverlayPageNumber: (overlayPageNumber: boolean) =>
     dispatch(setOverlayPageNumber(overlayPageNumber)),
+  setKeybinding: (keySetting: ReaderSetting, value: string) =>
+    dispatch(setKeybinding(keySetting, value)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -86,8 +103,51 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.OverlayPageNumber:
         props.setOverlayPageNumber(value);
         break;
+      case ReaderSetting.KeyPreviousPage:
+      case ReaderSetting.KeyFirstPage:
+      case ReaderSetting.KeyNextPage:
+      case ReaderSetting.KeyLastPage:
+      case ReaderSetting.KeyPreviousChapter:
+      case ReaderSetting.KeyNextChapter:
+      case ReaderSetting.KeyToggleLayoutDirection:
+      case ReaderSetting.KeyTogglePageView:
+      case ReaderSetting.KeyTogglePageFit:
+      case ReaderSetting.KeyToggleShowingSettingsModal:
+      case ReaderSetting.KeyToggleShowingSidebar:
+      case ReaderSetting.KeyExit:
+      case ReaderSetting.KeyCloseOrBack:
+        props.setKeybinding(readerSetting, value);
+        break;
       default:
         break;
+    }
+  };
+
+  const updateKeySetting = (
+    e: React.KeyboardEvent,
+    readerSetting: ReaderSetting
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (
+      !['Control', 'Shift', 'Meta', 'Command', 'Alt', 'Option'].includes(e.key)
+    ) {
+      const metaStr = `${e.metaKey ? 'meta+' : ''}`;
+      const ctrlStr = `${e.ctrlKey ? 'ctrl+' : ''}`;
+      const altStr = `${e.altKey ? 'alt+' : ''}`;
+      const shiftStr = `${e.shiftKey ? 'shift+' : ''}`;
+
+      const key = e.key
+        .toLowerCase()
+        .replace('arrow', '')
+        .replace('insert', 'ins')
+        .replace('delete', 'del')
+        .replace(' ', 'space')
+        .replace('+', 'plus');
+
+      const keyStr = `${metaStr}${ctrlStr}${altStr}${shiftStr}${key}`;
+      updateReaderSetting(readerSetting, keyStr);
     }
   };
 
@@ -201,6 +261,89 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           </Dropdown>
         </Col>
       </Row>
+      <Title level={4} className={styles.heading}>
+        Keyboard Shortcuts
+      </Title>
+
+      {[
+        {
+          name: 'Next Page',
+          value: props.keyNextPage,
+          setting: ReaderSetting.KeyNextPage,
+        },
+        {
+          name: 'Previous Page',
+          value: props.keyPreviousPage,
+          setting: ReaderSetting.KeyPreviousPage,
+        },
+        {
+          name: 'First Page',
+          value: props.keyFirstPage,
+          setting: ReaderSetting.KeyFirstPage,
+        },
+        {
+          name: 'Last Page',
+          value: props.keyLastPage,
+          setting: ReaderSetting.KeyLastPage,
+        },
+        {
+          name: 'Next Chapter',
+          value: props.keyNextChapter,
+          setting: ReaderSetting.KeyNextChapter,
+        },
+        {
+          name: 'Previous Chapter',
+          value: props.keyPreviousChapter,
+          setting: ReaderSetting.KeyPreviousChapter,
+        },
+        {
+          name: 'Exit Reader',
+          value: props.keyExit,
+          setting: ReaderSetting.KeyExit,
+        },
+        {
+          name: 'Close/Back',
+          value: props.keyCloseOrBack,
+          setting: ReaderSetting.KeyCloseOrBack,
+        },
+        {
+          name: 'Toggle Sidebar',
+          value: props.keyToggleShowingSidebar,
+          setting: ReaderSetting.KeyToggleShowingSidebar,
+        },
+        {
+          name: 'Toggle Layout Direction',
+          value: props.keyToggleLayoutDirection,
+          setting: ReaderSetting.KeyToggleLayoutDirection,
+        },
+        {
+          name: 'Toggle Page View',
+          value: props.keyTogglePageView,
+          setting: ReaderSetting.KeyTogglePageView,
+        },
+        {
+          name: 'Toggle Page Fit',
+          value: props.keyTogglePageFit,
+          setting: ReaderSetting.KeyTogglePageFit,
+        },
+        {
+          name: 'Show Settings Menu',
+          value: props.keyToggleShowingSettingsModal,
+          setting: ReaderSetting.KeyToggleShowingSettingsModal,
+        },
+      ].map((entry) => (
+        <Row className={styles.row} key={entry.setting}>
+          <Col span={10}>{entry.name}</Col>
+          <Col span={14}>
+            <Button
+              className={styles.shortcutButton}
+              onKeyDownCapture={(e) => updateKeySetting(e, entry.setting)}
+            >
+              {entry.value}
+            </Button>
+          </Col>
+        </Row>
+      ))}
     </>
   );
 };

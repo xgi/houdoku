@@ -67,6 +67,19 @@ export enum ReaderSetting {
   PageView = 'PageView',
   PreloadAmount = 'PreloadAmount',
   OverlayPageNumber = 'OverlayPageNumber',
+  KeyPreviousPage = 'KeyPreviousPage',
+  KeyFirstPage = 'KeyFirstPage',
+  KeyNextPage = 'KeyNextPage',
+  KeyLastPage = 'KeyLastPage',
+  KeyPreviousChapter = 'KeyPreviousChapter',
+  KeyNextChapter = 'KeyNextChapter',
+  KeyToggleLayoutDirection = 'KeyToggleLayoutDirection',
+  KeyTogglePageView = 'KeyTogglePageView',
+  KeyTogglePageFit = 'KeyTogglePageFit',
+  KeyToggleShowingSettingsModal = 'KeyToggleShowingSettingsModal',
+  KeyToggleShowingSidebar = 'KeyToggleShowingSidebar',
+  KeyExit = 'KeyExit',
+  KeyCloseOrBack = 'KeyCloseOrBack',
 }
 
 export enum TrackerSetting {

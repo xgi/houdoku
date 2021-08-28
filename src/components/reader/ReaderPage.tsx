@@ -51,22 +51,6 @@ import {
   getChapterDownloadPath,
 } from '../../util/filesystem';
 
-const KEYBOARD_SHORTCUTS = {
-  previousPage: 'left',
-  firstPage: 'ctrl+left',
-  nextPage: 'right',
-  lastPage: 'ctrl+right',
-  previousChapter: '[',
-  nextChapter: ']',
-  toggleLayoutDirection: 'd',
-  togglePageView: 'q',
-  togglePageFit: 'f',
-  toggleShowingSettingsModal: 'o',
-  toggleShowingSidebar: 's',
-  exit: 'backspace',
-  escape: 'escape',
-};
-
 const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
   lastPageNumber: state.reader.lastPageNumber,
@@ -83,6 +67,19 @@ const mapState = (state: RootState) => ({
   preloadAmount: state.settings.preloadAmount,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
   discordPresenceEnabled: state.settings.discordPresenceEnabled,
+  keyPreviousPage: state.settings.keyPreviousPage,
+  keyFirstPage: state.settings.keyFirstPage,
+  keyNextPage: state.settings.keyNextPage,
+  keyLastPage: state.settings.keyLastPage,
+  keyPreviousChapter: state.settings.keyPreviousChapter,
+  keyNextChapter: state.settings.keyNextChapter,
+  keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
+  keyTogglePageView: state.settings.keyTogglePageView,
+  keyTogglePageFit: state.settings.keyTogglePageFit,
+  keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
+  keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
+  keyExit: state.settings.keyExit,
+  keyCloseOrBack: state.settings.keyCloseOrBack,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -386,7 +383,23 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * Remove all keybindings from the window.
    */
   const removeKeybindings = () => {
-    Mousetrap.unbind(Object.values(KEYBOARD_SHORTCUTS));
+    Mousetrap.unbind(
+      Object.values([
+        props.keyPreviousPage,
+        props.keyFirstPage,
+        props.keyNextPage,
+        props.keyLastPage,
+        props.keyPreviousChapter,
+        props.keyNextChapter,
+        props.keyToggleLayoutDirection,
+        props.keyTogglePageView,
+        props.keyTogglePageFit,
+        props.keyToggleShowingSettingsModal,
+        props.keyToggleShowingSidebar,
+        props.keyExit,
+        props.keyCloseOrBack,
+      ])
+    );
   };
 
   /**
@@ -416,31 +429,25 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * These need to be removed (with removeKeybindings) when changing to another page.
    */
   const addKeybindings = () => {
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.previousPage, () => changePage(true));
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.firstPage, () => changePage(true, true));
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.nextPage, () => changePage(false));
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.lastPage, () => changePage(false, true));
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.previousChapter, () =>
-      changeChapter(true)
-    );
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.nextChapter, () => changeChapter(false));
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleLayoutDirection, () =>
+    Mousetrap.bind(props.keyPreviousPage, () => changePage(true));
+    Mousetrap.bind(props.keyFirstPage, () => changePage(true, true));
+    Mousetrap.bind(props.keyNextPage, () => changePage(false));
+    Mousetrap.bind(props.keyLastPage, () => changePage(false, true));
+    Mousetrap.bind(props.keyPreviousChapter, () => changeChapter(true));
+    Mousetrap.bind(props.keyNextChapter, () => changeChapter(false));
+    Mousetrap.bind(props.keyToggleLayoutDirection, () =>
       props.toggleLayoutDirection()
     );
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.togglePageView, () =>
-      props.togglePageView()
-    );
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.togglePageFit, () =>
-      props.togglePageFit()
-    );
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleShowingSettingsModal, () =>
+    Mousetrap.bind(props.keyTogglePageView, () => props.togglePageView());
+    Mousetrap.bind(props.keyTogglePageFit, () => props.togglePageFit());
+    Mousetrap.bind(props.keyToggleShowingSettingsModal, () =>
       props.toggleShowingSettingsModal()
     );
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.toggleShowingSidebar, () =>
+    Mousetrap.bind(props.keyToggleShowingSidebar, () =>
       props.toggleShowingSidebar()
     );
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.exit, () => exitPage());
-    Mousetrap.bind(KEYBOARD_SHORTCUTS.escape, () => {
+    Mousetrap.bind(props.keyExit, () => exitPage());
+    Mousetrap.bind(props.keyCloseOrBack, () => {
       if (!props.showingSidebar) props.toggleShowingSidebar();
       else exitPage();
     });
@@ -461,7 +468,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     removeKeybindings();
     addKeybindings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.chapter, props.lastPageNumber, props.showingSidebar]);
+  }, [props.showingSettingsModal]);
 
   useEffect(() => {
     addKeybindings();

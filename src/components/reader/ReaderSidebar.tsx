@@ -88,6 +88,19 @@ const mapState = (state: RootState) => ({
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
+  keyPreviousPage: state.settings.keyPreviousPage,
+  keyFirstPage: state.settings.keyFirstPage,
+  keyNextPage: state.settings.keyNextPage,
+  keyLastPage: state.settings.keyLastPage,
+  keyPreviousChapter: state.settings.keyPreviousChapter,
+  keyNextChapter: state.settings.keyNextChapter,
+  keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
+  keyTogglePageView: state.settings.keyTogglePageView,
+  keyTogglePageFit: state.settings.keyTogglePageFit,
+  keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
+  keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
+  keyExit: state.settings.keyExit,
+  keyCloseOrBack: state.settings.keyCloseOrBack,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -155,7 +168,13 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
         </Title>
       </div>
       <div className={styles.chapterHeader}>
-        <Tooltip title="Previous Chapter ([)">
+        <Tooltip
+          title={
+            <span>
+              Previous Chapter <Text keyboard>{props.keyPreviousChapter}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.chapterButton}
             ${props.getAdjacentChapterId(true) === -1 ? styles.disabled : ''}`}
@@ -183,7 +202,13 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             {getChapterTitleDisplay(props.chapter)}
           </Text>
         </Dropdown>
-        <Tooltip title="Next Chapter (])">
+        <Tooltip
+          title={
+            <span>
+              Next Chapter <Text keyboard>{props.keyNextChapter}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.chapterButton}
             ${props.getAdjacentChapterId(false) === -1 ? styles.disabled : ''}`}
@@ -194,7 +219,13 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
         </Tooltip>
       </div>
       <div className={styles.settingsBar}>
-        <Tooltip title="Change page fit (f)">
+        <Tooltip
+          title={
+            <span>
+              Change page fit <Text keyboard>{props.keyTogglePageFit}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.settingsButton}`}
             onClick={() => props.togglePageFit()}
@@ -202,7 +233,14 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             {ICONS_PAGE_FIT[props.pageFit]}
           </button>
         </Tooltip>
-        <Tooltip title="Change two-page view (q)">
+        <Tooltip
+          title={
+            <span>
+              Change two-page view{' '}
+              <Text keyboard>{props.keyTogglePageView}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.settingsButton}`}
             onClick={() => props.togglePageView()}
@@ -210,7 +248,14 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             {ICONS_PAGE_VIEW[props.pageView]}
           </button>
         </Tooltip>
-        <Tooltip title="Change reader direction (d)">
+        <Tooltip
+          title={
+            <span>
+              Change reader direction{' '}
+              <Text keyboard>{props.keyToggleLayoutDirection}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.settingsButton}`}
             onClick={() => props.toggleLayoutDirection()}
@@ -218,7 +263,14 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             {ICONS_LAYOUT_DIRECTION[props.layoutDirection]}
           </button>
         </Tooltip>
-        <Tooltip title="Toggle sidebar (s)">
+        <Tooltip
+          title={
+            <span>
+              Toggle sidebar{' '}
+              <Text keyboard>{props.keyToggleShowingSidebar}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.settingsButton}`}
             onClick={() => props.toggleShowingSidebar()}
@@ -226,7 +278,14 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             <ProfileOutlined />
           </button>
         </Tooltip>
-        <Tooltip title="Advanced Settings (o)">
+        <Tooltip
+          title={
+            <span>
+              Advanced Settings{' '}
+              <Text keyboard>{props.keyToggleShowingSettingsModal}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.settingsButton}`}
             onClick={() => props.toggleShowingSettingsModal()}
@@ -236,7 +295,13 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
         </Tooltip>
       </div>
       <div className={styles.pageControlBar}>
-        <Tooltip title="First Page (ctrl+←)">
+        <Tooltip
+          title={
+            <span>
+              First Page <Text keyboard>{props.keyFirstPage}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.pageButton}`}
             onClick={() => props.changePage(true, true)}
@@ -244,7 +309,13 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             <VerticalRightOutlined />
           </button>
         </Tooltip>
-        <Tooltip title="Previous Page (←)">
+        <Tooltip
+          title={
+            <span>
+              Previous Page <Text keyboard>{props.keyPreviousPage}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.pageButton}`}
             onClick={() => props.changePage(true)}
@@ -274,7 +345,13 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             className={`${styles.pageNumber}`}
           >{`${props.pageNumber} / ${props.lastPageNumber}`}</Text>
         </Dropdown>
-        <Tooltip title="Next Page (→)">
+        <Tooltip
+          title={
+            <span>
+              Next Page <Text keyboard>{props.keyNextPage}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.pageButton}`}
             onClick={() => props.changePage(false)}
@@ -282,7 +359,13 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             <RightOutlined />
           </button>
         </Tooltip>
-        <Tooltip title="Last Page (ctrl+→)">
+        <Tooltip
+          title={
+            <span>
+              Last Page <Text keyboard>{props.keyLastPage}</Text>
+            </span>
+          }
+        >
           <button
             className={`${styles.pageButton}`}
             onClick={() => props.changePage(false, true)}
