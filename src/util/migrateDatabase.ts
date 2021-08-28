@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax */
 import { Chapter, Series } from 'houdoku-extension-lib';
 import lf from 'lovefield';
@@ -63,8 +64,16 @@ export const performMigration = async () => {
     Chapter[]
   >);
 
+  if (seriesList.length === 0) {
+    db.delete();
+    db.close();
+  }
+
   const downloadsDir = await ipcRenderer.invoke(
     ipcChannels.GET_PATH.DOWNLOADS_DIR
+  );
+  const thumbnailsDir = await ipcRenderer.invoke(
+    ipcChannels.GET_PATH.THUMBNAILS_DIR
   );
 
   seriesList.forEach((series: Series) => {
@@ -74,17 +83,24 @@ export const performMigration = async () => {
       (chapter) => chapter.seriesId === series.id
     );
 
-    const newSeries = library.upsertSeries(series);
-    library.upsertChapters(chapters, series);
+    // strip IDs from series and chapters before adding to the new library
+    const newSeries = library.upsertSeries({ ...series, id: undefined });
+    library.upsertChapters(
+      chapters.map((c) => ({ ...c, id: undefined })),
+      newSeries
+    );
     if (newSeries.id === undefined) return;
     const newChapters = library.fetchChapters(newSeries.id);
 
+    // rename downloaded chapter/series paths using their IDs
     const seriesDirPath = path.join(downloadsDir, series.id.toString());
     if (fs.existsSync(seriesDirPath)) {
       for (const chapterDirName of fs.readdirSync(seriesDirPath)) {
         if (!Number.isNaN(chapterDirName)) {
-          const existingChapter = chapters.find((c) => c.id === chapterDirName);
-          if (!existingChapter) return;
+          const existingChapter = chapters.find(
+            (c) => c.id?.toString() === chapterDirName
+          );
+          if (!existingChapter) continue;
 
           const newChapter = newChapters.find(
             (c) =>
@@ -93,7 +109,7 @@ export const performMigration = async () => {
               c.groupName === existingChapter.groupName &&
               c.title === existingChapter.title
           );
-          if (!newChapter || !newChapter.id) return;
+          if (!newChapter || !newChapter.id) continue;
 
           fs.renameSync(
             path.join(seriesDirPath, chapterDirName),
@@ -104,5 +120,23 @@ export const performMigration = async () => {
 
       fs.renameSync(seriesDirPath, path.join(downloadsDir, newSeries.id));
     }
+
+    // rename thumbnail path
+    const fileExtensions = ['jpg', 'png', 'jpeg'];
+    for (let i = 0; i < fileExtensions.length; i += 1) {
+      const thumbnailPath = path.join(
+        thumbnailsDir,
+        `${series.id}.${fileExtensions[i]}`
+      );
+      if (fs.existsSync(thumbnailPath)) {
+        fs.renameSync(
+          thumbnailPath,
+          path.join(thumbnailsDir, `${newSeries.id}.${fileExtensions[i]}`)
+        );
+      }
+    }
   });
+
+  console.log('db export:');
+  console.log(await db.export());
 };
