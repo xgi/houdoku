@@ -468,7 +468,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     removeKeybindings();
     addKeybindings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.chapter, props.lastPageNumber, props.showingSidebar]);
+  }, [props.showingSettingsModal]);
 
   useEffect(() => {
     addKeybindings();
