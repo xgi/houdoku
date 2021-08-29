@@ -55,7 +55,8 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const getFilteredList = () => {
     return props.chapterList.filter(
       (chapter: Chapter) =>
-        props.chapterLanguages.includes(chapter.languageKey) &&
+        (props.chapterLanguages.includes(chapter.languageKey) ||
+          props.chapterLanguages.length === 0) &&
         chapter.title.toLowerCase().includes(filterTitle) &&
         chapter.groupName.toLowerCase().includes(filterGroup)
     );

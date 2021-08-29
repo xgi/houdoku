@@ -14,7 +14,7 @@ import persistantStore from '../../util/persistantStore';
 import storeKeys from '../../constants/storeKeys.json';
 
 export const DEFAULT_GENERAL_SETTINGS = {
-  [GeneralSetting.ChapterLanguages]: [LanguageKey.ENGLISH],
+  [GeneralSetting.ChapterLanguages]: [],
   [GeneralSetting.RefreshOnStart]: true,
   [GeneralSetting.AutoCheckForUpdates]: true,
   [GeneralSetting.AutoCheckForExtensionUpdates]: true,
