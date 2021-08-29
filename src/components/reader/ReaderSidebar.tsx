@@ -141,9 +141,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type Props = PropsFromRedux & {
   changePage: (left: boolean, toBound?: boolean) => void;
-  setChapter: (id: number) => void;
+  setChapter: (id: string) => void;
   changeChapter: (previous: boolean) => void;
-  getAdjacentChapterId: (previous: boolean) => number;
+  getAdjacentChapterId: (previous: boolean) => string | null;
   exitPage: () => void;
 };
 
@@ -164,7 +164,7 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
           <CloseOutlined />
         </button>
         <Title className={styles.seriesTitle} level={4}>
-          {props.series === undefined ? 'loading...' : props.series.title}
+          {props.series === undefined ? 'Loading title...' : props.series.title}
         </Title>
       </div>
       <div className={styles.chapterHeader}>
@@ -177,7 +177,9 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
         >
           <button
             className={`${styles.chapterButton}
-            ${props.getAdjacentChapterId(true) === -1 ? styles.disabled : ''}`}
+            ${
+              props.getAdjacentChapterId(true) === null ? styles.disabled : ''
+            }`}
             onClick={() => props.changeChapter(true)}
           >
             <ArrowLeftOutlined />
@@ -211,7 +213,9 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
         >
           <button
             className={`${styles.chapterButton}
-            ${props.getAdjacentChapterId(false) === -1 ? styles.disabled : ''}`}
+            ${
+              props.getAdjacentChapterId(false) === null ? styles.disabled : ''
+            }`}
             onClick={() => props.changeChapter(false)}
           >
             <ArrowRightOutlined />

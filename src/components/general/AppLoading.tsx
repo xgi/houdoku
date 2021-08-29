@@ -8,6 +8,7 @@ import logo from '../../img/logo.svg';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {
+  // eslint-disable-next-line react/no-unused-prop-types
   step: AppLoadStep | null;
 };
 
@@ -16,7 +17,7 @@ const AppLoading: React.FC<Props> = (props: Props) => {
     <div className={styles.container}>
       <Image className={styles.logo} src={logo} width={96} height={96} />
       <Title level={5} className={styles.title}>
-        {props.step === AppLoadStep.DatabaseInit ? 'initializing database' : ''}
+        houdoku is loading
       </Title>
       <Paragraph className={styles.paragraph}>
         If this message does not disappear automatically,

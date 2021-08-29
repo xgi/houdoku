@@ -1,4 +1,8 @@
 {
+  "LIBRARY": {
+    "SERIES_LIST": "library-series-list",
+    "CHAPTER_LIST_PREFIX": "library-chapters-"
+  },
   "EXTENSION_SETTINGS_PREFIX": "extension-settings-",
   "TRACKER_ACCESS_TOKEN_PREFIX": "tracker-access-token-",
   "SETTINGS": {

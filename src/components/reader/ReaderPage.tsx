@@ -25,7 +25,6 @@ import {
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
 import { LayoutDirection, PageFit, PageView } from '../../models/types';
-import db from '../../services/db';
 import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
 import {
@@ -50,6 +49,7 @@ import {
   getChapterDownloaded,
   getChapterDownloadPath,
 } from '../../util/filesystem';
+import library from '../../services/library';
 
 const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
@@ -117,12 +117,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 interface ParamTypes {
+  series_id: string;
   chapter_id: string;
 }
 
 const ReaderPage: React.FC<Props> = (props: Props) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { chapter_id } = useParams<ParamTypes>();
+  const { series_id, chapter_id } = useParams<ParamTypes>();
   const history = useHistory();
   const location = useLocation();
   const forceUpdate = useForceUpdate();
@@ -137,17 +138,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * @param series the series to find relevant chapters for
    * @param chapter the current chapter to find other chapters in relation to
    */
-  const createRelevantChapterList = async (
-    series: Series,
-    chapter: Chapter
-  ) => {
+  const createRelevantChapterList = (series: Series, chapter: Chapter) => {
     if (series.id === undefined) return;
 
     const relevantChapterList: Chapter[] = [];
-
-    const chapters: Chapter[] = (await db.fetchChapters(
-      series.id
-    )) as Chapter[];
+    const chapters: Chapter[] = library.fetchChapters(series.id);
 
     const chapterNumbersSet: Set<string> = new Set();
     chapters.forEach((c: Chapter) => chapterNumbersSet.add(c.chapterNumber));
@@ -224,21 +219,17 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * resolves, since it does not wait for prop methods. However, it will eventually set all
    * necessary props for the reader to properly show the chapter.
    * @param chapterId the chapter to view. If it does not exist, this method returns immediately
+   * @param seriesId the id of the series the chapter is from
    */
-  const loadChapterData = async (chapterId: number) => {
+  const loadChapterData = async (chapterId: string, seriesId: string) => {
     log.debug(`Reader is loading chapter data for chapter ${chapterId}`);
 
-    const chapter: Chapter = await db
-      .fetchChapter(chapterId)
-      .then((response: any) => response[0]);
-
-    if (chapter.seriesId === undefined) return;
-    const series: Series = await db
-      .fetchSeries(chapter.seriesId)
-      .then((response: any) => response[0]);
+    const chapter: Chapter | null = library.fetchChapter(seriesId, chapterId);
+    const series: Series | null = library.fetchSeries(seriesId);
+    if (chapter === null || series === null) return;
 
     if (props.relevantChapterList.length === 0) {
-      await createRelevantChapterList(series, chapter);
+      createRelevantChapterList(series, chapter);
     }
 
     props.setSource(series, chapter);
@@ -295,11 +286,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   /**
    * Get the ID of a chapter just before or after the current one.
    * @param previous whether to get the previous chapter (instead of the next one)
-   * @return the ID of the chapter, or -1 if none exists (or props.chapter or
+   * @return the ID of the chapter, or null if none exists (or props.chapter or
    *  props.relevantChapterList have not been loaded)
    */
-  const getAdjacentChapterId = (previous: boolean): number => {
-    if (props.chapter === undefined) return -1;
+  const getAdjacentChapterId = (previous: boolean): string | null => {
+    if (props.chapter === undefined) return null;
 
     const curChapterIndex: number = props.relevantChapterList.findIndex(
       (chapter: Chapter) => chapter.id === props.chapter?.id
@@ -313,10 +304,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       newChapterIndex < 0 ||
       newChapterIndex >= props.relevantChapterList.length
     )
-      return -1;
+      return null;
 
     const id = props.relevantChapterList[newChapterIndex]?.id;
-    return id === undefined ? -1 : id;
+    return id === undefined ? null : id;
   };
 
   /**
@@ -324,12 +315,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * The chapter does not necessarily need to be included in relevantChapterList.
    * @param id the chapter id
    */
-  const setChapter = (id: number) => {
+  const setChapter = (id: string) => {
     props.setPageNumber(1);
     props.setPageUrls([]);
     props.setPageDataList([]);
 
-    loadChapterData(id);
+    loadChapterData(id, series_id);
   };
 
   /**
@@ -341,7 +332,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    */
   const changeChapter = (previous: boolean) => {
     const newChapterId = getAdjacentChapterId(previous);
-    if (newChapterId === -1) return false;
+    if (newChapterId === null) return false;
     setChapter(newChapterId);
     return true;
   };
@@ -472,7 +463,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     addKeybindings();
-    loadChapterData(parseInt(chapter_id, 10));
+    loadChapterData(chapter_id, series_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
