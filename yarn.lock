@@ -1922,6 +1922,11 @@
   dependencies:
     "@types/jest" "*"
 
+"@types/uuid@^8.3.1":
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.1.tgz#1a32969cf8f0364b3d8c8af9cc3555b7805df14f"
+  integrity sha512-Y2mHTRAbqfFkpjldbkHGY8JIzRN6XqYRliG8/24FcHm2D2PwW24fl5xMRTVGdrb7iMrwCaIEbLWerGIkXuFWVg==
+
 "@types/verror@^1.10.3":
   version "1.10.4"
   resolved "https://registry.yarnpkg.com/@types/verror/-/verror-1.10.4.tgz#805c0612b3a0c124cf99f517364142946b74ba3b"
@@ -5941,10 +5946,10 @@ hosted-git-info@^4.0.1:
   dependencies:
     lru-cache "^6.0.0"
 
-houdoku-extension-lib@^1.5.6:
-  version "1.5.6"
-  resolved "https://registry.yarnpkg.com/houdoku-extension-lib/-/houdoku-extension-lib-1.5.6.tgz#98e9d1947e8cee0a4a74cc362ebc26b0f1753336"
-  integrity sha512-/k6qJCbdyyfa72Pw8FjzdNJmjD58exguW3hLYnZzcCs3Bt7d08NiHdAYV+6wIzdsj8iE7KOOanT4925P4Kxj1A==
+houdoku-extension-lib@^1.5.8:
+  version "1.5.8"
+  resolved "https://registry.yarnpkg.com/houdoku-extension-lib/-/houdoku-extension-lib-1.5.8.tgz#fd4877e265dcccd7f2fddc6ed18da281a04453f1"
+  integrity sha512-2Kae7lC5n3A/zjKB5r/NVaEHAT0QxBpRbGrfdoadVJ6Kb+3idIZdPt7Ckk7lURUjD3rbNzT1DXUagI2mhmkPqg==
 
 hpack.js@^2.1.6:
   version "2.1.6"

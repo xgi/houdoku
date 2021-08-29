@@ -8,7 +8,6 @@ import {
   setCompletedStartReload,
   setReloadingSeriesList,
 } from './actions';
-import db from '../../services/db';
 import {
   deleteAllDownloadedChapters,
   deleteThumbnail,
@@ -17,23 +16,34 @@ import { downloadCover } from '../../util/download';
 import { setStatusText } from '../statusbar/actions';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
+import library from '../../services/library';
+import { getNumberUnreadChapters } from '../../util/comparison';
+
+const updateSeriesNumberUnread = (series: Series) => {
+  if (series.id !== undefined) {
+    const chapters: Chapter[] = library.fetchChapters(series.id);
+    library.upsertSeries({
+      ...series,
+      numberUnread: getNumberUnreadChapters(chapters),
+    });
+  }
+};
 
 export function loadSeriesList(dispatch: any) {
-  db.fetchSerieses()
-    .then((response: any) => dispatch(setSeriesList(response)))
-    .catch((err: Error) => log.error(err));
+  const seriesList: Series[] = library.fetchSeriesList();
+  dispatch(setSeriesList(seriesList));
 }
 
-export function loadSeries(dispatch: any, id: number) {
-  db.fetchSeries(id)
-    .then((response: any) => dispatch(setSeries(response[0])))
-    .catch((err: Error) => log.error(err));
+export function loadSeries(dispatch: any, seriesId: string) {
+  const series: Series | null = library.fetchSeries(seriesId);
+  if (series !== null) {
+    dispatch(setSeries(series));
+  }
 }
 
-export function loadChapterList(dispatch: any, seriesId: number) {
-  db.fetchChapters(seriesId)
-    .then((response: any) => dispatch(setChapterList(response)))
-    .catch((err: Error) => log.error(err));
+export function loadChapterList(dispatch: any, seriesId: string) {
+  const chapters: Chapter[] = library.fetchChapters(seriesId);
+  dispatch(setChapterList(chapters));
 }
 
 export function removeSeries(
@@ -43,16 +53,12 @@ export function removeSeries(
 ) {
   if (series.id === undefined) return;
 
-  db.deleteSeries(series.id)
-    .then(() => {
-      deleteThumbnail(series);
-      // eslint-disable-next-line promise/always-return
-      if (deleteDownloadedChapters) {
-        deleteAllDownloadedChapters(series);
-      }
-      loadSeriesList(dispatch);
-    })
-    .catch((err: Error) => log.error(err));
+  library.removeSeries(series.id);
+  deleteThumbnail(series);
+  if (deleteDownloadedChapters) {
+    deleteAllDownloadedChapters(series);
+  }
+  loadSeriesList(dispatch);
 }
 
 export async function importSeries(dispatch: any, series: Series) {
@@ -68,10 +74,9 @@ export async function importSeries(dispatch: any, series: Series) {
     series.sourceId
   );
 
-  const addResponse = await db.addSeries(series);
-  const addedSeries: Series = addResponse[0] as Series;
-  await db.addChapters(chapters, addedSeries);
-  await db.updateSeriesNumberUnread(addedSeries);
+  const addedSeries = library.upsertSeries(series);
+  library.upsertChapters(chapters, addedSeries);
+  updateSeriesNumberUnread(addedSeries);
   await loadSeriesList(dispatch);
   downloadCover(addedSeries);
 
@@ -91,16 +96,12 @@ export function toggleChapterRead(
   const newChapter: Chapter = { ...chapter, read: !chapter.read };
 
   if (series.id !== undefined) {
-    db.addChapters([newChapter], series)
-      .then(() => db.updateSeriesNumberUnread(series))
-      .then(() => {
-        if (series.id !== undefined) {
-          loadChapterList(dispatch, series.id);
-          loadSeries(dispatch, series.id);
-        }
-        return true;
-      })
-      .catch((err: Error) => log.error(err));
+    library.upsertChapters([newChapter], series);
+    updateSeriesNumberUnread(series);
+    if (series.id !== undefined) {
+      loadChapterList(dispatch, series.id);
+      loadSeries(dispatch, series.id);
+    }
   }
 }
 
@@ -147,11 +148,9 @@ async function reloadSeries(series: Series): Promise<Error | void> {
     newSeries.trackerKeys = series.trackerKeys;
   }
 
-  const oldChapters: Chapter[] = (await db.fetchChapters(
-    series.id
-  )) as Chapter[];
-  const orphanedChapterIds: number[] = oldChapters.map(
-    (chapter: Chapter) => chapter.id || -1
+  const oldChapters: Chapter[] = library.fetchChapters(series.id);
+  const orphanedChapterIds: string[] = oldChapters.map(
+    (chapter: Chapter) => chapter.id || ''
   );
 
   const chapters: Chapter[] = newChapters.map((chapter: Chapter) => {
@@ -170,12 +169,13 @@ async function reloadSeries(series: Series): Promise<Error | void> {
     return chapter;
   });
 
-  await db.addSeries(newSeries);
-  await db.addChapters(chapters, newSeries);
-  if (orphanedChapterIds.length > 0) {
-    await db.deleteChaptersById(orphanedChapterIds);
+  library.upsertSeries(newSeries);
+  library.upsertChapters(chapters, newSeries);
+  if (orphanedChapterIds.length > 0 && newSeries.id !== undefined) {
+    library.removeChapters(orphanedChapterIds, newSeries.id);
   }
-  await db.updateSeriesNumberUnread(newSeries);
+
+  updateSeriesNumberUnread(newSeries);
 
   if (newSeries.remoteCoverUrl !== series.remoteCoverUrl) {
     log.debug(`Updating cover for series ${newSeries.id}`);
@@ -237,25 +237,17 @@ export async function reloadSeriesList(
 }
 
 export function updateSeries(series: Series) {
-  return db.addSeries(series).then(() => downloadCover(series));
+  const newSeries = library.upsertSeries(series);
+  return downloadCover(newSeries);
 }
 
-export async function updateSeriesUserTags(
-  series: Series,
-  userTags: string[],
-  callback?: () => void
-) {
-  const newSeries: Series = { ...series, userTags };
-  await db.addSeries(newSeries);
-  if (callback !== undefined) callback();
+export function updateSeriesUserTags(series: Series, userTags: string[]) {
+  library.upsertSeries({ ...series, userTags });
 }
 
-export async function updateSeriesTrackerKeys(
+export function updateSeriesTrackerKeys(
   series: Series,
-  trackerKeys: { [trackerId: string]: string } | undefined,
-  callback?: () => void
+  trackerKeys: { [trackerId: string]: string } | undefined
 ) {
-  const newSeries: Series = { ...series, trackerKeys };
-  await db.addSeries(newSeries);
-  if (callback !== undefined) callback();
+  library.upsertSeries({ ...series, trackerKeys });
 }

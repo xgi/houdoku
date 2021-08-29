@@ -11,6 +11,7 @@ import { getDownloadedList } from '../../features/downloader/utils';
 import { deleteDownloadedChapter } from '../../util/filesystem';
 import { setStatusText } from '../../features/statusbar/actions';
 import ipcChannels from '../../constants/ipcChannels.json';
+import library from '../../services/library';
 
 const { Text, Paragraph } = Typography;
 const { confirm } = Modal;
@@ -32,8 +33,6 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const [downloadsDir, setDownloadsDir] = useState('');
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
-  const [cacheSeriesList, setCacheSeriesList] = useState<Series[]>([]);
-  const [cacheChapterList, setCacheChapterList] = useState<Chapter[]>([]);
   const [treeData, setTreeData] = useState<any[]>([]);
 
   const loadDownloads = async () => {
@@ -45,16 +44,14 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
     getDownloadedList()
       // eslint-disable-next-line promise/always-return
-      .then(({ seriesList, chapterList }) => {
+      .then(({ seriesList, chapterLists }) => {
         const tempTreeData = seriesList.map((series) => {
-          const chapters = chapterList.filter(
-            (chapter) => chapter.seriesId === series.id
-          );
+          if (series.id === undefined) return {};
 
           return {
             title: `${series.title} [id:${series.id}]`,
             key: `series-${series.id}`,
-            children: chapters.map((chapter) => {
+            children: chapterLists[series.id].map((chapter) => {
               const groupStr =
                 chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
 
@@ -70,15 +67,13 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
                     {groupStr} [id:{chapter.id}]
                   </>
                 ),
-                key: `chapter-${chapter.id}`,
+                key: `${series.id};${chapter.id}`,
               };
             }),
           };
         });
 
         setTreeData(tempTreeData);
-        setCacheChapterList(chapterList);
-        setCacheSeriesList(seriesList);
       })
       .catch((err) => log.error(err))
       .finally(() => setLoading(false))
@@ -96,16 +91,12 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
       onOk() {
         Promise.all(
           checkedChapters.map(async (key: string) => {
-            const chapterIdStr = key.split('-').pop();
-            if (chapterIdStr === undefined) return;
-            const chapterId = parseInt(chapterIdStr, 10);
+            const seriesId = key.split(';')[0];
+            const chapterId = key.split(';')[1];
 
-            const chapter = cacheChapterList.find((c) => c.id === chapterId);
-            if (chapter === undefined || chapter.seriesId === undefined) return;
-            const series = cacheSeriesList.find(
-              (s) => s.id === chapter.seriesId
-            );
-            if (series === undefined) return;
+            const series = library.fetchSeries(seriesId);
+            const chapter = library.fetchChapter(seriesId, chapterId);
+            if (series === null || chapter === null) return;
 
             await deleteDownloadedChapter(series, chapter);
           })
@@ -152,7 +143,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
           selectable={false}
           onCheck={(keys: any) =>
             setCheckedChapters(
-              keys.filter((key: string) => key.startsWith('chapter-'))
+              keys.filter((key: string) => !key.startsWith('series-'))
             )
           }
           treeData={treeData}

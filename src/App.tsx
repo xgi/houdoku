@@ -9,13 +9,13 @@ import persistantStore from './util/persistantStore';
 import routes from './constants/routes.json';
 import DashboardPage from './components/general/DashboardPage';
 import ReaderPage from './components/reader/ReaderPage';
-import * as database from './util/db';
 import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
 import { AppLoadStep, TrackerMetadata } from './models/types';
 import { setStatusText } from './features/statusbar/actions';
 import { loadSeriesList } from './features/library/utils';
 import { linkDownloaderClientFunctions } from './features/downloader/reducers';
+import { performMigration } from './util/migrateDatabase';
 import AppLoading from './components/general/AppLoading';
 
 const store = configuredStore();
@@ -120,21 +120,18 @@ export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     log.debug('Performing database init and loading series list');
-    database
-      .init()
-      // eslint-disable-next-line promise/always-return
-      .then(() => {
-        setLoading(false);
-      })
+
+    performMigration()
       // eslint-disable-next-line promise/always-return
       .then(() => {
         loadSeriesList(store.dispatch);
+        setLoading(false);
       })
-      .catch((error) => log.error(error));
+      .catch((e) => log.error(e));
   });
 
-  if (database.database === undefined) {
-    return <AppLoading step={AppLoadStep.DatabaseInit} />;
+  if (loading) {
+    return <AppLoading step={AppLoadStep.DatabaseMigrate} />;
   }
 
   return (
@@ -142,7 +139,7 @@ export default function App() {
       <Router>
         <Switch>
           <Route
-            path={`${routes.READER}/:chapter_id`}
+            path={`${routes.READER}/:series_id/:chapter_id`}
             exact
             component={ReaderPage}
           />

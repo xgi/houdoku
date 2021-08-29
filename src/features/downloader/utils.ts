@@ -1,52 +1,47 @@
 import { Chapter, Series } from 'houdoku-extension-lib';
 import path from 'path';
-import db from '../../services/db';
+import library from '../../services/library';
 import { getAllDownloadedChapterPaths } from '../../util/filesystem';
 
 // eslint-disable-next-line import/prefer-default-export
 export async function getDownloadedList(): Promise<{
   seriesList: Series[];
-  chapterList: Chapter[];
+  chapterLists: { [seriesId: string]: Chapter[] };
 }> {
   const downloadedChapterPaths: string[] = await getAllDownloadedChapterPaths();
 
-  const cache: {
-    [seriesId: number]: { series: Series; chapters: Chapter[] };
-  } = {};
-
-  const seriesSet: Set<Series> = new Set();
-  const chapterSet: Set<Chapter> = new Set();
+  const seriesList: Series[] = [];
+  const chapterLists: { [seriesId: string]: Chapter[] } = {};
 
   await Promise.all(
-    downloadedChapterPaths.map(async (chapterPath: string) => {
-      const chapterId = parseInt(path.basename(chapterPath), 10);
-      const seriesId = parseInt(path.basename(path.dirname(chapterPath)), 10);
+    // eslint-disable-next-line array-callback-return
+    downloadedChapterPaths.map((chapterPath: string) => {
+      const chapterId = path.basename(chapterPath);
+      const seriesId = path.basename(path.dirname(chapterPath));
 
-      if (Number.isNaN(chapterId) || Number.isNaN(seriesId)) return;
+      const existingSeries: Series | undefined = seriesList.find(
+        (s) => s.id === seriesId
+      );
+      const series: Series | null =
+        existingSeries || library.fetchSeries(seriesId);
+      if (series === null) return;
+      if (!existingSeries) {
+        seriesList.push(series);
+      }
 
-      if (seriesId in cache) {
-        const cachedChapter = cache[seriesId].chapters.find(
-          (chapter: Chapter) => chapter.id === chapterId
-        );
-        if (cachedChapter !== undefined) chapterSet.add(cachedChapter);
+      const chapter: Chapter | null = library.fetchChapter(seriesId, chapterId);
+      if (chapter === null) return;
+
+      if (seriesId in chapterLists) {
+        chapterLists[seriesId] = [...chapterLists[seriesId], chapter];
       } else {
-        const series = (await db.fetchSeries(seriesId))[0] as Series;
-        const chapters = await db.fetchChapters(seriesId);
-
-        cache[seriesId] = {
-          series,
-          chapters,
-        };
-
-        seriesSet.add(series);
-        const chapter = chapters.find((c: Chapter) => c.id === chapterId);
-        if (chapter !== undefined) chapterSet.add(chapter);
+        chapterLists[seriesId] = [chapter];
       }
     })
   );
 
   return {
-    seriesList: Array.from(seriesSet),
-    chapterList: Array.from(chapterSet),
+    seriesList,
+    chapterLists,
   };
 }

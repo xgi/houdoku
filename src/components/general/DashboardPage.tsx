@@ -12,8 +12,6 @@ import {
 } from '@ant-design/icons';
 import { Series } from 'houdoku-extension-lib';
 import { RootState } from '../../store';
-import { setFilter, setSeriesBannerUrl } from '../../features/library/actions';
-import { setStatusText } from '../../features/statusbar/actions';
 import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
 import StatusBar from './StatusBar';
@@ -21,8 +19,6 @@ import styles from './DashboardPage.css';
 import routes from '../../constants/routes.json';
 import {
   importSeries,
-  loadChapterList,
-  loadSeries,
   loadSeriesList,
   reloadSeriesList,
 } from '../../features/library/utils';
@@ -48,16 +44,10 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  setStatusText: (text?: string) => dispatch(setStatusText(text)),
   loadSeriesList: () => loadSeriesList(dispatch),
-  loadSeries: (id: number) => loadSeries(dispatch, id),
-  loadChapterList: (seriesId: number) => loadChapterList(dispatch, seriesId),
   reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
     reloadSeriesList(dispatch, seriesList, callback),
   importSeries: (series: Series) => importSeries(dispatch, series),
-  setFilter: (filter: string) => dispatch(setFilter(filter)),
-  setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
-    dispatch(setSeriesBannerUrl(seriesBannerUrl)),
 });
 
 const connector = connect(mapState, mapDispatch);
