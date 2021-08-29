@@ -96,5 +96,5 @@ export enum PageView {
 }
 
 export enum AppLoadStep {
-  DatabaseInit = 'DatabaseInit',
+  DatabaseMigrate = 'DatabaseMigrate',
 }

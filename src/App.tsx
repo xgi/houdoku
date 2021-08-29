@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import log from 'electron-log';
@@ -11,11 +11,12 @@ import DashboardPage from './components/general/DashboardPage';
 import ReaderPage from './components/reader/ReaderPage';
 import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
-import { TrackerMetadata } from './models/types';
+import { AppLoadStep, TrackerMetadata } from './models/types';
 import { setStatusText } from './features/statusbar/actions';
 import { loadSeriesList } from './features/library/utils';
 import { linkDownloaderClientFunctions } from './features/downloader/reducers';
 import { performMigration } from './util/migrateDatabase';
+import AppLoading from './components/general/AppLoading';
 
 const store = configuredStore();
 
@@ -114,15 +115,24 @@ if (store.getState().settings.autoCheckForExtensionUpdates) {
 linkDownloaderClientFunctions(store);
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     log.debug('Performing database init and loading series list');
 
-    performMigration();
-    loadSeriesList(store.dispatch);
+    performMigration()
+      // eslint-disable-next-line promise/always-return
+      .then(() => {
+        loadSeriesList(store.dispatch);
+        setLoading(false);
+      })
+      .catch((e) => log.error(e));
   });
 
-  // return <AppLoading step={AppLoadStep.DatabaseInit} />;
+  if (loading) {
+    return <AppLoading step={AppLoadStep.DatabaseMigrate} />;
+  }
 
   return (
     <Provider store={store}>
