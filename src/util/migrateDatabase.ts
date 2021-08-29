@@ -5,6 +5,7 @@ import lf from 'lovefield';
 import path from 'path';
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
+import log from 'electron-log';
 import library from '../services/library';
 import ipcChannels from '../constants/ipcChannels.json';
 
@@ -65,8 +66,7 @@ export const performMigration = async () => {
   >);
 
   if (seriesList.length === 0) {
-    db.delete();
-    db.close();
+    return;
   }
 
   const downloadsDir = await ipcRenderer.invoke(
@@ -137,6 +137,18 @@ export const performMigration = async () => {
     }
   });
 
-  console.log('db export:');
-  console.log(await db.export());
+  db.export()
+    // eslint-disable-next-line promise/always-return
+    .then(async (data: unknown) => {
+      const baseAppPath = path.dirname(downloadsDir);
+      fs.writeFileSync(
+        path.join(baseAppPath, 'lovefield-db.bak'),
+        JSON.stringify(data)
+      );
+
+      await db.delete().from(seriesTable).exec();
+      await db.delete().from(chapterTable).exec();
+      db.close();
+    })
+    .catch((e) => log.error(e));
 };
