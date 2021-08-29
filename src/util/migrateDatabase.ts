@@ -54,6 +54,7 @@ const createSchemaBuilder = (): lf.schema.Builder => {
 
 // eslint-disable-next-line import/prefer-default-export
 export const performMigration = async () => {
+  log.debug('lovefield migration - connected to DB');
   const db: lf.Database = await createSchemaBuilder().connect();
   const seriesTable = db.getSchema().table('series');
   const chapterTable = db.getSchema().table('chapter');
@@ -66,8 +67,12 @@ export const performMigration = async () => {
   >);
 
   if (seriesList.length === 0) {
+    log.debug('No series in DB found, ending migration');
     return;
   }
+  log.debug(
+    `lovefield DB contained ${seriesList.length} series, starting migration`
+  );
 
   const downloadsDir = await ipcRenderer.invoke(
     ipcChannels.GET_PATH.DOWNLOADS_DIR
@@ -78,6 +83,7 @@ export const performMigration = async () => {
 
   seriesList.forEach((series: Series) => {
     if (!series.id) return;
+    log.debug(`migrating series with id ${series.id}`);
 
     const chapters = chapterList.filter(
       (chapter) => chapter.seriesId === series.id
@@ -91,6 +97,9 @@ export const performMigration = async () => {
     );
     if (newSeries.id === undefined) return;
     const newChapters = library.fetchChapters(newSeries.id);
+    log.debug(
+      `added series to new DB with id ${newSeries.id} along with ${newChapters.length} chapters`
+    );
 
     // rename downloaded chapter/series paths using their IDs
     const seriesDirPath = path.join(downloadsDir, series.id.toString());
@@ -111,14 +120,16 @@ export const performMigration = async () => {
           );
           if (!newChapter || !newChapter.id) continue;
 
-          fs.renameSync(
-            path.join(seriesDirPath, chapterDirName),
-            path.join(seriesDirPath, newChapter.id)
-          );
+          const sourcePath = path.join(seriesDirPath, chapterDirName);
+          const destPath = path.join(seriesDirPath, newChapter.id);
+          log.debug(`renaming chapter dir: ${sourcePath} -> ${destPath}`);
+          fs.renameSync(sourcePath, destPath);
         }
       }
 
-      fs.renameSync(seriesDirPath, path.join(downloadsDir, newSeries.id));
+      const destPath = path.join(downloadsDir, newSeries.id);
+      log.debug(`renaming series dir: ${seriesDirPath} -> ${destPath}`);
+      fs.renameSync(seriesDirPath, destPath);
     }
 
     // rename thumbnail path
@@ -129,26 +140,30 @@ export const performMigration = async () => {
         `${series.id}.${fileExtensions[i]}`
       );
       if (fs.existsSync(thumbnailPath)) {
-        fs.renameSync(
-          thumbnailPath,
-          path.join(thumbnailsDir, `${newSeries.id}.${fileExtensions[i]}`)
+        const destPath = path.join(
+          thumbnailsDir,
+          `${newSeries.id}.${fileExtensions[i]}`
         );
+        log.debug(`renaming thumbnail: ${thumbnailPath} -> ${destPath}`);
+        fs.renameSync(thumbnailPath, destPath);
       }
     }
   });
 
+  log.debug('exporting lovefield DB');
   db.export()
     // eslint-disable-next-line promise/always-return
     .then(async (data: unknown) => {
       const baseAppPath = path.dirname(downloadsDir);
-      fs.writeFileSync(
-        path.join(baseAppPath, 'lovefield-db.bak'),
-        JSON.stringify(data)
-      );
+      const destPath = path.join(baseAppPath, 'lovefield-db.bak');
+      log.debug(`writing lovefield DB export to ${destPath}`);
+      fs.writeFileSync(destPath, JSON.stringify(data));
 
+      log.debug('deleting contents from lovefield DB');
       await db.delete().from(seriesTable).exec();
       await db.delete().from(chapterTable).exec();
-      db.close();
+
+      log.debug('lovefield database migration complete');
     })
     .catch((e) => log.error(e));
 };
