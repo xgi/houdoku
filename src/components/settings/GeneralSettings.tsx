@@ -15,11 +15,13 @@ import {
 
 const { Option } = Select;
 
-const languageOptions = Object.values(Languages).map((language: Language) => (
-  <Option key={language.key} value={language.key}>
-    {language.name}
-  </Option>
-));
+const languageOptions = Object.values(Languages)
+  .filter((language) => language.key !== LanguageKey.MULTI)
+  .map((language: Language) => (
+    <Option key={language.key} value={language.key}>
+      {language.name}
+    </Option>
+  ));
 
 const mapState = (state: RootState) => ({
   chapterLanguages: state.settings.chapterLanguages,
