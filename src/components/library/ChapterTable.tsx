@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { useState } from 'react';
-import { Table, Checkbox, Button, Input } from 'antd';
+import { Table, Checkbox, Button, Input, Empty } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Chapter, Series, Languages } from 'houdoku-extension-lib';
@@ -215,6 +215,21 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         close={() => setShowingContextMenu(false)}
       />
       <Table
+        locale={{
+          emptyText: (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={
+                <span>
+                  No Chapters Found
+                  <br />
+                  You may need to adjust the &quot;Chapter Languages&quot;
+                  option in the Settings tab.
+                </span>
+              }
+            />
+          ),
+        }}
         onRow={(record, _rowIndex) => {
           return {
             onClick: () => {
