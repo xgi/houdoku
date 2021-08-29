@@ -99,7 +99,11 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
   if (storeValues[GeneralSetting.ChapterLanguages] !== null) {
     settings[GeneralSetting.ChapterLanguages] = storeValues[
       GeneralSetting.ChapterLanguages
-    ]?.split(',') as LanguageKey[];
+    ]
+      ? (storeValues[GeneralSetting.ChapterLanguages]?.split(
+          ','
+        ) as LanguageKey[])
+      : [];
   }
   if (storeValues[GeneralSetting.RefreshOnStart] !== null) {
     settings[GeneralSetting.RefreshOnStart] =
