@@ -27,6 +27,7 @@ import {
   SET_LIBRARY_FILTER_PROGRESS,
   SET_LIBRARY_FILTER_USER_TAGS,
   SET_KEYBINDING,
+  SET_CUSTOM_DOWNLOADS_DIR,
 } from './types';
 
 export function setChapterLanguages(
@@ -67,6 +68,17 @@ export function setAutoCheckForExtensionUpdates(
     type: SET_AUTO_CHECK_FOR_EXTENSION_UPDATES,
     payload: {
       autoCheckForExtensionUpdates,
+    },
+  };
+}
+
+export function setCustomDownloadsDir(
+  customDownloadsDir: string
+): SettingsAction {
+  return {
+    type: SET_CUSTOM_DOWNLOADS_DIR,
+    payload: {
+      customDownloadsDir,
     },
   };
 }

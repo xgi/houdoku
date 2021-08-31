@@ -14,7 +14,7 @@
   "GET_PATH": {
     "THUMBNAILS_DIR": "get-thumbnails-dir",
     "PLUGINS_DIR": "get-plugins-dir",
-    "DOWNLOADS_DIR": "get-downloads-dir",
+    "DEFAULT_DOWNLOADS_DIR": "get-default-downloads-dir",
     "LOGS_DIR": "get-logs-dir"
   },
   "GET_ALL_FILES": "get-all-files",

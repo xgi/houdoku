@@ -167,7 +167,7 @@ ipcMain.handle(ipcChannels.GET_PATH.PLUGINS_DIR, () => {
   return pluginsDir;
 });
 
-ipcMain.handle(ipcChannels.GET_PATH.DOWNLOADS_DIR, () => {
+ipcMain.handle(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR, () => {
   return downloadsDir;
 });
 

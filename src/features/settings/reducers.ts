@@ -29,6 +29,7 @@ import {
   SET_LIBRARY_FILTER_USER_TAGS,
   SET_AUTO_CHECK_FOR_EXTENSION_UPDATES,
   SET_KEYBINDING,
+  SET_CUSTOM_DOWNLOADS_DIR,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -67,6 +68,10 @@ const initialState: SettingsState = {
     storedGeneralSettings.AutoCheckForExtensionUpdates === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.AutoCheckForExtensionUpdates]
       : storedGeneralSettings.AutoCheckForExtensionUpdates,
+  customDownloadsDir:
+    storedGeneralSettings.CustomDownloadsDir === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.CustomDownloadsDir]
+      : storedGeneralSettings.CustomDownloadsDir,
   libraryColumns:
     storedGeneralSettings.LibraryColumns === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryColumns]
@@ -233,6 +238,15 @@ export default function settings(
         ...state,
         autoCheckForExtensionUpdates:
           action.payload.autoCheckForExtensionUpdates,
+      };
+    case SET_CUSTOM_DOWNLOADS_DIR:
+      saveGeneralSetting(
+        GeneralSetting.CustomDownloadsDir,
+        action.payload.customDownloadsDir
+      );
+      return {
+        ...state,
+        customDownloadsDir: action.payload.customDownloadsDir,
       };
     case SET_LIBRARY_COLUMNS:
       saveGeneralSetting(

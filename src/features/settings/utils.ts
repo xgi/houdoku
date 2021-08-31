@@ -18,6 +18,7 @@ export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.RefreshOnStart]: true,
   [GeneralSetting.AutoCheckForUpdates]: true,
   [GeneralSetting.AutoCheckForExtensionUpdates]: true,
+  [GeneralSetting.CustomDownloadsDir]: '',
   [GeneralSetting.LibraryColumns]: 4,
   [GeneralSetting.LibraryFilterStatus]: null,
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,

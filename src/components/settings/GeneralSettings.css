@@ -1,3 +1,7 @@
 .row {
   margin-bottom: 8px !important;
 }
+
+.downloadDirInput {
+  width: 99% !important;
+}

@@ -19,6 +19,7 @@ export const SET_REFRESH_ON_START = 'SET_REFRESH_ON_START';
 export const SET_AUTO_CHECK_FOR_UPDATES = 'SET_AUTO_CHECK_FOR_UPDATES';
 export const SET_AUTO_CHECK_FOR_EXTENSION_UPDATES =
   'SET_AUTO_CHECK_FOR_EXTENSION_UPDATES';
+export const SET_CUSTOM_DOWNLOADS_DIR = 'SET_CUSTOM_DOWNLOADS_DIR';
 export const SET_LIBRARY_COLUMNS = 'SET_LIBRARY_COLUMNS';
 export const SET_LIBRARY_FILTER_STATUS = 'SET_LIBRARY_FILTER_STATUS';
 export const SET_LIBRARY_FILTER_PROGRESS = 'SET_LIBRARY_FILTER_PROGRESS';
@@ -33,6 +34,7 @@ export interface SettingsState {
   refreshOnStart: boolean;
   autoCheckForUpdates: boolean;
   autoCheckForExtensionUpdates: boolean;
+  customDownloadsDir: string;
   libraryColumns: number;
   libraryFilterStatus: SeriesStatus | null;
   libraryFilterProgress: ProgressFilter;
@@ -127,6 +129,13 @@ interface SetAutoCheckForExtensionUpdatesAction {
   };
 }
 
+interface SetCustomDownloadsDirAction {
+  type: typeof SET_CUSTOM_DOWNLOADS_DIR;
+  payload: {
+    customDownloadsDir: string;
+  };
+}
+
 interface SetLibraryColumnsAction {
   type: typeof SET_LIBRARY_COLUMNS;
   payload: {
@@ -196,6 +205,7 @@ export type SettingsAction =
   | SetRefreshOnStartAction
   | SetAutoCheckForUpdatesAction
   | SetAutoCheckForExtensionUpdatesAction
+  | SetCustomDownloadsDirAction
   | SetLibraryColumnsAction
   | SetLibraryFilterStatusAction
   | SetLibraryFilterProgressAction

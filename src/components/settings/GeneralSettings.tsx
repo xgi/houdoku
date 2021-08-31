@@ -1,8 +1,9 @@
 import React from 'react';
-import { Select, Col, Row, Menu, Dropdown, Button } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { Select, Col, Row, Menu, Dropdown, Button, Input, Tooltip } from 'antd';
+import { DownOutlined, SelectOutlined, UndoOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
+import { ipcRenderer } from 'electron';
 import styles from './GeneralSettings.css';
 import { GeneralSetting } from '../../models/types';
 import { RootState } from '../../store';
@@ -10,8 +11,10 @@ import {
   setAutoCheckForExtensionUpdates,
   setAutoCheckForUpdates,
   setChapterLanguages,
+  setCustomDownloadsDir,
   setRefreshOnStart,
 } from '../../features/settings/actions';
+import ipcChannels from '../../constants/ipcChannels.json';
 
 const { Option } = Select;
 
@@ -23,11 +26,16 @@ const languageOptions = Object.values(Languages)
     </Option>
   ));
 
+const defaultDownloadsDir = await ipcRenderer.invoke(
+  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
+);
+
 const mapState = (state: RootState) => ({
   chapterLanguages: state.settings.chapterLanguages,
   refreshOnStart: state.settings.refreshOnStart,
   autoCheckForUpdates: state.settings.autoCheckForUpdates,
   autoCheckForExtensionUpdates: state.settings.autoCheckForExtensionUpdates,
+  customDownloadsDir: state.settings.customDownloadsDir,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,6 +48,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setAutoCheckForUpdates(autoCheckForUpdates)),
   setAutoCheckForExtensionUpdates: (autoCheckForExtensionUpdates: boolean) =>
     dispatch(setAutoCheckForExtensionUpdates(autoCheckForExtensionUpdates)),
+  setCustomDownloadsDir: (customDownloadsDir: string) =>
+    dispatch(setCustomDownloadsDir(customDownloadsDir)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -62,6 +72,9 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         break;
       case GeneralSetting.AutoCheckForExtensionUpdates:
         props.setAutoCheckForExtensionUpdates(value);
+        break;
+      case GeneralSetting.CustomDownloadsDir:
+        props.setCustomDownloadsDir(value);
         break;
       default:
         break;
@@ -172,6 +185,48 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
               <DownOutlined />
             </Button>
           </Dropdown>
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Custom Downloads Location</Col>
+        <Col span={12}>
+          <Input
+            className={styles.downloadDirInput}
+            value={props.customDownloadsDir || defaultDownloadsDir}
+            title={props.customDownloadsDir || defaultDownloadsDir}
+            placeholder="Downloads location..."
+            disabled
+          />
+        </Col>
+        <Col span={1}>
+          <Tooltip title="Select directory">
+            <Button
+              icon={<SelectOutlined />}
+              onClick={() =>
+                ipcRenderer
+                  .invoke(
+                    ipcChannels.APP.SHOW_OPEN_DIALOG,
+                    true,
+                    [],
+                    'Select Downloads Directory'
+                  )
+                  .then((fileList: string) => {
+                    // eslint-disable-next-line promise/always-return
+                    if (fileList.length > 0) {
+                      props.setCustomDownloadsDir(fileList[0]);
+                    }
+                  })
+              }
+            />
+          </Tooltip>
+        </Col>
+        <Col span={1}>
+          <Tooltip title="Reset">
+            <Button
+              icon={<UndoOutlined />}
+              onClick={() => props.setCustomDownloadsDir('')}
+            />
+          </Tooltip>
         </Col>
       </Row>
     </>
