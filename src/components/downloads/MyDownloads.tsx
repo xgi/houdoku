@@ -41,44 +41,38 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   const [treeData, setTreeData] = useState<any[]>([]);
 
   const loadDownloads = async () => {
-    setLoading(true);
+    const downloadedList = getDownloadedList(
+      props.customDownloadsDir || defaultDownloadsDir
+    );
+    const tempTreeData = downloadedList.seriesList.map((series) => {
+      if (series.id === undefined) return {};
 
-    getDownloadedList(props.customDownloadsDir || defaultDownloadsDir)
-      // eslint-disable-next-line promise/always-return
-      .then(({ seriesList, chapterLists }) => {
-        const tempTreeData = seriesList.map((series) => {
-          if (series.id === undefined) return {};
+      return {
+        title: `${series.title} [id:${series.id}]`,
+        key: `series-${series.id}`,
+        children: downloadedList.chapterLists[series.id].map((chapter) => {
+          const groupStr =
+            chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
 
           return {
-            title: `${series.title} [id:${series.id}]`,
-            key: `series-${series.id}`,
-            children: chapterLists[series.id].map((chapter) => {
-              const groupStr =
-                chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
-
-              return {
-                title: (
-                  <>
-                    <div
-                      className={`${styles.flag} flag flag-${
-                        Languages[chapter.languageKey].flagCode
-                      }`}
-                    />
-                    Chapter {chapter.chapterNumber}
-                    {groupStr} [id:{chapter.id}]
-                  </>
-                ),
-                key: `${series.id};${chapter.id}`,
-              };
-            }),
+            title: (
+              <>
+                <div
+                  className={`${styles.flag} flag flag-${
+                    Languages[chapter.languageKey].flagCode
+                  }`}
+                />
+                Chapter {chapter.chapterNumber}
+                {groupStr} [id:{chapter.id}]
+              </>
+            ),
+            key: `${series.id};${chapter.id}`,
           };
-        });
+        }),
+      };
+    });
 
-        setTreeData(tempTreeData);
-      })
-      .catch((err) => log.error(err))
-      .finally(() => setLoading(false))
-      .catch((err) => log.error(err));
+    setTreeData(tempTreeData);
   };
 
   const deleteSelected = async () => {

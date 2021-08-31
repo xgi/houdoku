@@ -90,15 +90,16 @@ export function getAllDownloadedChapterPaths(downloadsDir: string): string[] {
   return Array.from(chapterPaths);
 }
 
-export function deleteDownloadedChapter(
+export async function deleteDownloadedChapter(
   series: Series,
   chapter: Chapter,
   downloadsDir: string
-): void {
+): Promise<void> {
   log.debug(
     `Deleting from disk chapter ${chapter.id} from series ${series.id}`
   );
-  if (series.id === undefined || chapter.id === undefined) return;
+  if (series.id === undefined || chapter.id === undefined)
+    return new Promise((resolve) => resolve());
 
   const chapterDownloadPath = getChapterDownloadPath(
     series,
@@ -106,26 +107,38 @@ export function deleteDownloadedChapter(
     downloadsDir
   );
   if (fs.existsSync(chapterDownloadPath)) {
-    rimraf(chapterDownloadPath, () => {
-      const seriesDir = path.dirname(chapterDownloadPath);
-      if (fs.existsSync(seriesDir) && fs.readdirSync(seriesDir).length === 0) {
-        fs.rmdirSync(seriesDir);
-      }
-    });
+    return new Promise((resolve) =>
+      rimraf(chapterDownloadPath, () => {
+        const seriesDir = path.dirname(chapterDownloadPath);
+        if (
+          fs.existsSync(seriesDir) &&
+          fs.readdirSync(seriesDir).length === 0
+        ) {
+          fs.rmdirSync(seriesDir);
+        }
+        resolve();
+      })
+    );
   }
+  return new Promise((resolve) => resolve());
 }
 
-export function deleteAllDownloadedChapters(
+export async function deleteAllDownloadedChapters(
   series: Series,
   downloadsDir: string
-): void {
+): Promise<void> {
   log.debug(`Deleting from disk all chapters for series ${series.id}`);
-  if (series.id === undefined) return;
+  if (series.id === undefined) return new Promise((resolve) => resolve());
 
   const seriesDownloadPath = path.join(downloadsDir, `${series.id}`);
   if (fs.existsSync(seriesDownloadPath)) {
-    rimraf(seriesDownloadPath, () => {});
+    return new Promise((resolve) =>
+      rimraf(seriesDownloadPath, () => {
+        resolve();
+      })
+    );
   }
+  return new Promise((resolve) => resolve());
 }
 
 /**
