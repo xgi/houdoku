@@ -12,6 +12,7 @@ export type DownloadTask = {
   series: Series;
   page?: number;
   totalPages?: number;
+  downloadsDir: string;
 };
 
 export type DownloadError = {
@@ -57,12 +58,17 @@ export default class DownloaderClient {
         break;
       }
 
-      this.currentTask = { series: task.series, chapter: task.chapter };
+      this.currentTask = {
+        series: task.series,
+        chapter: task.chapter,
+        downloadsDir: task.downloadsDir,
+      };
 
       // eslint-disable-next-line no-await-in-loop
       const chapterPath = await getChapterDownloadPath(
         task.series,
-        task.chapter
+        task.chapter,
+        task.downloadsDir
       );
       if (!fs.existsSync(chapterPath)) {
         fs.mkdirSync(chapterPath, { recursive: true });
@@ -146,6 +152,7 @@ export default class DownloaderClient {
         this.currentTask = {
           series: task.series,
           chapter: task.chapter,
+          downloadsDir: task.downloadsDir,
           page: i,
           totalPages: pageUrls.length,
         };

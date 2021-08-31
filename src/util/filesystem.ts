@@ -51,7 +51,7 @@ export async function getThumbnailPath(series: Series): Promise<string | null> {
   return path.join(thumbnailsDir, `${series.id}.${ext}`);
 }
 
-export function getChapterDownloadPathSync(
+export function getChapterDownloadPath(
   series: Series,
   chapter: Chapter,
   downloadsDir: string
@@ -59,45 +59,18 @@ export function getChapterDownloadPathSync(
   return path.join(downloadsDir, `${series.id}`, `${chapter.id}`);
 }
 
-export async function getChapterDownloadPath(
-  series: Series,
-  chapter: Chapter
-): Promise<string> {
-  const downloadsDir = await ipcRenderer.invoke(
-    ipcChannels.GET_PATH.DOWNLOADS_DIR
-  );
-  return getChapterDownloadPathSync(series, chapter, downloadsDir);
-}
-
-export async function getChapterDownloaded(
-  series: Series,
-  chapter: Chapter
-): Promise<boolean> {
-  const downloadsDir = await ipcRenderer.invoke(
-    ipcChannels.GET_PATH.DOWNLOADS_DIR
-  );
-  const chapterPath = getChapterDownloadPathSync(series, chapter, downloadsDir);
-  return fs.existsSync(chapterPath)
-    ? fs.readdirSync(chapterPath).length > 0
-    : false;
-}
-
-export function getChapterDownloadedSync(
+export function getChapterDownloaded(
   series: Series,
   chapter: Chapter,
   downloadsDir: string
 ): boolean {
-  const chapterPath = getChapterDownloadPathSync(series, chapter, downloadsDir);
+  const chapterPath = getChapterDownloadPath(series, chapter, downloadsDir);
   return fs.existsSync(chapterPath)
     ? fs.readdirSync(chapterPath).length > 0
     : false;
 }
 
-export async function getAllDownloadedChapterPaths(): Promise<string[]> {
-  const downloadsDir = await ipcRenderer.invoke(
-    ipcChannels.GET_PATH.DOWNLOADS_DIR
-  );
-
+export function getAllDownloadedChapterPaths(downloadsDir: string): string[] {
   if (!fs.existsSync(downloadsDir)) {
     return [];
   }
@@ -117,53 +90,42 @@ export async function getAllDownloadedChapterPaths(): Promise<string[]> {
   return Array.from(chapterPaths);
 }
 
-export async function deleteDownloadedChapter(
+export function deleteDownloadedChapter(
   series: Series,
-  chapter: Chapter
-): Promise<void> {
+  chapter: Chapter,
+  downloadsDir: string
+): void {
   log.debug(
     `Deleting from disk chapter ${chapter.id} from series ${series.id}`
   );
-  if (series.id === undefined || chapter.id === undefined)
-    return new Promise((resolve) => resolve());
+  if (series.id === undefined || chapter.id === undefined) return;
 
-  const chapterDownloadPath = await getChapterDownloadPath(series, chapter);
+  const chapterDownloadPath = getChapterDownloadPath(
+    series,
+    chapter,
+    downloadsDir
+  );
   if (fs.existsSync(chapterDownloadPath)) {
-    return new Promise((resolve) =>
-      rimraf(chapterDownloadPath, () => {
-        const seriesDir = path.dirname(chapterDownloadPath);
-        if (
-          fs.existsSync(seriesDir) &&
-          fs.readdirSync(seriesDir).length === 0
-        ) {
-          fs.rmdirSync(seriesDir);
-        }
-        resolve();
-      })
-    );
+    rimraf(chapterDownloadPath, () => {
+      const seriesDir = path.dirname(chapterDownloadPath);
+      if (fs.existsSync(seriesDir) && fs.readdirSync(seriesDir).length === 0) {
+        fs.rmdirSync(seriesDir);
+      }
+    });
   }
-  return new Promise((resolve) => resolve());
 }
 
-export async function deleteAllDownloadedChapters(
-  series: Series
-): Promise<void> {
+export function deleteAllDownloadedChapters(
+  series: Series,
+  downloadsDir: string
+): void {
   log.debug(`Deleting from disk all chapters for series ${series.id}`);
-  if (series.id === undefined) return new Promise((resolve) => resolve());
+  if (series.id === undefined) return;
 
-  const downloadsDir = await ipcRenderer.invoke(
-    ipcChannels.GET_PATH.DOWNLOADS_DIR
-  );
   const seriesDownloadPath = path.join(downloadsDir, `${series.id}`);
-
   if (fs.existsSync(seriesDownloadPath)) {
-    return new Promise((resolve) =>
-      rimraf(seriesDownloadPath, () => {
-        resolve();
-      })
-    );
+    rimraf(seriesDownloadPath, () => {});
   }
-  return new Promise((resolve) => resolve());
 }
 
 /**

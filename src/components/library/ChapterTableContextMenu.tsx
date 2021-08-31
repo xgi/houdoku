@@ -17,14 +17,14 @@ import { downloadChapters } from '../../features/downloader/actions';
 import { DownloadTask } from '../../services/downloader';
 import { RootState } from '../../store';
 import { toggleChapterRead } from '../../features/library/utils';
-import { getChapterDownloadedSync } from '../../util/filesystem';
+import { getChapterDownloaded } from '../../util/filesystem';
 import routes from '../../constants/routes.json';
 import ipcChannels from '../../constants/ipcChannels.json';
 
 const { confirm } = Modal;
 
-const downloadsDir = await ipcRenderer.invoke(
-  ipcChannels.GET_PATH.DOWNLOADS_DIR
+const defaultDownloadsDir = await ipcRenderer.invoke(
+  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
 const WIDTH = 150;
@@ -34,6 +34,7 @@ const mapState = (state: RootState) => ({
   queue: state.downloader.queue,
   currentTask: state.downloader.currentTask,
   downloadErrors: state.downloader.downloadErrors,
+  customDownloadsDir: state.settings.customDownloadsDir,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,7 +76,13 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     const queue: Chapter[] = [];
     // eslint-disable-next-line no-restricted-syntax
     for (const chapter of chapters) {
-      if (!getChapterDownloadedSync(props.series, chapter, downloadsDir)) {
+      if (
+        !getChapterDownloaded(
+          props.series,
+          chapter,
+          props.customDownloadsDir || defaultDownloadsDir
+        )
+      ) {
         queue.push(chapter);
       }
     }
@@ -84,7 +91,11 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
       props.downloadChapters(
         queue.map(
           (chapter: Chapter) =>
-            ({ chapter, series: props.series } as DownloadTask)
+            ({
+              chapter,
+              series: props.series,
+              downloadsDir: props.customDownloadsDir || defaultDownloadsDir,
+            } as DownloadTask)
         )
       );
     };
@@ -108,7 +119,11 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     props.close();
     if (props.chapter !== undefined) {
       props.downloadChapters([
-        { chapter: props.chapter, series: props.series } as DownloadTask,
+        {
+          chapter: props.chapter,
+          series: props.series,
+          downloadsDir: props.customDownloadsDir || defaultDownloadsDir,
+        } as DownloadTask,
       ]);
     }
   };

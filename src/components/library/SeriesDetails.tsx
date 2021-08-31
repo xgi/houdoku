@@ -79,7 +79,12 @@ const mapState = (state: RootState) => ({
   seriesBannerUrl: state.library.seriesBannerUrl,
   chapterLanguages: state.settings.chapterLanguages,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
+  customDownloadsDir: state.settings.customDownloadsDir,
 });
+
+const defaultDownloadsDir = await ipcRenderer.invoke(
+  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
+);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
@@ -92,8 +97,11 @@ const mapDispatch = (dispatch: any) => ({
   loadChapterList: (seriesId: string) => loadChapterList(dispatch, seriesId),
   reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
     reloadSeriesList(dispatch, seriesList, callback),
-  removeSeries: (series: Series, deleteDownloadedChapters: boolean) =>
-    removeSeries(dispatch, series, deleteDownloadedChapters),
+  removeSeries: (
+    series: Series,
+    deleteDownloadedChapters: boolean,
+    downloadsDir: string
+  ) => removeSeries(dispatch, series, deleteDownloadedChapters, downloadsDir),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
   updateSeriesUserTags: (series: Series, userTags: string[]) =>
@@ -320,7 +328,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
               // eslint-disable-next-line promise/always-return
               if (props.series !== undefined) {
                 log.info(`Removing series ${props.series.id}`);
-                props.removeSeries(props.series, values.deleteDownloads);
+                props.removeSeries(
+                  props.series,
+                  values.deleteDownloads,
+                  props.customDownloadsDir || defaultDownloadsDir
+                );
                 history.push(routes.LIBRARY);
               }
             })

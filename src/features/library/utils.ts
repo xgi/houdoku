@@ -49,14 +49,15 @@ export function loadChapterList(dispatch: any, seriesId: string) {
 export function removeSeries(
   dispatch: any,
   series: Series,
-  deleteDownloadedChapters = false
+  deleteDownloadedChapters = false,
+  downloadsDir = ''
 ) {
   if (series.id === undefined) return;
 
   library.removeSeries(series.id);
   deleteThumbnail(series);
   if (deleteDownloadedChapters) {
-    deleteAllDownloadedChapters(series);
+    deleteAllDownloadedChapters(series, downloadsDir);
   }
   loadSeriesList(dispatch);
 }

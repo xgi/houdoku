@@ -3,7 +3,7 @@ import { Button, Modal, Row, Tree, Typography } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import log from 'electron-log';
-import { Chapter, Languages, Series } from 'houdoku-extension-lib';
+import { Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import styles from './MyDownloads.css';
 import { RootState } from '../../store';
@@ -16,7 +16,13 @@ import library from '../../services/library';
 const { Text, Paragraph } = Typography;
 const { confirm } = Modal;
 
-const mapState = (state: RootState) => ({});
+const defaultDownloadsDir = await ipcRenderer.invoke(
+  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
+);
+
+const mapState = (state: RootState) => ({
+  customDownloadsDir: state.settings.customDownloadsDir,
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
@@ -31,18 +37,13 @@ type Props = PropsFromRedux & {};
 
 const MyDownloads: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(false);
-  const [downloadsDir, setDownloadsDir] = useState('');
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
   const [treeData, setTreeData] = useState<any[]>([]);
 
   const loadDownloads = async () => {
     setLoading(true);
 
-    setDownloadsDir(
-      await ipcRenderer.invoke(ipcChannels.GET_PATH.DOWNLOADS_DIR)
-    );
-
-    getDownloadedList()
+    getDownloadedList(props.customDownloadsDir || defaultDownloadsDir)
       // eslint-disable-next-line promise/always-return
       .then(({ seriesList, chapterLists }) => {
         const tempTreeData = seriesList.map((series) => {
@@ -98,7 +99,11 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
             const chapter = library.fetchChapter(seriesId, chapterId);
             if (series === null || chapter === null) return;
 
-            await deleteDownloadedChapter(series, chapter);
+            await deleteDownloadedChapter(
+              series,
+              chapter,
+              props.customDownloadsDir || defaultDownloadsDir
+            );
           })
         )
           // eslint-disable-next-line promise/always-return
@@ -132,8 +137,12 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
       <Paragraph>
         Your downloaded chapters are saved in{' '}
         <Text code>
-          <a href={`file:///${downloadsDir}`} target="_blank" rel="noreferrer">
-            {downloadsDir}
+          <a
+            href={`file:///${props.customDownloadsDir || defaultDownloadsDir}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {props.customDownloadsDir || defaultDownloadsDir}
           </a>
         </Text>
       </Paragraph>

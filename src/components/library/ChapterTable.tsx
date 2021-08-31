@@ -9,19 +9,20 @@ import { connect, ConnectedProps } from 'react-redux';
 import routes from '../../constants/routes.json';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
 import ChapterTableContextMenu from './ChapterTableContextMenu';
-import { getChapterDownloadedSync } from '../../util/filesystem';
+import { getChapterDownloaded } from '../../util/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { RootState } from '../../store';
 import { toggleChapterRead } from '../../features/library/utils';
 
-const downloadsDir = await ipcRenderer.invoke(
-  ipcChannels.GET_PATH.DOWNLOADS_DIR
+const defaultDownloadsDir = await ipcRenderer.invoke(
+  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
 const mapState = (state: RootState) => ({
   chapterList: state.library.chapterList,
   chapterLanguages: state.settings.chapterLanguages,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
+  customDownloadsDir: state.settings.customDownloadsDir,
   currentTask: state.downloader.currentTask,
 });
 
@@ -116,10 +117,10 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       render: function render(_text: string, record: Chapter) {
         return (
           <Checkbox
-            checked={getChapterDownloadedSync(
+            checked={getChapterDownloaded(
               props.series,
               record,
-              downloadsDir
+              props.customDownloadsDir || defaultDownloadsDir
             )}
             disabled
           />

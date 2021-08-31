@@ -4,11 +4,12 @@ import library from '../../services/library';
 import { getAllDownloadedChapterPaths } from '../../util/filesystem';
 
 // eslint-disable-next-line import/prefer-default-export
-export async function getDownloadedList(): Promise<{
+export async function getDownloadedList(downloadsDir: string): Promise<{
   seriesList: Series[];
   chapterLists: { [seriesId: string]: Chapter[] };
 }> {
-  const downloadedChapterPaths: string[] = await getAllDownloadedChapterPaths();
+  const downloadedChapterPaths: string[] =
+    getAllDownloadedChapterPaths(downloadsDir);
 
   const seriesList: Series[] = [];
   const chapterLists: { [seriesId: string]: Chapter[] } = {};

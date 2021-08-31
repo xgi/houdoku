@@ -55,6 +55,7 @@ export enum GeneralSetting {
   RefreshOnStart = 'RefreshOnStart',
   AutoCheckForUpdates = 'AutoCheckForUpdates',
   AutoCheckForExtensionUpdates = 'AutoCheckForExtensionUpdates',
+  CustomDownloadsDir = 'CustomDownloadsDir',
   LibraryColumns = 'LibraryColumns',
   LibraryFilterStatus = 'LibraryFilterStatus',
   LibraryFilterProgress = 'LibraryFilterProgress',

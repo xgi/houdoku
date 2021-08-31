@@ -51,6 +51,10 @@ import {
 } from '../../util/filesystem';
 import library from '../../services/library';
 
+const defaultDownloadsDir = await ipcRenderer.invoke(
+  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
+);
+
 const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
   lastPageNumber: state.reader.lastPageNumber,
@@ -61,6 +65,7 @@ const mapState = (state: RootState) => ({
   relevantChapterList: state.reader.relevantChapterList,
   showingSettingsModal: state.reader.showingSettingsModal,
   showingSidebar: state.reader.showingSidebar,
+  customDownloadsDir: state.settings.customDownloadsDir,
   pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
@@ -176,15 +181,19 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       `Reader is loading downloaded chapter data for chapter ${chapter.id}`
     );
 
-    const pageUrls: string[] = await getChapterDownloadPath(series, chapter)
-      .then((chapterPath: string) =>
-        ipcRenderer.invoke(
-          ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
-          FS_METADATA.id,
-          SeriesSourceType.STANDARD,
-          '',
-          chapterPath
-        )
+    const chapterDownloadPath: string = getChapterDownloadPath(
+      series,
+      chapter,
+      props.customDownloadsDir || defaultDownloadsDir
+    );
+
+    const pageUrls: string[] = await ipcRenderer
+      .invoke(
+        ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
+        FS_METADATA.id,
+        SeriesSourceType.STANDARD,
+        '',
+        chapterDownloadPath
       )
       .then((pageRequesterData: PageRequesterData) =>
         ipcRenderer.invoke(
@@ -243,7 +252,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       );
     }
 
-    if (await getChapterDownloaded(series, chapter)) {
+    if (
+      getChapterDownloaded(
+        series,
+        chapter,
+        props.customDownloadsDir || defaultDownloadsDir
+      )
+    ) {
       loadDownloadedChapterData(series, chapter);
       return;
     }
