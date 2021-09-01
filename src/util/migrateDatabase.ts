@@ -75,7 +75,7 @@ export const performMigration = async () => {
   );
 
   const downloadsDir = await ipcRenderer.invoke(
-    ipcChannels.GET_PATH.DOWNLOADS_DIR
+    ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
   );
   const thumbnailsDir = await ipcRenderer.invoke(
     ipcChannels.GET_PATH.THUMBNAILS_DIR
