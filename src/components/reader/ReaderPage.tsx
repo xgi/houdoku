@@ -305,6 +305,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    *  props.relevantChapterList have not been loaded)
    */
   const getAdjacentChapterId = (previous: boolean): string | null => {
+    console.log(props.chapter);
     if (props.chapter === undefined) return null;
 
     const curChapterIndex: number = props.relevantChapterList.findIndex(
@@ -313,6 +314,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     const newChapterIndex = previous
       ? curChapterIndex + 1
       : curChapterIndex - 1;
+
+    console.log(
+      `curChapterIndex: ${curChapterIndex} newChapterIndex: ${newChapterIndex}`
+    );
 
     if (
       curChapterIndex === -1 ||
@@ -474,7 +479,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     removeKeybindings();
     addKeybindings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.showingSettingsModal]);
+  }, [props.showingSettingsModal, props.chapter, props.lastPageNumber]);
 
   useEffect(() => {
     addKeybindings();
