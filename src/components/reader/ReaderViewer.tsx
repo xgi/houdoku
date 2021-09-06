@@ -74,6 +74,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     const rect: DOMRect = e.target.getBoundingClientRect();
     const relX = e.clientX - rect.left;
 
+    console.log('clicked');
     if (relX > rect.width * 0.6) {
       props.changePageNumber(
         props.layoutDirection === LayoutDirection.LeftToRight ? 1 : -1
@@ -156,7 +157,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
             : styles.viewerContainer
         }
         onClick={
-          LayoutDirection.Vertical ? () => {} : viewerContainerClickHandler
+          props.layoutDirection === LayoutDirection.Vertical
+            ? () => {}
+            : viewerContainerClickHandler
         }
       >
         {imageWrappers}
