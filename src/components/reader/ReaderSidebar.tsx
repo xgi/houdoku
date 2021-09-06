@@ -336,7 +336,7 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
             >
               {Array.from(
                 { length: props.lastPageNumber },
-                (v, k) => k + 1
+                (_v, k) => k + 1
               ).map((pageNumber: number) => (
                 <Menu.Item key={pageNumber} data-value={pageNumber}>
                   Page {pageNumber}

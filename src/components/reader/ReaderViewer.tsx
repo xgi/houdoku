@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Layout } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { RootState } from '../../store';
 import styles from './ReaderViewer.css';
 import { LayoutDirection, PageFit, PageView } from '../../models/types';
-import { changePageNumber } from '../../features/reader/actions';
+import { changePageNumber, setPageNumber } from '../../features/reader/actions';
 
 const { Content } = Layout;
 
@@ -26,6 +26,7 @@ const mapState = (state: RootState) => ({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
   changePageNumber: (delta: number) => dispatch(changePageNumber(delta)),
+  setPageNumber: (pageNumber: number) => dispatch(setPageNumber(pageNumber)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -35,6 +36,31 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const ReaderViewer: React.FC<Props> = (props: Props) => {
+  const viewerContainer = useRef<HTMLDivElement>(null);
+  const [skipChangePageNumEffect, setSkipChangePageNumEffect] = useState(false);
+
+  const handleViewerScroll = (e: any) => {
+    if (viewerContainer.current) {
+      let imageHeightSum = 0;
+
+      let childNum = 0;
+      for (
+        childNum = 0;
+        childNum < viewerContainer.current.children.length &&
+        imageHeightSum < e.target.scrollTop;
+        childNum += 1
+      ) {
+        imageHeightSum +=
+          viewerContainer.current.children[childNum].clientHeight;
+      }
+
+      if (props.pageNumber !== childNum + 1) {
+        setSkipChangePageNumEffect(true);
+        props.setPageNumber(childNum + 1);
+      }
+    }
+  };
+
   const getPageMargin = () => {
     return props.layoutDirection === LayoutDirection.Vertical
       ? 0
@@ -119,6 +145,8 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
 
     return (
       <div
+        ref={viewerContainer}
+        onScroll={(e) => handleViewerScroll(e)}
         className={
           props.layoutDirection === LayoutDirection.Vertical
             ? styles.viewerContainerVertical
@@ -142,6 +170,19 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       </div>
     );
   };
+
+  useEffect(() => {
+    if (skipChangePageNumEffect) {
+      setSkipChangePageNumEffect(false);
+    } else if (viewerContainer.current) {
+      if (viewerContainer.current.children.length >= props.pageNumber - 1) {
+        viewerContainer.current.children[props.pageNumber - 1].scrollIntoView(
+          false
+        );
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.pageNumber]);
 
   return (
     <>
