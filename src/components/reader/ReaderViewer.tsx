@@ -181,10 +181,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     if (skipChangePageNumEffect) {
       setSkipChangePageNumEffect(false);
     } else if (viewerContainer.current) {
-      if (viewerContainer.current.children.length >= props.pageNumber - 1) {
-        viewerContainer.current.children[props.pageNumber - 1].scrollIntoView(
-          false
-        );
+      const elem = viewerContainer.current.children[props.pageNumber - 1];
+      if (elem !== undefined) {
+        elem.scrollIntoView(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
