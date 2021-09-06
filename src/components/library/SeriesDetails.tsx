@@ -206,7 +206,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             {series.genres.map((genreKey: GenreKey) => {
               const genre = Genres[genreKey];
               return genre !== undefined && 'name' in genre ? (
-                <Tag>{genre.name}</Tag>
+                <Tag key={genreKey}>{genre.name}</Tag>
               ) : (
                 ''
               );
@@ -222,7 +222,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             {series.themes.map((themeKey: ThemeKey) => {
               const theme = Themes[themeKey];
               return theme !== undefined && 'name' in theme ? (
-                <Tag>{theme.name}</Tag>
+                <Tag key={themeKey}>{theme.name}</Tag>
               ) : (
                 ''
               );
@@ -238,7 +238,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             {series.formats.map((formatKey: FormatKey) => {
               const format = Formats[formatKey];
               return format !== undefined && 'name' in format ? (
-                <Tag>{format.name}</Tag>
+                <Tag key={formatKey}>{format.name}</Tag>
               ) : (
                 ''
               );
@@ -256,7 +256,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                 const contentWarning = ContentWarnings[contentWarningKey];
                 return contentWarning !== undefined &&
                   'name' in contentWarning ? (
-                  <Tag>{contentWarning.name}</Tag>
+                  <Tag key={contentWarningKey}>{contentWarning.name}</Tag>
                 ) : (
                   ''
                 );
