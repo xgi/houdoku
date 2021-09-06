@@ -54,7 +54,10 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           viewerContainer.current.children[childNum].clientHeight;
       }
 
-      if (props.pageNumber !== childNum + 1) {
+      if (
+        props.pageNumber !== childNum + 1 &&
+        childNum < props.lastPageNumber
+      ) {
         setSkipChangePageNumEffect(true);
         props.setPageNumber(childNum + 1);
       }
