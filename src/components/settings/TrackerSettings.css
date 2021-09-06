@@ -3,6 +3,10 @@
   margin-bottom: 8px !important;
 }
 
+.heading {
+  margin-top: 2em !important;
+}
+
 .loaderContainer {
   text-align: center;
 }

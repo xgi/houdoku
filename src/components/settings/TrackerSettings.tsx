@@ -136,7 +136,9 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
           </Dropdown>
         </Col>
       </Row>
-      <Title level={4}>AniList</Title>
+      <Title level={4} className={styles.heading}>
+        AniList
+      </Title>
       <Row className={styles.row}>
         <Col span={10}>1) Open the authentication page in your browser</Col>
         <Col span={14}>
