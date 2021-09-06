@@ -124,7 +124,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
             ? styles.viewerContainerVertical
             : styles.viewerContainer
         }
-        onClick={viewerContainerClickHandler}
+        onClick={
+          LayoutDirection.Vertical ? () => {} : viewerContainerClickHandler
+        }
       >
         {imageWrappers}
       </div>
