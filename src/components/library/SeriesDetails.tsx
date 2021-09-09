@@ -48,7 +48,6 @@ import {
   loadSeriesList,
   reloadSeriesList,
   removeSeries,
-  toggleChapterRead,
   updateSeriesUserTags,
 } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
@@ -102,8 +101,6 @@ const mapDispatch = (dispatch: any) => ({
     deleteDownloadedChapters: boolean,
     downloadsDir: string
   ) => removeSeries(dispatch, series, deleteDownloadedChapters, downloadsDir),
-  toggleChapterRead: (chapter: Chapter, series: Series) =>
-    toggleChapterRead(dispatch, chapter, series),
   updateSeriesUserTags: (series: Series, userTags: string[]) =>
     updateSeriesUserTags(series, userTags),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>

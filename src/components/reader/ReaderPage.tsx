@@ -242,8 +242,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     }
 
     props.setSource(series, chapter);
-    if (!chapter.read) props.toggleChapterRead(chapter, series);
-    if (props.trackerAutoUpdate) props.sendProgressToTrackers(chapter, series);
     if (props.discordPresenceEnabled) {
       ipcRenderer.invoke(
         ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY,
@@ -413,6 +411,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * If the series prop is loaded, go to its series detail page. Otherwise, go to the library.
    */
   const exitPage = () => {
+    props.setSource(undefined, undefined);
     props.setPageNumber(1);
     props.setPageUrls([]);
     props.setPageDataList([]);
@@ -460,6 +459,23 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
+    // mark the chapter as read if past a certain page threshold
+    if (
+      props.series !== undefined &&
+      props.chapter !== undefined &&
+      props.lastPageNumber > 0
+    ) {
+      if (
+        props.pageNumber >= Math.floor(0.8 * props.lastPageNumber) &&
+        !props.chapter.read
+      ) {
+        props.toggleChapterRead(props.chapter, props.series);
+        if (props.trackerAutoUpdate)
+          props.sendProgressToTrackers(props.chapter, props.series);
+      }
+    }
+
+    // if we go past the last page or before the first page, change the chapter
     if (props.pageNumber > props.lastPageNumber && props.lastPageNumber !== 0) {
       const changed = changeChapter(false);
       if (!changed) props.setPageNumber(props.lastPageNumber);
