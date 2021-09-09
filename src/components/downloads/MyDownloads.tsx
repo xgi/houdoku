@@ -58,6 +58,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
             title: (
               <>
                 <div
+                  title={Languages[chapter.languageKey].name}
                   className={`${styles.flag} flag flag-${
                     Languages[chapter.languageKey].flagCode
                   }`}

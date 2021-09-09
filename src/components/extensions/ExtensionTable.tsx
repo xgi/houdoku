@@ -187,6 +187,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
         }
         return (
           <div
+            title={Languages[record.languageKey].name}
             className={`flag flag-${Languages[record.languageKey].flagCode}`}
           />
         );

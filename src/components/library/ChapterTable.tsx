@@ -137,6 +137,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
           <></>
         ) : (
           <div
+            title={Languages[record.languageKey].name}
             className={`flag flag-${Languages[record.languageKey].flagCode}`}
           />
         );
