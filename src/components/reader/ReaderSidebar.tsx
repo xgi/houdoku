@@ -52,7 +52,6 @@ import {
   togglePageFit,
   togglePageView,
 } from '../../features/settings/actions';
-import { toggleChapterRead } from '../../features/library/utils';
 
 const { Sider } = Layout;
 const { Title, Text } = Typography;
@@ -132,8 +131,6 @@ const mapDispatch = (dispatch: any) => ({
     });
     dispatch(toggleShowingSidebar());
   },
-  toggleChapterRead: (chapter: Chapter, series: Series) =>
-    toggleChapterRead(dispatch, chapter, series),
 });
 
 const connector = connect(mapState, mapDispatch);
