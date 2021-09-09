@@ -35,6 +35,8 @@ export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.KeyFirstPage]: 'ctrl+left',
   [ReaderSetting.KeyNextPage]: 'right',
   [ReaderSetting.KeyLastPage]: 'ctrl+right',
+  [ReaderSetting.KeyScrollUp]: 'up',
+  [ReaderSetting.KeyScrollDown]: 'down',
   [ReaderSetting.KeyPreviousChapter]: '[',
   [ReaderSetting.KeyNextChapter]: ']',
   [ReaderSetting.KeyToggleLayoutDirection]: 'd',
@@ -199,6 +201,14 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   if (storeValues[ReaderSetting.KeyLastPage] !== null) {
     settings[ReaderSetting.KeyLastPage] =
       storeValues[ReaderSetting.KeyLastPage];
+  }
+  if (storeValues[ReaderSetting.KeyScrollUp] !== null) {
+    settings[ReaderSetting.KeyScrollUp] =
+      storeValues[ReaderSetting.KeyScrollUp];
+  }
+  if (storeValues[ReaderSetting.KeyScrollDown] !== null) {
+    settings[ReaderSetting.KeyScrollDown] =
+      storeValues[ReaderSetting.KeyScrollDown];
   }
   if (storeValues[ReaderSetting.KeyPreviousChapter] !== null) {
     settings[ReaderSetting.KeyPreviousChapter] =
