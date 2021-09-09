@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
 import { Layout } from 'antd';
@@ -76,6 +76,8 @@ const mapState = (state: RootState) => ({
   keyFirstPage: state.settings.keyFirstPage,
   keyNextPage: state.settings.keyNextPage,
   keyLastPage: state.settings.keyLastPage,
+  keyScrollUp: state.settings.keyScrollUp,
+  keyScrollDown: state.settings.keyScrollDown,
   keyPreviousChapter: state.settings.keyPreviousChapter,
   keyNextChapter: state.settings.keyNextChapter,
   keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
@@ -132,6 +134,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const location = useLocation();
   const forceUpdate = useForceUpdate();
+  const viewer = useRef<any>({});
 
   /**
    * Populate the relevantChapterList prop.
@@ -393,6 +396,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         props.keyFirstPage,
         props.keyNextPage,
         props.keyLastPage,
+        props.keyScrollUp,
+        props.keyScrollDown,
         props.keyPreviousChapter,
         props.keyNextChapter,
         props.keyToggleLayoutDirection,
@@ -438,6 +443,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     Mousetrap.bind(props.keyFirstPage, () => changePage(true, true));
     Mousetrap.bind(props.keyNextPage, () => changePage(false));
     Mousetrap.bind(props.keyLastPage, () => changePage(false, true));
+    Mousetrap.bind(props.keyScrollUp, () => {
+      if (viewer && viewer.current) viewer.current.scroll(-1, 30);
+    });
+    Mousetrap.bind(props.keyScrollDown, () => {
+      if (viewer && viewer.current) viewer.current.scroll(1, 30);
+    });
     Mousetrap.bind(props.keyPreviousChapter, () => changeChapter(true));
     Mousetrap.bind(props.keyNextChapter, () => changeChapter(false));
     Mousetrap.bind(props.keyToggleLayoutDirection, () =>
@@ -518,7 +529,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         ) : (
           <>
             <ReaderPreloadContainer />
-            <ReaderViewer />
+            <ReaderViewer viewerRef={viewer} />
           </>
         )}
       </Layout>

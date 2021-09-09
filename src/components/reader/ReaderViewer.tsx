@@ -33,11 +33,19 @@ const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = PropsFromRedux & {
+  viewerRef: any;
+};
 
 const ReaderViewer: React.FC<Props> = (props: Props) => {
   const viewerContainer = useRef<HTMLDivElement>(null);
   const [skipChangePageNumEffect, setSkipChangePageNumEffect] = useState(false);
+
+  props.viewerRef.current.scroll = (direction: number, amount: number) => {
+    if (viewerContainer.current) {
+      viewerContainer.current.scrollBy(0, direction * amount);
+    }
+  };
 
   const handleViewerScroll = (e: any) => {
     if (viewerContainer.current) {
@@ -74,7 +82,6 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     const rect: DOMRect = e.target.getBoundingClientRect();
     const relX = e.clientX - rect.left;
 
-    console.log('clicked');
     if (relX > rect.width * 0.6) {
       props.changePageNumber(
         props.layoutDirection === LayoutDirection.LeftToRight ? 1 : -1
