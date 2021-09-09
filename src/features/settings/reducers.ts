@@ -124,6 +124,14 @@ const initialState: SettingsState = {
     storedReaderSettings.KeyLastPage === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyLastPage]
       : storedReaderSettings.KeyLastPage,
+  keyScrollUp:
+    storedReaderSettings.KeyScrollUp === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyScrollUp]
+      : storedReaderSettings.KeyScrollUp,
+  keyScrollDown:
+    storedReaderSettings.KeyScrollDown === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyScrollDown]
+      : storedReaderSettings.KeyScrollDown,
   keyPreviousChapter:
     storedReaderSettings.KeyPreviousChapter === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyPreviousChapter]
@@ -351,6 +359,10 @@ export default function settings(
           return { ...state, keyNextPage: action.payload.value };
         case ReaderSetting.KeyLastPage:
           return { ...state, keyLastPage: action.payload.value };
+        case ReaderSetting.KeyScrollUp:
+          return { ...state, keyScrollUp: action.payload.value };
+        case ReaderSetting.KeyScrollDown:
+          return { ...state, keyScrollDown: action.payload.value };
         case ReaderSetting.KeyPreviousChapter:
           return { ...state, keyPreviousChapter: action.payload.value };
         case ReaderSetting.KeyNextChapter:

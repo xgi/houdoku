@@ -54,6 +54,8 @@ const mapState = (state: RootState) => ({
   keyFirstPage: state.settings.keyFirstPage,
   keyNextPage: state.settings.keyNextPage,
   keyLastPage: state.settings.keyLastPage,
+  keyScrollUp: state.settings.keyScrollUp,
+  keyScrollDown: state.settings.keyScrollDown,
   keyPreviousChapter: state.settings.keyPreviousChapter,
   keyNextChapter: state.settings.keyNextChapter,
   keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
@@ -107,6 +109,8 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.KeyFirstPage:
       case ReaderSetting.KeyNextPage:
       case ReaderSetting.KeyLastPage:
+      case ReaderSetting.KeyScrollUp:
+      case ReaderSetting.KeyScrollDown:
       case ReaderSetting.KeyPreviousChapter:
       case ReaderSetting.KeyNextChapter:
       case ReaderSetting.KeyToggleLayoutDirection:
@@ -285,6 +289,16 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           name: 'Last Page',
           value: props.keyLastPage,
           setting: ReaderSetting.KeyLastPage,
+        },
+        {
+          name: 'Scroll Up',
+          value: props.keyScrollUp,
+          setting: ReaderSetting.KeyScrollUp,
+        },
+        {
+          name: 'Scroll Down',
+          value: props.keyScrollDown,
+          setting: ReaderSetting.KeyScrollDown,
         },
         {
           name: 'Next Chapter',
