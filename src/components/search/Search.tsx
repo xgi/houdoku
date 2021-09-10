@@ -8,7 +8,6 @@ import {
   Modal,
   Divider,
   Typography,
-  Pagination,
   Spin,
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';

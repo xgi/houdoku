@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Table, Button, Tooltip } from 'antd';
+import { Table, Button } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import {
   RegistrySearchResults,
