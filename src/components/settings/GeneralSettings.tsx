@@ -81,6 +81,8 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
     }
   };
 
+  console.log(props.customDownloadsDir);
+
   return (
     <>
       <Row className={styles.row}>
@@ -213,7 +215,10 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
                   .then((fileList: string) => {
                     // eslint-disable-next-line promise/always-return
                     if (fileList.length > 0) {
-                      props.setCustomDownloadsDir(fileList[0]);
+                      updateGeneralSetting(
+                        GeneralSetting.CustomDownloadsDir,
+                        fileList[0]
+                      );
                     }
                   })
               }
@@ -224,7 +229,9 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
           <Tooltip title="Reset">
             <Button
               icon={<UndoOutlined />}
-              onClick={() => props.setCustomDownloadsDir('')}
+              onClick={() =>
+                updateGeneralSetting(GeneralSetting.CustomDownloadsDir, '')
+              }
             />
           </Tooltip>
         </Col>

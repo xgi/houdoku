@@ -120,6 +120,10 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
     settings[GeneralSetting.AutoCheckForExtensionUpdates] =
       storeValues[GeneralSetting.AutoCheckForExtensionUpdates] === 'true';
   }
+  if (storeValues[GeneralSetting.CustomDownloadsDir] !== null) {
+    settings[GeneralSetting.CustomDownloadsDir] =
+      storeValues[GeneralSetting.CustomDownloadsDir];
+  }
   if (storeValues[GeneralSetting.LibraryColumns] !== null) {
     settings[GeneralSetting.LibraryColumns] = parseInt(
       storeValues[GeneralSetting.LibraryColumns] as string,
