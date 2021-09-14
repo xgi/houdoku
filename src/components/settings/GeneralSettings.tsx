@@ -81,8 +81,6 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
     }
   };
 
-  console.log(props.customDownloadsDir);
-
   return (
     <>
       <Row className={styles.row}>
