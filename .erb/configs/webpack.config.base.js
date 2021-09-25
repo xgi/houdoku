@@ -4,10 +4,13 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import { dependencies as externals } from '../../src/package.json';
+import { dependencies } from '../../src/package.json';
 
 export default {
-  externals: [...Object.keys(externals || {})],
+  externals: [
+    ...Object.keys(dependencies || {}),
+    { 'electron-debug': 'electron-debug' },
+  ],
 
   module: {
     rules: [
