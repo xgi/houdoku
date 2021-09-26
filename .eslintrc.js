@@ -5,6 +5,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'react/destructuring-assignment': 'off',
   },
+  plugins: ['import'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
