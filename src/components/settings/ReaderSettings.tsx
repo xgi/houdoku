@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Row, Menu, Dropdown, Button, Modal } from 'antd';
+import { Col, Row, Menu, Dropdown, Button, Modal, Tooltip } from 'antd';
 import { DownOutlined, UndoOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import Title from 'antd/lib/typography/Title';
@@ -386,16 +386,18 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             >
               {entry.value}
             </Button>
-            <Button
-              className={styles.shortcutResetButton}
-              icon={<UndoOutlined />}
-              onClick={() =>
-                updateReaderSetting(
-                  entry.setting,
-                  DEFAULT_READER_SETTINGS[entry.setting]
-                )
-              }
-            />
+            <Tooltip title="Reset">
+              <Button
+                className={styles.shortcutResetButton}
+                icon={<UndoOutlined />}
+                onClick={() =>
+                  updateReaderSetting(
+                    entry.setting,
+                    DEFAULT_READER_SETTINGS[entry.setting]
+                  )
+                }
+              />
+            </Tooltip>
           </Col>
         </Row>
       ))}
