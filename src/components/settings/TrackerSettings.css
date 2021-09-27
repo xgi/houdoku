@@ -3,9 +3,11 @@
   margin-bottom: 8px !important;
 }
 
-.heading {
-  margin-top: 2em !important;
+.step {
+  margin-bottom: 6px !important;
 }
+
+.heading {}
 
 .loaderContainer {
   text-align: center;
