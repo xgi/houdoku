@@ -4,7 +4,7 @@
 }
 
 .step {
-  margin-bottom: 6px !important;
+  margin-bottom: 8px !important;
 }
 
 .loaderContainer {
@@ -17,4 +17,8 @@
 
 .statusText {
   text-align: center;
+}
+
+.unlinkButton {
+  margin-left: 1rem;
 }

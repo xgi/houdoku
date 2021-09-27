@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -12,9 +9,9 @@ import {
   Row,
   Spin,
   Collapse,
+  Typography,
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { connect, ConnectedProps } from 'react-redux';
@@ -28,6 +25,7 @@ import { setTrackerAutoUpdate } from '../../features/settings/actions';
 import { RootState } from '../../store';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
 
+const { Text, Paragraph } = Typography;
 const { Panel } = Collapse;
 
 const mapState = (state: RootState) => ({
@@ -167,7 +165,41 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
       </Row>
       <Collapse>
         {[AniListTrackerMetadata, MALTrackerMetadata].map((trackerMetadata) => (
-          <Panel header={trackerMetadata.name} key={trackerMetadata.id}>
+          <Panel
+            key={trackerMetadata.id}
+            // header={trackerMetadata.name}
+            header={
+              <div
+                style={{
+                  width: 'calc(100% - 24px)',
+                  display: 'inline-flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <span>{trackerMetadata.name}</span>
+                {usernames[trackerMetadata.id] ? (
+                  <div>
+                    <span>
+                      Logged in as{' '}
+                      <Text code>{usernames[trackerMetadata.id]}</Text>
+                    </span>
+                    <Button
+                      className={styles.unlinkButton}
+                      type="primary"
+                      danger
+                      size="small"
+                      onClick={() => saveAccessToken(trackerMetadata.id, '')}
+                    >
+                      Unlink
+                    </Button>
+                  </div>
+                ) : (
+                  <span>Not logged in.</span>
+                )}
+              </div>
+            }
+          >
             <Row className={styles.step}>
               <Col span={6}>
                 1) Open the authentication page in your browser
@@ -186,7 +218,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
               </Col>
             </Row>
             <Row className={styles.step}>
-              <Col span={6}>2) Copy the token you receive</Col>
+              <Col span={6}>2) Copy the code you receive</Col>
               <Col span={2} />
               <Col span={16}>
                 <Input
@@ -216,20 +248,6 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
                 </Button>
               </Col>
             </Row>
-
-            {usernames[trackerMetadata.id] ? (
-              <Paragraph className={styles.statusText}>
-                Authenticated as {usernames[trackerMetadata.id]}.{' '}
-                <a onClick={() => saveAccessToken(trackerMetadata.id, '')}>
-                  Unlink
-                </a>
-                .
-              </Paragraph>
-            ) : (
-              <Paragraph className={styles.statusText}>
-                You are not currently authenticated.
-              </Paragraph>
-            )}
           </Panel>
         ))}
       </Collapse>
