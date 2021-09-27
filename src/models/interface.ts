@@ -4,6 +4,10 @@ export interface GetAuthUrlFunc {
   (): string;
 }
 
+export interface GetTokenFunc {
+  (code: string): Promise<string | null>;
+}
+
 export interface GetUsernameFunc {
   (): Promise<string | null>;
 }
@@ -33,6 +37,7 @@ export interface TrackerClientInterface {
 
   getMetadata: () => TrackerMetadata;
   getAuthUrl: GetAuthUrlFunc;
+  getToken: GetTokenFunc;
   getUsername: GetUsernameFunc;
   search: SearchFunc;
   getLibraryEntry: GetLibraryEntryFunc;
@@ -51,6 +56,8 @@ export abstract class TrackerClientAbstract implements TrackerClientInterface {
   getMetadata!: () => TrackerMetadata;
 
   getAuthUrl!: GetAuthUrlFunc;
+
+  getToken!: GetTokenFunc;
 
   getUsername!: GetUsernameFunc;
 

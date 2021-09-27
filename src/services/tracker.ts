@@ -5,17 +5,31 @@ import {
   AniListTrackerClient,
   AniListTrackerMetadata,
 } from './trackers/anilist';
+import { MALTrackerClient, MALTrackerMetadata } from './trackers/myanimelist';
 import ipcChannels from '../constants/ipcChannels.json';
 import { TrackEntry, TrackerSeries, TrackStatus } from '../models/types';
 
 const TRACKER_CLIENTS: { [key: string]: TrackerClientInterface } = {
   [AniListTrackerMetadata.id]: new AniListTrackerClient(),
+  [MALTrackerMetadata.id]: new MALTrackerClient(),
 };
 
-function getAuthUrl(trackerId: string): string {
+function getAuthUrls(): { [trackerId: string]: string } {
+  log.info(`Getting auth urls from trackers`);
+  const authUrls: { [trackerId: string]: string } = {};
+  Object.entries(TRACKER_CLIENTS).forEach(([trackerId, trackerClient]) => {
+    authUrls[trackerId] = trackerClient.getAuthUrl();
+  });
+  return authUrls;
+}
+
+function getToken(
+  trackerId: string,
+  accessCode: string
+): Promise<string | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(`Getting auth url from tracker ${trackerId}`);
-  return tracker.getAuthUrl();
+  log.info(`Getting access token for tracker ${trackerId}`);
+  return tracker.getToken(accessCode);
 }
 
 function getUsername(trackerId: string): Promise<string | null> {
@@ -85,10 +99,13 @@ export const createTrackerIpcHandlers = (ipcMain: IpcMain) => {
     );
   });
 
+  ipcMain.handle(ipcChannels.TRACKER.GET_AUTH_URLS, () => {
+    return getAuthUrls();
+  });
   ipcMain.handle(
-    ipcChannels.TRACKER.GET_AUTH_URL,
-    (_event, trackerId: string) => {
-      return getAuthUrl(trackerId);
+    ipcChannels.TRACKER.GET_TOKEN,
+    (_event, trackerId: string, accessCode: string) => {
+      return getToken(trackerId, accessCode);
     }
   );
   ipcMain.handle(

@@ -8,6 +8,7 @@ import {
   GetLibraryEntryFunc,
   AddLibraryEntryFunc,
   UpdateLibraryEntryFunc,
+  GetTokenFunc,
 } from '../../models/interface';
 import { TrackEntry, TrackerMetadata, TrackStatus } from '../../models/types';
 
@@ -42,6 +43,10 @@ export class AniListTrackerClient extends TrackerClientAbstract {
 
   getAuthUrl: GetAuthUrlFunc = () => {
     return `https://anilist.co/api/v2/oauth/authorize?client_id=${clientId}&response_type=token`;
+  };
+
+  getToken: GetTokenFunc = (code: string) => {
+    return new Promise((resolve) => resolve(code));
   };
 
   getUsername: GetUsernameFunc = () => {
