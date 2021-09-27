@@ -130,7 +130,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         </Col>
       </Row>
       <Row className={styles.row}>
-        <Col span={10}>Check For Client Updates Automatically</Col>
+        <Col span={10}>Check For Houdoku Updates Automatically</Col>
         <Col span={14}>
           <Dropdown
             overlay={
