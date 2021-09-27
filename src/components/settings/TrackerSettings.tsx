@@ -17,7 +17,6 @@ import { DownOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import Title from 'antd/lib/typography/Title';
 import { connect, ConnectedProps } from 'react-redux';
 import styles from './TrackerSettings.css';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -166,138 +165,73 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
           </Dropdown>
         </Col>
       </Row>
-      <Collapse defaultActiveKey={['1']}>
-        <Panel header="AniList" key={AniListTrackerMetadata.id}>
-          <Title level={4} className={styles.heading}>
-            AniList
-          </Title>
-          <Row className={styles.step}>
-            <Col span={6}>1) Open the authentication page in your browser</Col>
-            <Col span={2} />
-            <Col span={16}>
-              <Paragraph>
-                <a
-                  href={authUrls[AniListTrackerMetadata.id]}
-                  target="_blank"
-                  rel="noreferrer"
+      <Collapse>
+        {[AniListTrackerMetadata, MALTrackerMetadata].map((trackerMetadata) => (
+          <Panel header={trackerMetadata.name} key={trackerMetadata.id}>
+            <Row className={styles.step}>
+              <Col span={6}>
+                1) Open the authentication page in your browser
+              </Col>
+              <Col span={2} />
+              <Col span={16}>
+                <Paragraph>
+                  <a
+                    href={authUrls[trackerMetadata.id]}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {authUrls[trackerMetadata.id]}
+                  </a>
+                </Paragraph>
+              </Col>
+            </Row>
+            <Row className={styles.step}>
+              <Col span={6}>2) Copy the token you receive</Col>
+              <Col span={2} />
+              <Col span={16}>
+                <Input
+                  value={accessCodes[trackerMetadata.id]}
+                  onChange={(e: any) =>
+                    setAccessCodes({
+                      ...accessCodes,
+                      [trackerMetadata.id]: e.target.value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+            <Row className={styles.step}>
+              <Col span={6}>3) Save details</Col>
+              <Col span={2} />
+              <Col span={16}>
+                <Button
+                  onClick={() =>
+                    submitAccessCode(
+                      trackerMetadata.id,
+                      accessCodes[trackerMetadata.id]
+                    )
+                  }
                 >
-                  {authUrls[AniListTrackerMetadata.id]}
+                  Submit
+                </Button>
+              </Col>
+            </Row>
+
+            {usernames[trackerMetadata.id] ? (
+              <Paragraph className={styles.statusText}>
+                Authenticated as {usernames[trackerMetadata.id]}.{' '}
+                <a onClick={() => saveAccessToken(trackerMetadata.id, '')}>
+                  Unlink
                 </a>
+                .
               </Paragraph>
-            </Col>
-          </Row>
-          <Row className={styles.step}>
-            <Col span={6}>2) Copy the token you receive</Col>
-            <Col span={2} />
-            <Col span={16}>
-              <Input
-                value={accessCodes[AniListTrackerMetadata.id]}
-                onChange={(e: any) =>
-                  setAccessCodes({
-                    ...accessCodes,
-                    [AniListTrackerMetadata.id]: e.target.value,
-                  })
-                }
-              />
-            </Col>
-          </Row>
-          <Row className={styles.step}>
-            <Col span={6}>3) Save details</Col>
-            <Col span={2} />
-            <Col span={16}>
-              <Button
-                onClick={() =>
-                  submitAccessCode(
-                    AniListTrackerMetadata.id,
-                    accessCodes[AniListTrackerMetadata.id]
-                  )
-                }
-              >
-                Submit
-              </Button>
-            </Col>
-          </Row>
-
-          {usernames[AniListTrackerMetadata.id] ? (
-            <Paragraph className={styles.statusText}>
-              Authenticated as {usernames[AniListTrackerMetadata.id]}.{' '}
-              <a onClick={() => saveAccessToken(AniListTrackerMetadata.id, '')}>
-                Unlink
-              </a>
-              .
-            </Paragraph>
-          ) : (
-            <Paragraph className={styles.statusText}>
-              You are not currently authenticated.
-            </Paragraph>
-          )}
-        </Panel>
-
-        <Panel header="MyAnimeList" key={MALTrackerMetadata.id}>
-          <Title level={4} className={styles.heading}>
-            MyAnimeList
-          </Title>
-          <Row className={styles.step}>
-            <Col span={6}>1) Open the authentication page in your browser</Col>
-            <Col span={2} />
-            <Col span={16}>
-              <Paragraph>
-                <a
-                  href={authUrls[MALTrackerMetadata.id]}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {authUrls[MALTrackerMetadata.id]}
-                </a>
+            ) : (
+              <Paragraph className={styles.statusText}>
+                You are not currently authenticated.
               </Paragraph>
-            </Col>
-          </Row>
-          <Row className={styles.step}>
-            <Col span={6}>2) Copy the code you receive</Col>
-            <Col span={2} />
-            <Col span={16}>
-              <Input
-                value={accessCodes[MALTrackerMetadata.id]}
-                onChange={(e: any) =>
-                  setAccessCodes({
-                    ...accessCodes,
-                    [MALTrackerMetadata.id]: e.target.value,
-                  })
-                }
-              />
-            </Col>
-          </Row>
-          <Row className={styles.step}>
-            <Col span={6}>3) Save details</Col>
-            <Col span={2} />
-            <Col span={16}>
-              <Button
-                onClick={() =>
-                  submitAccessCode(
-                    MALTrackerMetadata.id,
-                    accessCodes[MALTrackerMetadata.id]
-                  )
-                }
-              >
-                Submit
-              </Button>
-            </Col>
-          </Row>
-
-          {usernames[MALTrackerMetadata.id] ? (
-            <Paragraph className={styles.statusText}>
-              Authenticated as {usernames[MALTrackerMetadata.id]}.{' '}
-              <a onClick={() => saveAccessToken(MALTrackerMetadata.id, '')}>
-                Unlink
-              </a>
-              .
-            </Paragraph>
-          ) : (
-            <Paragraph className={styles.statusText}>
-              You are not currently authenticated.
-            </Paragraph>
-          )}
-        </Panel>
+            )}
+          </Panel>
+        ))}
       </Collapse>
     </>
   );
