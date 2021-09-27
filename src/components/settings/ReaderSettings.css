@@ -6,7 +6,15 @@
   margin-top: 2em !important;
 }
 
+.resetAllButton {
+  margin-bottom: 12px;
+}
+
 .shortcutButton:focus {
   background-color: var(--color-foreground) !important;
   color: var(--color-background) !important;
+}
+
+.shortcutResetButton {
+  margin-left: 4px;
 }

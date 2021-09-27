@@ -120,8 +120,9 @@ interface ParamTypes {
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams<ParamTypes>();
   const history = useHistory();
-  const [extensionMetadata, setExtensionMetadata] =
-    useState<ExtensionMetadata | undefined>();
+  const [extensionMetadata, setExtensionMetadata] = useState<
+    ExtensionMetadata | undefined
+  >();
   const [showingTrackerModal, setShowingTrackerModal] = useState(false);
   const [showingRemoveModal, setShowingRemoveModal] = useState(false);
   const [showingEditModal, setShowingEditModal] = useState(false);

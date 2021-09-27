@@ -1,8 +1,9 @@
-import React from 'react';
-import { Col, Row, Menu, Dropdown, Button } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Col, Row, Menu, Dropdown, Button, Modal } from 'antd';
+import { DownOutlined, UndoOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import Title from 'antd/lib/typography/Title';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './ReaderSettings.css';
 import {
   LayoutDirection,
@@ -19,6 +20,7 @@ import {
   setPageView,
   setPreloadAmount,
 } from '../../features/settings/actions';
+import { DEFAULT_READER_SETTINGS } from '../../features/settings/utils';
 
 const layoutDirectionText: { [key in LayoutDirection]: string } = {
   [LayoutDirection.LeftToRight]: 'Left-to-Right',
@@ -88,6 +90,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const ReaderSettings: React.FC<Props> = (props: Props) => {
+  const [showingResetKeybindsModal, setShowingKeybindsModal] = useState(false);
+
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
       case ReaderSetting.LayoutDirection:
@@ -189,6 +193,26 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
 
   return (
     <>
+      <Modal
+        visible={showingResetKeybindsModal}
+        title="Reset all keyboard shortcuts to the default?"
+        onCancel={() => setShowingKeybindsModal(false)}
+        okText="Reset"
+        okButtonProps={{ danger: true }}
+        onOk={() => {
+          Object.values(ReaderSetting).forEach((readerSetting) =>
+            updateReaderSetting(
+              readerSetting,
+              DEFAULT_READER_SETTINGS[readerSetting]
+            )
+          );
+          setShowingKeybindsModal(false);
+        }}
+      >
+        <Paragraph>
+          This will overwrite your current keyboard shortcuts.
+        </Paragraph>
+      </Modal>
       <Row className={styles.row}>
         <Col span={10}>Layout Direction</Col>
         <Col span={14}>
@@ -268,6 +292,13 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       <Title level={4} className={styles.heading}>
         Keyboard Shortcuts
       </Title>
+
+      <Button
+        className={styles.resetAllButton}
+        onClick={() => setShowingKeybindsModal(true)}
+      >
+        Reset All Shortcuts
+      </Button>
 
       {[
         {
@@ -355,6 +386,16 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             >
               {entry.value}
             </Button>
+            <Button
+              className={styles.shortcutResetButton}
+              icon={<UndoOutlined />}
+              onClick={() =>
+                updateReaderSetting(
+                  entry.setting,
+                  DEFAULT_READER_SETTINGS[entry.setting]
+                )
+              }
+            />
           </Col>
         </Row>
       ))}
