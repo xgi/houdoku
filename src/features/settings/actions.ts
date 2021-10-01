@@ -18,6 +18,7 @@ import {
   SET_CHAPTER_LANGUAGES,
   SET_REFRESH_ON_START,
   SET_OVERLAY_PAGE_NUMBER,
+  SET_HIDE_SCROLLBAR,
   SET_TRACKER_AUTO_UPDATE,
   SET_DISCORD_PRESENCE_ENABLED,
   SET_AUTO_CHECK_FOR_UPDATES,
@@ -186,6 +187,15 @@ export function setOverlayPageNumber(
     type: SET_OVERLAY_PAGE_NUMBER,
     payload: {
       overlayPageNumber,
+    },
+  };
+}
+
+export function setHideScrollbar(hideScrollbar: boolean): SettingsAction {
+  return {
+    type: SET_HIDE_SCROLLBAR,
+    payload: {
+      hideScrollbar,
     },
   };
 }

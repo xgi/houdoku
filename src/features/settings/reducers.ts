@@ -30,6 +30,7 @@ import {
   SET_AUTO_CHECK_FOR_EXTENSION_UPDATES,
   SET_KEYBINDING,
   SET_CUSTOM_DOWNLOADS_DIR,
+  SET_HIDE_SCROLLBAR,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -108,6 +109,10 @@ const initialState: SettingsState = {
     storedReaderSettings.OverlayPageNumber === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.OverlayPageNumber]
       : storedReaderSettings.OverlayPageNumber,
+  hideScrollbar:
+    storedReaderSettings.HideScrollbar === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.HideScrollbar]
+      : storedReaderSettings.HideScrollbar,
   keyPreviousPage:
     storedReaderSettings.KeyPreviousPage === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyPreviousPage]
@@ -333,6 +338,12 @@ export default function settings(
         action.payload.overlayPageNumber
       );
       return { ...state, overlayPageNumber: action.payload.overlayPageNumber };
+    case SET_HIDE_SCROLLBAR:
+      saveReaderSetting(
+        ReaderSetting.HideScrollbar,
+        action.payload.hideScrollbar
+      );
+      return { ...state, hideScrollbar: action.payload.hideScrollbar };
     case SET_TRACKER_AUTO_UPDATE:
       saveTrackerSetting(
         TrackerSetting.TrackerAutoUpdate,

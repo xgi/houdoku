@@ -20,6 +20,10 @@
   overflow-y: auto;
 }
 
+.noScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .pageImage {
   min-width: 0;
   width: 100%;
@@ -58,9 +62,5 @@
 .pageNumberOverlayText {
   font-size: 1.2em;
   margin-bottom: 0 !important;
-  text-shadow: -1px -1px 0 var(--color-background),
-    0 -1px 0 var(--color-background), 1px -1px 0 var(--color-background),
-    1px 0 0 var(--color-background), 1px 1px 0 var(--color-background),
-    0 1px 0 var(--color-background), -1px 1px 0 var(--color-background),
-    -1px 0 0 var(--color-background);
+  text-shadow: -1px -1px 0 var(--color-background), 0 -1px 0 var(--color-background), 1px -1px 0 var(--color-background), 1px 0 0 var(--color-background), 1px 1px 0 var(--color-background), 0 1px 0 var(--color-background), -1px 1px 0 var(--color-background), -1px 0 0 var(--color-background);
 }

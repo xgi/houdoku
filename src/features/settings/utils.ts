@@ -31,6 +31,7 @@ export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.PageFit]: PageFit.Auto,
   [ReaderSetting.PreloadAmount]: 2,
   [ReaderSetting.OverlayPageNumber]: false,
+  [ReaderSetting.HideScrollbar]: false,
   [ReaderSetting.KeyPreviousPage]: 'left',
   [ReaderSetting.KeyFirstPage]: 'ctrl+left',
   [ReaderSetting.KeyNextPage]: 'right',
@@ -189,6 +190,10 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   if (storeValues[ReaderSetting.OverlayPageNumber] !== null) {
     settings[ReaderSetting.OverlayPageNumber] =
       storeValues[ReaderSetting.OverlayPageNumber] === 'true';
+  }
+  if (storeValues[ReaderSetting.HideScrollbar] !== null) {
+    settings[ReaderSetting.HideScrollbar] =
+      storeValues[ReaderSetting.HideScrollbar] === 'true';
   }
   if (storeValues[ReaderSetting.KeyPreviousPage] !== null) {
     settings[ReaderSetting.KeyPreviousPage] =
