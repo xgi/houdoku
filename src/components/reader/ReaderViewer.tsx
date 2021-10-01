@@ -21,6 +21,7 @@ const mapState = (state: RootState) => ({
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
   overlayPageNumber: state.settings.overlayPageNumber,
+  hideScrollbar: state.settings.hideScrollbar,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -140,6 +141,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         <Content
           key={i}
           className={`${styles.imageWrapper}
+            ${props.hideScrollbar ? styles.noScrollbar : ''}
             ${props.pageFit === PageFit.Auto ? styles.fitAuto : ''}
             ${props.pageFit === PageFit.Width ? styles.fitWidth : ''}
             ${props.pageFit === PageFit.Height ? styles.fitHeight : ''}
@@ -158,11 +160,13 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       <div
         ref={viewerContainer}
         onScroll={(e) => handleViewerScroll(e)}
-        className={
-          props.layoutDirection === LayoutDirection.Vertical
-            ? styles.viewerContainerVertical
-            : styles.viewerContainer
-        }
+        className={`
+          ${props.hideScrollbar ? styles.noScrollbar : ''}
+          ${
+            props.layoutDirection === LayoutDirection.Vertical
+              ? styles.viewerContainerVertical
+              : styles.viewerContainer
+          }`}
         onClick={
           props.layoutDirection === LayoutDirection.Vertical
             ? () => {}

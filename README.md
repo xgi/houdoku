@@ -58,9 +58,8 @@ framework. Each component has a CSS file for custom styles.
 
 **State**: Redux (and react-redux) is used for state management. There are several defined "features" (located in `src/features/`) which encompass the majority of user-initiated functionality. Using React Hooks is acceptable, but discouraged, for small components. This is a convenience; preferably all state should be handled by Redux.
 
-**Database**: Library data is stored with
-[Lovefield](https://google.github.io/lovefield). Miscellaneous data,
-including user settings, is saved with `localStorage`.
+**Storage**: Library data and settings are saved with `localStorage`. Thumbnails are stored in
+the user-data path.
 
 **Plugins/Extensions**: See the [houdoku-extensions](https://github.com/xgi/houdoku-extensions) repo. Dynamic loading is handled by [aki-plugin-manager](https://github.com/xgi/aki-plugin-manager).
 
