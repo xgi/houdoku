@@ -25,6 +25,7 @@ export const SET_LIBRARY_FILTER_STATUS = 'SET_LIBRARY_FILTER_STATUS';
 export const SET_LIBRARY_FILTER_PROGRESS = 'SET_LIBRARY_FILTER_PROGRESS';
 export const SET_LIBRARY_FILTER_USER_TAGS = 'SET_LIBRARY_FILTER_USER_TAGS';
 export const SET_OVERLAY_PAGE_NUMBER = 'SET_OVERLAY_PAGE_NUMBER';
+export const SET_HIDE_SCROLLBAR = 'SET_HIDE_SCROLLBAR';
 export const SET_TRACKER_AUTO_UPDATE = 'SET_TRACKER_AUTO_UPDATE';
 export const SET_DISCORD_PRESENCE_ENABLED = 'SET_DISCORD_PRESENCE_ENABLED';
 export const SET_KEYBINDING = 'SET_KEYBINDING';
@@ -44,6 +45,7 @@ export interface SettingsState {
   layoutDirection: LayoutDirection;
   preloadAmount: number;
   overlayPageNumber: boolean;
+  hideScrollbar: boolean;
   trackerAutoUpdate: boolean;
   discordPresenceEnabled: boolean;
   keyPreviousPage: string;
@@ -173,6 +175,13 @@ interface SetOverlayPageNumberAction {
   };
 }
 
+interface SetHideScrollbar {
+  type: typeof SET_HIDE_SCROLLBAR;
+  payload: {
+    hideScrollbar: boolean;
+  };
+}
+
 interface SetTrackerAutoUpdateAction {
   type: typeof SET_TRACKER_AUTO_UPDATE;
   payload: {
@@ -213,6 +222,7 @@ export type SettingsAction =
   | SetLibraryFilterProgressAction
   | SetLibraryFilterUserTagsAction
   | SetOverlayPageNumberAction
+  | SetHideScrollbar
   | SetTrackerAutoUpdateAction
   | SetDiscordPresenceEnabledAction
   | SetKeybindingAction;

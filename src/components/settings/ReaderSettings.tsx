@@ -13,6 +13,7 @@ import {
 } from '../../models/types';
 import { RootState } from '../../store';
 import {
+  setHideScrollbar,
   setKeybinding,
   setLayoutDirection,
   setOverlayPageNumber,
@@ -52,6 +53,7 @@ const mapState = (state: RootState) => ({
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
   overlayPageNumber: state.settings.overlayPageNumber,
+  hideScrollbar: state.settings.hideScrollbar,
   keyPreviousPage: state.settings.keyPreviousPage,
   keyFirstPage: state.settings.keyFirstPage,
   keyNextPage: state.settings.keyNextPage,
@@ -79,6 +81,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setPreloadAmount(preloadAmount)),
   setOverlayPageNumber: (overlayPageNumber: boolean) =>
     dispatch(setOverlayPageNumber(overlayPageNumber)),
+  setHideScrollbar: (hideScrollbar: boolean) =>
+    dispatch(setHideScrollbar(hideScrollbar)),
   setKeybinding: (keySetting: ReaderSetting, value: string) =>
     dispatch(setKeybinding(keySetting, value)),
 });
@@ -108,6 +112,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         break;
       case ReaderSetting.OverlayPageNumber:
         props.setOverlayPageNumber(value);
+        break;
+      case ReaderSetting.HideScrollbar:
+        props.setHideScrollbar(value);
         break;
       case ReaderSetting.KeyPreviousPage:
       case ReaderSetting.KeyFirstPage:
@@ -284,6 +291,35 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           >
             <Button>
               {props.overlayPageNumber ? 'Yes' : 'No'}
+              <DownOutlined />
+            </Button>
+          </Dropdown>
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Hide Scrollbar</Col>
+        <Col span={14}>
+          <Dropdown
+            overlay={
+              <Menu
+                onClick={(e: any) => {
+                  updateReaderSetting(
+                    ReaderSetting.HideScrollbar,
+                    e.item.props['data-value'] === 'true'
+                  );
+                }}
+              >
+                <Menu.Item key={1} data-value="true">
+                  Yes
+                </Menu.Item>
+                <Menu.Item key={2} data-value="false">
+                  No
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button>
+              {props.hideScrollbar ? 'Yes' : 'No'}
               <DownOutlined />
             </Button>
           </Dropdown>

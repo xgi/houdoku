@@ -68,6 +68,7 @@ export enum ReaderSetting {
   PageView = 'PageView',
   PreloadAmount = 'PreloadAmount',
   OverlayPageNumber = 'OverlayPageNumber',
+  HideScrollbar = 'HideScrollbar',
   KeyPreviousPage = 'KeyPreviousPage',
   KeyFirstPage = 'KeyFirstPage',
   KeyNextPage = 'KeyNextPage',
