@@ -25,6 +25,14 @@ export type TrackerSeries = {
   coverUrl: string;
 };
 
+export enum TrackScoreFormat {
+  POINT_100 = 'POINT_100',
+  POINT_10_DECIMAL = 'POINT_10_DECIMAL',
+  POINT_10 = 'POINT_10',
+  POINT_5 = 'POINT_5',
+  POINT_3 = 'POINT_3',
+}
+
 export enum TrackStatus {
   Reading = 'Reading',
   Planning = 'Planning',
@@ -40,6 +48,7 @@ export type TrackEntry = {
   description?: string;
   coverUrl?: string;
   score?: number;
+  scoreFormat?: TrackScoreFormat;
   progress?: number;
   status?: TrackStatus;
 };
