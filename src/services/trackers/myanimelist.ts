@@ -11,7 +11,7 @@ import {
   UpdateLibraryEntryFunc,
   GetTokenFunc,
 } from '../../models/interface';
-import { TrackEntry, TrackerMetadata } from '../../models/types';
+import { TrackEntry, TrackerMetadata, TrackerSeries } from '../../models/types';
 import { formDataFromObject } from '../../util/net';
 
 const CLIENT_ID = '217d11dc032b71dd35c60c7204b07a65';
@@ -30,6 +30,47 @@ type UserResponseData = {
   name: string;
   location: string;
   joined_at: string;
+};
+
+type MangaListResponseData = {
+  data: {
+    node: {
+      id: number;
+      title: string;
+      main_picture:
+        | {
+            large: string | null | undefined;
+            medium: string | null | undefined;
+          }
+        | null
+        | undefined;
+      start_date: string | null | undefined;
+      end_date: string | null | undefined;
+      synopsis: string | null | undefined;
+      mean: number | null | undefined;
+      rank: number | null | undefined;
+      popularity: number | null | undefined;
+      num_list_users: number | null | undefined;
+      num_scoring_users: number | null | undefined;
+      my_list_status:
+        | {
+            status: string | null | undefined;
+            score: number;
+            num_volumes_read: number;
+            num_chapters_read: number;
+            start_date: string | null | undefined;
+            finish_date: string | null | undefined;
+            priority: number;
+            tags: string[];
+            comments: string;
+          }
+        | null
+        | undefined;
+    };
+  }[];
+  paging: {
+    next: string;
+  };
 };
 
 export const MALTrackerMetadata: TrackerMetadata = {
@@ -113,8 +154,35 @@ export class MALTrackerClient extends TrackerClientAbstract {
       });
   };
 
-  search: SearchFunc = (text: string) => {
-    return new Promise((resolve) => resolve([]));
+  search: SearchFunc = async (text: string) => {
+    if (this.accessToken === '') return new Promise((resolve) => resolve([]));
+
+    const url = `${BASE_URL}/manga?q=${text}&nsfw=true&fields=id,title,synopsis,main_picture`;
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        Accept: 'application/json',
+      },
+    };
+
+    return fetch(url, options)
+      .then((response) => response.json())
+      .then((data: MangaListResponseData) => {
+        return data.data.map((item) => {
+          const { node } = item;
+          return {
+            id: node.id.toString(),
+            title: node.title,
+            description: node.synopsis,
+            coverUrl: node.main_picture?.large,
+          } as TrackerSeries;
+        });
+      })
+      .catch((e: Error) => {
+        log.error(e);
+        return [];
+      });
   };
 
   getLibraryEntry: GetLibraryEntryFunc = async (seriesId: string) => {
