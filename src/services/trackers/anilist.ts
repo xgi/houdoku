@@ -315,7 +315,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
 
     const query = `
       mutation UpdateManga (
-        ${'$'}listId: Int, ${'$'}progress: Int, ${'$'}status: MediaListStatus, ${'$'}score: Int
+        ${'$'}listId: Int, ${'$'}progress: Int, ${'$'}status: MediaListStatus, ${'$'}score: Float
       ) {
         SaveMediaListEntry (
           id: ${'$'}listId, progress: ${'$'}progress, status: ${'$'}status, score: ${'$'}score
@@ -342,7 +342,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
           status: Object.keys(STATUS_MAP).find(
             (key: string) => STATUS_MAP[key] === trackEntry.status
           ),
-          score: trackEntry.score === undefined ? 0 : trackEntry.score * 10,
+          score: trackEntry.score === undefined ? 0 : trackEntry.score,
         },
       }),
     };
