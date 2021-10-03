@@ -101,6 +101,8 @@ export class AniListTrackerClient extends TrackerClientAbstract {
           return null;
         }
         this.userId = data.data.Viewer.id;
+        this.userScoreFormat =
+          SCORE_FORMAT_MAP[data.data.Viewer.mediaListOptions.scoreFormat];
         return data.data.Viewer.name;
       })
       .catch((e: Error) => log.error(e));
@@ -219,7 +221,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
           description: data.data.MediaList.media.description,
           coverUrl: data.data.MediaList.media.coverImage.large,
           score: data.data.MediaList.score,
-          scoreFormat: SCORE_FORMAT_MAP[data.data.MediaList.score],
+          scoreFormat: this.userScoreFormat,
           progress: data.data.MediaList.progress,
           status: STATUS_MAP[data.data.MediaList.status],
         } as TrackEntry;
