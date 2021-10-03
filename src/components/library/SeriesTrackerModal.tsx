@@ -13,7 +13,6 @@ import {
   Menu,
   Modal,
   Row,
-  Spin,
   Tabs,
 } from 'antd';
 import { DownOutlined, CheckOutlined } from '@ant-design/icons';
@@ -56,7 +55,6 @@ type Props = {
 };
 
 const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
-  const [loading, setLoading] = useState(true);
   const [usernames, setUsernames] = useState<{
     [trackerId: string]: string | null;
   }>({});
@@ -68,9 +66,6 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   }>({});
 
   const loadTrackerData = async () => {
-    console.log('loading tracker data');
-    console.log(props.series.trackerKeys);
-
     const _getUsername = (trackerId: string): Promise<string | null> =>
       ipcRenderer
         .invoke(ipcChannels.TRACKER.GET_USERNAME, trackerId)
@@ -324,7 +319,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
       footer={null}
       onCancel={props.toggleVisible}
     >
-      <Tabs defaultActiveKey="1" tabPosition="top" className={styles.tabs}>
+      <Tabs tabPosition="top" className={styles.tabs}>
         {TRACKER_METADATAS.map((trackerMetadata) => (
           <TabPane tab={trackerMetadata.name} key={trackerMetadata.id}>
             {renderTrackerContent(trackerMetadata)}
