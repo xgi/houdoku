@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -29,8 +31,11 @@ import {
   TrackScoreFormat,
 } from '../../models/types';
 import { updateSeriesTrackerKeys } from '../../features/library/utils';
+import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
 
 const { TabPane } = Tabs;
+
+const TRACKER_METADATAS = [AniListTrackerMetadata, MALTrackerMetadata];
 
 const SCORE_FORMAT_OPTIONS: {
   [key in TrackScoreFormat]: number[];
@@ -51,83 +56,104 @@ type Props = {
 
 const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
-  const [trackerKey, setTrackerKey] = useState('');
-  const [trackerSeriesList, setTrackerSeriesList] = useState<TrackerSeries[]>(
-    []
-  );
-  const [trackEntry, setTrackEntry] = useState<TrackEntry>();
+  const [usernames, setUsernames] = useState<{
+    [trackerId: string]: string | null;
+  }>({});
+  const [trackerSeriesLists, setTrackerSeriesLists] = useState<{
+    [trackerId: string]: TrackerSeries[];
+  }>({});
+  const [trackEntries, setTrackEntries] = useState<{
+    [trackerId: string]: TrackEntry;
+  }>({});
 
-  const updateLibraryEntry = (_trackEntry: TrackEntry) => {
-    setLoading(true);
+  const loadTrackerData = async () => {
+    console.log('loading tracker data');
+    console.log(props.series.trackerKeys);
+
+    const _getUsername = (trackerId: string): Promise<string | null> =>
+      ipcRenderer
+        .invoke(ipcChannels.TRACKER.GET_USERNAME, trackerId)
+        .catch((e) => log.error(e));
+    const _getTrackEntry = (trackerId: string, trackerKey: string) =>
+      ipcRenderer
+        .invoke(ipcChannels.TRACKER.GET_LIBRARY_ENTRY, trackerId, trackerKey)
+        .catch((e) => log.error(e));
+    const _getSeriesList = (trackerId: string): Promise<TrackerSeries[]> =>
+      ipcRenderer
+        .invoke(ipcChannels.TRACKER.SEARCH, trackerId, props.series.title)
+        .catch((e) => log.error(e));
+
+    const _usernames: { [trackerId: string]: string | null } = {};
+    const _trackEntries: { [trackerId: string]: TrackEntry } = {};
+    const _trackerSeriesLists: { [trackerId: string]: TrackerSeries[] } = {};
+
+    await Promise.all(
+      TRACKER_METADATAS.map(async (trackerMetadata) => {
+        const username = await _getUsername(trackerMetadata.id);
+        _usernames[trackerMetadata.id] = username;
+
+        if (
+          props.series.trackerKeys &&
+          props.series.trackerKeys[trackerMetadata.id]
+        ) {
+          const trackerKey = props.series.trackerKeys[trackerMetadata.id];
+          const sourceTrackEntry = await _getTrackEntry(
+            trackerMetadata.id,
+            trackerKey
+          );
+
+          _trackEntries[trackerMetadata.id] =
+            sourceTrackEntry === null
+              ? {
+                  seriesId: trackerKey,
+                  progress: 0,
+                  status: TrackStatus.Reading,
+                }
+              : sourceTrackEntry;
+        } else {
+          const seriesList = await _getSeriesList(trackerMetadata.id);
+          _trackerSeriesLists[trackerMetadata.id] = seriesList.slice(0, 5);
+        }
+      })
+    );
+
+    setUsernames(_usernames);
+    setTrackEntries(_trackEntries);
+    setTrackerSeriesLists(_trackerSeriesLists);
+  };
+
+  const sendTrackEntry = (trackerId: string, trackEntry: TrackEntry) => {
+    setTrackEntries({ ...trackEntries, [trackerId]: trackEntry });
 
     ipcRenderer
-      .invoke(
-        ipcChannels.TRACKER.UPDATE_LIBRARY_ENTRY,
-        AniListTrackerMetadata.id,
-        _trackEntry
-      )
-      .then((libraryEntry: TrackEntry) =>
-        setTrackEntry(
-          libraryEntry !== null
-            ? libraryEntry
-            : {
-                seriesId: trackerKey,
-                progress: 0,
-                status: TrackStatus.Reading,
-              }
-        )
-      )
-      .catch((e) => log.error(e))
-      .finally(() => setLoading(false))
+      .invoke(ipcChannels.TRACKER.UPDATE_LIBRARY_ENTRY, trackerId, trackEntry)
       .catch((e) => log.error(e));
   };
 
-  const loadTrackerSeriesList = () => {
-    setLoading(true);
-
-    ipcRenderer
-      .invoke(
-        ipcChannels.TRACKER.SEARCH,
-        AniListTrackerMetadata.id,
-        props.series.title
-      )
-      .then((_seriesList: TrackerSeries[]) =>
-        setTrackerSeriesList(_seriesList.slice(0, 5))
-      )
-      .catch((e) => log.error(e))
-      .finally(() => setLoading(false))
-      .catch((e) => log.error(e));
-  };
-
-  const applySeriesTrackerKey = (key: string) => {
-    const newTrackerKeys = {
+  const applySeriesTrackerKey = (trackerId: string, key: string) => {
+    updateSeriesTrackerKeys(props.series, {
       ...props.series.trackerKeys,
-      [AniListTrackerMetadata.id]: key,
-    };
-
-    updateSeriesTrackerKeys(props.series, newTrackerKeys);
-    setTrackerKey(key);
+      [trackerId]: key,
+    });
     props.loadSeriesContent();
   };
 
-  const renderTrackerSeriesList = () => {
+  const renderTrackerSeriesList = (trackerId: string) => {
     return (
       <List
         header={null}
         footer={null}
         bordered
-        dataSource={trackerSeriesList}
+        dataSource={trackerSeriesLists[trackerId]}
         renderItem={(item) => (
           <List.Item
             key={item.id}
             extra={
-              <Button onClick={() => applySeriesTrackerKey(item.id)}>
+              <Button onClick={() => applySeriesTrackerKey(trackerId, item.id)}>
                 Link
               </Button>
             }
           >
-            {/* {item.name} <a href={item.url}>{item.url}</a>) */}
             <List.Item.Meta
               avatar={
                 <img
@@ -153,7 +179,8 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const renderTrackEntry = () => {
+  const renderTrackEntry = (trackerId: string) => {
+    const trackEntry = trackEntries[trackerId];
     if (trackEntry === undefined)
       return <Paragraph>Failed to define tracker entry.</Paragraph>;
 
@@ -166,7 +193,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               overlay={
                 <Menu
                   onClick={(e: any) =>
-                    updateLibraryEntry({
+                    sendTrackEntry(trackerId, {
                       ...trackEntry,
                       status: e.item.props['data-value'] as TrackStatus,
                     })
@@ -205,13 +232,16 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
                 min={0}
                 value={trackEntry.progress}
                 onChange={(value) =>
-                  setTrackEntry({ ...trackEntry, progress: value })
+                  setTrackEntries({
+                    ...trackEntries,
+                    [trackerId]: { ...trackEntry, progress: value },
+                  })
                 }
               />
               <Button
                 className={styles.progressSubmitButton}
                 icon={<CheckOutlined />}
-                onClick={() => updateLibraryEntry(trackEntry)}
+                onClick={() => sendTrackEntry(trackerId, trackEntry)}
               />
             </span>
           </Col>
@@ -223,7 +253,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               overlay={
                 <Menu
                   onClick={(e: any) => {
-                    updateLibraryEntry({
+                    sendTrackEntry(trackerId, {
                       ...trackEntry,
                       score: parseInt(e.item.props['data-value'], 10),
                     });
@@ -249,8 +279,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
         <Paragraph className={styles.unlinkText}>
           <a
             onClick={() => {
-              applySeriesTrackerKey('');
-              loadTrackerSeriesList();
+              applySeriesTrackerKey(trackerId, '');
             }}
           >
             Unlink this series.
@@ -260,99 +289,31 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const renderTrackerContent = () => {
-    if (!authenticated) {
+  const renderTrackerContent = (trackerId: string, trackerName: string) => {
+    if (!usernames[trackerId]) {
       return (
         <Paragraph>
-          In order to track this series, please link your AniList account
+          In order to track this series, please link your {trackerName} account
           through the Settings tab on the left.
         </Paragraph>
       );
     }
 
-    return trackerKey === '' ? renderTrackerSeriesList() : renderTrackEntry();
+    return props.series.trackerKeys && props.series.trackerKeys[trackerId]
+      ? renderTrackEntry(trackerId)
+      : renderTrackerSeriesList(trackerId);
   };
 
   useEffect(() => {
-    if (trackerKey !== '') {
-      setTrackEntry(undefined);
-      setLoading(true);
-
-      ipcRenderer
-        .invoke(
-          ipcChannels.TRACKER.GET_LIBRARY_ENTRY,
-          AniListTrackerMetadata.id,
-          trackerKey
-        )
-        .then((libraryEntry: TrackEntry) =>
-          setTrackEntry(
-            libraryEntry !== null
-              ? libraryEntry
-              : {
-                  seriesId: trackerKey,
-                  progress: 0,
-                  status: TrackStatus.Reading,
-                }
-          )
-        )
-        .catch((e) => log.error(e))
-        .finally(() => setLoading(false))
-        .catch((e) => log.error(e));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trackerKey]);
-
-  useEffect(() => {
-    setTrackerKey('');
-    setTrackerSeriesList([]);
+    setUsernames({});
+    setTrackEntries({});
+    setTrackerSeriesLists({});
 
     if (props.visible) {
-      ipcRenderer
-        .invoke(ipcChannels.TRACKER.GET_USERNAME, AniListTrackerMetadata.id)
-        .then((username: string | null) => {
-          const isAuth = username !== null;
-          setAuthenticated(isAuth);
-          return isAuth;
-        })
-        .then((isAuth: boolean) => {
-          // eslint-disable-next-line promise/always-return
-          if (isAuth) {
-            if (
-              props.series.trackerKeys &&
-              Object.keys(props.series.trackerKeys).includes(
-                AniListTrackerMetadata.id
-              )
-            ) {
-              const key = props.series.trackerKeys[AniListTrackerMetadata.id];
-              setTrackerKey(key);
-              if (key === '') loadTrackerSeriesList();
-            } else {
-              loadTrackerSeriesList();
-            }
-          } else {
-            setLoading(false);
-          }
-        })
-        .catch((e) => log.error(e));
+      loadTrackerData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.series, props.visible]);
-
-  if (loading) {
-    return (
-      <Modal
-        title="Trackers"
-        visible={props.visible}
-        footer={null}
-        onCancel={props.toggleVisible}
-      >
-        <div className={styles.loaderContainer}>
-          <Spin />
-          <Paragraph>Loading tracker details...</Paragraph>
-        </div>
-      </Modal>
-    );
-  }
 
   return (
     <Modal
@@ -363,7 +324,10 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     >
       <Tabs defaultActiveKey="1" tabPosition="top" className={styles.tabs}>
         <TabPane tab="AniList" key={1}>
-          {renderTrackerContent()}
+          {renderTrackerContent(
+            AniListTrackerMetadata.id,
+            AniListTrackerMetadata.name
+          )}
         </TabPane>
       </Tabs>
     </Modal>
