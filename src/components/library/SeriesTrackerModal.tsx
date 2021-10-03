@@ -29,6 +29,7 @@ import {
   TrackerSeries,
   TrackStatus,
   TrackScoreFormat,
+  TrackerMetadata,
 } from '../../models/types';
 import { updateSeriesTrackerKeys } from '../../features/library/utils';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
@@ -289,19 +290,20 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const renderTrackerContent = (trackerId: string, trackerName: string) => {
-    if (!usernames[trackerId]) {
+  const renderTrackerContent = (trackerMetadata: TrackerMetadata) => {
+    if (!usernames[trackerMetadata.id]) {
       return (
         <Paragraph>
-          In order to track this series, please link your {trackerName} account
-          through the Settings tab on the left.
+          In order to track this series, please link your {trackerMetadata.name}{' '}
+          account through the Settings tab on the left.
         </Paragraph>
       );
     }
 
-    return props.series.trackerKeys && props.series.trackerKeys[trackerId]
-      ? renderTrackEntry(trackerId)
-      : renderTrackerSeriesList(trackerId);
+    return props.series.trackerKeys &&
+      props.series.trackerKeys[trackerMetadata.id]
+      ? renderTrackEntry(trackerMetadata.id)
+      : renderTrackerSeriesList(trackerMetadata.id);
   };
 
   useEffect(() => {
@@ -323,12 +325,11 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
       onCancel={props.toggleVisible}
     >
       <Tabs defaultActiveKey="1" tabPosition="top" className={styles.tabs}>
-        <TabPane tab="AniList" key={1}>
-          {renderTrackerContent(
-            AniListTrackerMetadata.id,
-            AniListTrackerMetadata.name
-          )}
-        </TabPane>
+        {TRACKER_METADATAS.map((trackerMetadata) => (
+          <TabPane tab={trackerMetadata.name} key={trackerMetadata.id}>
+            {renderTrackerContent(trackerMetadata)}
+          </TabPane>
+        ))}
       </Tabs>
     </Modal>
   );
