@@ -481,6 +481,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         !props.chapter.read
       ) {
         props.toggleChapterRead(props.chapter, props.series);
+        props.setSource(props.series, { ...props.chapter, read: true });
         if (props.trackerAutoUpdate)
           props.sendProgressToTrackers(props.chapter, props.series);
       }

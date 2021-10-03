@@ -10,7 +10,12 @@ import {
   UpdateLibraryEntryFunc,
   GetTokenFunc,
 } from '../../models/interface';
-import { TrackEntry, TrackerMetadata, TrackStatus } from '../../models/types';
+import {
+  TrackEntry,
+  TrackerMetadata,
+  TrackScoreFormat,
+  TrackStatus,
+} from '../../models/types';
 
 const clientId = '5631';
 
@@ -23,6 +28,14 @@ const STATUS_MAP: { [key: string]: TrackStatus } = {
   REREADING: TrackStatus.Reading,
 };
 
+const SCORE_FORMAT_MAP: { [key: string]: TrackScoreFormat } = {
+  POINT_10: TrackScoreFormat.POINT_10,
+  POINT_100: TrackScoreFormat.POINT_100,
+  POINT_10_DECIMAL: TrackScoreFormat.POINT_10_DECIMAL,
+  POINT_5: TrackScoreFormat.POINT_5,
+  POINT_3: TrackScoreFormat.POINT_3,
+};
+
 export const AniListTrackerMetadata: TrackerMetadata = {
   id: 'ea5b9ee9-a60b-461f-99c3-8082bb773e0c',
   name: 'AniList',
@@ -31,6 +44,8 @@ export const AniListTrackerMetadata: TrackerMetadata = {
 
 export class AniListTrackerClient extends TrackerClientAbstract {
   userId: string;
+
+  userScoreFormat: TrackScoreFormat | undefined;
 
   constructor(accessToken = '') {
     super(accessToken);
@@ -86,6 +101,8 @@ export class AniListTrackerClient extends TrackerClientAbstract {
           return null;
         }
         this.userId = data.data.Viewer.id;
+        this.userScoreFormat =
+          SCORE_FORMAT_MAP[data.data.Viewer.mediaListOptions.scoreFormat];
         return data.data.Viewer.name;
       })
       .catch((e: Error) => log.error(e));
@@ -148,7 +165,8 @@ export class AniListTrackerClient extends TrackerClientAbstract {
   getLibraryEntry: GetLibraryEntryFunc = async (seriesId: string) => {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
-    if (this.userId === '') await this.getUsername();
+    if (this.userId === '' || this.userScoreFormat === undefined)
+      await this.getUsername();
     if (this.userId === '') return null;
 
     const query = `
@@ -156,7 +174,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
         MediaList (userId: ${'$'}id, type: MANGA, mediaId: ${'$'}manga_id) {
           id
           status
-          scoreRaw: score(format: POINT_10)
+          score
           progress
           media {
             id
@@ -202,7 +220,8 @@ export class AniListTrackerClient extends TrackerClientAbstract {
           title: data.data.MediaList.media.title.romaji,
           description: data.data.MediaList.media.description,
           coverUrl: data.data.MediaList.media.coverImage.large,
-          score: data.data.MediaList.scoreRaw,
+          score: data.data.MediaList.score,
+          scoreFormat: this.userScoreFormat,
           progress: data.data.MediaList.progress,
           status: STATUS_MAP[data.data.MediaList.status],
         } as TrackEntry;
@@ -273,7 +292,8 @@ export class AniListTrackerClient extends TrackerClientAbstract {
   ) => {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
-    if (this.userId === '') await this.getUsername();
+    if (this.userId === '' || this.userScoreFormat === undefined)
+      await this.getUsername();
     if (this.userId === '') return null;
 
     const prevEntry = await this.getLibraryEntry(trackEntry.seriesId);
@@ -298,7 +318,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
         ${'$'}listId: Int, ${'$'}progress: Int, ${'$'}status: MediaListStatus, ${'$'}score: Int
       ) {
         SaveMediaListEntry (
-          id: ${'$'}listId, progress: ${'$'}progress, status: ${'$'}status, scoreRaw: ${'$'}score
+          id: ${'$'}listId, progress: ${'$'}progress, status: ${'$'}status, score: ${'$'}score
         ) {
           id
           progress

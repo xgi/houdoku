@@ -22,10 +22,25 @@ import { Series } from 'houdoku-extension-lib';
 import styles from './SeriesTrackerModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { AniListTrackerMetadata } from '../../services/trackers/anilist';
-import { TrackEntry, TrackerSeries, TrackStatus } from '../../models/types';
+import {
+  TrackEntry,
+  TrackerSeries,
+  TrackStatus,
+  TrackScoreFormat,
+} from '../../models/types';
 import { updateSeriesTrackerKeys } from '../../features/library/utils';
 
 const { TabPane } = Tabs;
+
+const SCORE_FORMAT_OPTIONS: {
+  [key in TrackScoreFormat]: number[];
+} = {
+  [TrackScoreFormat.POINT_10]: [...Array(11).keys()],
+  [TrackScoreFormat.POINT_100]: [...Array(101).keys()],
+  [TrackScoreFormat.POINT_10_DECIMAL]: [...Array(101).keys()],
+  [TrackScoreFormat.POINT_5]: [...Array(6).keys()],
+  [TrackScoreFormat.POINT_3]: [...Array(4).keys()],
+};
 
 type Props = {
   series: Series;
@@ -214,7 +229,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
                     });
                   }}
                 >
-                  {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value: number) => (
+                  {SCORE_FORMAT_OPTIONS[
+                    trackEntry.scoreFormat || TrackScoreFormat.POINT_10
+                  ].map((value: number) => (
                     <Menu.Item key={value} data-value={value}>
                       {value}
                     </Menu.Item>
