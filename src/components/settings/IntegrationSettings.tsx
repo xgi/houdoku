@@ -1,5 +1,5 @@
 import React from 'react';
-import { Col, Row, Menu, Dropdown, Button } from 'antd';
+import { Col, Row, Menu, Dropdown, Button, Switch } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
@@ -43,30 +43,15 @@ const IntegrationSettings: React.FC<Props> = (props: Props) => {
       <Row className={styles.row}>
         <Col span={10}>Use Discord Rich Presence</Col>
         <Col span={14}>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  updateIntegrationSetting(
-                    IntegrationSetting.DiscordPresenceEnabled,
-                    e.item.props['data-value'] === 'true'
-                  );
-                }}
-              >
-                <Menu.Item key={1} data-value="true">
-                  Yes
-                </Menu.Item>
-                <Menu.Item key={2} data-value="false">
-                  No
-                </Menu.Item>
-              </Menu>
+          <Switch
+            checked={props.discordPresenceEnabled}
+            onChange={(checked: boolean) =>
+              updateIntegrationSetting(
+                IntegrationSetting.DiscordPresenceEnabled,
+                checked
+              )
             }
-          >
-            <Button>
-              {props.discordPresenceEnabled ? 'Yes' : 'No'}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
+          />
         </Col>
       </Row>
       <Row className={styles.row}>

@@ -1,5 +1,15 @@
 import React from 'react';
-import { Select, Col, Row, Menu, Dropdown, Button, Input, Tooltip } from 'antd';
+import {
+  Select,
+  Col,
+  Row,
+  Menu,
+  Dropdown,
+  Button,
+  Input,
+  Tooltip,
+  Switch,
+} from 'antd';
 import { DownOutlined, SelectOutlined, UndoOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
@@ -103,88 +113,37 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
       <Row className={styles.row}>
         <Col span={10}>Refresh Library on Startup</Col>
         <Col span={14}>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  updateGeneralSetting(
-                    GeneralSetting.RefreshOnStart,
-                    e.item.props['data-value'] === 'true'
-                  );
-                }}
-              >
-                <Menu.Item key={1} data-value="true">
-                  Yes
-                </Menu.Item>
-                <Menu.Item key={2} data-value="false">
-                  No
-                </Menu.Item>
-              </Menu>
+          <Switch
+            checked={props.refreshOnStart}
+            onChange={(checked: boolean) =>
+              updateGeneralSetting(GeneralSetting.RefreshOnStart, checked)
             }
-          >
-            <Button>
-              {props.refreshOnStart ? 'Yes' : 'No'}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
+          />
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Check For Houdoku Updates Automatically</Col>
         <Col span={14}>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  updateGeneralSetting(
-                    GeneralSetting.AutoCheckForUpdates,
-                    e.item.props['data-value'] === 'true'
-                  );
-                }}
-              >
-                <Menu.Item key={1} data-value="true">
-                  Yes
-                </Menu.Item>
-                <Menu.Item key={2} data-value="false">
-                  No
-                </Menu.Item>
-              </Menu>
+          <Switch
+            checked={props.autoCheckForUpdates}
+            onChange={(checked: boolean) =>
+              updateGeneralSetting(GeneralSetting.AutoCheckForUpdates, checked)
             }
-          >
-            <Button>
-              {props.autoCheckForUpdates ? 'Yes' : 'No'}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
+          />
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Check For Extension Updates Automatically</Col>
         <Col span={14}>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  updateGeneralSetting(
-                    GeneralSetting.AutoCheckForExtensionUpdates,
-                    e.item.props['data-value'] === 'true'
-                  );
-                }}
-              >
-                <Menu.Item key={1} data-value="true">
-                  Yes
-                </Menu.Item>
-                <Menu.Item key={2} data-value="false">
-                  No
-                </Menu.Item>
-              </Menu>
+          <Switch
+            checked={props.autoCheckForExtensionUpdates}
+            onChange={(checked: boolean) =>
+              updateGeneralSetting(
+                GeneralSetting.AutoCheckForExtensionUpdates,
+                checked
+              )
             }
-          >
-            <Button>
-              {props.autoCheckForExtensionUpdates ? 'Yes' : 'No'}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
+          />
         </Col>
       </Row>
       <Row className={styles.row}>
