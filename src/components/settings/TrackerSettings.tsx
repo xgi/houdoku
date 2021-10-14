@@ -3,15 +3,13 @@ import {
   Alert,
   Button,
   Col,
-  Dropdown,
   Input,
-  Menu,
   Row,
   Spin,
   Collapse,
   Typography,
+  Switch,
 } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { connect, ConnectedProps } from 'react-redux';
@@ -137,30 +135,12 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
       <Row className={styles.row}>
         <Col span={10}>Update Progress Automatically</Col>
         <Col span={14}>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  updateTrackerSetting(
-                    TrackerSetting.TrackerAutoUpdate,
-                    e.item.props['data-value'] === 'true'
-                  );
-                }}
-              >
-                <Menu.Item key={1} data-value="true">
-                  Yes
-                </Menu.Item>
-                <Menu.Item key={2} data-value="false">
-                  No
-                </Menu.Item>
-              </Menu>
+          <Switch
+            checked={props.trackerAutoUpdate}
+            onChange={(checked: boolean) =>
+              updateTrackerSetting(TrackerSetting.TrackerAutoUpdate, checked)
             }
-          >
-            <Button>
-              {props.trackerAutoUpdate ? 'Yes' : 'No'}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
+          />
         </Col>
       </Row>
       <Collapse>

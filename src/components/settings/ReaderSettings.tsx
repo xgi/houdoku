@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Row, Menu, Dropdown, Button, Modal, Tooltip } from 'antd';
+import { Col, Row, Menu, Dropdown, Button, Modal, Tooltip, Switch } from 'antd';
 import { DownOutlined, UndoOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import Title from 'antd/lib/typography/Title';
@@ -270,59 +270,23 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       <Row className={styles.row}>
         <Col span={10}>Overlay Page Number</Col>
         <Col span={14}>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  updateReaderSetting(
-                    ReaderSetting.OverlayPageNumber,
-                    e.item.props['data-value'] === 'true'
-                  );
-                }}
-              >
-                <Menu.Item key={1} data-value="true">
-                  Yes
-                </Menu.Item>
-                <Menu.Item key={2} data-value="false">
-                  No
-                </Menu.Item>
-              </Menu>
+          <Switch
+            checked={props.overlayPageNumber}
+            onChange={(checked: boolean) =>
+              updateReaderSetting(ReaderSetting.OverlayPageNumber, checked)
             }
-          >
-            <Button>
-              {props.overlayPageNumber ? 'Yes' : 'No'}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
+          />
         </Col>
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Hide Scrollbar</Col>
         <Col span={14}>
-          <Dropdown
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  updateReaderSetting(
-                    ReaderSetting.HideScrollbar,
-                    e.item.props['data-value'] === 'true'
-                  );
-                }}
-              >
-                <Menu.Item key={1} data-value="true">
-                  Yes
-                </Menu.Item>
-                <Menu.Item key={2} data-value="false">
-                  No
-                </Menu.Item>
-              </Menu>
+          <Switch
+            checked={props.hideScrollbar}
+            onChange={(checked: boolean) =>
+              updateReaderSetting(ReaderSetting.HideScrollbar, checked)
             }
-          >
-            <Button>
-              {props.hideScrollbar ? 'Yes' : 'No'}
-              <DownOutlined />
-            </Button>
-          </Dropdown>
+          />
         </Col>
       </Row>
       <Title level={4} className={styles.heading}>
