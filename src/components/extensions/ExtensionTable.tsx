@@ -11,7 +11,6 @@ import { gt } from 'semver';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   ExtensionMetadata,
-  Language,
   LanguageKey,
   Languages,
 } from 'houdoku-extension-lib';
@@ -39,10 +38,14 @@ type Props = PropsFromRedux & {
 
 const ExtensionTable: React.FC<Props> = (props: Props) => {
   const [dataSource, setDataSource] = useState<ExtensionTableRow[]>([]);
+  const [extensionLanguageKeys, setExtensionLanguageKeys] = useState<{
+    [languageKey: string]: number;
+  }>({});
 
   const updateDataSource = async () => {
     if (props.registryResults === undefined) {
       setDataSource([]);
+      setExtensionLanguageKeys({});
       return;
     }
 
@@ -50,6 +53,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       ipcChannels.EXTENSION_MANAGER.GET_ALL
     );
 
+    const newExtensionLanguageKeys: { [languageKey: string]: number } = {};
     setDataSource(
       props.registryResults.objects
         .map((object: any) => {
@@ -66,17 +70,22 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
             canUpdate = gt(pkg.version, installedVersion);
           }
 
+          const languageKey =
+            !('translatedLanguage' in description) ||
+            description.translatedLanguage === ''
+              ? undefined
+              : description.translatedLanguage;
+          if (languageKey !== undefined) {
+            newExtensionLanguageKeys[languageKey] = 1;
+          }
+
           return {
             pkgName: pkg.name,
             friendlyName: description.name,
             id: description.id,
             availableVersion: pkg.version,
             url: description.url,
-            languageKey:
-              !('translatedLanguage' in description) ||
-              description.translatedLanguage === ''
-                ? undefined
-                : description.translatedLanguage,
+            languageKey,
             installedVersion,
             canUpdate,
             hasSettings: metadata ? metadata.hasSettings : false,
@@ -102,6 +111,8 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
           return a.pkgName.localeCompare(b.pkgName);
         })
     );
+
+    setExtensionLanguageKeys(newExtensionLanguageKeys);
   };
 
   const handleInstall = (
@@ -171,9 +182,14 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'language',
       key: 'language',
       width: '5%',
-      filters: Object.values(Languages).map((language: Language) => {
-        return { text: language.name, value: language.key };
-      }),
+      filters: Object.entries(extensionLanguageKeys).map(
+        ([languageKey, count]) => {
+          return {
+            text: `${Languages[languageKey].name}`,
+            value: languageKey,
+          };
+        }
+      ),
       filteredValue: undefined,
       onFilter: (value: string | number | boolean, record: ExtensionTableRow) =>
         value === undefined || record.languageKey === value,
