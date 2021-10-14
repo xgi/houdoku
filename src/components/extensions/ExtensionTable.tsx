@@ -75,8 +75,12 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
             description.translatedLanguage === ''
               ? undefined
               : description.translatedLanguage;
+
           if (languageKey !== undefined) {
-            newExtensionLanguageKeys[languageKey] = 1;
+            newExtensionLanguageKeys[languageKey] =
+              languageKey in newExtensionLanguageKeys
+                ? newExtensionLanguageKeys[languageKey] + 1
+                : 1;
           }
 
           return {
@@ -185,7 +189,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       filters: Object.entries(extensionLanguageKeys).map(
         ([languageKey, count]) => {
           return {
-            text: `${Languages[languageKey].name}`,
+            text: `${Languages[languageKey].name} [${count}]`,
             value: languageKey,
           };
         }
