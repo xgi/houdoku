@@ -1,6 +1,5 @@
 import React from 'react';
-import { Col, Row, Menu, Dropdown, Button, Switch } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { Col, Row, Switch } from 'antd';
 import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './IntegrationSettings.css';

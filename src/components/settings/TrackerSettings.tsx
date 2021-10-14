@@ -3,16 +3,13 @@ import {
   Alert,
   Button,
   Col,
-  Dropdown,
   Input,
-  Menu,
   Row,
   Spin,
   Collapse,
   Typography,
   Switch,
 } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { connect, ConnectedProps } from 'react-redux';

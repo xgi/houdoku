@@ -1,16 +1,6 @@
 import React from 'react';
-import {
-  Select,
-  Col,
-  Row,
-  Menu,
-  Dropdown,
-  Button,
-  Input,
-  Tooltip,
-  Switch,
-} from 'antd';
-import { DownOutlined, SelectOutlined, UndoOutlined } from '@ant-design/icons';
+import { Select, Col, Row, Button, Input, Tooltip, Switch } from 'antd';
+import { SelectOutlined, UndoOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
