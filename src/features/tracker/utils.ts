@@ -10,7 +10,7 @@ export function sendProgressToTrackers(chapter: Chapter, series: Series) {
 
   if (series.trackerKeys) {
     Object.keys(series.trackerKeys).forEach(async (trackerId: string) => {
-      if (series.trackerKeys) {
+      if (series.trackerKeys && series.trackerKeys[trackerId]) {
         const curTrackEntry: TrackEntry | null = await ipcRenderer.invoke(
           ipcChannels.TRACKER.GET_LIBRARY_ENTRY,
           trackerId,
