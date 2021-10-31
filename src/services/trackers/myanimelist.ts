@@ -55,7 +55,7 @@ type MangaResponseData = {
     large: string;
   };
   num_chapters: number;
-  my_list_status: {
+  my_list_status?: {
     status: string;
     is_rereading: boolean;
     num_volumes_read: number;
@@ -103,6 +103,22 @@ type MangaListResponseData = {
   paging: {
     next: string;
   };
+};
+
+type UpdateMangaResponseData = {
+  error?: string;
+  message?: string;
+  status: string;
+  is_rereading: boolean;
+  num_volumes_read: number;
+  num_chapters_read: number;
+  score: number;
+  updated_at: string;
+  priority: number;
+  num_times_reread: number;
+  reread_value: number;
+  tags: string[];
+  comments: string;
 };
 
 export const MALTrackerMetadata: TrackerMetadata = {
@@ -236,6 +252,10 @@ export class MALTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => response.json())
       .then((data: MangaResponseData) => {
+        if (data.my_list_status === undefined) {
+          return null;
+        }
+
         return {
           seriesId: `${data.id}`,
           title: data.title,
@@ -254,12 +274,58 @@ export class MALTrackerClient extends TrackerClientAbstract {
   };
 
   addLibraryEntry: AddLibraryEntryFunc = async (trackEntry: TrackEntry) => {
-    return new Promise((resolve) => resolve(null));
+    return this.updateLibraryEntry(trackEntry);
   };
 
   updateLibraryEntry: UpdateLibraryEntryFunc = async (
     trackEntry: TrackEntry
   ) => {
-    return new Promise((resolve) => resolve(null));
+    if (this.accessToken === '') return new Promise((resolve) => resolve(null));
+
+    if (this.userId === '') await this.getUsername();
+    if (this.userId === '') return null;
+
+    const formContents = {
+      num_chapters_read: trackEntry.progress,
+      status: Object.keys(STATUS_MAP).find(
+        (key: string) => STATUS_MAP[key] === trackEntry.status
+      ),
+      score: trackEntry.score,
+    };
+
+    const bodyFields: string[] = [];
+    Object.entries(formContents).forEach(([key, value]) => {
+      if (value !== undefined) {
+        bodyFields.push(`${key}=${value}`);
+      }
+    });
+
+    const url = `${BASE_URL}/manga/${trackEntry.seriesId}/my_list_status`;
+    const options = {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${this.accessToken}`,
+        Accept: 'application/json',
+      },
+      body: bodyFields.join('&'),
+    };
+
+    return fetch(url, options)
+      .then((response) => response.json())
+      .then((data: UpdateMangaResponseData) => {
+        if ('error' in data) {
+          log.error(
+            `Error updating library entry for series ${trackEntry.seriesId} from tracker ${MALTrackerMetadata.id}: ${data.error}`
+          );
+          return null;
+        }
+
+        return this.getLibraryEntry(trackEntry.seriesId);
+      })
+      .catch((e: Error) => {
+        log.error(e);
+        return null;
+      });
   };
 }
