@@ -13,6 +13,7 @@ import {
   Menu,
   Modal,
   Row,
+  Spin,
   Tabs,
 } from 'antd';
 import { DownOutlined, CheckOutlined } from '@ant-design/icons';
@@ -55,6 +56,7 @@ type Props = {
 };
 
 const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
+  const [loading, setLoading] = useState(false);
   const [usernames, setUsernames] = useState<{
     [trackerId: string]: string | null;
   }>({});
@@ -66,6 +68,8 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   }>({});
 
   const loadTrackerData = async () => {
+    setLoading(true);
+
     const _getUsername = (trackerId: string): Promise<string | null> =>
       ipcRenderer
         .invoke(ipcChannels.TRACKER.GET_USERNAME, trackerId)
@@ -116,6 +120,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     setUsernames(_usernames);
     setTrackEntries(_trackEntries);
     setTrackerSeriesLists(_trackerSeriesLists);
+    setLoading(false);
   };
 
   const sendTrackEntry = (trackerId: string, trackEntry: TrackEntry) => {
@@ -287,6 +292,15 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
   const renderTrackerContent = (trackerMetadata: TrackerMetadata) => {
     if (!usernames[trackerMetadata.id]) {
+      if (loading) {
+        return (
+          <div className={styles.loaderContainer}>
+            <Spin />
+            <Paragraph>Loading from {trackerMetadata.name}...</Paragraph>
+          </div>
+        );
+      }
+
       return (
         <Paragraph>
           In order to track this series, please link your {trackerMetadata.name}{' '}
