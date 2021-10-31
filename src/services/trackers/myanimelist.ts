@@ -11,12 +11,26 @@ import {
   UpdateLibraryEntryFunc,
   GetTokenFunc,
 } from '../../models/interface';
-import { TrackEntry, TrackerMetadata, TrackerSeries } from '../../models/types';
+import {
+  TrackEntry,
+  TrackerMetadata,
+  TrackerSeries,
+  TrackScoreFormat,
+  TrackStatus,
+} from '../../models/types';
 import { formDataFromObject } from '../../util/net';
 
 const CLIENT_ID = '217d11dc032b71dd35c60c7204b07a65';
 const BASE_URL = 'https://api.myanimelist.net/v2';
 const OAUTH_BASE_URL = 'https://myanimelist.net/v1/oauth2';
+
+const STATUS_MAP: { [key: string]: TrackStatus } = {
+  reading: TrackStatus.Reading,
+  plan_to_read: TrackStatus.Planning,
+  completed: TrackStatus.Completed,
+  dropped: TrackStatus.Dropped,
+  on_hold: TrackStatus.Paused,
+};
 
 type TokenResponseData = {
   token_type: 'Bearer';
@@ -30,6 +44,24 @@ type UserResponseData = {
   name: string;
   location: string;
   joined_at: string;
+};
+
+type MangaResponseData = {
+  id: number;
+  title: string;
+  synopsis: string;
+  main_picture: {
+    medium: string;
+    large: string;
+  };
+  num_chapters: number;
+  my_list_status: {
+    status: string;
+    is_rereading: boolean;
+    num_volumes_read: number;
+    num_chapters_read: number;
+    score: number;
+  };
 };
 
 type MangaListResponseData = {
@@ -146,6 +178,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => response.json())
       .then((data: UserResponseData) => {
+        this.userId = `${data.id}`;
         return data.name;
       })
       .catch((e: Error) => {
@@ -186,7 +219,38 @@ export class MALTrackerClient extends TrackerClientAbstract {
   };
 
   getLibraryEntry: GetLibraryEntryFunc = async (seriesId: string) => {
-    return new Promise((resolve) => resolve(null));
+    if (this.accessToken === '') return new Promise((resolve) => resolve(null));
+
+    if (this.userId === '') await this.getUsername();
+    if (this.userId === '') return null;
+
+    const url = `${BASE_URL}/manga/${seriesId}?fields=synopsis,num_chapters,my_list_status{start_date,finish_date}`;
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        Accept: 'application/json',
+      },
+    };
+
+    return fetch(url, options)
+      .then((response) => response.json())
+      .then((data: MangaResponseData) => {
+        return {
+          seriesId: `${data.id}`,
+          title: data.title,
+          description: data.synopsis,
+          coverUrl: data.main_picture?.large,
+          score: data.my_list_status.score,
+          scoreFormat: TrackScoreFormat.POINT_10,
+          progress: data.my_list_status.num_chapters_read,
+          status: STATUS_MAP[data.my_list_status.status],
+        } as TrackEntry;
+      })
+      .catch((e: Error) => {
+        log.error(e);
+        return null;
+      });
   };
 
   addLibraryEntry: AddLibraryEntryFunc = async (trackEntry: TrackEntry) => {
