@@ -7,14 +7,13 @@
 @import 'style/colors.css';
 @import 'style/titlebar.css';
 @import 'style/flags.css';
-
 body {
   /* height: 100vh; */
-
   overflow-y: hidden;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   font-size: 14px;
 }
+
 #root {
   height: calc(100vh);
   margin-top: 24px;
@@ -25,7 +24,7 @@ h4.ant-typography {
   font-size: 18px;
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
   font-weight: bold;
   user-select: none;
 }
@@ -47,19 +46,22 @@ h4.ant-typography {
   font-size: 14px !important;
 }
 
-.ant-alert-description > .ant-typography {
+.ant-alert-description>.ant-typography {
   margin-bottom: 0 !important;
 }
 
 ::-webkit-scrollbar {
   width: 14px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--color-foreground-alt);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-foreground);
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-7);
 }

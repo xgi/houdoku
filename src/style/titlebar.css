@@ -9,6 +9,7 @@
   width: 100%;
   background: var(--color-background);
   padding: 2px;
+  z-index: 999;
 }
 
 #titlebar #drag-region {
