@@ -49,7 +49,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           for (
             childNum = 0;
             childNum < viewerContainer.current.children.length &&
-            imageHeightSum < root.scrollTop;
+            imageHeightSum < root.scrollTop + root.clientHeight - 54;
             childNum += 1
           ) {
             imageHeightSum +=
@@ -57,11 +57,12 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           }
 
           if (
-            props.pageNumber !== childNum + 1 &&
-            childNum < props.lastPageNumber
+            props.pageNumber !== childNum &&
+            childNum <= props.lastPageNumber &&
+            childNum > 0
           ) {
             setSkipChangePageNumEffect(true);
-            props.setPageNumber(childNum + 1);
+            props.setPageNumber(childNum);
           }
         }
       };
@@ -120,11 +121,18 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     } else if (viewerContainer.current) {
       const elem = viewerContainer.current.children[props.pageNumber - 1];
       if (elem !== undefined) {
-        elem.scrollIntoView(false);
+        elem.scrollIntoView();
+
+        // if we're not scrolling to the last page, need to scroll up some
+        // since the image is covered by the header
+        const root = document.getElementById('root');
+        if (root && props.pageNumber < props.lastPageNumber) {
+          root.scrollTop -= 54;
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.pageNumber]);
+  }, [props.pageNumber, props.lastPageNumber]);
 
   return (
     <>

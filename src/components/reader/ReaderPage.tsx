@@ -503,7 +503,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     removeKeybindings();
     addKeybindings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.showingSettingsModal, props.chapter, props.lastPageNumber]);
+  }, [
+    props.showingSettingsModal,
+    props.readingDirection,
+    props.pageStyle,
+    props.chapter,
+    props.lastPageNumber,
+  ]);
 
   useEffect(() => {
     addRootStyles();
