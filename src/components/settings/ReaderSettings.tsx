@@ -5,19 +5,16 @@ import { connect, ConnectedProps } from 'react-redux';
 import Title from 'antd/lib/typography/Title';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './ReaderSettings.css';
-import {
-  LayoutDirection,
-  PageFit,
-  PageView,
-  ReaderSetting,
-} from '../../models/types';
+import { LayoutDirection, PageView, ReaderSetting } from '../../models/types';
 import { RootState } from '../../store';
 import {
+  setFitContainToHeight,
+  setFitContainToWidth,
+  setFitStretch,
   setHideScrollbar,
   setKeybinding,
   setLayoutDirection,
   setOverlayPageNumber,
-  setPageFit,
   setPageView,
   setPreloadAmount,
 } from '../../features/settings/actions';
@@ -33,11 +30,6 @@ const pageViewText: { [key in PageView]: string } = {
   [PageView.Double]: 'Double (Even Start)',
   [PageView.Double_OddStart]: 'Double (Odd Start)',
 };
-const pageFitText: { [key in PageFit]: string } = {
-  [PageFit.Auto]: 'Auto',
-  [PageFit.Width]: 'Fit Width',
-  [PageFit.Height]: 'Fit Height',
-};
 const preloadText: { [key: number]: string } = {
   0: 'Disabled',
   1: '1 Page',
@@ -48,7 +40,9 @@ const preloadText: { [key: number]: string } = {
 };
 
 const mapState = (state: RootState) => ({
-  pageFit: state.settings.pageFit,
+  fitContainToWidth: state.settings.fitContainToWidth,
+  fitContainToHeight: state.settings.fitContainToHeight,
+  fitStretch: state.settings.fitStretch,
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
@@ -64,7 +58,6 @@ const mapState = (state: RootState) => ({
   keyNextChapter: state.settings.keyNextChapter,
   keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
   keyTogglePageView: state.settings.keyTogglePageView,
-  keyTogglePageFit: state.settings.keyTogglePageFit,
   keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
   keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
   keyExit: state.settings.keyExit,
@@ -73,7 +66,11 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
+  setFitContainToWidth: (value: boolean) =>
+    dispatch(setFitContainToWidth(value)),
+  setFitContainToHeight: (value: boolean) =>
+    dispatch(setFitContainToHeight(value)),
+  setFitStretch: (value: boolean) => dispatch(setFitStretch(value)),
   setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
   setLayoutDirection: (layoutDirection: LayoutDirection) =>
     dispatch(setLayoutDirection(layoutDirection)),
@@ -101,8 +98,14 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.LayoutDirection:
         props.setLayoutDirection(value);
         break;
-      case ReaderSetting.PageFit:
-        props.setPageFit(value);
+      case ReaderSetting.FitContainToWidth:
+        props.setFitContainToWidth(value);
+        break;
+      case ReaderSetting.FitContainToHeight:
+        props.setFitContainToHeight(value);
+        break;
+      case ReaderSetting.FitStretch:
+        props.setFitStretch(value);
         break;
       case ReaderSetting.PageView:
         props.setPageView(value);
@@ -126,7 +129,6 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.KeyNextChapter:
       case ReaderSetting.KeyToggleLayoutDirection:
       case ReaderSetting.KeyTogglePageView:
-      case ReaderSetting.KeyTogglePageFit:
       case ReaderSetting.KeyToggleShowingSettingsModal:
       case ReaderSetting.KeyToggleShowingSidebar:
       case ReaderSetting.KeyExit:
@@ -246,13 +248,36 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         </Col>
       </Row>
       <Row className={styles.row}>
-        <Col span={10}>Page Fit</Col>
+        <Col span={10}>Fit: Contain to Width</Col>
         <Col span={14}>
-          <Dropdown overlay={renderMenu(ReaderSetting.PageFit, pageFitText)}>
-            <Button>
-              {pageFitText[props.pageFit]} <DownOutlined />
-            </Button>
-          </Dropdown>
+          <Switch
+            checked={props.fitContainToWidth}
+            onChange={(checked: boolean) =>
+              updateReaderSetting(ReaderSetting.FitContainToWidth, checked)
+            }
+          />
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Fit: Contain to Height</Col>
+        <Col span={14}>
+          <Switch
+            checked={props.fitContainToHeight}
+            onChange={(checked: boolean) =>
+              updateReaderSetting(ReaderSetting.FitContainToHeight, checked)
+            }
+          />
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Fit: Stretch Pages</Col>
+        <Col span={14}>
+          <Switch
+            checked={props.fitStretch}
+            onChange={(checked: boolean) =>
+              updateReaderSetting(ReaderSetting.FitStretch, checked)
+            }
+          />
         </Col>
       </Row>
       <Row className={styles.row}>
@@ -365,11 +390,6 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           name: 'Toggle Page View',
           value: props.keyTogglePageView,
           setting: ReaderSetting.KeyTogglePageView,
-        },
-        {
-          name: 'Toggle Page Fit',
-          value: props.keyTogglePageFit,
-          setting: ReaderSetting.KeyTogglePageFit,
         },
         {
           name: 'Show Settings Menu',

@@ -4,7 +4,6 @@ import {
   GeneralSetting,
   IntegrationSetting,
   LayoutDirection,
-  PageFit,
   PageView,
   ProgressFilter,
   ReaderSetting,
@@ -28,7 +27,9 @@ export const DEFAULT_GENERAL_SETTINGS = {
 export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.LayoutDirection]: LayoutDirection.LeftToRight,
   [ReaderSetting.PageView]: PageView.Single,
-  [ReaderSetting.PageFit]: PageFit.Auto,
+  [ReaderSetting.FitContainToWidth]: true,
+  [ReaderSetting.FitContainToHeight]: true,
+  [ReaderSetting.FitStretch]: false,
   [ReaderSetting.PreloadAmount]: 2,
   [ReaderSetting.OverlayPageNumber]: false,
   [ReaderSetting.HideScrollbar]: false,
@@ -42,7 +43,6 @@ export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.KeyNextChapter]: ']',
   [ReaderSetting.KeyToggleLayoutDirection]: 'd',
   [ReaderSetting.KeyTogglePageView]: 'q',
-  [ReaderSetting.KeyTogglePageFit]: 'f',
   [ReaderSetting.KeyToggleShowingSettingsModal]: 'o',
   [ReaderSetting.KeyToggleShowingSidebar]: 's',
   [ReaderSetting.KeyExit]: 'backspace',
@@ -169,11 +169,17 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
       10
     );
   }
-  if (storeValues[ReaderSetting.PageFit] !== null) {
-    settings[ReaderSetting.PageFit] = parseInt(
-      storeValues[ReaderSetting.PageFit] as string,
-      10
-    );
+  if (storeValues[ReaderSetting.FitContainToWidth] !== null) {
+    settings[ReaderSetting.FitContainToWidth] =
+      storeValues[ReaderSetting.FitContainToWidth] === 'true';
+  }
+  if (storeValues[ReaderSetting.FitContainToHeight] !== null) {
+    settings[ReaderSetting.FitContainToHeight] =
+      storeValues[ReaderSetting.FitContainToHeight] === 'true';
+  }
+  if (storeValues[ReaderSetting.FitStretch] !== null) {
+    settings[ReaderSetting.FitStretch] =
+      storeValues[ReaderSetting.FitStretch] === 'true';
   }
   if (storeValues[ReaderSetting.PageView] !== null) {
     settings[ReaderSetting.PageView] = parseInt(
@@ -234,10 +240,6 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   if (storeValues[ReaderSetting.KeyTogglePageView] !== null) {
     settings[ReaderSetting.KeyTogglePageView] =
       storeValues[ReaderSetting.KeyTogglePageView];
-  }
-  if (storeValues[ReaderSetting.KeyTogglePageFit] !== null) {
-    settings[ReaderSetting.KeyTogglePageFit] =
-      storeValues[ReaderSetting.KeyTogglePageFit];
   }
   if (storeValues[ReaderSetting.KeyToggleShowingSettingsModal] !== null) {
     settings[ReaderSetting.KeyToggleShowingSettingsModal] =

@@ -72,7 +72,9 @@ export enum GeneralSetting {
 }
 
 export enum ReaderSetting {
-  PageFit = 'PageFit',
+  FitContainToWidth = 'FitContainToWidth',
+  FitContainToHeight = 'FitContainToHeight',
+  FitStretch = 'FitStretch',
   LayoutDirection = 'LayoutDirection',
   PageView = 'PageView',
   PreloadAmount = 'PreloadAmount',
@@ -88,7 +90,6 @@ export enum ReaderSetting {
   KeyNextChapter = 'KeyNextChapter',
   KeyToggleLayoutDirection = 'KeyToggleLayoutDirection',
   KeyTogglePageView = 'KeyTogglePageView',
-  KeyTogglePageFit = 'KeyTogglePageFit',
   KeyToggleShowingSettingsModal = 'KeyToggleShowingSettingsModal',
   KeyToggleShowingSidebar = 'KeyToggleShowingSidebar',
   KeyExit = 'KeyExit',
@@ -101,12 +102,6 @@ export enum TrackerSetting {
 
 export enum IntegrationSetting {
   DiscordPresenceEnabled = 'DiscordPresenceEnabled',
-}
-
-export enum PageFit {
-  Auto,
-  Width,
-  Height,
 }
 
 export enum LayoutDirection {

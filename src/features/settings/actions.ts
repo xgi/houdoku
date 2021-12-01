@@ -1,14 +1,11 @@
 import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
   LayoutDirection,
-  PageFit,
   PageView,
   ProgressFilter,
   ReaderSetting,
 } from '../../models/types';
 import {
-  SET_PAGE_FIT,
-  TOGGLE_PAGE_FIT,
   SettingsAction,
   TOGGLE_PAGE_VIEW,
   TOGGLE_LAYOUT_DIRECTION,
@@ -29,6 +26,9 @@ import {
   SET_LIBRARY_FILTER_USER_TAGS,
   SET_KEYBINDING,
   SET_CUSTOM_DOWNLOADS_DIR,
+  SET_FIT_CONTAIN_TO_WIDTH,
+  SET_FIT_CONTAIN_TO_HEIGHT,
+  SET_FIT_STRETCH,
 } from './types';
 
 export function setChapterLanguages(
@@ -124,18 +124,34 @@ export function setLibraryFilterUserTags(userTags: string[]): SettingsAction {
   };
 }
 
-export function setPageFit(pageFit: PageFit): SettingsAction {
+export function setFitContainToWidth(
+  fitContainToWidth: boolean
+): SettingsAction {
   return {
-    type: SET_PAGE_FIT,
+    type: SET_FIT_CONTAIN_TO_WIDTH,
     payload: {
-      pageFit,
+      fitContainToWidth,
     },
   };
 }
 
-export function togglePageFit(): SettingsAction {
+export function setFitContainToHeight(
+  fitContainToHeight: boolean
+): SettingsAction {
   return {
-    type: TOGGLE_PAGE_FIT,
+    type: SET_FIT_CONTAIN_TO_HEIGHT,
+    payload: {
+      fitContainToHeight,
+    },
+  };
+}
+
+export function setFitStretch(fitStretch: boolean): SettingsAction {
+  return {
+    type: SET_FIT_STRETCH,
+    payload: {
+      fitStretch,
+    },
   };
 }
 

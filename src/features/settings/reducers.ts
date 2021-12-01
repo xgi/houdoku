@@ -3,17 +3,14 @@ import {
   GeneralSetting,
   IntegrationSetting,
   LayoutDirection,
-  PageFit,
   PageView,
   ReaderSetting,
   TrackerSetting,
 } from '../../models/types';
 import {
   SettingsState,
-  SET_PAGE_FIT,
   SET_PRELOAD_AMOUNT,
   TOGGLE_LAYOUT_DIRECTION,
-  TOGGLE_PAGE_FIT,
   TOGGLE_PAGE_VIEW,
   SET_LAYOUT_DIRECTION,
   SET_PAGE_VIEW,
@@ -31,6 +28,9 @@ import {
   SET_KEYBINDING,
   SET_CUSTOM_DOWNLOADS_DIR,
   SET_HIDE_SCROLLBAR,
+  SET_FIT_CONTAIN_TO_WIDTH,
+  SET_FIT_CONTAIN_TO_HEIGHT,
+  SET_FIT_STRETCH,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -89,10 +89,18 @@ const initialState: SettingsState = {
     storedGeneralSettings.LibraryFilterUserTags === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterUserTags]
       : storedGeneralSettings.LibraryFilterUserTags,
-  pageFit:
-    storedReaderSettings.PageFit === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.PageFit]
-      : storedReaderSettings.PageFit,
+  fitContainToWidth:
+    storedReaderSettings.FitContainToWidth === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.FitContainToWidth]
+      : storedReaderSettings.FitContainToWidth,
+  fitContainToHeight:
+    storedReaderSettings.FitContainToHeight === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.FitContainToHeight]
+      : storedReaderSettings.FitContainToHeight,
+  fitStretch:
+    storedReaderSettings.FitStretch === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.FitStretch]
+      : storedReaderSettings.FitStretch,
   pageView:
     storedReaderSettings.PageView === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.PageView]
@@ -153,10 +161,6 @@ const initialState: SettingsState = {
     storedReaderSettings.KeyTogglePageView === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyTogglePageView]
       : storedReaderSettings.KeyTogglePageView,
-  keyTogglePageFit:
-    storedReaderSettings.KeyTogglePageFit === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyTogglePageFit]
-      : storedReaderSettings.KeyTogglePageFit,
   keyToggleShowingSettingsModal:
     storedReaderSettings.KeyToggleShowingSettingsModal === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingSettingsModal]
@@ -182,16 +186,6 @@ const initialState: SettingsState = {
       ? DEFAULT_INTEGRATION_SETTINGS[IntegrationSetting.DiscordPresenceEnabled]
       : storedIntegrationSettings.DiscordPresenceEnabled,
 };
-
-function nextPageFit(pageFit: PageFit): PageFit {
-  if (pageFit === PageFit.Auto) {
-    return PageFit.Width;
-  }
-  if (pageFit === PageFit.Width) {
-    return PageFit.Height;
-  }
-  return PageFit.Auto;
-}
 
 function nextLayoutDirection(
   layoutDirection: LayoutDirection
@@ -297,13 +291,24 @@ export default function settings(
         ...state,
         libraryFilterUserTags: action.payload.userTags,
       };
-    case SET_PAGE_FIT:
-      saveReaderSetting(ReaderSetting.PageFit, action.payload.pageFit);
-      return { ...state, pageFit: action.payload.pageFit };
-    case TOGGLE_PAGE_FIT:
-      const newPageFit: PageFit = nextPageFit(state.pageFit);
-      saveReaderSetting(ReaderSetting.PageFit, newPageFit);
-      return { ...state, pageFit: newPageFit };
+    case SET_FIT_CONTAIN_TO_WIDTH:
+      saveReaderSetting(
+        ReaderSetting.FitContainToWidth,
+        action.payload.fitContainToWidth
+      );
+      return { ...state, fitContainToWidth: action.payload.fitContainToWidth };
+    case SET_FIT_CONTAIN_TO_HEIGHT:
+      saveReaderSetting(
+        ReaderSetting.FitContainToHeight,
+        action.payload.fitContainToHeight
+      );
+      return {
+        ...state,
+        fitContainToHeight: action.payload.fitContainToHeight,
+      };
+    case SET_FIT_STRETCH:
+      saveReaderSetting(ReaderSetting.FitStretch, action.payload.fitStretch);
+      return { ...state, fitStretch: action.payload.fitStretch };
     case SET_PAGE_VIEW:
       saveReaderSetting(ReaderSetting.PageView, action.payload.pageView);
       return { ...state, pageView: action.payload.pageView };
@@ -382,8 +387,6 @@ export default function settings(
           return { ...state, keyToggleLayoutDirection: action.payload.value };
         case ReaderSetting.KeyTogglePageView:
           return { ...state, keyTogglePageView: action.payload.value };
-        case ReaderSetting.KeyTogglePageFit:
-          return { ...state, keyTogglePageFit: action.payload.value };
         case ReaderSetting.KeyToggleShowingSettingsModal:
           return {
             ...state,

@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store';
 import styles from './ReaderViewer.css';
-import { LayoutDirection, PageFit, PageView } from '../../models/types';
+import { LayoutDirection, PageView } from '../../models/types';
 import { changePageNumber, setPageNumber } from '../../features/reader/actions';
 
 const mapState = (state: RootState) => ({
@@ -13,7 +13,9 @@ const mapState = (state: RootState) => ({
   pageDataList: state.reader.pageDataList,
   series: state.reader.series,
   showingSidebar: state.reader.showingSidebar,
-  pageFit: state.settings.pageFit,
+  fitContainToWidth: state.settings.fitContainToWidth,
+  fitContainToHeight: state.settings.fitContainToHeight,
+  fitStretch: state.settings.fitStretch,
   pageView: state.settings.pageView,
   layoutDirection: state.settings.layoutDirection,
   overlayPageNumber: state.settings.overlayPageNumber,
@@ -88,12 +90,22 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       pageContainers.push(
         <div
           id={`pageContainer-${i}`}
-          className={`${styles.page} ${styles.containWidth} ${styles.containHeight}`}
+          className={`
+            ${styles.page}
+            ${props.fitContainToWidth ? styles.containWidth : ''}
+            ${props.fitContainToHeight ? styles.containHeight : ''}
+            ${props.fitStretch ? styles.grow : ''}
+          `}
         >
           <img
             src={props.pageDataList[i - 1]}
             alt={`Page ${i}`}
-            className={`${styles.pageImage} ${styles.containWidth} ${styles.containHeight}`}
+            className={`
+              ${styles.pageImage}
+              ${props.fitContainToWidth ? styles.containWidth : ''}
+              ${props.fitContainToHeight ? styles.containHeight : ''}
+              ${props.fitStretch ? styles.grow : ''}
+            `}
           />
         </div>
       );

@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+/* eslint-disable react/button-has-type */
+import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
-import { Layout } from 'antd';
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
@@ -24,21 +24,21 @@ import {
 } from '../../features/reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
-import { LayoutDirection, PageFit, PageView } from '../../models/types';
+import { LayoutDirection, PageView } from '../../models/types';
 import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
 import {
+  setFitContainToHeight,
+  setFitContainToWidth,
+  setFitStretch,
   setLayoutDirection,
-  setPageFit,
   setPageView,
   setPreloadAmount,
   toggleLayoutDirection,
-  togglePageFit,
   togglePageView,
 } from '../../features/settings/actions';
 import { toggleChapterRead } from '../../features/library/utils';
 import { useForceUpdate } from '../../util/reactutil';
-import ReaderSidebar from './ReaderSidebar';
 import ReaderViewer from './ReaderViewer';
 import ReaderPreloadContainer from './ReaderPreloadContainer';
 import ReaderLoader from './ReaderLoader';
@@ -66,8 +66,10 @@ const mapState = (state: RootState) => ({
   showingSettingsModal: state.reader.showingSettingsModal,
   showingSidebar: state.reader.showingSidebar,
   customDownloadsDir: state.settings.customDownloadsDir,
-  pageFit: state.settings.pageFit,
   pageView: state.settings.pageView,
+  fitContainToWidth: state.settings.fitContainToWidth,
+  fitContainToHeight: state.settings.fitContainToHeight,
+  fitStretch: state.settings.fitStretch,
   layoutDirection: state.settings.layoutDirection,
   preloadAmount: state.settings.preloadAmount,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
@@ -82,7 +84,6 @@ const mapState = (state: RootState) => ({
   keyNextChapter: state.settings.keyNextChapter,
   keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
   keyTogglePageView: state.settings.keyTogglePageView,
-  keyTogglePageFit: state.settings.keyTogglePageFit,
   keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
   keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
   keyExit: state.settings.keyExit,
@@ -93,8 +94,11 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (dispatch: any) => ({
   setPageNumber: (pageNumber: number) => dispatch(setPageNumber(pageNumber)),
   changePageNumber: (delta: number) => dispatch(changePageNumber(delta)),
-  setPageFit: (pageFit: PageFit) => dispatch(setPageFit(pageFit)),
-  togglePageFit: () => dispatch(togglePageFit()),
+  setFitContainToWidth: (value: boolean) =>
+    dispatch(setFitContainToWidth(value)),
+  setFitContainToHeight: (value: boolean) =>
+    dispatch(setFitContainToHeight(value)),
+  setFitStretch: (value: boolean) => dispatch(setFitStretch(value)),
   setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
   togglePageView: () => dispatch(togglePageView()),
   setLayoutDirection: (layoutDirection: LayoutDirection) =>
@@ -409,7 +413,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         props.keyNextChapter,
         props.keyToggleLayoutDirection,
         props.keyTogglePageView,
-        props.keyTogglePageFit,
         props.keyToggleShowingSettingsModal,
         props.keyToggleShowingSidebar,
         props.keyExit,
@@ -457,7 +460,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       props.toggleLayoutDirection()
     );
     Mousetrap.bind(props.keyTogglePageView, () => props.togglePageView());
-    Mousetrap.bind(props.keyTogglePageFit, () => props.togglePageFit());
     Mousetrap.bind(props.keyToggleShowingSettingsModal, () =>
       props.toggleShowingSettingsModal()
     );
@@ -526,12 +528,26 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           top: '24px',
           fontSize: '12px',
           fontFamily: '"Segoe UI", sans-serif',
+          color: 'black',
           zIndex: 300,
         }}
       >
         <span>Control Bar</span>
         <button onClick={() => props.changePageNumber(-1)}>left</button>
         <button onClick={() => props.changePageNumber(1)}>right</button>
+        <button
+          onClick={() => props.setFitContainToWidth(!props.fitContainToWidth)}
+        >
+          fit to width (cur={props.fitContainToWidth.toString()})
+        </button>
+        <button
+          onClick={() => props.setFitContainToHeight(!props.fitContainToHeight)}
+        >
+          fit to height (cur={props.fitContainToHeight.toString()})
+        </button>
+        <button onClick={() => props.setFitStretch(!props.fitStretch)}>
+          stretch (cur={props.fitStretch.toString()})
+        </button>
         <span>current page: {props.pageNumber}</span>
       </div>
 

@@ -1,15 +1,15 @@
 import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
   LayoutDirection,
-  PageFit,
   PageView,
   ProgressFilter,
   ReaderSetting,
 } from '../../models/types';
 
 export const SET_CHAPTER_LANGUAGES = 'SET_CHAPTER_LANGUAGES';
-export const SET_PAGE_FIT = 'SET_PAGE_FIT';
-export const TOGGLE_PAGE_FIT = 'TOGGLE_PAGE_FIT';
+export const SET_FIT_CONTAIN_TO_WIDTH = 'SET_FIT_CONTAIN_TO_WIDTH';
+export const SET_FIT_CONTAIN_TO_HEIGHT = 'SET_FIT_CONTAIN_TO_HEIGHT';
+export const SET_FIT_STRETCH = 'SET_FIT_STRETCH';
 export const SET_PAGE_VIEW = 'SET_PAGE_VIEW';
 export const TOGGLE_PAGE_VIEW = 'TOGGLE_PAGE_VIEW';
 export const SET_LAYOUT_DIRECTION = 'SET_LAYOUT_DIRECTION';
@@ -40,7 +40,9 @@ export interface SettingsState {
   libraryFilterStatus: SeriesStatus | null;
   libraryFilterProgress: ProgressFilter;
   libraryFilterUserTags: string[];
-  pageFit: PageFit;
+  fitContainToWidth: boolean;
+  fitContainToHeight: boolean;
+  fitStretch: boolean;
   pageView: PageView;
   layoutDirection: LayoutDirection;
   preloadAmount: number;
@@ -58,7 +60,6 @@ export interface SettingsState {
   keyNextChapter: string;
   keyToggleLayoutDirection: string;
   keyTogglePageView: string;
-  keyTogglePageFit: string;
   keyToggleShowingSettingsModal: string;
   keyToggleShowingSidebar: string;
   keyExit: string;
@@ -72,15 +73,25 @@ interface SetChapterLanguagesAction {
   };
 }
 
-interface SetPageFitAction {
-  type: typeof SET_PAGE_FIT;
+interface SetFitContainToWidth {
+  type: typeof SET_FIT_CONTAIN_TO_WIDTH;
   payload: {
-    pageFit: PageFit;
+    fitContainToWidth: boolean;
   };
 }
 
-interface TogglePageFitAction {
-  type: typeof TOGGLE_PAGE_FIT;
+interface SetFitContainToHeight {
+  type: typeof SET_FIT_CONTAIN_TO_HEIGHT;
+  payload: {
+    fitContainToHeight: boolean;
+  };
+}
+
+interface SetFitStretch {
+  type: typeof SET_FIT_STRETCH;
+  payload: {
+    fitStretch: boolean;
+  };
 }
 
 interface SetPageViewAction {
@@ -206,8 +217,9 @@ interface SetKeybindingAction {
 
 export type SettingsAction =
   | SetChapterLanguagesAction
-  | SetPageFitAction
-  | TogglePageFitAction
+  | SetFitContainToWidth
+  | SetFitContainToHeight
+  | SetFitStretch
   | SetPageViewAction
   | TogglePageViewAction
   | SetLayoutDirectionAction

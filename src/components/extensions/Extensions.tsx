@@ -13,14 +13,7 @@ import ExtensionTable from './ExtensionTable';
 import InstalledExtensionsModal from './InstalledExtensionsModal';
 import ExtensionSettingsModal from './ExtensionSettingsModal';
 
-const mapState = (state: RootState) => ({
-  chapterLanguages: state.settings.chapterLanguages,
-  refreshOnStart: state.settings.refreshOnStart,
-  pageFit: state.settings.pageFit,
-  pageView: state.settings.pageView,
-  layoutDirection: state.settings.layoutDirection,
-  preloadAmount: state.settings.preloadAmount,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({});

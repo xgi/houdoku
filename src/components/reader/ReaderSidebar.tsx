@@ -97,7 +97,6 @@ const mapState = (state: RootState) => ({
   keyNextChapter: state.settings.keyNextChapter,
   keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
   keyTogglePageView: state.settings.keyTogglePageView,
-  keyTogglePageFit: state.settings.keyTogglePageFit,
   keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
   keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
   keyExit: state.settings.keyExit,
@@ -222,20 +221,6 @@ const ReaderSidebar: React.FC<Props> = (props: Props) => {
         </Tooltip>
       </div>
       <div className={styles.settingsBar}>
-        <Tooltip
-          title={
-            <span>
-              Change page fit <Text keyboard>{props.keyTogglePageFit}</Text>
-            </span>
-          }
-        >
-          <button
-            className={`${styles.settingsButton}`}
-            onClick={() => props.togglePageFit()}
-          >
-            {ICONS_PAGE_FIT[props.pageFit]}
-          </button>
-        </Tooltip>
         <Tooltip
           title={
             <span>
