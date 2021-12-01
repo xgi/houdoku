@@ -134,7 +134,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const location = useLocation();
   const forceUpdate = useForceUpdate();
-  const viewer = useRef<any>({});
 
   /**
    * Populate the relevantChapterList prop.
@@ -386,6 +385,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.changePageNumber(delta);
   };
 
+  const addRootStyles = () => {
+    document.getElementById('root')?.classList.add(styles.root);
+  };
+
+  const removeRootStyles = () => {
+    document.getElementById('root')?.classList.remove(styles.root);
+  };
+
   /**
    * Remove all keybindings from the window.
    */
@@ -421,6 +428,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.setPageUrls([]);
     props.setPageDataList([]);
     props.setRelevantChapterList([]);
+    removeRootStyles();
     removeKeybindings();
 
     if (props.discordPresenceEnabled) {
@@ -443,12 +451,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     Mousetrap.bind(props.keyFirstPage, () => changePage(true, true));
     Mousetrap.bind(props.keyNextPage, () => changePage(false));
     Mousetrap.bind(props.keyLastPage, () => changePage(false, true));
-    Mousetrap.bind(props.keyScrollUp, () => {
-      if (viewer && viewer.current) viewer.current.scroll(-1, 30);
-    });
-    Mousetrap.bind(props.keyScrollDown, () => {
-      if (viewer && viewer.current) viewer.current.scroll(1, 30);
-    });
     Mousetrap.bind(props.keyPreviousChapter, () => changeChapter(true));
     Mousetrap.bind(props.keyNextChapter, () => changeChapter(false));
     Mousetrap.bind(props.keyToggleLayoutDirection, () =>
@@ -505,36 +507,36 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   }, [props.showingSettingsModal, props.chapter, props.lastPageNumber]);
 
   useEffect(() => {
+    addRootStyles();
     addKeybindings();
     loadChapterData(chapter_id, series_id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   return (
-    <Layout className={styles.pageLayout}>
-      <ReaderSettingsModal />
-      {props.showingSidebar ? (
-        <ReaderSidebar
-          changePage={changePage}
-          setChapter={setChapter}
-          changeChapter={changeChapter}
-          getAdjacentChapterId={getAdjacentChapterId}
-          exitPage={exitPage}
-        />
-      ) : (
-        <></>
-      )}
-      <Layout className={`site-layout ${styles.contentLayout}`}>
-        {props.pageDataList.length === 0 ? (
-          <ReaderLoader extensionId={props.series?.extensionId} />
-        ) : (
-          <>
-            <ReaderPreloadContainer />
-            <ReaderViewer viewerRef={viewer} />
-          </>
-        )}
-      </Layout>
-    </Layout>
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+    <div style={{ marginTop: '54px', outline: 'none' }} tabIndex={0}>
+      <div
+        id="HEADER_MOVE_TO_SEPARATE_COMPONENT"
+        style={{
+          height: '30px',
+          width: '100%',
+          backgroundColor: 'var(--color-background-alt)',
+          position: 'fixed',
+          top: '24px',
+          fontSize: '12px',
+          fontFamily: '"Segoe UI", sans-serif',
+          zIndex: 300,
+        }}
+      >
+        <span>Control Bar</span>
+        <button onClick={() => props.changePageNumber(-1)}>left</button>
+        <button onClick={() => props.changePageNumber(1)}>right</button>
+        <span>current page: {props.pageNumber}</span>
+      </div>
+
+      <ReaderViewer />
+    </div>
   );
 };
 

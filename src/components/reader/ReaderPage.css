@@ -1,10 +1,21 @@
+.root::-webkit-scrollbar-track {
+  margin-top: 54px;
+  /* padding-bottom: 24px; */
+}
+
+.root {
+  margin-top: 0 !important;
+}
+
 .pageLayout {
   min-height: 100vh;
+  padding-top: 23px;
+  background: magenta !important;
 }
 
 .contentLayout {
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center;
+  align-items: center; */
   height: calc(100vh - 24px);
   overflow-y: auto;
   overflow-x: hidden;

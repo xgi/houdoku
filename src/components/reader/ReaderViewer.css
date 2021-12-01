@@ -1,66 +1,52 @@
-.viewerContainer {
+.container {
+  width: 100%;
+}
+
+.page {
   width: 100%;
   display: flex;
+  align-items: center;
   position: relative;
-  overflow: hidden;
-  cursor: pointer;
 }
 
-.viewerContainerVertical {
-  width: 100%;
-  display: flex;
-  position: relative;
-  flex-wrap: wrap;
-  overflow-y: auto;
-  cursor: pointer;
+.page.containHeight {
+  height: calc(100vh - 54px);
 }
 
-.imageWrapper {
-  min-width: 100%;
-  overflow-y: auto;
-}
-
-.noScrollbar::-webkit-scrollbar {
-  display: none;
+.page.grow:not(.containHeight) {
+  min-height: 100%;
 }
 
 .pageImage {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: unset;
+  height: unset;
+}
+
+.pageImage.containWidth {
+  max-width: 100%;
   min-width: 0;
+}
+
+.pageImage.containHeight {
+  max-height: 100%;
+}
+
+.pageImage.grow {
+  object-fit: contain;
+  overflow-y: hidden;
+}
+
+.pageImage.grow:not(.containHeight) {
   width: 100%;
 }
 
-.fitHeight .pageImage {
-  object-fit: contain;
-  max-height: calc(100vh - 24px);
+.pageImage.left {
+  margin-right: 0;
 }
 
-.fitWidth .pageImage {
-  max-width: 100%;
-  flex-grow: 1;
-}
-
-.fitAuto .pageImage {
-  /* width: auto; */
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.imageColumn {
-  float: left;
-  width: 50%;
-}
-
-.pageNumberOverlayContainer {
-  position: absolute;
-  z-index: 20;
-  right: 25px;
-  bottom: 10px;
-}
-
-.pageNumberOverlayText {
-  font-size: 1.2em;
-  margin-bottom: 0 !important;
-  text-shadow: -1px -1px 0 var(--color-background), 0 -1px 0 var(--color-background), 1px -1px 0 var(--color-background), 1px 0 0 var(--color-background), 1px 1px 0 var(--color-background), 0 1px 0 var(--color-background), -1px 1px 0 var(--color-background), -1px 0 0 var(--color-background);
+.pageImage.right {
+  margin-left: 0;
 }
