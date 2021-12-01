@@ -75,8 +75,8 @@ export enum ReaderSetting {
   FitContainToWidth = 'FitContainToWidth',
   FitContainToHeight = 'FitContainToHeight',
   FitStretch = 'FitStretch',
-  LayoutDirection = 'LayoutDirection',
-  PageView = 'PageView',
+  ReadingDirection = 'ReadingDirection',
+  PageStyle = 'PageStyle',
   PreloadAmount = 'PreloadAmount',
   OverlayPageNumber = 'OverlayPageNumber',
   HideScrollbar = 'HideScrollbar',
@@ -88,8 +88,8 @@ export enum ReaderSetting {
   KeyScrollDown = 'KeyScrollDown',
   KeyPreviousChapter = 'KeyPreviousChapter',
   KeyNextChapter = 'KeyNextChapter',
-  KeyToggleLayoutDirection = 'KeyToggleLayoutDirection',
-  KeyTogglePageView = 'KeyTogglePageView',
+  KeyToggleReadingDirection = 'KeyToggleReadingDirection',
+  KeyTogglePageStyle = 'KeyTogglePageStyle',
   KeyToggleShowingSettingsModal = 'KeyToggleShowingSettingsModal',
   KeyToggleShowingSidebar = 'KeyToggleShowingSidebar',
   KeyExit = 'KeyExit',
@@ -104,16 +104,15 @@ export enum IntegrationSetting {
   DiscordPresenceEnabled = 'DiscordPresenceEnabled',
 }
 
-export enum LayoutDirection {
-  LeftToRight,
-  RightToLeft,
-  Vertical,
+export enum ReadingDirection {
+  LeftToRight = 'LeftToRight',
+  RightToLeft = 'RightToLeft',
 }
 
-export enum PageView {
-  Single,
-  Double,
-  Double_OddStart,
+export enum PageStyle {
+  Single = 'Single',
+  Double = 'Double',
+  LongStrip = 'LongStrip',
 }
 
 export enum AppLoadStep {

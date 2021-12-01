@@ -1,19 +1,19 @@
 import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
-  LayoutDirection,
-  PageView,
+  PageStyle,
   ProgressFilter,
   ReaderSetting,
+  ReadingDirection,
 } from '../../models/types';
 
 export const SET_CHAPTER_LANGUAGES = 'SET_CHAPTER_LANGUAGES';
 export const SET_FIT_CONTAIN_TO_WIDTH = 'SET_FIT_CONTAIN_TO_WIDTH';
 export const SET_FIT_CONTAIN_TO_HEIGHT = 'SET_FIT_CONTAIN_TO_HEIGHT';
 export const SET_FIT_STRETCH = 'SET_FIT_STRETCH';
-export const SET_PAGE_VIEW = 'SET_PAGE_VIEW';
-export const TOGGLE_PAGE_VIEW = 'TOGGLE_PAGE_VIEW';
-export const SET_LAYOUT_DIRECTION = 'SET_LAYOUT_DIRECTION';
-export const TOGGLE_LAYOUT_DIRECTION = 'TOGGLE_LAYOUT_DIRECTION';
+export const SET_PAGE_STYLE = 'SET_PAGE_STYLE';
+export const TOGGLE_PAGE_STYLE = 'TOGGLE_PAGE_STYLE';
+export const SET_READING_DIRECTION = 'SET_READING_DIRECTION';
+export const TOGGLE_READING_DIRECTION = 'TOGGLE_READING_DIRECTION';
 export const SET_PRELOAD_AMOUNT = 'SET_PRELOAD_AMOUNT';
 export const SET_REFRESH_ON_START = 'SET_REFRESH_ON_START';
 export const SET_AUTO_CHECK_FOR_UPDATES = 'SET_AUTO_CHECK_FOR_UPDATES';
@@ -43,8 +43,8 @@ export interface SettingsState {
   fitContainToWidth: boolean;
   fitContainToHeight: boolean;
   fitStretch: boolean;
-  pageView: PageView;
-  layoutDirection: LayoutDirection;
+  pageStyle: PageStyle;
+  readingDirection: ReadingDirection;
   preloadAmount: number;
   overlayPageNumber: boolean;
   hideScrollbar: boolean;
@@ -58,8 +58,8 @@ export interface SettingsState {
   keyScrollDown: string;
   keyPreviousChapter: string;
   keyNextChapter: string;
-  keyToggleLayoutDirection: string;
-  keyTogglePageView: string;
+  keyToggleReadingDirection: string;
+  keyTogglePageStyle: string;
   keyToggleShowingSettingsModal: string;
   keyToggleShowingSidebar: string;
   keyExit: string;
@@ -94,26 +94,26 @@ interface SetFitStretch {
   };
 }
 
-interface SetPageViewAction {
-  type: typeof SET_PAGE_VIEW;
+interface SetPageStyleAction {
+  type: typeof SET_PAGE_STYLE;
   payload: {
-    pageView: PageView;
+    pageStyle: PageStyle;
   };
 }
 
-interface TogglePageViewAction {
-  type: typeof TOGGLE_PAGE_VIEW;
+interface TogglePageStyleAction {
+  type: typeof TOGGLE_PAGE_STYLE;
 }
 
-interface SetLayoutDirectionAction {
-  type: typeof SET_LAYOUT_DIRECTION;
+interface SetReadingDirectionAction {
+  type: typeof SET_READING_DIRECTION;
   payload: {
-    layoutDirection: LayoutDirection;
+    readingDirection: ReadingDirection;
   };
 }
 
-interface ToggleLayoutDirectionAction {
-  type: typeof TOGGLE_LAYOUT_DIRECTION;
+interface ToggleReadingDirectionAction {
+  type: typeof TOGGLE_READING_DIRECTION;
 }
 
 interface SetPreloadAmountAction {
@@ -220,10 +220,10 @@ export type SettingsAction =
   | SetFitContainToWidth
   | SetFitContainToHeight
   | SetFitStretch
-  | SetPageViewAction
-  | TogglePageViewAction
-  | SetLayoutDirectionAction
-  | ToggleLayoutDirectionAction
+  | SetPageStyleAction
+  | TogglePageStyleAction
+  | SetReadingDirectionAction
+  | ToggleReadingDirectionAction
   | SetPreloadAmountAction
   | SetRefreshOnStartAction
   | SetAutoCheckForUpdatesAction

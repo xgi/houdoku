@@ -3,8 +3,8 @@ import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
   GeneralSetting,
   IntegrationSetting,
-  LayoutDirection,
-  PageView,
+  ReadingDirection,
+  PageStyle,
   ProgressFilter,
   ReaderSetting,
   TrackerSetting,
@@ -25,8 +25,8 @@ export const DEFAULT_GENERAL_SETTINGS = {
 };
 
 export const DEFAULT_READER_SETTINGS = {
-  [ReaderSetting.LayoutDirection]: LayoutDirection.LeftToRight,
-  [ReaderSetting.PageView]: PageView.Single,
+  [ReaderSetting.ReadingDirection]: ReadingDirection.LeftToRight,
+  [ReaderSetting.PageStyle]: PageStyle.Single,
   [ReaderSetting.FitContainToWidth]: true,
   [ReaderSetting.FitContainToHeight]: true,
   [ReaderSetting.FitStretch]: false,
@@ -41,8 +41,8 @@ export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.KeyScrollDown]: 'down',
   [ReaderSetting.KeyPreviousChapter]: '[',
   [ReaderSetting.KeyNextChapter]: ']',
-  [ReaderSetting.KeyToggleLayoutDirection]: 'd',
-  [ReaderSetting.KeyTogglePageView]: 'q',
+  [ReaderSetting.KeyToggleReadingDirection]: 'd',
+  [ReaderSetting.KeyTogglePageStyle]: 'q',
   [ReaderSetting.KeyToggleShowingSettingsModal]: 'o',
   [ReaderSetting.KeyToggleShowingSidebar]: 's',
   [ReaderSetting.KeyExit]: 'backspace',
@@ -163,11 +163,9 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
     ReaderSetting
   );
 
-  if (storeValues[ReaderSetting.LayoutDirection] !== null) {
-    settings[ReaderSetting.LayoutDirection] = parseInt(
-      storeValues[ReaderSetting.LayoutDirection] as string,
-      10
-    );
+  if (storeValues[ReaderSetting.ReadingDirection] !== null) {
+    settings[ReaderSetting.ReadingDirection] =
+      storeValues[ReaderSetting.ReadingDirection];
   }
   if (storeValues[ReaderSetting.FitContainToWidth] !== null) {
     settings[ReaderSetting.FitContainToWidth] =
@@ -181,11 +179,8 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
     settings[ReaderSetting.FitStretch] =
       storeValues[ReaderSetting.FitStretch] === 'true';
   }
-  if (storeValues[ReaderSetting.PageView] !== null) {
-    settings[ReaderSetting.PageView] = parseInt(
-      storeValues[ReaderSetting.PageView] as string,
-      10
-    );
+  if (storeValues[ReaderSetting.PageStyle] !== null) {
+    settings[ReaderSetting.PageStyle] = storeValues[ReaderSetting.PageStyle];
   }
   if (storeValues[ReaderSetting.PreloadAmount] !== null) {
     settings[ReaderSetting.PreloadAmount] = parseInt(
@@ -233,13 +228,13 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
     settings[ReaderSetting.KeyNextChapter] =
       storeValues[ReaderSetting.KeyNextChapter];
   }
-  if (storeValues[ReaderSetting.KeyToggleLayoutDirection] !== null) {
-    settings[ReaderSetting.KeyToggleLayoutDirection] =
-      storeValues[ReaderSetting.KeyToggleLayoutDirection];
+  if (storeValues[ReaderSetting.KeyToggleReadingDirection] !== null) {
+    settings[ReaderSetting.KeyToggleReadingDirection] =
+      storeValues[ReaderSetting.KeyToggleReadingDirection];
   }
-  if (storeValues[ReaderSetting.KeyTogglePageView] !== null) {
-    settings[ReaderSetting.KeyTogglePageView] =
-      storeValues[ReaderSetting.KeyTogglePageView];
+  if (storeValues[ReaderSetting.KeyTogglePageStyle] !== null) {
+    settings[ReaderSetting.KeyTogglePageStyle] =
+      storeValues[ReaderSetting.KeyTogglePageStyle];
   }
   if (storeValues[ReaderSetting.KeyToggleShowingSettingsModal] !== null) {
     settings[ReaderSetting.KeyToggleShowingSettingsModal] =

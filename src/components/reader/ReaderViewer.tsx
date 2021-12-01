@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store';
 import styles from './ReaderViewer.css';
-import { LayoutDirection, PageView } from '../../models/types';
+import { ReadingDirection, PageStyle } from '../../models/types';
 import { changePageNumber, setPageNumber } from '../../features/reader/actions';
 
 const mapState = (state: RootState) => ({
@@ -16,8 +16,8 @@ const mapState = (state: RootState) => ({
   fitContainToWidth: state.settings.fitContainToWidth,
   fitContainToHeight: state.settings.fitContainToHeight,
   fitStretch: state.settings.fitStretch,
-  pageView: state.settings.pageView,
-  layoutDirection: state.settings.layoutDirection,
+  pageStyle: state.settings.pageStyle,
+  readingDirection: state.settings.readingDirection,
   overlayPageNumber: state.settings.overlayPageNumber,
   hideScrollbar: state.settings.hideScrollbar,
 });
@@ -69,20 +69,20 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.lastPageNumber, props.pageNumber]);
 
-  const viewerContainerClickHandler = (e: any) => {
-    const rect: DOMRect = e.target.getBoundingClientRect();
-    const relX = e.clientX - rect.left;
+  // const viewerContainerClickHandler = (e: any) => {
+  //   const rect: DOMRect = e.target.getBoundingClientRect();
+  //   const relX = e.clientX - rect.left;
 
-    if (relX > rect.width * 0.6) {
-      props.changePageNumber(
-        props.layoutDirection === LayoutDirection.LeftToRight ? 1 : -1
-      );
-    } else if (relX < rect.width * 0.4) {
-      props.changePageNumber(
-        props.layoutDirection === LayoutDirection.LeftToRight ? -1 : 1
-      );
-    }
-  };
+  //   if (relX > rect.width * 0.6) {
+  //     props.changePageNumber(
+  //       props.layoutDirection === LayoutDirection.LeftToRight ? 1 : -1
+  //     );
+  //   } else if (relX < rect.width * 0.4) {
+  //     props.changePageNumber(
+  //       props.layoutDirection === LayoutDirection.LeftToRight ? -1 : 1
+  //     );
+  //   }
+  // };
 
   const getVerticalPages = () => {
     const pageContainers = [];

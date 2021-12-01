@@ -24,18 +24,18 @@ import {
 } from '../../features/reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
-import { LayoutDirection, PageView } from '../../models/types';
+import { ReadingDirection, PageStyle } from '../../models/types';
 import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
 import {
   setFitContainToHeight,
   setFitContainToWidth,
   setFitStretch,
-  setLayoutDirection,
-  setPageView,
+  setPageStyle,
   setPreloadAmount,
-  toggleLayoutDirection,
-  togglePageView,
+  setReadingDirection,
+  togglePageStyle,
+  toggleReadingDirection,
 } from '../../features/settings/actions';
 import { toggleChapterRead } from '../../features/library/utils';
 import { useForceUpdate } from '../../util/reactutil';
@@ -66,11 +66,11 @@ const mapState = (state: RootState) => ({
   showingSettingsModal: state.reader.showingSettingsModal,
   showingSidebar: state.reader.showingSidebar,
   customDownloadsDir: state.settings.customDownloadsDir,
-  pageView: state.settings.pageView,
+  pageStyle: state.settings.pageStyle,
   fitContainToWidth: state.settings.fitContainToWidth,
   fitContainToHeight: state.settings.fitContainToHeight,
   fitStretch: state.settings.fitStretch,
-  layoutDirection: state.settings.layoutDirection,
+  readingDirection: state.settings.readingDirection,
   preloadAmount: state.settings.preloadAmount,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
   discordPresenceEnabled: state.settings.discordPresenceEnabled,
@@ -82,8 +82,8 @@ const mapState = (state: RootState) => ({
   keyScrollDown: state.settings.keyScrollDown,
   keyPreviousChapter: state.settings.keyPreviousChapter,
   keyNextChapter: state.settings.keyNextChapter,
-  keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
-  keyTogglePageView: state.settings.keyTogglePageView,
+  keyToggleReadingDirection: state.settings.keyToggleReadingDirection,
+  keyTogglePageStyle: state.settings.keyTogglePageStyle,
   keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
   keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
   keyExit: state.settings.keyExit,
@@ -99,11 +99,11 @@ const mapDispatch = (dispatch: any) => ({
   setFitContainToHeight: (value: boolean) =>
     dispatch(setFitContainToHeight(value)),
   setFitStretch: (value: boolean) => dispatch(setFitStretch(value)),
-  setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
-  togglePageView: () => dispatch(togglePageView()),
-  setLayoutDirection: (layoutDirection: LayoutDirection) =>
-    dispatch(setLayoutDirection(layoutDirection)),
-  toggleLayoutDirection: () => dispatch(toggleLayoutDirection()),
+  setPageStyle: (value: PageStyle) => dispatch(setPageStyle(value)),
+  togglePageStyle: () => dispatch(togglePageStyle()),
+  setReadingDirection: (value: ReadingDirection) =>
+    dispatch(setReadingDirection(value)),
+  toggleReadingDirection: () => dispatch(toggleReadingDirection()),
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
   setPageUrls: (pageUrls: string[]) => dispatch(setPageUrls(pageUrls)),
@@ -366,10 +366,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    */
   const changePage = (left: boolean, toBound = false) => {
     if (toBound) {
-      if (
-        props.layoutDirection === LayoutDirection.LeftToRight ||
-        props.layoutDirection === LayoutDirection.Vertical
-      ) {
+      if (props.readingDirection === ReadingDirection.LeftToRight) {
         props.setPageNumber(left ? 1 : props.lastPageNumber);
       } else {
         props.setPageNumber(left ? props.lastPageNumber : 1);
@@ -379,10 +376,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     let delta = left ? -1 : 1;
 
-    if (props.layoutDirection === LayoutDirection.RightToLeft) {
+    if (props.readingDirection === ReadingDirection.RightToLeft) {
       delta = -delta;
     }
-    if (props.pageView !== PageView.Single) {
+    if (props.pageStyle === PageStyle.Double) {
       delta *= 2;
     }
 
@@ -411,8 +408,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         props.keyScrollDown,
         props.keyPreviousChapter,
         props.keyNextChapter,
-        props.keyToggleLayoutDirection,
-        props.keyTogglePageView,
+        props.keyToggleReadingDirection,
+        props.keyTogglePageStyle,
         props.keyToggleShowingSettingsModal,
         props.keyToggleShowingSidebar,
         props.keyExit,
@@ -456,10 +453,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     Mousetrap.bind(props.keyLastPage, () => changePage(false, true));
     Mousetrap.bind(props.keyPreviousChapter, () => changeChapter(true));
     Mousetrap.bind(props.keyNextChapter, () => changeChapter(false));
-    Mousetrap.bind(props.keyToggleLayoutDirection, () =>
-      props.toggleLayoutDirection()
+    Mousetrap.bind(props.keyToggleReadingDirection, () =>
+      props.toggleReadingDirection()
     );
-    Mousetrap.bind(props.keyTogglePageView, () => props.togglePageView());
+    Mousetrap.bind(props.keyTogglePageStyle, () => props.togglePageStyle());
     Mousetrap.bind(props.keyToggleShowingSettingsModal, () =>
       props.toggleShowingSettingsModal()
     );
@@ -547,6 +544,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         </button>
         <button onClick={() => props.setFitStretch(!props.fitStretch)}>
           stretch (cur={props.fitStretch.toString()})
+        </button>
+        <button onClick={() => props.toggleReadingDirection()}>
+          reading direction (cur={props.readingDirection})
+        </button>
+        <button onClick={() => props.togglePageStyle()}>
+          page style (cur={props.pageStyle})
         </button>
         <span>current page: {props.pageNumber}</span>
       </div>

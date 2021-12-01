@@ -2,18 +2,14 @@
 import {
   GeneralSetting,
   IntegrationSetting,
-  LayoutDirection,
-  PageView,
+  PageStyle,
   ReaderSetting,
+  ReadingDirection,
   TrackerSetting,
 } from '../../models/types';
 import {
   SettingsState,
   SET_PRELOAD_AMOUNT,
-  TOGGLE_LAYOUT_DIRECTION,
-  TOGGLE_PAGE_VIEW,
-  SET_LAYOUT_DIRECTION,
-  SET_PAGE_VIEW,
   SET_CHAPTER_LANGUAGES,
   SET_REFRESH_ON_START,
   SET_OVERLAY_PAGE_NUMBER,
@@ -31,6 +27,10 @@ import {
   SET_FIT_CONTAIN_TO_WIDTH,
   SET_FIT_CONTAIN_TO_HEIGHT,
   SET_FIT_STRETCH,
+  SET_PAGE_STYLE,
+  TOGGLE_PAGE_STYLE,
+  TOGGLE_READING_DIRECTION,
+  SET_READING_DIRECTION,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -101,14 +101,14 @@ const initialState: SettingsState = {
     storedReaderSettings.FitStretch === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.FitStretch]
       : storedReaderSettings.FitStretch,
-  pageView:
-    storedReaderSettings.PageView === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.PageView]
-      : storedReaderSettings.PageView,
-  layoutDirection:
-    storedReaderSettings.LayoutDirection === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.LayoutDirection]
-      : storedReaderSettings.LayoutDirection,
+  pageStyle:
+    storedReaderSettings.PageStyle === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.PageStyle]
+      : storedReaderSettings.PageStyle,
+  readingDirection:
+    storedReaderSettings.ReadingDirection === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.ReadingDirection]
+      : storedReaderSettings.ReadingDirection,
   preloadAmount:
     storedReaderSettings.PreloadAmount === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.PreloadAmount]
@@ -153,14 +153,14 @@ const initialState: SettingsState = {
     storedReaderSettings.KeyNextChapter === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyNextChapter]
       : storedReaderSettings.KeyNextChapter,
-  keyToggleLayoutDirection:
-    storedReaderSettings.KeyToggleLayoutDirection === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleLayoutDirection]
-      : storedReaderSettings.KeyToggleLayoutDirection,
-  keyTogglePageView:
-    storedReaderSettings.KeyTogglePageView === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyTogglePageView]
-      : storedReaderSettings.KeyTogglePageView,
+  keyToggleReadingDirection:
+    storedReaderSettings.KeyToggleReadingDirection === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleReadingDirection]
+      : storedReaderSettings.KeyToggleReadingDirection,
+  keyTogglePageStyle:
+    storedReaderSettings.KeyTogglePageStyle === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyTogglePageStyle]
+      : storedReaderSettings.KeyTogglePageStyle,
   keyToggleShowingSettingsModal:
     storedReaderSettings.KeyToggleShowingSettingsModal === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingSettingsModal]
@@ -187,26 +187,20 @@ const initialState: SettingsState = {
       : storedIntegrationSettings.DiscordPresenceEnabled,
 };
 
-function nextLayoutDirection(
-  layoutDirection: LayoutDirection
-): LayoutDirection {
-  if (layoutDirection === LayoutDirection.LeftToRight) {
-    return LayoutDirection.RightToLeft;
-  }
-  if (layoutDirection === LayoutDirection.RightToLeft) {
-    return LayoutDirection.Vertical;
-  }
-  return LayoutDirection.LeftToRight;
+function nextReadingDirection(
+  readingDirection: ReadingDirection
+): ReadingDirection {
+  return readingDirection === ReadingDirection.LeftToRight
+    ? ReadingDirection.RightToLeft
+    : ReadingDirection.LeftToRight;
 }
 
-function nextPageView(pageView: PageView): PageView {
-  if (pageView === PageView.Single) {
-    return PageView.Double;
-  }
-  if (pageView === PageView.Double) {
-    return PageView.Double_OddStart;
-  }
-  return PageView.Single;
+function nextPageStyle(pageStyle: PageStyle): PageStyle {
+  return {
+    [PageStyle.Single]: PageStyle.Double,
+    [PageStyle.Double]: PageStyle.LongStrip,
+    [PageStyle.LongStrip]: PageStyle.Single,
+  }[pageStyle];
 }
 
 export default function settings(
@@ -309,27 +303,27 @@ export default function settings(
     case SET_FIT_STRETCH:
       saveReaderSetting(ReaderSetting.FitStretch, action.payload.fitStretch);
       return { ...state, fitStretch: action.payload.fitStretch };
-    case SET_PAGE_VIEW:
-      saveReaderSetting(ReaderSetting.PageView, action.payload.pageView);
-      return { ...state, pageView: action.payload.pageView };
-    case TOGGLE_PAGE_VIEW:
-      const newPageView: PageView = nextPageView(state.pageView);
-      saveReaderSetting(ReaderSetting.PageView, newPageView);
-      return { ...state, pageView: newPageView };
-    case SET_LAYOUT_DIRECTION:
+    case SET_PAGE_STYLE:
+      saveReaderSetting(ReaderSetting.PageStyle, action.payload.pageStyle);
+      return { ...state, pageStyle: action.payload.pageStyle };
+    case TOGGLE_PAGE_STYLE:
+      const newPageStyle: PageStyle = nextPageStyle(state.pageStyle);
+      saveReaderSetting(ReaderSetting.PageStyle, newPageStyle);
+      return { ...state, pageStyle: newPageStyle };
+    case SET_READING_DIRECTION:
       saveReaderSetting(
-        ReaderSetting.LayoutDirection,
-        action.payload.layoutDirection
+        ReaderSetting.ReadingDirection,
+        action.payload.readingDirection
       );
-      return { ...state, layoutDirection: action.payload.layoutDirection };
-    case TOGGLE_LAYOUT_DIRECTION:
-      const newLayoutDirection: LayoutDirection = nextLayoutDirection(
-        state.layoutDirection
+      return { ...state, readingDirection: action.payload.readingDirection };
+    case TOGGLE_READING_DIRECTION:
+      const newReadingDirection: ReadingDirection = nextReadingDirection(
+        state.readingDirection
       );
-      saveReaderSetting(ReaderSetting.LayoutDirection, newLayoutDirection);
+      saveReaderSetting(ReaderSetting.ReadingDirection, newReadingDirection);
       return {
         ...state,
-        layoutDirection: newLayoutDirection,
+        readingDirection: newReadingDirection,
       };
     case SET_PRELOAD_AMOUNT:
       saveReaderSetting(
@@ -383,10 +377,10 @@ export default function settings(
           return { ...state, keyPreviousChapter: action.payload.value };
         case ReaderSetting.KeyNextChapter:
           return { ...state, keyNextChapter: action.payload.value };
-        case ReaderSetting.KeyToggleLayoutDirection:
-          return { ...state, keyToggleLayoutDirection: action.payload.value };
-        case ReaderSetting.KeyTogglePageView:
-          return { ...state, keyTogglePageView: action.payload.value };
+        case ReaderSetting.KeyToggleReadingDirection:
+          return { ...state, keyToggleReadingDirection: action.payload.value };
+        case ReaderSetting.KeyTogglePageStyle:
+          return { ...state, keyTogglePageStyle: action.payload.value };
         case ReaderSetting.KeyToggleShowingSettingsModal:
           return {
             ...state,

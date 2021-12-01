@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import Title from 'antd/lib/typography/Title';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './ReaderSettings.css';
-import { LayoutDirection, PageView, ReaderSetting } from '../../models/types';
+import { ReadingDirection, PageStyle, ReaderSetting } from '../../models/types';
 import { RootState } from '../../store';
 import {
   setFitContainToHeight,
@@ -13,22 +13,21 @@ import {
   setFitStretch,
   setHideScrollbar,
   setKeybinding,
-  setLayoutDirection,
   setOverlayPageNumber,
-  setPageView,
+  setPageStyle,
   setPreloadAmount,
+  setReadingDirection,
 } from '../../features/settings/actions';
 import { DEFAULT_READER_SETTINGS } from '../../features/settings/utils';
 
-const layoutDirectionText: { [key in LayoutDirection]: string } = {
-  [LayoutDirection.LeftToRight]: 'Left-to-Right',
-  [LayoutDirection.RightToLeft]: 'Right-to-Left',
-  [LayoutDirection.Vertical]: 'Vertical',
+const readingDirectionText: { [key in ReadingDirection]: string } = {
+  [ReadingDirection.LeftToRight]: 'Left-to-Right',
+  [ReadingDirection.RightToLeft]: 'Right-to-Left',
 };
-const pageViewText: { [key in PageView]: string } = {
-  [PageView.Single]: 'Single',
-  [PageView.Double]: 'Double (Even Start)',
-  [PageView.Double_OddStart]: 'Double (Odd Start)',
+const pageStyleText: { [key in PageStyle]: string } = {
+  [PageStyle.Single]: 'Single',
+  [PageStyle.Double]: 'Double',
+  [PageStyle.LongStrip]: 'Long Strip',
 };
 const preloadText: { [key: number]: string } = {
   0: 'Disabled',
@@ -43,8 +42,8 @@ const mapState = (state: RootState) => ({
   fitContainToWidth: state.settings.fitContainToWidth,
   fitContainToHeight: state.settings.fitContainToHeight,
   fitStretch: state.settings.fitStretch,
-  pageView: state.settings.pageView,
-  layoutDirection: state.settings.layoutDirection,
+  pageStyle: state.settings.pageStyle,
+  readingDirection: state.settings.readingDirection,
   preloadAmount: state.settings.preloadAmount,
   overlayPageNumber: state.settings.overlayPageNumber,
   hideScrollbar: state.settings.hideScrollbar,
@@ -56,8 +55,8 @@ const mapState = (state: RootState) => ({
   keyScrollDown: state.settings.keyScrollDown,
   keyPreviousChapter: state.settings.keyPreviousChapter,
   keyNextChapter: state.settings.keyNextChapter,
-  keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,
-  keyTogglePageView: state.settings.keyTogglePageView,
+  keyToggleReadingDirection: state.settings.keyToggleReadingDirection,
+  keyTogglePageStyle: state.settings.keyTogglePageStyle,
   keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
   keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
   keyExit: state.settings.keyExit,
@@ -71,9 +70,9 @@ const mapDispatch = (dispatch: any) => ({
   setFitContainToHeight: (value: boolean) =>
     dispatch(setFitContainToHeight(value)),
   setFitStretch: (value: boolean) => dispatch(setFitStretch(value)),
-  setPageView: (pageView: PageView) => dispatch(setPageView(pageView)),
-  setLayoutDirection: (layoutDirection: LayoutDirection) =>
-    dispatch(setLayoutDirection(layoutDirection)),
+  setPageStyle: (value: PageStyle) => dispatch(setPageStyle(value)),
+  setReadingDirection: (value: ReadingDirection) =>
+    dispatch(setReadingDirection(value)),
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
   setOverlayPageNumber: (overlayPageNumber: boolean) =>
@@ -95,8 +94,8 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
 
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
-      case ReaderSetting.LayoutDirection:
-        props.setLayoutDirection(value);
+      case ReaderSetting.ReadingDirection:
+        props.setReadingDirection(value);
         break;
       case ReaderSetting.FitContainToWidth:
         props.setFitContainToWidth(value);
@@ -107,8 +106,8 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.FitStretch:
         props.setFitStretch(value);
         break;
-      case ReaderSetting.PageView:
-        props.setPageView(value);
+      case ReaderSetting.PageStyle:
+        props.setPageStyle(value);
         break;
       case ReaderSetting.PreloadAmount:
         props.setPreloadAmount(value);
@@ -127,8 +126,8 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.KeyScrollDown:
       case ReaderSetting.KeyPreviousChapter:
       case ReaderSetting.KeyNextChapter:
-      case ReaderSetting.KeyToggleLayoutDirection:
-      case ReaderSetting.KeyTogglePageView:
+      case ReaderSetting.KeyToggleReadingDirection:
+      case ReaderSetting.KeyTogglePageStyle:
       case ReaderSetting.KeyToggleShowingSettingsModal:
       case ReaderSetting.KeyToggleShowingSidebar:
       case ReaderSetting.KeyExit:
@@ -223,26 +222,28 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         </Paragraph>
       </Modal>
       <Row className={styles.row}>
-        <Col span={10}>Layout Direction</Col>
+        <Col span={10}>Reading Direction</Col>
         <Col span={14}>
           <Dropdown
             overlay={renderMenu(
-              ReaderSetting.LayoutDirection,
-              layoutDirectionText
+              ReaderSetting.ReadingDirection,
+              readingDirectionText
             )}
           >
             <Button>
-              {layoutDirectionText[props.layoutDirection]} <DownOutlined />
+              {readingDirectionText[props.readingDirection]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
       </Row>
       <Row className={styles.row}>
-        <Col span={10}>Page View</Col>
+        <Col span={10}>Page Style</Col>
         <Col span={14}>
-          <Dropdown overlay={renderMenu(ReaderSetting.PageView, pageViewText)}>
+          <Dropdown
+            overlay={renderMenu(ReaderSetting.PageStyle, pageStyleText)}
+          >
             <Button>
-              {pageViewText[props.pageView]} <DownOutlined />
+              {pageStyleText[props.pageStyle]} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -382,14 +383,14 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           setting: ReaderSetting.KeyToggleShowingSidebar,
         },
         {
-          name: 'Toggle Layout Direction',
-          value: props.keyToggleLayoutDirection,
-          setting: ReaderSetting.KeyToggleLayoutDirection,
+          name: 'Toggle Reading Direction',
+          value: props.keyToggleReadingDirection,
+          setting: ReaderSetting.KeyToggleReadingDirection,
         },
         {
-          name: 'Toggle Page View',
-          value: props.keyTogglePageView,
-          setting: ReaderSetting.KeyTogglePageView,
+          name: 'Toggle Page Style',
+          value: props.keyTogglePageStyle,
+          setting: ReaderSetting.KeyTogglePageStyle,
         },
         {
           name: 'Show Settings Menu',

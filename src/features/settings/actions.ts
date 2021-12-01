@@ -1,17 +1,13 @@
 import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
-  LayoutDirection,
-  PageView,
+  PageStyle,
   ProgressFilter,
   ReaderSetting,
+  ReadingDirection,
 } from '../../models/types';
 import {
   SettingsAction,
-  TOGGLE_PAGE_VIEW,
-  TOGGLE_LAYOUT_DIRECTION,
   SET_PRELOAD_AMOUNT,
-  SET_PAGE_VIEW,
-  SET_LAYOUT_DIRECTION,
   SET_CHAPTER_LANGUAGES,
   SET_REFRESH_ON_START,
   SET_OVERLAY_PAGE_NUMBER,
@@ -29,6 +25,10 @@ import {
   SET_FIT_CONTAIN_TO_WIDTH,
   SET_FIT_CONTAIN_TO_HEIGHT,
   SET_FIT_STRETCH,
+  SET_PAGE_STYLE,
+  SET_READING_DIRECTION,
+  TOGGLE_PAGE_STYLE,
+  TOGGLE_READING_DIRECTION,
 } from './types';
 
 export function setChapterLanguages(
@@ -155,35 +155,35 @@ export function setFitStretch(fitStretch: boolean): SettingsAction {
   };
 }
 
-export function setPageView(pageView: PageView): SettingsAction {
+export function setPageStyle(pageStyle: PageStyle): SettingsAction {
   return {
-    type: SET_PAGE_VIEW,
+    type: SET_PAGE_STYLE,
     payload: {
-      pageView,
+      pageStyle,
     },
   };
 }
 
-export function togglePageView(): SettingsAction {
+export function togglePageStyle(): SettingsAction {
   return {
-    type: TOGGLE_PAGE_VIEW,
+    type: TOGGLE_PAGE_STYLE,
   };
 }
 
-export function setLayoutDirection(
-  layoutDirection: LayoutDirection
+export function setReadingDirection(
+  readingDirection: ReadingDirection
 ): SettingsAction {
   return {
-    type: SET_LAYOUT_DIRECTION,
+    type: SET_READING_DIRECTION,
     payload: {
-      layoutDirection,
+      readingDirection,
     },
   };
 }
 
-export function toggleLayoutDirection(): SettingsAction {
+export function toggleReadingDirection(): SettingsAction {
   return {
-    type: TOGGLE_LAYOUT_DIRECTION,
+    type: TOGGLE_READING_DIRECTION,
   };
 }
 
