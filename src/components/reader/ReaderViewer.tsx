@@ -94,9 +94,6 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
    * Get the page container, which contains all page images (with only the current one(s) shown).
    *
    * This is used for the Single and Double page styles.
-   *
-   * TODO: finish
-   * @returns
    */
   const getSinglePageContainer = () => {
     const pageImages = [];
@@ -134,10 +131,6 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
    *
    * All containers and pages are rendered with this layout (i.e. this doesn't use display:none).
    * The Double and LongStrip layouts are mutually exclusive.
-   *
-   * TODO: finish
-   *
-   * @returns
    */
   const getSeparatePageContainers = () => {
     const pageContainers = [];
@@ -167,7 +160,6 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
    * Add handling to update the page number when scrolling.
    *
    * Only updates the page number when on the LongStrip style.
-   * TODO: finish
    */
   useEffect(() => {
     const root = document.getElementById(ROOT_ID);
@@ -210,7 +202,6 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
    * Scrolls to the current page number when it is changed.
    *
    * Only has function when on the LongStrip style.
-   * TODO: finish
    */
   useEffect(() => {
     if (props.pageStyle === PageStyle.LongStrip) {
