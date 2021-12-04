@@ -34,105 +34,204 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = PropsFromRedux & {};
 
+const ROOT_ID = 'root';
+const ROOT_TOP_MARGIN = 54;
+
 const ReaderViewer: React.FC<Props> = (props: Props) => {
   const viewerContainer = useRef<HTMLDivElement>(null);
   const [skipChangePageNumEffect, setSkipChangePageNumEffect] = useState(false);
 
-  useEffect(() => {
-    const root = document.getElementById('root');
-    if (root) {
-      root.onscroll = () => {
-        if (viewerContainer.current) {
-          let imageHeightSum = 0;
+  const viewerContainerClickHandler = (e: any) => {
+    if (viewerContainer.current) {
+      const rect: DOMRect = viewerContainer.current.getBoundingClientRect();
+      const relX = e.clientX - rect.left;
 
-          let childNum = 0;
-          for (
-            childNum = 0;
-            childNum < viewerContainer.current.children.length &&
-            imageHeightSum < root.scrollTop + root.clientHeight - 54;
-            childNum += 1
-          ) {
-            imageHeightSum +=
-              viewerContainer.current.children[childNum].clientHeight;
-          }
-
-          if (
-            props.pageNumber !== childNum &&
-            childNum <= props.lastPageNumber &&
-            childNum > 0
-          ) {
-            setSkipChangePageNumEffect(true);
-            props.setPageNumber(childNum);
-          }
-        }
-      };
+      if (relX > rect.width * 0.6) {
+        props.changePageNumber(
+          props.readingDirection === ReadingDirection.LeftToRight ? 1 : -1
+        );
+      } else if (relX < rect.width * 0.4) {
+        props.changePageNumber(
+          props.readingDirection === ReadingDirection.LeftToRight ? -1 : 1
+        );
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.lastPageNumber, props.pageNumber]);
+  };
 
-  // const viewerContainerClickHandler = (e: any) => {
-  //   const rect: DOMRect = e.target.getBoundingClientRect();
-  //   const relX = e.clientX - rect.left;
+  const getPageImage = (pageNumber: number, showing: boolean) => {
+    return (
+      <img
+        src={props.pageDataList[pageNumber - 1]}
+        alt={`Page ${pageNumber}`}
+        style={showing ? {} : { display: 'none' }}
+        className={`
+      ${styles.pageImage}
+      ${
+        props.pageStyle === PageStyle.Double && pageNumber === props.pageNumber
+          ? styles.left
+          : ''
+      }
+      ${
+        props.pageStyle === PageStyle.Double &&
+        pageNumber === props.pageNumber + 1
+          ? styles.right
+          : ''
+      }
+      ${props.fitContainToWidth ? styles.containWidth : ''}
+      ${props.fitContainToHeight ? styles.containHeight : ''}
+      ${
+        props.fitStretch &&
+        (props.fitContainToWidth || props.fitContainToHeight)
+          ? styles.grow
+          : ''
+      }
+    `}
+      />
+    );
+  };
 
-  //   if (relX > rect.width * 0.6) {
-  //     props.changePageNumber(
-  //       props.layoutDirection === LayoutDirection.LeftToRight ? 1 : -1
-  //     );
-  //   } else if (relX < rect.width * 0.4) {
-  //     props.changePageNumber(
-  //       props.layoutDirection === LayoutDirection.LeftToRight ? -1 : 1
-  //     );
-  //   }
-  // };
+  /**
+   * Get the page container, which contains all page images (with only the current one(s) shown).
+   *
+   * This is used for the Single and Double page styles.
+   *
+   * TODO: finish
+   * @returns
+   */
+  const getSinglePageContainer = () => {
+    const pageImages = [];
+    for (let i = 1; i <= props.lastPageNumber; i += 1) {
+      const showing =
+        i === props.pageNumber ||
+        (props.pageStyle === PageStyle.Double && i === props.pageNumber + 1);
+      pageImages.push(getPageImage(i, showing));
+    }
 
-  const getVerticalPages = () => {
+    return (
+      <div
+        className={`
+            ${styles.page}
+            ${props.fitContainToWidth ? styles.containWidth : ''}
+            ${props.fitContainToHeight ? styles.containHeight : ''}
+            ${
+              props.fitStretch &&
+              (props.fitContainToWidth || props.fitContainToHeight)
+                ? styles.grow
+                : ''
+            }
+          `}
+      >
+        {pageImages}
+      </div>
+    );
+  };
+
+  /**
+   * Get the page containers, with one per page image.
+   *
+   * This is used for the LongStrip page style. Unlike getSinglePageContainer(), this method
+   * creates a separate container per page,
+   *
+   * All containers and pages are rendered with this layout (i.e. this doesn't use display:none).
+   * The Double and LongStrip layouts are mutually exclusive.
+   *
+   * TODO: finish
+   *
+   * @returns
+   */
+  const getSeparatePageContainers = () => {
     const pageContainers = [];
     for (let i = 1; i <= props.lastPageNumber; i += 1) {
       pageContainers.push(
         <div
-          id={`pageContainer-${i}`}
           className={`
             ${styles.page}
             ${props.fitContainToWidth ? styles.containWidth : ''}
             ${props.fitContainToHeight ? styles.containHeight : ''}
-            ${props.fitStretch ? styles.grow : ''}
+            ${
+              props.fitStretch &&
+              (props.fitContainToWidth || props.fitContainToHeight)
+                ? styles.grow
+                : ''
+            }
           `}
         >
-          <img
-            src={props.pageDataList[i - 1]}
-            alt={`Page ${i}`}
-            className={`
-              ${styles.pageImage}
-              ${props.fitContainToWidth ? styles.containWidth : ''}
-              ${props.fitContainToHeight ? styles.containHeight : ''}
-              ${props.fitStretch ? styles.grow : ''}
-            `}
-          />
+          {getPageImage(i, true)}
         </div>
       );
     }
-
     return pageContainers;
   };
 
+  /**
+   * Add handling to update the page number when scrolling.
+   *
+   * Only updates the page number when on the LongStrip style.
+   * TODO: finish
+   */
   useEffect(() => {
-    if (skipChangePageNumEffect) {
-      setSkipChangePageNumEffect(false);
-    } else if (viewerContainer.current) {
-      const elem = viewerContainer.current.children[props.pageNumber - 1];
-      if (elem !== undefined) {
-        elem.scrollIntoView();
+    const root = document.getElementById(ROOT_ID);
+    if (root) {
+      if (props.pageStyle === PageStyle.LongStrip) {
+        root.onscroll = () => {
+          if (viewerContainer.current) {
+            let imageHeightSum = 0;
 
-        // if we're not scrolling to the last page, need to scroll up some
-        // since the image is covered by the header
-        const root = document.getElementById('root');
-        if (root && props.pageNumber < props.lastPageNumber) {
-          root.scrollTop -= 54;
+            let childNum = 0;
+            for (
+              childNum = 0;
+              childNum < viewerContainer.current.children.length &&
+              imageHeightSum <
+                root.scrollTop + root.clientHeight - ROOT_TOP_MARGIN;
+              childNum += 1
+            ) {
+              imageHeightSum +=
+                viewerContainer.current.children[childNum].clientHeight;
+            }
+
+            if (
+              props.pageNumber !== childNum &&
+              childNum <= props.lastPageNumber &&
+              childNum > 0
+            ) {
+              setSkipChangePageNumEffect(true);
+              props.setPageNumber(childNum);
+            }
+          }
+        };
+      } else {
+        root.onscroll = () => true;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.pageStyle, props.lastPageNumber, props.pageNumber]);
+
+  /**
+   * Scrolls to the current page number when it is changed.
+   *
+   * Only has function when on the LongStrip style.
+   * TODO: finish
+   */
+  useEffect(() => {
+    if (props.pageStyle === PageStyle.LongStrip) {
+      if (skipChangePageNumEffect) {
+        setSkipChangePageNumEffect(false);
+      } else if (viewerContainer.current) {
+        const elem = viewerContainer.current.children[props.pageNumber - 1];
+        if (elem !== undefined) {
+          elem.scrollIntoView();
+
+          // if we're not scrolling to the last page, need to scroll up some
+          // since the image is covered by the header
+          const root = document.getElementById(ROOT_ID);
+          if (root && props.pageNumber < props.lastPageNumber) {
+            root.scrollTop -= ROOT_TOP_MARGIN;
+          }
         }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.pageNumber, props.lastPageNumber]);
+  }, [props.pageStyle, props.pageNumber, props.lastPageNumber]);
 
   return (
     <>
@@ -142,16 +241,15 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         className={`
           ${styles.container}
           ${props.hideScrollbar ? styles.noScrollbar : ''}`}
+        onClick={
+          props.pageStyle === PageStyle.LongStrip
+            ? () => true
+            : viewerContainerClickHandler
+        }
       >
-        {/* {getPageContainers()} */}
-        {getVerticalPages()}
-        {/* <div className={`${styles.page} ${styles.containWidth} ${styles.grow}`}>
-          <img
-            src={props.pageDataList[props.pageNumber - 1]}
-            alt={`Page ${props.pageNumber}`}
-            className={`${styles.pageImage} ${styles.containWidth} ${styles.grow}`}
-          />
-        </div> */}
+        {props.pageStyle === PageStyle.LongStrip
+          ? getSeparatePageContainers()
+          : getSinglePageContainer()}
       </div>
     </>
   );
