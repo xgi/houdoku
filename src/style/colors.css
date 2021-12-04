@@ -101,7 +101,7 @@ a.ant-typography:hover,
   color: var(--color-foreground);
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
   background-color: var(--color-background-alt) !important;
   color: var(--color-foreground-header) !important;
 }
@@ -110,7 +110,7 @@ td.ant-table-column-sort {
   background-color: var(--color-background) !important;
 }
 
-.ant-table-tbody > tr.ant-table-row:hover > td {
+.ant-table-tbody>tr.ant-table-row:hover>td {
   background-color: var(--color-background-alt) !important;
 }
 
@@ -177,9 +177,40 @@ td.ant-table-column-sort {
   background: var(--color-link);
 }
 
+.ant-checkbox-wrapper {
+  color: var(--color-foreground);
+}
+
+.ant-checkbox-wrapper .ant-checkbox-inner,
+.ant-checkbox .ant-checkbox-inner,
+.ant-checkbox-input+.ant-checkbox-inner,
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox:hover .ant-checkbox-inner,
+.ant-checkbox-input:focus+.ant-checkbox-inner {
+  border-color: var(--color-foreground);
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--color-foreground-alt);
+}
+
+.ant-checkbox-checked::after {
+  border: none;
+}
+
+.ant-collapse:not(.ant-collapse-ghost) > .ant-collapse-item > .ant-collapse-header {
+  background-color: var(--color-background-alt);
+  color: var(--color-foreground);
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  color: var(--color-foreground);
+}
+
 #window-controls .button:hover {
   background: rgba(255, 255, 255, 0.1);
 }
+
 #close-button:hover {
   background: var(--color-exit) !important;
 }

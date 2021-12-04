@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
-import { Col, Row, Menu, Dropdown, Button, Modal, Tooltip, Switch } from 'antd';
-import { DownOutlined, UndoOutlined } from '@ant-design/icons';
+import { Row, Menu, Button, Modal, Tooltip, Checkbox, Collapse } from 'antd';
+import {
+  UndoOutlined,
+  FileOutlined,
+  ReadOutlined,
+  DownSquareOutlined,
+  LeftSquareOutlined,
+  RightSquareOutlined,
+} from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
-import Title from 'antd/lib/typography/Title';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './ReaderSettings.css';
 import { ReadingDirection, PageStyle, ReaderSetting } from '../../models/types';
@@ -20,23 +26,7 @@ import {
 } from '../../features/settings/actions';
 import { DEFAULT_READER_SETTINGS } from '../../features/settings/utils';
 
-const readingDirectionText: { [key in ReadingDirection]: string } = {
-  [ReadingDirection.LeftToRight]: 'Left-to-Right',
-  [ReadingDirection.RightToLeft]: 'Right-to-Left',
-};
-const pageStyleText: { [key in PageStyle]: string } = {
-  [PageStyle.Single]: 'Single',
-  [PageStyle.Double]: 'Double',
-  [PageStyle.LongStrip]: 'Long Strip',
-};
-const preloadText: { [key: number]: string } = {
-  0: 'Disabled',
-  1: '1 Page',
-  2: '2 Pages',
-  3: '3 Pages',
-  4: '4 Pages',
-  5: '5 Pages',
-};
+const { Panel } = Collapse;
 
 const mapState = (state: RootState) => ({
   fitContainToWidth: state.settings.fitContainToWidth,
@@ -163,27 +153,6 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const renderMenu = (
-    readerSetting: ReaderSetting,
-    textMap: { [key: number]: string }
-  ) => {
-    return (
-      <Menu
-        onClick={(e: any) => {
-          updateReaderSetting(readerSetting, e.item.props['data-value']);
-        }}
-      >
-        {Object.entries(textMap).map((entry) => {
-          return (
-            <Menu.Item key={entry[0]} data-value={entry[0]}>
-              {entry[1]}
-            </Menu.Item>
-          );
-        })}
-      </Menu>
-    );
-  };
-
   return (
     <>
       <Modal
@@ -206,185 +175,228 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           This will overwrite your current keyboard shortcuts.
         </Paragraph>
       </Modal>
+      <Paragraph className={styles.settingName}>Page Style</Paragraph>
       <Row className={styles.row}>
-        <Col span={10}>Reading Direction</Col>
-        <Col span={14}>
-          <Dropdown
-            overlay={renderMenu(
-              ReaderSetting.ReadingDirection,
-              readingDirectionText
-            )}
+        <div className={styles.toggleContainer}>
+          <Button
+            icon={<FileOutlined />}
+            className={`
+              ${styles.toggleButton}
+              ${props.pageStyle === PageStyle.Single ? styles.active : ''}
+            `}
+            onClick={() =>
+              updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Single)
+            }
           >
-            <Button>
-              {readingDirectionText[props.readingDirection]} <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Page Style</Col>
-        <Col span={14}>
-          <Dropdown
-            overlay={renderMenu(ReaderSetting.PageStyle, pageStyleText)}
+            Single
+          </Button>
+          <Button
+            icon={<ReadOutlined />}
+            className={`
+              ${styles.toggleButton}
+              ${props.pageStyle === PageStyle.Double ? styles.active : ''}
+            `}
+            onClick={() =>
+              updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Double)
+            }
           >
-            <Button>
-              {pageStyleText[props.pageStyle]} <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Col>
+            Double
+          </Button>
+          <Button
+            icon={<DownSquareOutlined />}
+            className={`
+              ${styles.toggleButton}
+              ${props.pageStyle === PageStyle.LongStrip ? styles.active : ''}
+            `}
+            onClick={() =>
+              updateReaderSetting(ReaderSetting.PageStyle, PageStyle.LongStrip)
+            }
+          >
+            Long Strip
+          </Button>
+        </div>
       </Row>
+      <Paragraph className={styles.settingName}>Reading Direction</Paragraph>
       <Row className={styles.row}>
-        <Col span={10}>Fit: Contain to Width</Col>
-        <Col span={14}>
-          <Switch
+        <div className={styles.toggleContainer}>
+          <Button
+            icon={<RightSquareOutlined />}
+            className={`
+              ${styles.toggleButton}
+              ${
+                props.readingDirection === ReadingDirection.LeftToRight
+                  ? styles.active
+                  : ''
+              }
+            `}
+            onClick={() =>
+              updateReaderSetting(
+                ReaderSetting.ReadingDirection,
+                ReadingDirection.LeftToRight
+              )
+            }
+          >
+            Left-to-Right
+          </Button>
+          <Button
+            icon={<LeftSquareOutlined />}
+            className={`
+              ${styles.toggleButton}
+              ${
+                props.readingDirection === ReadingDirection.RightToLeft
+                  ? styles.active
+                  : ''
+              }
+            `}
+            onClick={() =>
+              updateReaderSetting(
+                ReaderSetting.ReadingDirection,
+                ReadingDirection.RightToLeft
+              )
+            }
+          >
+            Right-to-Left
+          </Button>
+        </div>
+      </Row>
+      <Paragraph className={styles.settingName}>Image Sizing</Paragraph>
+      <Row className={styles.row}>
+        <div>
+          <Checkbox
+            className={styles.checkbox}
             checked={props.fitContainToWidth}
-            onChange={(checked: boolean) =>
-              updateReaderSetting(ReaderSetting.FitContainToWidth, checked)
+            onClick={() =>
+              updateReaderSetting(
+                ReaderSetting.FitContainToWidth,
+                !props.fitContainToWidth
+              )
             }
-          />
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Fit: Contain to Height</Col>
-        <Col span={14}>
-          <Switch
+          >
+            Contain to width
+          </Checkbox>
+          <br />
+          <Checkbox
+            className={styles.checkbox}
             checked={props.fitContainToHeight}
-            onChange={(checked: boolean) =>
-              updateReaderSetting(ReaderSetting.FitContainToHeight, checked)
+            onClick={() =>
+              updateReaderSetting(
+                ReaderSetting.FitContainToHeight,
+                !props.fitContainToHeight
+              )
             }
-          />
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Fit: Stretch Pages</Col>
-        <Col span={14}>
-          <Switch
+          >
+            Contain to height
+          </Checkbox>
+          <br />
+          <Checkbox
+            className={styles.checkbox}
             checked={props.fitStretch}
-            onChange={(checked: boolean) =>
-              updateReaderSetting(ReaderSetting.FitStretch, checked)
+            disabled={!(props.fitContainToHeight || props.fitContainToWidth)}
+            onClick={() =>
+              updateReaderSetting(ReaderSetting.FitStretch, !props.fitStretch)
             }
-          />
-        </Col>
+          >
+            Stretch small pages
+          </Checkbox>
+        </div>
       </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Overlay Page Number</Col>
-        <Col span={14}>
-          <Switch
-            checked={props.overlayPageNumber}
-            onChange={(checked: boolean) =>
-              updateReaderSetting(ReaderSetting.OverlayPageNumber, checked)
-            }
-          />
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Hide Scrollbar</Col>
-        <Col span={14}>
-          <Switch
-            checked={props.hideScrollbar}
-            onChange={(checked: boolean) =>
-              updateReaderSetting(ReaderSetting.HideScrollbar, checked)
-            }
-          />
-        </Col>
-      </Row>
-      <Title level={4} className={styles.heading}>
-        Keyboard Shortcuts
-      </Title>
-
-      <Button
-        className={styles.resetAllButton}
-        onClick={() => setShowingKeybindsModal(true)}
-      >
-        Reset All Shortcuts
-      </Button>
-
-      {[
-        {
-          name: 'Next Page',
-          value: props.keyNextPage,
-          setting: ReaderSetting.KeyNextPage,
-        },
-        {
-          name: 'Previous Page',
-          value: props.keyPreviousPage,
-          setting: ReaderSetting.KeyPreviousPage,
-        },
-        {
-          name: 'First Page',
-          value: props.keyFirstPage,
-          setting: ReaderSetting.KeyFirstPage,
-        },
-        {
-          name: 'Last Page',
-          value: props.keyLastPage,
-          setting: ReaderSetting.KeyLastPage,
-        },
-        {
-          name: 'Next Chapter',
-          value: props.keyNextChapter,
-          setting: ReaderSetting.KeyNextChapter,
-        },
-        {
-          name: 'Previous Chapter',
-          value: props.keyPreviousChapter,
-          setting: ReaderSetting.KeyPreviousChapter,
-        },
-        {
-          name: 'Exit Reader',
-          value: props.keyExit,
-          setting: ReaderSetting.KeyExit,
-        },
-        {
-          name: 'Close/Back',
-          value: props.keyCloseOrBack,
-          setting: ReaderSetting.KeyCloseOrBack,
-        },
-        {
-          name: 'Toggle Sidebar',
-          value: props.keyToggleShowingSidebar,
-          setting: ReaderSetting.KeyToggleShowingSidebar,
-        },
-        {
-          name: 'Toggle Reading Direction',
-          value: props.keyToggleReadingDirection,
-          setting: ReaderSetting.KeyToggleReadingDirection,
-        },
-        {
-          name: 'Toggle Page Style',
-          value: props.keyTogglePageStyle,
-          setting: ReaderSetting.KeyTogglePageStyle,
-        },
-        {
-          name: 'Show Settings Menu',
-          value: props.keyToggleShowingSettingsModal,
-          setting: ReaderSetting.KeyToggleShowingSettingsModal,
-        },
-      ].map((entry) => (
-        <Row className={styles.row} key={entry.setting}>
-          <Col span={10}>{entry.name}</Col>
-          <Col span={14}>
-            <Button
-              className={styles.shortcutButton}
-              onKeyDownCapture={(e) => updateKeySetting(e, entry.setting)}
-            >
-              {entry.value}
-            </Button>
-            <Tooltip title="Reset">
-              <Button
-                className={styles.shortcutResetButton}
-                icon={<UndoOutlined />}
-                onClick={() =>
-                  updateReaderSetting(
-                    entry.setting,
-                    DEFAULT_READER_SETTINGS[entry.setting]
-                  )
-                }
-              />
-            </Tooltip>
-          </Col>
-        </Row>
-      ))}
+      <Collapse ghost className={styles.something}>
+        <Panel
+          className={styles.keybindsPanel}
+          header="Keyboard Shortcuts"
+          key="1"
+        >
+          {[
+            {
+              name: 'Next Page',
+              value: props.keyNextPage,
+              setting: ReaderSetting.KeyNextPage,
+            },
+            {
+              name: 'Previous Page',
+              value: props.keyPreviousPage,
+              setting: ReaderSetting.KeyPreviousPage,
+            },
+            {
+              name: 'First Page',
+              value: props.keyFirstPage,
+              setting: ReaderSetting.KeyFirstPage,
+            },
+            {
+              name: 'Last Page',
+              value: props.keyLastPage,
+              setting: ReaderSetting.KeyLastPage,
+            },
+            {
+              name: 'Next Chapter',
+              value: props.keyNextChapter,
+              setting: ReaderSetting.KeyNextChapter,
+            },
+            {
+              name: 'Previous Chapter',
+              value: props.keyPreviousChapter,
+              setting: ReaderSetting.KeyPreviousChapter,
+            },
+            {
+              name: 'Exit Reader',
+              value: props.keyExit,
+              setting: ReaderSetting.KeyExit,
+            },
+            {
+              name: 'Close/Back',
+              value: props.keyCloseOrBack,
+              setting: ReaderSetting.KeyCloseOrBack,
+            },
+            {
+              name: 'Toggle Reading Direction',
+              value: props.keyToggleReadingDirection,
+              setting: ReaderSetting.KeyToggleReadingDirection,
+            },
+            {
+              name: 'Toggle Page Style',
+              value: props.keyTogglePageStyle,
+              setting: ReaderSetting.KeyTogglePageStyle,
+            },
+            {
+              name: 'Show Settings Menu',
+              value: props.keyToggleShowingSettingsModal,
+              setting: ReaderSetting.KeyToggleShowingSettingsModal,
+            },
+          ].map((entry) => (
+            <Row className={styles.keybindRow} key={entry.setting}>
+              <div className={styles.keybindName}>{entry.name}</div>
+              <div>
+                <Button
+                  className={styles.shortcutButton}
+                  onKeyDownCapture={(e) => updateKeySetting(e, entry.setting)}
+                >
+                  {entry.value}
+                </Button>
+                <Tooltip title="Reset">
+                  <Button
+                    className={styles.shortcutResetButton}
+                    icon={<UndoOutlined />}
+                    onClick={() =>
+                      updateReaderSetting(
+                        entry.setting,
+                        DEFAULT_READER_SETTINGS[entry.setting]
+                      )
+                    }
+                  >
+                    Reset
+                  </Button>
+                </Tooltip>
+              </div>
+            </Row>
+          ))}
+          <Button
+            className={styles.resetAllButton}
+            onClick={() => setShowingKeybindsModal(true)}
+          >
+            Reset All Shortcuts
+          </Button>
+        </Panel>
+      </Collapse>
     </>
   );
 };
