@@ -40,6 +40,7 @@ import {
 import { toggleChapterRead } from '../../features/library/utils';
 import { useForceUpdate } from '../../util/reactutil';
 import ReaderViewer from './ReaderViewer';
+import ReaderHeader from './ReaderHeader';
 import ReaderPreloadContainer from './ReaderPreloadContainer';
 import ReaderLoader from './ReaderLoader';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
@@ -521,45 +522,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
     <div style={{ marginTop: '54px', outline: 'none' }} tabIndex={0}>
-      <div
-        id="HEADER_MOVE_TO_SEPARATE_COMPONENT"
-        style={{
-          height: '30px',
-          width: '100%',
-          backgroundColor: 'var(--color-background-alt)',
-          position: 'fixed',
-          top: '24px',
-          fontSize: '12px',
-          fontFamily: '"Segoe UI", sans-serif',
-          color: 'black',
-          zIndex: 300,
-        }}
-      >
-        <span>Control Bar</span>
-        <button onClick={() => props.changePageNumber(-1)}>left</button>
-        <button onClick={() => props.changePageNumber(1)}>right</button>
-        <button
-          onClick={() => props.setFitContainToWidth(!props.fitContainToWidth)}
-        >
-          fit to width (cur={props.fitContainToWidth.toString()})
-        </button>
-        <button
-          onClick={() => props.setFitContainToHeight(!props.fitContainToHeight)}
-        >
-          fit to height (cur={props.fitContainToHeight.toString()})
-        </button>
-        <button onClick={() => props.setFitStretch(!props.fitStretch)}>
-          stretch (cur={props.fitStretch.toString()})
-        </button>
-        <button onClick={() => props.toggleReadingDirection()}>
-          reading direction (cur={props.readingDirection})
-        </button>
-        <button onClick={() => props.togglePageStyle()}>
-          page style (cur={props.pageStyle})
-        </button>
-        <span>current page: {props.pageNumber}</span>
-      </div>
-
+      <ReaderHeader
+        changePage={changePage}
+        setChapter={setChapter}
+        changeChapter={changeChapter}
+        getAdjacentChapterId={getAdjacentChapterId}
+        exitPage={exitPage}
+      />
       <ReaderViewer />
     </div>
   );
