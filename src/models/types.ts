@@ -84,8 +84,6 @@ export enum ReaderSetting {
   KeyFirstPage = 'KeyFirstPage',
   KeyNextPage = 'KeyNextPage',
   KeyLastPage = 'KeyLastPage',
-  KeyScrollUp = 'KeyScrollUp',
-  KeyScrollDown = 'KeyScrollDown',
   KeyPreviousChapter = 'KeyPreviousChapter',
   KeyNextChapter = 'KeyNextChapter',
   KeyToggleReadingDirection = 'KeyToggleReadingDirection',

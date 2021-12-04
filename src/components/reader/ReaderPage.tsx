@@ -79,8 +79,6 @@ const mapState = (state: RootState) => ({
   keyFirstPage: state.settings.keyFirstPage,
   keyNextPage: state.settings.keyNextPage,
   keyLastPage: state.settings.keyLastPage,
-  keyScrollUp: state.settings.keyScrollUp,
-  keyScrollDown: state.settings.keyScrollDown,
   keyPreviousChapter: state.settings.keyPreviousChapter,
   keyNextChapter: state.settings.keyNextChapter,
   keyToggleReadingDirection: state.settings.keyToggleReadingDirection,
@@ -405,8 +403,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         props.keyFirstPage,
         props.keyNextPage,
         props.keyLastPage,
-        props.keyScrollUp,
-        props.keyScrollDown,
         props.keyPreviousChapter,
         props.keyNextChapter,
         props.keyToggleReadingDirection,
@@ -522,6 +518,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   return (
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
     <div style={{ marginTop: '54px', outline: 'none' }} tabIndex={0}>
+      <ReaderSettingsModal />
       <ReaderHeader
         changePage={changePage}
         setChapter={setChapter}

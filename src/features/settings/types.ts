@@ -54,8 +54,6 @@ export interface SettingsState {
   keyFirstPage: string;
   keyNextPage: string;
   keyLastPage: string;
-  keyScrollUp: string;
-  keyScrollDown: string;
   keyPreviousChapter: string;
   keyNextChapter: string;
   keyToggleReadingDirection: string;

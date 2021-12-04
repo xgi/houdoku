@@ -51,8 +51,6 @@ const mapState = (state: RootState) => ({
   keyFirstPage: state.settings.keyFirstPage,
   keyNextPage: state.settings.keyNextPage,
   keyLastPage: state.settings.keyLastPage,
-  keyScrollUp: state.settings.keyScrollUp,
-  keyScrollDown: state.settings.keyScrollDown,
   keyPreviousChapter: state.settings.keyPreviousChapter,
   keyNextChapter: state.settings.keyNextChapter,
   keyToggleReadingDirection: state.settings.keyToggleReadingDirection,
@@ -122,8 +120,6 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.KeyFirstPage:
       case ReaderSetting.KeyNextPage:
       case ReaderSetting.KeyLastPage:
-      case ReaderSetting.KeyScrollUp:
-      case ReaderSetting.KeyScrollDown:
       case ReaderSetting.KeyPreviousChapter:
       case ReaderSetting.KeyNextChapter:
       case ReaderSetting.KeyToggleReadingDirection:
@@ -167,20 +163,6 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const renderMenuItems = (textMap: { [key: number]: string }) => {
-    return (
-      <>
-        {Object.entries(textMap).map((entry) => {
-          return (
-            <Menu.Item key={entry[0]} data-value={entry[0]}>
-              {entry[1]}
-            </Menu.Item>
-          );
-        })}
-      </>
-    );
-  };
-
   const renderMenu = (
     readerSetting: ReaderSetting,
     textMap: { [key: number]: string }
@@ -188,13 +170,16 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
     return (
       <Menu
         onClick={(e: any) => {
-          updateReaderSetting(
-            readerSetting,
-            parseInt(e.item.props['data-value'], 10)
-          );
+          updateReaderSetting(readerSetting, e.item.props['data-value']);
         }}
       >
-        {renderMenuItems(textMap)}
+        {Object.entries(textMap).map((entry) => {
+          return (
+            <Menu.Item key={entry[0]} data-value={entry[0]}>
+              {entry[1]}
+            </Menu.Item>
+          );
+        })}
       </Menu>
     );
   };
@@ -282,18 +267,6 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         </Col>
       </Row>
       <Row className={styles.row}>
-        <Col span={10}>Image Preloading</Col>
-        <Col span={14}>
-          <Dropdown
-            overlay={renderMenu(ReaderSetting.PreloadAmount, preloadText)}
-          >
-            <Button>
-              {preloadText[props.preloadAmount]} <DownOutlined />
-            </Button>
-          </Dropdown>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
         <Col span={10}>Overlay Page Number</Col>
         <Col span={14}>
           <Switch
@@ -346,16 +319,6 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           name: 'Last Page',
           value: props.keyLastPage,
           setting: ReaderSetting.KeyLastPage,
-        },
-        {
-          name: 'Scroll Up',
-          value: props.keyScrollUp,
-          setting: ReaderSetting.KeyScrollUp,
-        },
-        {
-          name: 'Scroll Down',
-          value: props.keyScrollDown,
-          setting: ReaderSetting.KeyScrollDown,
         },
         {
           name: 'Next Chapter',

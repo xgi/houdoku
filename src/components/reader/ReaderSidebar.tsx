@@ -91,8 +91,6 @@ const mapState = (state: RootState) => ({
   keyFirstPage: state.settings.keyFirstPage,
   keyNextPage: state.settings.keyNextPage,
   keyLastPage: state.settings.keyLastPage,
-  keyScrollUp: state.settings.keyScrollUp,
-  keyScrollDown: state.settings.keyScrollDown,
   keyPreviousChapter: state.settings.keyPreviousChapter,
   keyNextChapter: state.settings.keyNextChapter,
   keyToggleLayoutDirection: state.settings.keyToggleLayoutDirection,

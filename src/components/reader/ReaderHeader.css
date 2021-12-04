@@ -25,7 +25,7 @@
   background-color: var(--color-foreground-alt) !important;
 }
 
-.exitButton, .pageStyleButton, .fitButton, .stretchButton {
+.exitButton, .pageStyleButton, .fitButton, .stretchButton, .settingsButton {
   padding-left: 6px;
   padding-right: 6px;
 }

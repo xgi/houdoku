@@ -99,8 +99,6 @@ const mapState = (state: RootState) => ({
   keyFirstPage: state.settings.keyFirstPage,
   keyNextPage: state.settings.keyNextPage,
   keyLastPage: state.settings.keyLastPage,
-  keyScrollUp: state.settings.keyScrollUp,
-  keyScrollDown: state.settings.keyScrollDown,
   keyPreviousChapter: state.settings.keyPreviousChapter,
   keyNextChapter: state.settings.keyNextChapter,
   keyToggleReadingDirection: state.settings.keyToggleReadingDirection,
@@ -157,15 +155,6 @@ type Props = PropsFromRedux & {
 };
 
 const ReaderHeader: React.FC<Props> = (props: Props) => {
-  const getChapterTitleDisplay = (chapter: Chapter | undefined): string => {
-    if (chapter === undefined) return 'Loading chapter title...';
-
-    if (chapter.title.length > 0) {
-      return `${chapter.chapterNumber} - ${chapter.title}`;
-    }
-    return `Chapter ${chapter.chapterNumber}`;
-  };
-
   const getFitButtonContent = (): {
     text: string;
     icon: JSX.Element;
@@ -258,14 +247,14 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             >
               {props.relevantChapterList.map((chapter: Chapter) => (
                 <Menu.Item key={chapter.id} data-value={chapter.id}>
-                  {getChapterTitleDisplay(chapter)}
+                  {`Chapter ${chapter.chapterNumber}`}
                 </Menu.Item>
               ))}
             </Menu>
           }
         >
           <Text className={`${styles.field}`}>
-            {getChapterTitleDisplay(props.chapter)}
+            Chapter {props.chapter?.chapterNumber || 'Unknown Chapter'}
           </Text>
         </Dropdown>
         <button className={`${styles.button} ${styles.arrowButton}`}>
@@ -366,6 +355,20 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         >
           {ICONS_READING_DIRECTION[props.readingDirection]}{' '}
           {TEXT_READING_DIRECTION[props.readingDirection]}
+        </button>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+        }}
+      >
+        <button
+          className={`${styles.button} ${styles.settingsButton}`}
+          onClick={() => props.toggleShowingSettingsModal()}
+        >
+          <SettingOutlined /> Settings
         </button>
       </div>
     </div>
