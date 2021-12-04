@@ -3,7 +3,7 @@
   --inner-height: calc(var(--header-height) - 6px);
 }
 
-button {
+.button {
   cursor: pointer;
   background: var(--color-background) !important;
   color: var(--color-foreground) !important;
@@ -15,12 +15,12 @@ button {
   outline: none;
 }
 
-button:hover:not(button:disabled) {
+.button:hover:not(.button:disabled) {
   background-color: var(--color-foreground-alt) !important;
   color: var(--color-foreground-header) !important;
 }
 
-button:disabled {
+.button:disabled {
   cursor: not-allowed;
   background-color: var(--color-foreground-alt) !important;
 }

@@ -212,7 +212,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const renderFitButton = () => {
     const fitButtonContent = getFitButtonContent();
     return (
-      <button className={`${styles.fitButton}`} onClick={fitButtonContent.func}>
+      <button
+        className={`${styles.button} ${styles.fitButton}`}
+        onClick={fitButtonContent.func}
+      >
         {fitButtonContent.icon} {fitButtonContent.text}
       </button>
     );
@@ -237,13 +240,13 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <button className={`${styles.exitButton}`}>
+        <button className={`${styles.button} ${styles.exitButton}`}>
           <ArrowLeftOutlined /> Go Back
         </button>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <button className={`${styles.arrowButton}`}>
+        <button className={`${styles.button} ${styles.arrowButton}`}>
           <LeftOutlined />
         </button>
         <Dropdown
@@ -265,7 +268,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             {getChapterTitleDisplay(props.chapter)}
           </Text>
         </Dropdown>
-        <button className={`${styles.arrowButton}`}>
+        <button className={`${styles.button} ${styles.arrowButton}`}>
           <RightOutlined />
         </button>
       </div>
@@ -276,10 +279,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           flexDirection: 'row',
         }}
       >
-        <button className={`${styles.arrowButton}`}>
+        <button className={`${styles.button} ${styles.arrowButton}`}>
           <VerticalRightOutlined />
         </button>
-        <button className={`${styles.arrowButton}`}>
+        <button className={`${styles.button} ${styles.arrowButton}`}>
           <LeftOutlined />
         </button>
         <Dropdown
@@ -304,10 +307,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             className={`${styles.field}`}
           >{`${props.pageNumber} / ${props.lastPageNumber}`}</Text>
         </Dropdown>
-        <button className={`${styles.arrowButton}`}>
+        <button className={`${styles.button} ${styles.arrowButton}`}>
           <RightOutlined />
         </button>
-        <button className={`${styles.arrowButton}`}>
+        <button className={`${styles.button} ${styles.arrowButton}`}>
           <VerticalLeftOutlined />
         </button>
       </div>
@@ -319,7 +322,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         }}
       >
         <button
-          className={`${styles.pageStyleButton}`}
+          className={`${styles.button} ${styles.pageStyleButton}`}
           onClick={() => props.togglePageStyle()}
         >
           {ICONS_PAGE_STYLE[props.pageStyle]} {TEXT_PAGE_STYLE[props.pageStyle]}
@@ -342,7 +345,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         }}
       >
         <button
-          className={`${styles.stretchButton}`}
+          className={`${styles.button} ${styles.stretchButton}`}
           onClick={() => props.setFitStretch(!props.fitStretch)}
           disabled={!(props.fitContainToHeight || props.fitContainToWidth)}
         >
@@ -358,7 +361,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         }}
       >
         <button
-          className={`${styles.stretchButton}`}
+          className={`${styles.button} ${styles.stretchButton}`}
           onClick={() => props.toggleReadingDirection()}
         >
           {ICONS_READING_DIRECTION[props.readingDirection]}{' '}
