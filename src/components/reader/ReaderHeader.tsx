@@ -1,26 +1,17 @@
 /* eslint-disable react/button-has-type */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import {
-  Layout,
-  Typography,
-  Tooltip,
-  Dropdown,
-  Menu,
-  notification,
-} from 'antd';
+import { Typography, Dropdown, Menu } from 'antd';
 import {
   FullscreenOutlined,
   ColumnWidthOutlined,
   ColumnHeightOutlined,
   FileOutlined,
   ReadOutlined,
-  ReadFilled,
   RightSquareOutlined,
   LeftSquareOutlined,
   DownSquareOutlined,
   SettingOutlined,
-  ArrowRightOutlined,
   ArrowLeftOutlined,
   RightOutlined,
   LeftOutlined,
@@ -29,17 +20,12 @@ import {
   CloseOutlined,
   StopOutlined,
 } from '@ant-design/icons';
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter } from 'houdoku-extension-lib';
+import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined';
 import { RootState } from '../../store';
 import {
-  changePageNumber,
   setPageNumber,
-  setPageUrls,
-  setSource,
-  setRelevantChapterList,
   toggleShowingSettingsModal,
-  setPageDataList,
-  toggleShowingSidebar,
 } from '../../features/reader/actions';
 import styles from './ReaderHeader.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
@@ -47,16 +33,13 @@ import {
   setReadingDirection,
   setPageStyle,
   setFitStretch,
-  setPreloadAmount,
   toggleReadingDirection,
   togglePageStyle,
   setFitContainToWidth,
   setFitContainToHeight,
 } from '../../features/settings/actions';
-import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined';
 
-const { Sider } = Layout;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const TEXT_PAGE_STYLE = {
   [PageStyle.Single]: 'Single Page',
@@ -84,7 +67,6 @@ const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
   lastPageNumber: state.reader.lastPageNumber,
   pageUrls: state.reader.pageUrls,
-  pageDataList: state.reader.pageDataList,
   series: state.reader.series,
   chapter: state.reader.chapter,
   relevantChapterList: state.reader.relevantChapterList,
@@ -94,25 +76,11 @@ const mapState = (state: RootState) => ({
   fitContainToHeight: state.settings.fitContainToHeight,
   fitStretch: state.settings.fitStretch,
   readingDirection: state.settings.readingDirection,
-  preloadAmount: state.settings.preloadAmount,
-  keyPreviousPage: state.settings.keyPreviousPage,
-  keyFirstPage: state.settings.keyFirstPage,
-  keyNextPage: state.settings.keyNextPage,
-  keyLastPage: state.settings.keyLastPage,
-  keyPreviousChapter: state.settings.keyPreviousChapter,
-  keyNextChapter: state.settings.keyNextChapter,
-  keyToggleReadingDirection: state.settings.keyToggleReadingDirection,
-  keyTogglePageStyle: state.settings.keyTogglePageStyle,
-  keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
-  keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
-  keyExit: state.settings.keyExit,
-  keyCloseOrBack: state.settings.keyCloseOrBack,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
   setPageNumber: (pageNumber: number) => dispatch(setPageNumber(pageNumber)),
-  changePageNumber: (delta: number) => dispatch(changePageNumber(delta)),
   setFitContainToWidth: (value: boolean) =>
     dispatch(setFitContainToWidth(value)),
   setFitContainToHeight: (value: boolean) =>
@@ -123,24 +91,7 @@ const mapDispatch = (dispatch: any) => ({
   setReadingDirection: (value: ReadingDirection) =>
     dispatch(setReadingDirection(value)),
   toggleReadingDirection: () => dispatch(toggleReadingDirection()),
-  setPreloadAmount: (preloadAmount: number) =>
-    dispatch(setPreloadAmount(preloadAmount)),
-  setPageUrls: (pageUrls: string[]) => dispatch(setPageUrls(pageUrls)),
-  setPageDataList: (pageDataList: string[]) =>
-    dispatch(setPageDataList(pageDataList)),
-  setSource: (series?: Series, chapter?: Chapter) =>
-    dispatch(setSource(series, chapter)),
-  setRelevantChapterList: (relevantChapterList: Chapter[]) =>
-    dispatch(setRelevantChapterList(relevantChapterList)),
   toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
-  toggleShowingSidebar: () => {
-    notification.open({
-      message: 'Sidebar Closed',
-      description: 'Press [s] or [ESC] to re-open the sidebar',
-      placement: 'bottomLeft',
-    });
-    dispatch(toggleShowingSidebar());
-  },
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -210,26 +161,13 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
     );
   };
 
+  useEffect(() => {
+    console.log(window.innerWidth);
+  }, [window.innerWidth]);
+
   return (
-    <div
-      style={{
-        height: '30px',
-        width: '100%',
-        backgroundColor: 'var(--color-background-alt)',
-        position: 'fixed',
-        top: '24px',
-        fontSize: '12px',
-        fontFamily: '"Segoe UI", sans-serif',
-        color: 'black',
-        zIndex: 300,
-        display: 'flex',
-        flexDirection: 'row',
-        gap: '6px',
-        paddingLeft: '6px',
-        userSelect: 'none',
-      }}
-    >
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+    <div className={styles.container}>
+      <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.exitButton}`}
           onClick={props.exitPage}
@@ -238,7 +176,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         </button>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={props.getAdjacentChapterId(true) === null}
@@ -274,12 +212,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         </button>
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
+      <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={props.pageNumber <= 1}
@@ -337,12 +270,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         </button>
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
+      <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.pageStyleButton}`}
           onClick={() => props.togglePageStyle()}
@@ -351,21 +279,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         </button>
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
-        {renderFitButton()}
-      </div>
+      <div className={styles.buttonGroup}>{renderFitButton()}</div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
+      <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.stretchButton}`}
           onClick={() => props.setFitStretch(!props.fitStretch)}
@@ -376,12 +292,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         </button>
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
+      <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.stretchButton}`}
           onClick={() => props.toggleReadingDirection()}
@@ -391,12 +302,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         </button>
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}
-      >
+      <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.settingsButton}`}
           onClick={() => props.toggleShowingSettingsModal()}

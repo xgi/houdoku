@@ -1,6 +1,33 @@
 :root {
-  --header-height: 30px;
-  --inner-height: calc(var(--header-height) - 6px);
+  --reader-header-height: 30px;
+  --reader-header-min-width: 800px;
+  --reader-header-inner-height: calc(var(--reader-header-height) - 6px);
+  --reader-header-position-top: 24px;
+}
+
+.container {
+  background-color: var(--color-background-alt);
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 12px;
+
+  height: var(--reader-header-height);
+  width: 100%;
+  min-width: var(--reader-header-min-width);
+  position: fixed;
+  top: var(--reader-header-position-top);
+
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  padding-left: 6px;
+
+  z-index: 300;
+  user-select: none;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: row;
 }
 
 .button {
@@ -8,7 +35,7 @@
   background: var(--color-background) !important;
   color: var(--color-foreground) !important;
 
-  height: var(--inner-height);
+  height: var(--reader-header-inner-height);
   margin: auto !important;
   padding: 0;
   border: none;
@@ -40,7 +67,7 @@
   color: var(--color-foreground);
 
   cursor: pointer;
-  height: var(--inner-height);
+  height: var(--reader-header-inner-height);
 
   margin: auto;
   padding-left: 6px;
