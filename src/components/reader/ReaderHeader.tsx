@@ -226,16 +226,24 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         flexDirection: 'row',
         gap: '6px',
         paddingLeft: '6px',
+        userSelect: 'none',
       }}
     >
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <button className={`${styles.button} ${styles.exitButton}`}>
+        <button
+          className={`${styles.button} ${styles.exitButton}`}
+          onClick={props.exitPage}
+        >
           <ArrowLeftOutlined /> Go Back
         </button>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <button className={`${styles.button} ${styles.arrowButton}`}>
+        <button
+          className={`${styles.button} ${styles.arrowButton}`}
+          disabled={props.getAdjacentChapterId(true) === null}
+          onClick={() => props.changeChapter(true)}
+        >
           <LeftOutlined />
         </button>
         <Dropdown
@@ -257,7 +265,11 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             Chapter {props.chapter?.chapterNumber || 'Unknown Chapter'}
           </Text>
         </Dropdown>
-        <button className={`${styles.button} ${styles.arrowButton}`}>
+        <button
+          className={`${styles.button} ${styles.arrowButton}`}
+          disabled={props.getAdjacentChapterId(false) === null}
+          onClick={() => props.changeChapter(false)}
+        >
           <RightOutlined />
         </button>
       </div>
@@ -268,10 +280,20 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           flexDirection: 'row',
         }}
       >
-        <button className={`${styles.button} ${styles.arrowButton}`}>
+        <button
+          className={`${styles.button} ${styles.arrowButton}`}
+          disabled={props.pageNumber <= 1}
+          onClick={() => props.changePage(true, true)}
+        >
           <VerticalRightOutlined />
         </button>
-        <button className={`${styles.button} ${styles.arrowButton}`}>
+        <button
+          className={`${styles.button} ${styles.arrowButton}`}
+          disabled={
+            props.pageNumber <= 1 && props.getAdjacentChapterId(true) === null
+          }
+          onClick={() => props.changePage(true)}
+        >
           <LeftOutlined />
         </button>
         <Dropdown
@@ -296,10 +318,21 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             className={`${styles.field}`}
           >{`${props.pageNumber} / ${props.lastPageNumber}`}</Text>
         </Dropdown>
-        <button className={`${styles.button} ${styles.arrowButton}`}>
+        <button
+          className={`${styles.button} ${styles.arrowButton}`}
+          disabled={
+            props.pageNumber === props.lastPageNumber &&
+            props.getAdjacentChapterId(false) === null
+          }
+          onClick={() => props.changePage(false)}
+        >
           <RightOutlined />
         </button>
-        <button className={`${styles.button} ${styles.arrowButton}`}>
+        <button
+          className={`${styles.button} ${styles.arrowButton}`}
+          disabled={props.pageNumber >= props.lastPageNumber}
+          onClick={() => props.changePage(false, true)}
+        >
           <VerticalLeftOutlined />
         </button>
       </div>
