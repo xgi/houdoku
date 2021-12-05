@@ -50,6 +50,7 @@ import {
   getChapterDownloadPath,
 } from '../../util/filesystem';
 import library from '../../services/library';
+import { updateTitlebarText } from '../../util/titlebar';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
@@ -246,6 +247,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     }
 
     props.setSource(series, chapter);
+    updateTitlebarText(
+      `${series.title} - Chapter ${chapter.chapterNumber}${
+        chapter.title ? ` - ${chapter.title}` : ''
+      }`
+    );
     if (props.discordPresenceEnabled) {
       ipcRenderer.invoke(
         ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY,
@@ -426,6 +432,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.setRelevantChapterList([]);
     removeRootStyles();
     removeKeybindings();
+
+    updateTitlebarText();
 
     if (props.discordPresenceEnabled) {
       ipcRenderer.invoke(ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY);

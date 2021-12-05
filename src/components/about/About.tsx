@@ -36,7 +36,8 @@ const About: React.FC<Props> = (props: Props) => {
         series on the Add Series page.
       </Paragraph>
       <Paragraph className={styles.paragraph}>
-        Houdoku is open source. Please report issues or request features on GitHub.
+        Houdoku is open source. Please report issues or request features on
+        GitHub.
       </Paragraph>
       <Paragraph className={styles.paragraph}>
         Website:{' '}
