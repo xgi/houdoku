@@ -38,11 +38,10 @@ const ReaderLoader: React.FC<Props> = (props: Props) => {
   }, [props.extensionId]);
 
   return (
-    <>
-      <Spin />
-      <p>Loading pages...</p>
+    <div className={styles.container}>
+      <Spin size="large" />
       {extensionMessage ? <p>{extensionMessage}</p> : <></>}
-    </>
+    </div>
   );
 };
 

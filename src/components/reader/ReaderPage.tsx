@@ -41,7 +41,6 @@ import { toggleChapterRead } from '../../features/library/utils';
 import { useForceUpdate } from '../../util/reactutil';
 import ReaderViewer from './ReaderViewer';
 import ReaderHeader from './ReaderHeader';
-import ReaderPreloadContainer from './ReaderPreloadContainer';
 import ReaderLoader from './ReaderLoader';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -526,7 +525,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         getAdjacentChapterId={getAdjacentChapterId}
         exitPage={exitPage}
       />
-      <ReaderViewer />
+      {props.pageDataList.length === 0 ? (
+        <ReaderLoader extensionId={props.series?.extensionId} />
+      ) : (
+        <ReaderViewer />
+      )}
     </div>
   );
 };
