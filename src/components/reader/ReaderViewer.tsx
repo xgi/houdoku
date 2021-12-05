@@ -201,7 +201,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   /**
    * Scrolls to the current page number when it is changed.
    *
-   * Only has function when on the LongStrip style.
+   * This is primarily for the LongStrip style, but on Single/Double
+   * we also scroll up to the top since the user may have scrolled
+   * to the button of the previous page.
    */
   useEffect(() => {
     if (props.pageStyle === PageStyle.LongStrip) {
@@ -220,6 +222,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           }
         }
       }
+    } else {
+      const root = document.getElementById(ROOT_ID);
+      if (root) root.scrollTop = 0;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.pageStyle, props.pageNumber, props.lastPageNumber]);
