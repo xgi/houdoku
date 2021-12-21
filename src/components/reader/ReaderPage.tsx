@@ -248,9 +248,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     props.setSource(series, chapter);
     updateTitlebarText(
-      `${series.title} - Chapter ${chapter.chapterNumber}${
-        chapter.title ? ` - ${chapter.title}` : ''
-      }`
+      `${series.title} - ${
+        chapter.chapterNumber
+          ? `Chapter ${chapter.chapterNumber}`
+          : 'Unknown Chapter'
+      }${chapter.title ? ` - ${chapter.title}` : ''}`
     );
     if (props.discordPresenceEnabled) {
       ipcRenderer.invoke(

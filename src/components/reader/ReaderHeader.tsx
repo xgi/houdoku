@@ -200,7 +200,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           }
         >
           <Text className={`${styles.field}`}>
-            Chapter {props.chapter?.chapterNumber || 'Unknown Chapter'}
+            {props.chapter
+              ? `Chapter ${props.chapter.chapterNumber}`
+              : 'Unknown Chapter'}
           </Text>
         </Dropdown>
         <button
