@@ -161,10 +161,6 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
     );
   };
 
-  useEffect(() => {
-    console.log(window.innerWidth);
-  }, [window.innerWidth]);
-
   return (
     <div className={styles.container}>
       <div className={styles.buttonGroup}>
@@ -249,9 +245,12 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             </Menu>
           }
         >
-          <Text
-            className={`${styles.field}`}
-          >{`${props.pageNumber} / ${props.lastPageNumber}`}</Text>
+          <Text className={`${styles.field}`}>{`${props.pageNumber}${
+            props.pageStyle === PageStyle.Double &&
+            props.pageNumber !== props.lastPageNumber
+              ? `-${props.pageNumber + 1}`
+              : ''
+          } / ${props.lastPageNumber}`}</Text>
         </Dropdown>
         <button
           className={`${styles.button} ${styles.arrowButton}`}
