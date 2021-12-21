@@ -196,7 +196,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           }
         >
           <Text className={`${styles.field}`}>
-            {props.chapter
+            {props.chapter && props.chapter.chapterNumber
               ? `Chapter ${props.chapter.chapterNumber}`
               : 'Unknown Chapter'}
           </Text>

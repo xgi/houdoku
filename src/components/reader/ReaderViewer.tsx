@@ -55,6 +55,18 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   };
 
   const getPageImage = (pageNumber: number, showing: boolean) => {
+    let isLeft = false;
+    let isRight = false;
+    if (props.pageStyle === PageStyle.Double) {
+      if (props.readingDirection === ReadingDirection.LeftToRight) {
+        isLeft = pageNumber === props.pageNumber;
+        isRight = pageNumber === props.pageNumber + 1;
+      } else {
+        isRight = pageNumber === props.pageNumber;
+        isLeft = pageNumber === props.pageNumber + 1;
+      }
+    }
+
     return (
       <img
         src={props.pageDataList[pageNumber - 1]}
@@ -62,17 +74,8 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         style={showing ? {} : { display: 'none' }}
         className={`
       ${styles.pageImage}
-      ${
-        props.pageStyle === PageStyle.Double && pageNumber === props.pageNumber
-          ? styles.left
-          : ''
-      }
-      ${
-        props.pageStyle === PageStyle.Double &&
-        pageNumber === props.pageNumber + 1
-          ? styles.right
-          : ''
-      }
+      ${isLeft ? styles.left : ''}
+      ${isRight ? styles.right : ''}
       ${props.fitContainToWidth ? styles.containWidth : ''}
       ${props.fitContainToHeight ? styles.containHeight : ''}
       ${
@@ -92,12 +95,18 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
    * This is used for the Single and Double page styles.
    */
   const getSinglePageContainer = () => {
-    const pageImages = [];
+    let pageImages = [];
     for (let i = 1; i <= props.lastPageNumber; i += 1) {
       const showing =
         i === props.pageNumber ||
         (props.pageStyle === PageStyle.Double && i === props.pageNumber + 1);
       pageImages.push(getPageImage(i, showing));
+    }
+
+    // in the Double style, the image on the right needs to be at a later index
+    // in the array -- therefore in right-to-left mode, we need to reverse the array
+    if (props.readingDirection === ReadingDirection.RightToLeft) {
+      pageImages = pageImages.reverse();
     }
 
     return (
