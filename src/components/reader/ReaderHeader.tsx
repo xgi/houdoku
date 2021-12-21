@@ -175,7 +175,12 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.arrowButton}`}
-          disabled={props.getAdjacentChapterId(true) === null}
+          disabled={
+            (props.readingDirection === ReadingDirection.LeftToRight &&
+              props.getAdjacentChapterId(true) === null) ||
+            (props.readingDirection === ReadingDirection.RightToLeft &&
+              props.getAdjacentChapterId(false) === null)
+          }
           onClick={() => props.changeChapter(true)}
         >
           <LeftOutlined />
@@ -203,7 +208,12 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         </Dropdown>
         <button
           className={`${styles.button} ${styles.arrowButton}`}
-          disabled={props.getAdjacentChapterId(false) === null}
+          disabled={
+            (props.readingDirection === ReadingDirection.LeftToRight &&
+              props.getAdjacentChapterId(false) === null) ||
+            (props.readingDirection === ReadingDirection.RightToLeft &&
+              props.getAdjacentChapterId(true) === null)
+          }
           onClick={() => props.changeChapter(false)}
         >
           <RightOutlined />
@@ -213,7 +223,12 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.arrowButton}`}
-          disabled={props.pageNumber <= 1}
+          disabled={
+            (props.readingDirection === ReadingDirection.LeftToRight &&
+              props.pageNumber <= 1) ||
+            (props.readingDirection === ReadingDirection.RightToLeft &&
+              props.pageNumber >= props.lastPageNumber)
+          }
           onClick={() => props.changePage(true, true)}
         >
           <VerticalRightOutlined />
@@ -221,7 +236,12 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            props.pageNumber <= 1 && props.getAdjacentChapterId(true) === null
+            (props.readingDirection === ReadingDirection.RightToLeft &&
+              props.pageNumber === props.lastPageNumber &&
+              props.getAdjacentChapterId(false) === null) ||
+            (props.readingDirection === ReadingDirection.LeftToRight &&
+              props.pageNumber <= 1 &&
+              props.getAdjacentChapterId(true) === null)
           }
           onClick={() => props.changePage(true)}
         >
@@ -255,8 +275,12 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            props.pageNumber === props.lastPageNumber &&
-            props.getAdjacentChapterId(false) === null
+            (props.readingDirection === ReadingDirection.LeftToRight &&
+              props.pageNumber === props.lastPageNumber &&
+              props.getAdjacentChapterId(false) === null) ||
+            (props.readingDirection === ReadingDirection.RightToLeft &&
+              props.pageNumber <= 1 &&
+              props.getAdjacentChapterId(true) === null)
           }
           onClick={() => props.changePage(false)}
         >
@@ -264,7 +288,12 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         </button>
         <button
           className={`${styles.button} ${styles.arrowButton}`}
-          disabled={props.pageNumber >= props.lastPageNumber}
+          disabled={
+            (props.readingDirection === ReadingDirection.LeftToRight &&
+              props.pageNumber >= props.lastPageNumber) ||
+            (props.readingDirection === ReadingDirection.RightToLeft &&
+              props.pageNumber <= 1)
+          }
           onClick={() => props.changePage(false, true)}
         >
           <VerticalLeftOutlined />
