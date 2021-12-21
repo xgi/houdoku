@@ -538,7 +538,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       {props.pageDataList.length === 0 ? (
         <ReaderLoader extensionId={props.series?.extensionId} />
       ) : (
-        <ReaderViewer />
+        <ReaderViewer changePage={changePage} />
       )}
     </div>
   );

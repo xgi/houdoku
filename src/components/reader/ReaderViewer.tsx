@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { RootState } from '../../store';
 import styles from './ReaderViewer.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
-import { changePageNumber, setPageNumber } from '../../features/reader/actions';
+import { setPageNumber } from '../../features/reader/actions';
 
 const mapState = (state: RootState) => ({
   pageNumber: state.reader.pageNumber,
@@ -24,15 +24,15 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  changePageNumber: (delta: number) => dispatch(changePageNumber(delta)),
   setPageNumber: (pageNumber: number) => dispatch(setPageNumber(pageNumber)),
 });
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = PropsFromRedux & {
+  changePage: (left: boolean, toBound?: boolean) => void;
+};
 
 const ROOT_ID = 'root';
 const ROOT_TOP_MARGIN = 54;
@@ -47,13 +47,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       const relX = e.clientX - rect.left;
 
       if (relX > rect.width * 0.6) {
-        props.changePageNumber(
-          props.readingDirection === ReadingDirection.LeftToRight ? 1 : -1
-        );
+        props.changePage(false);
       } else if (relX < rect.width * 0.4) {
-        props.changePageNumber(
-          props.readingDirection === ReadingDirection.LeftToRight ? -1 : 1
-        );
+        props.changePage(true);
       }
     }
   };
