@@ -11,11 +11,10 @@ import DashboardPage from './components/general/DashboardPage';
 import ReaderPage from './components/reader/ReaderPage';
 import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
-import { AppLoadStep, TrackerMetadata } from './models/types';
+import { TrackerMetadata } from './models/types';
 import { setStatusText } from './features/statusbar/actions';
 import { loadSeriesList } from './features/library/utils';
 import { linkDownloaderClientFunctions } from './features/downloader/reducers';
-import { performMigration } from './util/migrateDatabase';
 import AppLoading from './components/general/AppLoading';
 
 const store = configuredStore();
@@ -119,19 +118,16 @@ export default function App() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    log.debug('Performing database init and loading series list');
+    log.debug('Performing initial app load steps');
 
-    performMigration()
-      // eslint-disable-next-line promise/always-return
-      .then(() => {
-        loadSeriesList(store.dispatch);
-        setLoading(false);
-      })
-      .catch((e) => log.error(e));
+    // Add any additional preload steps here (e.g. data migration, verifications, etc)
+
+    loadSeriesList(store.dispatch);
+    setLoading(false);
   });
 
   if (loading) {
-    return <AppLoading step={AppLoadStep.DatabaseMigrate} />;
+    return <AppLoading />;
   }
 
   return (

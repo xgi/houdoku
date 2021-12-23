@@ -9,7 +9,7 @@ import logo from '../../img/logo.svg';
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {
   // eslint-disable-next-line react/no-unused-prop-types
-  step: AppLoadStep | null;
+  step?: AppLoadStep;
 };
 
 const AppLoading: React.FC<Props> = (props: Props) => {

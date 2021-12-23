@@ -13,8 +13,5 @@
     "electron-rebuild": "node -r ../.erb/scripts/BabelRegister.js ../.erb/scripts/ElectronRebuild.js",
     "postinstall": "yarn electron-rebuild"
   },
-  "license": "MIT",
-  "devDependencies": {
-    "@types/lovefield": "^2.1.3"
-  }
+  "license": "MIT"
 }
