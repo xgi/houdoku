@@ -3,15 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <title>Houdoku</title>
-    <script>
-      (() => {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = './dist/style.css';
-        // HACK: Writing the script path should be done with webpack
-        document.getElementsByTagName('head')[0].appendChild(link);
-      })();
-    </script>
   </head>
   <body>
     <header id="titlebar">
@@ -53,7 +44,7 @@
         
           // Dynamically insert the bundled app script in the renderer process
           const port = process.env.PORT || 1212;
-          scripts.push(`http://localhost:${port}/dist/renderer.dev.js`);
+          scripts.push(`http://127.0.0.1:${port}/dist/renderer.dev.js`);
         } else {
           scripts.push('./dist/renderer.prod.js');
         }

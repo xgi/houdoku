@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const port = process.env.PORT || 1212;
-const publicPath = `http://localhost:${port}/dist`;
+const publicPath = `http://127.0.0.1:${port}/dist`;
 const dllDir = path.join(__dirname, '../dll');
 const manifest = path.resolve(dllDir, 'renderer.json');
 const requiredByDLLConfig = module.parent.filename.includes(
@@ -45,13 +45,14 @@ export default merge(baseConfig, {
   target: 'electron-renderer',
 
   entry: [
+    'webpack/hot/only-dev-server',
     'core-js',
     'regenerator-runtime/runtime',
-    require.resolve('../../src/index.tsx'),
+    path.join('../../src/index.tsx'),
   ],
 
   output: {
-    publicPath: `http://localhost:${port}/dist/`,
+    publicPath,
     filename: 'renderer.dev.js',
   },
 
@@ -246,25 +247,22 @@ export default merge(baseConfig, {
 
   devServer: {
     port,
-    publicPath,
     compress: true,
-    noInfo: false,
-    stats: 'errors-only',
-    inline: true,
-    lazy: false,
     hot: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
-    contentBase: path.join(__dirname, 'dist'),
-    watchOptions: {
-      aggregateTimeout: 300,
-      ignored: /node_modules/,
-      poll: 100,
+    static: {
+      publicPath: '/',
+    },
+    client: {
+      overlay: false,
+      webSocketURL: {
+        hostname: '127.0.0.1',
+      },
     },
     historyApiFallback: {
       verbose: true,
-      disableDotRule: false,
     },
-    before() {
+    onBeforeSetupMiddleware() {
       console.log('Starting Main Process...');
       spawn('npm', ['run', 'start:main'], {
         shell: true,

@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "es2021",
     "module": "esnext",
     "lib": ["dom", "esnext"],
     "declaration": true,
     "declarationMap": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": true,
     "pretty": true,
     "sourceMap": true,
