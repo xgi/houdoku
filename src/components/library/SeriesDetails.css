@@ -70,7 +70,7 @@
   position: absolute;
   top: 29px;
   z-index: 100;
-  background-color: var(--color-background-faded);
+  background-color: var(--color-background);
 }
 
 .removeButton,
