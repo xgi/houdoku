@@ -9,7 +9,12 @@ import { dependencies } from '../../src/package.json';
 export default {
   externals: [
     ...Object.keys(dependencies || {}),
-    { 'electron-debug': 'electron-debug' },
+    {
+      'electron-debug': 'electron-debug',
+      'utf-8-validate': 'utf-8-validate',
+      'register-scheme': 'register-scheme',
+      bufferutil: 'bufferutil',
+    },
   ],
 
   module: {

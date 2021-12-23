@@ -48,8 +48,9 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
     x: 0,
     y: 0,
   });
-  const [contextMenuChapter, setContextMenuChapter] =
-    useState<Chapter | undefined>();
+  const [contextMenuChapter, setContextMenuChapter] = useState<
+    Chapter | undefined
+  >();
   const [filterTitle, setFilterTitle] = useState('');
   const [filterGroup, setFilterGroup] = useState('');
 

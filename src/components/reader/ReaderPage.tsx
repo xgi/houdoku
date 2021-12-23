@@ -525,7 +525,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   }, [location]);
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
     <div style={{ marginTop: '54px', outline: 'none' }} tabIndex={0}>
       <ReaderSettingsModal />
       <ReaderHeader
