@@ -118,13 +118,15 @@ export default function App() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    log.debug('Performing initial app load steps');
+    if (loading) {
+      log.debug('Performing initial app load steps');
 
-    // Add any additional preload steps here (e.g. data migration, verifications, etc)
+      // Add any additional preload steps here (e.g. data migration, verifications, etc)
 
-    loadSeriesList(store.dispatch);
-    setLoading(false);
-  });
+      loadSeriesList(store.dispatch);
+      setLoading(false);
+    }
+  }, [loading]);
 
   if (loading) {
     return <AppLoading />;
