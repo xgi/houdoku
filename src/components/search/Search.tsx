@@ -236,31 +236,6 @@ const Search: React.FC<Props> = (props: Props) => {
         >
           Select Directory
         </Button>
-        <Divider>or</Divider>
-        <Button
-          onClick={() =>
-            ipcRenderer
-              .invoke(
-                ipcChannels.APP.SHOW_OPEN_DIALOG,
-                false,
-                [
-                  {
-                    name: 'Archives',
-                    extensions: ['zip', 'rar', 'cbz', 'cbr'],
-                  },
-                ],
-                'Select Series Archive'
-              )
-              .then((fileList: string) => {
-                // eslint-disable-next-line promise/always-return
-                if (fileList.length > 0) {
-                  handleSearchFilesystem(fileList[0], SeriesSourceType.ARCHIVE);
-                }
-              })
-          }
-        >
-          Select Archive File
-        </Button>
       </div>
     );
   };

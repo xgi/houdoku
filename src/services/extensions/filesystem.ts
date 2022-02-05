@@ -36,6 +36,58 @@ export const FS_METADATA: ExtensionMetadata = {
   pageLoadMessage: '',
 };
 
+const ARCHIVE_FILE_DELIMITER = '<archive>';
+
+const isSupportedArchivePath = (str: string) => {
+  return ['zip', 'rar', 'cbz', 'cbr'].some((ext) => {
+    return str.endsWith(`.${ext}`);
+  });
+};
+
+const parseChapterMetadata = (
+  text: string
+): {
+  title: string;
+  chapterNum: string;
+  volumeNum: string;
+  group: string;
+} => {
+  const matchChapterNum: RegExpMatchArray | null = text.match(
+    new RegExp(/c(\d)+(\.(\d)+)?/g)
+  );
+  const matchVolumeNum: RegExpMatchArray | null = text.match(
+    new RegExp(/v(\d)+/g)
+  );
+  const matchGroup: RegExpMatchArray | null = text.match(new RegExp(/\[.*\]/g));
+  const matchAnyNum: RegExpMatchArray | null = text.match(new RegExp(/(\d)+/g));
+
+  let chapterNum = '';
+  if (matchChapterNum === null) {
+    if (matchAnyNum !== null && matchVolumeNum === null) {
+      chapterNum = parseFloat(matchAnyNum[0]).toString();
+    }
+  } else {
+    const matchNumber = matchChapterNum[0].match(new RegExp(/(\d)+/g));
+    chapterNum = matchNumber ? parseFloat(matchNumber[0]).toString() : '';
+  }
+
+  let volumeNum = '';
+  if (matchVolumeNum !== null) {
+    const matchNumber = matchVolumeNum[0].match(new RegExp(/(\d)+/g));
+    volumeNum = matchNumber ? parseFloat(matchNumber[0]).toString() : '';
+  }
+
+  const group: string =
+    matchGroup === null ? '' : matchGroup[0].replace('[', '').replace(']', '');
+
+  return {
+    title: text.trim(),
+    chapterNum,
+    volumeNum,
+    group: group.trim(),
+  };
+};
+
 export class FSExtensionClient extends ExtensionClientAbstract {
   getMetadata: () => ExtensionMetadata = () => {
     return FS_METADATA;
@@ -43,20 +95,12 @@ export class FSExtensionClient extends ExtensionClientAbstract {
 
   getSeries: GetSeriesFunc = (sourceType: SeriesSourceType, id: string) => {
     const dirName = path.basename(id);
-
-    let title = dirName.trim();
-    ['zip', 'rar', 'cbz', 'cbr'].forEach((ext) => {
-      if (title.endsWith(`.${ext}`)) {
-        title = title.substr(0, title.lastIndexOf('.'));
-      }
-    });
-
     const series: Series = {
       id: undefined,
       extensionId: FS_METADATA.id,
       sourceId: id,
       sourceType,
-      title,
+      title: dirName.trim(),
       altTitles: [],
       description: '',
       authors: [],
@@ -79,126 +123,89 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     });
   };
 
-  getChapters: GetChaptersFunc = (sourceType: SeriesSourceType, id: string) => {
-    let fileListPromise;
-    if (sourceType === SeriesSourceType.STANDARD) {
-      fileListPromise = new Promise<string[]>((resolve) => {
-        resolve(walk(id));
-      });
-    } else if (sourceType === SeriesSourceType.ARCHIVE) {
-      fileListPromise = getArchiveFiles(id);
-    } else {
-      return new Promise((resolve) => resolve([]));
-    }
+  getChapters: GetChaptersFunc = (
+    _sourceType: SeriesSourceType,
+    id: string
+  ) => {
+    const fileList = walk(id);
+    const chapterPaths: Set<string> = new Set();
+    fileList.forEach((file: string) => {
+      chapterPaths.add(path.dirname(file));
 
-    return fileListPromise.then((fileList: string[]) => {
-      const imageDirectories: Set<string> = new Set();
-      fileList.forEach((file: string) => {
-        imageDirectories.add(path.dirname(file));
-      });
+      if (isSupportedArchivePath(file)) {
+        chapterPaths.add(file);
+        chapterPaths.delete(path.dirname(file));
+      }
+    });
 
-      const chapters: Chapter[] = [];
-
-      let prevChapterNum = 0;
-      Array.from(imageDirectories).forEach((directory: string) => {
-        const dirName: string = path.basename(directory);
-        const matchChapterNum: RegExpMatchArray | null = dirName.match(
-          new RegExp(/c(\d)+(\.(\d)+)?/g)
-        );
-        const matchVolumeNum: RegExpMatchArray | null = dirName.match(
-          new RegExp(/v(\d)+/g)
-        );
-        const matchGroup: RegExpMatchArray | null = dirName.match(
-          new RegExp(/\[.*\]/g)
-        );
-        const matchAnyNum: RegExpMatchArray | null = dirName.match(
-          new RegExp(/(\d)+/g)
-        );
-
-        let chapterNum = '';
-        if (matchChapterNum === null) {
-          if (matchAnyNum === null) {
-            chapterNum = Math.floor(prevChapterNum + 1).toString();
-          } else {
-            chapterNum = parseFloat(matchAnyNum[0]).toString();
-          }
-        } else {
-          chapterNum = parseFloat(
-            matchChapterNum[0].replace('c', '')
-          ).toString();
-        }
-
-        const volumeNum: string =
-          matchVolumeNum === null
-            ? ''
-            : parseFloat(matchVolumeNum[0].replace('v', '')).toString();
-        const group: string =
-          matchGroup === null
-            ? ''
-            : matchGroup[0].replace('[', '').replace(']', '');
-
-        prevChapterNum = parseFloat(chapterNum);
-        chapters.push({
-          id: undefined,
-          seriesId: undefined,
-          sourceId: directory,
-          title: dirName.trim(),
-          chapterNumber: chapterNum,
-          volumeNumber: volumeNum,
+    const chapters: Chapter[] = Array.from(chapterPaths).map(
+      (chapterPath: string) => {
+        const metadata = parseChapterMetadata(path.basename(chapterPath));
+        return {
+          sourceId: chapterPath,
+          title: metadata.title,
+          chapterNumber: metadata.chapterNum,
+          volumeNumber: metadata.volumeNum,
           languageKey: LanguageKey.ENGLISH,
-          groupName: group.trim(),
+          groupName: metadata.group,
           time: new Date().getTime(),
           read: false,
-        });
-      });
-      return chapters;
+        };
+      }
+    );
+
+    return new Promise((resolve) => {
+      resolve(chapters);
     });
   };
 
   getPageRequesterData: GetPageRequesterDataFunc = (
-    sourceType: SeriesSourceType,
-    seriesSourceId: string,
+    _sourceType: SeriesSourceType,
+    _seriesSourceId: string,
     chapterSourceId: string
   ) => {
+    const isArchive = isSupportedArchivePath(chapterSourceId);
+
     let fileListPromise;
-    if (sourceType === SeriesSourceType.STANDARD) {
+    if (isArchive) {
+      fileListPromise = getArchiveFiles(chapterSourceId);
+    } else {
       fileListPromise = new Promise<string[]>((resolve) =>
         resolve(walk(chapterSourceId))
       );
-    } else if (sourceType === SeriesSourceType.ARCHIVE) {
-      fileListPromise = getArchiveFiles(seriesSourceId).then(
-        (fileList: string[]) =>
-          fileList.filter((_path: string) => _path.startsWith(chapterSourceId))
-      );
-    } else {
-      throw new Error('invalid series source type');
     }
 
     return fileListPromise.then((fileList: string[]) => {
+      const imageFileList = fileList.filter((file) =>
+        ['png', 'jpg', 'jpeg'].some((ext) => file.endsWith(`.${ext}`))
+      );
       return new Promise((resolve) => {
         resolve({
-          server: '',
+          server: isArchive ? chapterSourceId : '',
           hash: '',
-          numPages: fileList.length,
-          pageFilenames: fileList,
+          numPages: imageFileList.length,
+          pageFilenames: imageFileList,
         });
       });
     });
   };
 
   getPageUrls: GetPageUrlsFunc = (pageRequesterData: PageRequesterData) => {
-    const pageUrls: string[] = [];
-    for (let i = 0; i < pageRequesterData.numPages; i += 1) {
-      pageUrls.push(`${pageRequesterData.pageFilenames[i]}`);
-    }
-    return pageUrls;
+    if (pageRequesterData.server === '') return pageRequesterData.pageFilenames;
+    return pageRequesterData.pageFilenames.map(
+      (pageFilename) =>
+        `${pageRequesterData.server}${ARCHIVE_FILE_DELIMITER}${pageFilename}`
+    );
   };
 
-  getPageData: GetPageDataFunc = (series: Series, url: string) => {
-    if (series.sourceType === SeriesSourceType.ARCHIVE) {
-      const archiveFile = series.sourceId;
-      return getArchiveFileBase64(archiveFile, url).then(
-        (data: any) => `data:image/png;base64,${data}`
+  getPageData: GetPageDataFunc = (_series: Series, url: string) => {
+    if (url.includes(ARCHIVE_FILE_DELIMITER)) {
+      const parts = url.split(ARCHIVE_FILE_DELIMITER);
+      const archivePath = parts[0];
+      const filename = parts[1];
+
+      return getArchiveFileBase64(archivePath, filename).then(
+        (data) => `data:image/png;base64,${data}`
       );
     }
 
