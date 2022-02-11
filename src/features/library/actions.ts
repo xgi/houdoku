@@ -1,6 +1,8 @@
 import { Chapter, Series } from 'houdoku-extension-lib';
 import {
   LibraryAction,
+  SET_CHAPTER_FILTER_GROUP,
+  SET_CHAPTER_FILTER_TITLE,
   SET_CHAPTER_LIST,
   SET_COMPLETED_START_RELOAD,
   SET_FILTER,
@@ -75,6 +77,24 @@ export function setCompletedStartReload(
     type: SET_COMPLETED_START_RELOAD,
     payload: {
       completedStartReload,
+    },
+  };
+}
+
+export function setChapterFilterTitle(value: string): LibraryAction {
+  return {
+    type: SET_CHAPTER_FILTER_TITLE,
+    payload: {
+      chapterFilterTitle: value,
+    },
+  };
+}
+
+export function setChapterFilterGroup(value: string): LibraryAction {
+  return {
+    type: SET_CHAPTER_FILTER_GROUP,
+    payload: {
+      chapterFilterGroup: value,
     },
   };
 }

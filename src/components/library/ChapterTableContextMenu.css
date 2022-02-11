@@ -16,6 +16,7 @@
 .button:hover {
   background-color: var(--color-background-alt);
   color: var(--color-foreground);
+  cursor: pointer;
 }
 
 .divider {

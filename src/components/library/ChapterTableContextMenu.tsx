@@ -5,23 +5,18 @@ import {
   CaretRightOutlined,
   CheckOutlined,
   DownloadOutlined,
-  ExclamationCircleOutlined,
 } from '@ant-design/icons';
 import { Chapter, Series } from 'houdoku-extension-lib';
 import { connect, ConnectedProps } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import { useHistory } from 'react-router-dom';
-import { Modal } from 'antd';
 import styles from './ChapterTableContextMenu.css';
 import { downloadChapters } from '../../features/downloader/actions';
 import { DownloadTask } from '../../services/downloader';
 import { RootState } from '../../store';
 import { toggleChapterRead } from '../../features/library/utils';
-import { getChapterDownloaded } from '../../util/filesystem';
 import routes from '../../constants/routes.json';
 import ipcChannels from '../../constants/ipcChannels.json';
-
-const { confirm } = Modal;
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
@@ -72,49 +67,6 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     });
   };
 
-  const safeDownloadChapters = (chapters: Chapter[]) => {
-    const queue: Chapter[] = [];
-    // eslint-disable-next-line no-restricted-syntax
-    for (const chapter of chapters) {
-      if (
-        !getChapterDownloaded(
-          props.series,
-          chapter,
-          props.customDownloadsDir || defaultDownloadsDir
-        )
-      ) {
-        queue.push(chapter);
-      }
-    }
-
-    const func = () => {
-      props.downloadChapters(
-        queue.map(
-          (chapter: Chapter) =>
-            ({
-              chapter,
-              series: props.series,
-              downloadsDir: props.customDownloadsDir || defaultDownloadsDir,
-            } as DownloadTask)
-        )
-      );
-    };
-
-    if (queue.length >= 3) {
-      confirm({
-        title: `Download ${queue.length} chapters?`,
-        icon: <ExclamationCircleOutlined />,
-        content:
-          'You can view, pause, or cancel from the Downloads tab on the left.',
-        onOk() {
-          func();
-        },
-      });
-    } else {
-      func();
-    }
-  };
-
   const handleDownload = () => {
     props.close();
     if (props.chapter !== undefined) {
@@ -126,16 +78,6 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
         } as DownloadTask,
       ]);
     }
-  };
-
-  const handleDownloadPrevious = () => {
-    props.close();
-    safeDownloadChapters(getPreviousChapters());
-  };
-
-  const handleDownloadAll = () => {
-    props.close();
-    safeDownloadChapters(props.chapterList);
   };
 
   const handleRead = () => {
@@ -200,15 +142,6 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
       <hr className={styles.divider} />
       <button className={styles.button} onClick={() => handleDownload()}>
         <DownloadOutlined /> Download
-      </button>
-      <button
-        className={styles.button}
-        onClick={() => handleDownloadPrevious()}
-      >
-        Download previous
-      </button>
-      <button className={styles.button} onClick={() => handleDownloadAll()}>
-        Download all
       </button>
     </div>
   );

@@ -75,6 +75,7 @@
 
 .removeButton,
 .trackerButton,
+.downloadButton,
 .editButton {
   margin-left: 0.3rem;
   background-color: var(--color-background) !important;
