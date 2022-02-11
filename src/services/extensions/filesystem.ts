@@ -176,9 +176,13 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     }
 
     return fileListPromise.then((fileList: string[]) => {
-      const imageFileList = fileList.filter((file) =>
-        ['png', 'jpg', 'jpeg'].some((ext) => file.endsWith(`.${ext}`))
-      );
+      const collator = new Intl.Collator([], { numeric: true });
+      const imageFileList = fileList
+        .filter((file) =>
+          ['png', 'jpg', 'jpeg'].some((ext) => file.endsWith(`.${ext}`))
+        )
+        .sort((a, b) => collator.compare(path.basename(a), path.basename(b)));
+
       return new Promise((resolve) => {
         resolve({
           server: isArchive ? chapterSourceId : '',
