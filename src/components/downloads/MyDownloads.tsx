@@ -51,34 +51,39 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
       return {
         title: `${series.title} [id:${series.id}]`,
         key: `series-${series.id}`,
-        children: downloadedList.chapterLists[series.id].map((chapter) => {
-          const groupStr =
-            chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
+        children: downloadedList.chapterLists[series.id]
+          .sort(
+            (a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
+          )
+          .reverse()
+          .map((chapter) => {
+            const groupStr =
+              chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
 
-          return {
-            title: (
-              <>
-                <div
-                  className="flag-container"
-                  style={{ display: 'inline-block' }}
-                >
-                  <img
-                    src={flags}
-                    title={Languages[chapter.languageKey].name}
-                    className={`flag flag-${
-                      Languages[chapter.languageKey].flagCode
-                    }`}
-                  />
-                </div>
-                <span style={{ paddingLeft: 4 }}>
-                  Chapter {chapter.chapterNumber}
-                  {groupStr} [id:{chapter.id}]
-                </span>
-              </>
-            ),
-            key: `${series.id};${chapter.id}`,
-          };
-        }),
+            return {
+              title: (
+                <>
+                  <div
+                    className="flag-container"
+                    style={{ display: 'inline-block' }}
+                  >
+                    <img
+                      src={flags}
+                      title={Languages[chapter.languageKey].name}
+                      className={`flag flag-${
+                        Languages[chapter.languageKey].flagCode
+                      }`}
+                    />
+                  </div>
+                  <span style={{ paddingLeft: 4 }}>
+                    Chapter {chapter.chapterNumber}
+                    {groupStr} [id:{chapter.id}]
+                  </span>
+                </>
+              ),
+              key: `${series.id};${chapter.id}`,
+            };
+          }),
       };
     });
 
