@@ -12,6 +12,7 @@ import { deleteDownloadedChapter } from '../../util/filesystem';
 import { setStatusText } from '../../features/statusbar/actions';
 import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
+import flags from '../../img/flags.png';
 
 const { Text, Paragraph } = Typography;
 const { confirm } = Modal;
@@ -58,13 +59,21 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
             title: (
               <>
                 <div
-                  title={Languages[chapter.languageKey].name}
-                  className={`${styles.flag} flag flag-${
-                    Languages[chapter.languageKey].flagCode
-                  }`}
-                />
-                Chapter {chapter.chapterNumber}
-                {groupStr} [id:{chapter.id}]
+                  className="flag-container"
+                  style={{ display: 'inline-block' }}
+                >
+                  <img
+                    src={flags}
+                    title={Languages[chapter.languageKey].name}
+                    className={`flag flag-${
+                      Languages[chapter.languageKey].flagCode
+                    }`}
+                  />
+                </div>
+                <span style={{ paddingLeft: 4 }}>
+                  Chapter {chapter.chapterNumber}
+                  {groupStr} [id:{chapter.id}]
+                </span>
               </>
             ),
             key: `${series.id};${chapter.id}`,

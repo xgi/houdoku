@@ -18,6 +18,7 @@ import { ExtensionTableRow } from '../../models/types';
 import { RootState } from '../../store';
 import { setStatusText } from '../../features/statusbar/actions';
 import ipcChannels from '../../constants/ipcChannels.json';
+import flags from '../../img/flags.png';
 
 const mapState = (state: RootState) => ({});
 
@@ -208,10 +209,13 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
           return <></>;
         }
         return (
-          <div
-            title={Languages[record.languageKey].name}
-            className={`flag flag-${Languages[record.languageKey].flagCode}`}
-          />
+          <div className="flag-container">
+            <img
+              src={flags}
+              title={Languages[record.languageKey].name}
+              className={`flag flag-${Languages[record.languageKey].flagCode}`}
+            />
+          </div>
         );
       },
     },

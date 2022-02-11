@@ -18,6 +18,7 @@ import {
   setChapterFilterTitle,
 } from '../../features/library/actions';
 import { useForceUpdate } from '../../util/reactutil';
+import flags from '../../img/flags.png';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
@@ -156,10 +157,13 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         return Languages[record.languageKey] === undefined ? (
           <></>
         ) : (
-          <div
-            title={Languages[record.languageKey].name}
-            className={`flag flag-${Languages[record.languageKey].flagCode}`}
-          />
+          <div className="flag-container">
+            <img
+              src={flags}
+              title={Languages[record.languageKey].name}
+              className={`flag flag-${Languages[record.languageKey].flagCode}`}
+            />
+          </div>
         );
       },
     },
