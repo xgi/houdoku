@@ -98,8 +98,10 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
         .filter((row: ExtensionTableRow) => {
           if (props.filterText === '') return true;
           return (
-            row.friendlyName.includes(props.filterText) ||
-            row.url.includes(props.filterText)
+            row.friendlyName
+              .toLowerCase()
+              .includes(props.filterText.toLowerCase()) ||
+            row.url.toLowerCase().includes(props.filterText.toLowerCase())
           );
         })
         .sort((a: ExtensionTableRow, b: ExtensionTableRow) => {
