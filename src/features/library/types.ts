@@ -7,6 +7,8 @@ export const SET_RELOADING_SERIES_LIST = 'SET_RELOADING_SERIES_LIST';
 export const SET_FILTER = 'SET_FILTER';
 export const SET_SERIES_BANNER_URL = 'SET_SERIES_BANNER_URL';
 export const SET_COMPLETED_START_RELOAD = 'SET_COMPLETED_START_RELOAD';
+export const SET_CHAPTER_FILTER_TITLE = 'SET_CHAPTER_FILTER_TITLE';
+export const SET_CHAPTER_FILTER_GROUP = 'SET_CHAPTER_FILTER_GROUP';
 
 export interface LibraryState {
   seriesList: Series[];
@@ -17,6 +19,8 @@ export interface LibraryState {
   filter: string;
   seriesBannerUrl: string | null;
   completedStartReload: boolean;
+  chapterFilterTitle: string;
+  chapterFilterGroup: string;
 }
 
 interface SetSeriesListAction {
@@ -68,6 +72,20 @@ interface SetCompletedStartReloadAction {
   };
 }
 
+interface SetChapterFilterTitleAction {
+  type: typeof SET_CHAPTER_FILTER_TITLE;
+  payload: {
+    chapterFilterTitle: string;
+  };
+}
+
+interface SetChapterFilterGroupAction {
+  type: typeof SET_CHAPTER_FILTER_GROUP;
+  payload: {
+    chapterFilterGroup: string;
+  };
+}
+
 export type LibraryAction =
   | SetSeriesListAction
   | SetSeriesAction
@@ -75,4 +93,6 @@ export type LibraryAction =
   | SetReloadingSeriesListAction
   | SetFilterAction
   | SetSeriesBannerUrlAction
-  | SetCompletedStartReloadAction;
+  | SetCompletedStartReloadAction
+  | SetChapterFilterTitleAction
+  | SetChapterFilterGroupAction;

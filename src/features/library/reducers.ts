@@ -8,6 +8,8 @@ import {
   SET_CHAPTER_LIST,
   SET_COMPLETED_START_RELOAD,
   SET_RELOADING_SERIES_LIST,
+  SET_CHAPTER_FILTER_TITLE,
+  SET_CHAPTER_FILTER_GROUP,
 } from './types';
 
 const initialState: LibraryState = {
@@ -19,6 +21,8 @@ const initialState: LibraryState = {
   filter: '',
   seriesBannerUrl: null,
   completedStartReload: false,
+  chapterFilterTitle: '',
+  chapterFilterGroup: '',
 };
 
 const parseUserTags = (seriesList: Series[]): string[] => {
@@ -32,6 +36,7 @@ const parseUserTags = (seriesList: Series[]): string[] => {
 };
 
 export default function library(
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = initialState,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   action: any
@@ -60,6 +65,16 @@ export default function library(
       return {
         ...state,
         completedStartReload: action.payload.completedStartReload,
+      };
+    case SET_CHAPTER_FILTER_TITLE:
+      return {
+        ...state,
+        chapterFilterTitle: action.payload.chapterFilterTitle,
+      };
+    case SET_CHAPTER_FILTER_GROUP:
+      return {
+        ...state,
+        chapterFilterGroup: action.payload.chapterFilterGroup,
       };
     default:
       return state;

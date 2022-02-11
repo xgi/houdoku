@@ -13,6 +13,11 @@ import { getChapterDownloaded } from '../../util/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { RootState } from '../../store';
 import { toggleChapterRead } from '../../features/library/utils';
+import {
+  setChapterFilterGroup,
+  setChapterFilterTitle,
+} from '../../features/library/actions';
+import { useForceUpdate } from '../../util/reactutil';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
@@ -20,6 +25,8 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
 
 const mapState = (state: RootState) => ({
   chapterList: state.library.chapterList,
+  chapterFilterTitle: state.library.chapterFilterTitle,
+  chapterFilterGroup: state.library.chapterFilterGroup,
   chapterLanguages: state.settings.chapterLanguages,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
   customDownloadsDir: state.settings.customDownloadsDir,
@@ -30,6 +37,10 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (dispatch: any) => ({
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
+  setChapterFilterTitle: (value: string) =>
+    dispatch(setChapterFilterTitle(value)),
+  setChapterFilterGroup: (value: string) =>
+    dispatch(setChapterFilterGroup(value)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -51,21 +62,20 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const [contextMenuChapter, setContextMenuChapter] = useState<
     Chapter | undefined
   >();
-  const [filterTitle, setFilterTitle] = useState('');
-  const [filterGroup, setFilterGroup] = useState('');
+  const forceUpdate = useForceUpdate();
 
-  const getFilteredList = () => {
+  const getFilteredChapterList = () => {
     return props.chapterList.filter(
       (chapter: Chapter) =>
         (props.chapterLanguages.includes(chapter.languageKey) ||
           props.chapterLanguages.length === 0) &&
-        chapter.title.toLowerCase().includes(filterTitle) &&
-        chapter.groupName.toLowerCase().includes(filterGroup)
+        chapter.title.toLowerCase().includes(props.chapterFilterTitle) &&
+        chapter.groupName.toLowerCase().includes(props.chapterFilterGroup)
     );
   };
 
   const getNextUnreadChapter = () => {
-    return getFilteredList()
+    return getFilteredChapterList()
       .sort(
         (a: Chapter, b: Chapter) =>
           parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
@@ -73,22 +83,31 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       .find((chapter: Chapter) => !chapter.read);
   };
 
-  const getColumnSearchProps = (dataIndex: string) => ({
-    filterDropdown: () => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder={`Filter ${dataIndex}...`}
-          allowClear
-          onChange={(e) =>
-            dataIndex === 'title'
-              ? setFilterTitle(e.target.value)
-              : setFilterGroup(e.target.value)
-          }
-        />
-      </div>
-    ),
-    filterIcon: () => <SearchOutlined />,
-  });
+  const getColumnSearchProps = (dataIndex: string) => {
+    const localSetChapterFilterTitle = props.setChapterFilterTitle;
+    const localSetChapterFilterGroup = props.setChapterFilterGroup;
+
+    return {
+      filterDropdown: () => (
+        <div style={{ padding: 8 }}>
+          <Input
+            placeholder={`Filter ${dataIndex}...`}
+            allowClear
+            autoFocus
+            onChange={(e) => {
+              if (dataIndex === 'title') {
+                localSetChapterFilterTitle(e.target.value);
+              } else {
+                localSetChapterFilterGroup(e.target.value);
+              }
+              forceUpdate();
+            }}
+          />
+        </div>
+      ),
+      filterIcon: () => <SearchOutlined />,
+    };
+  };
 
   const columns = [
     {
@@ -207,7 +226,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
     },
   ];
 
-  const filteredList = getFilteredList();
+  const filteredList = getFilteredChapterList();
   return (
     <>
       <ChapterTableContextMenu
