@@ -67,6 +67,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
 
     return (
       <img
+        key={pageNumber}
         src={props.pageDataList[pageNumber - 1]}
         alt={`Page ${pageNumber}`}
         style={showing ? {} : { display: 'none' }}
@@ -140,6 +141,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     for (let i = 1; i <= props.lastPageNumber; i += 1) {
       pageContainers.push(
         <div
+          key={i}
           className={`
             ${styles.page}
             ${props.fitContainToWidth ? styles.containWidth : ''}
