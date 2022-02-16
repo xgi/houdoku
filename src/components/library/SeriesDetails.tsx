@@ -485,7 +485,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           name="download_x_form"
           initialValues={{ amount: 3 }}
         >
-          <span>
+          <div className={styles.downloadXRow}>
             Download next{' '}
             <Form.Item
               className={styles.formItem}
@@ -495,7 +495,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
               <InputNumber min={1} />
             </Form.Item>{' '}
             chapters
-          </span>
+          </div>
         </Form>
       </Modal>
       <Link to={routes.LIBRARY}>

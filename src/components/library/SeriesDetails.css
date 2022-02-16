@@ -97,3 +97,13 @@
 .formItem {
   margin-bottom: 0 !important;
 }
+
+.downloadXRow {
+  display: flex;
+  align-items: center;
+}
+
+.downloadXRow > .formItem {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
