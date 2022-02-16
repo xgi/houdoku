@@ -9,7 +9,6 @@ import {
   Popover,
   Select,
   Badge,
-  Tooltip,
 } from 'antd';
 import { DownOutlined, SyncOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
@@ -100,19 +99,17 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   return (
     <>
       <Header className={styles.header}>
-        <Tooltip title="Refresh library">
-          <Button
-            className={styles.reloadButton}
-            type="primary"
-            onClick={() => {
-              if (!props.reloadingSeriesList) {
-                props.reloadSeriesList(props.seriesList, props.loadSeriesList);
-              }
-            }}
-          >
-            {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
-          </Button>
-        </Tooltip>
+        <Button
+          className={styles.reloadButton}
+          type="primary"
+          onClick={() => {
+            if (!props.reloadingSeriesList) {
+              props.reloadSeriesList(props.seriesList, props.loadSeriesList);
+            }
+          }}
+        >
+          {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
+        </Button>
         <Popover
           content={
             <Slider
@@ -130,9 +127,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
             setShowingColumnsPopover(visible)
           }
         >
-          <Tooltip title="Change number of columns">
-            <Button className={styles.columnsButton}>Columns</Button>
-          </Tooltip>
+          <Button className={styles.columnsButton}>Columns</Button>
         </Popover>
         <Popover
           content={
@@ -158,15 +153,13 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           visible={showingTagsPopover}
           onVisibleChange={(visible: boolean) => setShowingTagsPopover(visible)}
         >
-          <Tooltip title="Filter by user tag">
-            <Button className={styles.tagsButton}>
-              <Badge
-                className={styles.userTagsBadge}
-                count={props.libraryFilterUserTags.length}
-              />
-              Filter Tags
-            </Button>
-          </Tooltip>
+          <Button className={styles.tagsButton}>
+            <Badge
+              className={styles.userTagsBadge}
+              count={props.libraryFilterUserTags.length}
+            />
+            Filter Tags
+          </Button>
         </Popover>
         <Dropdown
           className={styles.progressDropdown}
