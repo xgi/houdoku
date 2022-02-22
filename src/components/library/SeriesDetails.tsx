@@ -188,14 +188,19 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     return blankCover;
   };
 
-  const getFilteredChapterList = () => {
-    return props.chapterList.filter(
-      (chapter: Chapter) =>
-        (props.chapterLanguages.includes(chapter.languageKey) ||
-          props.chapterLanguages.length === 0) &&
-        chapter.title.toLowerCase().includes(props.chapterFilterTitle) &&
-        chapter.groupName.toLowerCase().includes(props.chapterFilterGroup)
-    );
+  const getSortedFilteredChapterList = () => {
+    return props.chapterList
+      .filter(
+        (chapter: Chapter) =>
+          (props.chapterLanguages.includes(chapter.languageKey) ||
+            props.chapterLanguages.length === 0) &&
+          chapter.title.toLowerCase().includes(props.chapterFilterTitle) &&
+          chapter.groupName.toLowerCase().includes(props.chapterFilterGroup)
+      )
+      .sort(
+        (a: Chapter, b: Chapter) =>
+          parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
+      );
   };
 
   const handleDownloadChapters = (
@@ -249,11 +254,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     const result: Chapter[] = [];
     let prevChapterNumber = -1;
 
-    const sortedList = getFilteredChapterList().sort(
-      (a: Chapter, b: Chapter) =>
-        parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
-    );
-
+    const sortedList = getSortedFilteredChapterList();
     const startIndex = sortedList.map((c) => c.read).lastIndexOf(true);
     sortedList
       .slice(startIndex === -1 ? 0 : startIndex + 1)
@@ -567,7 +568,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                   <Menu.Item
                     onClick={() =>
                       handleDownloadChapters(
-                        getFilteredChapterList().filter(
+                        getSortedFilteredChapterList().filter(
                           (chapter) => !chapter.read
                         )
                       )
@@ -577,7 +578,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                   </Menu.Item>
                   <Menu.Item
                     onClick={() =>
-                      handleDownloadChapters(getFilteredChapterList())
+                      handleDownloadChapters(getSortedFilteredChapterList())
                     }
                   >
                     All
