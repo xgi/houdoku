@@ -222,7 +222,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "file-loader": "^6.0.0",
     "formdata-node": "^4.3.1",
-    "houdoku-extension-lib": "^1.5.8",
+    "houdoku-extension-lib": "^1.5.9",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.4.5",
     "lint-staged": "^12.1.3",

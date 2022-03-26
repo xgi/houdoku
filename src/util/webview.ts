@@ -4,7 +4,8 @@ import { WebviewResponse } from 'houdoku-extension-lib';
 // eslint-disable-next-line import/prefer-default-export
 export const loadInWebView = (
   window: BrowserWindow | null,
-  url: string
+  url: string,
+  options?: Electron.LoadURLOptions
 ): Promise<WebviewResponse> => {
   if (window !== null) {
     const spoofView = new BrowserView({
@@ -15,7 +16,7 @@ export const loadInWebView = (
     window.setBrowserView(spoofView);
     spoofView.setBounds({ x: 0, y: 0, width: 0, height: 0 });
 
-    spoofView.webContents.loadURL(url);
+    spoofView.webContents.loadURL(url, options);
     return new Promise<WebviewResponse>((resolve, reject) => {
       if (spoofView === null)
         reject(new Error('Failed to setup new BrowserView to load URL'));

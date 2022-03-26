@@ -22,7 +22,7 @@ import {
 } from 'electron';
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import log from 'electron-log';
-import { ExtensionMetadata } from 'houdoku-extension-lib';
+import { ExtensionMetadata, WebviewFunc } from 'houdoku-extension-lib';
 import { walk } from './util/filesystem';
 import {
   createExtensionIpcHandlers,
@@ -279,7 +279,9 @@ ipcMain.handle(
   ipcChannels.APP.SHOW_OPEN_DIALOG,
   (
     _event,
+    // eslint-disable-next-line @typescript-eslint/default-param-last
     directory = false,
+    // eslint-disable-next-line @typescript-eslint/default-param-last
     filters: { name: string; extensions: string[] }[] = [],
     title: string
   ) => {
@@ -333,7 +335,8 @@ ipcMain.handle(
 );
 
 // create ipc handlers for specific extension functionality
-const webviewFn = (url: string) => loadInWebView(mainWindow, url);
+const webviewFn: WebviewFunc = (url, options) =>
+  loadInWebView(mainWindow, url, options);
 createExtensionIpcHandlers(ipcMain, pluginsDir, webviewFn);
 loadExtensions(pluginsDir, webviewFn);
 

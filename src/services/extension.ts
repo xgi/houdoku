@@ -344,7 +344,7 @@ function setSettings(
 export const createExtensionIpcHandlers = (
   ipcMain: IpcMain,
   pluginsDir: string,
-  webviewFn: (url: string) => Promise<WebviewResponse>
+  webviewFn: WebviewFunc
 ) => {
   log.debug('Creating extension IPC handlers in main...');
 
