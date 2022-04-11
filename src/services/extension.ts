@@ -8,14 +8,13 @@ import {
   SettingType,
   ExtensionMetadata,
   SeriesListResponse,
-  WebviewResponse,
 } from 'houdoku-extension-lib';
 import aki, {
   RegistrySearchPackage,
   RegistrySearchResults,
 } from 'aki-plugin-manager';
 import { IpcMain } from 'electron';
-import fetch from 'node-fetch';
+import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 import DOMParser from 'dom-parser';
 import log from 'electron-log';
 import { gt } from 'semver';
@@ -60,7 +59,26 @@ export async function loadExtensions(
         // eslint-disable-next-line no-eval
         eval('require') as NodeRequire
       );
-      const client = new mod.ExtensionClient(fetch, webviewFn, domParser);
+
+      const fetchWrappedFn = (
+        url: RequestInfo,
+        init?: RequestInit | undefined
+      ): Promise<Response> => {
+        try {
+          return fetch(url, init);
+        } catch (e) {
+          log.error(`Non-promise error when calling fetch`, e, url, init);
+          return new Promise(() => {
+            throw Error('fetch threw a non-promise error');
+          });
+        }
+      };
+
+      const client = new mod.ExtensionClient(
+        fetchWrappedFn,
+        webviewFn,
+        domParser
+      );
 
       log.info(`Loaded extension "${pluginName}" version ${pluginDetails[1]}`);
       EXTENSION_CLIENTS[client.getMetadata().id] = client;
