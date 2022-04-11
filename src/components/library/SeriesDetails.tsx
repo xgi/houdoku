@@ -625,7 +625,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </div>
       </div>
       {renderSeriesDescriptions(props.series)}
-      {'title filter: ' + props.chapterFilterTitle}
       <ChapterTable series={props.series} />
     </>
   );
