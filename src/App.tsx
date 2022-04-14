@@ -79,6 +79,13 @@ ipcRenderer.on(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS, () => {
 ipcRenderer.on(ipcChannels.APP.SET_STATUS, (_event, text) => {
   store.dispatch(setStatusText(text));
 });
+ipcRenderer.on(ipcChannels.WINDOW.SET_FULLSCREEN, (_event, fullscreen) => {
+  if (fullscreen) {
+    document.getElementById('titlebar')?.classList.add('hidden');
+  } else {
+    document.getElementById('titlebar')?.classList.remove('hidden');
+  }
+});
 
 if (store.getState().settings.autoCheckForUpdates) {
   ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);

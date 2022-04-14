@@ -7,17 +7,26 @@
 @import 'style/colors.css';
 @import 'style/titlebar.css';
 @import 'style/flags.css';
+
 body {
   /* height: 100vh; */
   overflow-y: hidden;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   font-size: 14px;
+
+  --default-titlebar-height: 24px;
 }
 
 #root {
   height: calc(100vh);
-  margin-top: 24px;
   overflow-y: auto;
+
+  --titlebar-height: var(--default-titlebar-height);
+  margin-top: var(--titlebar-height);
+}
+
+#titlebar.hidden+#root {
+  --titlebar-height: 0px;
 }
 
 h4.ant-typography {

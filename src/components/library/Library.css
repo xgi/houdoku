@@ -9,7 +9,7 @@
   padding-bottom: 16px;
   padding-right: 16px;
   overflow-y: scroll;
-  height: calc(100vh - 24px - 24px - var(--header-height));
+  height: calc(100vh - 24px - var(--titlebar-height) - var(--header-height));
 }
 
 .emptyMessageContainer {
@@ -17,5 +17,5 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  height: calc(100vh - 24px - 24px);
+  height: calc(100vh - 24px - var(--titlebar-height));
 }

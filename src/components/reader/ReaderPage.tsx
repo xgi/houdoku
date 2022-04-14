@@ -525,7 +525,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   }, [location]);
 
   return (
-    <div style={{ marginTop: '54px', outline: 'none' }} tabIndex={0}>
+    <div className={styles.content} tabIndex={0}>
       <ReaderSettingsModal />
       <ReaderHeader
         changePage={changePage}

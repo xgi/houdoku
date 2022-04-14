@@ -2,7 +2,7 @@
   --reader-header-height: 30px;
   --reader-header-min-width: 800px;
   --reader-header-inner-height: calc(var(--reader-header-height) - 6px);
-  --reader-header-position-top: 24px;
+  --reader-header-position-top: var(--titlebar-height);
 }
 
 .container {
