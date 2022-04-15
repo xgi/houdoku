@@ -90,6 +90,7 @@ export enum ReaderSetting {
   KeyTogglePageStyle = 'KeyTogglePageStyle',
   KeyToggleShowingSettingsModal = 'KeyToggleShowingSettingsModal',
   KeyToggleShowingSidebar = 'KeyToggleShowingSidebar',
+  KeyToggleShowingHeader = 'KeyToggleShowingHeader',
   KeyExit = 'KeyExit',
   KeyCloseOrBack = 'KeyCloseOrBack',
 }

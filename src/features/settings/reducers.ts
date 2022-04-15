@@ -161,6 +161,10 @@ const initialState: SettingsState = {
     storedReaderSettings.KeyToggleShowingSidebar === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingSidebar]
       : storedReaderSettings.KeyToggleShowingSidebar,
+  keyToggleShowingHeader:
+    storedReaderSettings.KeyToggleShowingHeader === undefined
+      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingHeader]
+      : storedReaderSettings.KeyToggleShowingHeader,
   keyExit:
     storedReaderSettings.KeyExit === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyExit]
@@ -196,6 +200,7 @@ function nextPageStyle(pageStyle: PageStyle): PageStyle {
 }
 
 export default function settings(
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = initialState,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   action: any
@@ -376,6 +381,8 @@ export default function settings(
           };
         case ReaderSetting.KeyToggleShowingSidebar:
           return { ...state, keyToggleShowingSidebar: action.payload.value };
+        case ReaderSetting.KeyToggleShowingHeader:
+          return { ...state, keyToggleShowingHeader: action.payload.value };
         case ReaderSetting.KeyExit:
           return { ...state, keyExit: action.payload.value };
         case ReaderSetting.KeyCloseOrBack:

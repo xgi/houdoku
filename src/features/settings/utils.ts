@@ -43,6 +43,7 @@ export const DEFAULT_READER_SETTINGS = {
   [ReaderSetting.KeyTogglePageStyle]: 'q',
   [ReaderSetting.KeyToggleShowingSettingsModal]: 'o',
   [ReaderSetting.KeyToggleShowingSidebar]: 's',
+  [ReaderSetting.KeyToggleShowingHeader]: 'm',
   [ReaderSetting.KeyExit]: 'backspace',
   [ReaderSetting.KeyCloseOrBack]: 'escape',
 };
@@ -233,6 +234,10 @@ export function getStoredReaderSettings(): { [key in ReaderSetting]?: any } {
   if (storeValues[ReaderSetting.KeyToggleShowingSidebar] !== null) {
     settings[ReaderSetting.KeyToggleShowingSidebar] =
       storeValues[ReaderSetting.KeyToggleShowingSidebar];
+  }
+  if (storeValues[ReaderSetting.KeyToggleShowingHeader] !== null) {
+    settings[ReaderSetting.KeyToggleShowingHeader] =
+      storeValues[ReaderSetting.KeyToggleShowingHeader];
   }
   if (storeValues[ReaderSetting.KeyExit] !== null) {
     settings[ReaderSetting.KeyExit] = storeValues[ReaderSetting.KeyExit];

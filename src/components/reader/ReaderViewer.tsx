@@ -33,7 +33,6 @@ type Props = PropsFromRedux & {
 };
 
 const ROOT_ID = 'root';
-const ROOT_TOP_MARGIN = 54;
 
 const ReaderViewer: React.FC<Props> = (props: Props) => {
   const viewerContainer = useRef<HTMLDivElement>(null);
@@ -168,7 +167,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
    */
   useEffect(() => {
     const root = document.getElementById(ROOT_ID);
-    if (root) {
+    const readerPage = root?.firstElementChild;
+
+    if (root && readerPage) {
       if (props.pageStyle === PageStyle.LongStrip) {
         root.onscroll = () => {
           if (viewerContainer.current) {
@@ -179,7 +180,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
               childNum = 0;
               childNum < viewerContainer.current.children.length &&
               imageHeightSum <
-                root.scrollTop + root.clientHeight - ROOT_TOP_MARGIN;
+                root.scrollTop +
+                  root.clientHeight -
+                  parseInt(getComputedStyle(readerPage).marginTop);
               childNum += 1
             ) {
               imageHeightSum +=
@@ -222,8 +225,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           // if we're not scrolling to the last page, need to scroll up some
           // since the image is covered by the header
           const root = document.getElementById(ROOT_ID);
-          if (root && props.pageNumber < props.lastPageNumber) {
-            root.scrollTop -= ROOT_TOP_MARGIN;
+          const readerPage = root?.firstElementChild;
+          if (root && readerPage && props.pageNumber < props.lastPageNumber) {
+            root.scrollTop -= parseInt(getComputedStyle(readerPage).marginTop);
           }
         }
       }

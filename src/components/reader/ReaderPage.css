@@ -1,22 +1,17 @@
 .root::-webkit-scrollbar-track {
-  margin-top: 54px;
-  /* padding-bottom: 24px; */
+  margin-top: calc(var(--reader-header-height) + var(--titlebar-height));
 }
 
 .root {
+  --reader-header-height: 30px;
   margin-top: 0 !important;
 }
 
-.pageLayout {
-  min-height: 100vh;
-  padding-top: 23px;
-  background: magenta !important;
+.content {
+  margin-top: calc(var(--reader-header-height) + var(--titlebar-height));
+  outline: none;
 }
 
-.contentLayout {
-  /* justify-content: center;
-  align-items: center; */
-  height: calc(100vh - 24px);
-  overflow-y: auto;
-  overflow-x: hidden;
+.headerless {
+  --reader-header-height: 0px;
 }

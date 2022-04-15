@@ -125,6 +125,13 @@ const createWindow = async () => {
     event.preventDefault();
     shell.openExternal(url);
   });
+
+  mainWindow.on('enter-full-screen', () => {
+    mainWindow?.webContents.send(ipcChannels.WINDOW.SET_FULLSCREEN, true);
+  });
+  mainWindow.on('leave-full-screen', () => {
+    mainWindow?.webContents.send(ipcChannels.WINDOW.SET_FULLSCREEN, false);
+  });
 };
 
 app.on('window-all-closed', () => {
