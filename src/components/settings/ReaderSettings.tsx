@@ -364,6 +364,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
               value: props.keyToggleShowingSettingsModal,
               setting: ReaderSetting.KeyToggleShowingSettingsModal,
             },
+            {
+              name: 'Toggle Menu Bar',
+              value: props.keyToggleShowingHeader,
+              setting: ReaderSetting.KeyToggleShowingHeader,
+            },
           ].map((entry) => (
             <Row className={styles.keybindRow} key={entry.setting}>
               <div className={styles.keybindName}>{entry.name}</div>
