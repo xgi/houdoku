@@ -60,6 +60,7 @@ export interface SettingsState {
   keyTogglePageStyle: string;
   keyToggleShowingSettingsModal: string;
   keyToggleShowingSidebar: string;
+  keyToggleShowingHeader: string;
   keyExit: string;
   keyCloseOrBack: string;
 }

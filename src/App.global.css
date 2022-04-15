@@ -13,15 +13,13 @@ body {
   overflow-y: hidden;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   font-size: 14px;
-
-  --default-titlebar-height: 24px;
 }
 
 #root {
   height: calc(100vh);
   overflow-y: auto;
 
-  --titlebar-height: var(--default-titlebar-height);
+  --titlebar-height: 24px;
   margin-top: var(--titlebar-height);
 }
 

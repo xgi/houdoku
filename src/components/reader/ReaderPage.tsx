@@ -21,6 +21,7 @@ import {
   toggleShowingSettingsModal,
   setPageDataList,
   toggleShowingSidebar,
+  toggleShowingHeader,
 } from '../../features/reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
@@ -66,6 +67,7 @@ const mapState = (state: RootState) => ({
   relevantChapterList: state.reader.relevantChapterList,
   showingSettingsModal: state.reader.showingSettingsModal,
   showingSidebar: state.reader.showingSidebar,
+  showingHeader: state.reader.showingHeader,
   customDownloadsDir: state.settings.customDownloadsDir,
   pageStyle: state.settings.pageStyle,
   fitContainToWidth: state.settings.fitContainToWidth,
@@ -85,6 +87,7 @@ const mapState = (state: RootState) => ({
   keyTogglePageStyle: state.settings.keyTogglePageStyle,
   keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
   keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
+  keyToggleShowingHeader: state.settings.keyToggleShowingHeader,
   keyExit: state.settings.keyExit,
   keyCloseOrBack: state.settings.keyCloseOrBack,
 });
@@ -114,6 +117,7 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setRelevantChapterList(relevantChapterList)),
   toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
   toggleShowingSidebar: () => dispatch(toggleShowingSidebar()),
+  toggleShowingHeader: () => dispatch(toggleShowingHeader()),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
   sendProgressToTrackers: (chapter: Chapter, series: Series) =>
@@ -392,12 +396,21 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.changePageNumber(delta);
   };
 
-  const addRootStyles = () => {
-    document.getElementById('root')?.classList.add(styles.root);
+  const removeRootStyles = () => {
+    document
+      .getElementById('root')
+      ?.classList.remove(styles.root, styles.headerless);
   };
 
-  const removeRootStyles = () => {
-    document.getElementById('root')?.classList.remove(styles.root);
+  const addRootStyles = () => {
+    removeRootStyles();
+
+    const stylesToAdd = [styles.root];
+    console.log(`here, showingHeader=${props.showingHeader}`);
+    if (!props.showingHeader) {
+      stylesToAdd.push(styles.headerless);
+    }
+    document.getElementById('root')?.classList.add(...stylesToAdd);
   };
 
   /**
@@ -469,12 +482,20 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     Mousetrap.bind(props.keyToggleShowingSidebar, () =>
       props.toggleShowingSidebar()
     );
+    Mousetrap.bind(props.keyToggleShowingHeader, () =>
+      props.toggleShowingHeader()
+    );
     Mousetrap.bind(props.keyExit, () => exitPage());
     Mousetrap.bind(props.keyCloseOrBack, () => {
       if (!props.showingSidebar) props.toggleShowingSidebar();
       else exitPage();
     });
   };
+
+  useEffect(() => {
+    addRootStyles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.showingHeader]);
 
   useEffect(() => {
     // mark the chapter as read if past a certain page threshold
@@ -527,13 +548,18 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   return (
     <div className={styles.content} tabIndex={0}>
       <ReaderSettingsModal />
-      <ReaderHeader
-        changePage={changePage}
-        setChapter={setChapter}
-        changeChapter={changeChapter}
-        getAdjacentChapterId={getAdjacentChapterId}
-        exitPage={exitPage}
-      />
+      {props.showingHeader ? (
+        <ReaderHeader
+          changePage={changePage}
+          setChapter={setChapter}
+          changeChapter={changeChapter}
+          getAdjacentChapterId={getAdjacentChapterId}
+          exitPage={exitPage}
+        />
+      ) : (
+        <></>
+      )}
+
       {props.pageDataList.length === 0 ? (
         <ReaderLoader extensionId={props.series?.extensionId} />
       ) : (

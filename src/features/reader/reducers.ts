@@ -8,6 +8,7 @@ import {
   SET_RELEVANT_CHAPTER_LIST,
   SET_PAGE_DATA_LIST,
   TOGGLE_SHOWING_SIDEBAR,
+  TOGGLE_SHOWING_HEADER,
 } from './types';
 
 const initialState: ReaderState = {
@@ -20,9 +21,11 @@ const initialState: ReaderState = {
   relevantChapterList: [],
   showingSettingsModal: false,
   showingSidebar: true,
+  showingHeader: true,
 };
 
 export default function reader(
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = initialState,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   action: any
@@ -67,6 +70,8 @@ export default function reader(
       return { ...state, showingSettingsModal: !state.showingSettingsModal };
     case TOGGLE_SHOWING_SIDEBAR:
       return { ...state, showingSidebar: !state.showingSidebar };
+    case TOGGLE_SHOWING_HEADER:
+      return { ...state, showingHeader: !state.showingHeader };
     default:
       return state;
   }

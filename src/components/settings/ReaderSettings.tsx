@@ -47,6 +47,7 @@ const mapState = (state: RootState) => ({
   keyTogglePageStyle: state.settings.keyTogglePageStyle,
   keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
   keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
+  keyToggleShowingHeader: state.settings.keyToggleShowingHeader,
   keyExit: state.settings.keyExit,
   keyCloseOrBack: state.settings.keyCloseOrBack,
 });
@@ -116,6 +117,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.KeyTogglePageStyle:
       case ReaderSetting.KeyToggleShowingSettingsModal:
       case ReaderSetting.KeyToggleShowingSidebar:
+      case ReaderSetting.KeyToggleShowingHeader:
       case ReaderSetting.KeyExit:
       case ReaderSetting.KeyCloseOrBack:
         props.setKeybinding(readerSetting, value);

@@ -1,12 +1,17 @@
 .root::-webkit-scrollbar-track {
-  margin-top: calc(30px + var(--titlebar-height));
+  margin-top: calc(var(--reader-header-height) + var(--titlebar-height));
 }
 
 .root {
+  --reader-header-height: 30px;
   margin-top: 0 !important;
 }
 
 .content {
-  margin-top: var(--titlebar-height);
+  margin-top: calc(var(--reader-header-height) + var(--titlebar-height));
   outline: none;
+}
+
+.headerless {
+  --reader-header-height: 0px;
 }
