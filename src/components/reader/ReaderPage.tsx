@@ -213,22 +213,22 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       );
     props.setPageUrls(pageUrls);
 
-    const curPageDataList: string[] = [];
-    for (let i = 0; i < pageUrls.length; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      await ipcRenderer
-        .invoke(
+    Promise.all(
+      pageUrls.map((pageUrl) =>
+        ipcRenderer.invoke(
           ipcChannels.EXTENSION.GET_PAGE_DATA,
           FS_METADATA.id,
           series,
-          pageUrls[i]
+          pageUrl
         )
-        .then((data: string) => {
-          curPageDataList[i] = data;
-          return props.setPageDataList([...curPageDataList]);
-        });
-      forceUpdate();
-    }
+      )
+    )
+      // eslint-disable-next-line promise/always-return
+      .then((pageDataList: string[]) => {
+        props.setPageDataList(pageDataList);
+        forceUpdate();
+      })
+      .catch((e) => log.error(e));
   };
 
   /**
@@ -294,22 +294,22 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       );
     props.setPageUrls(pageUrls);
 
-    const curPageDataList: string[] = [];
-    for (let i = 0; i < pageUrls.length; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      await ipcRenderer
-        .invoke(
+    Promise.all(
+      pageUrls.map((pageUrl) =>
+        ipcRenderer.invoke(
           ipcChannels.EXTENSION.GET_PAGE_DATA,
-          series.extensionId,
+          FS_METADATA.id,
           series,
-          pageUrls[i]
+          pageUrl
         )
-        .then((data: string) => {
-          curPageDataList[i] = data;
-          return props.setPageDataList([...curPageDataList]);
-        });
-      forceUpdate();
-    }
+      )
+    )
+      // eslint-disable-next-line promise/always-return
+      .then((pageDataList: string[]) => {
+        props.setPageDataList(pageDataList);
+        forceUpdate();
+      })
+      .catch((e) => log.error(e));
   };
 
   /**
