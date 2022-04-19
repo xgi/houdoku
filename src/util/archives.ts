@@ -1,5 +1,9 @@
 import fs from 'fs';
 import JSZip from 'jszip';
+import path from 'path';
+import log from 'electron-log';
+import { v4 as uuidv4 } from 'uuid';
+import { walk } from './filesystem';
 
 /**
  * Get a list of all files within an archive.
@@ -26,17 +30,39 @@ export async function getArchiveFiles(archive: string): Promise<string[]> {
     );
 }
 
-/**
- * Get the Base64 encoding for a file in an archive.
- * @param archive the path of the archive to read from
- * @param file the path of the file within the archive to read
- * @returns promise for the Base64-encoded contents of the file
- */
-export async function getArchiveFileBase64(
+export async function extract(
   archive: string,
-  file: string
-): Promise<string> {
-  return new JSZip.external.Promise((resolve, reject) => {
+  internalFilenames: string[],
+  baseOutputPath: string
+): Promise<string[]> {
+  log.info(
+    `Extracting ${internalFilenames.length} files from ${archive} to ${baseOutputPath}`
+  );
+
+  // remove existing image files
+  const existingFilenames = walk(baseOutputPath).filter((file) =>
+    ['png', 'jpg', 'jpeg'].some((ext) => file.endsWith(`.${ext}`))
+  );
+  existingFilenames.forEach((existingFilename) =>
+    fs.unlinkSync(existingFilename)
+  );
+
+  // remove existing directories
+  fs.readdirSync(baseOutputPath, { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory())
+    .forEach((dirent) => {
+      try {
+        fs.rmdirSync(path.join(baseOutputPath, dirent.name));
+      } catch (e) {
+        log.error(
+          `Could not remove directory in extracted location: ${dirent.name}`,
+          e
+        );
+      }
+    });
+
+  // load archive file
+  const zip = await new JSZip.external.Promise((resolve, reject) => {
     fs.readFile(archive, (err, data) => {
       if (err) {
         reject(err);
@@ -44,9 +70,40 @@ export async function getArchiveFileBase64(
         resolve(data);
       }
     });
-  })
-    .then((data: any) => {
-      return JSZip.loadAsync(data);
+  }).then((data: any) => {
+    return JSZip.loadAsync(data);
+  });
+
+  // Extract each file from the zip (that is included in internalFilenames) and return
+  // the extracted paths. We wait until the extraction is completed before returning
+  // so that the client doesn't try to load the images before they are fully extracted.
+  // Files are extracted to a subdirectory with an arbitrary UUID to prevent the rare possibility
+  // of this function being run concurrently.
+  const subdirectory = uuidv4();
+  fs.mkdirSync(path.join(baseOutputPath, subdirectory), { recursive: true });
+
+  return Promise.all(
+    internalFilenames.map(async (internalFilename) => {
+      return new Promise((resolve, reject) => {
+        const outputPath = path.join(
+          baseOutputPath,
+          subdirectory,
+          path.basename(internalFilename)
+        );
+
+        const file = zip.file(internalFilename);
+        if (file) {
+          file
+            .nodeStream()
+            .pipe(fs.createWriteStream(outputPath))
+            .on('finish', function () {
+              resolve(outputPath);
+            });
+        } else {
+          log.error(`File not in archive: ${internalFilename}`);
+          reject();
+        }
+      });
     })
-    .then((zip: any) => zip.file(file).async('base64'));
+  );
 }

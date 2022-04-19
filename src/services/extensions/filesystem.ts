@@ -21,7 +21,7 @@ import {
   GetSettingTypesFunc,
   SeriesListResponse,
 } from 'houdoku-extension-lib';
-import { getArchiveFileBase64, getArchiveFiles } from '../../util/archives';
+import { extract, getArchiveFiles } from '../../util/archives';
 import { walk } from '../../util/filesystem';
 
 export const FS_METADATA: ExtensionMetadata = {
@@ -35,8 +35,6 @@ export const FS_METADATA: ExtensionMetadata = {
   noticeUrl: 'https://houdoku.org/docs/adding-manga/adding-local-series',
   pageLoadMessage: '',
 };
-
-const ARCHIVE_FILE_DELIMITER = '<archive>';
 
 const isSupportedArchivePath = (str: string) => {
   return ['zip', 'rar', 'cbz', 'cbr'].some((ext) => {
@@ -89,6 +87,12 @@ const parseChapterMetadata = (
 };
 
 export class FSExtensionClient extends ExtensionClientAbstract {
+  extractPath?: string = undefined;
+
+  setExtractPath = (extractPath: string) => {
+    this.extractPath = extractPath;
+  };
+
   getMetadata: () => ExtensionMetadata = () => {
     return FS_METADATA;
   };
@@ -175,7 +179,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       );
     }
 
-    return fileListPromise.then((fileList: string[]) => {
+    return fileListPromise.then(async (fileList: string[]) => {
       const collator = new Intl.Collator([], { numeric: true });
       const imageFileList = fileList
         .filter((file) =>
@@ -183,36 +187,36 @@ export class FSExtensionClient extends ExtensionClientAbstract {
         )
         .sort((a, b) => collator.compare(path.basename(a), path.basename(b)));
 
-      return new Promise((resolve) => {
-        resolve({
-          server: isArchive ? chapterSourceId : '',
+      if (isArchive && this.extractPath) {
+        const extractedFilenames = await extract(
+          chapterSourceId,
+          imageFileList,
+          this.extractPath
+        );
+        return {
+          server: '',
           hash: '',
-          numPages: imageFileList.length,
-          pageFilenames: imageFileList,
+          numPages: extractedFilenames.length,
+          pageFilenames: extractedFilenames,
+        };
+      } else {
+        return new Promise((resolve) => {
+          resolve({
+            server: '',
+            hash: '',
+            numPages: imageFileList.length,
+            pageFilenames: imageFileList,
+          });
         });
-      });
+      }
     });
   };
 
   getPageUrls: GetPageUrlsFunc = (pageRequesterData: PageRequesterData) => {
-    if (pageRequesterData.server === '') return pageRequesterData.pageFilenames;
-    return pageRequesterData.pageFilenames.map(
-      (pageFilename) =>
-        `${pageRequesterData.server}${ARCHIVE_FILE_DELIMITER}${pageFilename}`
-    );
+    return pageRequesterData.pageFilenames;
   };
 
   getPageData: GetPageDataFunc = (_series: Series, url: string) => {
-    if (url.includes(ARCHIVE_FILE_DELIMITER)) {
-      const parts = url.split(ARCHIVE_FILE_DELIMITER);
-      const archivePath = parts[0];
-      const filename = parts[1];
-
-      return getArchiveFileBase64(archivePath, filename).then(
-        (data) => `data:image/png;base64,${data}`
-      );
-    }
-
     return new Promise((resolve) => {
       resolve(url);
     });

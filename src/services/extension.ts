@@ -27,6 +27,7 @@ const EXTENSION_CLIENTS: { [key: string]: ExtensionClientInterface } = {};
 
 export async function loadExtensions(
   pluginsDir: string,
+  extractDir: string,
   webviewFn: WebviewFunc
 ) {
   log.info('Loading extensions...');
@@ -48,6 +49,7 @@ export async function loadExtensions(
   });
 
   const fsExtensionClient = new FSExtensionClient(fetch, webviewFn, domParser);
+  fsExtensionClient.setExtractPath(extractDir);
   EXTENSION_CLIENTS[fsExtensionClient.getMetadata().id] = fsExtensionClient;
 
   aki.list(pluginsDir).forEach((pluginDetails: [string, string]) => {
@@ -362,12 +364,13 @@ function setSettings(
 export const createExtensionIpcHandlers = (
   ipcMain: IpcMain,
   pluginsDir: string,
+  extractDir: string,
   webviewFn: WebviewFunc
 ) => {
   log.debug('Creating extension IPC handlers in main...');
 
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, async (event) => {
-    await loadExtensions(pluginsDir, webviewFn);
+    await loadExtensions(pluginsDir, extractDir, webviewFn);
     return event.sender.send(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS);
   });
   ipcMain.handle(
