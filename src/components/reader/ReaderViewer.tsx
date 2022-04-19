@@ -70,6 +70,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         src={props.pageDataList[pageNumber - 1]}
         alt={`Page ${pageNumber}`}
         style={showing ? {} : { display: 'none' }}
+        loading="lazy"
         className={`
       ${styles.pageImage}
       ${isLeft ? styles.left : ''}

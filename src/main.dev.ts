@@ -42,6 +42,7 @@ const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
 const pluginsDir = path.join(app.getPath('userData'), 'plugins');
 const downloadsDir = path.join(app.getPath('userData'), 'downloads');
 const logsDir = path.join(app.getPath('userData'), 'logs');
+const extractDir = path.join(app.getPath('userData'), 'extracted');
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -344,8 +345,8 @@ ipcMain.handle(
 // create ipc handlers for specific extension functionality
 const webviewFn: WebviewFunc = (url, options) =>
   loadInWebView(mainWindow, url, options);
-createExtensionIpcHandlers(ipcMain, pluginsDir, webviewFn);
-loadExtensions(pluginsDir, webviewFn);
+createExtensionIpcHandlers(ipcMain, pluginsDir, extractDir, webviewFn);
+loadExtensions(pluginsDir, extractDir, webviewFn);
 
 createTrackerIpcHandlers(ipcMain);
 createDiscordIpcHandlers(ipcMain);
