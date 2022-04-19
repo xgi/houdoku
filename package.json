@@ -202,7 +202,7 @@
     "discord-rpc": "^4.0.1",
     "dom-parser": "^0.1.6",
     "electron": "^18.0.3",
-    "electron-builder": "^22.13.1",
+    "electron-builder": "^23.0.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-notarize": "^1.0.0",
     "electron-rebuild": "^3.2.5",
