@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        node: ['17']
+        node: ['18']
         os: [macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
