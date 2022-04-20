@@ -406,7 +406,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     removeRootStyles();
 
     const stylesToAdd = [styles.root];
-    console.log(`here, showingHeader=${props.showingHeader}`);
     if (!props.showingHeader) {
       stylesToAdd.push(styles.headerless);
     }

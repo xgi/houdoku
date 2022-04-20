@@ -39,6 +39,10 @@ export async function extract(
     `Extracting ${internalFilenames.length} files from ${archive} to ${baseOutputPath}`
   );
 
+  if (!fs.existsSync(baseOutputPath)) {
+    fs.mkdirSync(baseOutputPath, { recursive: true });
+  }
+
   // remove existing image files
   const existingFilenames = walk(baseOutputPath).filter((file) =>
     ['png', 'jpg', 'jpeg'].some((ext) => file.endsWith(`.${ext}`))
