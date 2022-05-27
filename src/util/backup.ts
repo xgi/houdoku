@@ -1,7 +1,8 @@
+import storeKeys from '../constants/storeKeys.json';
 import persistantStore from '../util/persistantStore';
 
-export const downloadFile = async () => {
-  const myData = persistantStore.downloadSettings();
+export const createBackup = async () => {
+  const myData = persistantStore.read(storeKeys.LIBRARY.SERIES_LIST);
   const fileName = 'backup';
   const json = JSON.stringify(myData);
   const blob = new Blob([json], { type: 'application/json' });
@@ -20,7 +21,7 @@ export const restoreBackup = (e: any) => {
   reader.onload = (e) => {
     if (e.target) {
       const text: string | ArrayBuffer | null = JSON.parse(e.target.result);
-      persistantStore.restoreSettings(text);
+      persistantStore.write(storeKeys.LIBRARY.SERIES_LIST, text);
     }
   };
   reader.readAsBinaryString(e.target.files[0]);

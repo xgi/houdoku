@@ -15,7 +15,7 @@ import {
   setRefreshOnStart,
 } from '../../features/settings/actions';
 import ipcChannels from '../../constants/ipcChannels.json';
-import { downloadFile, restoreBackup } from '../../util/backup';
+import { createBackup, restoreBackup } from '../../util/backup';
 
 const { Option } = Select;
 
@@ -185,7 +185,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         </Col>
       </Row>
       <Row className={styles.row}>
-        <Button onClick={downloadFile}>Create Backup</Button>
+        <Button onClick={createBackup}>Create Backup</Button>
       </Row>
 
       <Row className={styles.row}>

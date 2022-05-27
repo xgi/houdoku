@@ -10,12 +10,4 @@ export default {
   remove(entryName: string): void {
     return window.localStorage.removeItem(entryName);
   },
-
-  downloadSettings() {
-    return window.localStorage.getItem('library-series-list');
-  },
-
-  restoreSettings(settings: any) {
-    return window.localStorage.setItem('library-series-list', settings);
-  },
 };
