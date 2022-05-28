@@ -15,6 +15,7 @@ import {
   setRefreshOnStart,
 } from '../../features/settings/actions';
 import ipcChannels from '../../constants/ipcChannels.json';
+import { createBackup, restoreBackup } from '../../util/backup';
 
 const { Option } = Select;
 
@@ -182,6 +183,19 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
             />
           </Tooltip>
         </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Button onClick={createBackup}>Create Backup</Button>
+      </Row>
+
+      <Row className={styles.row}>
+        <Tooltip title="Select Backup File">
+          <Input
+            type={'file'}
+            className={styles.downloadDirInput}
+            onChange={restoreBackup}
+          />
+        </Tooltip>
       </Row>
     </>
   );
