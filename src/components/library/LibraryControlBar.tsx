@@ -19,9 +19,10 @@ import { setFilter } from '../../features/library/actions';
 import { loadSeriesList, reloadSeriesList } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
-import { ProgressFilter } from '../../models/types';
+import { LibraryType, ProgressFilter } from '../../models/types';
 import {
   setLibraryColumns,
+  setLibraryTypes,
   setLibraryFilterProgress,
   setLibraryFilterStatus,
   setLibraryFilterUserTags,
@@ -38,6 +39,7 @@ const mapState = (state: RootState) => ({
   libraryFilterProgress: state.settings.libraryFilterProgress,
   libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
+  libraryTypes: state.settings.libraryTypes,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,6 +57,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setLibraryFilterUserTags(userTags)),
   setLibraryColumns: (libraryColumns: number) =>
     dispatch(setLibraryColumns(libraryColumns)),
+  setLibraryTypes: (libraryTypes: string) =>
+    dispatch(setLibraryTypes(libraryTypes)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -93,6 +97,18 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
       return `${prefix}Unread`;
     if (props.libraryFilterProgress === ProgressFilter.Finished)
       return `${prefix}Finished`;
+    return prefix;
+  };
+
+  /**
+   * Get a displayable string for the current libraryType value.
+   * @returns a user-friendly representation of the libraryType prop
+   */
+  const getLibraryTypeText = () => {
+    const prefix = 'Type: ';
+
+    if (props.libraryTypes === LibraryType.Grid) return `${prefix}Grid`;
+    if (props.libraryTypes === LibraryType.List) return `${prefix}List`;
     return prefix;
   };
 
@@ -194,6 +210,29 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
             {getFilterProgressText()} <DownOutlined />
           </Button>
         </Dropdown>
+
+        <Dropdown
+          className={styles.libraryTypeDropdown}
+          overlay={
+            <Menu
+              onClick={(e: any) =>
+                props.setLibraryTypes(e.item.props['data-value'])
+              }
+            >
+              <Menu.Item key={LibraryType.Grid} data-value={LibraryType.Grid}>
+                Grid
+              </Menu.Item>
+              <Menu.Item key={LibraryType.List} data-value={LibraryType.List}>
+                List
+              </Menu.Item>
+            </Menu>
+          }
+        >
+          <Button>
+            {getLibraryTypeText()} <DownOutlined />
+          </Button>
+        </Dropdown>
+
         <Dropdown
           className={styles.statusDropdown}
           overlay={

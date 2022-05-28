@@ -31,6 +31,7 @@ import {
   TOGGLE_PAGE_STYLE,
   TOGGLE_READING_DIRECTION,
   SET_READING_DIRECTION,
+  SET_LIBRARY_TYPES,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -77,6 +78,10 @@ const initialState: SettingsState = {
     storedGeneralSettings.LibraryColumns === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryColumns]
       : storedGeneralSettings.LibraryColumns,
+  libraryTypes:
+    storedGeneralSettings.LibraryTypes === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryTypes]
+      : storedGeneralSettings.LibraryTypes,
   libraryFilterStatus:
     storedGeneralSettings.LibraryFilterStatus === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterStatus]
@@ -254,6 +259,15 @@ export default function settings(
       return {
         ...state,
         libraryColumns: action.payload.libraryColumns,
+      };
+    case SET_LIBRARY_TYPES:
+      saveGeneralSetting(
+        GeneralSetting.LibraryTypes,
+        action.payload.libraryTypes
+      );
+      return {
+        ...state,
+        libraryTypes: action.payload.libraryTypes,
       };
     case SET_LIBRARY_FILTER_STATUS:
       saveGeneralSetting(

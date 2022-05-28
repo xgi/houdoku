@@ -14,6 +14,7 @@ import { RootState } from '../../store';
 import SeriesGrid from '../general/SeriesGrid';
 import LibraryControlBar from './LibraryControlBar';
 import ipcChannels from '../../constants/ipcChannels.json';
+import SeriesList from '../general/SeriesList';
 
 const { confirm } = Modal;
 
@@ -24,6 +25,7 @@ const mapState = (state: RootState) => ({
   libraryFilterProgress: state.settings.libraryFilterProgress,
   libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
+  libraryType: state.settings.libraryTypes,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,21 +84,38 @@ const Library: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const renderSeriesGrid = () => {
+  const renderSeries = () => {
     return (
-      <div className={styles.seriesGrid}>
-        <SeriesGrid
-          columns={props.libraryColumns}
-          seriesList={props.seriesList}
-          sorted
-          filter={props.filter}
-          filterStatus={props.libraryFilterStatus}
-          filterProgress={props.libraryFilterProgress}
-          filterUserTags={props.libraryFilterUserTags}
-          clickFunc={goToSeries}
-          inLibraryFunc={undefined}
-        />
-      </div>
+      <>
+        {props.libraryType === 'GRID' ? (
+          <div className={styles.seriesGrid}>
+            <SeriesGrid
+              columns={props.libraryColumns}
+              seriesList={props.seriesList}
+              sorted
+              filter={props.filter}
+              filterStatus={props.libraryFilterStatus}
+              filterProgress={props.libraryFilterProgress}
+              filterUserTags={props.libraryFilterUserTags}
+              clickFunc={goToSeries}
+              inLibraryFunc={undefined}
+            />
+          </div>
+        ) : (
+          <div className={styles.seriesList}>
+            <SeriesList
+              seriesList={props.seriesList}
+              sorted
+              filter={props.filter}
+              filterStatus={props.libraryFilterStatus}
+              filterProgress={props.libraryFilterProgress}
+              filterUserTags={props.libraryFilterUserTags}
+              clickFunc={goToSeries}
+              inLibraryFunc={undefined}
+            />
+          </div>
+        )}
+      </>
     );
   };
 
@@ -115,7 +134,7 @@ const Library: React.FC<Props> = (props: Props) => {
   return (
     <>
       <LibraryControlBar />
-      {props.seriesList.length > 0 ? renderSeriesGrid() : renderEmptyMessage()}
+      {props.seriesList.length > 0 ? renderSeries() : renderEmptyMessage()}
     </>
   );
 };

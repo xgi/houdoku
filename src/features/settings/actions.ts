@@ -29,6 +29,7 @@ import {
   SET_READING_DIRECTION,
   TOGGLE_PAGE_STYLE,
   TOGGLE_READING_DIRECTION,
+  SET_LIBRARY_TYPES,
 } from './types';
 
 export function setChapterLanguages(
@@ -89,6 +90,15 @@ export function setLibraryColumns(libraryColumns: number): SettingsAction {
     type: SET_LIBRARY_COLUMNS,
     payload: {
       libraryColumns,
+    },
+  };
+}
+
+export function setLibraryTypes(libraryTypes: string): SettingsAction {
+  return {
+    type: SET_LIBRARY_TYPES,
+    payload: {
+      libraryTypes,
     },
   };
 }

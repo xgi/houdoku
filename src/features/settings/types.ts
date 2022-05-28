@@ -21,6 +21,7 @@ export const SET_AUTO_CHECK_FOR_EXTENSION_UPDATES =
   'SET_AUTO_CHECK_FOR_EXTENSION_UPDATES';
 export const SET_CUSTOM_DOWNLOADS_DIR = 'SET_CUSTOM_DOWNLOADS_DIR';
 export const SET_LIBRARY_COLUMNS = 'SET_LIBRARY_COLUMNS';
+export const SET_LIBRARY_TYPES = 'SET_LIBRARY_TYPES';
 export const SET_LIBRARY_FILTER_STATUS = 'SET_LIBRARY_FILTER_STATUS';
 export const SET_LIBRARY_FILTER_PROGRESS = 'SET_LIBRARY_FILTER_PROGRESS';
 export const SET_LIBRARY_FILTER_USER_TAGS = 'SET_LIBRARY_FILTER_USER_TAGS';
@@ -37,6 +38,7 @@ export interface SettingsState {
   autoCheckForExtensionUpdates: boolean;
   customDownloadsDir: string;
   libraryColumns: number;
+  libraryTypes: string;
   libraryFilterStatus: SeriesStatus | null;
   libraryFilterProgress: ProgressFilter;
   libraryFilterUserTags: string[];
@@ -157,6 +159,13 @@ interface SetLibraryColumnsAction {
   };
 }
 
+interface SetLibraryTypesAction {
+  type: typeof SET_LIBRARY_TYPES;
+  payload: {
+    libraryTypes: string;
+  };
+}
+
 interface SetLibraryFilterStatusAction {
   type: typeof SET_LIBRARY_FILTER_STATUS;
   payload: {
@@ -229,6 +238,7 @@ export type SettingsAction =
   | SetAutoCheckForExtensionUpdatesAction
   | SetCustomDownloadsDirAction
   | SetLibraryColumnsAction
+  | SetLibraryTypesAction
   | SetLibraryFilterStatusAction
   | SetLibraryFilterProgressAction
   | SetLibraryFilterUserTagsAction

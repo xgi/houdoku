@@ -19,6 +19,7 @@ export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.AutoCheckForExtensionUpdates]: true,
   [GeneralSetting.CustomDownloadsDir]: '',
   [GeneralSetting.LibraryColumns]: 4,
+  [GeneralSetting.LibraryTypes]: 'GRID',
   [GeneralSetting.LibraryFilterStatus]: null,
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
   [GeneralSetting.LibraryFilterUserTags]: [],
