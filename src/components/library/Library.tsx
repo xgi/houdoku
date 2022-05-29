@@ -15,6 +15,7 @@ import SeriesGrid from '../general/SeriesGrid';
 import LibraryControlBar from './LibraryControlBar';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesList from '../general/SeriesList';
+import { LibraryType } from '../../models/types';
 
 const { confirm } = Modal;
 
@@ -26,6 +27,7 @@ const mapState = (state: RootState) => ({
   libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
   libraryType: state.settings.libraryTypes,
+  librarySort: state.settings.librarySort,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -87,7 +89,7 @@ const Library: React.FC<Props> = (props: Props) => {
   const renderSeries = () => {
     return (
       <>
-        {JSON.stringify(props.libraryType) === 'GRID' ? (
+        {props.libraryType == LibraryType.Grid ? (
           <div className={styles.seriesGrid}>
             <SeriesGrid
               columns={props.libraryColumns}
@@ -97,6 +99,7 @@ const Library: React.FC<Props> = (props: Props) => {
               filterStatus={props.libraryFilterStatus}
               filterProgress={props.libraryFilterProgress}
               filterUserTags={props.libraryFilterUserTags}
+              librarySort={props.librarySort}
               clickFunc={goToSeries}
               inLibraryFunc={undefined}
             />

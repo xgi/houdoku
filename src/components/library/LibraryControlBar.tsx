@@ -19,13 +19,14 @@ import { setFilter } from '../../features/library/actions';
 import { loadSeriesList, reloadSeriesList } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
-import { LibraryType, ProgressFilter } from '../../models/types';
+import { LibrarySort, LibraryType, ProgressFilter } from '../../models/types';
 import {
   setLibraryColumns,
   setLibraryTypes,
   setLibraryFilterProgress,
   setLibraryFilterStatus,
   setLibraryFilterUserTags,
+  setLibrarySort,
 } from '../../features/settings/actions';
 
 const { Option } = Select;
@@ -40,6 +41,7 @@ const mapState = (state: RootState) => ({
   libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
   libraryTypes: state.settings.libraryTypes,
+  librarySort: state.settings.librarySort,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,8 +59,10 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setLibraryFilterUserTags(userTags)),
   setLibraryColumns: (libraryColumns: number) =>
     dispatch(setLibraryColumns(libraryColumns)),
-  setLibraryTypes: (libraryTypes: string) =>
+  setLibraryTypes: (libraryTypes: LibraryType) =>
     dispatch(setLibraryTypes(libraryTypes)),
+  setLibrarySort: (librarySort: LibrarySort) =>
+    dispatch(setLibrarySort(librarySort)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -109,6 +113,19 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
 
     if (props.libraryTypes === LibraryType.Grid) return `${prefix}Grid`;
     if (props.libraryTypes === LibraryType.List) return `${prefix}List`;
+    return prefix;
+  };
+
+  /**
+   * Get a displayable string for the current librarySort value.
+   * @returns a user-friendly representation of the librarySort prop
+   */
+  const getLibrarySortText = () => {
+    const prefix = 'Sort: ';
+
+    if (props.librarySort === LibrarySort.Asc) return `${prefix}Asc`;
+    if (props.librarySort === LibrarySort.Desc) return `${prefix}Dsc`;
+    if (props.librarySort === LibrarySort.Title) return `${prefix}Title`;
     return prefix;
   };
 
@@ -210,7 +227,6 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
             {getFilterProgressText()} <DownOutlined />
           </Button>
         </Dropdown>
-
         <Dropdown
           className={styles.libraryTypeDropdown}
           overlay={
@@ -232,7 +248,30 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
             {getLibraryTypeText()} <DownOutlined />
           </Button>
         </Dropdown>
-
+        <Dropdown
+          className={styles.libraryTypeDropdown}
+          overlay={
+            <Menu
+              onClick={(e: any) =>
+                props.setLibrarySort(e.item.props['data-value'])
+              }
+            >
+              <Menu.Item key={LibrarySort.Asc} data-value={LibrarySort.Asc}>
+                Ascending
+              </Menu.Item>
+              <Menu.Item key={LibrarySort.Desc} data-value={LibrarySort.Desc}>
+                Descending
+              </Menu.Item>
+              <Menu.Item key={LibrarySort.Title} data-value={LibrarySort.Title}>
+                Title
+              </Menu.Item>
+            </Menu>
+          }
+        >
+          <Button>
+            {getLibrarySortText()} <DownOutlined />
+          </Button>
+        </Dropdown>
         <Dropdown
           className={styles.statusDropdown}
           overlay={

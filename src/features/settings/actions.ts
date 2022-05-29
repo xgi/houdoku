@@ -1,5 +1,7 @@
 import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
+  LibrarySort,
+  LibraryType,
   PageStyle,
   ProgressFilter,
   ReaderSetting,
@@ -20,6 +22,8 @@ import {
   SET_LIBRARY_FILTER_STATUS,
   SET_LIBRARY_FILTER_PROGRESS,
   SET_LIBRARY_FILTER_USER_TAGS,
+  SET_LIBRARY_TYPES,
+  SET_LIBRARY_SORT,
   SET_KEYBINDING,
   SET_CUSTOM_DOWNLOADS_DIR,
   SET_FIT_CONTAIN_TO_WIDTH,
@@ -29,7 +33,6 @@ import {
   SET_READING_DIRECTION,
   TOGGLE_PAGE_STYLE,
   TOGGLE_READING_DIRECTION,
-  SET_LIBRARY_TYPES,
 } from './types';
 
 export function setChapterLanguages(
@@ -94,7 +97,7 @@ export function setLibraryColumns(libraryColumns: number): SettingsAction {
   };
 }
 
-export function setLibraryTypes(libraryTypes: string): SettingsAction {
+export function setLibraryTypes(libraryTypes: LibraryType): SettingsAction {
   return {
     type: SET_LIBRARY_TYPES,
     payload: {
@@ -121,6 +124,15 @@ export function setLibraryFilterProgress(
     type: SET_LIBRARY_FILTER_PROGRESS,
     payload: {
       progress,
+    },
+  };
+}
+
+export function setLibrarySort(librarySort: LibrarySort): SettingsAction {
+  return {
+    type: SET_LIBRARY_SORT,
+    payload: {
+      librarySort,
     },
   };
 }

@@ -6,7 +6,7 @@ import { ipcRenderer } from 'electron';
 import Title from 'antd/lib/typography/Title';
 import { CheckOutlined } from '@ant-design/icons';
 import { Series, SeriesStatus } from 'houdoku-extension-lib';
-import { ProgressFilter } from '../../models/types';
+import { LibrarySort, ProgressFilter } from '../../models/types';
 import styles from './SeriesGrid.css';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -26,6 +26,7 @@ type Props = {
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
   filterUserTags: string[];
+  librarySort: LibrarySort;
   clickFunc: (series: Series, inLibrary: boolean | undefined) => void;
   inLibraryFunc: ((series: Series) => boolean) | undefined;
 };
@@ -91,11 +92,20 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
       return true;
     });
 
-    return props.sorted
-      ? filteredList.sort((a: Series, b: Series) =>
+    switch (props.librarySort) {
+      case LibrarySort.Asc:
+        return filteredList.sort(
+          (a: Series, b: Series) => a.numberUnread - b.numberUnread
+        );
+      case LibrarySort.Desc:
+        return filteredList.sort(
+          (a: Series, b: Series) => b.numberUnread - a.numberUnread
+        );
+      case LibrarySort.Title:
+        return filteredList.sort((a: Series, b: Series) =>
           a.title.localeCompare(b.title)
-        )
-      : filteredList;
+        );
+    }
   };
 
   /**

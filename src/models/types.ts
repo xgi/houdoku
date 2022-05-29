@@ -59,6 +59,12 @@ export enum ProgressFilter {
   Finished = 'Finished',
 }
 
+export enum LibrarySort {
+  Asc = 'ASC',
+  Desc = 'DESC',
+  Title = 'TITLE',
+}
+
 export enum LibraryType {
   Grid = 'GRID',
   List = 'LIST',
@@ -72,6 +78,7 @@ export enum GeneralSetting {
   CustomDownloadsDir = 'CustomDownloadsDir',
   LibraryColumns = 'LibraryColumns',
   LibraryTypes = 'LibraryTypes',
+  LibrarySort = 'LibrarySort',
   LibraryFilterStatus = 'LibraryFilterStatus',
   LibraryFilterProgress = 'LibraryFilterProgress',
   LibraryFilterUserTags = 'LibraryFilterUserTags',

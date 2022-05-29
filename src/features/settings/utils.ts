@@ -8,6 +8,8 @@ import {
   ProgressFilter,
   ReaderSetting,
   TrackerSetting,
+  LibraryType,
+  LibrarySort,
 } from '../../models/types';
 import persistantStore from '../../util/persistantStore';
 import storeKeys from '../../constants/storeKeys.json';
@@ -19,7 +21,8 @@ export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.AutoCheckForExtensionUpdates]: true,
   [GeneralSetting.CustomDownloadsDir]: '',
   [GeneralSetting.LibraryColumns]: 4,
-  [GeneralSetting.LibraryTypes]: 'GRID',
+  [GeneralSetting.LibraryTypes]: LibraryType.Grid,
+  [GeneralSetting.LibrarySort]: LibrarySort.Desc,
   [GeneralSetting.LibraryFilterStatus]: null,
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
   [GeneralSetting.LibraryFilterUserTags]: [],

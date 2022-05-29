@@ -32,6 +32,7 @@ import {
   TOGGLE_READING_DIRECTION,
   SET_READING_DIRECTION,
   SET_LIBRARY_TYPES,
+  SET_LIBRARY_SORT,
 } from './types';
 import {
   DEFAULT_GENERAL_SETTINGS,
@@ -86,6 +87,10 @@ const initialState: SettingsState = {
     storedGeneralSettings.LibraryFilterStatus === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterStatus]
       : storedGeneralSettings.LibraryFilterStatus,
+  librarySort:
+    storedGeneralSettings.LibrarySort === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibrarySort]
+      : storedGeneralSettings.LibrarySort,
   libraryFilterProgress:
     storedGeneralSettings.LibraryFilterProgress === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterProgress]
@@ -277,6 +282,15 @@ export default function settings(
       return {
         ...state,
         libraryFilterStatus: action.payload.status,
+      };
+    case SET_LIBRARY_SORT:
+      saveGeneralSetting(
+        GeneralSetting.LibrarySort,
+        action.payload.librarySort
+      );
+      return {
+        ...state,
+        librarySort: action.payload.librarySort,
       };
     case SET_LIBRARY_FILTER_PROGRESS:
       saveGeneralSetting(
