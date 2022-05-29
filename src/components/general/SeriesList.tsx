@@ -74,15 +74,16 @@ const SeriesList: React.FC<Props> = (props: Props) => {
     },
     {
       title: 'Authors',
-      key: 'genres',
+      key: 'authors',
       render: (series: any) => {
-        return series.authors.map((author: any) => <Tag>{author}</Tag>);
+        return series.authors.map((author: any) => (
+          <Tag key={author}>{author}</Tag>
+        ));
       },
     },
-
     {
       title: 'Series',
-      key: 'read',
+      key: 'title',
       render: (series: any) => {
         const inLibrary: boolean | undefined =
           props.inLibraryFunc === undefined
@@ -90,14 +91,13 @@ const SeriesList: React.FC<Props> = (props: Props) => {
             : props.inLibraryFunc(series);
 
         return (
-          <div>
-            <Button
-              onClick={() => props.clickFunc(series, inLibrary)}
-              type="primary"
-            >
-              Continue
-            </Button>
-          </div>
+          <Button
+            onClick={() => props.clickFunc(series, inLibrary)}
+            type="primary"
+            key={series}
+          >
+            Continue
+          </Button>
         );
       },
     },
@@ -108,6 +108,7 @@ const SeriesList: React.FC<Props> = (props: Props) => {
       <Table
         columns={listColumns}
         dataSource={getFilteredList(props.seriesList)}
+        rowKey="id"
       />
     </>
   );

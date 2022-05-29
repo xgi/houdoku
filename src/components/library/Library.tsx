@@ -87,7 +87,7 @@ const Library: React.FC<Props> = (props: Props) => {
   const renderSeries = () => {
     return (
       <>
-        {props.libraryType === 'GRID' ? (
+        {JSON.stringify(props.libraryType) === 'GRID' ? (
           <div className={styles.seriesGrid}>
             <SeriesGrid
               columns={props.libraryColumns}
