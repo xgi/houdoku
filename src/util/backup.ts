@@ -18,9 +18,11 @@ export const createBackup = async () => {
 export const restoreBackup = (e: any) => {
   e.preventDefault();
   const reader = new FileReader();
-  reader.onload = (e) => {
-    if (e.target) {
-      const text: string | ArrayBuffer | null = JSON.parse(e.target.result);
+  reader.onload = (progressEvent: any) => {
+    if (progressEvent.target) {
+      const text: string | ArrayBuffer | null = JSON.parse(
+        progressEvent.target.result
+      );
       persistantStore.write(storeKeys.LIBRARY.SERIES_LIST, text);
     }
   };
