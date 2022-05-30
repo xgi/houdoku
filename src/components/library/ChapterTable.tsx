@@ -19,6 +19,7 @@ import {
 } from '../../features/library/actions';
 import { useForceUpdate } from '../../util/reactutil';
 import flags from '../../img/flags.png';
+import moment from 'moment';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
@@ -171,14 +172,14 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      width: '33%',
+      width: '30%',
       ...getColumnSearchProps('title'),
     },
     {
       title: 'Group',
       dataIndex: 'groupName',
       key: 'groupName',
-      width: '22%',
+      width: '17%',
       ...getColumnSearchProps('groupName'),
     },
     {
@@ -204,6 +205,16 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         compare: (a: Chapter, b: Chapter) =>
           parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber),
         multiple: 1,
+      },
+    },
+    {
+      title: 'Date',
+      dataIndex: 'time',
+      width: '8%',
+      key: 'time',
+      render: function render(_: string, record: Chapter) {
+        const msec = moment(record.time).format('Do MMM YY');
+        return msec;
       },
     },
     {

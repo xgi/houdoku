@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Tag, Table } from 'antd';
 import { Series, SeriesStatus } from 'houdoku-extension-lib';
-import { ProgressFilter } from '../../models/types';
+import { LibrarySort, ProgressFilter } from '../../models/types';
 
 type Props = {
   seriesList: Series[];
@@ -10,6 +10,7 @@ type Props = {
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
   filterUserTags: string[];
+  librarySort: LibrarySort;
   clickFunc: (series: Series, inLibrary: boolean | undefined) => void;
   inLibraryFunc: ((series: Series) => boolean) | undefined;
 };
@@ -49,11 +50,20 @@ const SeriesList: React.FC<Props> = (props: Props) => {
       return true;
     });
 
-    return props.sorted
-      ? filteredList.sort((a: Series, b: Series) =>
+    switch (props.librarySort) {
+      case LibrarySort.Asc:
+        return filteredList.sort(
+          (a: Series, b: Series) => a.numberUnread - b.numberUnread
+        );
+      case LibrarySort.Desc:
+        return filteredList.sort(
+          (a: Series, b: Series) => b.numberUnread - a.numberUnread
+        );
+      case LibrarySort.Title:
+        return filteredList.sort((a: Series, b: Series) =>
           a.title.localeCompare(b.title)
-        )
-      : filteredList;
+        );
+    }
   };
 
   const listColumns = [

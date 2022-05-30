@@ -113,6 +113,7 @@ const Library: React.FC<Props> = (props: Props) => {
               filterStatus={props.libraryFilterStatus}
               filterProgress={props.libraryFilterProgress}
               filterUserTags={props.libraryFilterUserTags}
+              librarySort={props.librarySort}
               clickFunc={goToSeries}
               inLibraryFunc={undefined}
             />
