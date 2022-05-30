@@ -147,6 +147,16 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
       GeneralSetting.LibraryFilterProgress
     ] as ProgressFilter;
   }
+  if (storeValues[GeneralSetting.LibraryTypes] !== null) {
+    settings[GeneralSetting.LibraryTypes] = storeValues[
+      GeneralSetting.LibraryTypes
+    ] as LibraryType;
+  }
+  if (storeValues[GeneralSetting.LibrarySort] !== null) {
+    settings[GeneralSetting.LibrarySort] = storeValues[
+      GeneralSetting.LibrarySort
+    ] as LibrarySort;
+  }
   if (storeValues[GeneralSetting.LibraryFilterUserTags] !== null) {
     const tags =
       storeValues[GeneralSetting.LibraryFilterUserTags]?.split(',') || [];
