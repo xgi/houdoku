@@ -6,6 +6,7 @@ const initialState: StatusState = {
 };
 
 export default function status(
+  // eslint-disable-next-line @typescript-eslint/default-param-last
   state = initialState,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   action: any
