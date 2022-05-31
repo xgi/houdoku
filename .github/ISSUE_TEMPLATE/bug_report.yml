@@ -84,4 +84,4 @@ body:
   - type: textarea
     id: additional-info
     attributes:
-      label: Additional information
+      label: Additional information (optional)

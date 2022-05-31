@@ -1,0 +1,32 @@
+name: 🔮 Feature request
+description: Request a feature for Houdoku
+labels: [feature request]
+body:
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgements
+      description: Before opening a ticket, please go through the following steps.
+      options:
+        - label: Check that there is not an existing ticket for this request, and that it is not related to an existing ticket.
+          required: true
+        - label: Create one ticket per feature. Feel free to create multiple tickets.
+          required: true
+        - label: If this is an extension-related request, open a ticket in the [extensions repo](https://github.com/xgi/houdoku-extensions/issues/new/choose) instead.
+          required: true
+        - label: Write a concise title for this ticket in the field above.
+          required: true
+
+  - type: textarea
+    id: feature-info
+    attributes:
+      label: Feature details
+      description: |
+        Describe how you would improve Houdoku
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional information (optional)
