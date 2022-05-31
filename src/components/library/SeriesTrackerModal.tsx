@@ -13,7 +13,11 @@ import {
   Spin,
   Tabs,
 } from 'antd';
-import { DownOutlined, CheckOutlined } from '@ant-design/icons';
+import {
+  DownOutlined,
+  CheckOutlined,
+  ArrowRightOutlined,
+} from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
@@ -177,7 +181,11 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const renderTrackEntry = (trackerId: string) => {
+  const renderTrackEntry = (
+    trackerId: string,
+    trackerUrl: string,
+    trackerName: string
+  ) => {
     const trackEntry = trackEntries[trackerId];
     if (trackEntry === undefined)
       return <Paragraph>Failed to define tracker entry.</Paragraph>;
@@ -186,7 +194,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
       <>
         <Row className={styles.row}>
           <Col span={8}>Status</Col>
-          <Col span={16}>
+          <Col span={8}>
             <Dropdown
               overlay={
                 <Menu
@@ -219,6 +227,19 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
                 {trackEntry?.status} <DownOutlined />
               </Button>
             </Dropdown>
+          </Col>
+          <Col>
+            <Button
+              type="primary"
+              onClick={() =>
+                window.open(
+                  `${trackerUrl}/manga/${trackEntry.seriesId}`,
+                  '_blank'
+                )
+              }
+            >
+              {trackerName} <ArrowRightOutlined rotate={-45} />
+            </Button>
           </Col>
         </Row>
         <Row className={styles.row}>
@@ -308,7 +329,11 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
     return props.series.trackerKeys &&
       props.series.trackerKeys[trackerMetadata.id]
-      ? renderTrackEntry(trackerMetadata.id)
+      ? renderTrackEntry(
+          trackerMetadata.id,
+          trackerMetadata.url,
+          trackerMetadata.name
+        )
       : renderTrackerSeriesList(trackerMetadata.id);
   };
 
