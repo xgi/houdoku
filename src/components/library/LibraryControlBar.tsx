@@ -109,7 +109,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
    * @returns a user-friendly representation of the libraryView prop
    */
   const getLibraryView = () => {
-    const prefix = 'Type: ';
+    const prefix = 'View: ';
 
     if (props.libraryViews === LibraryView.Grid) return `${prefix}Grid`;
     if (props.libraryViews === LibraryView.List) return `${prefix}List`;

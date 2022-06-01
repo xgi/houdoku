@@ -195,7 +195,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               overlay={
                 <Menu
                   onClick={(e: any) =>
-                    sendTrackEntry(trackerId, {
+                    sendTrackEntry(trackerMetadata.id, {
                       ...trackEntry,
                       status: e.item.props['data-value'] as TrackStatus,
                     })
@@ -249,14 +249,14 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
                 onChange={(value) =>
                   setTrackEntries({
                     ...trackEntries,
-                    [trackerId]: { ...trackEntry, progress: value },
+                    [trackerMetadata.id]: { ...trackEntry, progress: value },
                   })
                 }
               />
               <Button
                 className={styles.progressSubmitButton}
                 icon={<CheckOutlined />}
-                onClick={() => sendTrackEntry(trackerId, trackEntry)}
+                onClick={() => sendTrackEntry(trackerMetadata.id, trackEntry)}
               />
             </span>
           </Col>
@@ -268,7 +268,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               overlay={
                 <Menu
                   onClick={(e: any) => {
-                    sendTrackEntry(trackerId, {
+                    sendTrackEntry(trackerMetadata.id, {
                       ...trackEntry,
                       score: parseInt(e.item.props['data-value'], 10),
                     });
