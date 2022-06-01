@@ -79,10 +79,10 @@ const initialState: SettingsState = {
     storedGeneralSettings.LibraryColumns === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryColumns]
       : storedGeneralSettings.LibraryColumns,
-  libraryTypes:
-    storedGeneralSettings.LibraryTypes === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryTypes]
-      : storedGeneralSettings.LibraryTypes,
+  libraryViews:
+    storedGeneralSettings.LibraryViews === undefined
+      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryViews]
+      : storedGeneralSettings.LibraryViews,
   libraryFilterStatus:
     storedGeneralSettings.LibraryFilterStatus === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterStatus]
@@ -267,12 +267,12 @@ export default function settings(
       };
     case SET_LIBRARY_TYPES:
       saveGeneralSetting(
-        GeneralSetting.LibraryTypes,
-        action.payload.libraryTypes
+        GeneralSetting.LibraryViews,
+        action.payload.libraryViews
       );
       return {
         ...state,
-        libraryTypes: action.payload.libraryTypes,
+        libraryViews: action.payload.libraryViews,
       };
     case SET_LIBRARY_FILTER_STATUS:
       saveGeneralSetting(

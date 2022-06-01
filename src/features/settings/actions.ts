@@ -1,7 +1,7 @@
 import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
   LibrarySort,
-  LibraryType,
+  LibraryView,
   PageStyle,
   ProgressFilter,
   ReaderSetting,
@@ -97,11 +97,11 @@ export function setLibraryColumns(libraryColumns: number): SettingsAction {
   };
 }
 
-export function setLibraryTypes(libraryTypes: LibraryType): SettingsAction {
+export function setLibraryViews(libraryViews: LibraryView): SettingsAction {
   return {
     type: SET_LIBRARY_TYPES,
     payload: {
-      libraryTypes,
+      libraryViews,
     },
   };
 }

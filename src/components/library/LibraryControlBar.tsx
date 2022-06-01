@@ -19,10 +19,10 @@ import { setFilter } from '../../features/library/actions';
 import { loadSeriesList, reloadSeriesList } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
-import { LibrarySort, LibraryType, ProgressFilter } from '../../models/types';
+import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import {
   setLibraryColumns,
-  setLibraryTypes,
+  setLibraryViews,
   setLibraryFilterProgress,
   setLibraryFilterStatus,
   setLibraryFilterUserTags,
@@ -40,7 +40,7 @@ const mapState = (state: RootState) => ({
   libraryFilterProgress: state.settings.libraryFilterProgress,
   libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
-  libraryTypes: state.settings.libraryTypes,
+  libraryViews: state.settings.libraryViews,
   librarySort: state.settings.librarySort,
 });
 
@@ -59,8 +59,8 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setLibraryFilterUserTags(userTags)),
   setLibraryColumns: (libraryColumns: number) =>
     dispatch(setLibraryColumns(libraryColumns)),
-  setLibraryTypes: (libraryTypes: LibraryType) =>
-    dispatch(setLibraryTypes(libraryTypes)),
+  setLibraryViews: (libraryViews: LibraryView) =>
+    dispatch(setLibraryViews(libraryViews)),
   setLibrarySort: (librarySort: LibrarySort) =>
     dispatch(setLibrarySort(librarySort)),
 });
@@ -105,14 +105,14 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   };
 
   /**
-   * Get a displayable string for the current libraryType value.
-   * @returns a user-friendly representation of the libraryType prop
+   * Get a displayable string for the current libraryView value.
+   * @returns a user-friendly representation of the libraryView prop
    */
-  const getLibraryTypeText = () => {
+  const getLibraryView = () => {
     const prefix = 'Type: ';
 
-    if (props.libraryTypes === LibraryType.Grid) return `${prefix}Grid`;
-    if (props.libraryTypes === LibraryType.List) return `${prefix}List`;
+    if (props.libraryViews === LibraryView.Grid) return `${prefix}Grid`;
+    if (props.libraryViews === LibraryView.List) return `${prefix}List`;
     return prefix;
   };
 
@@ -228,28 +228,28 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           </Button>
         </Dropdown>
         <Dropdown
-          className={styles.libraryTypeDropdown}
+          className={styles.libraryViewDropdown}
           overlay={
             <Menu
               onClick={(e: any) =>
-                props.setLibraryTypes(e.item.props['data-value'])
+                props.setLibraryViews(e.item.props['data-value'])
               }
             >
-              <Menu.Item key={LibraryType.Grid} data-value={LibraryType.Grid}>
+              <Menu.Item key={LibraryView.Grid} data-value={LibraryView.Grid}>
                 Grid
               </Menu.Item>
-              <Menu.Item key={LibraryType.List} data-value={LibraryType.List}>
+              <Menu.Item key={LibraryView.List} data-value={LibraryView.List}>
                 List
               </Menu.Item>
             </Menu>
           }
         >
           <Button>
-            {getLibraryTypeText()} <DownOutlined />
+            {getLibraryView()} <DownOutlined />
           </Button>
         </Dropdown>
         <Dropdown
-          className={styles.libraryTypeDropdown}
+          className={styles.libraryViewDropdown}
           overlay={
             <Menu
               onClick={(e: any) =>

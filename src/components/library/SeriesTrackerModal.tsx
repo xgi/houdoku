@@ -181,12 +181,8 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const renderTrackEntry = (
-    trackerId: string,
-    trackerUrl: string,
-    trackerName: string
-  ) => {
-    const trackEntry = trackEntries[trackerId];
+  const renderTrackEntry = (trackerMetadata: TrackerMetadata) => {
+    const trackEntry = trackEntries[trackerMetadata.id];
     if (trackEntry === undefined)
       return <Paragraph>Failed to define tracker entry.</Paragraph>;
 
@@ -233,12 +229,12 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               type="primary"
               onClick={() =>
                 window.open(
-                  `${trackerUrl}/manga/${trackEntry.seriesId}`,
+                  `${trackerMetadata.url}/manga/${trackEntry.seriesId}`,
                   '_blank'
                 )
               }
             >
-              {trackerName} <ArrowRightOutlined rotate={-45} />
+              {trackerMetadata.name} <ArrowRightOutlined rotate={-45} />
             </Button>
           </Col>
         </Row>
@@ -298,7 +294,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
         <Paragraph className={styles.unlinkText}>
           <a
             onClick={() => {
-              applySeriesTrackerKey(trackerId, '');
+              applySeriesTrackerKey(trackerMetadata.id, '');
             }}
           >
             Unlink this series.
@@ -329,11 +325,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
     return props.series.trackerKeys &&
       props.series.trackerKeys[trackerMetadata.id]
-      ? renderTrackEntry(
-          trackerMetadata.id,
-          trackerMetadata.url,
-          trackerMetadata.name
-        )
+      ? renderTrackEntry(trackerMetadata)
       : renderTrackerSeriesList(trackerMetadata.id);
   };
 

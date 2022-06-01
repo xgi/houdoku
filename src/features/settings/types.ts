@@ -1,7 +1,7 @@
 import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
   LibrarySort,
-  LibraryType,
+  LibraryView,
   PageStyle,
   ProgressFilter,
   ReaderSetting,
@@ -41,7 +41,7 @@ export interface SettingsState {
   autoCheckForExtensionUpdates: boolean;
   customDownloadsDir: string;
   libraryColumns: number;
-  libraryTypes: LibraryType;
+  libraryViews: LibraryView;
   librarySort: LibrarySort;
   libraryFilterStatus: SeriesStatus | null;
   libraryFilterProgress: ProgressFilter;
@@ -163,10 +163,10 @@ interface SetLibraryColumnsAction {
   };
 }
 
-interface SetLibraryTypesAction {
+interface SetLibraryViewsAction {
   type: typeof SET_LIBRARY_TYPES;
   payload: {
-    libraryTypes: LibraryType;
+    libraryViews: LibraryView;
   };
 }
 
@@ -247,7 +247,7 @@ export type SettingsAction =
   | SetAutoCheckForExtensionUpdatesAction
   | SetCustomDownloadsDirAction
   | SetLibraryColumnsAction
-  | SetLibraryTypesAction
+  | SetLibraryViewsAction
   | SetLibrarySortAction
   | SetLibraryFilterStatusAction
   | SetLibraryFilterProgressAction

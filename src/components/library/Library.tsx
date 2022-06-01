@@ -15,7 +15,7 @@ import SeriesGrid from '../general/SeriesGrid';
 import LibraryControlBar from './LibraryControlBar';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesList from '../general/SeriesList';
-import { LibraryType } from '../../models/types';
+import { LibraryView } from '../../models/types';
 
 const { confirm } = Modal;
 
@@ -26,7 +26,7 @@ const mapState = (state: RootState) => ({
   libraryFilterProgress: state.settings.libraryFilterProgress,
   libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
-  libraryType: state.settings.libraryTypes,
+  libraryView: state.settings.libraryViews,
   librarySort: state.settings.librarySort,
 });
 
@@ -89,7 +89,7 @@ const Library: React.FC<Props> = (props: Props) => {
   const renderSeries = () => {
     return (
       <>
-        {props.libraryType == LibraryType.Grid ? (
+        {props.libraryView == LibraryView.Grid ? (
           <div className={styles.seriesGrid}>
             <SeriesGrid
               columns={props.libraryColumns}

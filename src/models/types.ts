@@ -65,7 +65,7 @@ export enum LibrarySort {
   Title = 'TITLE',
 }
 
-export enum LibraryType {
+export enum LibraryView {
   Grid = 'GRID',
   List = 'LIST',
 }
@@ -77,7 +77,7 @@ export enum GeneralSetting {
   AutoCheckForExtensionUpdates = 'AutoCheckForExtensionUpdates',
   CustomDownloadsDir = 'CustomDownloadsDir',
   LibraryColumns = 'LibraryColumns',
-  LibraryTypes = 'LibraryTypes',
+  LibraryViews = 'LibraryViews',
   LibrarySort = 'LibrarySort',
   LibraryFilterStatus = 'LibraryFilterStatus',
   LibraryFilterProgress = 'LibraryFilterProgress',
