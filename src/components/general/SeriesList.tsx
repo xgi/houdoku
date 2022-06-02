@@ -51,17 +51,21 @@ const SeriesList: React.FC<Props> = (props: Props) => {
     });
 
     switch (props.librarySort) {
-      case LibrarySort.Asc:
+      case LibrarySort.UnreadAsc:
         return filteredList.sort(
           (a: Series, b: Series) => a.numberUnread - b.numberUnread
         );
-      case LibrarySort.Desc:
+      case LibrarySort.UnreadDesc:
         return filteredList.sort(
           (a: Series, b: Series) => b.numberUnread - a.numberUnread
         );
-      case LibrarySort.Title:
+      case LibrarySort.TitleAsc:
         return filteredList.sort((a: Series, b: Series) =>
           a.title.localeCompare(b.title)
+        );
+      case LibrarySort.TitleDesc:
+        return filteredList.sort((a: Series, b: Series) =>
+          b.title.localeCompare(a.title)
         );
     }
   };

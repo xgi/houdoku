@@ -22,7 +22,7 @@ export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.CustomDownloadsDir]: '',
   [GeneralSetting.LibraryColumns]: 4,
   [GeneralSetting.LibraryViews]: LibraryView.Grid,
-  [GeneralSetting.LibrarySort]: LibrarySort.Desc,
+  [GeneralSetting.LibrarySort]: LibrarySort.TitleAsc,
   [GeneralSetting.LibraryFilterStatus]: null,
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
   [GeneralSetting.LibraryFilterUserTags]: [],

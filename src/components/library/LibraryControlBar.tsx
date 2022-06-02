@@ -123,9 +123,13 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const getLibrarySortText = () => {
     const prefix = 'Sort: ';
 
-    if (props.librarySort === LibrarySort.Asc) return `${prefix}Asc`;
-    if (props.librarySort === LibrarySort.Desc) return `${prefix}Dsc`;
-    if (props.librarySort === LibrarySort.Title) return `${prefix}Title`;
+    if (props.librarySort === LibrarySort.TitleAsc) return `${prefix}Title Asc`;
+    if (props.librarySort === LibrarySort.TitleDesc)
+      return `${prefix}Title Desc`;
+    if (props.librarySort === LibrarySort.UnreadAsc)
+      return `${prefix}Unread Asc`;
+    if (props.librarySort === LibrarySort.UnreadDesc)
+      return `${prefix}Unread Desc`;
     return prefix;
   };
 
@@ -256,14 +260,29 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
                 props.setLibrarySort(e.item.props['data-value'])
               }
             >
-              <Menu.Item key={LibrarySort.Asc} data-value={LibrarySort.Asc}>
-                Ascending
+              <Menu.Item
+                key={LibrarySort.TitleAsc}
+                data-value={LibrarySort.TitleAsc}
+              >
+                Title Asc
               </Menu.Item>
-              <Menu.Item key={LibrarySort.Desc} data-value={LibrarySort.Desc}>
-                Descending
+              <Menu.Item
+                key={LibrarySort.TitleDesc}
+                data-value={LibrarySort.TitleDesc}
+              >
+                Title Desc
               </Menu.Item>
-              <Menu.Item key={LibrarySort.Title} data-value={LibrarySort.Title}>
-                Title
+              <Menu.Item
+                key={LibrarySort.UnreadDesc}
+                data-value={LibrarySort.UnreadDesc}
+              >
+                Unread Desc
+              </Menu.Item>
+              <Menu.Item
+                key={LibrarySort.UnreadAsc}
+                data-value={LibrarySort.UnreadAsc}
+              >
+                Unread Asc
               </Menu.Item>
             </Menu>
           }
