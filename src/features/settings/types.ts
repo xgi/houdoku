@@ -1,5 +1,7 @@
 import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import {
+  LibrarySort,
+  LibraryView,
   PageStyle,
   ProgressFilter,
   ReaderSetting,
@@ -21,6 +23,8 @@ export const SET_AUTO_CHECK_FOR_EXTENSION_UPDATES =
   'SET_AUTO_CHECK_FOR_EXTENSION_UPDATES';
 export const SET_CUSTOM_DOWNLOADS_DIR = 'SET_CUSTOM_DOWNLOADS_DIR';
 export const SET_LIBRARY_COLUMNS = 'SET_LIBRARY_COLUMNS';
+export const SET_LIBRARY_TYPES = 'SET_LIBRARY_TYPES';
+export const SET_LIBRARY_SORT = 'SET_LIBRARY_SORT';
 export const SET_LIBRARY_FILTER_STATUS = 'SET_LIBRARY_FILTER_STATUS';
 export const SET_LIBRARY_FILTER_PROGRESS = 'SET_LIBRARY_FILTER_PROGRESS';
 export const SET_LIBRARY_FILTER_USER_TAGS = 'SET_LIBRARY_FILTER_USER_TAGS';
@@ -37,6 +41,8 @@ export interface SettingsState {
   autoCheckForExtensionUpdates: boolean;
   customDownloadsDir: string;
   libraryColumns: number;
+  libraryViews: LibraryView;
+  librarySort: LibrarySort;
   libraryFilterStatus: SeriesStatus | null;
   libraryFilterProgress: ProgressFilter;
   libraryFilterUserTags: string[];
@@ -157,13 +163,25 @@ interface SetLibraryColumnsAction {
   };
 }
 
+interface SetLibraryViewsAction {
+  type: typeof SET_LIBRARY_TYPES;
+  payload: {
+    libraryViews: LibraryView;
+  };
+}
+
 interface SetLibraryFilterStatusAction {
   type: typeof SET_LIBRARY_FILTER_STATUS;
   payload: {
     status: SeriesStatus | null;
   };
 }
-
+interface SetLibrarySortAction {
+  type: typeof SET_LIBRARY_SORT;
+  payload: {
+    librarySort: LibrarySort;
+  };
+}
 interface SetLibraryFilterProgressAction {
   type: typeof SET_LIBRARY_FILTER_PROGRESS;
   payload: {
@@ -229,6 +247,8 @@ export type SettingsAction =
   | SetAutoCheckForExtensionUpdatesAction
   | SetCustomDownloadsDirAction
   | SetLibraryColumnsAction
+  | SetLibraryViewsAction
+  | SetLibrarySortAction
   | SetLibraryFilterStatusAction
   | SetLibraryFilterProgressAction
   | SetLibraryFilterUserTagsAction

@@ -8,6 +8,8 @@ import {
   ProgressFilter,
   ReaderSetting,
   TrackerSetting,
+  LibraryView,
+  LibrarySort,
 } from '../../models/types';
 import persistantStore from '../../util/persistantStore';
 import storeKeys from '../../constants/storeKeys.json';
@@ -19,6 +21,8 @@ export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.AutoCheckForExtensionUpdates]: true,
   [GeneralSetting.CustomDownloadsDir]: '',
   [GeneralSetting.LibraryColumns]: 4,
+  [GeneralSetting.LibraryViews]: LibraryView.Grid,
+  [GeneralSetting.LibrarySort]: LibrarySort.TitleAsc,
   [GeneralSetting.LibraryFilterStatus]: null,
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
   [GeneralSetting.LibraryFilterUserTags]: [],
@@ -142,6 +146,16 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
     settings[GeneralSetting.LibraryFilterProgress] = storeValues[
       GeneralSetting.LibraryFilterProgress
     ] as ProgressFilter;
+  }
+  if (storeValues[GeneralSetting.LibraryViews] !== null) {
+    settings[GeneralSetting.LibraryViews] = storeValues[
+      GeneralSetting.LibraryViews
+    ] as LibraryView;
+  }
+  if (storeValues[GeneralSetting.LibrarySort] !== null) {
+    settings[GeneralSetting.LibrarySort] = storeValues[
+      GeneralSetting.LibrarySort
+    ] as LibrarySort;
   }
   if (storeValues[GeneralSetting.LibraryFilterUserTags] !== null) {
     const tags =

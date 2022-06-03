@@ -59,6 +59,18 @@ export enum ProgressFilter {
   Finished = 'Finished',
 }
 
+export enum LibrarySort {
+  UnreadAsc = 'UnreadAsc',
+  UnreadDesc = 'UnreadDesc',
+  TitleAsc = 'TitleAsc',
+  TitleDesc = 'TitleDesc',
+}
+
+export enum LibraryView {
+  Grid = 'GRID',
+  List = 'LIST',
+}
+
 export enum GeneralSetting {
   ChapterLanguages = 'ChapterLanguages',
   RefreshOnStart = 'RefreshOnStart',
@@ -66,6 +78,8 @@ export enum GeneralSetting {
   AutoCheckForExtensionUpdates = 'AutoCheckForExtensionUpdates',
   CustomDownloadsDir = 'CustomDownloadsDir',
   LibraryColumns = 'LibraryColumns',
+  LibraryViews = 'LibraryViews',
+  LibrarySort = 'LibrarySort',
   LibraryFilterStatus = 'LibraryFilterStatus',
   LibraryFilterProgress = 'LibraryFilterProgress',
   LibraryFilterUserTags = 'LibraryFilterUserTags',

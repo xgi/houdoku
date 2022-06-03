@@ -19,12 +19,14 @@ import { setFilter } from '../../features/library/actions';
 import { loadSeriesList, reloadSeriesList } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
-import { ProgressFilter } from '../../models/types';
+import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import {
   setLibraryColumns,
+  setLibraryViews,
   setLibraryFilterProgress,
   setLibraryFilterStatus,
   setLibraryFilterUserTags,
+  setLibrarySort,
 } from '../../features/settings/actions';
 
 const { Option } = Select;
@@ -38,6 +40,8 @@ const mapState = (state: RootState) => ({
   libraryFilterProgress: state.settings.libraryFilterProgress,
   libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
+  libraryViews: state.settings.libraryViews,
+  librarySort: state.settings.librarySort,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,6 +59,10 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setLibraryFilterUserTags(userTags)),
   setLibraryColumns: (libraryColumns: number) =>
     dispatch(setLibraryColumns(libraryColumns)),
+  setLibraryViews: (libraryViews: LibraryView) =>
+    dispatch(setLibraryViews(libraryViews)),
+  setLibrarySort: (librarySort: LibrarySort) =>
+    dispatch(setLibrarySort(librarySort)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -93,6 +101,35 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
       return `${prefix}Unread`;
     if (props.libraryFilterProgress === ProgressFilter.Finished)
       return `${prefix}Finished`;
+    return prefix;
+  };
+
+  /**
+   * Get a displayable string for the current libraryView value.
+   * @returns a user-friendly representation of the libraryView prop
+   */
+  const getLibraryView = () => {
+    const prefix = 'View: ';
+
+    if (props.libraryViews === LibraryView.Grid) return `${prefix}Grid`;
+    if (props.libraryViews === LibraryView.List) return `${prefix}List`;
+    return prefix;
+  };
+
+  /**
+   * Get a displayable string for the current librarySort value.
+   * @returns a user-friendly representation of the librarySort prop
+   */
+  const getLibrarySortText = () => {
+    const prefix = 'Sort: ';
+
+    if (props.librarySort === LibrarySort.TitleAsc) return `${prefix}Title Asc`;
+    if (props.librarySort === LibrarySort.TitleDesc)
+      return `${prefix}Title Desc`;
+    if (props.librarySort === LibrarySort.UnreadAsc)
+      return `${prefix}Unread Asc`;
+    if (props.librarySort === LibrarySort.UnreadDesc)
+      return `${prefix}Unread Desc`;
     return prefix;
   };
 
@@ -192,6 +229,66 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
         >
           <Button>
             {getFilterProgressText()} <DownOutlined />
+          </Button>
+        </Dropdown>
+        <Dropdown
+          className={styles.libraryViewDropdown}
+          overlay={
+            <Menu
+              onClick={(e: any) =>
+                props.setLibraryViews(e.item.props['data-value'])
+              }
+            >
+              <Menu.Item key={LibraryView.Grid} data-value={LibraryView.Grid}>
+                Grid
+              </Menu.Item>
+              <Menu.Item key={LibraryView.List} data-value={LibraryView.List}>
+                List
+              </Menu.Item>
+            </Menu>
+          }
+        >
+          <Button>
+            {getLibraryView()} <DownOutlined />
+          </Button>
+        </Dropdown>
+        <Dropdown
+          className={styles.libraryViewDropdown}
+          overlay={
+            <Menu
+              onClick={(e: any) =>
+                props.setLibrarySort(e.item.props['data-value'])
+              }
+            >
+              <Menu.Item
+                key={LibrarySort.TitleAsc}
+                data-value={LibrarySort.TitleAsc}
+              >
+                Title Asc
+              </Menu.Item>
+              <Menu.Item
+                key={LibrarySort.TitleDesc}
+                data-value={LibrarySort.TitleDesc}
+              >
+                Title Desc
+              </Menu.Item>
+              <Menu.Item
+                key={LibrarySort.UnreadDesc}
+                data-value={LibrarySort.UnreadDesc}
+              >
+                Unread Desc
+              </Menu.Item>
+              <Menu.Item
+                key={LibrarySort.UnreadAsc}
+                data-value={LibrarySort.UnreadAsc}
+              >
+                Unread Asc
+              </Menu.Item>
+            </Menu>
+          }
+        >
+          <Button>
+            {getLibrarySortText()} <DownOutlined />
           </Button>
         </Dropdown>
         <Dropdown

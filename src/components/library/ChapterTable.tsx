@@ -171,14 +171,14 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      width: '33%',
+      width: '30%',
       ...getColumnSearchProps('title'),
     },
     {
       title: 'Group',
       dataIndex: 'groupName',
       key: 'groupName',
-      width: '22%',
+      width: '17%',
       ...getColumnSearchProps('groupName'),
     },
     {

@@ -13,7 +13,11 @@ import {
   Spin,
   Tabs,
 } from 'antd';
-import { DownOutlined, CheckOutlined } from '@ant-design/icons';
+import {
+  DownOutlined,
+  CheckOutlined,
+  ArrowRightOutlined,
+} from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
@@ -177,8 +181,8 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const renderTrackEntry = (trackerId: string) => {
-    const trackEntry = trackEntries[trackerId];
+  const renderTrackEntry = (trackerMetadata: TrackerMetadata) => {
+    const trackEntry = trackEntries[trackerMetadata.id];
     if (trackEntry === undefined)
       return <Paragraph>Failed to define tracker entry.</Paragraph>;
 
@@ -186,12 +190,12 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
       <>
         <Row className={styles.row}>
           <Col span={8}>Status</Col>
-          <Col span={16}>
+          <Col span={8}>
             <Dropdown
               overlay={
                 <Menu
                   onClick={(e: any) =>
-                    sendTrackEntry(trackerId, {
+                    sendTrackEntry(trackerMetadata.id, {
                       ...trackEntry,
                       status: e.item.props['data-value'] as TrackStatus,
                     })
@@ -220,6 +224,19 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               </Button>
             </Dropdown>
           </Col>
+          <Col>
+            <Button
+              type="primary"
+              onClick={() =>
+                window.open(
+                  `${trackerMetadata.url}/manga/${trackEntry.seriesId}`,
+                  '_blank'
+                )
+              }
+            >
+              {trackerMetadata.name} <ArrowRightOutlined rotate={-45} />
+            </Button>
+          </Col>
         </Row>
         <Row className={styles.row}>
           <Col span={8}>Progress</Col>
@@ -232,14 +249,14 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
                 onChange={(value) =>
                   setTrackEntries({
                     ...trackEntries,
-                    [trackerId]: { ...trackEntry, progress: value },
+                    [trackerMetadata.id]: { ...trackEntry, progress: value },
                   })
                 }
               />
               <Button
                 className={styles.progressSubmitButton}
                 icon={<CheckOutlined />}
-                onClick={() => sendTrackEntry(trackerId, trackEntry)}
+                onClick={() => sendTrackEntry(trackerMetadata.id, trackEntry)}
               />
             </span>
           </Col>
@@ -251,7 +268,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               overlay={
                 <Menu
                   onClick={(e: any) => {
-                    sendTrackEntry(trackerId, {
+                    sendTrackEntry(trackerMetadata.id, {
                       ...trackEntry,
                       score: parseInt(e.item.props['data-value'], 10),
                     });
@@ -277,7 +294,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
         <Paragraph className={styles.unlinkText}>
           <a
             onClick={() => {
-              applySeriesTrackerKey(trackerId, '');
+              applySeriesTrackerKey(trackerMetadata.id, '');
             }}
           >
             Unlink this series.
@@ -308,7 +325,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
     return props.series.trackerKeys &&
       props.series.trackerKeys[trackerMetadata.id]
-      ? renderTrackEntry(trackerMetadata.id)
+      ? renderTrackEntry(trackerMetadata)
       : renderTrackerSeriesList(trackerMetadata.id);
   };
 
