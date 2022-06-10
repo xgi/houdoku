@@ -38,14 +38,22 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const viewerContainer = useRef<HTMLDivElement>(null);
   const [skipChangePageNumEffect, setSkipChangePageNumEffect] = useState(false);
 
-  const viewerContainerClickHandler = (e: any) => {
-    if (viewerContainer.current) {
-      const rect: DOMRect = viewerContainer.current.getBoundingClientRect();
-      const relX = e.clientX - rect.left;
-
-      if (relX > rect.width * 0.6) {
+  const viewerContainerClickHandler = (
+    e: React.MouseEvent,
+    pageStyle: PageStyle
+  ) => {
+    if (pageStyle === PageStyle.LongStrip) {
+      const visibleHeight = window.innerHeight;
+      if (e.clientY > visibleHeight * 0.6) {
         props.changePage(false);
-      } else if (relX < rect.width * 0.4) {
+      } else if (e.clientY < visibleHeight * 0.4) {
+        props.changePage(true);
+      }
+    } else {
+      const visibleWidth = window.innerWidth;
+      if (e.clientX > visibleWidth * 0.6) {
+        props.changePage(false);
+      } else if (e.clientX < visibleWidth * 0.4) {
         props.changePage(true);
       }
     }
@@ -246,11 +254,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         className={`
           ${styles.container}
           ${props.hideScrollbar ? styles.noScrollbar : ''}`}
-        onClick={
-          props.pageStyle === PageStyle.LongStrip
-            ? () => true
-            : viewerContainerClickHandler
-        }
+        onClick={(e) => viewerContainerClickHandler(e, props.pageStyle)}
       >
         {props.pageStyle === PageStyle.LongStrip
           ? getSeparatePageContainers()
