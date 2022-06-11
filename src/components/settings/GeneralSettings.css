@@ -5,3 +5,13 @@
 .downloadDirInput {
   width: 99% !important;
 }
+
+.downloadLocationGroup {
+  display: flex;
+  gap: 2px;
+}
+
+.backupButtonGroup {
+  display: flex;
+  gap: 8px;
+}

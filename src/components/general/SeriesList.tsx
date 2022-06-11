@@ -83,7 +83,7 @@ const SeriesList: React.FC<Props> = (props: Props) => {
       key: 'status',
     },
     {
-      title: 'Authors',
+      title: 'Author(s)',
       key: 'authors',
       render: (series: any) => {
         return series.authors.map((author: any) => (
@@ -92,7 +92,7 @@ const SeriesList: React.FC<Props> = (props: Props) => {
       },
     },
     {
-      title: 'Series',
+      title: '',
       key: 'title',
       render: (series: any) => {
         const inLibrary: boolean | undefined =

@@ -60,6 +60,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const GeneralSettings: React.FC<Props> = (props: Props) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
     switch (generalSetting) {
       case GeneralSetting.ChapterLanguages:
@@ -139,63 +140,96 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
       </Row>
       <Row className={styles.row}>
         <Col span={10}>Custom Downloads Location</Col>
-        <Col span={12}>
-          <Input
+        <Col span={14}>
+          <div className={styles.downloadLocationGroup}>
+            <Input
+              className={styles.downloadDirInput}
+              value={props.customDownloadsDir || defaultDownloadsDir}
+              title={props.customDownloadsDir || defaultDownloadsDir}
+              placeholder="Downloads location..."
+              disabled
+            />
+            <Tooltip title="Select directory">
+              <Button
+                icon={<SelectOutlined />}
+                onClick={() =>
+                  ipcRenderer
+                    .invoke(
+                      ipcChannels.APP.SHOW_OPEN_DIALOG,
+                      true,
+                      [],
+                      'Select Downloads Directory'
+                    )
+                    .then((fileList: string) => {
+                      // eslint-disable-next-line promise/always-return
+                      if (fileList.length > 0) {
+                        updateGeneralSetting(
+                          GeneralSetting.CustomDownloadsDir,
+                          fileList[0]
+                        );
+                      }
+                    })
+                }
+              />
+            </Tooltip>
+            <Tooltip title="Reset">
+              <Button
+                icon={<UndoOutlined />}
+                onClick={() =>
+                  updateGeneralSetting(GeneralSetting.CustomDownloadsDir, '')
+                }
+              />
+            </Tooltip>
+          </div>
+        </Col>
+      </Row>
+      <Row className={styles.row}>
+        <Col span={10}>Backup Library</Col>
+        <Col span={14}>
+          {/* <Input
             className={styles.downloadDirInput}
             value={props.customDownloadsDir || defaultDownloadsDir}
             title={props.customDownloadsDir || defaultDownloadsDir}
             placeholder="Downloads location..."
             disabled
-          />
-        </Col>
-        <Col span={1}>
-          <Tooltip title="Select directory">
+          /> */}
+
+          <div className={styles.backupButtonGroup}>
+            <Button onClick={createBackup}>Create Backup</Button>
             <Button
-              icon={<SelectOutlined />}
               onClick={() =>
                 ipcRenderer
                   .invoke(
                     ipcChannels.APP.SHOW_OPEN_DIALOG,
-                    true,
-                    [],
-                    'Select Downloads Directory'
+                    false,
+                    [
+                      {
+                        name: 'Houdoku Series Backup',
+                        extensions: ['json'],
+                      },
+                    ],
+                    'Select series backup file'
                   )
                   .then((fileList: string) => {
                     // eslint-disable-next-line promise/always-return
                     if (fileList.length > 0) {
-                      updateGeneralSetting(
-                        GeneralSetting.CustomDownloadsDir,
+                      return ipcRenderer.invoke(
+                        ipcChannels.APP.READ_ENTIRE_FILE,
                         fileList[0]
                       );
                     }
+                    return;
+                  })
+                  .then((fileContent: string) => {
+                    // eslint-disable-next-line promise/always-return
+                    if (fileContent) restoreBackup(fileContent);
                   })
               }
-            />
-          </Tooltip>
+            >
+              Restore Backup
+            </Button>
+          </div>
         </Col>
-        <Col span={1}>
-          <Tooltip title="Reset">
-            <Button
-              icon={<UndoOutlined />}
-              onClick={() =>
-                updateGeneralSetting(GeneralSetting.CustomDownloadsDir, '')
-              }
-            />
-          </Tooltip>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Button onClick={createBackup}>Create Backup</Button>
-      </Row>
-
-      <Row className={styles.row}>
-        <Tooltip title="Select Backup File">
-          <Input
-            type={'file'}
-            className={styles.downloadDirInput}
-            onChange={restoreBackup}
-          />
-        </Tooltip>
       </Row>
     </>
   );

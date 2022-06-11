@@ -4,7 +4,8 @@
     "SET_STATUS": "set-status",
     "LOAD_STORED_EXTENSION_SETTINGS": "load-stored-extension-settings",
     "SHOW_OPEN_DIALOG": "show-open-dialog",
-    "SHOW_EXTENSION_UPDATE_DIALOG": "show-extension-update-dialog"
+    "SHOW_EXTENSION_UPDATE_DIALOG": "show-extension-update-dialog",
+    "READ_ENTIRE_FILE": "read-entire-file"
   },
   "WINDOW": {
     "MINIMIZE": "window-minimize",

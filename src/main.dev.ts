@@ -10,6 +10,7 @@
  */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import fs from 'fs';
 import path from 'path';
 import {
   app,
@@ -315,6 +316,12 @@ ipcMain.handle(
       .catch((e) => log.error(e));
   }
 );
+
+ipcMain.handle(ipcChannels.APP.READ_ENTIRE_FILE, (_event, filepath: string) => {
+  log.info(`Reading entire file: ${filepath}`);
+
+  return fs.readFileSync(filepath).toString();
+});
 
 ipcMain.handle(
   ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG,
