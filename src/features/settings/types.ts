@@ -27,7 +27,6 @@ export const SET_LIBRARY_TYPES = 'SET_LIBRARY_TYPES';
 export const SET_LIBRARY_SORT = 'SET_LIBRARY_SORT';
 export const SET_LIBRARY_FILTER_STATUS = 'SET_LIBRARY_FILTER_STATUS';
 export const SET_LIBRARY_FILTER_PROGRESS = 'SET_LIBRARY_FILTER_PROGRESS';
-export const SET_LIBRARY_FILTER_USER_TAGS = 'SET_LIBRARY_FILTER_USER_TAGS';
 export const SET_OVERLAY_PAGE_NUMBER = 'SET_OVERLAY_PAGE_NUMBER';
 export const SET_HIDE_SCROLLBAR = 'SET_HIDE_SCROLLBAR';
 export const SET_TRACKER_AUTO_UPDATE = 'SET_TRACKER_AUTO_UPDATE';
@@ -45,7 +44,6 @@ export interface SettingsState {
   librarySort: LibrarySort;
   libraryFilterStatus: SeriesStatus | null;
   libraryFilterProgress: ProgressFilter;
-  libraryFilterUserTags: string[];
   fitContainToWidth: boolean;
   fitContainToHeight: boolean;
   fitStretch: boolean;
@@ -189,13 +187,6 @@ interface SetLibraryFilterProgressAction {
   };
 }
 
-interface SetLibraryFilterUserTagsAction {
-  type: typeof SET_LIBRARY_FILTER_USER_TAGS;
-  payload: {
-    userTags: string[];
-  };
-}
-
 interface SetOverlayPageNumberAction {
   type: typeof SET_OVERLAY_PAGE_NUMBER;
   payload: {
@@ -251,7 +242,6 @@ export type SettingsAction =
   | SetLibrarySortAction
   | SetLibraryFilterStatusAction
   | SetLibraryFilterProgressAction
-  | SetLibraryFilterUserTagsAction
   | SetOverlayPageNumberAction
   | SetHideScrollbar
   | SetTrackerAutoUpdateAction

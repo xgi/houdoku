@@ -272,7 +272,6 @@ const Search: React.FC<Props> = (props: Props) => {
           filter=""
           filterProgress={ProgressFilter.All}
           filterStatus={null}
-          filterUserTags={[]}
           clickFunc={(
             series: Series,
             isInLibrary: boolean | undefined = undefined

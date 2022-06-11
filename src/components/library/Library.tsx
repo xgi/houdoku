@@ -24,7 +24,6 @@ const mapState = (state: RootState) => ({
   filter: state.library.filter,
   libraryFilterStatus: state.settings.libraryFilterStatus,
   libraryFilterProgress: state.settings.libraryFilterProgress,
-  libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
   libraryView: state.settings.libraryViews,
   librarySort: state.settings.librarySort,
@@ -98,7 +97,6 @@ const Library: React.FC<Props> = (props: Props) => {
               filter={props.filter}
               filterStatus={props.libraryFilterStatus}
               filterProgress={props.libraryFilterProgress}
-              filterUserTags={props.libraryFilterUserTags}
               librarySort={props.librarySort}
               clickFunc={goToSeries}
               inLibraryFunc={undefined}
@@ -112,7 +110,6 @@ const Library: React.FC<Props> = (props: Props) => {
               filter={props.filter}
               filterStatus={props.libraryFilterStatus}
               filterProgress={props.libraryFilterProgress}
-              filterUserTags={props.libraryFilterUserTags}
               librarySort={props.librarySort}
               clickFunc={goToSeries}
               inLibraryFunc={undefined}

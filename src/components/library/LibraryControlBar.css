@@ -20,11 +20,6 @@
   margin: 0 6px 0 0 !important;
 }
 
-.userTagsBadge {
-  margin-left: -6px !important;
-  margin-right: 7px !important;
-}
-
 .divider {
   border-right: 1px solid var(--color-background);
   margin-left: 0.75rem;

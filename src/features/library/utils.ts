@@ -145,7 +145,6 @@ async function reloadSeries(series: Series): Promise<Error | void> {
     newSeries = { ...series };
   } else {
     newSeries.id = series.id;
-    newSeries.userTags = series.userTags;
     newSeries.trackerKeys = series.trackerKeys;
   }
 
@@ -240,10 +239,6 @@ export async function reloadSeriesList(
 export function updateSeries(series: Series) {
   const newSeries = library.upsertSeries(series);
   return downloadCover(newSeries);
-}
-
-export function updateSeriesUserTags(series: Series, userTags: string[]) {
-  library.upsertSeries({ ...series, userTags });
 }
 
 export function updateSeriesTrackerKeys(

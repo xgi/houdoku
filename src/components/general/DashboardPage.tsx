@@ -34,7 +34,6 @@ const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
   series: state.library.series,
   chapterList: state.library.chapterList,
-  userTags: state.library.userTags,
   filter: state.library.filter,
   seriesBannerUrl: state.library.seriesBannerUrl,
   completedStartReload: state.library.completedStartReload,

@@ -15,7 +15,6 @@ export interface LibraryState {
   series: Series | undefined;
   chapterList: Chapter[];
   reloadingSeriesList: boolean;
-  userTags: string[];
   filter: string;
   seriesBannerUrl: string | null;
   completedStartReload: boolean;

@@ -17,22 +17,11 @@ const initialState: LibraryState = {
   series: undefined,
   chapterList: [],
   reloadingSeriesList: false,
-  userTags: [],
   filter: '',
   seriesBannerUrl: null,
   completedStartReload: false,
   chapterFilterTitle: '',
   chapterFilterGroup: '',
-};
-
-const parseUserTags = (seriesList: Series[]): string[] => {
-  const userTags = new Set<string>();
-  seriesList.forEach((series: Series) => {
-    series.userTags.forEach((userTag: string) => {
-      userTags.add(userTag);
-    });
-  });
-  return Array.from(userTags);
 };
 
 export default function library(
@@ -46,7 +35,6 @@ export default function library(
       return {
         ...state,
         seriesList: action.payload.seriesList,
-        userTags: parseUserTags(action.payload.seriesList),
       };
     case SET_SERIES:
       return { ...state, series: action.payload.series };

@@ -25,7 +25,6 @@ export const DEFAULT_GENERAL_SETTINGS = {
   [GeneralSetting.LibrarySort]: LibrarySort.TitleAsc,
   [GeneralSetting.LibraryFilterStatus]: null,
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
-  [GeneralSetting.LibraryFilterUserTags]: [],
 };
 
 export const DEFAULT_READER_SETTINGS = {
@@ -156,13 +155,6 @@ export function getStoredGeneralSettings(): { [key in GeneralSetting]?: any } {
     settings[GeneralSetting.LibrarySort] = storeValues[
       GeneralSetting.LibrarySort
     ] as LibrarySort;
-  }
-  if (storeValues[GeneralSetting.LibraryFilterUserTags] !== null) {
-    const tags =
-      storeValues[GeneralSetting.LibraryFilterUserTags]?.split(',') || [];
-    if (tags.every((tag: string) => tag !== '')) {
-      settings[GeneralSetting.LibraryFilterUserTags] = tags;
-    }
   }
 
   log.debug(`Using general settings: ${JSON.stringify(settings)}`);

@@ -1,15 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 import React, { useState } from 'react';
-import {
-  Button,
-  Slider,
-  Input,
-  Dropdown,
-  Menu,
-  Popover,
-  Select,
-  Badge,
-} from 'antd';
+import { Button, Slider, Input, Dropdown, Menu, Popover } from 'antd';
 import { DownOutlined, SyncOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
@@ -25,20 +16,15 @@ import {
   setLibraryViews,
   setLibraryFilterProgress,
   setLibraryFilterStatus,
-  setLibraryFilterUserTags,
   setLibrarySort,
 } from '../../features/settings/actions';
-
-const { Option } = Select;
 
 const mapState = (state: RootState) => ({
   seriesList: state.library.seriesList,
   reloadingSeriesList: state.library.reloadingSeriesList,
-  userTags: state.library.userTags,
   filter: state.library.filter,
   libraryFilterStatus: state.settings.libraryFilterStatus,
   libraryFilterProgress: state.settings.libraryFilterProgress,
-  libraryFilterUserTags: state.settings.libraryFilterUserTags,
   libraryColumns: state.settings.libraryColumns,
   libraryViews: state.settings.libraryViews,
   librarySort: state.settings.librarySort,
@@ -55,8 +41,6 @@ const mapDispatch = (dispatch: any) => ({
     dispatch(setLibraryFilterStatus(status)),
   setLibraryFilterProgress: (progressFilter: ProgressFilter) =>
     dispatch(setLibraryFilterProgress(progressFilter)),
-  setFilterUserTags: (userTags: string[]) =>
-    dispatch(setLibraryFilterUserTags(userTags)),
   setLibraryColumns: (libraryColumns: number) =>
     dispatch(setLibraryColumns(libraryColumns)),
   setLibraryViews: (libraryViews: LibraryView) =>
@@ -73,7 +57,6 @@ type Props = PropsFromRedux & {};
 
 const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [showingColumnsPopover, setShowingColumnsPopover] = useState(false);
-  const [showingTagsPopover, setShowingTagsPopover] = useState(false);
 
   /**
    * Get a displayable string for the current filterStatus value.
@@ -165,38 +148,6 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           }
         >
           <Button className={styles.columnsButton}>Columns</Button>
-        </Popover>
-        <Popover
-          content={
-            <Select
-              mode="tags"
-              allowClear
-              style={{ width: '100%' }}
-              placeholder="Enter tags..."
-              value={props.libraryFilterUserTags}
-              onChange={(userTags: string[]) =>
-                props.setFilterUserTags(userTags)
-              }
-            >
-              {props.userTags.map((userTag: string) => (
-                <Option key={userTag} value={userTag}>
-                  {userTag}
-                </Option>
-              ))}
-            </Select>
-          }
-          title="Filter by user tag"
-          trigger="click"
-          visible={showingTagsPopover}
-          onVisibleChange={(visible: boolean) => setShowingTagsPopover(visible)}
-        >
-          <Button className={styles.tagsButton}>
-            <Badge
-              className={styles.userTagsBadge}
-              count={props.libraryFilterUserTags.length}
-            />
-            Filter Tags
-          </Button>
         </Popover>
         <Dropdown
           className={styles.progressDropdown}

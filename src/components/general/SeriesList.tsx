@@ -9,7 +9,6 @@ type Props = {
   filter: string;
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
-  filterUserTags: string[];
   librarySort: LibrarySort;
   clickFunc: (series: Series, inLibrary: boolean | undefined) => void;
   inLibraryFunc: ((series: Series) => boolean) | undefined;
@@ -42,9 +41,6 @@ const SeriesList: React.FC<Props> = (props: Props) => {
         series.numberUnread > 0
       ) {
         return false;
-      }
-      for (let i = 0; i < props.filterUserTags.length; i += 1) {
-        if (!series.userTags.includes(props.filterUserTags[i])) return false;
       }
 
       return true;

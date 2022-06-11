@@ -51,7 +51,6 @@ import {
   loadSeriesList,
   reloadSeriesList,
   removeSeries,
-  updateSeriesUserTags,
 } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { downloadChapters } from '../../features/downloader/actions';
@@ -80,7 +79,6 @@ const mapState = (state: RootState) => ({
   series: state.library.series,
   chapterList: state.library.chapterList,
   reloadingSeriesList: state.library.reloadingSeriesList,
-  userTags: state.library.userTags,
   seriesBannerUrl: state.library.seriesBannerUrl,
   chapterFilterTitle: state.library.chapterFilterTitle,
   chapterFilterGroup: state.library.chapterFilterGroup,
@@ -109,8 +107,6 @@ const mapDispatch = (dispatch: any) => ({
     deleteDownloadedChapters: boolean,
     downloadsDir: string
   ) => removeSeries(dispatch, series, deleteDownloadedChapters, downloadsDir),
-  updateSeriesUserTags: (series: Series, userTags: string[]) =>
-    updateSeriesUserTags(series, userTags),
   setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
     dispatch(setSeriesBannerUrl(seriesBannerUrl)),
   downloadChapters: (tasks: DownloadTask[]) =>
@@ -365,29 +361,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
               }
             )}
           </div>
-        </Descriptions.Item>
-        <Descriptions.Item
-          className={styles.descriptionItem}
-          label="User Tags"
-          span={4}
-        >
-          <Select
-            mode="tags"
-            allowClear
-            style={{ width: '100%' }}
-            placeholder="Enter tags..."
-            value={series.userTags}
-            onChange={(userTags: string[]) => {
-              props.updateSeriesUserTags(series, userTags);
-              props.setSeries({ ...series, userTags });
-            }}
-          >
-            {props.userTags.map((userTag: string) => (
-              <Option key={userTag} value={userTag}>
-                {userTag}
-              </Option>
-            ))}
-          </Select>
         </Descriptions.Item>
       </Descriptions>
     );

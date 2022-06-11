@@ -19,7 +19,6 @@ import {
   SET_LIBRARY_COLUMNS,
   SET_LIBRARY_FILTER_STATUS,
   SET_LIBRARY_FILTER_PROGRESS,
-  SET_LIBRARY_FILTER_USER_TAGS,
   SET_AUTO_CHECK_FOR_EXTENSION_UPDATES,
   SET_KEYBINDING,
   SET_CUSTOM_DOWNLOADS_DIR,
@@ -95,10 +94,6 @@ const initialState: SettingsState = {
     storedGeneralSettings.LibraryFilterProgress === undefined
       ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterProgress]
       : storedGeneralSettings.LibraryFilterProgress,
-  libraryFilterUserTags:
-    storedGeneralSettings.LibraryFilterUserTags === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterUserTags]
-      : storedGeneralSettings.LibraryFilterUserTags,
   fitContainToWidth:
     storedReaderSettings.FitContainToWidth === undefined
       ? DEFAULT_READER_SETTINGS[ReaderSetting.FitContainToWidth]
@@ -300,15 +295,6 @@ export default function settings(
       return {
         ...state,
         libraryFilterProgress: action.payload.progress,
-      };
-    case SET_LIBRARY_FILTER_USER_TAGS:
-      saveGeneralSetting(
-        GeneralSetting.LibraryFilterUserTags,
-        action.payload.userTags
-      );
-      return {
-        ...state,
-        libraryFilterUserTags: action.payload.userTags,
       };
     case SET_FIT_CONTAIN_TO_WIDTH:
       saveReaderSetting(

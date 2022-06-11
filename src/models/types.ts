@@ -53,6 +53,19 @@ export type TrackEntry = {
   status?: TrackStatus;
 };
 
+export enum GeneralSetting {
+  ChapterLanguages = 'ChapterLanguages',
+  RefreshOnStart = 'RefreshOnStart',
+  AutoCheckForUpdates = 'AutoCheckForUpdates',
+  AutoCheckForExtensionUpdates = 'AutoCheckForExtensionUpdates',
+  CustomDownloadsDir = 'CustomDownloadsDir',
+  LibraryColumns = 'LibraryColumns',
+  LibraryViews = 'LibraryViews',
+  LibrarySort = 'LibrarySort',
+  LibraryFilterStatus = 'LibraryFilterStatus',
+  LibraryFilterProgress = 'LibraryFilterProgress',
+}
+
 export enum ProgressFilter {
   All = 'All',
   Unread = 'Unread',
@@ -69,20 +82,6 @@ export enum LibrarySort {
 export enum LibraryView {
   Grid = 'GRID',
   List = 'LIST',
-}
-
-export enum GeneralSetting {
-  ChapterLanguages = 'ChapterLanguages',
-  RefreshOnStart = 'RefreshOnStart',
-  AutoCheckForUpdates = 'AutoCheckForUpdates',
-  AutoCheckForExtensionUpdates = 'AutoCheckForExtensionUpdates',
-  CustomDownloadsDir = 'CustomDownloadsDir',
-  LibraryColumns = 'LibraryColumns',
-  LibraryViews = 'LibraryViews',
-  LibrarySort = 'LibrarySort',
-  LibraryFilterStatus = 'LibraryFilterStatus',
-  LibraryFilterProgress = 'LibraryFilterProgress',
-  LibraryFilterUserTags = 'LibraryFilterUserTags',
 }
 
 export enum ReaderSetting {

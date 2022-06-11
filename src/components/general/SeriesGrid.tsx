@@ -25,8 +25,7 @@ type Props = {
   filter: string;
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
-  filterUserTags: string[];
-  librarySort: LibrarySort;
+  librarySort?: LibrarySort;
   clickFunc: (series: Series, inLibrary: boolean | undefined) => void;
   inLibraryFunc: ((series: Series) => boolean) | undefined;
 };
@@ -85,30 +84,31 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
       ) {
         return false;
       }
-      for (let i = 0; i < props.filterUserTags.length; i += 1) {
-        if (!series.userTags.includes(props.filterUserTags[i])) return false;
-      }
 
       return true;
     });
 
-    switch (props.librarySort) {
-      case LibrarySort.UnreadAsc:
-        return filteredList.sort(
-          (a: Series, b: Series) => a.numberUnread - b.numberUnread
-        );
-      case LibrarySort.UnreadDesc:
-        return filteredList.sort(
-          (a: Series, b: Series) => b.numberUnread - a.numberUnread
-        );
-      case LibrarySort.TitleAsc:
-        return filteredList.sort((a: Series, b: Series) =>
-          a.title.localeCompare(b.title)
-        );
-      case LibrarySort.TitleDesc:
-        return filteredList.sort((a: Series, b: Series) =>
-          b.title.localeCompare(a.title)
-        );
+    if (props.librarySort !== undefined) {
+      switch (props.librarySort) {
+        case LibrarySort.UnreadAsc:
+          return filteredList.sort(
+            (a: Series, b: Series) => a.numberUnread - b.numberUnread
+          );
+        case LibrarySort.UnreadDesc:
+          return filteredList.sort(
+            (a: Series, b: Series) => b.numberUnread - a.numberUnread
+          );
+        case LibrarySort.TitleAsc:
+          return filteredList.sort((a: Series, b: Series) =>
+            a.title.localeCompare(b.title)
+          );
+        case LibrarySort.TitleDesc:
+          return filteredList.sort((a: Series, b: Series) =>
+            b.title.localeCompare(a.title)
+          );
+      }
+    } else {
+      return filteredList;
     }
   };
 

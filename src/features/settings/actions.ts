@@ -21,7 +21,6 @@ import {
   SET_LIBRARY_COLUMNS,
   SET_LIBRARY_FILTER_STATUS,
   SET_LIBRARY_FILTER_PROGRESS,
-  SET_LIBRARY_FILTER_USER_TAGS,
   SET_LIBRARY_TYPES,
   SET_LIBRARY_SORT,
   SET_KEYBINDING,
@@ -133,15 +132,6 @@ export function setLibrarySort(librarySort: LibrarySort): SettingsAction {
     type: SET_LIBRARY_SORT,
     payload: {
       librarySort,
-    },
-  };
-}
-
-export function setLibraryFilterUserTags(userTags: string[]): SettingsAction {
-  return {
-    type: SET_LIBRARY_FILTER_USER_TAGS,
-    payload: {
-      userTags,
     },
   };
 }

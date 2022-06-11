@@ -118,7 +118,6 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       originalLanguageKey: LanguageKey.JAPANESE,
       numberUnread: 0,
       remoteCoverUrl: '',
-      userTags: [],
       trackerKeys: {},
     };
 
