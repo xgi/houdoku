@@ -22,6 +22,7 @@ import {
   setPageDataList,
   toggleShowingSidebar,
   toggleShowingHeader,
+  setShowingNoNextChapter,
 } from '../../features/reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
@@ -52,6 +53,7 @@ import {
 } from '../../util/filesystem';
 import library from '../../services/library';
 import { updateTitlebarText } from '../../util/titlebar';
+import Paragraph from 'antd/lib/typography/Paragraph';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
@@ -68,6 +70,7 @@ const mapState = (state: RootState) => ({
   showingSettingsModal: state.reader.showingSettingsModal,
   showingSidebar: state.reader.showingSidebar,
   showingHeader: state.reader.showingHeader,
+  showingNoNextChapter: state.reader.showingNoNextChapter,
   customDownloadsDir: state.settings.customDownloadsDir,
   pageStyle: state.settings.pageStyle,
   fitContainToWidth: state.settings.fitContainToWidth,
@@ -118,6 +121,8 @@ const mapDispatch = (dispatch: any) => ({
   toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
   toggleShowingSidebar: () => dispatch(toggleShowingSidebar()),
   toggleShowingHeader: () => dispatch(toggleShowingHeader()),
+  setShowingNoNextChapter: (value: boolean) =>
+    dispatch(setShowingNoNextChapter(value)),
   toggleChapterRead: (chapter: Chapter, series: Series) =>
     toggleChapterRead(dispatch, chapter, series),
   sendProgressToTrackers: (chapter: Chapter, series: Series) =>
@@ -366,36 +371,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     return true;
   };
 
-  /**
-   * Change the current viewed page.
-   * Note that even when the user is viewing in two-page mode, they still always have a single
-   * page number prop.
-   * This method takes the current reader direction into account.
-   * @param left whether to get the page to the left (as opposed to the right)
-   * @param toBound whether to get the final page in this direction (i.e. the first or last page)
-   */
-  const changePage = (left: boolean, toBound = false) => {
-    if (toBound) {
-      if (props.readingDirection === ReadingDirection.LeftToRight) {
-        props.setPageNumber(left ? 1 : props.lastPageNumber);
-      } else {
-        props.setPageNumber(left ? props.lastPageNumber : 1);
-      }
-      return;
-    }
-
-    let delta = left ? -1 : 1;
-
-    if (props.readingDirection === ReadingDirection.RightToLeft) {
-      delta = -delta;
-    }
-    if (props.pageStyle === PageStyle.Double) {
-      delta *= 2;
-    }
-
-    props.changePageNumber(delta);
-  };
-
   const removeRootStyles = () => {
     document
       .getElementById('root')
@@ -444,6 +419,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     props.setPageUrls([]);
     props.setPageDataList([]);
     props.setRelevantChapterList([]);
+    props.setShowingNoNextChapter(false);
     removeRootStyles();
     removeKeybindings();
 
@@ -457,6 +433,43 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       history.push(`${routes.SERIES}/${props.series.id}`);
     } else {
       history.push(routes.LIBRARY);
+    }
+  };
+
+  /**
+   * Change the current viewed page.
+   * Note that even when the user is viewing in two-page mode, they still always have a single
+   * page number prop.
+   * This method takes the current reader direction into account.
+   * @param left whether to get the page to the left (as opposed to the right)
+   * @param toBound whether to get the final page in this direction (i.e. the first or last page)
+   */
+  const changePage = (left: boolean, toBound = false) => {
+    if (toBound) {
+      if (props.readingDirection === ReadingDirection.LeftToRight) {
+        props.setPageNumber(left ? 1 : props.lastPageNumber);
+      } else {
+        props.setPageNumber(left ? props.lastPageNumber : 1);
+      }
+      return;
+    }
+
+    let delta = left ? -1 : 1;
+    if (props.readingDirection === ReadingDirection.RightToLeft) {
+      delta = -delta;
+    }
+    if (props.pageStyle === PageStyle.Double) {
+      delta *= 2;
+    }
+
+    if (props.showingNoNextChapter) {
+      if (delta < 0) {
+        props.setShowingNoNextChapter(false);
+      } else {
+        exitPage();
+      }
+    } else {
+      props.changePageNumber(delta);
     }
   };
 
@@ -501,12 +514,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     if (
       props.series !== undefined &&
       props.chapter !== undefined &&
+      !props.chapter.read &&
       props.lastPageNumber > 0
     ) {
-      if (
-        props.pageNumber >= Math.floor(0.8 * props.lastPageNumber) &&
-        !props.chapter.read
-      ) {
+      if (props.pageNumber >= Math.floor(0.8 * props.lastPageNumber)) {
         props.toggleChapterRead(props.chapter, props.series);
         props.setSource(props.series, { ...props.chapter, read: true });
         if (props.trackerAutoUpdate)
@@ -517,7 +528,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     // if we go past the last page or before the first page, change the chapter
     if (props.pageNumber > props.lastPageNumber && props.lastPageNumber !== 0) {
       const changed = changeChapter(false);
-      if (!changed) props.setPageNumber(props.lastPageNumber);
+      if (!changed) {
+        props.setShowingNoNextChapter(true);
+        props.setPageNumber(props.lastPageNumber);
+      }
     } else if (props.pageNumber <= 0) {
       const changed = changeChapter(true);
       if (!changed) props.setPageNumber(1);
@@ -530,6 +544,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     addKeybindings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    props.showingNoNextChapter,
     props.showingSettingsModal,
     props.readingDirection,
     props.pageStyle,
@@ -559,10 +574,18 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         <></>
       )}
 
-      {props.pageDataList.length === 0 ? (
-        <ReaderLoader extensionId={props.series?.extensionId} />
+      {props.showingNoNextChapter ? (
+        <div className={styles.finalChapterContainer}>
+          <Paragraph>There&apos;s no next chapter.</Paragraph>
+        </div>
       ) : (
-        <ReaderViewer changePage={changePage} />
+        <>
+          {props.pageDataList.length === 0 ? (
+            <ReaderLoader extensionId={props.series?.extensionId} />
+          ) : (
+            <ReaderViewer changePage={changePage} />
+          )}
+        </>
       )}
     </div>
   );

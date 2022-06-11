@@ -10,6 +10,7 @@ import {
   SET_PAGE_DATA_LIST,
   TOGGLE_SHOWING_SIDEBAR,
   TOGGLE_SHOWING_HEADER,
+  SET_SHOWING_NO_NEXT_CHAPTER,
 } from './types';
 
 export function setPageNumber(pageNumber: number): ReaderAction {
@@ -84,5 +85,16 @@ export function toggleShowingSidebar(): ReaderAction {
 export function toggleShowingHeader(): ReaderAction {
   return {
     type: TOGGLE_SHOWING_HEADER,
+  };
+}
+
+export function setShowingNoNextChapter(
+  showingNoNextChapter: boolean
+): ReaderAction {
+  return {
+    type: SET_SHOWING_NO_NEXT_CHAPTER,
+    payload: {
+      showingNoNextChapter,
+    },
   };
 }

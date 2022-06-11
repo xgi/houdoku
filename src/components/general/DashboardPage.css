@@ -19,6 +19,8 @@
   max-width: 180px !important;
   min-width: 180px !important;
   width: 180px !important;
+
+  user-select: none;
 }
 
 .content {

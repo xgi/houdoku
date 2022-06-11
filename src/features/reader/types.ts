@@ -9,6 +9,7 @@ export const SET_RELEVANT_CHAPTER_LIST = 'SET_RELEVANT_CHAPTER_LIST';
 export const TOGGLE_SHOWING_SETTINGS_MODAL = 'TOGGLE_SHOWING_SETTINGS_MODAL';
 export const TOGGLE_SHOWING_SIDEBAR = 'TOGGLE_SHOWING_SIDEBAR';
 export const TOGGLE_SHOWING_HEADER = 'TOGGLE_SHOWING_HEADER';
+export const SET_SHOWING_NO_NEXT_CHAPTER = 'SET_SHOWING_NO_NEXT_CHAPTER';
 
 export interface ReaderState {
   pageNumber: number;
@@ -21,6 +22,7 @@ export interface ReaderState {
   showingSettingsModal: boolean;
   showingSidebar: boolean;
   showingHeader: boolean;
+  showingNoNextChapter: boolean;
 }
 
 interface SetPageNumberAction {
@@ -78,6 +80,13 @@ interface ToggleShowingHeaderAction {
   type: typeof TOGGLE_SHOWING_HEADER;
 }
 
+interface SetShowingNoNextChapterAction {
+  type: typeof SET_SHOWING_NO_NEXT_CHAPTER;
+  payload: {
+    showingNoNextChapter: boolean;
+  };
+}
+
 export type ReaderAction =
   | SetPageNumberAction
   | ChangePageNumberAction
@@ -87,4 +96,5 @@ export type ReaderAction =
   | SetRelevantChapterListAction
   | ToggleShowingSettingsModal
   | ToggleShowingSidebarAction
-  | ToggleShowingHeaderAction;
+  | ToggleShowingHeaderAction
+  | SetShowingNoNextChapterAction;

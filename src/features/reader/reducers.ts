@@ -9,6 +9,7 @@ import {
   SET_PAGE_DATA_LIST,
   TOGGLE_SHOWING_SIDEBAR,
   TOGGLE_SHOWING_HEADER,
+  SET_SHOWING_NO_NEXT_CHAPTER,
 } from './types';
 
 const initialState: ReaderState = {
@@ -22,6 +23,7 @@ const initialState: ReaderState = {
   showingSettingsModal: false,
   showingSidebar: true,
   showingHeader: true,
+  showingNoNextChapter: false,
 };
 
 export default function reader(
@@ -72,6 +74,11 @@ export default function reader(
       return { ...state, showingSidebar: !state.showingSidebar };
     case TOGGLE_SHOWING_HEADER:
       return { ...state, showingHeader: !state.showingHeader };
+    case SET_SHOWING_NO_NEXT_CHAPTER:
+      return {
+        ...state,
+        showingNoNextChapter: action.payload.showingNoNextChapter,
+      };
     default:
       return state;
   }
