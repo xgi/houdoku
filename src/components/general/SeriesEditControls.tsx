@@ -2,28 +2,14 @@ import React from 'react';
 import { Button, Col, Dropdown, Input, Menu, Row, Select } from 'antd';
 import { DownOutlined, UploadOutlined } from '@ant-design/icons';
 import {
-  ContentWarning,
-  ContentWarningKey,
-  Format,
-  FormatKey,
-  Genre,
-  GenreKey,
   Language,
   Series,
   SeriesStatus,
-  Theme,
-  ThemeKey,
   Languages,
-  Genres,
-  Themes,
-  Formats,
-  ContentWarnings,
-  genreKeysFromNames,
-  themeKeysFromNames,
-  formatKeysFromNames,
-  contentWarningKeysFromNames,
-  Demographics,
-  Demographic,
+  SeriesTags,
+  SeriesTagKeysFromNames,
+  SeriesTag,
+  SeriesTagKey,
 } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import styles from './SeriesEditControls.css';
@@ -32,35 +18,11 @@ import ipcChannels from '../../constants/ipcChannels.json';
 
 const { Option } = Select;
 
-const genreOptions = Object.values(Genres)
-  .sort((a: Genre, b: Genre) => a.name.localeCompare(b.name))
-  .map((genre: Genre) => (
-    <Option key={genre.name} value={genre.name}>
-      {genre.name}
-    </Option>
-  ));
-
-const themeOptions = Object.values(Themes)
-  .sort((a: Theme, b: Theme) => a.name.localeCompare(b.name))
-  .map((theme: Theme) => (
-    <Option key={theme.name} value={theme.name}>
-      {theme.name}
-    </Option>
-  ));
-
-const formatOptions = Object.values(Formats)
-  .sort((a: Format, b: Format) => a.name.localeCompare(b.name))
-  .map((format: Format) => (
-    <Option key={format.name} value={format.name}>
-      {format.name}
-    </Option>
-  ));
-
-const contentWarningOptions = Object.values(ContentWarnings)
-  .sort((a: ContentWarning, b: ContentWarning) => a.name.localeCompare(b.name))
-  .map((contentWarning: ContentWarning) => (
-    <Option key={contentWarning.name} value={contentWarning.name}>
-      {contentWarning.name}
+const tagOptions = Object.values(SeriesTags)
+  .sort((a: SeriesTag, b: SeriesTag) => a.name.localeCompare(b.name))
+  .map((tag: SeriesTag) => (
+    <Option key={tag.name} value={tag.name}>
+      {tag.name}
     </Option>
   ));
 
@@ -207,132 +169,28 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Col>
       </Row>
       <Row className={styles.row}>
-        <Col span={10}>Genres</Col>
+        <Col span={10}>Tags</Col>
         <Col span={14}>
           <Select
             mode="multiple"
             allowClear
             style={{ width: '100%' }}
-            placeholder="Genres..."
-            value={props.series.genres.map(
-              (genreKey: GenreKey) => Genres[genreKey].name
+            placeholder="Tags..."
+            value={props.series.tagKeys.map(
+              (tagKey: SeriesTagKey) => SeriesTags[tagKey].name
             )}
             onChange={(value: string[]) =>
               props.setSeries({
                 ...props.series,
-                genres: genreKeysFromNames(value).filter(
+                tagKeys: SeriesTagKeysFromNames(value).filter(
                   (entry) => entry !== null
-                ) as GenreKey[],
+                ) as SeriesTagKey[],
               })
             }
             disabled={!props.editable}
           >
-            {genreOptions}
+            {tagOptions}
           </Select>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Themes</Col>
-        <Col span={14}>
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: '100%' }}
-            placeholder="Themes..."
-            value={props.series.themes.map(
-              (themeKey: ThemeKey) => Themes[themeKey].name
-            )}
-            onChange={(value: string[]) =>
-              props.setSeries({
-                ...props.series,
-                themes: themeKeysFromNames(value).filter(
-                  (entry) => entry !== null
-                ) as ThemeKey[],
-              })
-            }
-            disabled={!props.editable}
-          >
-            {themeOptions}
-          </Select>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Formats</Col>
-        <Col span={14}>
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: '100%' }}
-            placeholder="Formats..."
-            value={props.series.formats.map(
-              (formatKey: FormatKey) => Formats[formatKey].name
-            )}
-            onChange={(value: string[]) =>
-              props.setSeries({
-                ...props.series,
-                formats: formatKeysFromNames(value).filter(
-                  (entry) => entry !== null
-                ) as FormatKey[],
-              })
-            }
-            disabled={!props.editable}
-          >
-            {formatOptions}
-          </Select>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Content Warnings</Col>
-        <Col span={14}>
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: '100%' }}
-            placeholder="Content warnings..."
-            value={props.series.contentWarnings.map(
-              (contentWarningKey: ContentWarningKey) =>
-                ContentWarnings[contentWarningKey].name
-            )}
-            onChange={(value: string[]) =>
-              props.setSeries({
-                ...props.series,
-                contentWarnings: contentWarningKeysFromNames(value).filter(
-                  (entry) => entry !== null
-                ) as ContentWarningKey[],
-              })
-            }
-            disabled={!props.editable}
-          >
-            {contentWarningOptions}
-          </Select>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Demographic</Col>
-        <Col span={14}>
-          <Dropdown
-            disabled={!props.editable}
-            overlay={
-              <Menu
-                onClick={(e: any) => {
-                  props.setSeries({
-                    ...props.series,
-                    demographic: e.item.props['data-value'],
-                  });
-                }}
-              >
-                {Object.values(Demographics).map((demographic: Demographic) => (
-                  <Menu.Item key={demographic.key} data-value={demographic.key}>
-                    {demographic.name}
-                  </Menu.Item>
-                ))}
-              </Menu>
-            }
-          >
-            <Button>
-              {Demographics[props.series.demographic].name} <DownOutlined />
-            </Button>
-          </Dropdown>
         </Col>
       </Row>
       <Row className={styles.row}>

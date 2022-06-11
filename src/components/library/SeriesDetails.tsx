@@ -23,16 +23,10 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { connect, ConnectedProps } from 'react-redux';
 import {
   Chapter,
-  ContentWarningKey,
-  FormatKey,
-  GenreKey,
   Series,
-  ThemeKey,
   Languages,
-  Genres,
-  Themes,
-  Formats,
-  ContentWarnings,
+  SeriesTags,
+  SeriesTagKey,
   ExtensionMetadata,
 } from 'houdoku-extension-lib';
 import ChapterTable from './ChapterTable';
@@ -65,7 +59,6 @@ import library from '../../services/library';
 import { DownloadTask } from '../../services/downloader';
 
 const { Title } = Typography;
-const { Option } = Select;
 const { confirm } = Modal;
 
 const thumbnailsDir = await ipcRenderer.invoke(
@@ -297,69 +290,18 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         </Descriptions.Item>
         <Descriptions.Item
           className={styles.descriptionItem}
-          label="Genres"
-          span={2}
+          label="Tags"
+          span={4}
         >
           <div>
-            {series.genres.map((genreKey: GenreKey) => {
-              const genre = Genres[genreKey];
-              return genre !== undefined && 'name' in genre ? (
-                <Tag key={genreKey}>{genre.name}</Tag>
+            {series.tagKeys.map((tagKey: SeriesTagKey) => {
+              const tag = SeriesTags[tagKey];
+              return tag !== undefined && 'name' in tag ? (
+                <Tag key={tag.key}>{tag.name}</Tag>
               ) : (
                 ''
               );
             })}
-          </div>
-        </Descriptions.Item>
-        <Descriptions.Item
-          className={styles.descriptionItem}
-          label="Themes"
-          span={2}
-        >
-          <div>
-            {series.themes.map((themeKey: ThemeKey) => {
-              const theme = Themes[themeKey];
-              return theme !== undefined && 'name' in theme ? (
-                <Tag key={themeKey}>{theme.name}</Tag>
-              ) : (
-                ''
-              );
-            })}
-          </div>
-        </Descriptions.Item>
-        <Descriptions.Item
-          className={styles.descriptionItem}
-          label="Formats"
-          span={2}
-        >
-          <div>
-            {series.formats.map((formatKey: FormatKey) => {
-              const format = Formats[formatKey];
-              return format !== undefined && 'name' in format ? (
-                <Tag key={formatKey}>{format.name}</Tag>
-              ) : (
-                ''
-              );
-            })}
-          </div>
-        </Descriptions.Item>
-        <Descriptions.Item
-          className={styles.descriptionItem}
-          label="Content Warnings"
-          span={2}
-        >
-          <div>
-            {series.contentWarnings.map(
-              (contentWarningKey: ContentWarningKey) => {
-                const contentWarning = ContentWarnings[contentWarningKey];
-                return contentWarning !== undefined &&
-                  'name' in contentWarning ? (
-                  <Tag key={contentWarningKey}>{contentWarning.name}</Tag>
-                ) : (
-                  ''
-                );
-              }
-            )}
           </div>
         </Descriptions.Item>
       </Descriptions>

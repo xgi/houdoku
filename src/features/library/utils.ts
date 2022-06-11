@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series, SeriesTagKey } from 'houdoku-extension-lib';
 import {
   setSeriesList,
   setSeries,
@@ -246,4 +246,25 @@ export function updateSeriesTrackerKeys(
   trackerKeys: { [trackerId: string]: string } | undefined
 ) {
   library.upsertSeries({ ...series, trackerKeys });
+}
+
+export function migrateSeriesTagKeys() {
+  const seriesList: Series[] = library.fetchSeriesList();
+  seriesList.forEach((series) => {
+    const tagKeys: SeriesTagKey[] = [];
+    ['formats', 'genres', 'demographics', 'contentWarnings', 'themes'].forEach(
+      (oldField) => {
+        if (oldField in series) {
+          tagKeys.push(
+            // @ts-expect-error handling deprecated key
+            ...series[oldField].filter((key: string) => key in SeriesTagKey)
+          );
+
+          // @ts-expect-error handling deprecated key
+          delete series[oldField];
+          library.upsertSeries({ ...series, tagKeys: tagKeys });
+        }
+      }
+    );
+  });
 }
