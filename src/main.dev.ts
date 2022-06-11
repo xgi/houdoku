@@ -46,6 +46,7 @@ const logsDir = path.join(app.getPath('userData'), 'logs');
 const extractDir = path.join(app.getPath('userData'), 'extracted');
 
 let mainWindow: BrowserWindow | null = null;
+let spoofWindow: BrowserWindow | null = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -62,17 +63,14 @@ if (
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-  const extensions = ['REACT_DEVELOPER_TOOLS'];
+  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
 
-  return installer
-    .default(
-      extensions.map((name) => installer[name]),
-      forceDownload
-    )
-    .catch(log.error);
+  return Promise.all(
+    extensions.map((name) => installer.default(installer[name], forceDownload))
+  ).catch((err) => console.log(err));
 };
 
-const createWindow = async () => {
+const createWindows = async () => {
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
@@ -83,7 +81,6 @@ const createWindow = async () => {
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'resources')
     : path.join(__dirname, '../resources');
-
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
   };
@@ -101,7 +98,6 @@ const createWindow = async () => {
       contextIsolation: false,
     },
   });
-
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
   // @TODO: Use 'ready-to-show' event
@@ -134,6 +130,12 @@ const createWindow = async () => {
   mainWindow.on('leave-full-screen', () => {
     mainWindow?.webContents.send(ipcChannels.WINDOW.SET_FULLSCREEN, false);
   });
+
+  spoofWindow = new BrowserWindow({
+    show: false,
+    width: 1024,
+    height: 728,
+  });
 };
 
 app.on('window-all-closed', () => {
@@ -144,12 +146,12 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(createWindow).catch(log.error);
+app.whenReady().then(createWindows).catch(log.error);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) createWindow();
+  if (mainWindow === null) createWindows();
 });
 
 ipcMain.handle(ipcChannels.WINDOW.MINIMIZE, () => {
@@ -351,7 +353,7 @@ ipcMain.handle(
 
 // create ipc handlers for specific extension functionality
 const webviewFn: WebviewFunc = (url, options) =>
-  loadInWebView(mainWindow, url, options);
+  loadInWebView(spoofWindow, url, options);
 createExtensionIpcHandlers(ipcMain, pluginsDir, extractDir, webviewFn);
 loadExtensions(pluginsDir, extractDir, webviewFn);
 
