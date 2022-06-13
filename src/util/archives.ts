@@ -4,6 +4,7 @@ import path from 'path';
 import log from 'electron-log';
 import { v4 as uuidv4 } from 'uuid';
 import { walk } from './filesystem';
+import { IMAGE_EXTENSIONS } from '../constants/constants.json';
 
 /**
  * Get a list of all files within an archive.
@@ -45,7 +46,7 @@ export async function extract(
 
   // remove existing image files
   const existingFilenames = walk(baseOutputPath).filter((file) =>
-    ['png', 'jpg', 'jpeg'].some((ext) => file.endsWith(`.${ext}`))
+    IMAGE_EXTENSIONS.some((ext) => file.endsWith(`.${ext}`))
   );
   existingFilenames.forEach((existingFilename) =>
     fs.unlinkSync(existingFilename)
