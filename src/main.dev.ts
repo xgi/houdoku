@@ -114,8 +114,18 @@ const createWindows = async () => {
     }
   });
 
+  spoofWindow = new BrowserWindow({
+    show: false,
+    width: 1024,
+    height: 728,
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
+    spoofWindow?.close();
+  });
+  spoofWindow.on('closed', () => {
+    spoofWindow = null;
   });
 
   // Open urls in the user's browser
@@ -129,12 +139,6 @@ const createWindows = async () => {
   });
   mainWindow.on('leave-full-screen', () => {
     mainWindow?.webContents.send(ipcChannels.WINDOW.SET_FULLSCREEN, false);
-  });
-
-  spoofWindow = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
   });
 };
 
