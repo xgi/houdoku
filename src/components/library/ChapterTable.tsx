@@ -70,7 +70,9 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       (chapter: Chapter) =>
         (props.chapterLanguages.includes(chapter.languageKey) ||
           props.chapterLanguages.length === 0) &&
+        chapter.title !== null &&
         chapter.title.toLowerCase().includes(props.chapterFilterTitle) &&
+        chapter.groupName !== null &&
         chapter.groupName.toLowerCase().includes(props.chapterFilterGroup)
     );
   };
