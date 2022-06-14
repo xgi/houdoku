@@ -22,7 +22,7 @@ import {
 } from 'houdoku-extension-lib';
 import { extract, getArchiveFiles } from '../../util/archives';
 import { walk } from '../../util/filesystem';
-import { IMAGE_EXTENSIONS } from '../../constants/constants.json';
+import constants from '../../constants/constants.json';
 
 export const FS_METADATA: ExtensionMetadata = {
   id: '9ef3242e-b5a0-4f56-bf2f-5e0c9f6f50ab',
@@ -178,7 +178,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       const collator = new Intl.Collator([], { numeric: true });
       const imageFileList = fileList
         .filter((file) =>
-          IMAGE_EXTENSIONS.some((ext) => file.endsWith(`.${ext}`))
+          constants.IMAGE_EXTENSIONS.some((ext) => file.endsWith(`.${ext}`))
         )
         .sort((a, b) => collator.compare(path.basename(a), path.basename(b)));
 

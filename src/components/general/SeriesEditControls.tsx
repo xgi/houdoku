@@ -11,7 +11,7 @@ import { ipcRenderer } from 'electron';
 import styles from './SeriesEditControls.css';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
-import { IMAGE_EXTENSIONS } from '../../constants/constants.json';
+import constants from '../../constants/constants.json';
 
 const { Option } = Select;
 
@@ -63,7 +63,7 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
                         [
                           {
                             name: 'Image',
-                            extensions: IMAGE_EXTENSIONS,
+                            extensions: constants.IMAGE_EXTENSIONS,
                           },
                         ],
                         'Select Series Cover'

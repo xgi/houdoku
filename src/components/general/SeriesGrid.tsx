@@ -10,7 +10,7 @@ import { LibrarySort, ProgressFilter } from '../../models/types';
 import styles from './SeriesGrid.css';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
-import { IMAGE_EXTENSIONS } from '../../constants/constants.json';
+import constants from '../../constants/constants.json';
 
 const thumbnailsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.THUMBNAILS_DIR
@@ -44,7 +44,7 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
    */
   const getImageSource = (series: Series) => {
     if (series.id !== undefined) {
-      const fileExtensions = IMAGE_EXTENSIONS;
+      const fileExtensions = constants.IMAGE_EXTENSIONS;
       for (let i = 0; i < fileExtensions.length; i += 1) {
         const thumbnailPath = path.join(
           thumbnailsDir,

@@ -54,7 +54,7 @@ import { deleteThumbnail, getChapterDownloaded } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import library from '../../services/library';
 import { DownloadTask } from '../../services/downloader';
-import { IMAGE_EXTENSIONS } from '../../constants/constants.json';
+import constants from '../../constants/constants.json';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -164,7 +164,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   }
 
   const getThumbnailPath = (seriesId?: string) => {
-    const fileExtensions = IMAGE_EXTENSIONS;
+    const fileExtensions = constants.IMAGE_EXTENSIONS;
     for (let i = 0; i < fileExtensions.length; i += 1) {
       const thumbnailPath = path.join(
         thumbnailsDir,
