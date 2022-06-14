@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Chapter, Series, SeriesTagKey } from 'houdoku-extension-lib';
+import { Chapter, Series } from 'houdoku-extension-lib';
 import {
   setSeriesList,
   setSeries,
@@ -248,23 +248,26 @@ export function updateSeriesTrackerKeys(
   library.upsertSeries({ ...series, trackerKeys });
 }
 
-export function migrateSeriesTagKeys() {
+export function migrateSeriesTags() {
   const seriesList: Series[] = library.fetchSeriesList();
   seriesList.forEach((series) => {
-    const tagKeys: SeriesTagKey[] = [];
-    ['formats', 'genres', 'demographics', 'contentWarnings', 'themes'].forEach(
-      (oldField) => {
-        if (oldField in series) {
-          tagKeys.push(
-            // @ts-expect-error handling deprecated key
-            ...series[oldField].filter((key: string) => key in SeriesTagKey)
-          );
+    const tags: string[] = [];
+    [
+      'formats',
+      'genres',
+      'demographics',
+      'contentWarnings',
+      'themes',
+      'tagKeys',
+    ].forEach((oldField) => {
+      if (oldField in series) {
+        // @ts-expect-error handling deprecated key
+        tags.push(...series[oldField]);
+        // @ts-expect-error handling deprecated key
+        delete series[oldField];
 
-          // @ts-expect-error handling deprecated key
-          delete series[oldField];
-          library.upsertSeries({ ...series, tagKeys: tagKeys });
-        }
+        library.upsertSeries({ ...series, tags: tags });
       }
-    );
+    });
   });
 }

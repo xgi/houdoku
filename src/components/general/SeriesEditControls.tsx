@@ -6,10 +6,6 @@ import {
   Series,
   SeriesStatus,
   Languages,
-  SeriesTags,
-  SeriesTagKeysFromNames,
-  SeriesTag,
-  SeriesTagKey,
 } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import styles from './SeriesEditControls.css';
@@ -18,14 +14,6 @@ import ipcChannels from '../../constants/ipcChannels.json';
 import { IMAGE_EXTENSIONS } from '../../constants/constants.json';
 
 const { Option } = Select;
-
-const tagOptions = Object.values(SeriesTags)
-  .sort((a: SeriesTag, b: SeriesTag) => a.name.localeCompare(b.name))
-  .map((tag: SeriesTag) => (
-    <Option key={tag.name} value={tag.name}>
-      {tag.name}
-    </Option>
-  ));
 
 type Props = {
   series: Series;
@@ -177,20 +165,20 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
             allowClear
             style={{ width: '100%' }}
             placeholder="Tags..."
-            value={props.series.tagKeys.map(
-              (tagKey: SeriesTagKey) => SeriesTags[tagKey].name
-            )}
+            value={props.series.tags}
             onChange={(value: string[]) =>
               props.setSeries({
                 ...props.series,
-                tagKeys: SeriesTagKeysFromNames(value).filter(
-                  (entry) => entry !== null
-                ) as SeriesTagKey[],
+                tags: value,
               })
             }
             disabled={!props.editable}
           >
-            {tagOptions}
+            {props.series.tags.map((tag: string) => (
+              <Option key={tag} value={tag}>
+                {tag}
+              </Option>
+            ))}
           </Select>
         </Col>
       </Row>

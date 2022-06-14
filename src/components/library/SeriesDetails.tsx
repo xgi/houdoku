@@ -8,7 +8,6 @@ import {
   Descriptions,
   Affix,
   Modal,
-  Select,
   Checkbox,
   Form,
   Tag,
@@ -25,8 +24,6 @@ import {
   Chapter,
   Series,
   Languages,
-  SeriesTags,
-  SeriesTagKey,
   ExtensionMetadata,
 } from 'houdoku-extension-lib';
 import ChapterTable from './ChapterTable';
@@ -295,14 +292,9 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           span={4}
         >
           <div>
-            {series.tagKeys.map((tagKey: SeriesTagKey) => {
-              const tag = SeriesTags[tagKey];
-              return tag !== undefined && 'name' in tag ? (
-                <Tag key={tag.key}>{tag.name}</Tag>
-              ) : (
-                ''
-              );
-            })}
+            {series.tags.map((tag: string) => (
+              <Tag key={tag}>{tag}</Tag>
+            ))}
           </div>
         </Descriptions.Item>
       </Descriptions>

@@ -109,7 +109,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       description: '',
       authors: [],
       artists: [],
-      tagKeys: [],
+      tags: [],
       status: SeriesStatus.COMPLETED,
       originalLanguageKey: LanguageKey.JAPANESE,
       numberUnread: 0,

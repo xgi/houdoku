@@ -13,7 +13,7 @@ import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
 import { TrackerMetadata } from './models/types';
 import { setStatusText } from './features/statusbar/actions';
-import { loadSeriesList, migrateSeriesTagKeys } from './features/library/utils';
+import { loadSeriesList, migrateSeriesTags } from './features/library/utils';
 import { linkDownloaderClientFunctions } from './features/downloader/reducers';
 import AppLoading from './components/general/AppLoading';
 
@@ -134,8 +134,8 @@ export default function App() {
 
       // Previously the series object had separate tag fields (themes, formats, genres,
       // demographic, content warnings). These have now been consolidated into the
-      // field 'tagKeys'.
-      migrateSeriesTagKeys();
+      // field 'tags'.
+      migrateSeriesTags();
 
       loadSeriesList(store.dispatch);
       setLoading(false);
