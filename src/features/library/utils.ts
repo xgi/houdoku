@@ -109,10 +109,12 @@ export function toggleChapterRead(
 }
 
 async function reloadSeries(series: Series): Promise<Error | void> {
-  if (series.id === undefined)
+  log.info(`Reloading series ${series.id} - ${series.title}`);
+  if (series.id === undefined) {
     return new Promise((resolve) =>
       resolve(Error('Series does not have database ID'))
     );
+  }
 
   if (
     (await ipcRenderer.invoke(
