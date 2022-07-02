@@ -3,6 +3,7 @@ import log from 'electron-log';
 import DiscordRPC from 'discord-rpc';
 import { Chapter, Series } from 'houdoku-extension-lib';
 import ipcChannels from '../constants/ipcChannels.json';
+import packageJson from '../../package.json';
 
 function getActivity(
   startTime: Date,
@@ -15,7 +16,10 @@ function getActivity(
     details: `${series.title}`,
     state: `Chapter ${chapter.chapterNumber}`,
     startTimestamp: startTime,
-    largeImageKey: 'logo',
+    largeImageKey: series.remoteCoverUrl ? series.remoteCoverUrl : 'logo',
+    smallImageKey: series.remoteCoverUrl ? 'logo' : undefined,
+    largeImageText: series.title,
+    smallImageText: packageJson.productName,
     instance: false,
   };
 }
