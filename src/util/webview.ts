@@ -2,7 +2,7 @@ import { BrowserWindow } from 'electron';
 import { WebviewResponse } from 'houdoku-extension-lib';
 
 // eslint-disable-next-line import/prefer-default-export
-export const loadInWebView = (
+export const loadInWebView = async (
   spoofWindow: BrowserWindow | null,
   url: string,
   options?: Electron.LoadURLOptions
@@ -16,7 +16,7 @@ export const loadInWebView = (
   }
 
   return new Promise<WebviewResponse>((resolve, reject) => {
-    const handleFrame = async (finishedLoad = false) => {
+    const handleFrame = async () => {
       const cookies = await spoofWindow.webContents.session.cookies.get({});
       const hasClearanceCookie =
         cookies.filter((cookie) => cookie.name === 'cf_clearance').length > 0;
@@ -30,21 +30,30 @@ export const loadInWebView = (
 
       spoofWindow?.webContents
         .executeJavaScript('document.body.innerHTML')
-        // eslint-disable-next-line promise/always-return
         .then((value) => {
-          const pageUrl = spoofWindow.webContents.getURL();
-          const pageTitle = spoofWindow.webContents.getTitle();
+          // eslint-disable-next-line promise/always-return
+          if (value) {
+            const pageUrl = spoofWindow.webContents.getURL();
+            const pageTitle = spoofWindow.webContents.getTitle();
 
-          spoofWindow.webContents.setBackgroundThrottling(true);
-          resolve({ text: value, url: pageUrl, title: pageTitle });
+            resolve({ text: value, url: pageUrl, title: pageTitle });
+          } else {
+            reject(new Error('Finished loading page, but it has no content'));
+          }
         });
     };
 
-    spoofWindow.webContents.removeAllListeners('did-frame-finish-load');
-    spoofWindow.webContents.on('did-frame-finish-load', () => handleFrame());
+    spoofWindow.webContents.removeAllListeners('did-finish-load');
+    spoofWindow.webContents.on('did-finish-load', () => handleFrame());
 
     spoofWindow.webContents.setBackgroundThrottling(false);
-    // eslint-disable-next-line promise/catch-or-return
-    spoofWindow.loadURL(url, options).then(() => handleFrame(true));
+    spoofWindow.loadURL(url, options);
+  }).then(async (response) => {
+    spoofWindow.webContents.stop();
+    spoofWindow.webContents.setBackgroundThrottling(true);
+    await spoofWindow.webContents.executeJavaScript(
+      'document.body.innerHTML = ""'
+    );
+    return response;
   });
 };
