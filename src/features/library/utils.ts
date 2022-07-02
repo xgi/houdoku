@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Chapter, Series } from 'houdoku-extension-lib';
@@ -11,6 +12,7 @@ import {
 import {
   deleteAllDownloadedChapters,
   deleteThumbnail,
+  getThumbnailPath,
 } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import { setStatusText } from '../statusbar/actions';
@@ -177,13 +179,19 @@ async function reloadSeries(series: Series): Promise<Error | void> {
 
   updateSeriesNumberUnread(newSeries);
 
-  if (newSeries.remoteCoverUrl !== series.remoteCoverUrl) {
-    log.debug(`Updating cover for series ${newSeries.id}`);
-    deleteThumbnail(series);
-    downloadCover(newSeries);
+  // download the cover as a thumbnail if the remote URL has changed or
+  // there is no existing thumbnail
+  const thumbnailPath = await getThumbnailPath(series);
+  if (thumbnailPath !== null) {
+    if (
+      newSeries.remoteCoverUrl !== series.remoteCoverUrl ||
+      !fs.existsSync(thumbnailPath)
+    ) {
+      log.debug(`Updating cover for series ${newSeries.id}`);
+      deleteThumbnail(series);
+      downloadCover(newSeries);
+    }
   }
-
-  return new Promise((resolve) => resolve());
 }
 
 export async function reloadSeriesList(
