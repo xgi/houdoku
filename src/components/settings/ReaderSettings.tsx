@@ -11,7 +11,12 @@ import {
 import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './ReaderSettings.css';
-import { ReadingDirection, PageStyle, ReaderSetting } from '../../models/types';
+import {
+  ReadingDirection,
+  PageStyle,
+  ReaderSetting,
+  DefaultSettings,
+} from '../../models/types';
 import { RootState } from '../../store';
 import {
   setFitContainToHeight,
@@ -24,7 +29,6 @@ import {
   setPreloadAmount,
   setReadingDirection,
 } from '../../features/settings/actions';
-import { DEFAULT_READER_SETTINGS } from '../../features/settings/utils';
 
 const { Panel } = Collapse;
 
@@ -165,10 +169,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         okButtonProps={{ danger: true }}
         onOk={() => {
           Object.values(ReaderSetting).forEach((readerSetting) =>
-            updateReaderSetting(
-              readerSetting,
-              DEFAULT_READER_SETTINGS[readerSetting]
-            )
+            updateReaderSetting(readerSetting, DefaultSettings[readerSetting])
           );
           setShowingKeybindsModal(false);
         }}
@@ -386,7 +387,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
                     onClick={() =>
                       updateReaderSetting(
                         entry.setting,
-                        DEFAULT_READER_SETTINGS[entry.setting]
+                        DefaultSettings[entry.setting]
                       )
                     }
                   >

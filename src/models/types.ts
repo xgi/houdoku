@@ -1,4 +1,4 @@
-import { LanguageKey } from 'houdoku-extension-lib';
+import { LanguageKey, SettingType } from 'houdoku-extension-lib';
 
 export type ExtensionTableRow = {
   pkgName: string;
@@ -130,3 +130,81 @@ export enum PageStyle {
 export enum AppLoadStep {
   DatabaseMigrate = 'DatabaseMigrate',
 }
+
+export const SettingTypes = {
+  [GeneralSetting.ChapterLanguages]: SettingType.STRING_ARRAY,
+  [GeneralSetting.RefreshOnStart]: SettingType.BOOLEAN,
+  [GeneralSetting.AutoCheckForUpdates]: SettingType.BOOLEAN,
+  [GeneralSetting.AutoCheckForExtensionUpdates]: SettingType.BOOLEAN,
+  [GeneralSetting.CustomDownloadsDir]: SettingType.STRING,
+  [GeneralSetting.LibraryColumns]: SettingType.NUMBER,
+  [GeneralSetting.LibraryViews]: SettingType.STRING,
+  [GeneralSetting.LibrarySort]: SettingType.STRING,
+  [GeneralSetting.LibraryFilterStatus]: SettingType.STRING,
+  [GeneralSetting.LibraryFilterProgress]: SettingType.STRING,
+
+  [ReaderSetting.FitContainToWidth]: SettingType.BOOLEAN,
+  [ReaderSetting.FitContainToHeight]: SettingType.BOOLEAN,
+  [ReaderSetting.FitStretch]: SettingType.BOOLEAN,
+  [ReaderSetting.ReadingDirection]: SettingType.STRING,
+  [ReaderSetting.PageStyle]: SettingType.STRING,
+  [ReaderSetting.PreloadAmount]: SettingType.NUMBER,
+  [ReaderSetting.OverlayPageNumber]: SettingType.BOOLEAN,
+  [ReaderSetting.HideScrollbar]: SettingType.BOOLEAN,
+  [ReaderSetting.KeyPreviousPage]: SettingType.STRING,
+  [ReaderSetting.KeyFirstPage]: SettingType.STRING,
+  [ReaderSetting.KeyNextPage]: SettingType.STRING,
+  [ReaderSetting.KeyLastPage]: SettingType.STRING,
+  [ReaderSetting.KeyPreviousChapter]: SettingType.STRING,
+  [ReaderSetting.KeyNextChapter]: SettingType.STRING,
+  [ReaderSetting.KeyToggleReadingDirection]: SettingType.STRING,
+  [ReaderSetting.KeyTogglePageStyle]: SettingType.STRING,
+  [ReaderSetting.KeyToggleShowingSettingsModal]: SettingType.STRING,
+  [ReaderSetting.KeyToggleShowingSidebar]: SettingType.STRING,
+  [ReaderSetting.KeyToggleShowingHeader]: SettingType.STRING,
+  [ReaderSetting.KeyExit]: SettingType.STRING,
+  [ReaderSetting.KeyCloseOrBack]: SettingType.STRING,
+
+  [TrackerSetting.TrackerAutoUpdate]: SettingType.BOOLEAN,
+
+  [IntegrationSetting.DiscordPresenceEnabled]: SettingType.BOOLEAN,
+};
+
+export const DefaultSettings = {
+  [GeneralSetting.ChapterLanguages]: [],
+  [GeneralSetting.RefreshOnStart]: true,
+  [GeneralSetting.AutoCheckForUpdates]: true,
+  [GeneralSetting.AutoCheckForExtensionUpdates]: true,
+  [GeneralSetting.CustomDownloadsDir]: '',
+  [GeneralSetting.LibraryColumns]: 4,
+  [GeneralSetting.LibraryViews]: LibraryView.Grid,
+  [GeneralSetting.LibrarySort]: LibrarySort.TitleAsc,
+  [GeneralSetting.LibraryFilterStatus]: null,
+  [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
+
+  [ReaderSetting.ReadingDirection]: ReadingDirection.LeftToRight,
+  [ReaderSetting.PageStyle]: PageStyle.Single,
+  [ReaderSetting.FitContainToWidth]: true,
+  [ReaderSetting.FitContainToHeight]: true,
+  [ReaderSetting.FitStretch]: false,
+  [ReaderSetting.PreloadAmount]: 2,
+  [ReaderSetting.OverlayPageNumber]: false,
+  [ReaderSetting.HideScrollbar]: false,
+  [ReaderSetting.KeyPreviousPage]: 'left',
+  [ReaderSetting.KeyFirstPage]: 'ctrl+left',
+  [ReaderSetting.KeyNextPage]: 'right',
+  [ReaderSetting.KeyLastPage]: 'ctrl+right',
+  [ReaderSetting.KeyPreviousChapter]: '[',
+  [ReaderSetting.KeyNextChapter]: ']',
+  [ReaderSetting.KeyToggleReadingDirection]: 'd',
+  [ReaderSetting.KeyTogglePageStyle]: 'q',
+  [ReaderSetting.KeyToggleShowingSettingsModal]: 'o',
+  [ReaderSetting.KeyToggleShowingSidebar]: 's',
+  [ReaderSetting.KeyToggleShowingHeader]: 'm',
+  [ReaderSetting.KeyExit]: 'backspace',
+  [ReaderSetting.KeyCloseOrBack]: 'escape',
+
+  [TrackerSetting.TrackerAutoUpdate]: true,
+
+  [IntegrationSetting.DiscordPresenceEnabled]: false,
+};

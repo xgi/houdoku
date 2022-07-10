@@ -1,5 +1,6 @@
 /* eslint-disable no-case-declarations */
 import {
+  DefaultSettings,
   GeneralSetting,
   IntegrationSetting,
   PageStyle,
@@ -34,158 +35,65 @@ import {
   SET_LIBRARY_SORT,
 } from './types';
 import {
-  DEFAULT_GENERAL_SETTINGS,
-  DEFAULT_INTEGRATION_SETTINGS,
-  DEFAULT_READER_SETTINGS,
-  DEFAULT_TRACKER_SETTINGS,
-  getStoredGeneralSettings,
-  getStoredIntegrationSettings,
-  getStoredReaderSettings,
-  getStoredTrackerSettings,
+  getAllStoredSettings,
   saveGeneralSetting,
   saveIntegrationSetting,
   saveReaderSetting,
   saveTrackerSetting,
 } from './utils';
 
-const storedGeneralSettings = getStoredGeneralSettings();
-const storedReaderSettings = getStoredReaderSettings();
-const storedTrackerSettings = getStoredTrackerSettings();
-const storedIntegrationSettings = getStoredIntegrationSettings();
+const storedSettings = getAllStoredSettings();
+
+const fromSetting = (
+  key: GeneralSetting | ReaderSetting | TrackerSetting | IntegrationSetting
+) => {
+  return storedSettings[key] === undefined
+    ? DefaultSettings[key]
+    : storedSettings[key];
+};
 
 const initialState: SettingsState = {
-  chapterLanguages:
-    storedGeneralSettings.ChapterLanguages === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.ChapterLanguages]
-      : storedGeneralSettings.ChapterLanguages,
-  refreshOnStart:
-    storedGeneralSettings.RefreshOnStart === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.RefreshOnStart]
-      : storedGeneralSettings.RefreshOnStart,
-  autoCheckForUpdates:
-    storedGeneralSettings.AutoCheckForUpdates === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.AutoCheckForUpdates]
-      : storedGeneralSettings.AutoCheckForUpdates,
-  autoCheckForExtensionUpdates:
-    storedGeneralSettings.AutoCheckForExtensionUpdates === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.AutoCheckForExtensionUpdates]
-      : storedGeneralSettings.AutoCheckForExtensionUpdates,
-  customDownloadsDir:
-    storedGeneralSettings.CustomDownloadsDir === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.CustomDownloadsDir]
-      : storedGeneralSettings.CustomDownloadsDir,
-  libraryColumns:
-    storedGeneralSettings.LibraryColumns === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryColumns]
-      : storedGeneralSettings.LibraryColumns,
-  libraryViews:
-    storedGeneralSettings.LibraryViews === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryViews]
-      : storedGeneralSettings.LibraryViews,
-  libraryFilterStatus:
-    storedGeneralSettings.LibraryFilterStatus === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterStatus]
-      : storedGeneralSettings.LibraryFilterStatus,
-  librarySort:
-    storedGeneralSettings.LibrarySort === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibrarySort]
-      : storedGeneralSettings.LibrarySort,
-  libraryFilterProgress:
-    storedGeneralSettings.LibraryFilterProgress === undefined
-      ? DEFAULT_GENERAL_SETTINGS[GeneralSetting.LibraryFilterProgress]
-      : storedGeneralSettings.LibraryFilterProgress,
-  fitContainToWidth:
-    storedReaderSettings.FitContainToWidth === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.FitContainToWidth]
-      : storedReaderSettings.FitContainToWidth,
-  fitContainToHeight:
-    storedReaderSettings.FitContainToHeight === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.FitContainToHeight]
-      : storedReaderSettings.FitContainToHeight,
-  fitStretch:
-    storedReaderSettings.FitStretch === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.FitStretch]
-      : storedReaderSettings.FitStretch,
-  pageStyle:
-    storedReaderSettings.PageStyle === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.PageStyle]
-      : storedReaderSettings.PageStyle,
-  readingDirection:
-    storedReaderSettings.ReadingDirection === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.ReadingDirection]
-      : storedReaderSettings.ReadingDirection,
-  preloadAmount:
-    storedReaderSettings.PreloadAmount === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.PreloadAmount]
-      : storedReaderSettings.PreloadAmount,
-  overlayPageNumber:
-    storedReaderSettings.OverlayPageNumber === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.OverlayPageNumber]
-      : storedReaderSettings.OverlayPageNumber,
-  hideScrollbar:
-    storedReaderSettings.HideScrollbar === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.HideScrollbar]
-      : storedReaderSettings.HideScrollbar,
-  keyPreviousPage:
-    storedReaderSettings.KeyPreviousPage === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyPreviousPage]
-      : storedReaderSettings.KeyPreviousPage,
-  keyFirstPage:
-    storedReaderSettings.KeyFirstPage === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyFirstPage]
-      : storedReaderSettings.KeyFirstPage,
-  keyNextPage:
-    storedReaderSettings.KeyNextPage === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyNextPage]
-      : storedReaderSettings.KeyNextPage,
-  keyLastPage:
-    storedReaderSettings.KeyLastPage === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyLastPage]
-      : storedReaderSettings.KeyLastPage,
-  keyPreviousChapter:
-    storedReaderSettings.KeyPreviousChapter === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyPreviousChapter]
-      : storedReaderSettings.KeyPreviousChapter,
-  keyNextChapter:
-    storedReaderSettings.KeyNextChapter === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyNextChapter]
-      : storedReaderSettings.KeyNextChapter,
-  keyToggleReadingDirection:
-    storedReaderSettings.KeyToggleReadingDirection === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleReadingDirection]
-      : storedReaderSettings.KeyToggleReadingDirection,
-  keyTogglePageStyle:
-    storedReaderSettings.KeyTogglePageStyle === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyTogglePageStyle]
-      : storedReaderSettings.KeyTogglePageStyle,
-  keyToggleShowingSettingsModal:
-    storedReaderSettings.KeyToggleShowingSettingsModal === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingSettingsModal]
-      : storedReaderSettings.KeyToggleShowingSettingsModal,
-  keyToggleShowingSidebar:
-    storedReaderSettings.KeyToggleShowingSidebar === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingSidebar]
-      : storedReaderSettings.KeyToggleShowingSidebar,
-  keyToggleShowingHeader:
-    storedReaderSettings.KeyToggleShowingHeader === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyToggleShowingHeader]
-      : storedReaderSettings.KeyToggleShowingHeader,
-  keyExit:
-    storedReaderSettings.KeyExit === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyExit]
-      : storedReaderSettings.KeyExit,
-  keyCloseOrBack:
-    storedReaderSettings.KeyCloseOrBack === undefined
-      ? DEFAULT_READER_SETTINGS[ReaderSetting.KeyCloseOrBack]
-      : storedReaderSettings.KeyCloseOrBack,
-  trackerAutoUpdate:
-    storedTrackerSettings.TrackerAutoUpdate === undefined
-      ? DEFAULT_TRACKER_SETTINGS[TrackerSetting.TrackerAutoUpdate]
-      : storedTrackerSettings.TrackerAutoUpdate,
-  discordPresenceEnabled:
-    storedIntegrationSettings.DiscordPresenceEnabled === undefined
-      ? DEFAULT_INTEGRATION_SETTINGS[IntegrationSetting.DiscordPresenceEnabled]
-      : storedIntegrationSettings.DiscordPresenceEnabled,
+  chapterLanguages: fromSetting(GeneralSetting.ChapterLanguages),
+  refreshOnStart: fromSetting(GeneralSetting.RefreshOnStart),
+  autoCheckForUpdates: fromSetting(GeneralSetting.AutoCheckForUpdates),
+  autoCheckForExtensionUpdates: fromSetting(
+    GeneralSetting.AutoCheckForExtensionUpdates
+  ),
+  customDownloadsDir: fromSetting(GeneralSetting.CustomDownloadsDir),
+  libraryColumns: fromSetting(GeneralSetting.LibraryColumns),
+  libraryViews: fromSetting(GeneralSetting.LibraryViews),
+  libraryFilterStatus: fromSetting(GeneralSetting.LibraryFilterStatus),
+  librarySort: fromSetting(GeneralSetting.LibrarySort),
+  libraryFilterProgress: fromSetting(GeneralSetting.LibraryFilterProgress),
+  fitContainToWidth: fromSetting(ReaderSetting.FitContainToWidth),
+  fitContainToHeight: fromSetting(ReaderSetting.FitContainToHeight),
+  fitStretch: fromSetting(ReaderSetting.FitStretch),
+  pageStyle: fromSetting(ReaderSetting.PageStyle),
+  readingDirection: fromSetting(ReaderSetting.ReadingDirection),
+  preloadAmount: fromSetting(ReaderSetting.PreloadAmount),
+  overlayPageNumber: fromSetting(ReaderSetting.OverlayPageNumber),
+  hideScrollbar: fromSetting(ReaderSetting.HideScrollbar),
+  keyPreviousPage: fromSetting(ReaderSetting.KeyPreviousPage),
+  keyFirstPage: fromSetting(ReaderSetting.KeyFirstPage),
+  keyNextPage: fromSetting(ReaderSetting.KeyNextPage),
+  keyLastPage: fromSetting(ReaderSetting.KeyLastPage),
+  keyPreviousChapter: fromSetting(ReaderSetting.KeyPreviousChapter),
+  keyNextChapter: fromSetting(ReaderSetting.KeyNextChapter),
+  keyToggleReadingDirection: fromSetting(
+    ReaderSetting.KeyToggleReadingDirection
+  ),
+  keyTogglePageStyle: fromSetting(ReaderSetting.KeyTogglePageStyle),
+  keyToggleShowingSettingsModal: fromSetting(
+    ReaderSetting.KeyToggleShowingSettingsModal
+  ),
+  keyToggleShowingSidebar: fromSetting(ReaderSetting.KeyToggleShowingSidebar),
+  keyToggleShowingHeader: fromSetting(ReaderSetting.KeyToggleShowingHeader),
+  keyExit: fromSetting(ReaderSetting.KeyExit),
+  keyCloseOrBack: fromSetting(ReaderSetting.KeyCloseOrBack),
+  trackerAutoUpdate: fromSetting(TrackerSetting.TrackerAutoUpdate),
+  discordPresenceEnabled: fromSetting(
+    IntegrationSetting.DiscordPresenceEnabled
+  ),
 };
 
 function nextReadingDirection(
