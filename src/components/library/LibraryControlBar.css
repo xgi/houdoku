@@ -42,3 +42,11 @@
 .columnsButton {
   margin-left: 0.3rem !important;
 }
+
+
+.enabledMenuItem::before {
+  content: "✓";
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}

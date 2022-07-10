@@ -54,7 +54,7 @@ const parseStoreValues = (
           settings[settingKey] = value === 'true';
           break;
         case SettingType.STRING:
-          settings[settingKey] = value;
+          settings[settingKey] = value === 'null' ? null : value;
           break;
         case SettingType.STRING_ARRAY:
           settings[settingKey] = value ? value.split(',') : [];

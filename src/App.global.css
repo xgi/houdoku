@@ -45,6 +45,11 @@ h4.ant-typography {
   overflow: auto;
 }
 
+.ant-dropdown-menu .ant-dropdown-menu-sub {
+  min-width: 100px;
+  text-align: center;
+}
+
 .ant-alert {
   padding: 8px 15px !important;
 }

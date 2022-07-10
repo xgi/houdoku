@@ -73,10 +73,10 @@ export enum ProgressFilter {
 }
 
 export enum LibrarySort {
-  UnreadAsc = 'UnreadAsc',
-  UnreadDesc = 'UnreadDesc',
   TitleAsc = 'TitleAsc',
   TitleDesc = 'TitleDesc',
+  UnreadAsc = 'UnreadAsc',
+  UnreadDesc = 'UnreadDesc',
 }
 
 export enum LibraryView {

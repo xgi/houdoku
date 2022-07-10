@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 import React, { useState } from 'react';
-import { Button, Slider, Input, Dropdown, Menu, Popover } from 'antd';
+import { Button, Input, Dropdown, Menu } from 'antd';
 import { DownOutlined, SyncOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
@@ -55,66 +55,16 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = PropsFromRedux & {};
 
+const LIBRARY_SORT_TEXT = {
+  [LibrarySort.TitleAsc]: 'Title Asc',
+  [LibrarySort.TitleDesc]: 'Title Desc',
+  [LibrarySort.UnreadAsc]: 'Unread Asc',
+  [LibrarySort.UnreadDesc]: 'Unread Desc',
+};
+
 const LibraryControlBar: React.FC<Props> = (props: Props) => {
-  const [showingColumnsPopover, setShowingColumnsPopover] = useState(false);
-
-  /**
-   * Get a displayable string for the current filterStatus value.
-   * @returns a user-friendly representation of the filterStatus prop
-   */
-  const getFilterStatusText = () => {
-    const status = props.libraryFilterStatus;
-
-    let valueText = '';
-    if (status === null) valueText = 'Any';
-    else valueText = status;
-    return `Status: ${valueText}`;
-  };
-
-  /**
-   * Get a displayable string for the current filterProgress value.
-   * @returns a user-friendly representation of the filterProgress prop
-   */
-  const getFilterProgressText = () => {
-    const prefix = 'Progress: ';
-
-    if (props.libraryFilterProgress === ProgressFilter.All)
-      return `${prefix}All`;
-    if (props.libraryFilterProgress === ProgressFilter.Unread)
-      return `${prefix}Unread`;
-    if (props.libraryFilterProgress === ProgressFilter.Finished)
-      return `${prefix}Finished`;
-    return prefix;
-  };
-
-  /**
-   * Get a displayable string for the current libraryView value.
-   * @returns a user-friendly representation of the libraryView prop
-   */
-  const getLibraryView = () => {
-    const prefix = 'View: ';
-
-    if (props.libraryViews === LibraryView.Grid) return `${prefix}Grid`;
-    if (props.libraryViews === LibraryView.List) return `${prefix}List`;
-    return prefix;
-  };
-
-  /**
-   * Get a displayable string for the current librarySort value.
-   * @returns a user-friendly representation of the librarySort prop
-   */
-  const getLibrarySortText = () => {
-    const prefix = 'Sort: ';
-
-    if (props.librarySort === LibrarySort.TitleAsc) return `${prefix}Title Asc`;
-    if (props.librarySort === LibrarySort.TitleDesc)
-      return `${prefix}Title Desc`;
-    if (props.librarySort === LibrarySort.UnreadAsc)
-      return `${prefix}Unread Asc`;
-    if (props.librarySort === LibrarySort.UnreadDesc)
-      return `${prefix}Unread Desc`;
-    return prefix;
-  };
+  const [viewSubmenu, setViewSubmenu] = useState('');
+  const [filterSubmenu, setFilterSubmenu] = useState('');
 
   return (
     <>
@@ -130,157 +80,143 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
         >
           {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
         </Button>
-        <Popover
-          content={
-            <Slider
-              min={2}
-              max={8}
-              step={2}
-              value={props.libraryColumns}
-              onChange={(value: number) => props.setLibraryColumns(value)}
-            />
-          }
-          title="Change number of columns"
-          trigger="click"
-          visible={showingColumnsPopover}
-          onVisibleChange={(visible: boolean) =>
-            setShowingColumnsPopover(visible)
-          }
-        >
-          <Button className={styles.columnsButton}>Columns</Button>
-        </Popover>
-        <Dropdown
-          className={styles.progressDropdown}
-          overlay={
-            <Menu
-              onClick={(e: any) =>
-                props.setLibraryFilterProgress(e.item.props['data-value'])
-              }
-            >
-              <Menu.Item
-                key={ProgressFilter.All}
-                data-value={ProgressFilter.All}
-              >
-                All
-              </Menu.Item>
-              <Menu.Item
-                key={ProgressFilter.Unread}
-                data-value={ProgressFilter.Unread}
-              >
-                Unread
-              </Menu.Item>
-              <Menu.Item
-                key={ProgressFilter.Finished}
-                data-value={ProgressFilter.Finished}
-              >
-                Finished
-              </Menu.Item>
-            </Menu>
-          }
-        >
-          <Button>
-            {getFilterProgressText()} <DownOutlined />
-          </Button>
-        </Dropdown>
         <Dropdown
           className={styles.libraryViewDropdown}
           overlay={
             <Menu
-              onClick={(e: any) =>
-                props.setLibraryViews(e.item.props['data-value'])
-              }
+              openKeys={[viewSubmenu]}
+              onOpenChange={(keys) => setViewSubmenu(keys.pop() || '')}
             >
-              <Menu.Item key={LibraryView.Grid} data-value={LibraryView.Grid}>
-                Grid
-              </Menu.Item>
-              <Menu.Item key={LibraryView.List} data-value={LibraryView.List}>
-                List
-              </Menu.Item>
+              <Menu.SubMenu
+                key={'Columns'}
+                title={'Columns'}
+                popupOffset={[-4, 0]}
+              >
+                {[2, 4, 6, 8].map((value) => (
+                  <Menu.Item
+                    key={`columns-${value}`}
+                    onClick={() => props.setLibraryColumns(value)}
+                    className={
+                      props.libraryColumns === value
+                        ? styles.enabledMenuItem
+                        : ''
+                    }
+                  >
+                    {value}
+                  </Menu.Item>
+                ))}
+              </Menu.SubMenu>
+              <Menu.SubMenu
+                key={'Layout'}
+                title={'Layout'}
+                popupOffset={[-4, 0]}
+              >
+                <Menu.Item
+                  key={LibraryView.Grid}
+                  onClick={() => props.setLibraryViews(LibraryView.Grid)}
+                  className={
+                    props.libraryViews === LibraryView.Grid
+                      ? styles.enabledMenuItem
+                      : ''
+                  }
+                >
+                  Grid
+                </Menu.Item>
+                <Menu.Item
+                  key={LibraryView.List}
+                  onClick={() => props.setLibraryViews(LibraryView.List)}
+                  className={
+                    props.libraryViews === LibraryView.List
+                      ? styles.enabledMenuItem
+                      : ''
+                  }
+                >
+                  List
+                </Menu.Item>
+              </Menu.SubMenu>
+              <Menu.SubMenu key={'Sort'} title={'Sort'} popupOffset={[-4, 0]}>
+                {Object.values(LibrarySort).map((value) => (
+                  <Menu.Item
+                    key={value}
+                    onClick={() => props.setLibrarySort(value)}
+                    className={
+                      props.librarySort === value ? styles.enabledMenuItem : ''
+                    }
+                  >
+                    {LIBRARY_SORT_TEXT[value]}
+                  </Menu.Item>
+                ))}
+              </Menu.SubMenu>
             </Menu>
           }
         >
           <Button>
-            {getLibraryView()} <DownOutlined />
-          </Button>
-        </Dropdown>
-        <Dropdown
-          className={styles.libraryViewDropdown}
-          overlay={
-            <Menu
-              onClick={(e: any) =>
-                props.setLibrarySort(e.item.props['data-value'])
-              }
-            >
-              <Menu.Item
-                key={LibrarySort.TitleAsc}
-                data-value={LibrarySort.TitleAsc}
-              >
-                Title Asc
-              </Menu.Item>
-              <Menu.Item
-                key={LibrarySort.TitleDesc}
-                data-value={LibrarySort.TitleDesc}
-              >
-                Title Desc
-              </Menu.Item>
-              <Menu.Item
-                key={LibrarySort.UnreadDesc}
-                data-value={LibrarySort.UnreadDesc}
-              >
-                Unread Desc
-              </Menu.Item>
-              <Menu.Item
-                key={LibrarySort.UnreadAsc}
-                data-value={LibrarySort.UnreadAsc}
-              >
-                Unread Asc
-              </Menu.Item>
-            </Menu>
-          }
-        >
-          <Button>
-            {getLibrarySortText()} <DownOutlined />
+            View <DownOutlined />
           </Button>
         </Dropdown>
         <Dropdown
           className={styles.statusDropdown}
           overlay={
             <Menu
-              onClick={(e: any) =>
-                props.setLibraryFilterStatus(e.item.props['data-value'])
-              }
+              openKeys={[filterSubmenu]}
+              onOpenChange={(keys) => setFilterSubmenu(keys.pop() || '')}
             >
-              <Menu.Item key={null} data-value={null}>
-                Any
-              </Menu.Item>
-              <Menu.Item
-                key={SeriesStatus.ONGOING}
-                data-value={SeriesStatus.ONGOING}
+              <Menu.SubMenu
+                key={'Progress'}
+                title={'Progress'}
+                popupOffset={[-4, 0]}
               >
-                Ongoing
-              </Menu.Item>
-              <Menu.Item
-                key={SeriesStatus.COMPLETED}
-                data-value={SeriesStatus.COMPLETED}
+                {Object.values(ProgressFilter).map((value) => (
+                  <Menu.Item
+                    key={value}
+                    onClick={() => props.setLibraryFilterProgress(value)}
+                    className={
+                      props.libraryFilterProgress === value
+                        ? styles.enabledMenuItem
+                        : ''
+                    }
+                  >
+                    {value}
+                  </Menu.Item>
+                ))}
+              </Menu.SubMenu>
+              <Menu.SubMenu
+                key={'Status'}
+                title={'Status'}
+                popupOffset={[-4, 0]}
               >
-                Completed
-              </Menu.Item>
-              <Menu.Item
-                key={SeriesStatus.CANCELLED}
-                data-value={SeriesStatus.CANCELLED}
-              >
-                Cancelled
-              </Menu.Item>
+                {[[null, 'Any'], ...Object.entries(SeriesStatus)].map(
+                  ([seriesStatus, text]) => (
+                    <Menu.Item
+                      key={text}
+                      onClick={() =>
+                        props.setLibraryFilterStatus(
+                          seriesStatus as SeriesStatus
+                        )
+                      }
+                      className={
+                        props.libraryFilterStatus === seriesStatus ||
+                        (props.libraryFilterProgress === undefined &&
+                          seriesStatus === null)
+                          ? styles.enabledMenuItem
+                          : ''
+                      }
+                    >
+                      {text}
+                    </Menu.Item>
+                  )
+                )}
+              </Menu.SubMenu>
             </Menu>
           }
         >
           <Button>
-            {getFilterStatusText()} <DownOutlined />
+            Filter <DownOutlined />
           </Button>
         </Dropdown>
         <Input
           className={styles.seriesFilter}
-          placeholder="Filter series list..."
+          placeholder="Search your library..."
           onChange={(e) => props.setFilter(e.target.value)}
         />
       </Header>
