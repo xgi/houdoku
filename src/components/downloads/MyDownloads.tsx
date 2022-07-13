@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Row, Tree, Typography } from 'antd';
+import { Alert, Button, Modal, Row, Tree, Typography } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { connect, ConnectedProps } from 'react-redux';
 import log from 'electron-log';
@@ -14,7 +14,7 @@ import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
 import flags from '../../img/flags.png';
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 const { confirm } = Modal;
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
@@ -118,6 +118,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
           // eslint-disable-next-line promise/always-return
           .then(() => {
             props.setStatusText(`Deleted ${count} downloaded chapter(s)`);
+            setCheckedChapters([]);
             loadDownloads();
           })
           .catch((err) => log.error(err));
@@ -132,29 +133,42 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   return (
     <>
+      <Alert
+        className={styles.infoAlert}
+        type="info"
+        message={
+          <>
+            You can download chapters for offline reading from the series page
+            in your library. Your downloaded chapters are saved in{' '}
+            <Text code>
+              <a
+                href={`file:///${
+                  props.customDownloadsDir || defaultDownloadsDir
+                }`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {props.customDownloadsDir || defaultDownloadsDir}
+              </a>
+            </Text>
+          </>
+        }
+      />
       <Row className={styles.controlRow}>
         <Button
           className={styles.refreshButton}
           onClick={() => loadDownloads()}
         >
-          {loading ? <SyncOutlined spin /> : 'Refresh Downloads'}
+          {loading ? <SyncOutlined spin /> : 'Refresh List'}
         </Button>
-        <Button type="primary" danger onClick={() => deleteSelected()}>
-          Delete Selected
-        </Button>
+        {checkedChapters.length > 0 ? (
+          <Button type="primary" danger onClick={() => deleteSelected()}>
+            Delete Selected
+          </Button>
+        ) : (
+          ''
+        )}
       </Row>
-      <Paragraph>
-        Your downloaded chapters are saved in{' '}
-        <Text code>
-          <a
-            href={`file:///${props.customDownloadsDir || defaultDownloadsDir}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {props.customDownloadsDir || defaultDownloadsDir}
-          </a>
-        </Text>
-      </Paragraph>
       {treeData.length > 0 ? (
         <Tree
           checkable

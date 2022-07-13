@@ -36,11 +36,11 @@ type Props = PropsFromRedux & {};
 const Downloads: React.FC<Props> = (props: Props) => {
   return (
     <Tabs defaultActiveKey="1" tabPosition="top">
-      <TabPane tab="Status" key={1}>
-        <DownloadsStatus />
-      </TabPane>
-      <TabPane tab="My Downloads" key={2}>
+      <TabPane tab="My Downloads" key={1}>
         <MyDownloads />
+      </TabPane>
+      <TabPane tab="Queue" key={2}>
+        <DownloadsStatus />
       </TabPane>
     </Tabs>
   );
