@@ -84,6 +84,8 @@ a.ant-typography:hover,
 .ant-input:focus,
 .ant-input-number:hover,
 .ant-input-number:focus,
+.ant-input-search .ant-input:hover,
+.ant-input-search .ant-input:focus,
 .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
 .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):focus,
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector {

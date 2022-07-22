@@ -116,7 +116,10 @@ export default class DownloaderClient {
       for (i; i <= pageUrls.length && this.running; i += 1) {
         const pageUrl = pageUrls[i - 1];
         const ext = pageUrl.split('.').pop()?.split('?v')[0];
-        const pageNumPadded = String(i).padStart(pageUrls.length.toString().length, '0');
+        const pageNumPadded = String(i).padStart(
+          pageUrls.length.toString().length,
+          '0'
+        );
         const pagePath = path.join(chapterPath, `${pageNumPadded}.${ext}`);
 
         if (this.setStatusText) {

@@ -34,6 +34,7 @@ import {
 } from '../../models/types';
 import { updateSeriesTrackerKeys } from '../../features/library/utils';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
+import Search from 'antd/lib/input/Search';
 
 const { TabPane } = Tabs;
 
@@ -58,6 +59,7 @@ type Props = {
 
 const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(false);
+  const [searchText, setSearchText] = useState(props.series.title);
   const [usernames, setUsernames] = useState<{
     [trackerId: string]: string | null;
   }>({});
@@ -81,7 +83,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
         .catch((e) => log.error(e));
     const _getSeriesList = (trackerId: string): Promise<TrackerSeries[]> =>
       ipcRenderer
-        .invoke(ipcChannels.TRACKER.SEARCH, trackerId, props.series.title)
+        .invoke(ipcChannels.TRACKER.SEARCH, trackerId, searchText)
         .catch((e) => log.error(e));
 
     const _usernames: { [trackerId: string]: string | null } = {};
@@ -142,42 +144,52 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
   const renderTrackerSeriesList = (trackerId: string) => {
     return (
-      <List
-        header={null}
-        footer={null}
-        bordered
-        dataSource={trackerSeriesLists[trackerId]}
-        renderItem={(item) => (
-          <List.Item
-            key={item.id}
-            extra={
-              <Button onClick={() => applySeriesTrackerKey(trackerId, item.id)}>
-                Link
-              </Button>
-            }
-          >
-            <List.Item.Meta
-              avatar={
-                <img
-                  className={styles.coverImg}
-                  src={item.coverUrl}
-                  alt="cover"
-                />
+      <>
+        <Search
+          className={styles.titleSearch}
+          defaultValue={searchText}
+          placeholder="Search for series..."
+          onSearch={(value) => setSearchText(value)}
+        />
+        <List
+          header={null}
+          footer={null}
+          bordered
+          dataSource={trackerSeriesLists[trackerId]}
+          renderItem={(item) => (
+            <List.Item
+              key={item.id}
+              extra={
+                <Button
+                  onClick={() => applySeriesTrackerKey(trackerId, item.id)}
+                >
+                  Link
+                </Button>
               }
-              title={
-                <Paragraph className={styles.listItemTitle}>
-                  {item.title}
-                </Paragraph>
-              }
-              description={
-                <Paragraph className={styles.listItemDescription}>
-                  {item.description.substr(0, 80)}...
-                </Paragraph>
-              }
-            />
-          </List.Item>
-        )}
-      />
+            >
+              <List.Item.Meta
+                avatar={
+                  <img
+                    className={styles.coverImg}
+                    src={item.coverUrl}
+                    alt="cover"
+                  />
+                }
+                title={
+                  <Paragraph className={styles.listItemTitle}>
+                    {item.title}
+                  </Paragraph>
+                }
+                description={
+                  <Paragraph className={styles.listItemDescription}>
+                    {item.description.substr(0, 80)}...
+                  </Paragraph>
+                }
+              />
+            </List.Item>
+          )}
+        />
+      </>
     );
   };
 
@@ -330,6 +342,12 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
+    loadTrackerData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchText]);
+
+  useEffect(() => {
+    setSearchText(props.series.title);
     setUsernames({});
     setTrackEntries({});
     setTrackerSeriesLists({});
