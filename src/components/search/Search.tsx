@@ -34,7 +34,7 @@ import { RootState } from '../../store';
 import AddSeriesModal from './AddSeriesModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
-import { seriesListState } from '../../state/libraryState';
+import { seriesListState } from '../../state/libraryStates';
 
 type SearchParams = {
   text?: string;

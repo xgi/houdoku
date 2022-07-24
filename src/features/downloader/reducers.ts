@@ -1,6 +1,5 @@
 import { EnhancedStore } from '@reduxjs/toolkit';
 import DownloaderClient from '../../services/downloader';
-import { setStatusText } from '../statusbar/actions';
 import { internalCopyClientState } from './actions';
 import {
   DOWNLOAD_CHAPTERS,
@@ -54,10 +53,13 @@ export default function downloader(
   };
 }
 
-export const linkDownloaderClientFunctions = (store: EnhancedStore) => {
-  downloaderClient.setStatusTextFunc((text: string | undefined) =>
-    store.dispatch(setStatusText(text))
-  );
+export const linkDownloaderClientFunctions = (
+  store: EnhancedStore,
+  setStatusText: (statusText: string) => void
+) => {
+  downloaderClient.setStatusTextFunc((text: string | undefined) => {
+    if (text) setStatusText(text);
+  });
   downloaderClient.setCopyClientStateFunc(() =>
     store.dispatch(internalCopyClientState())
   );

@@ -5,14 +5,15 @@ import { connect, ConnectedProps } from 'react-redux';
 import log from 'electron-log';
 import { Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
+import { useSetRecoilState } from 'recoil';
 import styles from './MyDownloads.css';
 import { RootState } from '../../store';
 import { getDownloadedList } from '../../features/downloader/utils';
 import { deleteDownloadedChapter } from '../../util/filesystem';
-import { setStatusText } from '../../features/statusbar/actions';
 import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
 import flags from '../../img/flags.png';
+import { statusTextState } from '../../state/statusBarStates';
 
 const { Text } = Typography;
 const { confirm } = Modal;
@@ -26,9 +27,7 @@ const mapState = (state: RootState) => ({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setStatusText: (text?: string) => dispatch(setStatusText(text)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -40,6 +39,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
   const [treeData, setTreeData] = useState<any[]>([]);
+  const setStatusText = useSetRecoilState(statusTextState);
 
   const loadDownloads = async () => {
     const downloadedList = getDownloadedList(
@@ -118,7 +118,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
         )
           // eslint-disable-next-line promise/always-return
           .then(() => {
-            props.setStatusText(`Deleted ${count} downloaded chapter(s)`);
+            setStatusText(`Deleted ${count} downloaded chapter(s)`);
             setCheckedChapters([]);
             loadDownloads();
           })

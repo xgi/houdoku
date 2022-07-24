@@ -4,7 +4,7 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
-import { RecoilRoot, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { configuredStore } from './store';
 import persistantStore from './util/persistantStore';
 import routes from './constants/routes.json';
@@ -13,11 +13,11 @@ import ReaderPage from './components/reader/ReaderPage';
 import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
 import { TrackerMetadata } from './models/types';
-import { setStatusText } from './features/statusbar/actions';
 import { loadSeriesList, migrateSeriesTags } from './features/library/utils';
 import { linkDownloaderClientFunctions } from './features/downloader/reducers';
 import AppLoading from './components/general/AppLoading';
-import { seriesListState } from './state/libraryState';
+import { seriesListState } from './state/libraryStates';
+import { statusTextState } from './state/statusBarStates';
 
 const store = configuredStore();
 
@@ -78,9 +78,6 @@ log.debug('Adding app-wide renderer IPC handlers');
 ipcRenderer.on(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS, () => {
   loadStoredExtensionSettings();
 });
-ipcRenderer.on(ipcChannels.APP.SET_STATUS, (_event, text) => {
-  store.dispatch(setStatusText(text));
-});
 ipcRenderer.on(ipcChannels.WINDOW.SET_FULLSCREEN, (_event, fullscreen) => {
   if (fullscreen) {
     document.getElementById('titlebar')?.classList.add('hidden');
@@ -118,13 +115,10 @@ if (store.getState().settings.autoCheckForExtensionUpdates) {
   );
 }
 
-// the downloader requires access to some other actions/parts of the
-// state, so they are manually linked here
-linkDownloaderClientFunctions(store);
-
 export default function App() {
   const [loading, setLoading] = useState(true);
   const setSeriesList = useSetRecoilState(seriesListState);
+  const setStatusText = useSetRecoilState(statusTextState);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -134,6 +128,15 @@ export default function App() {
       /**
        * Add any additional preload steps here (e.g. data migration, verifications, etc)
        */
+
+      // Allow the main thread to set status messages
+      ipcRenderer.on(ipcChannels.APP.SET_STATUS, (_event, text) => {
+        setStatusText(text);
+      });
+
+      // The downloader requires access to some other actions/parts of the
+      // state, so they are manually linked here
+      linkDownloaderClientFunctions(store, setStatusText);
 
       // Previously the series object had separate tag fields (themes, formats, genres,
       // demographic, content warnings). These have now been consolidated into the

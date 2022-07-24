@@ -10,7 +10,7 @@ import {
   DownloadOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import log from 'electron-log';
 import { RootState } from '../../store';
 import SeriesDetails from '../library/SeriesDetails';
@@ -28,8 +28,9 @@ import {
   completedStartReloadState,
   reloadingSeriesListState,
   seriesListState,
-} from '../../state/libraryState';
+} from '../../state/libraryStates';
 import library from '../../services/library';
+import { statusTextState } from '../../state/statusBarStates';
 
 const { Content, Sider } = Layout;
 
@@ -53,6 +54,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const [completedStartReload, setCompletedStartReload] = useRecoilState(
     completedStartReloadState
   );
+  const setStatusText = useSetRecoilState(statusTextState);
 
   useEffect(() => {
     if (
@@ -64,7 +66,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
       reloadSeriesList(
         library.fetchSeriesList(),
         setSeriesList,
-        setReloadingSeriesList
+        setReloadingSeriesList,
+        setStatusText
       )
         // eslint-disable-next-line promise/always-return
         .then(() => {

@@ -14,18 +14,17 @@ import {
   LanguageKey,
   Languages,
 } from 'houdoku-extension-lib';
+import { useSetRecoilState } from 'recoil';
 import { ExtensionTableRow } from '../../models/types';
 import { RootState } from '../../store';
-import { setStatusText } from '../../features/statusbar/actions';
 import ipcChannels from '../../constants/ipcChannels.json';
 import flags from '../../img/flags.png';
+import { statusTextState } from '../../state/statusBarStates';
 
 const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setStatusText: (text?: string) => dispatch(setStatusText(text)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -42,6 +41,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
   const [extensionLanguageKeys, setExtensionLanguageKeys] = useState<{
     [languageKey: string]: number;
   }>({});
+  const setStatusText = useSetRecoilState(statusTextState);
 
   const updateDataSource = async () => {
     if (props.registryResults === undefined) {
@@ -127,7 +127,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
     friendlyName: string,
     version: string
   ) => {
-    props.setStatusText(`Installing extension ${friendlyName}@${version} ...`);
+    setStatusText(`Installing extension ${friendlyName}@${version} ...`);
 
     ipcRenderer
       .invoke(ipcChannels.EXTENSION_MANAGER.INSTALL, pkgName, version)
@@ -141,7 +141,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
         );
       })
       .then((loaded: boolean) => {
-        props.setStatusText(
+        setStatusText(
           loaded
             ? `Successfully installed and loaded extension ${friendlyName}@${version}`
             : `Could not load extension ${friendlyName}@${version}`
@@ -153,7 +153,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
   };
 
   const handleRemove = (pkgName: string, friendlyName: string) => {
-    props.setStatusText(`Removing extension ${friendlyName}...`);
+    setStatusText(`Removing extension ${friendlyName}...`);
 
     ipcRenderer
       .invoke(ipcChannels.EXTENSION_MANAGER.UNINSTALL, pkgName)
@@ -167,7 +167,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
         );
       })
       .then((loaded: boolean) => {
-        props.setStatusText(
+        setStatusText(
           loaded
             ? `Failed to remove extension ${friendlyName}`
             : `Successfully removed extension ${friendlyName}`

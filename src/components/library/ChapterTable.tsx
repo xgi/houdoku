@@ -21,7 +21,7 @@ import {
   chapterFilterTitleState,
   chapterListState,
   seriesState,
-} from '../../state/libraryState';
+} from '../../state/libraryStates';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR

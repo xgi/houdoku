@@ -5,10 +5,9 @@ import { DownOutlined, SyncOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
 import { SeriesStatus } from 'houdoku-extension-lib';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import styles from './LibraryControlBar.css';
 import { reloadSeriesList } from '../../features/library/utils';
-import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import {
@@ -22,7 +21,8 @@ import {
   filterState,
   reloadingSeriesListState,
   seriesListState,
-} from '../../state/libraryState';
+} from '../../state/libraryStates';
+import { statusTextState } from '../../state/statusBarStates';
 
 const mapState = (state: RootState) => ({
   libraryFilterStatus: state.settings.libraryFilterStatus,
@@ -34,7 +34,6 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  setStatusText: (text?: string) => dispatch(setStatusText(text)),
   setLibraryFilterStatus: (status: SeriesStatus | null) =>
     dispatch(setLibraryFilterStatus(status)),
   setLibraryFilterProgress: (progressFilter: ProgressFilter) =>
@@ -65,7 +64,8 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(
     reloadingSeriesListState
   );
-  const [filter, setFilter] = useRecoilState(filterState);
+  const setFilter = useSetRecoilState(filterState);
+  const setStatusText = useSetRecoilState(statusTextState);
   const [viewSubmenu, setViewSubmenu] = useState('');
   const [filterSubmenu, setFilterSubmenu] = useState('');
 
@@ -76,7 +76,12 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
         type="primary"
         onClick={() => {
           if (!reloadingSeriesList) {
-            reloadSeriesList(seriesList, setSeriesList, setReloadingSeriesList);
+            reloadSeriesList(
+              seriesList,
+              setSeriesList,
+              setReloadingSeriesList,
+              setStatusText
+            );
           }
         }}
       >

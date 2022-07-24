@@ -4,14 +4,15 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import styles from './AddSeriesModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesEditControls from '../general/SeriesEditControls';
 import { importSeries } from '../../features/library/utils';
 import library from '../../services/library';
 import { downloadCover } from '../../util/download';
-import { seriesListState } from '../../state/libraryState';
+import { seriesListState } from '../../state/libraryStates';
+import { statusTextState } from '../../state/statusBarStates';
 
 type Props = {
   series: Series | undefined;
@@ -22,6 +23,7 @@ type Props = {
 
 const AddSeriesModal: React.FC<Props> = (props: Props) => {
   const [, setSeriesList] = useRecoilState(seriesListState);
+  const setStatusText = useSetRecoilState(statusTextState);
   const [customSeries, setCustomSeries] = useState<Series>();
   const [loading, setLoading] = useState(true);
 
@@ -59,7 +61,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
 
   const handleAdd = () => {
     if (customSeries !== undefined) {
-      importSeries(customSeries)
+      importSeries(customSeries, setStatusText)
         // eslint-disable-next-line promise/always-return
         .then((addedSeries) => {
           setSeriesList(library.fetchSeriesList());

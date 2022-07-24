@@ -62,11 +62,14 @@ export function removeSeries(
   loadSeriesList(setSeriesList);
 }
 
-export async function importSeries(series: Series): Promise<Series> {
+export async function importSeries(
+  series: Series,
+  setStatusText: (statusText: string) => void
+): Promise<Series> {
   log.debug(
     `Importing series ${series.sourceId} from extension ${series.extensionId}`
   );
-  // dispatch(setStatusText(`Adding "${series.title}" to your library...`));
+  setStatusText(`Adding "${series.title}" to your library...`);
 
   const chapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
@@ -80,7 +83,7 @@ export async function importSeries(series: Series): Promise<Series> {
   updateSeriesNumberUnread(addedSeries);
 
   log.debug(`Imported series ${series.sourceId} with database ID ${series.id}`);
-  // dispatch(setStatusText(`Added "${addedSeries.title}" to your library.`));
+  setStatusText(`Added "${addedSeries.title}" to your library.`);
   return addedSeries;
 }
 
@@ -198,7 +201,8 @@ async function reloadSeries(series: Series): Promise<Error | void> {
 export async function reloadSeriesList(
   seriesList: Series[],
   setSeriesList: (seriesList: Series[]) => void,
-  setReloadingSeriesList: (reloadingSeriesList: boolean) => void
+  setReloadingSeriesList: (reloadingSeriesList: boolean) => void,
+  setStatusText: (statusText: string) => void
 ) {
   log.debug(`Reloading series list...`);
   setReloadingSeriesList(true);
@@ -211,11 +215,9 @@ export async function reloadSeriesList(
 
   // eslint-disable-next-line no-restricted-syntax
   for (const series of sortedSeriesList) {
-    // dispatch(
-    //   setStatusText(
-    //     `Reloading library (${cur}/${seriesList.length}) - ${series.title}`
-    //   )
-    // );
+    setStatusText(
+      `Reloading library (${cur}/${seriesList.length}) - ${series.title}`
+    );
     // eslint-disable-next-line no-await-in-loop
     const ret = await reloadSeries(series);
     if (ret instanceof Error) {
@@ -240,8 +242,7 @@ export async function reloadSeriesList(
 
   setSeriesList(library.fetchSeriesList());
   setReloadingSeriesList(false);
-
-  // dispatch(setStatusText(statusMessage));
+  setStatusText(statusMessage);
 }
 
 export function updateSeries(series: Series) {

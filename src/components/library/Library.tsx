@@ -5,18 +5,18 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { Modal } from 'antd';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styles from './Library.css';
 import routes from '../../constants/routes.json';
 import { removeSeries } from '../../features/library/utils';
-import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import SeriesGrid from '../general/SeriesGrid';
 import LibraryControlBar from './LibraryControlBar';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesList from '../general/SeriesList';
 import { LibraryView } from '../../models/types';
-import { filterState, seriesListState } from '../../state/libraryState';
+import { filterState, seriesListState } from '../../state/libraryStates';
+import { statusTextState } from '../../state/statusBarStates';
 
 const { confirm } = Modal;
 
@@ -29,9 +29,7 @@ const mapState = (state: RootState) => ({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setStatusText: (text?: string) => dispatch(setStatusText(text)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;

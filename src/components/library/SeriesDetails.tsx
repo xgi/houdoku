@@ -52,7 +52,8 @@ import {
   seriesBannerUrlState,
   seriesListState,
   seriesState,
-} from '../../state/libraryState';
+} from '../../state/libraryStates';
+import { statusTextState } from '../../state/statusBarStates';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -112,6 +113,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(
     reloadingSeriesListState
   );
+  const setStatusText = useSetRecoilState(statusTextState);
 
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
@@ -490,7 +492,8 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                   reloadSeriesList(
                     [series],
                     setSeriesList,
-                    setReloadingSeriesList
+                    setReloadingSeriesList,
+                    setStatusText
                   )
                     .then(loadContent)
                     .catch((e) => log.error(e));
