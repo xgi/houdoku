@@ -26,24 +26,13 @@ import {
   Languages,
   ExtensionMetadata,
 } from 'houdoku-extension-lib';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ChapterTable from './ChapterTable';
 import styles from './SeriesDetails.css';
 import blankCover from '../../img/blank_cover.png';
 import routes from '../../constants/routes.json';
 import { getBannerImageUrl } from '../../services/mediasource';
-import {
-  setChapterList,
-  setSeries,
-  setSeriesBannerUrl,
-} from '../../features/library/actions';
-import {
-  loadChapterList,
-  loadSeries,
-  loadSeriesList,
-  reloadSeriesList,
-  removeSeries,
-} from '../../features/library/utils';
-import { setStatusText } from '../../features/statusbar/actions';
+import { reloadSeriesList, removeSeries } from '../../features/library/utils';
 import { downloadChapters } from '../../features/downloader/actions';
 import { RootState } from '../../store';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -55,6 +44,15 @@ import { downloadCover } from '../../util/download';
 import library from '../../services/library';
 import { DownloadTask } from '../../services/downloader';
 import constants from '../../constants/constants.json';
+import {
+  chapterFilterGroupState,
+  chapterFilterTitleState,
+  chapterListState,
+  reloadingSeriesListState,
+  seriesBannerUrlState,
+  seriesListState,
+  seriesState,
+} from '../../state/libraryState';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -67,12 +65,6 @@ if (!fs.existsSync(thumbnailsDir)) {
 }
 
 const mapState = (state: RootState) => ({
-  series: state.library.series,
-  chapterList: state.library.chapterList,
-  reloadingSeriesList: state.library.reloadingSeriesList,
-  seriesBannerUrl: state.library.seriesBannerUrl,
-  chapterFilterTitle: state.library.chapterFilterTitle,
-  chapterFilterGroup: state.library.chapterFilterGroup,
   chapterLanguages: state.settings.chapterLanguages,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
   customDownloadsDir: state.settings.customDownloadsDir,
@@ -84,22 +76,6 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  setSeries: (series: Series) => dispatch(setSeries(series)),
-  setChapterList: (chapterList: Chapter[]) =>
-    dispatch(setChapterList(chapterList)),
-  setStatusText: (text?: string) => dispatch(setStatusText(text)),
-  loadSeries: (seriesId: string) => loadSeries(dispatch, seriesId),
-  loadSeriesList: () => loadSeriesList(dispatch),
-  loadChapterList: (seriesId: string) => loadChapterList(dispatch, seriesId),
-  reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
-    reloadSeriesList(dispatch, seriesList, callback),
-  removeSeries: (
-    series: Series,
-    deleteDownloadedChapters: boolean,
-    downloadsDir: string
-  ) => removeSeries(dispatch, series, deleteDownloadedChapters, downloadsDir),
-  setSeriesBannerUrl: (seriesBannerUrl: string | null) =>
-    dispatch(setSeriesBannerUrl(seriesBannerUrl)),
   downloadChapters: (tasks: DownloadTask[]) =>
     dispatch(downloadChapters(tasks)),
 });
@@ -126,27 +102,35 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const [showingDownloadXModal, setShowingDownloadXModal] = useState(false);
   const [removalForm] = Form.useForm();
   const [downloadXForm] = Form.useForm();
+  const [series, setSeries] = useRecoilState(seriesState);
+  const setSeriesList = useSetRecoilState(seriesListState);
+  const [chapterList, setChapterList] = useRecoilState(chapterListState);
+  const [seriesBannerUrl, setSeriesBannerUrl] =
+    useRecoilState(seriesBannerUrlState);
+  const chapterFilterTitle = useRecoilValue(chapterFilterTitleState);
+  const chapterFilterGroup = useRecoilValue(chapterFilterGroupState);
+  const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(
+    reloadingSeriesListState
+  );
 
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
 
-    const series: Series | null = library.fetchSeries(id);
-    if (series === null) return;
+    const storedSeries: Series | null = library.fetchSeries(id);
+    if (storedSeries === null) return;
 
-    props.setSeries(series);
-    props.loadChapterList(id);
+    setSeries(storedSeries);
+    setChapterList(library.fetchChapters(id));
 
     setExtensionMetadata(
       await ipcRenderer.invoke(
         ipcChannels.EXTENSION_MANAGER.GET,
-        series.extensionId
+        storedSeries.extensionId
       )
     );
 
-    getBannerImageUrl(series)
-      .then((seriesBannerUrl: string | null) =>
-        props.setSeriesBannerUrl(seriesBannerUrl)
-      )
+    getBannerImageUrl(storedSeries)
+      .then((url: string | null) => setSeriesBannerUrl(url))
       .catch((err: Error) => log.error(err));
   };
 
@@ -155,7 +139,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  if (props.series === undefined) {
+  if (series === undefined) {
     return (
       <div>
         <p>Loading...</p>
@@ -176,13 +160,13 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   };
 
   const getSortedFilteredChapterList = () => {
-    return props.chapterList
+    return chapterList
       .filter(
         (chapter: Chapter) =>
           (props.chapterLanguages.includes(chapter.languageKey) ||
             props.chapterLanguages.length === 0) &&
-          chapter.title.toLowerCase().includes(props.chapterFilterTitle) &&
-          chapter.groupName.toLowerCase().includes(props.chapterFilterGroup)
+          chapter.title.toLowerCase().includes(chapterFilterTitle) &&
+          chapter.groupName.toLowerCase().includes(chapterFilterGroup)
       )
       .sort(
         (a: Chapter, b: Chapter) =>
@@ -194,14 +178,14 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     chapters: Chapter[],
     largeAmountWarning = true
   ) => {
-    if (props.series === undefined) return;
+    if (series === undefined) return;
 
     const queue: Chapter[] = [];
     chapters.forEach((chapter) => {
       if (
-        props.series &&
+        series &&
         !getChapterDownloaded(
-          props.series,
+          series,
           chapter,
           props.customDownloadsDir || defaultDownloadsDir
         )
@@ -216,7 +200,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           (chapter: Chapter) =>
             ({
               chapter,
-              series: props.series,
+              series,
               downloadsDir: props.customDownloadsDir || defaultDownloadsDir,
             } as DownloadTask)
         )
@@ -247,11 +231,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     sortedList
       .slice(startIndex === -1 ? 0 : startIndex + 1)
       .every((chapter) => {
-        if (props.series === undefined) return false;
+        if (series === undefined) return false;
 
         const chapterNumber = parseFloat(chapter.chapterNumber);
         const isDownloaded = getChapterDownloaded(
-          props.series,
+          series,
           chapter,
           props.customDownloadsDir || defaultDownloadsDir
         );
@@ -268,7 +252,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     return result;
   };
 
-  const renderSeriesDescriptions = (series: Series) => {
+  const renderSeriesDescriptions = () => {
     const language = Languages[series.originalLanguageKey];
     const languageStr =
       language !== undefined && 'name' in language ? language.name : '';
@@ -302,28 +286,27 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     );
   };
 
-  if (props.series === undefined) return <></>;
-
+  if (series === undefined) return <></>;
   return (
     <>
       <SeriesTrackerModal
         loadSeriesContent={() => loadContent()}
-        series={props.series}
+        series={series}
         visible={showingTrackerModal}
         toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
       />
       <EditSeriesModal
-        series={props.series}
+        series={series}
         visible={showingEditModal}
         editable
         toggleVisible={() => setShowingEditModal(!showingEditModal)}
-        saveCallback={(series) => {
-          if (series.remoteCoverUrl !== props.series?.remoteCoverUrl) {
-            log.debug(`Updating cover for series ${props.series?.id}`);
-            deleteThumbnail(series);
-            downloadCover(series);
+        saveCallback={(newSeries) => {
+          if (newSeries.remoteCoverUrl !== series?.remoteCoverUrl) {
+            log.debug(`Updating cover for series ${series?.id}`);
+            deleteThumbnail(newSeries);
+            downloadCover(newSeries);
           }
-          props.setSeries(series);
+          setSeries(newSeries);
         }}
       />
       <Modal
@@ -337,10 +320,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             .validateFields()
             .then((values) => {
               // eslint-disable-next-line promise/always-return
-              if (props.series !== undefined) {
-                log.info(`Removing series ${props.series.id}`);
-                props.removeSeries(
-                  props.series,
+              if (series !== undefined) {
+                log.info(`Removing series ${series.id}`);
+                removeSeries(
+                  series,
+                  setSeriesList,
                   values.deleteDownloads,
                   props.customDownloadsDir || defaultDownloadsDir
                 );
@@ -410,17 +394,17 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       </Modal>
       <Link to={routes.LIBRARY}>
         <Affix className={styles.backButtonAffix}>
-          <Button onClick={() => props.loadSeriesList()}>
+          <Button onClick={() => setSeriesList(library.fetchSeriesList())}>
             ◀ Back to library
           </Button>
         </Affix>
       </Link>
       <div className={styles.backgroundContainer}>
         <div className={styles.backgroundImageContainer}>
-          {props.seriesBannerUrl === null ? (
+          {seriesBannerUrl === null ? (
             <></>
           ) : (
-            <img src={props.seriesBannerUrl} alt={props.series.title} />
+            <img src={seriesBannerUrl} alt={series.title} />
           )}
         </div>
         <div className={styles.controlContainer}>
@@ -431,7 +415,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             >
               Remove Series
             </Button>
-            {props.series.extensionId === FS_METADATA.id ? (
+            {series.extensionId === FS_METADATA.id ? (
               <Button
                 className={styles.editButton}
                 onClick={() => setShowingEditModal(true)}
@@ -502,11 +486,17 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
               type="primary"
               className={styles.refreshButton}
               onClick={() => {
-                if (props.series !== undefined && !props.reloadingSeriesList)
-                  props.reloadSeriesList([props.series], loadContent);
+                if (series !== undefined && !reloadingSeriesList)
+                  reloadSeriesList(
+                    [series],
+                    setSeriesList,
+                    setReloadingSeriesList
+                  )
+                    .then(loadContent)
+                    .catch((e) => log.error(e));
               }}
             >
-              {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
+              {reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
             </Button>
           </div>
         </div>
@@ -515,13 +505,13 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         <div>
           <img
             className={styles.coverImage}
-            src={getThumbnailPath(props.series.id)}
-            alt={props.series.title}
+            src={getThumbnailPath(series.id)}
+            alt={series.title}
           />
         </div>
         <div className={styles.headerDetailsContainer}>
           <div className={styles.headerTitleRow}>
-            <Title level={4}>{props.series.title}</Title>
+            <Title level={4}>{series.title}</Title>
             {extensionMetadata !== undefined && 'name' in extensionMetadata ? (
               <Paragraph>{extensionMetadata.name}</Paragraph>
             ) : (
@@ -529,12 +519,12 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             )}
           </div>
           <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
-            {props.series.description}
+            {series.description}
           </Paragraph>
         </div>
       </div>
-      {renderSeriesDescriptions(props.series)}
-      <ChapterTable series={props.series} />
+      {renderSeriesDescriptions()}
+      <ChapterTable series={series} />
     </>
   );
 };

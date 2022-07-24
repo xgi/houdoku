@@ -4,6 +4,7 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
+import { RecoilRoot, useSetRecoilState } from 'recoil';
 import { configuredStore } from './store';
 import persistantStore from './util/persistantStore';
 import routes from './constants/routes.json';
@@ -16,6 +17,7 @@ import { setStatusText } from './features/statusbar/actions';
 import { loadSeriesList, migrateSeriesTags } from './features/library/utils';
 import { linkDownloaderClientFunctions } from './features/downloader/reducers';
 import AppLoading from './components/general/AppLoading';
+import { seriesListState } from './state/libraryState';
 
 const store = configuredStore();
 
@@ -122,6 +124,7 @@ linkDownloaderClientFunctions(store);
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const setSeriesList = useSetRecoilState(seriesListState);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -137,9 +140,10 @@ export default function App() {
       // field 'tags'.
       migrateSeriesTags();
 
-      loadSeriesList(store.dispatch);
+      loadSeriesList(setSeriesList);
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   if (loading) {

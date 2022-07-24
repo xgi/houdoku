@@ -3,19 +3,11 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Chapter, Series } from 'houdoku-extension-lib';
 import {
-  setSeriesList,
-  setSeries,
-  setChapterList,
-  setCompletedStartReload,
-  setReloadingSeriesList,
-} from './actions';
-import {
   deleteAllDownloadedChapters,
   deleteThumbnail,
   getThumbnailPath,
 } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
-import { setStatusText } from '../statusbar/actions';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
@@ -31,26 +23,32 @@ const updateSeriesNumberUnread = (series: Series) => {
   }
 };
 
-export function loadSeriesList(dispatch: any) {
+export function loadSeriesList(setSeriesList: (seriesList: Series[]) => void) {
   const seriesList: Series[] = library.fetchSeriesList();
-  dispatch(setSeriesList(seriesList));
+  setSeriesList(seriesList);
 }
 
-export function loadSeries(dispatch: any, seriesId: string) {
+export function loadSeries(
+  seriesId: string,
+  setSeries: (series: Series) => void
+) {
   const series: Series | null = library.fetchSeries(seriesId);
   if (series !== null) {
-    dispatch(setSeries(series));
+    setSeries(series);
   }
 }
 
-export function loadChapterList(dispatch: any, seriesId: string) {
+export function loadChapterList(
+  seriesId: string,
+  setChapterList: (chapterList: Chapter[]) => void
+) {
   const chapters: Chapter[] = library.fetchChapters(seriesId);
-  dispatch(setChapterList(chapters));
+  setChapterList(chapters);
 }
 
 export function removeSeries(
-  dispatch: any,
   series: Series,
+  setSeriesList: (seriesList: Series[]) => void,
   deleteDownloadedChapters = false,
   downloadsDir = ''
 ) {
@@ -61,14 +59,14 @@ export function removeSeries(
   if (deleteDownloadedChapters) {
     deleteAllDownloadedChapters(series, downloadsDir);
   }
-  loadSeriesList(dispatch);
+  loadSeriesList(setSeriesList);
 }
 
-export async function importSeries(dispatch: any, series: Series) {
+export async function importSeries(series: Series): Promise<Series> {
   log.debug(
     `Importing series ${series.sourceId} from extension ${series.extensionId}`
   );
-  dispatch(setStatusText(`Adding "${series.title}" to your library...`));
+  // dispatch(setStatusText(`Adding "${series.title}" to your library...`));
 
   const chapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
@@ -80,17 +78,17 @@ export async function importSeries(dispatch: any, series: Series) {
   const addedSeries = library.upsertSeries(series);
   library.upsertChapters(chapters, addedSeries);
   updateSeriesNumberUnread(addedSeries);
-  await loadSeriesList(dispatch);
-  downloadCover(addedSeries);
 
   log.debug(`Imported series ${series.sourceId} with database ID ${series.id}`);
-  dispatch(setStatusText(`Added "${addedSeries.title}" to your library.`));
+  // dispatch(setStatusText(`Added "${addedSeries.title}" to your library.`));
+  return addedSeries;
 }
 
 export function toggleChapterRead(
-  dispatch: any,
   chapter: Chapter,
-  series: Series
+  series: Series,
+  setChapterList: (chapterList: Chapter[]) => void,
+  setSeries: (series: Series) => void
 ) {
   log.debug(
     `Toggling chapter read status for series ${series.title} chapterNum ${chapter.chapterNumber}`
@@ -102,8 +100,8 @@ export function toggleChapterRead(
     library.upsertChapters([newChapter], series);
     updateSeriesNumberUnread(series);
     if (series.id !== undefined) {
-      loadChapterList(dispatch, series.id);
-      loadSeries(dispatch, series.id);
+      loadChapterList(series.id, setChapterList);
+      loadSeries(series.id, setSeries);
     }
   }
 }
@@ -198,13 +196,12 @@ async function reloadSeries(series: Series): Promise<Error | void> {
 }
 
 export async function reloadSeriesList(
-  dispatch: any,
   seriesList: Series[],
-  callback?: () => void
+  setSeriesList: (seriesList: Series[]) => void,
+  setReloadingSeriesList: (reloadingSeriesList: boolean) => void
 ) {
   log.debug(`Reloading series list...`);
-
-  dispatch(setReloadingSeriesList(true));
+  setReloadingSeriesList(true);
 
   const sortedSeriesList = [...seriesList].sort((a: Series, b: Series) =>
     a.title.localeCompare(b.title)
@@ -214,11 +211,11 @@ export async function reloadSeriesList(
 
   // eslint-disable-next-line no-restricted-syntax
   for (const series of sortedSeriesList) {
-    dispatch(
-      setStatusText(
-        `Reloading library (${cur}/${seriesList.length}) - ${series.title}`
-      )
-    );
+    // dispatch(
+    //   setStatusText(
+    //     `Reloading library (${cur}/${seriesList.length}) - ${series.title}`
+    //   )
+    // );
     // eslint-disable-next-line no-await-in-loop
     const ret = await reloadSeries(series);
     if (ret instanceof Error) {
@@ -241,10 +238,10 @@ export async function reloadSeriesList(
         : `Reloaded ${cur} series`;
   }
 
-  dispatch(setReloadingSeriesList(false));
-  dispatch(setCompletedStartReload(true));
-  dispatch(setStatusText(statusMessage));
-  if (callback !== undefined) callback();
+  setSeriesList(library.fetchSeriesList());
+  setReloadingSeriesList(false);
+
+  // dispatch(setStatusText(statusMessage));
 }
 
 export function updateSeries(series: Series) {

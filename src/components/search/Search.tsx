@@ -20,6 +20,7 @@ import {
 } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
+import { useRecoilValue } from 'recoil';
 import styles from './Search.css';
 import { ProgressFilter } from '../../models/types';
 import SeriesGrid from '../general/SeriesGrid';
@@ -33,6 +34,7 @@ import { RootState } from '../../store';
 import AddSeriesModal from './AddSeriesModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
+import { seriesListState } from '../../state/libraryState';
 
 type SearchParams = {
   text?: string;
@@ -49,7 +51,6 @@ const mapState = (state: RootState) => ({
   addModalSeries: state.search.addModalSeries,
   addModalEditable: state.search.addModalEditable,
   showingAddModal: state.search.showingAddModal,
-  seriesList: state.library.seriesList,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -67,9 +68,8 @@ const mapDispatch = (dispatch: any) => ({
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type Props = PropsFromRedux & {
-  importSeries: (series: Series) => void;
-};
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = PropsFromRedux & {};
 
 const Search: React.FC<Props> = (props: Props) => {
   const location = useLocation();
@@ -79,6 +79,7 @@ const Search: React.FC<Props> = (props: Props) => {
   const [curViewingPage, setCurViewingPage] = useState(1);
   const [nextSourcePage, setNextSourcePage] = useState(1);
   const [sourceHasMore, setSourceHasMore] = useState(false);
+  const seriesList = useRecoilValue(seriesListState);
 
   const getSearchExtensionMetadata = () => {
     return extensionList.find(
@@ -88,7 +89,7 @@ const Search: React.FC<Props> = (props: Props) => {
 
   const inLibrary = (series: Series): boolean => {
     return (
-      props.seriesList.find(
+      seriesList.find(
         (_series: Series) =>
           (series.extensionId === _series.extensionId &&
             series.sourceId === _series.sourceId) ||
@@ -267,7 +268,6 @@ const Search: React.FC<Props> = (props: Props) => {
             0,
             curViewingPage * RESULTS_PAGE_SIZE
           )}
-          sorted={false}
           filter=""
           filterProgress={ProgressFilter.All}
           filterStatus={null}
@@ -321,7 +321,6 @@ const Search: React.FC<Props> = (props: Props) => {
         series={props.addModalSeries}
         editable={props.addModalEditable}
         toggleVisible={() => props.toggleShowingAddModal(false)}
-        importSeries={props.importSeries}
       />
       <div>
         <div className={styles.searchBar}>

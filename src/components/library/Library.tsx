@@ -5,10 +5,10 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { Modal } from 'antd';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './Library.css';
 import routes from '../../constants/routes.json';
-import { setFilter } from '../../features/library/actions';
-import { loadSeriesList, removeSeries } from '../../features/library/utils';
+import { removeSeries } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import SeriesGrid from '../general/SeriesGrid';
@@ -16,12 +16,11 @@ import LibraryControlBar from './LibraryControlBar';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesList from '../general/SeriesList';
 import { LibraryView } from '../../models/types';
+import { filterState, seriesListState } from '../../state/libraryState';
 
 const { confirm } = Modal;
 
 const mapState = (state: RootState) => ({
-  seriesList: state.library.seriesList,
-  filter: state.library.filter,
   libraryFilterStatus: state.settings.libraryFilterStatus,
   libraryFilterProgress: state.settings.libraryFilterProgress,
   libraryColumns: state.settings.libraryColumns,
@@ -31,10 +30,7 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  removeSeries: (series: Series) => removeSeries(dispatch, series),
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
-  loadSeriesList: () => loadSeriesList(dispatch),
-  setFilter: (filter: string) => dispatch(setFilter(filter)),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -45,6 +41,8 @@ type Props = PropsFromRedux & {};
 
 const Library: React.FC<Props> = (props: Props) => {
   const history = useHistory();
+  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
+  const filter = useRecoilValue(filterState);
 
   const goToSeries = async (series: Series) => {
     if (series.id !== undefined) {
@@ -61,7 +59,7 @@ const Library: React.FC<Props> = (props: Props) => {
             danger: true,
           },
           onOk: () => {
-            props.removeSeries(series);
+            removeSeries(series, setSeriesList);
           },
           maskClosable: true,
           content: (
@@ -92,8 +90,8 @@ const Library: React.FC<Props> = (props: Props) => {
           <div className={styles.seriesGrid}>
             <SeriesGrid
               columns={props.libraryColumns}
-              seriesList={props.seriesList}
-              filter={props.filter}
+              seriesList={seriesList}
+              filter={filter}
               filterStatus={props.libraryFilterStatus}
               filterProgress={props.libraryFilterProgress}
               librarySort={props.librarySort}
@@ -104,8 +102,8 @@ const Library: React.FC<Props> = (props: Props) => {
         ) : (
           <div className={styles.seriesList}>
             <SeriesList
-              seriesList={props.seriesList}
-              filter={props.filter}
+              seriesList={seriesList}
+              filter={filter}
               filterStatus={props.libraryFilterStatus}
               filterProgress={props.libraryFilterProgress}
               librarySort={props.librarySort}
@@ -133,7 +131,7 @@ const Library: React.FC<Props> = (props: Props) => {
   return (
     <>
       <LibraryControlBar />
-      {props.seriesList.length > 0 ? renderSeries() : renderEmptyMessage()}
+      {seriesList.length > 0 ? renderSeries() : renderEmptyMessage()}
     </>
   );
 };

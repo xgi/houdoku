@@ -4,10 +4,10 @@ import { Button, Input, Dropdown, Menu } from 'antd';
 import { DownOutlined, SyncOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { connect, ConnectedProps } from 'react-redux';
-import { Series, SeriesStatus } from 'houdoku-extension-lib';
+import { SeriesStatus } from 'houdoku-extension-lib';
+import { useRecoilState } from 'recoil';
 import styles from './LibraryControlBar.css';
-import { setFilter } from '../../features/library/actions';
-import { loadSeriesList, reloadSeriesList } from '../../features/library/utils';
+import { reloadSeriesList } from '../../features/library/utils';
 import { setStatusText } from '../../features/statusbar/actions';
 import { RootState } from '../../store';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
@@ -18,11 +18,13 @@ import {
   setLibraryFilterStatus,
   setLibrarySort,
 } from '../../features/settings/actions';
+import {
+  filterState,
+  reloadingSeriesListState,
+  seriesListState,
+} from '../../state/libraryState';
 
 const mapState = (state: RootState) => ({
-  seriesList: state.library.seriesList,
-  reloadingSeriesList: state.library.reloadingSeriesList,
-  filter: state.library.filter,
   libraryFilterStatus: state.settings.libraryFilterStatus,
   libraryFilterProgress: state.settings.libraryFilterProgress,
   libraryColumns: state.settings.libraryColumns,
@@ -33,10 +35,6 @@ const mapState = (state: RootState) => ({
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
   setStatusText: (text?: string) => dispatch(setStatusText(text)),
-  loadSeriesList: () => loadSeriesList(dispatch),
-  reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
-    reloadSeriesList(dispatch, seriesList, callback),
-  setFilter: (filter: string) => dispatch(setFilter(filter)),
   setLibraryFilterStatus: (status: SeriesStatus | null) =>
     dispatch(setLibraryFilterStatus(status)),
   setLibraryFilterProgress: (progressFilter: ProgressFilter) =>
@@ -63,6 +61,11 @@ const LIBRARY_SORT_TEXT = {
 };
 
 const LibraryControlBar: React.FC<Props> = (props: Props) => {
+  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
+  const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(
+    reloadingSeriesListState
+  );
+  const [filter, setFilter] = useRecoilState(filterState);
   const [viewSubmenu, setViewSubmenu] = useState('');
   const [filterSubmenu, setFilterSubmenu] = useState('');
 
@@ -72,12 +75,12 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
         className={styles.reloadButton}
         type="primary"
         onClick={() => {
-          if (!props.reloadingSeriesList) {
-            props.reloadSeriesList(props.seriesList, props.loadSeriesList);
+          if (!reloadingSeriesList) {
+            reloadSeriesList(seriesList, setSeriesList, setReloadingSeriesList);
           }
         }}
       >
-        {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
+        {reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
       </Button>
       <Dropdown
         className={styles.libraryViewDropdown}
@@ -196,7 +199,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
       <Input
         className={styles.seriesFilter}
         placeholder="Search your library..."
-        onChange={(e) => props.setFilter(e.target.value)}
+        onChange={(e) => setFilter(e.target.value)}
       />
     </Header>
   );

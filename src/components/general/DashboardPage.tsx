@@ -10,44 +10,36 @@ import {
   DownloadOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
-import { Series } from 'houdoku-extension-lib';
+import { useRecoilState } from 'recoil';
+import log from 'electron-log';
 import { RootState } from '../../store';
 import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
 import StatusBar from './StatusBar';
 import styles from './DashboardPage.css';
 import routes from '../../constants/routes.json';
-import {
-  importSeries,
-  loadSeriesList,
-  reloadSeriesList,
-} from '../../features/library/utils';
+import { reloadSeriesList } from '../../features/library/utils';
 import Settings from '../settings/Settings';
 import About from '../about/About';
 import Library from '../library/Library';
 import Extensions from '../extensions/Extensions';
 import Downloads from '../downloads/Downloads';
+import {
+  completedStartReloadState,
+  reloadingSeriesListState,
+  seriesListState,
+} from '../../state/libraryState';
+import library from '../../services/library';
 
 const { Content, Sider } = Layout;
 
 const mapState = (state: RootState) => ({
-  seriesList: state.library.seriesList,
-  series: state.library.series,
-  chapterList: state.library.chapterList,
-  filter: state.library.filter,
-  seriesBannerUrl: state.library.seriesBannerUrl,
-  completedStartReload: state.library.completedStartReload,
   refreshOnStart: state.settings.refreshOnStart,
   autoCheckForUpdates: state.settings.autoCheckForUpdates,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  loadSeriesList: () => loadSeriesList(dispatch),
-  reloadSeriesList: (seriesList: Series[], callback?: () => void) =>
-    reloadSeriesList(dispatch, seriesList, callback),
-  importSeries: (series: Series) => importSeries(dispatch, series),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -56,16 +48,32 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
+  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
+  const [, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
+  const [completedStartReload, setCompletedStartReload] = useRecoilState(
+    completedStartReloadState
+  );
+
   useEffect(() => {
     if (
       props.refreshOnStart &&
-      !props.completedStartReload &&
-      props.seriesList.length > 0
+      !completedStartReload &&
+      seriesList.length > 0
     ) {
-      props.reloadSeriesList(props.seriesList, props.loadSeriesList);
+      setReloadingSeriesList(true);
+      reloadSeriesList(
+        library.fetchSeriesList(),
+        setSeriesList,
+        setReloadingSeriesList
+      )
+        // eslint-disable-next-line promise/always-return
+        .then(() => {
+          setCompletedStartReload(true);
+        })
+        .catch((e) => log.error(e));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.seriesList]);
+  }, [seriesList]);
 
   return (
     <Layout className={styles.pageLayout}>
@@ -73,7 +81,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1" icon={<BookOutlined />}>
-            <Link to={routes.LIBRARY} onClick={() => props.loadSeriesList()}>
+            <Link
+              to={routes.LIBRARY}
+              onClick={() => setSeriesList(library.fetchSeriesList())}
+            >
               Library
             </Link>
           </Menu.Item>
@@ -107,7 +118,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               <About />
             </Route>
             <Route path={routes.SEARCH} exact>
-              <Search importSeries={props.importSeries} />
+              <Search />
             </Route>
             <Route path={routes.EXTENSIONS} exact>
               <Extensions />

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { Chapter, Series, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { connect, ConnectedProps } from 'react-redux';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import routes from '../../constants/routes.json';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
 import ChapterTableContextMenu from './ChapterTableContextMenu';
@@ -13,21 +14,20 @@ import { getChapterDownloaded } from '../../util/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { RootState } from '../../store';
 import { toggleChapterRead } from '../../features/library/utils';
-import {
-  setChapterFilterGroup,
-  setChapterFilterTitle,
-} from '../../features/library/actions';
 import { useForceUpdate } from '../../util/reactutil';
 import flags from '../../img/flags.png';
+import {
+  chapterFilterGroupState,
+  chapterFilterTitleState,
+  chapterListState,
+  seriesState,
+} from '../../state/libraryState';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
 const mapState = (state: RootState) => ({
-  chapterList: state.library.chapterList,
-  chapterFilterTitle: state.library.chapterFilterTitle,
-  chapterFilterGroup: state.library.chapterFilterGroup,
   chapterLanguages: state.settings.chapterLanguages,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
   customDownloadsDir: state.settings.customDownloadsDir,
@@ -35,14 +35,7 @@ const mapState = (state: RootState) => ({
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  toggleChapterRead: (chapter: Chapter, series: Series) =>
-    toggleChapterRead(dispatch, chapter, series),
-  setChapterFilterTitle: (value: string) =>
-    dispatch(setChapterFilterTitle(value)),
-  setChapterFilterGroup: (value: string) =>
-    dispatch(setChapterFilterGroup(value)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -52,6 +45,14 @@ type Props = PropsFromRedux & {
 };
 
 const ChapterTable: React.FC<Props> = (props: Props) => {
+  const setSeries = useSetRecoilState(seriesState);
+  const [chapterList, setChapterList] = useRecoilState(chapterListState);
+  const [chapterFilterTitle, setChapterFilterTitle] = useRecoilState(
+    chapterFilterTitleState
+  );
+  const [chapterFilterGroup, setChapterFilterGroup] = useRecoilState(
+    chapterFilterGroupState
+  );
   const [showingContextMenu, setShowingContextMenu] = useState(false);
   const [contextMenuLocation, setContextMenuLocation] = useState<{
     x: number;
@@ -66,14 +67,14 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const forceUpdate = useForceUpdate();
 
   const getFilteredChapterList = () => {
-    return props.chapterList.filter(
+    return chapterList.filter(
       (chapter: Chapter) =>
         (props.chapterLanguages.includes(chapter.languageKey) ||
           props.chapterLanguages.length === 0) &&
         chapter.title !== null &&
-        chapter.title.toLowerCase().includes(props.chapterFilterTitle) &&
+        chapter.title.toLowerCase().includes(chapterFilterTitle) &&
         chapter.groupName !== null &&
-        chapter.groupName.toLowerCase().includes(props.chapterFilterGroup)
+        chapter.groupName.toLowerCase().includes(chapterFilterGroup)
     );
   };
 
@@ -87,8 +88,8 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   };
 
   const getColumnSearchProps = (dataIndex: string) => {
-    const localSetChapterFilterTitle = props.setChapterFilterTitle;
-    const localSetChapterFilterGroup = props.setChapterFilterGroup;
+    const localSetChapterFilterTitle = setChapterFilterTitle;
+    const localSetChapterFilterGroup = setChapterFilterGroup;
 
     return {
       filterDropdown: (
@@ -123,7 +124,12 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
           <Checkbox
             checked={record.read}
             onChange={() => {
-              props.toggleChapterRead(record, props.series);
+              toggleChapterRead(
+                record,
+                props.series,
+                setChapterList,
+                setSeries
+              );
               if (!record.read && props.trackerAutoUpdate) {
                 sendProgressToTrackers(record, props.series);
               }

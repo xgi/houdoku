@@ -4,19 +4,24 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
+import { useRecoilState } from 'recoil';
 import styles from './AddSeriesModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesEditControls from '../general/SeriesEditControls';
+import { importSeries } from '../../features/library/utils';
+import library from '../../services/library';
+import { downloadCover } from '../../util/download';
+import { seriesListState } from '../../state/libraryState';
 
 type Props = {
   series: Series | undefined;
   visible: boolean;
   editable: boolean | undefined;
-  importSeries: (series: Series) => void;
   toggleVisible: () => void;
 };
 
 const AddSeriesModal: React.FC<Props> = (props: Props) => {
+  const [, setSeriesList] = useRecoilState(seriesListState);
   const [customSeries, setCustomSeries] = useState<Series>();
   const [loading, setLoading] = useState(true);
 
@@ -54,7 +59,13 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
 
   const handleAdd = () => {
     if (customSeries !== undefined) {
-      props.importSeries(customSeries);
+      importSeries(customSeries)
+        // eslint-disable-next-line promise/always-return
+        .then((addedSeries) => {
+          setSeriesList(library.fetchSeriesList());
+          downloadCover(addedSeries);
+        })
+        .catch((e) => log.error(e));
       props.toggleVisible();
     }
   };
