@@ -48,7 +48,7 @@ export default merge(baseConfig, {
     'webpack/hot/only-dev-server',
     'core-js',
     'regenerator-runtime/runtime',
-    path.join('../../src/index.tsx'),
+    path.join(__dirname, '../../src/index.tsx'),
   ],
 
   output: {
