@@ -1,11 +1,39 @@
 module.exports = {
-  extends: 'erb',
+  extends: [
+    'airbnb',
+    'airbnb-typescript',
+    'airbnb/hooks',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:promise/recommended',
+    'plugin:compat/recommended',
+    'plugin:prettier/recommended',
+  ],
+  env: {
+    browser: true,
+    node: true,
+  },
   rules: {
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-var-requires': 'off',
+    'react/jsx-no-useless-fragment': 'off',
+    'react/function-component-definition': 'off',
+    'react/require-default-props': 'off',
+    'jsx-a11y/no-noninteractive-tabindex': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
+    'class-methods-use-this': 'off',
+    'no-promise-executor-return': 'off',
+    'import/no-import-module-exports': 'off',
+    'no-param-reassign': ['error', { props: false }],
+
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
     'react/destructuring-assignment': 'off',
   },
   plugins: ['import'],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',

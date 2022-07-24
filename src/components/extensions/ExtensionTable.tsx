@@ -213,6 +213,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
             <img
               src={flags}
               title={Languages[record.languageKey].name}
+              alt={Languages[record.languageKey].name}
               className={`flag flag-${Languages[record.languageKey].flagCode}`}
             />
           </div>

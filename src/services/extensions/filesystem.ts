@@ -50,14 +50,11 @@ const parseChapterMetadata = (
   volumeNum: string;
   group: string;
 } => {
-  const matchChapterNum: RegExpMatchArray | null = text.match(
-    new RegExp(/c(\d)+(\.(\d)+)?/g)
-  );
-  const matchVolumeNum: RegExpMatchArray | null = text.match(
-    new RegExp(/v(\d)+/g)
-  );
-  const matchGroup: RegExpMatchArray | null = text.match(new RegExp(/\[.*\]/g));
-  const matchAnyNum: RegExpMatchArray | null = text.match(new RegExp(/(\d)+/g));
+  const matchChapterNum: RegExpMatchArray | null =
+    text.match(/c(\d)+(\.(\d)+)?/g);
+  const matchVolumeNum: RegExpMatchArray | null = text.match(/v(\d)+/g);
+  const matchGroup: RegExpMatchArray | null = text.match(/\[.*\]/g);
+  const matchAnyNum: RegExpMatchArray | null = text.match(/(\d)+/g);
 
   let chapterNum = '';
   if (matchChapterNum === null) {
@@ -65,13 +62,13 @@ const parseChapterMetadata = (
       chapterNum = parseFloat(matchAnyNum[0]).toString();
     }
   } else {
-    const matchNumber = matchChapterNum[0].match(new RegExp(/(\d)+/g));
+    const matchNumber = matchChapterNum[0].match(/(\d)+/g);
     chapterNum = matchNumber ? parseFloat(matchNumber[0]).toString() : '';
   }
 
   let volumeNum = '';
   if (matchVolumeNum !== null) {
-    const matchNumber = matchVolumeNum[0].match(new RegExp(/(\d)+/g));
+    const matchNumber = matchVolumeNum[0].match(/(\d)+/g);
     volumeNum = matchNumber ? parseFloat(matchNumber[0]).toString() : '';
   }
 
@@ -194,16 +191,15 @@ export class FSExtensionClient extends ExtensionClientAbstract {
           numPages: extractedFilenames.length,
           pageFilenames: extractedFilenames,
         };
-      } else {
-        return new Promise((resolve) => {
-          resolve({
-            server: '',
-            hash: '',
-            numPages: imageFileList.length,
-            pageFilenames: imageFileList,
-          });
-        });
       }
+      return new Promise((resolve) => {
+        resolve({
+          server: '',
+          hash: '',
+          numPages: imageFileList.length,
+          pageFilenames: imageFileList,
+        });
+      });
     });
   };
 

@@ -197,8 +197,9 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     if (props.series === undefined) return;
 
     const queue: Chapter[] = [];
-    for (const chapter of chapters) {
+    chapters.forEach((chapter) => {
       if (
+        props.series &&
         !getChapterDownloaded(
           props.series,
           chapter,
@@ -207,7 +208,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       ) {
         queue.push(chapter);
       }
-    }
+    });
 
     const func = () => {
       props.downloadChapters(

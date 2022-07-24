@@ -22,6 +22,7 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
+import Search from 'antd/lib/input/Search';
 import styles from './SeriesTrackerModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { AniListTrackerMetadata } from '../../services/trackers/anilist';
@@ -34,7 +35,6 @@ import {
 } from '../../models/types';
 import { updateSeriesTrackerKeys } from '../../features/library/utils';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
-import Search from 'antd/lib/input/Search';
 
 const { TabPane } = Tabs;
 

@@ -218,7 +218,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
                         fileList[0]
                       );
                     }
-                    return;
+                    return false;
                   })
                   .then((fileContent: string) => {
                     // eslint-disable-next-line promise/always-return

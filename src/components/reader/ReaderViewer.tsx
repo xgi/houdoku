@@ -190,7 +190,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
               imageHeightSum <
                 root.scrollTop +
                   root.clientHeight -
-                  parseInt(getComputedStyle(readerPage).marginTop);
+                  parseInt(getComputedStyle(readerPage).marginTop, 10);
               childNum += 1
             ) {
               imageHeightSum +=
@@ -235,7 +235,10 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           const root = document.getElementById(ROOT_ID);
           const readerPage = root?.firstElementChild;
           if (root && readerPage && props.pageNumber < props.lastPageNumber) {
-            root.scrollTop -= parseInt(getComputedStyle(readerPage).marginTop);
+            root.scrollTop -= parseInt(
+              getComputedStyle(readerPage).marginTop,
+              10
+            );
           }
         }
       }

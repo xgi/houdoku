@@ -91,7 +91,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
     const localSetChapterFilterGroup = props.setChapterFilterGroup;
 
     return {
-      filterDropdown: () => (
+      filterDropdown: (
         <div style={{ padding: 8 }}>
           <Input
             placeholder={`Filter ${dataIndex}...`}
@@ -108,7 +108,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
           />
         </div>
       ),
-      filterIcon: () => <SearchOutlined />,
+      filterIcon: <SearchOutlined />,
     };
   };
 
@@ -163,6 +163,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
             <img
               src={flags}
               title={Languages[record.languageKey].name}
+              alt={Languages[record.languageKey].name}
               className={`flag flag-${Languages[record.languageKey].flagCode}`}
             />
           </div>
@@ -209,6 +210,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       },
     },
     {
+      // eslint-disable-next-line react/no-unstable-nested-components
       title: () => {
         const nextChapter: Chapter | undefined = getNextUnreadChapter();
         if (nextChapter === undefined) return <></>;

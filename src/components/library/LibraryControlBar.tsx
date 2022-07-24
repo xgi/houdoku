@@ -67,160 +67,138 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [filterSubmenu, setFilterSubmenu] = useState('');
 
   return (
-    <>
-      <Header className={styles.header}>
-        <Button
-          className={styles.reloadButton}
-          type="primary"
-          onClick={() => {
-            if (!props.reloadingSeriesList) {
-              props.reloadSeriesList(props.seriesList, props.loadSeriesList);
-            }
-          }}
-        >
-          {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
+    <Header className={styles.header}>
+      <Button
+        className={styles.reloadButton}
+        type="primary"
+        onClick={() => {
+          if (!props.reloadingSeriesList) {
+            props.reloadSeriesList(props.seriesList, props.loadSeriesList);
+          }
+        }}
+      >
+        {props.reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
+      </Button>
+      <Dropdown
+        className={styles.libraryViewDropdown}
+        overlay={
+          <Menu
+            openKeys={[viewSubmenu]}
+            onOpenChange={(keys) => setViewSubmenu(keys.pop() || '')}
+          >
+            <Menu.SubMenu key="Columns" title="Columns" popupOffset={[-4, 0]}>
+              {[2, 4, 6, 8].map((value) => (
+                <Menu.Item
+                  key={`columns-${value}`}
+                  onClick={() => props.setLibraryColumns(value)}
+                  className={
+                    props.libraryColumns === value ? styles.enabledMenuItem : ''
+                  }
+                >
+                  {value}
+                </Menu.Item>
+              ))}
+            </Menu.SubMenu>
+            <Menu.SubMenu key="Layout" title="Layout" popupOffset={[-4, 0]}>
+              <Menu.Item
+                key={LibraryView.Grid}
+                onClick={() => props.setLibraryViews(LibraryView.Grid)}
+                className={
+                  props.libraryViews === LibraryView.Grid
+                    ? styles.enabledMenuItem
+                    : ''
+                }
+              >
+                Grid
+              </Menu.Item>
+              <Menu.Item
+                key={LibraryView.List}
+                onClick={() => props.setLibraryViews(LibraryView.List)}
+                className={
+                  props.libraryViews === LibraryView.List
+                    ? styles.enabledMenuItem
+                    : ''
+                }
+              >
+                List
+              </Menu.Item>
+            </Menu.SubMenu>
+            <Menu.SubMenu key="Sort" title="Sort" popupOffset={[-4, 0]}>
+              {Object.values(LibrarySort).map((value) => (
+                <Menu.Item
+                  key={value}
+                  onClick={() => props.setLibrarySort(value)}
+                  className={
+                    props.librarySort === value ? styles.enabledMenuItem : ''
+                  }
+                >
+                  {LIBRARY_SORT_TEXT[value]}
+                </Menu.Item>
+              ))}
+            </Menu.SubMenu>
+          </Menu>
+        }
+      >
+        <Button>
+          View <DownOutlined />
         </Button>
-        <Dropdown
-          className={styles.libraryViewDropdown}
-          overlay={
-            <Menu
-              openKeys={[viewSubmenu]}
-              onOpenChange={(keys) => setViewSubmenu(keys.pop() || '')}
-            >
-              <Menu.SubMenu
-                key={'Columns'}
-                title={'Columns'}
-                popupOffset={[-4, 0]}
-              >
-                {[2, 4, 6, 8].map((value) => (
-                  <Menu.Item
-                    key={`columns-${value}`}
-                    onClick={() => props.setLibraryColumns(value)}
-                    className={
-                      props.libraryColumns === value
-                        ? styles.enabledMenuItem
-                        : ''
-                    }
-                  >
-                    {value}
-                  </Menu.Item>
-                ))}
-              </Menu.SubMenu>
-              <Menu.SubMenu
-                key={'Layout'}
-                title={'Layout'}
-                popupOffset={[-4, 0]}
-              >
+      </Dropdown>
+      <Dropdown
+        className={styles.statusDropdown}
+        overlay={
+          <Menu
+            openKeys={[filterSubmenu]}
+            onOpenChange={(keys) => setFilterSubmenu(keys.pop() || '')}
+          >
+            <Menu.SubMenu key="Progress" title="Progress" popupOffset={[-4, 0]}>
+              {Object.values(ProgressFilter).map((value) => (
                 <Menu.Item
-                  key={LibraryView.Grid}
-                  onClick={() => props.setLibraryViews(LibraryView.Grid)}
+                  key={value}
+                  onClick={() => props.setLibraryFilterProgress(value)}
                   className={
-                    props.libraryViews === LibraryView.Grid
+                    props.libraryFilterProgress === value
                       ? styles.enabledMenuItem
                       : ''
                   }
                 >
-                  Grid
+                  {value}
                 </Menu.Item>
-                <Menu.Item
-                  key={LibraryView.List}
-                  onClick={() => props.setLibraryViews(LibraryView.List)}
-                  className={
-                    props.libraryViews === LibraryView.List
-                      ? styles.enabledMenuItem
-                      : ''
-                  }
-                >
-                  List
-                </Menu.Item>
-              </Menu.SubMenu>
-              <Menu.SubMenu key={'Sort'} title={'Sort'} popupOffset={[-4, 0]}>
-                {Object.values(LibrarySort).map((value) => (
+              ))}
+            </Menu.SubMenu>
+            <Menu.SubMenu key="Status" title="Status" popupOffset={[-4, 0]}>
+              {[[null, 'Any'], ...Object.entries(SeriesStatus)].map(
+                ([seriesStatus, text]) => (
                   <Menu.Item
-                    key={value}
-                    onClick={() => props.setLibrarySort(value)}
-                    className={
-                      props.librarySort === value ? styles.enabledMenuItem : ''
+                    key={text}
+                    onClick={() =>
+                      props.setLibraryFilterStatus(seriesStatus as SeriesStatus)
                     }
-                  >
-                    {LIBRARY_SORT_TEXT[value]}
-                  </Menu.Item>
-                ))}
-              </Menu.SubMenu>
-            </Menu>
-          }
-        >
-          <Button>
-            View <DownOutlined />
-          </Button>
-        </Dropdown>
-        <Dropdown
-          className={styles.statusDropdown}
-          overlay={
-            <Menu
-              openKeys={[filterSubmenu]}
-              onOpenChange={(keys) => setFilterSubmenu(keys.pop() || '')}
-            >
-              <Menu.SubMenu
-                key={'Progress'}
-                title={'Progress'}
-                popupOffset={[-4, 0]}
-              >
-                {Object.values(ProgressFilter).map((value) => (
-                  <Menu.Item
-                    key={value}
-                    onClick={() => props.setLibraryFilterProgress(value)}
                     className={
-                      props.libraryFilterProgress === value
+                      props.libraryFilterStatus === seriesStatus ||
+                      (props.libraryFilterProgress === undefined &&
+                        seriesStatus === null)
                         ? styles.enabledMenuItem
                         : ''
                     }
                   >
-                    {value}
+                    {text}
                   </Menu.Item>
-                ))}
-              </Menu.SubMenu>
-              <Menu.SubMenu
-                key={'Status'}
-                title={'Status'}
-                popupOffset={[-4, 0]}
-              >
-                {[[null, 'Any'], ...Object.entries(SeriesStatus)].map(
-                  ([seriesStatus, text]) => (
-                    <Menu.Item
-                      key={text}
-                      onClick={() =>
-                        props.setLibraryFilterStatus(
-                          seriesStatus as SeriesStatus
-                        )
-                      }
-                      className={
-                        props.libraryFilterStatus === seriesStatus ||
-                        (props.libraryFilterProgress === undefined &&
-                          seriesStatus === null)
-                          ? styles.enabledMenuItem
-                          : ''
-                      }
-                    >
-                      {text}
-                    </Menu.Item>
-                  )
-                )}
-              </Menu.SubMenu>
-            </Menu>
-          }
-        >
-          <Button>
-            Filter <DownOutlined />
-          </Button>
-        </Dropdown>
-        <Input
-          className={styles.seriesFilter}
-          placeholder="Search your library..."
-          onChange={(e) => props.setFilter(e.target.value)}
-        />
-      </Header>
-    </>
+                )
+              )}
+            </Menu.SubMenu>
+          </Menu>
+        }
+      >
+        <Button>
+          Filter <DownOutlined />
+        </Button>
+      </Dropdown>
+      <Input
+        className={styles.seriesFilter}
+        placeholder="Search your library..."
+        onChange={(e) => props.setFilter(e.target.value)}
+      />
+    </Header>
   );
 };
 

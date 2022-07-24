@@ -149,11 +149,7 @@ const DownloadsStatus: React.FC<Props> = (props: Props) => {
     props.queue.length === 0 &&
     props.downloadErrors.length === 0
   ) {
-    return (
-      <>
-        <Paragraph>There are no downloads queued.</Paragraph>
-      </>
-    );
+    return <Paragraph>There are no downloads queued.</Paragraph>;
   }
 
   return (

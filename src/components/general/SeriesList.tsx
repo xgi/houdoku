@@ -5,7 +5,6 @@ import { LibrarySort, ProgressFilter } from '../../models/types';
 
 type Props = {
   seriesList: Series[];
-  sorted: boolean;
   filter: string;
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
@@ -63,6 +62,8 @@ const SeriesList: React.FC<Props> = (props: Props) => {
         return filteredList.sort((a: Series, b: Series) =>
           b.title.localeCompare(a.title)
         );
+      default:
+        return filteredList;
     }
   };
 
@@ -114,13 +115,11 @@ const SeriesList: React.FC<Props> = (props: Props) => {
   ];
 
   return (
-    <>
-      <Table
-        columns={listColumns}
-        dataSource={getFilteredList(props.seriesList)}
-        rowKey="id"
-      />
-    </>
+    <Table
+      columns={listColumns}
+      dataSource={getFilteredList(props.seriesList)}
+      rowKey="id"
+    />
   );
 };
 

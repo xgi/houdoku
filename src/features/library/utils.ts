@@ -108,6 +108,7 @@ export function toggleChapterRead(
   }
 }
 
+// eslint-disable-next-line consistent-return
 async function reloadSeries(series: Series): Promise<Error | void> {
   log.info(`Reloading series ${series.id} - ${series.title}`);
   if (series.id === undefined) {
@@ -276,7 +277,7 @@ export function migrateSeriesTags() {
         // @ts-expect-error handling deprecated key
         delete series[oldField];
 
-        library.upsertSeries({ ...series, tags: tags });
+        library.upsertSeries({ ...series, tags });
       }
     });
   });

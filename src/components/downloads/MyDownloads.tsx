@@ -70,6 +70,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
                     <img
                       src={flags}
                       title={Languages[chapter.languageKey].name}
+                      alt={Languages[chapter.languageKey].name}
                       className={`flag flag-${
                         Languages[chapter.languageKey].flagCode
                       }`}

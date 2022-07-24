@@ -22,7 +22,6 @@ if (!fs.existsSync(thumbnailsDir)) {
 type Props = {
   columns: number;
   seriesList: Series[];
-  sorted: boolean;
   filter: string;
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
@@ -89,27 +88,25 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
       return true;
     });
 
-    if (props.librarySort !== undefined) {
-      switch (props.librarySort) {
-        case LibrarySort.UnreadAsc:
-          return filteredList.sort(
-            (a: Series, b: Series) => a.numberUnread - b.numberUnread
-          );
-        case LibrarySort.UnreadDesc:
-          return filteredList.sort(
-            (a: Series, b: Series) => b.numberUnread - a.numberUnread
-          );
-        case LibrarySort.TitleAsc:
-          return filteredList.sort((a: Series, b: Series) =>
-            a.title.localeCompare(b.title)
-          );
-        case LibrarySort.TitleDesc:
-          return filteredList.sort((a: Series, b: Series) =>
-            b.title.localeCompare(a.title)
-          );
-      }
-    } else {
-      return filteredList;
+    switch (props.librarySort) {
+      case LibrarySort.UnreadAsc:
+        return filteredList.sort(
+          (a: Series, b: Series) => a.numberUnread - b.numberUnread
+        );
+      case LibrarySort.UnreadDesc:
+        return filteredList.sort(
+          (a: Series, b: Series) => b.numberUnread - a.numberUnread
+        );
+      case LibrarySort.TitleAsc:
+        return filteredList.sort((a: Series, b: Series) =>
+          a.title.localeCompare(b.title)
+        );
+      case LibrarySort.TitleDesc:
+        return filteredList.sort((a: Series, b: Series) =>
+          b.title.localeCompare(a.title)
+        );
+      default:
+        return filteredList;
     }
   };
 
@@ -148,36 +145,34 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <>
-      <Row gutter={[16, 16]}>
-        {getFilteredList(props.seriesList).map((series: Series) => {
-          const coverSource = getImageSource(series).replaceAll('\\', '/');
-          const inLibrary: boolean | undefined =
-            props.inLibraryFunc === undefined
-              ? undefined
-              : props.inLibraryFunc(series);
+    <Row gutter={[16, 16]}>
+      {getFilteredList(props.seriesList).map((series: Series) => {
+        const coverSource = getImageSource(series).replaceAll('\\', '/');
+        const inLibrary: boolean | undefined =
+          props.inLibraryFunc === undefined
+            ? undefined
+            : props.inLibraryFunc(series);
 
-          return (
-            <Col span={24 / props.columns} key={`${series.id}-${series.title}`}>
-              <div
-                className={styles.coverContainer}
-                onClick={() => props.clickFunc(series, inLibrary)}
-                style={{
-                  backgroundImage: `linear-gradient(0deg, #000000cc, #00000000 40%, #00000000), url("${coverSource}")`,
-                  height: `calc(105vw / ${props.columns})`,
-                }}
-              >
-                {renderUnreadBadge(series)}
-                {inLibrary ? renderInLibraryBadge() : ''}
-                <Title level={5} className={styles.seriesTitle}>
-                  {series.title}
-                </Title>
-              </div>
-            </Col>
-          );
-        })}
-      </Row>
-    </>
+        return (
+          <Col span={24 / props.columns} key={`${series.id}-${series.title}`}>
+            <div
+              className={styles.coverContainer}
+              onClick={() => props.clickFunc(series, inLibrary)}
+              style={{
+                backgroundImage: `linear-gradient(0deg, #000000cc, #00000000 40%, #00000000), url("${coverSource}")`,
+                height: `calc(105vw / ${props.columns})`,
+              }}
+            >
+              {renderUnreadBadge(series)}
+              {inLibrary ? renderInLibraryBadge() : ''}
+              <Title level={5} className={styles.seriesTitle}>
+                {series.title}
+              </Title>
+            </div>
+          </Col>
+        );
+      })}
+    </Row>
   );
 };
 

@@ -251,7 +251,7 @@ function search(
 
   let adjustedText: string = text;
 
-  const paramsRegExp = new RegExp(/\S*:\S*/g);
+  const paramsRegExp = /\S*:\S*/g;
   const matchParams: RegExpMatchArray | null = text.match(paramsRegExp);
 
   let params: { [key: string]: string } = {};

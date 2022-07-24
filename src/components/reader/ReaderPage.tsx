@@ -11,6 +11,7 @@ import {
   Series,
   SeriesSourceType,
 } from 'houdoku-extension-lib';
+import Paragraph from 'antd/lib/typography/Paragraph';
 import { RootState } from '../../store';
 import {
   changePageNumber,
@@ -53,7 +54,6 @@ import {
 } from '../../util/filesystem';
 import library from '../../services/library';
 import { updateTitlebarText } from '../../util/titlebar';
-import Paragraph from 'antd/lib/typography/Paragraph';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR

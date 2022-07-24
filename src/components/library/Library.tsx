@@ -88,12 +88,11 @@ const Library: React.FC<Props> = (props: Props) => {
   const renderSeries = () => {
     return (
       <>
-        {props.libraryView == LibraryView.Grid ? (
+        {props.libraryView === LibraryView.Grid ? (
           <div className={styles.seriesGrid}>
             <SeriesGrid
               columns={props.libraryColumns}
               seriesList={props.seriesList}
-              sorted
               filter={props.filter}
               filterStatus={props.libraryFilterStatus}
               filterProgress={props.libraryFilterProgress}
@@ -106,7 +105,6 @@ const Library: React.FC<Props> = (props: Props) => {
           <div className={styles.seriesList}>
             <SeriesList
               seriesList={props.seriesList}
-              sorted
               filter={props.filter}
               filterStatus={props.libraryFilterStatus}
               filterProgress={props.libraryFilterProgress}

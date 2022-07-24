@@ -1,5 +1,5 @@
 import storeKeys from '../constants/storeKeys.json';
-import persistantStore from '../util/persistantStore';
+import persistantStore from './persistantStore';
 
 export const createBackup = async () => {
   const seriesListStr = persistantStore.read(storeKeys.LIBRARY.SERIES_LIST);
