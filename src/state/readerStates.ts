@@ -1,0 +1,57 @@
+import { Chapter, Series } from 'houdoku-extension-lib';
+import { atom } from 'recoil';
+
+export const pageNumberState = atom({
+  key: 'readerPageNumberState',
+  default: 1,
+});
+
+export const lastPageNumberState = atom({
+  key: 'readerLastPageNumberState',
+  default: 0,
+});
+
+export const pageUrlsState = atom({
+  key: 'readerPageUrlsState',
+  default: [] as string[],
+});
+
+export const pageDataListState = atom({
+  key: 'readerPageDataListState',
+  default: [] as string[],
+});
+
+export const seriesState = atom({
+  key: 'readerSeriesState',
+  default: undefined as Series | undefined,
+});
+
+export const chapterState = atom({
+  key: 'readerChapterState',
+  default: undefined as Chapter | undefined,
+});
+
+export const relevantChapterListState = atom({
+  key: 'readerRelevantChapterListState',
+  default: [] as Chapter[],
+});
+
+export const showingSettingsModalState = atom({
+  key: 'readerShowingSettingsModalState',
+  default: false,
+});
+
+export const showingSidebarState = atom({
+  key: 'readerShowingSidebarState',
+  default: true,
+});
+
+export const showingHeaderState = atom({
+  key: 'readerShowingHeaderState',
+  default: true,
+});
+
+export const showingNoNextChapterState = atom({
+  key: 'readerShowingNoNextChapterState',
+  default: false,
+});

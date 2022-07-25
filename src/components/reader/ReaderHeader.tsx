@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Typography, Dropdown, Menu } from 'antd';
 import {
@@ -22,11 +22,8 @@ import {
 } from '@ant-design/icons';
 import { Chapter } from 'houdoku-extension-lib';
 import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { RootState } from '../../store';
-import {
-  setPageNumber,
-  toggleShowingSettingsModal,
-} from '../../features/reader/actions';
 import styles from './ReaderHeader.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
 import {
@@ -38,6 +35,13 @@ import {
   setFitContainToWidth,
   setFitContainToHeight,
 } from '../../features/settings/actions';
+import {
+  chapterState,
+  lastPageNumberState,
+  pageNumberState,
+  relevantChapterListState,
+  showingSettingsModalState,
+} from '../../state/readerStates';
 
 const { Text } = Typography;
 
@@ -64,13 +68,6 @@ const ICONS_READING_DIRECTION = {
 };
 
 const mapState = (state: RootState) => ({
-  pageNumber: state.reader.pageNumber,
-  lastPageNumber: state.reader.lastPageNumber,
-  pageUrls: state.reader.pageUrls,
-  series: state.reader.series,
-  chapter: state.reader.chapter,
-  relevantChapterList: state.reader.relevantChapterList,
-  showingSettingsModal: state.reader.showingSettingsModal,
   pageStyle: state.settings.pageStyle,
   fitContainToWidth: state.settings.fitContainToWidth,
   fitContainToHeight: state.settings.fitContainToHeight,
@@ -80,7 +77,6 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  setPageNumber: (pageNumber: number) => dispatch(setPageNumber(pageNumber)),
   setFitContainToWidth: (value: boolean) =>
     dispatch(setFitContainToWidth(value)),
   setFitContainToHeight: (value: boolean) =>
@@ -91,7 +87,6 @@ const mapDispatch = (dispatch: any) => ({
   setReadingDirection: (value: ReadingDirection) =>
     dispatch(setReadingDirection(value)),
   toggleReadingDirection: () => dispatch(toggleReadingDirection()),
-  toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
 });
 
 const connector = connect(mapState, mapDispatch);
@@ -106,6 +101,14 @@ type Props = PropsFromRedux & {
 };
 
 const ReaderHeader: React.FC<Props> = (props: Props) => {
+  const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
+  const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(
+    showingSettingsModalState
+  );
+  const lastPageNumber = useRecoilValue(lastPageNumberState);
+  const chapter = useRecoilValue(chapterState);
+  const relevantChapterList = useRecoilValue(relevantChapterListState);
+
   const getFitButtonContent = (): {
     text: string;
     icon: JSX.Element;
@@ -192,17 +195,20 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 props.setChapter(e.item.props['data-value']);
               }}
             >
-              {props.relevantChapterList.map((chapter: Chapter) => (
-                <Menu.Item key={chapter.id} data-value={chapter.id}>
-                  {`Chapter ${chapter.chapterNumber}`}
+              {relevantChapterList.map((relevantChapter: Chapter) => (
+                <Menu.Item
+                  key={relevantChapter.id}
+                  data-value={relevantChapter.id}
+                >
+                  {`Chapter ${relevantChapter.chapterNumber}`}
                 </Menu.Item>
               ))}
             </Menu>
           }
         >
           <Text className={`${styles.field}`}>
-            {props.chapter && props.chapter.chapterNumber
-              ? `Chapter ${props.chapter.chapterNumber}`
+            {chapter && chapter.chapterNumber
+              ? `Chapter ${chapter.chapterNumber}`
               : 'Unknown Chapter'}
           </Text>
         </Dropdown>
@@ -225,9 +231,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
             (props.readingDirection === ReadingDirection.LeftToRight &&
-              props.pageNumber <= 1) ||
+              pageNumber <= 1) ||
             (props.readingDirection === ReadingDirection.RightToLeft &&
-              props.pageNumber >= props.lastPageNumber)
+              pageNumber >= lastPageNumber)
           }
           onClick={() => props.changePage(true, true)}
         >
@@ -237,10 +243,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
             (props.readingDirection === ReadingDirection.RightToLeft &&
-              props.pageNumber === props.lastPageNumber &&
+              pageNumber === lastPageNumber &&
               props.getAdjacentChapterId(false) === null) ||
             (props.readingDirection === ReadingDirection.LeftToRight &&
-              props.pageNumber <= 1 &&
+              pageNumber <= 1 &&
               props.getAdjacentChapterId(true) === null)
           }
           onClick={() => props.changePage(true)}
@@ -251,35 +257,34 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           overlay={
             <Menu
               onClick={(e: any) => {
-                props.setPageNumber(e.item.props['data-value']);
+                setPageNumber(e.item.props['data-value']);
               }}
             >
-              {Array.from(
-                { length: props.lastPageNumber },
-                (_v, k) => k + 1
-              ).map((pageNumber: number) => (
-                <Menu.Item key={pageNumber} data-value={pageNumber}>
-                  Page {pageNumber}
-                </Menu.Item>
-              ))}
+              {Array.from({ length: lastPageNumber }, (_v, k) => k + 1).map(
+                (i: number) => (
+                  <Menu.Item key={i} data-value={i}>
+                    Page {i}
+                  </Menu.Item>
+                )
+              )}
             </Menu>
           }
         >
-          <Text className={`${styles.field}`}>{`${props.pageNumber}${
+          <Text className={`${styles.field}`}>{`${pageNumber}${
             props.pageStyle === PageStyle.Double &&
-            props.pageNumber !== props.lastPageNumber
-              ? `-${props.pageNumber + 1}`
+            pageNumber !== lastPageNumber
+              ? `-${pageNumber + 1}`
               : ''
-          } / ${props.lastPageNumber}`}</Text>
+          } / ${lastPageNumber}`}</Text>
         </Dropdown>
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
             (props.readingDirection === ReadingDirection.LeftToRight &&
-              props.pageNumber === props.lastPageNumber &&
+              pageNumber === lastPageNumber &&
               props.getAdjacentChapterId(false) === null) ||
             (props.readingDirection === ReadingDirection.RightToLeft &&
-              props.pageNumber <= 1 &&
+              pageNumber <= 1 &&
               props.getAdjacentChapterId(true) === null)
           }
           onClick={() => props.changePage(false)}
@@ -290,9 +295,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
             (props.readingDirection === ReadingDirection.LeftToRight &&
-              props.pageNumber >= props.lastPageNumber) ||
+              pageNumber >= lastPageNumber) ||
             (props.readingDirection === ReadingDirection.RightToLeft &&
-              props.pageNumber <= 1)
+              pageNumber <= 1)
           }
           onClick={() => props.changePage(false, true)}
         >
@@ -335,7 +340,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.settingsButton}`}
-          onClick={() => props.toggleShowingSettingsModal()}
+          onClick={() => setShowingSettingsModal(!showingSettingsModal)}
         >
           <SettingOutlined /> Settings
         </button>

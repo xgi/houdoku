@@ -1,18 +1,15 @@
 import React from 'react';
 import { Modal } from 'antd';
 import { connect, ConnectedProps } from 'react-redux';
+import { useRecoilState } from 'recoil';
 import { RootState } from '../../store';
-import { toggleShowingSettingsModal } from '../../features/reader/actions';
 import ReaderSettings from '../settings/ReaderSettings';
+import { showingSettingsModalState } from '../../state/readerStates';
 
-const mapState = (state: RootState) => ({
-  showingSettingsModal: state.reader.showingSettingsModal,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -21,12 +18,16 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
+  const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(
+    showingSettingsModalState
+  );
+
   return (
     <Modal
       title="Reader Settings"
-      visible={props.showingSettingsModal}
+      visible={showingSettingsModal}
       footer={null}
-      onCancel={props.toggleShowingSettingsModal}
+      onCancel={() => setShowingSettingsModal(!showingSettingsModal)}
     >
       <ReaderSettings />
     </Modal>

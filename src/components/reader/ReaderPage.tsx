@@ -12,20 +12,8 @@ import {
   SeriesSourceType,
 } from 'houdoku-extension-lib';
 import Paragraph from 'antd/lib/typography/Paragraph';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { RootState } from '../../store';
-import {
-  changePageNumber,
-  setPageNumber,
-  setPageUrls,
-  setSource,
-  setRelevantChapterList,
-  toggleShowingSettingsModal,
-  setPageDataList,
-  toggleShowingSidebar,
-  toggleShowingHeader,
-  setShowingNoNextChapter,
-} from '../../features/reader/actions';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
 import { ReadingDirection, PageStyle } from '../../models/types';
@@ -55,24 +43,14 @@ import {
 } from '../../util/filesystem';
 import library from '../../services/library';
 import { updateTitlebarText } from '../../util/titlebar';
-import { chapterListState, seriesState } from '../../state/libraryStates';
+import * as libraryStates from '../../state/libraryStates';
+import * as readerStates from '../../state/readerStates';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
 const mapState = (state: RootState) => ({
-  pageNumber: state.reader.pageNumber,
-  lastPageNumber: state.reader.lastPageNumber,
-  pageUrls: state.reader.pageUrls,
-  pageDataList: state.reader.pageDataList,
-  series: state.reader.series,
-  chapter: state.reader.chapter,
-  relevantChapterList: state.reader.relevantChapterList,
-  showingSettingsModal: state.reader.showingSettingsModal,
-  showingSidebar: state.reader.showingSidebar,
-  showingHeader: state.reader.showingHeader,
-  showingNoNextChapter: state.reader.showingNoNextChapter,
   customDownloadsDir: state.settings.customDownloadsDir,
   pageStyle: state.settings.pageStyle,
   fitContainToWidth: state.settings.fitContainToWidth,
@@ -99,8 +77,6 @@ const mapState = (state: RootState) => ({
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
-  setPageNumber: (pageNumber: number) => dispatch(setPageNumber(pageNumber)),
-  changePageNumber: (delta: number) => dispatch(changePageNumber(delta)),
   setFitContainToWidth: (value: boolean) =>
     dispatch(setFitContainToWidth(value)),
   setFitContainToHeight: (value: boolean) =>
@@ -113,18 +89,6 @@ const mapDispatch = (dispatch: any) => ({
   toggleReadingDirection: () => dispatch(toggleReadingDirection()),
   setPreloadAmount: (preloadAmount: number) =>
     dispatch(setPreloadAmount(preloadAmount)),
-  setPageUrls: (pageUrls: string[]) => dispatch(setPageUrls(pageUrls)),
-  setPageDataList: (pageDataList: string[]) =>
-    dispatch(setPageDataList(pageDataList)),
-  setSource: (series?: Series, chapter?: Chapter) =>
-    dispatch(setSource(series, chapter)),
-  setRelevantChapterList: (relevantChapterList: Chapter[]) =>
-    dispatch(setRelevantChapterList(relevantChapterList)),
-  toggleShowingSettingsModal: () => dispatch(toggleShowingSettingsModal()),
-  toggleShowingSidebar: () => dispatch(toggleShowingSidebar()),
-  toggleShowingHeader: () => dispatch(toggleShowingHeader()),
-  setShowingNoNextChapter: (value: boolean) =>
-    dispatch(setShowingNoNextChapter(value)),
   sendProgressToTrackers: (chapter: Chapter, series: Series) =>
     sendProgressToTrackers(chapter, series),
 });
@@ -146,8 +110,40 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const location = useLocation();
   const forceUpdate = useForceUpdate();
-  const setChapterList = useSetRecoilState(chapterListState);
-  const setSeries = useSetRecoilState(seriesState);
+  const setChapterList = useSetRecoilState(libraryStates.chapterListState);
+  const setLibrarySeries = useSetRecoilState(libraryStates.seriesState);
+  const [readerSeries, setReaderSeries] = useRecoilState(
+    readerStates.seriesState
+  );
+  const [readerChapter, setReaderChapter] = useRecoilState(
+    readerStates.chapterState
+  );
+
+  const [pageNumber, setPageNumber] = useRecoilState(
+    readerStates.pageNumberState
+  );
+  const [lastPageNumber, setLastPageNumber] = useRecoilState(
+    readerStates.lastPageNumberState
+  );
+  const setPageUrls = useSetRecoilState(readerStates.pageUrlsState);
+  const [pageDataList, setPageDataList] = useRecoilState(
+    readerStates.pageDataListState
+  );
+  const [relevantChapterList, setRelevantChapterList] = useRecoilState(
+    readerStates.relevantChapterListState
+  );
+  const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(
+    readerStates.showingSettingsModalState
+  );
+  const [showingSidebar, setShowingSidebar] = useRecoilState(
+    readerStates.showingSidebarState
+  );
+  const [showingHeader, setShowingHeader] = useRecoilState(
+    readerStates.showingHeaderState
+  );
+  const [showingNoNextChapter, setShowingNoNextChapter] = useRecoilState(
+    readerStates.showingNoNextChapterState
+  );
 
   /**
    * Populate the relevantChapterList prop.
@@ -162,7 +158,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const createRelevantChapterList = (series: Series, chapter: Chapter) => {
     if (series.id === undefined) return;
 
-    const relevantChapterList: Chapter[] = [];
+    const newRelevantChapterList: Chapter[] = [];
     const chapters: Chapter[] = library.fetchChapters(series.id);
 
     const chapterNumbersSet: Set<string> = new Set();
@@ -182,11 +178,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         curChapters
       );
       if (bestMatch !== null && bestMatch.id !== undefined) {
-        relevantChapterList.push(bestMatch);
+        newRelevantChapterList.push(bestMatch);
       }
     });
 
-    props.setRelevantChapterList(relevantChapterList);
+    setRelevantChapterList(newRelevantChapterList);
   };
 
   const loadDownloadedChapterData = async (
@@ -203,7 +199,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       props.customDownloadsDir || defaultDownloadsDir
     );
 
-    const pageUrls: string[] = await ipcRenderer
+    const newPageUrls: string[] = await ipcRenderer
       .invoke(
         ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
         FS_METADATA.id,
@@ -218,10 +214,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           pageRequesterData
         )
       );
-    props.setPageUrls(pageUrls);
+    setPageUrls(newPageUrls);
+    setLastPageNumber(newPageUrls.length);
 
     Promise.all(
-      pageUrls.map((pageUrl) =>
+      newPageUrls.map((pageUrl) =>
         ipcRenderer.invoke(
           ipcChannels.EXTENSION.GET_PAGE_DATA,
           FS_METADATA.id,
@@ -231,8 +228,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       )
     )
       // eslint-disable-next-line promise/always-return
-      .then((pageDataList: string[]) => {
-        props.setPageDataList(pageDataList);
+      .then((newPageDataList: string[]) => {
+        setPageDataList(newPageDataList);
         forceUpdate();
       })
       .catch((e) => log.error(e));
@@ -253,11 +250,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     const series: Series | null = library.fetchSeries(seriesId);
     if (chapter === null || series === null) return;
 
-    if (props.relevantChapterList.length === 0) {
+    if (relevantChapterList.length === 0) {
       createRelevantChapterList(series, chapter);
     }
 
-    props.setSource(series, chapter);
+    setReaderSeries(series);
+    setReaderChapter(chapter);
     updateTitlebarText(
       `${series.title} - ${
         chapter.chapterNumber
@@ -284,7 +282,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       return;
     }
 
-    const pageUrls: string[] = await ipcRenderer
+    const newPageUrls: string[] = await ipcRenderer
       .invoke(
         ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
         series.extensionId,
@@ -299,10 +297,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           pageRequesterData
         )
       );
-    props.setPageUrls(pageUrls);
+    setPageUrls(newPageUrls);
+    setLastPageNumber(newPageUrls.length);
 
     Promise.all(
-      pageUrls.map((pageUrl) =>
+      newPageUrls.map((pageUrl) =>
         ipcRenderer.invoke(
           ipcChannels.EXTENSION.GET_PAGE_DATA,
           FS_METADATA.id,
@@ -312,8 +311,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       )
     )
       // eslint-disable-next-line promise/always-return
-      .then((pageDataList: string[]) => {
-        props.setPageDataList(pageDataList);
+      .then((newPageDataList: string[]) => {
+        setPageDataList(newPageDataList);
         forceUpdate();
       })
       .catch((e) => log.error(e));
@@ -326,10 +325,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    *  props.relevantChapterList have not been loaded)
    */
   const getAdjacentChapterId = (previous: boolean): string | null => {
-    if (props.chapter === undefined) return null;
+    if (readerChapter === undefined) return null;
 
-    const curChapterIndex: number = props.relevantChapterList.findIndex(
-      (chapter: Chapter) => chapter.id === props.chapter?.id
+    const curChapterIndex: number = relevantChapterList.findIndex(
+      (chapter: Chapter) => chapter.id === readerChapter?.id
     );
     const newChapterIndex = previous
       ? curChapterIndex + 1
@@ -338,11 +337,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     if (
       curChapterIndex === -1 ||
       newChapterIndex < 0 ||
-      newChapterIndex >= props.relevantChapterList.length
+      newChapterIndex >= relevantChapterList.length
     )
       return null;
 
-    const id = props.relevantChapterList[newChapterIndex]?.id;
+    const id = relevantChapterList[newChapterIndex]?.id;
     return id === undefined ? null : id;
   };
 
@@ -352,9 +351,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * @param id the chapter id
    */
   const setChapter = (id: string) => {
-    props.setPageNumber(1);
-    props.setPageUrls([]);
-    props.setPageDataList([]);
+    setPageNumber(1);
+    setPageUrls([]);
+    setLastPageNumber(0);
+    setPageDataList([]);
 
     loadChapterData(id, series_id);
   };
@@ -383,7 +383,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     removeRootStyles();
 
     const stylesToAdd = [styles.root];
-    if (!props.showingHeader) {
+    if (!showingHeader) {
       stylesToAdd.push(styles.headerless);
     }
     document.getElementById('root')?.classList.add(...stylesToAdd);
@@ -416,12 +416,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * If the series prop is loaded, go to its series detail page. Otherwise, go to the library.
    */
   const exitPage = () => {
-    props.setSource(undefined, undefined);
-    props.setPageNumber(1);
-    props.setPageUrls([]);
-    props.setPageDataList([]);
-    props.setRelevantChapterList([]);
-    props.setShowingNoNextChapter(false);
+    setReaderSeries(undefined);
+    setReaderChapter(undefined);
+    setPageNumber(1);
+    setPageUrls([]);
+    setLastPageNumber(0);
+    setPageDataList([]);
+    setRelevantChapterList([]);
+    setShowingNoNextChapter(false);
     removeRootStyles();
     removeKeybindings();
 
@@ -431,8 +433,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       ipcRenderer.invoke(ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY);
     }
 
-    if (props.series !== undefined) {
-      history.push(`${routes.SERIES}/${props.series.id}`);
+    if (readerSeries !== undefined) {
+      history.push(`${routes.SERIES}/${readerSeries.id}`);
     } else {
       history.push(routes.LIBRARY);
     }
@@ -449,9 +451,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const changePage = (left: boolean, toBound = false) => {
     if (toBound) {
       if (props.readingDirection === ReadingDirection.LeftToRight) {
-        props.setPageNumber(left ? 1 : props.lastPageNumber);
+        setPageNumber(left ? 1 : lastPageNumber);
       } else {
-        props.setPageNumber(left ? props.lastPageNumber : 1);
+        setPageNumber(left ? lastPageNumber : 1);
       }
       return;
     }
@@ -464,14 +466,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       delta *= 2;
     }
 
-    if (props.showingNoNextChapter) {
+    if (showingNoNextChapter) {
       if (delta < 0) {
-        props.setShowingNoNextChapter(false);
+        setShowingNoNextChapter(false);
       } else {
         exitPage();
       }
     } else {
-      props.changePageNumber(delta);
+      setPageNumber(pageNumber + delta);
     }
   };
 
@@ -491,72 +493,70 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     );
     Mousetrap.bind(props.keyTogglePageStyle, () => props.togglePageStyle());
     Mousetrap.bind(props.keyToggleShowingSettingsModal, () =>
-      props.toggleShowingSettingsModal()
+      setShowingSettingsModal(!showingSettingsModal)
     );
     Mousetrap.bind(props.keyToggleShowingSidebar, () =>
-      props.toggleShowingSidebar()
+      setShowingSidebar(showingSidebar)
     );
     Mousetrap.bind(props.keyToggleShowingHeader, () =>
-      props.toggleShowingHeader()
+      setShowingHeader(!showingHeader)
     );
-    Mousetrap.bind(props.keyExit, () => exitPage());
-    Mousetrap.bind(props.keyCloseOrBack, () => {
-      if (!props.showingSidebar) props.toggleShowingSidebar();
-      else exitPage();
-    });
+    Mousetrap.bind(props.keyExit, exitPage);
+    Mousetrap.bind(props.keyCloseOrBack, exitPage);
   };
 
   useEffect(() => {
     addRootStyles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.showingHeader]);
+  }, [showingHeader]);
 
   useEffect(() => {
     // mark the chapter as read if past a certain page threshold
     if (
-      props.series !== undefined &&
-      props.chapter !== undefined &&
-      !props.chapter.read &&
-      props.lastPageNumber > 0
+      readerSeries !== undefined &&
+      readerChapter !== undefined &&
+      !readerChapter.read &&
+      lastPageNumber > 0
     ) {
-      if (props.pageNumber >= Math.floor(0.8 * props.lastPageNumber)) {
+      if (pageNumber >= Math.floor(0.8 * lastPageNumber)) {
         toggleChapterRead(
-          props.chapter,
-          props.series,
+          readerChapter,
+          readerSeries,
           setChapterList,
-          setSeries
+          setLibrarySeries
         );
-        props.setSource(props.series, { ...props.chapter, read: true });
+        setReaderChapter({ ...readerChapter, read: true });
         if (props.trackerAutoUpdate)
-          props.sendProgressToTrackers(props.chapter, props.series);
+          props.sendProgressToTrackers(readerChapter, readerSeries);
       }
     }
 
     // if we go past the last page or before the first page, change the chapter
-    if (props.pageNumber > props.lastPageNumber && props.lastPageNumber !== 0) {
+    if (pageNumber > lastPageNumber && lastPageNumber !== 0) {
       const changed = changeChapter(false);
       if (!changed) {
-        props.setShowingNoNextChapter(true);
-        props.setPageNumber(props.lastPageNumber);
+        setShowingNoNextChapter(true);
+        setPageNumber(lastPageNumber);
       }
-    } else if (props.pageNumber <= 0) {
+    } else if (pageNumber <= 0) {
       const changed = changeChapter(true);
-      if (!changed) props.setPageNumber(1);
+      if (!changed) setPageNumber(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.pageNumber]);
+  }, [pageNumber]);
 
   useEffect(() => {
     removeKeybindings();
     addKeybindings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    props.showingNoNextChapter,
-    props.showingSettingsModal,
+    showingNoNextChapter,
+    showingSettingsModal,
     props.readingDirection,
     props.pageStyle,
-    props.chapter,
-    props.lastPageNumber,
+    readerChapter,
+    pageNumber,
+    lastPageNumber,
   ]);
 
   useEffect(() => {
@@ -569,7 +569,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   return (
     <div className={styles.content} tabIndex={0}>
       <ReaderSettingsModal />
-      {props.showingHeader ? (
+      {showingHeader ? (
         <ReaderHeader
           changePage={changePage}
           setChapter={setChapter}
@@ -581,14 +581,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         <></>
       )}
 
-      {props.showingNoNextChapter ? (
+      {showingNoNextChapter ? (
         <div className={styles.finalChapterContainer}>
           <Paragraph>There&apos;s no next chapter.</Paragraph>
         </div>
       ) : (
         <>
-          {props.pageDataList.length === 0 ? (
-            <ReaderLoader extensionId={props.series?.extensionId} />
+          {pageDataList.length === 0 ? (
+            <ReaderLoader extensionId={readerSeries?.extensionId} />
           ) : (
             <ReaderViewer changePage={changePage} />
           )}
