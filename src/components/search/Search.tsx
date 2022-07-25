@@ -20,21 +20,22 @@ import {
 } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './Search.css';
 import { ProgressFilter } from '../../models/types';
 import SeriesGrid from '../general/SeriesGrid';
-import {
-  setAddModalSeries,
-  setSearchExtension,
-  setSearchResults,
-  toggleShowingAddModal,
-} from '../../features/search/actions';
 import { RootState } from '../../store';
 import AddSeriesModal from './AddSeriesModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { seriesListState } from '../../state/libraryStates';
+import {
+  addModalEditableState,
+  addModalSeriesState,
+  searchExtensionState,
+  searchResultsState,
+  showingAddModalState,
+} from '../../state/searchStates';
 
 type SearchParams = {
   text?: string;
@@ -45,25 +46,10 @@ const RESULTS_PAGE_SIZE = 8;
 const { Text, Paragraph } = Typography;
 const { info } = Modal;
 
-const mapState = (state: RootState) => ({
-  searchExtension: state.search.searchExtension,
-  searchResults: state.search.searchResults,
-  addModalSeries: state.search.addModalSeries,
-  addModalEditable: state.search.addModalEditable,
-  showingAddModal: state.search.showingAddModal,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setSearchExtension: (searchExtension: string) =>
-    dispatch(setSearchExtension(searchExtension)),
-  setSearchResults: (searchResults: Series[]) =>
-    dispatch(setSearchResults(searchResults)),
-  setAddModalSeries: (addModalSeries: Series) =>
-    dispatch(setAddModalSeries(addModalSeries)),
-  toggleShowingAddModal: (editable: boolean) =>
-    dispatch(toggleShowingAddModal(editable)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -80,10 +66,20 @@ const Search: React.FC<Props> = (props: Props) => {
   const [nextSourcePage, setNextSourcePage] = useState(1);
   const [sourceHasMore, setSourceHasMore] = useState(false);
   const seriesList = useRecoilValue(seriesListState);
+  const [searchExtension, setSearchExtension] =
+    useRecoilState(searchExtensionState);
+  const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
+  const [addModalSeries, setAddModalSeries] =
+    useRecoilState(addModalSeriesState);
+  const [addModalEditable, setAddModalEditable] = useRecoilState(
+    addModalEditableState
+  );
+  const [showingAddModal, setShowingAddModal] =
+    useRecoilState(showingAddModalState);
 
   const getSearchExtensionMetadata = () => {
     return extensionList.find(
-      (metadata: ExtensionMetadata) => metadata.id === props.searchExtension
+      (metadata: ExtensionMetadata) => metadata.id === searchExtension
     );
   };
 
@@ -129,7 +125,7 @@ const Search: React.FC<Props> = (props: Props) => {
   ) => {
     setLoading(true);
     if (!loadingMore) {
-      props.setSearchResults([]);
+      setSearchResults([]);
       setCurViewingPage(1);
     }
 
@@ -137,23 +133,21 @@ const Search: React.FC<Props> = (props: Props) => {
       !params.text || params.text.length === 0
         ? ipcRenderer.invoke(
             ipcChannels.EXTENSION.DIRECTORY,
-            props.searchExtension,
+            searchExtension,
             page
           )
         : ipcRenderer.invoke(
             ipcChannels.EXTENSION.SEARCH,
-            props.searchExtension,
+            searchExtension,
             params.text,
             page
           );
 
     await respPromise
       .then((resp: SeriesListResponse) => {
-        props.setSearchResults(
+        setSearchResults(
           // eslint-disable-next-line promise/always-return
-          loadingMore
-            ? props.searchResults.concat(resp.seriesList)
-            : resp.seriesList
+          loadingMore ? searchResults.concat(resp.seriesList) : resp.seriesList
         );
         setSourceHasMore(resp.hasMore);
         setNextSourcePage(page + 1);
@@ -178,8 +172,9 @@ const Search: React.FC<Props> = (props: Props) => {
         if (inLibrary(series)) {
           showInLibraryMessage(series);
         } else {
-          props.setAddModalSeries(series);
-          props.toggleShowingAddModal(props.searchExtension === FS_METADATA.id);
+          setAddModalSeries(series);
+          setAddModalEditable(searchExtension === FS_METADATA.id);
+          setShowingAddModal(!showingAddModal);
         }
       })
       .catch((e) => log.error(e));
@@ -244,10 +239,10 @@ const Search: React.FC<Props> = (props: Props) => {
     return (
       <Menu
         onClick={(e: any) => {
-          props.setSearchResults([]);
+          setSearchResults([]);
           setNextSourcePage(1);
           setSearchParams({});
-          props.setSearchExtension(e.item.props['data-value']);
+          setSearchExtension(e.item.props['data-value']);
         }}
       >
         {extensionList.map((metadata: ExtensionMetadata) => (
@@ -264,7 +259,7 @@ const Search: React.FC<Props> = (props: Props) => {
       <div className={styles.seriesGrid}>
         <SeriesGrid
           columns={4}
-          seriesList={props.searchResults.slice(
+          seriesList={searchResults.slice(
             0,
             curViewingPage * RESULTS_PAGE_SIZE
           )}
@@ -278,10 +273,9 @@ const Search: React.FC<Props> = (props: Props) => {
             if (isInLibrary) {
               showInLibraryMessage(series);
             } else {
-              props.setAddModalSeries(series);
-              props.toggleShowingAddModal(
-                props.searchExtension === FS_METADATA.id
-              );
+              setAddModalSeries(series);
+              setAddModalEditable(searchExtension === FS_METADATA.id);
+              setShowingAddModal(!showingAddModal);
             }
           }}
           inLibraryFunc={inLibrary}
@@ -297,7 +291,7 @@ const Search: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    props.setSearchResults([]);
+    setSearchResults([]);
     setSourceHasMore(false);
     setNextSourcePage(1);
     setCurViewingPage(1);
@@ -310,17 +304,20 @@ const Search: React.FC<Props> = (props: Props) => {
       .then(() => handleSearch(searchParams))
       .catch((err: Error) => log.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.searchExtension]);
+  }, [searchExtension]);
 
   if (extensionList.length === 0) return <></>;
 
   return (
     <>
       <AddSeriesModal
-        visible={props.showingAddModal}
-        series={props.addModalSeries}
-        editable={props.addModalEditable}
-        toggleVisible={() => props.toggleShowingAddModal(false)}
+        visible={showingAddModal}
+        series={addModalSeries}
+        editable={addModalEditable}
+        toggleVisible={() => {
+          setShowingAddModal(!showingAddModal);
+          setAddModalEditable(false);
+        }}
       />
       <div>
         <div className={styles.searchBar}>
@@ -332,7 +329,7 @@ const Search: React.FC<Props> = (props: Props) => {
               Extension: {getSearchExtensionMetadata()?.name} <DownOutlined />
             </Button>
           </Dropdown>
-          {props.searchExtension !== FS_METADATA.id ? (
+          {searchExtension !== FS_METADATA.id ? (
             <>
               <Input
                 className={styles.searchField}
@@ -351,18 +348,14 @@ const Search: React.FC<Props> = (props: Props) => {
           )}
         </div>
         {renderAlert()}
-        {props.searchExtension === FS_METADATA.id ? (
-          renderFilesystemInputs()
-        ) : (
-          <></>
-        )}
+        {searchExtension === FS_METADATA.id ? renderFilesystemInputs() : <></>}
       </div>
 
-      {props.searchExtension === FS_METADATA.id ? (
+      {searchExtension === FS_METADATA.id ? (
         <></>
       ) : (
         <>
-          {props.searchResults.length === 0 ? (
+          {searchResults.length === 0 ? (
             <div className={styles.loadingContainer}>
               {loading ? (
                 <>
@@ -380,14 +373,13 @@ const Search: React.FC<Props> = (props: Props) => {
               {renderSeriesGrid()}
               <div className={styles.footerContainer}>
                 {sourceHasMore ||
-                props.searchResults.length >
-                  curViewingPage * RESULTS_PAGE_SIZE ? (
+                searchResults.length > curViewingPage * RESULTS_PAGE_SIZE ? (
                   <Button
                     className={styles.loadMoreButton}
                     onClick={() => {
                       if (
                         sourceHasMore &&
-                        props.searchResults.length <
+                        searchResults.length <
                           (curViewingPage + 1) * RESULTS_PAGE_SIZE
                       ) {
                         handleSearch(searchParams, nextSourcePage, true);
