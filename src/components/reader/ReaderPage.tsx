@@ -12,6 +12,7 @@ import {
   SeriesSourceType,
 } from 'houdoku-extension-lib';
 import Paragraph from 'antd/lib/typography/Paragraph';
+import { useSetRecoilState } from 'recoil';
 import { RootState } from '../../store';
 import {
   changePageNumber,
@@ -54,6 +55,7 @@ import {
 } from '../../util/filesystem';
 import library from '../../services/library';
 import { updateTitlebarText } from '../../util/titlebar';
+import { chapterListState, seriesState } from '../../state/libraryStates';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
@@ -123,8 +125,6 @@ const mapDispatch = (dispatch: any) => ({
   toggleShowingHeader: () => dispatch(toggleShowingHeader()),
   setShowingNoNextChapter: (value: boolean) =>
     dispatch(setShowingNoNextChapter(value)),
-  toggleChapterRead: (chapter: Chapter, series: Series) =>
-    toggleChapterRead(dispatch, chapter, series),
   sendProgressToTrackers: (chapter: Chapter, series: Series) =>
     sendProgressToTrackers(chapter, series),
 });
@@ -146,6 +146,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const location = useLocation();
   const forceUpdate = useForceUpdate();
+  const setChapterList = useSetRecoilState(chapterListState);
+  const setSeries = useSetRecoilState(seriesState);
 
   /**
    * Populate the relevantChapterList prop.
@@ -518,7 +520,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       props.lastPageNumber > 0
     ) {
       if (props.pageNumber >= Math.floor(0.8 * props.lastPageNumber)) {
-        props.toggleChapterRead(props.chapter, props.series);
+        toggleChapterRead(
+          props.chapter,
+          props.series,
+          setChapterList,
+          setSeries
+        );
         props.setSource(props.series, { ...props.chapter, read: true });
         if (props.trackerAutoUpdate)
           props.sendProgressToTrackers(props.chapter, props.series);

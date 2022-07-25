@@ -33,7 +33,6 @@ import blankCover from '../../img/blank_cover.png';
 import routes from '../../constants/routes.json';
 import { getBannerImageUrl } from '../../services/mediasource';
 import { reloadSeriesList, removeSeries } from '../../features/library/utils';
-import { downloadChapters } from '../../features/downloader/actions';
 import { RootState } from '../../store';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesTrackerModal from './SeriesTrackerModal';
@@ -42,7 +41,7 @@ import EditSeriesModal from './EditSeriesModal';
 import { deleteThumbnail, getChapterDownloaded } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import library from '../../services/library';
-import { DownloadTask } from '../../services/downloader';
+import { downloaderClient, DownloadTask } from '../../services/downloader';
 import constants from '../../constants/constants.json';
 import {
   chapterFilterGroupState,
@@ -76,10 +75,7 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
 );
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  downloadChapters: (tasks: DownloadTask[]) =>
-    dispatch(downloadChapters(tasks)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -197,7 +193,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     });
 
     const func = () => {
-      props.downloadChapters(
+      downloaderClient.add(
         queue.map(
           (chapter: Chapter) =>
             ({
@@ -207,6 +203,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             } as DownloadTask)
         )
       );
+      downloaderClient.start();
     };
 
     if (queue.length >= 3 && largeAmountWarning) {

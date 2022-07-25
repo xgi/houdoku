@@ -31,7 +31,6 @@ const mapState = (state: RootState) => ({
   chapterLanguages: state.settings.chapterLanguages,
   trackerAutoUpdate: state.settings.trackerAutoUpdate,
   customDownloadsDir: state.settings.customDownloadsDir,
-  currentTask: state.downloader.currentTask,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -21,10 +21,16 @@ export type DownloadError = {
   errorStr: string;
 };
 
-export default class DownloaderClient {
-  copyClientState?: () => void;
+class DownloaderClient {
+  setStatusTextState?: (text: string | undefined) => void;
 
-  setStatusText?: (text: string | undefined) => void;
+  setRunningState?: (running: boolean) => void;
+
+  setQueueState?: (queue: DownloadTask[]) => void;
+
+  setCurrentTaskState?: (currentTask: DownloadTask | null) => void;
+
+  setDownloadErrorsState?: (downloadErrors: DownloadError[]) => void;
 
   running = false;
 
@@ -34,35 +40,69 @@ export default class DownloaderClient {
 
   downloadErrors: DownloadError[] = [];
 
+  setStateFunctions = (
+    setStatusTextState: (text: string | undefined) => void,
+    setRunningState: (running: boolean) => void,
+    setQueueState: (queue: DownloadTask[]) => void,
+    setCurrentTaskState: (currentTask: DownloadTask | null) => void,
+    setDownloadErrorsState: (downloadErrors: DownloadError[]) => void
+  ) => {
+    this.setStatusTextState = setStatusTextState;
+    this.setRunningState = setRunningState;
+    this.setQueueState = setQueueState;
+    this.setCurrentTaskState = setCurrentTaskState;
+    this.setDownloadErrorsState = setDownloadErrorsState;
+  };
+
+  setRunning = (running: boolean) => {
+    this.running = running;
+    if (this.setRunningState) this.setRunningState(running);
+  };
+
+  setQueue = (queue: DownloadTask[]) => {
+    this.queue = queue;
+    if (this.setQueueState) this.setQueueState(queue);
+  };
+
+  setCurrentTask = (currentTask: DownloadTask | null) => {
+    this.currentTask = currentTask;
+    if (this.setCurrentTaskState) this.setCurrentTaskState(currentTask);
+  };
+
+  setDownloadErrors = (downloadErrors: DownloadError[]) => {
+    this.downloadErrors = downloadErrors;
+    if (this.setDownloadErrorsState)
+      this.setDownloadErrorsState(downloadErrors);
+  };
+
   _handleDownloadError = (downloadError: DownloadError) => {
     log.error(downloadError.errorStr);
-    this.running = false;
-    this.currentTask = null;
-    this.downloadErrors.push(downloadError);
-
-    if (this.copyClientState) this.copyClientState();
+    this.setRunning(false);
+    this.setCurrentTask(null);
+    this.setDownloadErrors([...this.downloadErrors, downloadError]);
   };
 
   start = async () => {
     if (this.running) return;
 
     if (this.queue.length === 0) {
-      this.running = false;
+      this.setRunning(false);
       return;
     }
 
-    this.running = true;
+    this.setRunning(true);
     while (this.running && this.queue.length > 0) {
-      const task: DownloadTask | undefined = this.queue.shift();
+      const task: DownloadTask | undefined = this.queue[0];
+      this.setQueue(this.queue.slice(1));
       if (task === undefined) {
         break;
       }
 
-      this.currentTask = {
+      this.setCurrentTask({
         series: task.series,
         chapter: task.chapter,
         downloadsDir: task.downloadsDir,
-      };
+      });
 
       // eslint-disable-next-line no-await-in-loop
       const chapterPath = await getChapterDownloadPath(
@@ -122,11 +162,11 @@ export default class DownloaderClient {
         );
         const pagePath = path.join(chapterPath, `${pageNumPadded}.${ext}`);
 
-        if (this.setStatusText) {
+        if (this.setStatusTextState) {
           const queueStr =
             this.queue.length > 0 ? ` [+${this.queue.length} in queue]` : '';
 
-          this.setStatusText(
+          this.setStatusTextState(
             `Downloading ${task.series.title} chapter ${task.chapter.chapterNumber} (${i}/${pageUrls.length})${queueStr}`
           );
         }
@@ -153,54 +193,44 @@ export default class DownloaderClient {
             } as DownloadError);
           });
 
-        this.currentTask = {
+        this.setCurrentTask({
           series: task.series,
           chapter: task.chapter,
           downloadsDir: task.downloadsDir,
           page: i,
           totalPages: pageUrls.length,
-        };
-        if (this.copyClientState) this.copyClientState();
+        });
       }
 
       if (!this.running) {
         // task was paused, add it back to the start of the queue
-        this.queue.unshift({ ...task, page: i });
+        this.setQueue([{ ...task, page: i }, ...this.queue]);
       }
 
-      if (this.setStatusText) {
+      if (this.setStatusTextState) {
         if (this.running) {
-          this.setStatusText(
+          this.setStatusTextState(
             `Finished downloading ${task.series.title} chapter ${task.chapter.chapterNumber}`
           );
         }
       }
-
-      if (this.copyClientState) this.copyClientState();
     }
 
-    this.running = false;
-    this.currentTask = null;
-    if (this.copyClientState) this.copyClientState();
+    this.setRunning(false);
+    this.setCurrentTask(null);
   };
 
   pause = () => {
-    this.running = false;
+    this.setRunning(false);
   };
 
   add = (tasks: DownloadTask[]) => {
-    tasks.forEach((task) => this.queue.push(task));
+    this.setQueue([...this.queue, ...tasks]);
   };
 
   clear = () => {
-    this.queue.length = 0;
-  };
-
-  setCopyClientStateFunc = (copyClientState: () => void) => {
-    this.copyClientState = copyClientState;
-  };
-
-  setStatusTextFunc = (setStatusText: (text: string | undefined) => void) => {
-    this.setStatusText = setStatusText;
+    this.setQueue([]);
   };
 }
+
+export const downloaderClient = new DownloaderClient();

@@ -14,10 +14,16 @@ import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
 import { TrackerMetadata } from './models/types';
 import { loadSeriesList, migrateSeriesTags } from './features/library/utils';
-import { linkDownloaderClientFunctions } from './features/downloader/reducers';
 import AppLoading from './components/general/AppLoading';
 import { seriesListState } from './state/libraryStates';
 import { statusTextState } from './state/statusBarStates';
+import { downloaderClient } from './services/downloader';
+import {
+  currentTaskState,
+  downloadErrorsState,
+  queueState,
+  runningState,
+} from './state/downloaderStates';
 
 const store = configuredStore();
 
@@ -119,6 +125,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const setSeriesList = useSetRecoilState(seriesListState);
   const setStatusText = useSetRecoilState(statusTextState);
+  const setRunning = useSetRecoilState(runningState);
+  const setQueue = useSetRecoilState(queueState);
+  const setCurrentTask = useSetRecoilState(currentTaskState);
+  const setDownloadErrors = useSetRecoilState(downloadErrorsState);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -134,9 +144,14 @@ export default function App() {
         setStatusText(text);
       });
 
-      // The downloader requires access to some other actions/parts of the
-      // state, so they are manually linked here
-      linkDownloaderClientFunctions(store, setStatusText);
+      // Give the downloader client access to the state modifiers
+      downloaderClient.setStateFunctions(
+        setStatusText,
+        setRunning,
+        setQueue,
+        setCurrentTask,
+        setDownloadErrors
+      );
 
       // Previously the series object had separate tag fields (themes, formats, genres,
       // demographic, content warnings). These have now been consolidated into the
