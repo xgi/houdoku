@@ -19,7 +19,6 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
-import { connect, ConnectedProps } from 'react-redux';
 import {
   Chapter,
   Series,
@@ -33,7 +32,6 @@ import blankCover from '../../img/blank_cover.png';
 import routes from '../../constants/routes.json';
 import { getBannerImageUrl } from '../../services/mediasource';
 import { reloadSeriesList, removeSeries } from '../../features/library/utils';
-import { RootState } from '../../store';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesTrackerModal from './SeriesTrackerModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
@@ -69,24 +67,16 @@ if (!fs.existsSync(thumbnailsDir)) {
   fs.mkdirSync(thumbnailsDir);
 }
 
-const mapState = (state: RootState) => ({});
-
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
-
 interface ParamTypes {
   id: string;
 }
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Props = {};
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams<ParamTypes>();
@@ -533,4 +523,4 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(SeriesDetails);
+export default SeriesDetails;

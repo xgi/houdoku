@@ -3,12 +3,10 @@ import React, { useState } from 'react';
 import { Button, Input, Dropdown, Menu } from 'antd';
 import { DownOutlined, SyncOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
-import { connect, ConnectedProps } from 'react-redux';
 import { SeriesStatus } from 'houdoku-extension-lib';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import styles from './LibraryControlBar.css';
 import { reloadSeriesList } from '../../features/library/utils';
-import { RootState } from '../../store';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import {
   filterState,
@@ -24,16 +22,8 @@ import {
   librarySortState,
 } from '../../state/settingStates';
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 const LIBRARY_SORT_TEXT = {
   [LibrarySort.TitleAsc]: 'Title Asc',
@@ -203,4 +193,4 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(LibraryControlBar);
+export default LibraryControlBar;

@@ -10,7 +10,6 @@ import {
   Spin,
 } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { connect, ConnectedProps } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import {
   ExtensionMetadata,
@@ -24,7 +23,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './Search.css';
 import { ProgressFilter } from '../../models/types';
 import SeriesGrid from '../general/SeriesGrid';
-import { RootState } from '../../store';
 import AddSeriesModal from './AddSeriesModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -46,16 +44,8 @@ const RESULTS_PAGE_SIZE = 8;
 const { Text, Paragraph } = Typography;
 const { info } = Modal;
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 const Search: React.FC<Props> = (props: Props) => {
   const location = useLocation();
@@ -401,4 +391,4 @@ const Search: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(Search);
+export default Search;

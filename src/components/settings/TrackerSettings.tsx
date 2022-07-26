@@ -12,31 +12,21 @@ import {
 } from 'antd';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { connect, ConnectedProps } from 'react-redux';
+import { useRecoilState } from 'recoil';
 import styles from './TrackerSettings.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 import storeKeys from '../../constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
 import { AniListTrackerMetadata } from '../../services/trackers/anilist';
 import { TrackerSetting } from '../../models/types';
-import { RootState } from '../../store';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
-import { useRecoilState } from 'recoil';
 import { trackerAutoUpdateState } from '../../state/settingStates';
 
 const { Text, Paragraph } = Typography;
 const { Panel } = Collapse;
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 const TrackerSettings: React.FC<Props> = (props: Props) => {
   const [trackerAutoUpdate, setTrackerAutoUpdate] = useRecoilState(
@@ -234,4 +224,4 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(TrackerSettings);
+export default TrackerSettings;

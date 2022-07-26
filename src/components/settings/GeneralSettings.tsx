@@ -1,15 +1,13 @@
 import React from 'react';
 import { Select, Col, Row, Button, Input, Tooltip, Switch } from 'antd';
 import { SelectOutlined, UndoOutlined } from '@ant-design/icons';
-import { connect, ConnectedProps } from 'react-redux';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
+import { useRecoilState } from 'recoil';
 import styles from './GeneralSettings.css';
 import { GeneralSetting } from '../../models/types';
-import { RootState } from '../../store';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { createBackup, restoreBackup } from '../../util/backup';
-import { useRecoilState } from 'recoil';
 import {
   autoCheckForExtensionUpdatesState,
   autoCheckForUpdatesState,
@@ -32,16 +30,8 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 const GeneralSettings: React.FC<Props> = (props: Props) => {
   const [chapterLanguages, setChapterLanguages] = useRecoilState(
@@ -233,4 +223,4 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(GeneralSettings);
+export default GeneralSettings;

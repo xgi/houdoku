@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Provider } from 'react-redux';
 import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { configuredStore } from './store';
 import persistantStore from './util/persistantStore';
 import routes from './constants/routes.json';
 import DashboardPage from './components/general/DashboardPage';
@@ -28,8 +26,6 @@ import {
   autoCheckForExtensionUpdatesState,
   autoCheckForUpdatesState,
 } from './state/settingStates';
-
-const store = configuredStore();
 
 const loadStoredExtensionSettings = () => {
   log.info('Loading stored extension settings...');
@@ -182,20 +178,18 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
-      <Router>
-        <Switch>
-          <Route
-            path={`${routes.READER}/:series_id/:chapter_id`}
-            exact
-            component={ReaderPage}
-          />
-          <Route path={routes.SERIES} component={DashboardPage} />
-          <Route path={routes.SEARCH} component={DashboardPage} />
-          <Route path={routes.SETTINGS} component={DashboardPage} />
-          <Route path={routes.LIBRARY} component={DashboardPage} />
-        </Switch>
-      </Router>
-    </Provider>
+    <Router>
+      <Switch>
+        <Route
+          path={`${routes.READER}/:series_id/:chapter_id`}
+          exact
+          component={ReaderPage}
+        />
+        <Route path={routes.SERIES} component={DashboardPage} />
+        <Route path={routes.SEARCH} component={DashboardPage} />
+        <Route path={routes.SETTINGS} component={DashboardPage} />
+        <Route path={routes.LIBRARY} component={DashboardPage} />
+      </Switch>
+    </Router>
   );
 }

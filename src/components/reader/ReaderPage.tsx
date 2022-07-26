@@ -1,6 +1,5 @@
 /* eslint-disable react/button-has-type */
 import React, { useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
 import { useParams, useHistory, useLocation } from 'react-router-dom';
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
@@ -13,7 +12,6 @@ import {
 } from 'houdoku-extension-lib';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { RootState } from '../../store';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
 import { ReadingDirection, PageStyle } from '../../models/types';
@@ -45,16 +43,8 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 interface ParamTypes {
   series_id: string;
@@ -597,4 +587,4 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(ReaderPage);
+export default ReaderPage;

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
 import { Link, Switch, Route } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import {
@@ -12,7 +11,6 @@ import {
 } from '@ant-design/icons';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import log from 'electron-log';
-import { RootState } from '../../store';
 import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
 import StatusBar from './StatusBar';
@@ -35,16 +33,8 @@ import { refreshOnStartState } from '../../state/settingStates';
 
 const { Content, Sider } = Layout;
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
@@ -135,4 +125,4 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(DashboardPage);
+export default DashboardPage;

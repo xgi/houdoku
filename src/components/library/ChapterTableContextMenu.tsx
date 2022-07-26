@@ -7,13 +7,11 @@ import {
   DownloadOutlined,
 } from '@ant-design/icons';
 import { Chapter, Series } from 'houdoku-extension-lib';
-import { connect, ConnectedProps } from 'react-redux';
 import { ipcRenderer } from 'electron';
 import { useHistory } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styles from './ChapterTableContextMenu.css';
 import { downloaderClient, DownloadTask } from '../../services/downloader';
-import { RootState } from '../../store';
 import { toggleChapterRead } from '../../features/library/utils';
 import routes from '../../constants/routes.json';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -27,15 +25,7 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
 const WIDTH = 150;
 const HEIGHT = 180;
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type Props = PropsFromRedux & {
+type Props = {
   location: { x: number; y: number };
   visible: boolean;
   series: Series;
@@ -143,4 +133,4 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(ChapterTableContextMenu);
+export default ChapterTableContextMenu;

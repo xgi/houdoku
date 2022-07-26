@@ -1,7 +1,5 @@
 import React from 'react';
 import { Tabs } from 'antd';
-import { connect, ConnectedProps } from 'react-redux';
-import { RootState } from '../../store';
 import TrackerSettings from './TrackerSettings';
 import IntegrationSettings from './IntegrationSettings';
 import ReaderSettings from './ReaderSettings';
@@ -9,16 +7,8 @@ import GeneralSettings from './GeneralSettings';
 
 const { TabPane } = Tabs;
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 const Settings: React.FC<Props> = (props: Props) => {
   return (
@@ -39,4 +29,4 @@ const Settings: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(Settings);
+export default Settings;

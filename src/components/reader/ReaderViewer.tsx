@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { RootState } from '../../store';
 import styles from './ReaderViewer.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
 import {
@@ -15,25 +13,14 @@ import {
   fitStretchState,
   pageStyleState,
   readingDirectionState,
-  overlayPageNumberState,
   hideScrollbarState,
 } from '../../state/settingStates';
 
-const mapState = (state: RootState) => ({});
+const ROOT_ID = 'root';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  // setPageNumber: (pageNumber: number) => dispatch(setPageNumber(pageNumber)),
-});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type Props = PropsFromRedux & {
+type Props = {
   changePage: (left: boolean, toBound?: boolean) => void;
 };
-
-const ROOT_ID = 'root';
 
 const ReaderViewer: React.FC<Props> = (props: Props) => {
   const viewerContainer = useRef<HTMLDivElement>(null);
@@ -46,13 +33,9 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const fitStretch = useRecoilValue(fitStretchState);
   const pageStyle = useRecoilValue(pageStyleState);
   const readingDirection = useRecoilValue(readingDirectionState);
-  const overlayPageNumber = useRecoilValue(overlayPageNumberState);
   const hideScrollbar = useRecoilValue(hideScrollbarState);
 
-  const viewerContainerClickHandler = (
-    e: React.MouseEvent,
-    pageStyle: PageStyle
-  ) => {
+  const viewerContainerClickHandler = (e: React.MouseEvent) => {
     if (pageStyle === PageStyle.LongStrip) {
       const visibleHeight = window.innerHeight;
       if (e.clientY > visibleHeight * 0.6) {
@@ -265,7 +248,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         className={`
           ${styles.container}
           ${hideScrollbar ? styles.noScrollbar : ''}`}
-        onClick={(e) => viewerContainerClickHandler(e, pageStyle)}
+        onClick={(e) => viewerContainerClickHandler(e)}
       >
         {pageStyle === PageStyle.LongStrip
           ? getSeparatePageContainers()
@@ -275,4 +258,4 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(ReaderViewer);
+export default ReaderViewer;

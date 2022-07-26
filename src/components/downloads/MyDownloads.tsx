@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Modal, Row, Tree, Typography } from 'antd';
 import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import { connect, ConnectedProps } from 'react-redux';
 import log from 'electron-log';
 import { Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styles from './MyDownloads.css';
-import { RootState } from '../../store';
 import { getDownloadedList } from '../../features/downloader/utils';
 import { deleteDownloadedChapter } from '../../util/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -23,16 +21,8 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 const MyDownloads: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(false);
@@ -186,4 +176,4 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(MyDownloads);
+export default MyDownloads;

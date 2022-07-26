@@ -8,7 +8,6 @@ import {
   RegistrySearchPackage,
 } from 'aki-plugin-manager';
 import { gt } from 'semver';
-import { connect, ConnectedProps } from 'react-redux';
 import {
   ExtensionMetadata,
   LanguageKey,
@@ -16,21 +15,11 @@ import {
 } from 'houdoku-extension-lib';
 import { useSetRecoilState } from 'recoil';
 import { ExtensionTableRow } from '../../models/types';
-import { RootState } from '../../store';
 import ipcChannels from '../../constants/ipcChannels.json';
 import flags from '../../img/flags.png';
 import { statusTextState } from '../../state/statusBarStates';
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {
+type Props = {
   registryResults: RegistrySearchResults;
   filterText: string;
   showExtensionSettingsModal: (extensionId: string) => void;
@@ -337,4 +326,4 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(ExtensionTable);
+export default ExtensionTable;

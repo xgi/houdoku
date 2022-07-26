@@ -5,14 +5,12 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Chapter, Series, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
-import { connect, ConnectedProps } from 'react-redux';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import routes from '../../constants/routes.json';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
 import ChapterTableContextMenu from './ChapterTableContextMenu';
 import { getChapterDownloaded } from '../../util/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
-import { RootState } from '../../store';
 import { toggleChapterRead } from '../../features/library/utils';
 import { useForceUpdate } from '../../util/reactutil';
 import flags from '../../img/flags.png';
@@ -32,15 +30,7 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-type Props = PropsFromRedux & {
+type Props = {
   series: Series;
 };
 
@@ -292,4 +282,4 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(ChapterTable);
+export default ChapterTable;

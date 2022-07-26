@@ -5,12 +5,10 @@ import {
   CloseOutlined,
   PauseOutlined,
 } from '@ant-design/icons';
-import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import Title from 'antd/lib/typography/Title';
 import { useRecoilValue } from 'recoil';
 import styles from './DownloadsStatus.css';
-import { RootState } from '../../store';
 import {
   downloaderClient,
   DownloadError,
@@ -24,16 +22,8 @@ import {
 
 const { Panel } = Collapse;
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 const DownloadsStatus: React.FC<Props> = (props: Props) => {
   const queue = useRecoilValue(queueState);
@@ -159,4 +149,4 @@ const DownloadsStatus: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(DownloadsStatus);
+export default DownloadsStatus;

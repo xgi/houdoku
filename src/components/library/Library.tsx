@@ -1,6 +1,5 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { connect, ConnectedProps } from 'react-redux';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
@@ -9,7 +8,6 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './Library.css';
 import routes from '../../constants/routes.json';
 import { removeSeries } from '../../features/library/utils';
-import { RootState } from '../../store';
 import SeriesGrid from '../general/SeriesGrid';
 import LibraryControlBar from './LibraryControlBar';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -26,16 +24,8 @@ import {
 
 const { confirm } = Modal;
 
-const mapState = (state: RootState) => ({});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({});
-
-const connector = connect(mapState, mapDispatch);
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = PropsFromRedux & {};
+type Props = {};
 
 const Library: React.FC<Props> = (props: Props) => {
   const history = useHistory();
@@ -139,4 +129,4 @@ const Library: React.FC<Props> = (props: Props) => {
   );
 };
 
-export default connector(Library);
+export default Library;
