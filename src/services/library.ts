@@ -9,23 +9,17 @@ const fetchSeriesList = (): Series[] => {
 };
 
 const fetchSeries = (seriesId: string): Series | null => {
-  const series: Series | undefined = fetchSeriesList().find(
-    (s) => s.id === seriesId
-  );
+  const series: Series | undefined = fetchSeriesList().find((s) => s.id === seriesId);
   return series || null;
 };
 
 const fetchChapters = (seriesId: string): Chapter[] => {
-  const val = persistantStore.read(
-    `${storeKeys.LIBRARY.CHAPTER_LIST_PREFIX}${seriesId}`
-  );
+  const val = persistantStore.read(`${storeKeys.LIBRARY.CHAPTER_LIST_PREFIX}${seriesId}`);
   return val === null ? [] : JSON.parse(val);
 };
 
 const fetchChapter = (seriesId: string, chapterId: string): Chapter | null => {
-  const chapter: Chapter | undefined = fetchChapters(seriesId).find(
-    (c) => c.id === chapterId
-  );
+  const chapter: Chapter | undefined = fetchChapters(seriesId).find((c) => c.id === chapterId);
   return chapter || null;
 };
 
@@ -33,9 +27,7 @@ const upsertSeries = (series: Series): Series => {
   const seriesId = series.id ? series.id : uuidv4();
   const newSeries: Series = { ...series, id: seriesId };
 
-  const existingList = fetchSeriesList().filter(
-    (s: Series) => s.id !== newSeries.id
-  );
+  const existingList = fetchSeriesList().filter((s: Series) => s.id !== newSeries.id);
 
   persistantStore.write(
     `${storeKeys.LIBRARY.SERIES_LIST}`,
@@ -48,13 +40,14 @@ const upsertChapters = (chapters: Chapter[], series: Series): void => {
   if (series.id === undefined) return;
 
   // retrieve existing chapters as a map of id:Chapter
-  const chapterMap: { [key: string]: Chapter } = fetchChapters(
-    series.id
-  ).reduce((map: { [key: string]: Chapter }, c) => {
-    if (c.id === undefined) return map;
-    map[c.id] = c;
-    return map;
-  }, {});
+  const chapterMap: { [key: string]: Chapter } = fetchChapters(series.id).reduce(
+    (map: { [key: string]: Chapter }, c) => {
+      if (c.id === undefined) return map;
+      map[c.id] = c;
+      return map;
+    },
+    {}
+  );
 
   // add/replace chapters in this map from param
   chapters.forEach((chapter) => {
@@ -75,17 +68,14 @@ const removeSeries = (seriesId: string, preserveChapters = false): void => {
   );
 
   if (!preserveChapters) {
-    persistantStore.remove(
-      `${storeKeys.LIBRARY.CHAPTER_LIST_PREFIX}${seriesId}`
-    );
+    persistantStore.remove(`${storeKeys.LIBRARY.CHAPTER_LIST_PREFIX}${seriesId}`);
   }
 };
 
 const removeChapters = (chapterIds: string[], seriesId: string): void => {
   const chapters = fetchChapters(seriesId);
   const filteredChapters: Chapter[] = chapters.filter(
-    (chapter: Chapter) =>
-      chapter.id !== undefined && !chapterIds.includes(chapter.id)
+    (chapter: Chapter) => chapter.id !== undefined && !chapterIds.includes(chapter.id)
   );
 
   persistantStore.write(

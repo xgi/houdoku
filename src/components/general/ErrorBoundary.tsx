@@ -47,9 +47,9 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className={styles.container}>
             <Title level={3}>Sorry, something went wrong.</Title>
             <Paragraph>
-              An error occurred while loading the page. Normally we would show
-              more specific information, but the error caused the renderer to
-              break, so we can only show you this page instead.
+              An error occurred while loading the page. Normally we would show more specific
+              information, but the error caused the renderer to break, so we can only show you this
+              page instead.
             </Paragraph>
             <Title level={4}>What to do</Title>
             <div className={styles.list}>
@@ -57,41 +57,29 @@ export class ErrorBoundary extends Component<Props, State> {
                 - Press <Text keyboard>Ctrl + R</Text> to reload the client.
               </Paragraph>
               <Paragraph>
-                - You can open the console by pressing{' '}
-                <Text keyboard>Ctrl + Shift + I</Text>, which may contain
-                additional information about the error.
+                - You can open the console by pressing <Text keyboard>Ctrl + Shift + I</Text>, which
+                may contain additional information about the error.
               </Paragraph>
               <Paragraph>
                 -{' '}
-                <a
-                  href={`${packageJson.repository.url}/issues`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={`${packageJson.repository.url}/issues`} target="_blank" rel="noreferrer">
                   Report an issue on GitHub
                 </a>
-                . Please copy the expanded error information below, as well as
-                the steps you took before seeing this page.
+                . Please copy the expanded error information below, as well as the steps you took
+                before seeing this page.
               </Paragraph>
             </div>
             <Title level={4}>Error details</Title>
             <Paragraph>
               Additional logs in{' '}
               <Text code>
-                <a
-                  href={`file:///${LOGS_DIR}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <a href={`file:///${LOGS_DIR}`} target="_blank" rel="noreferrer">
                   {LOGS_DIR}
                 </a>
               </Text>
             </Paragraph>
             <Collapse className={styles.errorCollapse} defaultActiveKey={[]}>
-              <Panel
-                header={`${this.state.error.name}: ${this.state.error.message}`}
-                key="1"
-              >
+              <Panel header={`${this.state.error.name}: ${this.state.error.message}`} key="1">
                 <p>{this.state.error.stack}</p>
               </Panel>
             </Collapse>

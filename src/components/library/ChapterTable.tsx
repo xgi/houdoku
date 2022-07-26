@@ -26,9 +26,7 @@ import {
   customDownloadsDirState,
 } from '../../state/settingStates';
 
-const defaultDownloadsDir = await ipcRenderer.invoke(
-  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
-);
+const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 type Props = {
   series: Series;
@@ -37,12 +35,8 @@ type Props = {
 const ChapterTable: React.FC<Props> = (props: Props) => {
   const setSeries = useSetRecoilState(seriesState);
   const [chapterList, setChapterList] = useRecoilState(chapterListState);
-  const [chapterFilterTitle, setChapterFilterTitle] = useRecoilState(
-    chapterFilterTitleState
-  );
-  const [chapterFilterGroup, setChapterFilterGroup] = useRecoilState(
-    chapterFilterGroupState
-  );
+  const [chapterFilterTitle, setChapterFilterTitle] = useRecoilState(chapterFilterTitleState);
+  const [chapterFilterGroup, setChapterFilterGroup] = useRecoilState(chapterFilterGroupState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const trackerAutoUpdate = useRecoilValue(trackerAutoUpdateState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
@@ -54,16 +48,13 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
     x: 0,
     y: 0,
   });
-  const [contextMenuChapter, setContextMenuChapter] = useState<
-    Chapter | undefined
-  >();
+  const [contextMenuChapter, setContextMenuChapter] = useState<Chapter | undefined>();
   const forceUpdate = useForceUpdate();
 
   const getFilteredChapterList = () => {
     return chapterList.filter(
       (chapter: Chapter) =>
-        (chapterLanguages.includes(chapter.languageKey) ||
-          chapterLanguages.length === 0) &&
+        (chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0) &&
         chapter.title !== null &&
         chapter.title.toLowerCase().includes(chapterFilterTitle) &&
         chapter.groupName !== null &&
@@ -73,10 +64,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
 
   const getNextUnreadChapter = () => {
     return getFilteredChapterList()
-      .sort(
-        (a: Chapter, b: Chapter) =>
-          parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
-      )
+      .sort((a: Chapter, b: Chapter) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber))
       .find((chapter: Chapter) => !chapter.read);
   };
 
@@ -117,12 +105,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
           <Checkbox
             checked={record.read}
             onChange={() => {
-              toggleChapterRead(
-                record,
-                props.series,
-                setChapterList,
-                setSeries
-              );
+              toggleChapterRead(record, props.series, setChapterList, setSeries);
               if (!record.read && trackerAutoUpdate) {
                 sendProgressToTrackers(record, props.series);
               }
@@ -253,8 +236,8 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
                 <span>
                   No Chapters Found
                   <br />
-                  You may need to adjust the &quot;Chapter Languages&quot;
-                  option in the Settings tab.
+                  You may need to adjust the &quot;Chapter Languages&quot; option in the Settings
+                  tab.
                 </span>
               }
             />

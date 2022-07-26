@@ -50,8 +50,7 @@ const parseChapterMetadata = (
   volumeNum: string;
   group: string;
 } => {
-  const matchChapterNum: RegExpMatchArray | null =
-    text.match(/c(\d)+(\.(\d)+)?/g);
+  const matchChapterNum: RegExpMatchArray | null = text.match(/c(\d)+(\.(\d)+)?/g);
   const matchVolumeNum: RegExpMatchArray | null = text.match(/v(\d)+/g);
   const matchGroup: RegExpMatchArray | null = text.match(/\[.*\]/g);
   const matchAnyNum: RegExpMatchArray | null = text.match(/(\d)+/g);
@@ -72,8 +71,7 @@ const parseChapterMetadata = (
     volumeNum = matchNumber ? parseFloat(matchNumber[0]).toString() : '';
   }
 
-  const group: string =
-    matchGroup === null ? '' : matchGroup[0].replace('[', '').replace(']', '');
+  const group: string = matchGroup === null ? '' : matchGroup[0].replace('[', '').replace(']', '');
 
   return {
     title: text.trim(),
@@ -119,10 +117,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     });
   };
 
-  getChapters: GetChaptersFunc = (
-    _sourceType: SeriesSourceType,
-    id: string
-  ) => {
+  getChapters: GetChaptersFunc = (_sourceType: SeriesSourceType, id: string) => {
     const fileList = walk(id);
     const chapterPaths: Set<string> = new Set();
     fileList.forEach((file: string) => {
@@ -134,21 +129,19 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       }
     });
 
-    const chapters: Chapter[] = Array.from(chapterPaths).map(
-      (chapterPath: string) => {
-        const metadata = parseChapterMetadata(path.basename(chapterPath));
-        return {
-          sourceId: chapterPath,
-          title: metadata.title,
-          chapterNumber: metadata.chapterNum,
-          volumeNumber: metadata.volumeNum,
-          languageKey: LanguageKey.ENGLISH,
-          groupName: metadata.group,
-          time: new Date().getTime(),
-          read: false,
-        };
-      }
-    );
+    const chapters: Chapter[] = Array.from(chapterPaths).map((chapterPath: string) => {
+      const metadata = parseChapterMetadata(path.basename(chapterPath));
+      return {
+        sourceId: chapterPath,
+        title: metadata.title,
+        chapterNumber: metadata.chapterNum,
+        volumeNumber: metadata.volumeNum,
+        languageKey: LanguageKey.ENGLISH,
+        groupName: metadata.group,
+        time: new Date().getTime(),
+        read: false,
+      };
+    });
 
     return new Promise((resolve) => {
       resolve(chapters);
@@ -166,25 +159,17 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     if (isArchive) {
       fileListPromise = getArchiveFiles(chapterSourceId);
     } else {
-      fileListPromise = new Promise<string[]>((resolve) =>
-        resolve(walk(chapterSourceId))
-      );
+      fileListPromise = new Promise<string[]>((resolve) => resolve(walk(chapterSourceId)));
     }
 
     return fileListPromise.then(async (fileList: string[]) => {
       const collator = new Intl.Collator([], { numeric: true });
       const imageFileList = fileList
-        .filter((file) =>
-          constants.IMAGE_EXTENSIONS.some((ext) => file.endsWith(`.${ext}`))
-        )
+        .filter((file) => constants.IMAGE_EXTENSIONS.some((ext) => file.endsWith(`.${ext}`)))
         .sort((a, b) => collator.compare(path.basename(a), path.basename(b)));
 
       if (isArchive && this.extractPath) {
-        const extractedFilenames = await extract(
-          chapterSourceId,
-          imageFileList,
-          this.extractPath
-        );
+        const extractedFilenames = await extract(chapterSourceId, imageFileList, this.extractPath);
         return {
           server: '',
           hash: '',

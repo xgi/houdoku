@@ -9,10 +9,7 @@ import {
   ExtensionMetadata,
   SeriesListResponse,
 } from 'houdoku-extension-lib';
-import aki, {
-  RegistrySearchPackage,
-  RegistrySearchResults,
-} from 'aki-plugin-manager';
+import aki, { RegistrySearchPackage, RegistrySearchResults } from 'aki-plugin-manager';
 import { IpcMain } from 'electron';
 import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
 import DOMParser from 'dom-parser';
@@ -37,9 +34,7 @@ export async function loadExtensions(
     if (extMetadata.id !== FS_METADATA.id) {
       aki.unload(
         pluginsDir,
-        `@houdoku/extension-${extMetadata.name
-          .toLowerCase()
-          .replaceAll(' ', '')}`,
+        `@houdoku/extension-${extMetadata.name.toLowerCase().replaceAll(' ', '')}`,
         // eslint-disable-next-line no-eval
         eval('require') as NodeRequire
       );
@@ -76,11 +71,7 @@ export async function loadExtensions(
         }
       };
 
-      const client = new mod.ExtensionClient(
-        fetchWrappedFn,
-        webviewFn,
-        domParser
-      );
+      const client = new mod.ExtensionClient(fetchWrappedFn, webviewFn, domParser);
 
       log.info(`Loaded extension "${pluginName}" version ${pluginDetails[1]}`);
       EXTENSION_CLIENTS[client.getMetadata().id] = client;
@@ -191,13 +182,9 @@ function getPageRequesterData(
  * @param pageRequesterData the PageRequesterData from getPageRequesterData for this chapter
  * @returns a list of urls for this chapter which can be passed to getPageData
  */
-function getPageUrls(
-  extensionId: string,
-  pageRequesterData: PageRequesterData
-): string[] {
+function getPageUrls(extensionId: string, pageRequesterData: PageRequesterData): string[] {
   try {
-    const pageUrls =
-      EXTENSION_CLIENTS[extensionId].getPageUrls(pageRequesterData);
+    const pageUrls = EXTENSION_CLIENTS[extensionId].getPageUrls(pageRequesterData);
     return pageUrls;
   } catch (err) {
     return [];
@@ -216,17 +203,11 @@ function getPageUrls(
  * @param url the URL for the page from getPageUrls
  * @returns promise for page data that can be put inside an <img> src
  */
-async function getPageData(
-  extensionId: string,
-  series: Series,
-  url: string
-): Promise<string> {
-  return EXTENSION_CLIENTS[extensionId]
-    .getPageData(series, url)
-    .catch((err: Error) => {
-      log.error(err);
-      return '';
-    });
+async function getPageData(extensionId: string, series: Series, url: string): Promise<string> {
+  return EXTENSION_CLIENTS[extensionId].getPageData(series, url).catch((err: Error) => {
+    log.error(err);
+    return '';
+  });
 }
 
 /**
@@ -237,16 +218,10 @@ async function getPageData(
  * are utilized at the extension's discretion
  * @returns promise for SeriesListResponse
  */
-function search(
-  extensionId: string,
-  text: string,
-  page: number
-): Promise<SeriesListResponse> {
+function search(extensionId: string, text: string, page: number): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
-    `Searching for "${text}" from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
+    `Searching for "${text}" from extension ${extensionId} (v=${extension.getMetadata().version})`
   );
 
   let adjustedText: string = text;
@@ -276,15 +251,10 @@ function search(
  * @param extensionId
  * @returns promise for SeriesListResponse
  */
-function directory(
-  extensionId: string,
-  page: number
-): Promise<SeriesListResponse> {
+function directory(extensionId: string, page: number): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
-    `Getting directory from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
+    `Getting directory from extension ${extensionId} (v=${extension.getMetadata().version})`
   );
 
   return extension.getDirectory(page).catch((err: Error) => {
@@ -302,9 +272,7 @@ function directory(
 function getSettingTypes(extensionId: string): { [key: string]: SettingType } {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
-    `Getting setting types from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
+    `Getting setting types from extension ${extensionId} (v=${extension.getMetadata().version})`
   );
 
   try {
@@ -323,11 +291,7 @@ function getSettingTypes(extensionId: string): { [key: string]: SettingType } {
  */
 function getSettings(extensionId: string): { [key: string]: unknown } {
   const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(
-    `Getting settings from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
-  );
+  log.info(`Getting settings from extension ${extensionId} (v=${extension.getMetadata().version})`);
 
   try {
     return extension.getSettings();
@@ -343,16 +307,9 @@ function getSettings(extensionId: string): { [key: string]: unknown } {
  * @param extensionId
  * @param settings a map of settings for the extension
  */
-function setSettings(
-  extensionId: string,
-  settings: { [key: string]: unknown }
-): void {
+function setSettings(extensionId: string, settings: { [key: string]: unknown }): void {
   const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(
-    `Setting settings from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
-  );
+  log.info(`Setting settings from extension ${extensionId} (v=${extension.getMetadata().version})`);
 
   try {
     extension.setSettings(settings);
@@ -373,40 +330,31 @@ export const createExtensionIpcHandlers = (
     await loadExtensions(pluginsDir, extractDir, webviewFn);
     return event.sender.send(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS);
   });
-  ipcMain.handle(
-    ipcChannels.EXTENSION_MANAGER.INSTALL,
-    (_event, name: string, version: string) => {
-      return new Promise<void>((resolve) => {
-        aki.install(name, version, pluginsDir, () => {
-          resolve();
-        });
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.INSTALL, (_event, name: string, version: string) => {
+    return new Promise<void>((resolve) => {
+      aki.install(name, version, pluginsDir, () => {
+        resolve();
       });
-    }
-  );
-  ipcMain.handle(
-    ipcChannels.EXTENSION_MANAGER.UNINSTALL,
-    (_event, name: string) => {
-      return new Promise<void>((resolve) => {
-        aki.uninstall(name, pluginsDir, () => {
-          resolve();
-        });
+    });
+  });
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.UNINSTALL, (_event, name: string) => {
+    return new Promise<void>((resolve) => {
+      aki.uninstall(name, pluginsDir, () => {
+        resolve();
       });
-    }
-  );
+    });
+  });
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.LIST, async () => {
     return aki.list(pluginsDir);
   });
-  ipcMain.handle(
-    ipcChannels.EXTENSION_MANAGER.GET,
-    async (_event, extensionId: string) => {
-      return extensionId in EXTENSION_CLIENTS
-        ? EXTENSION_CLIENTS[extensionId].getMetadata()
-        : undefined;
-    }
-  );
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET, async (_event, extensionId: string) => {
+    return extensionId in EXTENSION_CLIENTS
+      ? EXTENSION_CLIENTS[extensionId].getMetadata()
+      : undefined;
+  });
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET_ALL, () => {
-    return Object.values(EXTENSION_CLIENTS).map(
-      (client: ExtensionClientInterface) => client.getMetadata()
+    return Object.values(EXTENSION_CLIENTS).map((client: ExtensionClientInterface) =>
+      client.getMetadata()
     );
   });
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.CHECK_FOR_UPDATESS, async () => {
@@ -416,11 +364,7 @@ export const createExtensionIpcHandlers = (
     const availableUpdates: {
       [key: string]: { metadata: ExtensionMetadata; newVersion: string };
     } = {};
-    const registryResults: RegistrySearchResults = await aki.search(
-      'extension',
-      'houdoku',
-      100
-    );
+    const registryResults: RegistrySearchResults = await aki.search('extension', 'houdoku', 100);
     registryResults.objects.forEach((registryResult) => {
       const pkg: RegistrySearchPackage = registryResult.package;
       const description = JSON.parse(pkg.description);
@@ -436,33 +380,19 @@ export const createExtensionIpcHandlers = (
       }
     });
 
-    log.debug(
-      `Found ${
-        Object.values(availableUpdates).length
-      } available extension updates`
-    );
+    log.debug(`Found ${Object.values(availableUpdates).length} available extension updates`);
     return availableUpdates;
   });
 
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_SERIES,
-    (
-      _event,
-      extensionId: string,
-      sourceType: SeriesSourceType,
-      seriesId: string
-    ) => {
+    (_event, extensionId: string, sourceType: SeriesSourceType, seriesId: string) => {
       return getSeries(extensionId, sourceType, seriesId);
     }
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_CHAPTERS,
-    (
-      _event,
-      extensionId: string,
-      sourceType: SeriesSourceType,
-      seriesId: string
-    ) => {
+    (_event, extensionId: string, sourceType: SeriesSourceType, seriesId: string) => {
       return getChapters(extensionId, sourceType, seriesId);
     }
   );
@@ -475,12 +405,7 @@ export const createExtensionIpcHandlers = (
       seriesSourceId: string,
       chapterSourceId: string
     ) => {
-      return getPageRequesterData(
-        extensionId,
-        sourceType,
-        seriesSourceId,
-        chapterSourceId
-      );
+      return getPageRequesterData(extensionId, sourceType, seriesSourceId, chapterSourceId);
     }
   );
   ipcMain.handle(
@@ -501,24 +426,15 @@ export const createExtensionIpcHandlers = (
       return search(extensionId, text, page);
     }
   );
-  ipcMain.handle(
-    ipcChannels.EXTENSION.DIRECTORY,
-    (_event, extensionId: string, page: number) => {
-      return directory(extensionId, page);
-    }
-  );
-  ipcMain.handle(
-    ipcChannels.EXTENSION.GET_SETTING_TYPES,
-    (_event, extensionId: string) => {
-      return getSettingTypes(extensionId);
-    }
-  );
-  ipcMain.handle(
-    ipcChannels.EXTENSION.GET_SETTINGS,
-    (_event, extensionId: string) => {
-      return getSettings(extensionId);
-    }
-  );
+  ipcMain.handle(ipcChannels.EXTENSION.DIRECTORY, (_event, extensionId: string, page: number) => {
+    return directory(extensionId, page);
+  });
+  ipcMain.handle(ipcChannels.EXTENSION.GET_SETTING_TYPES, (_event, extensionId: string) => {
+    return getSettingTypes(extensionId);
+  });
+  ipcMain.handle(ipcChannels.EXTENSION.GET_SETTINGS, (_event, extensionId: string) => {
+    return getSettings(extensionId);
+  });
   ipcMain.handle(
     ipcChannels.EXTENSION.SET_SETTINGS,
     (_event, extensionId: string, settings: { [key: string]: unknown }) => {

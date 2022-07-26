@@ -27,9 +27,7 @@ function atomFromSetting<T>(
 ): RecoilState<T> {
   const atomKey = `setting${setting}`;
   const defaultValue: T =
-    storedSettings[setting] === undefined
-      ? DefaultSettings[setting]
-      : storedSettings[setting];
+    storedSettings[setting] === undefined ? DefaultSettings[setting] : storedSettings[setting];
   const effects: AtomEffect<T>[] = [
     ({ onSet }) => {
       onSet((value) => {

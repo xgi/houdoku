@@ -14,10 +14,7 @@ const IntegrationSettings: React.FC<Props> = (props: Props) => {
     discordPresenceEnabledState
   );
 
-  const updateIntegrationSetting = (
-    integrationSetting: IntegrationSetting,
-    value: any
-  ) => {
+  const updateIntegrationSetting = (integrationSetting: IntegrationSetting, value: any) => {
     switch (integrationSetting) {
       case IntegrationSetting.DiscordPresenceEnabled:
         setDiscordPresenceEnabled(value);
@@ -35,10 +32,7 @@ const IntegrationSettings: React.FC<Props> = (props: Props) => {
           <Switch
             checked={discordPresenceEnabled}
             onChange={(checked: boolean) =>
-              updateIntegrationSetting(
-                IntegrationSetting.DiscordPresenceEnabled,
-                checked
-              )
+              updateIntegrationSetting(IntegrationSetting.DiscordPresenceEnabled, checked)
             }
           />
         </Col>
@@ -46,9 +40,8 @@ const IntegrationSettings: React.FC<Props> = (props: Props) => {
       <Row className={styles.row}>
         <Col span={20}>
           <Paragraph>
-            To use Discord Rich Presence, make sure &quot;Display current
-            activity as a status message&quot; is enabled in your Discord
-            settings (under the Activity Status tab).
+            To use Discord Rich Presence, make sure &quot;Display current activity as a status
+            message&quot; is enabled in your Discord settings (under the Activity Status tab).
           </Paragraph>
         </Col>
       </Row>

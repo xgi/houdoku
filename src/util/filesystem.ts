@@ -40,9 +40,7 @@ export function walk(directory: string): string[] {
 export async function getThumbnailPath(series: Series): Promise<string | null> {
   if (series.remoteCoverUrl === '') return null;
 
-  const thumbnailsDir = await ipcRenderer.invoke(
-    ipcChannels.GET_PATH.THUMBNAILS_DIR
-  );
+  const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
   if (!fs.existsSync(thumbnailsDir)) {
     fs.mkdirSync(thumbnailsDir);
   }
@@ -65,9 +63,7 @@ export function getChapterDownloaded(
   downloadsDir: string
 ): boolean {
   const chapterPath = getChapterDownloadPath(series, chapter, downloadsDir);
-  return fs.existsSync(chapterPath)
-    ? fs.readdirSync(chapterPath).length > 0
-    : false;
+  return fs.existsSync(chapterPath) ? fs.readdirSync(chapterPath).length > 0 : false;
 }
 
 export function getAllDownloadedChapterPaths(downloadsDir: string): string[] {
@@ -95,25 +91,16 @@ export async function deleteDownloadedChapter(
   chapter: Chapter,
   downloadsDir: string
 ): Promise<void> {
-  log.debug(
-    `Deleting from disk chapter ${chapter.id} from series ${series.id}`
-  );
+  log.debug(`Deleting from disk chapter ${chapter.id} from series ${series.id}`);
   if (series.id === undefined || chapter.id === undefined)
     return new Promise((resolve) => resolve());
 
-  const chapterDownloadPath = getChapterDownloadPath(
-    series,
-    chapter,
-    downloadsDir
-  );
+  const chapterDownloadPath = getChapterDownloadPath(series, chapter, downloadsDir);
   if (fs.existsSync(chapterDownloadPath)) {
     return new Promise((resolve) =>
       rimraf(chapterDownloadPath, () => {
         const seriesDir = path.dirname(chapterDownloadPath);
-        if (
-          fs.existsSync(seriesDir) &&
-          fs.readdirSync(seriesDir).length === 0
-        ) {
+        if (fs.existsSync(seriesDir) && fs.readdirSync(seriesDir).length === 0) {
           fs.rmdirSync(seriesDir);
         }
         resolve();
@@ -148,9 +135,7 @@ export async function deleteAllDownloadedChapters(
  * @param series the series to delete the thumbnail for
  */
 export async function deleteThumbnail(series: Series) {
-  const thumbnailsDir = await ipcRenderer.invoke(
-    ipcChannels.GET_PATH.THUMBNAILS_DIR
-  );
+  const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
   if (!fs.existsSync(thumbnailsDir)) return;
 
   const files = fs.readdirSync(thumbnailsDir);

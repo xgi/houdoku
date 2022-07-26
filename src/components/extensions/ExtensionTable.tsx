@@ -3,16 +3,9 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Table, Button } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
-import {
-  RegistrySearchResults,
-  RegistrySearchPackage,
-} from 'aki-plugin-manager';
+import { RegistrySearchResults, RegistrySearchPackage } from 'aki-plugin-manager';
 import { gt } from 'semver';
-import {
-  ExtensionMetadata,
-  LanguageKey,
-  Languages,
-} from 'houdoku-extension-lib';
+import { ExtensionMetadata, LanguageKey, Languages } from 'houdoku-extension-lib';
 import { useSetRecoilState } from 'recoil';
 import { ExtensionTableRow } from '../../models/types';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -61,8 +54,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
           }
 
           const languageKey =
-            !('translatedLanguage' in description) ||
-            description.translatedLanguage === ''
+            !('translatedLanguage' in description) || description.translatedLanguage === ''
               ? undefined
               : description.translatedLanguage;
 
@@ -88,9 +80,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
         .filter((row: ExtensionTableRow) => {
           if (props.filterText === '') return true;
           return (
-            row.friendlyName
-              .toLowerCase()
-              .includes(props.filterText.toLowerCase()) ||
+            row.friendlyName.toLowerCase().includes(props.filterText.toLowerCase()) ||
             row.url.toLowerCase().includes(props.filterText.toLowerCase())
           );
         })
@@ -111,11 +101,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
     setExtensionLanguageKeys(newExtensionLanguageKeys);
   };
 
-  const handleInstall = (
-    pkgName: string,
-    friendlyName: string,
-    version: string
-  ) => {
+  const handleInstall = (pkgName: string, friendlyName: string, version: string) => {
     setStatusText(`Installing extension ${friendlyName}@${version} ...`);
 
     ipcRenderer
@@ -124,9 +110,8 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.LIST))
       .then((extensionDetailsList: [string, string][]) => {
         return (
-          extensionDetailsList.find(
-            (_details: [string, string]) => _details[0] === pkgName
-          ) !== undefined
+          extensionDetailsList.find((_details: [string, string]) => _details[0] === pkgName) !==
+          undefined
         );
       })
       .then((loaded: boolean) => {
@@ -150,9 +135,8 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.LIST))
       .then((extensionDetailsList: [string, string][]) => {
         return (
-          extensionDetailsList.find(
-            (_details: [string, string]) => _details[0] === pkgName
-          ) !== undefined
+          extensionDetailsList.find((_details: [string, string]) => _details[0] === pkgName) !==
+          undefined
         );
       })
       .then((loaded: boolean) => {
@@ -178,14 +162,12 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
       dataIndex: 'language',
       key: 'language',
       width: '5%',
-      filters: Object.entries(extensionLanguageKeys).map(
-        ([languageKey, count]) => {
-          return {
-            text: `${Languages[languageKey].name} [${count}]`,
-            value: languageKey,
-          };
-        }
-      ),
+      filters: Object.entries(extensionLanguageKeys).map(([languageKey, count]) => {
+        return {
+          text: `${Languages[languageKey].name} [${count}]`,
+          value: languageKey,
+        };
+      }),
       filteredValue: undefined,
       onFilter: (value: string | number | boolean, record: ExtensionTableRow) =>
         value === undefined || record.languageKey === value,
@@ -264,11 +246,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
           return (
             <Button
               onClick={() =>
-                handleInstall(
-                  record.pkgName,
-                  record.friendlyName,
-                  record.availableVersion
-                )
+                handleInstall(record.pkgName, record.friendlyName, record.availableVersion)
               }
             >
               Install
@@ -279,11 +257,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
           <Button
             type="primary"
             onClick={() =>
-              handleInstall(
-                record.pkgName,
-                record.friendlyName,
-                record.availableVersion
-              )
+              handleInstall(record.pkgName, record.friendlyName, record.availableVersion)
             }
           >
             Update
@@ -304,11 +278,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
         ) : (
           <Button
             shape="circle"
-            icon={
-              <SettingOutlined
-                onClick={() => props.showExtensionSettingsModal(record.id)}
-              />
-            }
+            icon={<SettingOutlined onClick={() => props.showExtensionSettingsModal(record.id)} />}
           />
         );
       },

@@ -26,27 +26,19 @@ const languageOptions = Object.values(Languages)
     </Option>
   ));
 
-const defaultDownloadsDir = await ipcRenderer.invoke(
-  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
-);
+const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
 const GeneralSettings: React.FC<Props> = (props: Props) => {
-  const [chapterLanguages, setChapterLanguages] = useRecoilState(
-    chapterLanguagesState
+  const [chapterLanguages, setChapterLanguages] = useRecoilState(chapterLanguagesState);
+  const [refreshOnStart, setRefreshOnStart] = useRecoilState(refreshOnStartState);
+  const [autoCheckForUpdates, setAutoCheckForUpdates] = useRecoilState(autoCheckForUpdatesState);
+  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(
+    autoCheckForExtensionUpdatesState
   );
-  const [refreshOnStart, setRefreshOnStart] =
-    useRecoilState(refreshOnStartState);
-  const [autoCheckForUpdates, setAutoCheckForUpdates] = useRecoilState(
-    autoCheckForUpdatesState
-  );
-  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] =
-    useRecoilState(autoCheckForExtensionUpdatesState);
-  const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(
-    customDownloadsDirState
-  );
+  const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(customDownloadsDirState);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
@@ -82,9 +74,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
             style={{ width: '100%' }}
             placeholder="Select languages..."
             defaultValue={chapterLanguages}
-            onChange={(value) =>
-              updateGeneralSetting(GeneralSetting.ChapterLanguages, value)
-            }
+            onChange={(value) => updateGeneralSetting(GeneralSetting.ChapterLanguages, value)}
           >
             {languageOptions}
           </Select>
@@ -118,10 +108,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
           <Switch
             checked={autoCheckForExtensionUpdates}
             onChange={(checked: boolean) =>
-              updateGeneralSetting(
-                GeneralSetting.AutoCheckForExtensionUpdates,
-                checked
-              )
+              updateGeneralSetting(GeneralSetting.AutoCheckForExtensionUpdates, checked)
             }
           />
         </Col>
@@ -151,10 +138,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
                     .then((fileList: string) => {
                       // eslint-disable-next-line promise/always-return
                       if (fileList.length > 0) {
-                        updateGeneralSetting(
-                          GeneralSetting.CustomDownloadsDir,
-                          fileList[0]
-                        );
+                        updateGeneralSetting(GeneralSetting.CustomDownloadsDir, fileList[0]);
                       }
                     })
                 }
@@ -163,9 +147,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
             <Tooltip title="Reset">
               <Button
                 icon={<UndoOutlined />}
-                onClick={() =>
-                  updateGeneralSetting(GeneralSetting.CustomDownloadsDir, '')
-                }
+                onClick={() => updateGeneralSetting(GeneralSetting.CustomDownloadsDir, '')}
               />
             </Tooltip>
           </div>
@@ -201,10 +183,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
                   .then((fileList: string) => {
                     // eslint-disable-next-line promise/always-return
                     if (fileList.length > 0) {
-                      return ipcRenderer.invoke(
-                        ipcChannels.APP.READ_ENTIRE_FILE,
-                        fileList[0]
-                      );
+                      return ipcRenderer.invoke(ipcChannels.APP.READ_ENTIRE_FILE, fileList[0]);
                     }
                     return false;
                   })

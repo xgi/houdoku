@@ -2,11 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './ReaderViewer.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
-import {
-  lastPageNumberState,
-  pageDataListState,
-  pageNumberState,
-} from '../../state/readerStates';
+import { lastPageNumberState, pageDataListState, pageNumberState } from '../../state/readerStates';
 import {
   fitContainToWidthState,
   fitContainToHeightState,
@@ -78,11 +74,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       ${isRight ? styles.right : ''}
       ${fitContainToWidth ? styles.containWidth : ''}
       ${fitContainToHeight ? styles.containHeight : ''}
-      ${
-        fitStretch && (fitContainToWidth || fitContainToHeight)
-          ? styles.grow
-          : ''
-      }
+      ${fitStretch && (fitContainToWidth || fitContainToHeight) ? styles.grow : ''}
     `}
       />
     );
@@ -96,9 +88,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const getSinglePageContainer = () => {
     let pageImages = [];
     for (let i = 1; i <= lastPageNumber; i += 1) {
-      const showing =
-        i === pageNumber ||
-        (pageStyle === PageStyle.Double && i === pageNumber + 1);
+      const showing = i === pageNumber || (pageStyle === PageStyle.Double && i === pageNumber + 1);
       pageImages.push(getPageImage(i, showing));
     }
 
@@ -114,11 +104,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
             ${styles.page}
             ${fitContainToWidth ? styles.containWidth : ''}
             ${fitContainToHeight ? styles.containHeight : ''}
-            ${
-              fitStretch && (fitContainToWidth || fitContainToHeight)
-                ? styles.grow
-                : ''
-            }
+            ${fitStretch && (fitContainToWidth || fitContainToHeight) ? styles.grow : ''}
           `}
       >
         {pageImages}
@@ -145,11 +131,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
             ${styles.page}
             ${fitContainToWidth ? styles.containWidth : ''}
             ${fitContainToHeight ? styles.containHeight : ''}
-            ${
-              fitStretch && (fitContainToWidth || fitContainToHeight)
-                ? styles.grow
-                : ''
-            }
+            ${fitStretch && (fitContainToWidth || fitContainToHeight) ? styles.grow : ''}
           `}
         >
           {getPageImage(i, true)}
@@ -184,15 +166,10 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
                   parseInt(getComputedStyle(readerPage).marginTop, 10);
               childNum += 1
             ) {
-              imageHeightSum +=
-                viewerContainer.current.children[childNum].clientHeight;
+              imageHeightSum += viewerContainer.current.children[childNum].clientHeight;
             }
 
-            if (
-              pageNumber !== childNum &&
-              childNum <= lastPageNumber &&
-              childNum > 0
-            ) {
+            if (pageNumber !== childNum && childNum <= lastPageNumber && childNum > 0) {
               setSkipChangePageNumEffect(true);
               setPageNumber(childNum);
             }
@@ -226,10 +203,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           const root = document.getElementById(ROOT_ID);
           const readerPage = root?.firstElementChild;
           if (root && readerPage && pageNumber < lastPageNumber) {
-            root.scrollTop -= parseInt(
-              getComputedStyle(readerPage).marginTop,
-              10
-            );
+            root.scrollTop -= parseInt(getComputedStyle(readerPage).marginTop, 10);
           }
         }
       }
@@ -250,9 +224,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           ${hideScrollbar ? styles.noScrollbar : ''}`}
         onClick={(e) => viewerContainerClickHandler(e)}
       >
-        {pageStyle === PageStyle.LongStrip
-          ? getSeparatePageContainers()
-          : getSinglePageContainer()}
+        {pageStyle === PageStyle.LongStrip ? getSeparatePageContainers() : getSinglePageContainer()}
       </div>
     </>
   );

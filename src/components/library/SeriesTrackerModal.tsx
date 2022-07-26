@@ -1,23 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  Col,
-  Dropdown,
-  InputNumber,
-  List,
-  Menu,
-  Modal,
-  Row,
-  Spin,
-  Tabs,
-} from 'antd';
-import {
-  DownOutlined,
-  CheckOutlined,
-  ArrowRightOutlined,
-} from '@ant-design/icons';
+import { Button, Col, Dropdown, InputNumber, List, Menu, Modal, Row, Spin, Tabs } from 'antd';
+import { DownOutlined, CheckOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
@@ -74,9 +59,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     setLoading(true);
 
     const _getUsername = (trackerId: string): Promise<string | null> =>
-      ipcRenderer
-        .invoke(ipcChannels.TRACKER.GET_USERNAME, trackerId)
-        .catch((e) => log.error(e));
+      ipcRenderer.invoke(ipcChannels.TRACKER.GET_USERNAME, trackerId).catch((e) => log.error(e));
     const _getTrackEntry = (trackerId: string, trackerKey: string) =>
       ipcRenderer
         .invoke(ipcChannels.TRACKER.GET_LIBRARY_ENTRY, trackerId, trackerKey)
@@ -95,15 +78,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
         const username = await _getUsername(trackerMetadata.id);
         _usernames[trackerMetadata.id] = username;
 
-        if (
-          props.series.trackerKeys &&
-          props.series.trackerKeys[trackerMetadata.id]
-        ) {
+        if (props.series.trackerKeys && props.series.trackerKeys[trackerMetadata.id]) {
           const trackerKey = props.series.trackerKeys[trackerMetadata.id];
-          const sourceTrackEntry = await _getTrackEntry(
-            trackerMetadata.id,
-            trackerKey
-          );
+          const sourceTrackEntry = await _getTrackEntry(trackerMetadata.id, trackerKey);
 
           _trackEntries[trackerMetadata.id] =
             sourceTrackEntry === null
@@ -160,26 +137,12 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
             <List.Item
               key={item.id}
               extra={
-                <Button
-                  onClick={() => applySeriesTrackerKey(trackerId, item.id)}
-                >
-                  Link
-                </Button>
+                <Button onClick={() => applySeriesTrackerKey(trackerId, item.id)}>Link</Button>
               }
             >
               <List.Item.Meta
-                avatar={
-                  <img
-                    className={styles.coverImg}
-                    src={item.coverUrl}
-                    alt="cover"
-                  />
-                }
-                title={
-                  <Paragraph className={styles.listItemTitle}>
-                    {item.title}
-                  </Paragraph>
-                }
+                avatar={<img className={styles.coverImg} src={item.coverUrl} alt="cover" />}
+                title={<Paragraph className={styles.listItemTitle}>{item.title}</Paragraph>}
                 description={
                   <Paragraph className={styles.listItemDescription}>
                     {item.description.substr(0, 80)}...
@@ -195,8 +158,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
   const renderTrackEntry = (trackerMetadata: TrackerMetadata) => {
     const trackEntry = trackEntries[trackerMetadata.id];
-    if (trackEntry === undefined)
-      return <Paragraph>Failed to define tracker entry.</Paragraph>;
+    if (trackEntry === undefined) return <Paragraph>Failed to define tracker entry.</Paragraph>;
 
     return (
       <>
@@ -240,10 +202,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
             <Button
               type="primary"
               onClick={() =>
-                window.open(
-                  `${trackerMetadata.url}/manga/${trackEntry.seriesId}`,
-                  '_blank'
-                )
+                window.open(`${trackerMetadata.url}/manga/${trackEntry.seriesId}`, '_blank')
               }
             >
               {trackerMetadata.name} <ArrowRightOutlined rotate={-45} />
@@ -286,19 +245,18 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
                     });
                   }}
                 >
-                  {SCORE_FORMAT_OPTIONS[
-                    trackEntry.scoreFormat || TrackScoreFormat.POINT_10
-                  ].map((value: number) => (
-                    <Menu.Item key={value} data-value={value}>
-                      {value}
-                    </Menu.Item>
-                  ))}
+                  {SCORE_FORMAT_OPTIONS[trackEntry.scoreFormat || TrackScoreFormat.POINT_10].map(
+                    (value: number) => (
+                      <Menu.Item key={value} data-value={value}>
+                        {value}
+                      </Menu.Item>
+                    )
+                  )}
                 </Menu>
               }
             >
               <Button>
-                {trackEntry.score === undefined ? '-' : trackEntry.score}{' '}
-                <DownOutlined />
+                {trackEntry.score === undefined ? '-' : trackEntry.score} <DownOutlined />
               </Button>
             </Dropdown>
           </Col>
@@ -329,14 +287,13 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
       return (
         <Paragraph>
-          In order to track this series, please link your {trackerMetadata.name}{' '}
-          account through the Settings tab on the left.
+          In order to track this series, please link your {trackerMetadata.name} account through the
+          Settings tab on the left.
         </Paragraph>
       );
     }
 
-    return props.series.trackerKeys &&
-      props.series.trackerKeys[trackerMetadata.id]
+    return props.series.trackerKeys && props.series.trackerKeys[trackerMetadata.id]
       ? renderTrackEntry(trackerMetadata)
       : renderTrackerSeriesList(trackerMetadata.id);
   };
@@ -359,12 +316,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   }, [props.series, props.visible]);
 
   return (
-    <Modal
-      title="Trackers"
-      visible={props.visible}
-      footer={null}
-      onCancel={props.toggleVisible}
-    >
+    <Modal title="Trackers" visible={props.visible} footer={null} onCancel={props.toggleVisible}>
       <Tabs tabPosition="top" className={styles.tabs}>
         {TRACKER_METADATAS.map((trackerMetadata) => (
           <TabPane tab={trackerMetadata.name} key={trackerMetadata.id}>

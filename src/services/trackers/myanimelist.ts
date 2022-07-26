@@ -143,8 +143,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
   };
 
   getAuthUrl: GetAuthUrlFunc = () => {
-    const pkceCode: { code_challenge: string; code_verifier: string } =
-      pkceChallenge();
+    const pkceCode: { code_challenge: string; code_verifier: string } = pkceChallenge();
     this.latestPkceCode = pkceCode;
     return `${OAUTH_BASE_URL}/authorize?client_id=${CLIENT_ID}&code_challenge=${pkceCode.code_challenge}&response_type=code`;
   };
@@ -277,9 +276,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
     return this.updateLibraryEntry(trackEntry);
   };
 
-  updateLibraryEntry: UpdateLibraryEntryFunc = async (
-    trackEntry: TrackEntry
-  ) => {
+  updateLibraryEntry: UpdateLibraryEntryFunc = async (trackEntry: TrackEntry) => {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
     if (this.userId === '') await this.getUsername();
@@ -287,9 +284,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
 
     const formContents = {
       num_chapters_read: trackEntry.progress,
-      status: Object.keys(STATUS_MAP).find(
-        (key: string) => STATUS_MAP[key] === trackEntry.status
-      ),
+      status: Object.keys(STATUS_MAP).find((key: string) => STATUS_MAP[key] === trackEntry.status),
       score: trackEntry.score,
     };
 

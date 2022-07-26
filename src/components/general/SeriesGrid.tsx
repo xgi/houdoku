@@ -12,9 +12,7 @@ import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
 import constants from '../../constants/constants.json';
 
-const thumbnailsDir = await ipcRenderer.invoke(
-  ipcChannels.GET_PATH.THUMBNAILS_DIR
-);
+const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
   fs.mkdirSync(thumbnailsDir);
 }
@@ -45,10 +43,7 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
     if (series.id !== undefined) {
       const fileExtensions = constants.IMAGE_EXTENSIONS;
       for (let i = 0; i < fileExtensions.length; i += 1) {
-        const thumbnailPath = path.join(
-          thumbnailsDir,
-          `${series.id}.${fileExtensions[i]}`
-        );
+        const thumbnailPath = path.join(thumbnailsDir, `${series.id}.${fileExtensions[i]}`);
         if (fs.existsSync(thumbnailPath)) return thumbnailPath;
       }
       return blankCover;
@@ -72,16 +67,10 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
       if (props.filterStatus !== null && series.status !== props.filterStatus) {
         return false;
       }
-      if (
-        props.filterProgress === ProgressFilter.Unread &&
-        series.numberUnread === 0
-      ) {
+      if (props.filterProgress === ProgressFilter.Unread && series.numberUnread === 0) {
         return false;
       }
-      if (
-        props.filterProgress === ProgressFilter.Finished &&
-        series.numberUnread > 0
-      ) {
+      if (props.filterProgress === ProgressFilter.Finished && series.numberUnread > 0) {
         return false;
       }
 
@@ -90,21 +79,13 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
 
     switch (props.librarySort) {
       case LibrarySort.UnreadAsc:
-        return filteredList.sort(
-          (a: Series, b: Series) => a.numberUnread - b.numberUnread
-        );
+        return filteredList.sort((a: Series, b: Series) => a.numberUnread - b.numberUnread);
       case LibrarySort.UnreadDesc:
-        return filteredList.sort(
-          (a: Series, b: Series) => b.numberUnread - a.numberUnread
-        );
+        return filteredList.sort((a: Series, b: Series) => b.numberUnread - a.numberUnread);
       case LibrarySort.TitleAsc:
-        return filteredList.sort((a: Series, b: Series) =>
-          a.title.localeCompare(b.title)
-        );
+        return filteredList.sort((a: Series, b: Series) => a.title.localeCompare(b.title));
       case LibrarySort.TitleDesc:
-        return filteredList.sort((a: Series, b: Series) =>
-          b.title.localeCompare(a.title)
-        );
+        return filteredList.sort((a: Series, b: Series) => b.title.localeCompare(a.title));
       default:
         return filteredList;
     }
@@ -149,9 +130,7 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
       {getFilteredList(props.seriesList).map((series: Series) => {
         const coverSource = getImageSource(series).replaceAll('\\', '/');
         const inLibrary: boolean | undefined =
-          props.inLibraryFunc === undefined
-            ? undefined
-            : props.inLibraryFunc(series);
+          props.inLibraryFunc === undefined ? undefined : props.inLibraryFunc(series);
 
         return (
           <Col span={24 / props.columns} key={`${series.id}-${series.title}`}>

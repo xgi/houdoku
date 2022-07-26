@@ -28,6 +28,13 @@ module.exports = {
     'import/no-import-module-exports': 'off',
     'no-param-reassign': ['error', { props: false }],
 
+    'prettier/prettier': [
+      'error',
+      {
+        printWidth: 100,
+      },
+    ],
+
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
     'react/destructuring-assignment': 'off',

@@ -1,11 +1,7 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/display-name */
 import React from 'react';
-import {
-  CaretRightOutlined,
-  CheckOutlined,
-  DownloadOutlined,
-} from '@ant-design/icons';
+import { CaretRightOutlined, CheckOutlined, DownloadOutlined } from '@ant-design/icons';
 import { Chapter, Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useHistory } from 'react-router-dom';
@@ -18,9 +14,7 @@ import ipcChannels from '../../constants/ipcChannels.json';
 import { chapterListState, seriesState } from '../../state/libraryStates';
 import { customDownloadsDirState } from '../../state/settingStates';
 
-const defaultDownloadsDir = await ipcRenderer.invoke(
-  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
-);
+const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 const WIDTH = 150;
 const HEIGHT = 180;
@@ -46,8 +40,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     return props.chapterList.filter((chapter: Chapter) => {
       return (
         props.chapter !== undefined &&
-        parseFloat(chapter.chapterNumber) <
-          parseFloat(props.chapter.chapterNumber)
+        parseFloat(chapter.chapterNumber) < parseFloat(props.chapter.chapterNumber)
       );
     });
   };
@@ -113,16 +106,10 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
       <button className={styles.button} onClick={() => handleToggleRead()}>
         <CheckOutlined /> Toggle read
       </button>
-      <button
-        className={styles.button}
-        onClick={() => handleMarkPrevious(true)}
-      >
+      <button className={styles.button} onClick={() => handleMarkPrevious(true)}>
         Mark previous read
       </button>
-      <button
-        className={styles.button}
-        onClick={() => handleMarkPrevious(false)}
-      >
+      <button className={styles.button} onClick={() => handleMarkPrevious(false)}>
         Mark previous unread
       </button>
       <hr className={styles.divider} />

@@ -22,10 +22,7 @@ import {
   queueState,
   runningState,
 } from './state/downloaderStates';
-import {
-  autoCheckForExtensionUpdatesState,
-  autoCheckForUpdatesState,
-} from './state/settingStates';
+import { autoCheckForExtensionUpdatesState, autoCheckForUpdatesState } from './state/settingStates';
 
 const loadStoredExtensionSettings = () => {
   log.info('Loading stored extension settings...');
@@ -65,11 +62,7 @@ const loadStoredTrackerTokens = () => {
           );
           if (token !== null) {
             log.debug(`Found stored token for tracker ${metadata.id}`);
-            ipcRenderer.invoke(
-              ipcChannels.TRACKER.SET_ACCESS_TOKEN,
-              metadata.id,
-              token
-            );
+            ipcRenderer.invoke(ipcChannels.TRACKER.SET_ACCESS_TOKEN, metadata.id, token);
           }
         });
       })
@@ -101,9 +94,7 @@ export default function App() {
   const setCurrentTask = useSetRecoilState(currentTaskState);
   const setDownloadErrors = useSetRecoilState(downloadErrorsState);
   const autoCheckForUpdates = useRecoilValue(autoCheckForUpdatesState);
-  const autoCheckForExtensionUpdates = useRecoilValue(
-    autoCheckForExtensionUpdatesState
-  );
+  const autoCheckForExtensionUpdates = useRecoilValue(autoCheckForExtensionUpdatesState);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -153,18 +144,13 @@ export default function App() {
             }) => {
               // eslint-disable-next-line promise/always-return
               if (Object.values(updates).length > 0) {
-                ipcRenderer.invoke(
-                  ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG,
-                  updates
-                );
+                ipcRenderer.invoke(ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG, updates);
               }
             }
           )
           .catch((err: Error) => log.error(err));
       } else {
-        log.debug(
-          'Skipping extension update check, autoCheckForExtensionUpdates is disabled'
-        );
+        log.debug('Skipping extension update check, autoCheckForExtensionUpdates is disabled');
       }
 
       loadSeriesList(setSeriesList);
@@ -180,11 +166,7 @@ export default function App() {
   return (
     <Router>
       <Switch>
-        <Route
-          path={`${routes.READER}/:series_id/:chapter_id`}
-          exact
-          component={ReaderPage}
-        />
+        <Route path={`${routes.READER}/:series_id/:chapter_id`} exact component={ReaderPage} />
         <Route path={routes.SERIES} component={DashboardPage} />
         <Route path={routes.SEARCH} component={DashboardPage} />
         <Route path={routes.SETTINGS} component={DashboardPage} />

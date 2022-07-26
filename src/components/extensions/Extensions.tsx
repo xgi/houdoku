@@ -60,15 +60,10 @@ const Extensions: React.FC<Props> = (props: Props) => {
         Extensions
       </Title>
       <Row className={styles.row}>
-        <Button
-          className={styles.reloadButton}
-          onClick={() => doSearchRegistry()}
-        >
+        <Button className={styles.reloadButton} onClick={() => doSearchRegistry()}>
           Refresh Extension List
         </Button>
-        <Button onClick={() => setShowingInstalledModal(true)}>
-          View Installed Extensions
-        </Button>
+        <Button onClick={() => setShowingInstalledModal(true)}>View Installed Extensions</Button>
         <div className={styles.spacer} />
         <Input
           className={styles.filterInput}
@@ -87,9 +82,7 @@ const Extensions: React.FC<Props> = (props: Props) => {
         <ExtensionTable
           registryResults={searchResults}
           filterText={filterText}
-          showExtensionSettingsModal={(extensionId: string) =>
-            showSettingsModal(extensionId)
-          }
+          showExtensionSettingsModal={(extensionId: string) => showSettingsModal(extensionId)}
         />
       )}
     </>

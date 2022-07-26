@@ -25,19 +25,14 @@ import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import log from 'electron-log';
 import { ExtensionMetadata, WebviewFunc } from 'houdoku-extension-lib';
 import { walk } from './util/filesystem';
-import {
-  createExtensionIpcHandlers,
-  loadExtensions,
-} from './services/extension';
+import { createExtensionIpcHandlers, loadExtensions } from './services/extension';
 import { loadInWebView } from './util/webview';
 import ipcChannels from './constants/ipcChannels.json';
 import packageJson from '../package.json';
 import { createTrackerIpcHandlers } from './services/tracker';
 import { createDiscordIpcHandlers } from './services/discord';
 
-log.info(
-  `Starting Houdoku main process (client version ${packageJson.version})`
-);
+log.info(`Starting Houdoku main process (client version ${packageJson.version})`);
 
 const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
 const pluginsDir = path.join(app.getPath('userData'), 'plugins');
@@ -53,10 +48,7 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install();
 }
 
-if (
-  process.env.NODE_ENV === 'development' ||
-  process.env.DEBUG_PROD === 'true'
-) {
+if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')();
 }
 
@@ -71,10 +63,7 @@ const installExtensions = async () => {
 };
 
 const createWindows = async () => {
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
+  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     await installExtensions();
   }
 
@@ -196,10 +185,7 @@ ipcMain.handle(ipcChannels.GET_ALL_FILES, (_event, rootPath: string) => {
 
 ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
   log.debug('Handling check for updates request...');
-  if (
-    process.env.NODE_ENV === 'development' ||
-    process.env.DEBUG_PROD === 'true'
-  ) {
+  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     log.info('Skipping update check because we are in dev environment');
     return;
   }
@@ -216,11 +202,9 @@ ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
     log.debug(`Downloading update: ${progress.transferred}/${progress.total}`);
     event.sender.send(
       ipcChannels.APP.SET_STATUS,
-      `Downloading update: ${round(progress.percent)}% (${round(
-        progress.transferred * MB
-      )}/${round(progress.total * MB)} MB) - ${round(
-        progress.bytesPerSecond * MB
-      )} MB/sec`
+      `Downloading update: ${round(progress.percent)}% (${round(progress.transferred * MB)}/${round(
+        progress.total * MB
+      )} MB) - ${round(progress.bytesPerSecond * MB)} MB/sec`
     );
   });
 
@@ -248,10 +232,7 @@ ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
 
   autoUpdater.on('error', (err: Error) => {
     log.error(`Updater encountered error: ${err}`);
-    event.sender.send(
-      ipcChannels.APP.SET_STATUS,
-      `Error while updating: ${err}`
-    );
+    event.sender.send(ipcChannels.APP.SET_STATUS, `Error while updating: ${err}`);
   });
 
   autoUpdater
@@ -300,9 +281,7 @@ ipcMain.handle(
     filters: { name: string; extensions: string[] }[] = [],
     title: string
   ) => {
-    log.info(
-      `Showing open dialog directory=${directory} filters=${filters.join(';')}`
-    );
+    log.info(`Showing open dialog directory=${directory} filters=${filters.join(';')}`);
 
     if (mainWindow === null) {
       log.error('Aborting open dialog, mainWindow is null');
@@ -341,8 +320,7 @@ ipcMain.handle(
 
     const updatesStr = Object.values(updates)
       .map(
-        (update) =>
-          `- ${update.metadata.name} (${update.metadata.version}→${update.newVersion})`
+        (update) => `- ${update.metadata.name} (${update.metadata.version}→${update.newVersion})`
       )
       .join('\n');
 
@@ -356,8 +334,7 @@ ipcMain.handle(
 );
 
 // create ipc handlers for specific extension functionality
-const webviewFn: WebviewFunc = (url, options) =>
-  loadInWebView(spoofWindow, url, options);
+const webviewFn: WebviewFunc = (url, options) => loadInWebView(spoofWindow, url, options);
 createExtensionIpcHandlers(ipcMain, pluginsDir, extractDir, webviewFn);
 loadExtensions(pluginsDir, extractDir, webviewFn);
 

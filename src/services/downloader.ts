@@ -71,8 +71,7 @@ class DownloaderClient {
 
   setDownloadErrors = (downloadErrors: DownloadError[]) => {
     this.downloadErrors = downloadErrors;
-    if (this.setDownloadErrorsState)
-      this.setDownloadErrorsState(downloadErrors);
+    if (this.setDownloadErrorsState) this.setDownloadErrorsState(downloadErrors);
   };
 
   _handleDownloadError = (downloadError: DownloadError) => {
@@ -133,8 +132,7 @@ class DownloaderClient {
 
       if (
         !pageUrls.every(
-          (pageUrl: string) =>
-            pageUrl.startsWith('http://') || pageUrl.startsWith('https://')
+          (pageUrl: string) => pageUrl.startsWith('http://') || pageUrl.startsWith('https://')
         )
       ) {
         this._handleDownloadError({
@@ -145,9 +143,7 @@ class DownloaderClient {
         break;
       }
 
-      log.debug(
-        `Downloading pages for chapter ${task.chapter.id} of series ${task.series.id}`
-      );
+      log.debug(`Downloading pages for chapter ${task.chapter.id} of series ${task.series.id}`);
 
       const startPage = task.page === undefined ? 1 : task.page;
       log.debug(`Starting download at page ${startPage}`);
@@ -156,15 +152,11 @@ class DownloaderClient {
       for (i; i <= pageUrls.length && this.running; i += 1) {
         const pageUrl = pageUrls[i - 1];
         const ext = pageUrl.split('.').pop()?.split('?v')[0];
-        const pageNumPadded = String(i).padStart(
-          pageUrls.length.toString().length,
-          '0'
-        );
+        const pageNumPadded = String(i).padStart(pageUrls.length.toString().length, '0');
         const pagePath = path.join(chapterPath, `${pageNumPadded}.${ext}`);
 
         if (this.setStatusTextState) {
-          const queueStr =
-            this.queue.length > 0 ? ` [+${this.queue.length} in queue]` : '';
+          const queueStr = this.queue.length > 0 ? ` [+${this.queue.length} in queue]` : '';
 
           this.setStatusTextState(
             `Downloading ${task.series.title} chapter ${task.chapter.chapterNumber} (${i}/${pageUrls.length})${queueStr}`

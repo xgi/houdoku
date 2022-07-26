@@ -1,12 +1,7 @@
 import React from 'react';
 import { Button, Col, Dropdown, Input, Menu, Row, Select } from 'antd';
 import { DownOutlined, UploadOutlined } from '@ant-design/icons';
-import {
-  Language,
-  Series,
-  SeriesStatus,
-  Languages,
-} from 'houdoku-extension-lib';
+import { Language, Series, SeriesStatus, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import styles from './SeriesEditControls.css';
 import blankCover from '../../img/blank_cover.png';
@@ -29,11 +24,7 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         <Col span={5}>
           <img
             className={styles.coverImage}
-            src={
-              props.series.remoteCoverUrl === ''
-                ? blankCover
-                : props.series.remoteCoverUrl
-            }
+            src={props.series.remoteCoverUrl === '' ? blankCover : props.series.remoteCoverUrl}
             alt={props.series.title}
           />
         </Col>
@@ -205,8 +196,7 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
             }
           >
             <Button>
-              {Languages[props.series.originalLanguageKey].name}{' '}
-              <DownOutlined />
+              {Languages[props.series.originalLanguageKey].name} <DownOutlined />
             </Button>
           </Dropdown>
         </Col>
@@ -225,22 +215,13 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
                   });
                 }}
               >
-                <Menu.Item
-                  key={SeriesStatus.ONGOING}
-                  data-value={SeriesStatus.ONGOING}
-                >
+                <Menu.Item key={SeriesStatus.ONGOING} data-value={SeriesStatus.ONGOING}>
                   Ongoing
                 </Menu.Item>
-                <Menu.Item
-                  key={SeriesStatus.COMPLETED}
-                  data-value={SeriesStatus.COMPLETED}
-                >
+                <Menu.Item key={SeriesStatus.COMPLETED} data-value={SeriesStatus.COMPLETED}>
                   Completed
                 </Menu.Item>
-                <Menu.Item
-                  key={SeriesStatus.CANCELLED}
-                  data-value={SeriesStatus.CANCELLED}
-                >
+                <Menu.Item key={SeriesStatus.CANCELLED} data-value={SeriesStatus.CANCELLED}>
                   Cancelled
                 </Menu.Item>
               </Menu>

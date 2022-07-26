@@ -40,10 +40,8 @@ const Library: React.FC<Props> = (props: Props) => {
   const goToSeries = async (series: Series) => {
     if (series.id !== undefined) {
       if (
-        (await ipcRenderer.invoke(
-          ipcChannels.EXTENSION_MANAGER.GET,
-          series.extensionId
-        )) === undefined
+        (await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET, series.extensionId)) ===
+        undefined
       ) {
         confirm({
           okType: 'primary',
@@ -57,16 +55,12 @@ const Library: React.FC<Props> = (props: Props) => {
           maskClosable: true,
           content: (
             <>
+              <Paragraph>The extension for this series was not found.</Paragraph>
               <Paragraph>
-                The extension for this series was not found.
+                To access the series, please reinstall the extension. Or, you may remove it from
+                your library now.
               </Paragraph>
-              <Paragraph>
-                To access the series, please reinstall the extension. Or, you
-                may remove it from your library now.
-              </Paragraph>
-              <Paragraph type="secondary">
-                (extension: {series.extensionId})
-              </Paragraph>
+              <Paragraph type="secondary">(extension: {series.extensionId})</Paragraph>
             </>
           ),
         });

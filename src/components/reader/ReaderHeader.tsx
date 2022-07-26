@@ -38,10 +38,7 @@ import {
   pageStyleState,
   readingDirectionState,
 } from '../../state/settingStates';
-import {
-  nextPageStyle,
-  nextReadingDirection,
-} from '../../features/settings/utils';
+import { nextPageStyle, nextReadingDirection } from '../../features/settings/utils';
 
 const { Text } = Typography;
 
@@ -77,23 +74,15 @@ type Props = {
 
 const ReaderHeader: React.FC<Props> = (props: Props) => {
   const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
-  const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(
-    showingSettingsModalState
-  );
+  const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(showingSettingsModalState);
   const lastPageNumber = useRecoilValue(lastPageNumberState);
   const chapter = useRecoilValue(chapterState);
   const relevantChapterList = useRecoilValue(relevantChapterListState);
   const [pageStyle, setPageStyle] = useRecoilState(pageStyleState);
-  const [fitContainToWidth, setFitContainToWidth] = useRecoilState(
-    fitContainToWidthState
-  );
-  const [fitContainToHeight, setFitContainToHeight] = useRecoilState(
-    fitContainToHeightState
-  );
+  const [fitContainToWidth, setFitContainToWidth] = useRecoilState(fitContainToWidthState);
+  const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
   const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
-  const [readingDirection, setReadingDirection] = useRecoilState(
-    readingDirectionState
-  );
+  const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
 
   const getFitButtonContent = (): {
     text: string;
@@ -141,10 +130,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const renderFitButton = () => {
     const fitButtonContent = getFitButtonContent();
     return (
-      <button
-        className={`${styles.button} ${styles.fitButton}`}
-        onClick={fitButtonContent.func}
-      >
+      <button className={`${styles.button} ${styles.fitButton}`} onClick={fitButtonContent.func}>
         {fitButtonContent.icon} {fitButtonContent.text}
       </button>
     );
@@ -153,10 +139,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   return (
     <div className={styles.container}>
       <div className={styles.buttonGroup}>
-        <button
-          className={`${styles.button} ${styles.exitButton}`}
-          onClick={props.exitPage}
-        >
+        <button className={`${styles.button} ${styles.exitButton}`} onClick={props.exitPage}>
           <ArrowLeftOutlined /> Go Back
         </button>
       </div>
@@ -182,10 +165,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
               }}
             >
               {relevantChapterList.map((relevantChapter: Chapter) => (
-                <Menu.Item
-                  key={relevantChapter.id}
-                  data-value={relevantChapter.id}
-                >
+                <Menu.Item key={relevantChapter.id} data-value={relevantChapter.id}>
                   {`Chapter ${relevantChapter.chapterNumber}`}
                 </Menu.Item>
               ))}
@@ -216,10 +196,8 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            (readingDirection === ReadingDirection.LeftToRight &&
-              pageNumber <= 1) ||
-            (readingDirection === ReadingDirection.RightToLeft &&
-              pageNumber >= lastPageNumber)
+            (readingDirection === ReadingDirection.LeftToRight && pageNumber <= 1) ||
+            (readingDirection === ReadingDirection.RightToLeft && pageNumber >= lastPageNumber)
           }
           onClick={() => props.changePage(true, true)}
         >
@@ -246,13 +224,11 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 setPageNumber(e.item.props['data-value']);
               }}
             >
-              {Array.from({ length: lastPageNumber }, (_v, k) => k + 1).map(
-                (i: number) => (
-                  <Menu.Item key={i} data-value={i}>
-                    Page {i}
-                  </Menu.Item>
-                )
-              )}
+              {Array.from({ length: lastPageNumber }, (_v, k) => k + 1).map((i: number) => (
+                <Menu.Item key={i} data-value={i}>
+                  Page {i}
+                </Menu.Item>
+              ))}
             </Menu>
           }
         >
@@ -279,10 +255,8 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            (readingDirection === ReadingDirection.LeftToRight &&
-              pageNumber >= lastPageNumber) ||
-            (readingDirection === ReadingDirection.RightToLeft &&
-              pageNumber <= 1)
+            (readingDirection === ReadingDirection.LeftToRight && pageNumber >= lastPageNumber) ||
+            (readingDirection === ReadingDirection.RightToLeft && pageNumber <= 1)
           }
           onClick={() => props.changePage(false, true)}
         >
@@ -314,12 +288,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.stretchButton}`}
-          onClick={() =>
-            setReadingDirection(nextReadingDirection(readingDirection))
-          }
+          onClick={() => setReadingDirection(nextReadingDirection(readingDirection))}
         >
-          {ICONS_READING_DIRECTION[readingDirection]}{' '}
-          {TEXT_READING_DIRECTION[readingDirection]}
+          {ICONS_READING_DIRECTION[readingDirection]} {TEXT_READING_DIRECTION[readingDirection]}
         </button>
       </div>
 

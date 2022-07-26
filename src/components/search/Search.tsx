@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  Alert,
-  Input,
-  Dropdown,
-  Menu,
-  Modal,
-  Typography,
-  Spin,
-} from 'antd';
+import { Button, Alert, Input, Dropdown, Menu, Modal, Typography, Spin } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
 import {
@@ -56,29 +47,21 @@ const Search: React.FC<Props> = (props: Props) => {
   const [nextSourcePage, setNextSourcePage] = useState(1);
   const [sourceHasMore, setSourceHasMore] = useState(false);
   const seriesList = useRecoilValue(seriesListState);
-  const [searchExtension, setSearchExtension] =
-    useRecoilState(searchExtensionState);
+  const [searchExtension, setSearchExtension] = useRecoilState(searchExtensionState);
   const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
-  const [addModalSeries, setAddModalSeries] =
-    useRecoilState(addModalSeriesState);
-  const [addModalEditable, setAddModalEditable] = useRecoilState(
-    addModalEditableState
-  );
-  const [showingAddModal, setShowingAddModal] =
-    useRecoilState(showingAddModalState);
+  const [addModalSeries, setAddModalSeries] = useRecoilState(addModalSeriesState);
+  const [addModalEditable, setAddModalEditable] = useRecoilState(addModalEditableState);
+  const [showingAddModal, setShowingAddModal] = useRecoilState(showingAddModalState);
 
   const getSearchExtensionMetadata = () => {
-    return extensionList.find(
-      (metadata: ExtensionMetadata) => metadata.id === searchExtension
-    );
+    return extensionList.find((metadata: ExtensionMetadata) => metadata.id === searchExtension);
   };
 
   const inLibrary = (series: Series): boolean => {
     return (
       seriesList.find(
         (_series: Series) =>
-          (series.extensionId === _series.extensionId &&
-            series.sourceId === _series.sourceId) ||
+          (series.extensionId === _series.extensionId && series.sourceId === _series.sourceId) ||
           series.title === _series.title
       ) !== undefined
     );
@@ -88,9 +71,7 @@ const Search: React.FC<Props> = (props: Props) => {
     info({
       content: (
         <>
-          <Paragraph>
-            &quot;{series.title}&quot; is already in your library.
-          </Paragraph>
+          <Paragraph>&quot;{series.title}&quot; is already in your library.</Paragraph>
 
           <Paragraph>
             <Text type="secondary">Source ID:</Text>{' '}
@@ -108,11 +89,7 @@ const Search: React.FC<Props> = (props: Props) => {
     });
   };
 
-  const handleSearch = async (
-    params: SearchParams,
-    page = 1,
-    loadingMore = false
-  ) => {
+  const handleSearch = async (params: SearchParams, page = 1, loadingMore = false) => {
     setLoading(true);
     if (!loadingMore) {
       setSearchResults([]);
@@ -121,17 +98,8 @@ const Search: React.FC<Props> = (props: Props) => {
 
     const respPromise =
       !params.text || params.text.length === 0
-        ? ipcRenderer.invoke(
-            ipcChannels.EXTENSION.DIRECTORY,
-            searchExtension,
-            page
-          )
-        : ipcRenderer.invoke(
-            ipcChannels.EXTENSION.SEARCH,
-            searchExtension,
-            params.text,
-            page
-          );
+        ? ipcRenderer.invoke(ipcChannels.EXTENSION.DIRECTORY, searchExtension, page)
+        : ipcRenderer.invoke(ipcChannels.EXTENSION.SEARCH, searchExtension, params.text, page);
 
     await respPromise
       .then((resp: SeriesListResponse) => {
@@ -146,17 +114,9 @@ const Search: React.FC<Props> = (props: Props) => {
       .catch((e) => log.error(e));
   };
 
-  const handleSearchFilesystem = (
-    path: string,
-    sourceType: SeriesSourceType
-  ) => {
+  const handleSearchFilesystem = (path: string, sourceType: SeriesSourceType) => {
     ipcRenderer
-      .invoke(
-        ipcChannels.EXTENSION.GET_SERIES,
-        FS_METADATA.id,
-        sourceType,
-        path
-      )
+      .invoke(ipcChannels.EXTENSION.GET_SERIES, FS_METADATA.id, sourceType, path)
       .then((series: Series) => {
         // eslint-disable-next-line promise/always-return
         if (inLibrary(series)) {
@@ -202,19 +162,11 @@ const Search: React.FC<Props> = (props: Props) => {
         <Button
           onClick={() =>
             ipcRenderer
-              .invoke(
-                ipcChannels.APP.SHOW_OPEN_DIALOG,
-                true,
-                [],
-                'Select Series Directory'
-              )
+              .invoke(ipcChannels.APP.SHOW_OPEN_DIALOG, true, [], 'Select Series Directory')
               .then((fileList: string) => {
                 // eslint-disable-next-line promise/always-return
                 if (fileList.length > 0) {
-                  handleSearchFilesystem(
-                    fileList[0],
-                    SeriesSourceType.STANDARD
-                  );
+                  handleSearchFilesystem(fileList[0], SeriesSourceType.STANDARD);
                 }
               })
           }
@@ -249,17 +201,11 @@ const Search: React.FC<Props> = (props: Props) => {
       <div className={styles.seriesGrid}>
         <SeriesGrid
           columns={4}
-          seriesList={searchResults.slice(
-            0,
-            curViewingPage * RESULTS_PAGE_SIZE
-          )}
+          seriesList={searchResults.slice(0, curViewingPage * RESULTS_PAGE_SIZE)}
           filter=""
           filterProgress={ProgressFilter.All}
           filterStatus={null}
-          clickFunc={(
-            series: Series,
-            isInLibrary: boolean | undefined = undefined
-          ) => {
+          clickFunc={(series: Series, isInLibrary: boolean | undefined = undefined) => {
             if (isInLibrary) {
               showInLibraryMessage(series);
             } else {
@@ -275,9 +221,7 @@ const Search: React.FC<Props> = (props: Props) => {
   };
 
   const getExtensionList = async () => {
-    setExtensionList(
-      await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL)
-    );
+    setExtensionList(await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL));
   };
 
   useEffect(() => {
@@ -311,10 +255,7 @@ const Search: React.FC<Props> = (props: Props) => {
       />
       <div>
         <div className={styles.searchBar}>
-          <Dropdown
-            className={styles.extensionDropdown}
-            overlay={renderExtensionMenu()}
-          >
+          <Dropdown className={styles.extensionDropdown} overlay={renderExtensionMenu()}>
             <Button>
               Extension: {getSearchExtensionMetadata()?.name} <DownOutlined />
             </Button>
@@ -326,9 +267,7 @@ const Search: React.FC<Props> = (props: Props) => {
                 placeholder="Search for a series..."
                 allowClear
                 value={searchParams.text}
-                onChange={(e) =>
-                  setSearchParams({ ...searchParams, text: e.target.value })
-                }
+                onChange={(e) => setSearchParams({ ...searchParams, text: e.target.value })}
                 onPressEnter={() => handleSearch(searchParams)}
               />
               <Button onClick={() => handleSearch(searchParams)}>Search</Button>
@@ -353,24 +292,20 @@ const Search: React.FC<Props> = (props: Props) => {
                   <Paragraph>Searching from extension...</Paragraph>
                 </>
               ) : (
-                <Paragraph>
-                  Sorry, no series were found with the current settings.
-                </Paragraph>
+                <Paragraph>Sorry, no series were found with the current settings.</Paragraph>
               )}
             </div>
           ) : (
             <>
               {renderSeriesGrid()}
               <div className={styles.footerContainer}>
-                {sourceHasMore ||
-                searchResults.length > curViewingPage * RESULTS_PAGE_SIZE ? (
+                {sourceHasMore || searchResults.length > curViewingPage * RESULTS_PAGE_SIZE ? (
                   <Button
                     className={styles.loadMoreButton}
                     onClick={() => {
                       if (
                         sourceHasMore &&
-                        searchResults.length <
-                          (curViewingPage + 1) * RESULTS_PAGE_SIZE
+                        searchResults.length < (curViewingPage + 1) * RESULTS_PAGE_SIZE
                       ) {
                         handleSearch(searchParams, nextSourcePage, true);
                       }

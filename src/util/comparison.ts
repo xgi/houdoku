@@ -11,13 +11,8 @@ import { Chapter } from 'houdoku-extension-lib';
  * @param options the list of chapters to select from
  * @returns the most recent matching chapter in the list, if available, else null
  */
-export function selectMostSimilarChapter(
-  original: Chapter,
-  options: Chapter[]
-): Chapter | null {
-  if (
-    options.find((chapter: Chapter) => chapter.id === original.id) !== undefined
-  ) {
+export function selectMostSimilarChapter(original: Chapter, options: Chapter[]): Chapter | null {
+  if (options.find((chapter: Chapter) => chapter.id === original.id) !== undefined) {
     return original;
   }
 
@@ -34,8 +29,7 @@ export function selectMostSimilarChapter(
         }
       } else {
         if (matchesLanguage !== null) {
-          matchesLanguage =
-            matchesLanguage.time > chapter.time ? matchesLanguage : chapter;
+          matchesLanguage = matchesLanguage.time > chapter.time ? matchesLanguage : chapter;
         } else {
           matchesLanguage = chapter;
         }

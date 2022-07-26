@@ -10,12 +10,7 @@ import {
   UpdateLibraryEntryFunc,
   GetTokenFunc,
 } from '../../models/interface';
-import {
-  TrackEntry,
-  TrackerMetadata,
-  TrackScoreFormat,
-  TrackStatus,
-} from '../../models/types';
+import { TrackEntry, TrackerMetadata, TrackScoreFormat, TrackStatus } from '../../models/types';
 
 const clientId = '5631';
 
@@ -94,15 +89,14 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((data: any) => {
         if ('errors' in data) {
           log.error(
-            `Error getting username from tracker ${
-              AniListTrackerMetadata.id
-            }: ${data.errors.map((error: any) => error.message).join('; ')}`
+            `Error getting username from tracker ${AniListTrackerMetadata.id}: ${data.errors
+              .map((error: any) => error.message)
+              .join('; ')}`
           );
           return null;
         }
         this.userId = data.data.Viewer.id;
-        this.userScoreFormat =
-          SCORE_FORMAT_MAP[data.data.Viewer.mediaListOptions.scoreFormat];
+        this.userScoreFormat = SCORE_FORMAT_MAP[data.data.Viewer.mediaListOptions.scoreFormat];
         return data.data.Viewer.name;
       })
       .catch((e: Error) => log.error(e));
@@ -143,9 +137,9 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((data: any) => {
         if ('errors' in data) {
           log.error(
-            `Error searching from tracker ${
-              AniListTrackerMetadata.id
-            }: ${data.errors.map((error: any) => error.message).join('; ')}`
+            `Error searching from tracker ${AniListTrackerMetadata.id}: ${data.errors
+              .map((error: any) => error.message)
+              .join('; ')}`
           );
           return null;
         }
@@ -165,8 +159,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
   getLibraryEntry: GetLibraryEntryFunc = async (seriesId: string) => {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
-    if (this.userId === '' || this.userScoreFormat === undefined)
-      await this.getUsername();
+    if (this.userId === '' || this.userScoreFormat === undefined) await this.getUsername();
     if (this.userId === '') return null;
 
     const query = `
@@ -271,11 +264,9 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((data: any) => {
         if ('errors' in data) {
           log.error(
-            `Error adding library entry for series ${
-              trackEntry.seriesId
-            } from tracker ${AniListTrackerMetadata.id}: ${data.errors
-              .map((error: any) => error.message)
-              .join('; ')}`
+            `Error adding library entry for series ${trackEntry.seriesId} from tracker ${
+              AniListTrackerMetadata.id
+            }: ${data.errors.map((error: any) => error.message).join('; ')}`
           );
           return null;
         }
@@ -287,20 +278,15 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       });
   };
 
-  updateLibraryEntry: UpdateLibraryEntryFunc = async (
-    trackEntry: TrackEntry
-  ) => {
+  updateLibraryEntry: UpdateLibraryEntryFunc = async (trackEntry: TrackEntry) => {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
-    if (this.userId === '' || this.userScoreFormat === undefined)
-      await this.getUsername();
+    if (this.userId === '' || this.userScoreFormat === undefined) await this.getUsername();
     if (this.userId === '') return null;
 
     const prevEntry = await this.getLibraryEntry(trackEntry.seriesId);
     if (prevEntry === null)
-      return this.addLibraryEntry(trackEntry).then(() =>
-        this.updateLibraryEntry(trackEntry)
-      );
+      return this.addLibraryEntry(trackEntry).then(() => this.updateLibraryEntry(trackEntry));
 
     trackEntry.id = prevEntry.id;
     if (trackEntry.progress === undefined) {
@@ -352,11 +338,9 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((data: any) => {
         if ('errors' in data) {
           log.error(
-            `Error updating library entry for series ${
-              trackEntry.seriesId
-            } from tracker ${AniListTrackerMetadata.id}: ${data.errors
-              .map((error: any) => error.message)
-              .join('; ')}`
+            `Error updating library entry for series ${trackEntry.seriesId} from tracker ${
+              AniListTrackerMetadata.id
+            }: ${data.errors.map((error: any) => error.message).join('; ')}`
           );
           return null;
         }

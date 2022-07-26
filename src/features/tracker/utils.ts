@@ -31,14 +31,10 @@ export function sendProgressToTrackers(chapter: Chapter, series: Series) {
         log.debug(
           `Update on tracker ${trackerId} for series ${series.title} to ${roundChapterNum}`
         );
-        await ipcRenderer.invoke(
-          ipcChannels.TRACKER.UPDATE_LIBRARY_ENTRY,
-          trackerId,
-          {
-            seriesId: series.trackerKeys[trackerId],
-            progress: roundChapterNum,
-          } as TrackEntry
-        );
+        await ipcRenderer.invoke(ipcChannels.TRACKER.UPDATE_LIBRARY_ENTRY, trackerId, {
+          seriesId: series.trackerKeys[trackerId],
+          progress: roundChapterNum,
+        } as TrackEntry);
       }
     });
   }

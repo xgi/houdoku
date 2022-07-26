@@ -28,10 +28,7 @@ export function loadSeriesList(setSeriesList: (seriesList: Series[]) => void) {
   setSeriesList(seriesList);
 }
 
-export function loadSeries(
-  seriesId: string,
-  setSeries: (series: Series) => void
-) {
+export function loadSeries(seriesId: string, setSeries: (series: Series) => void) {
   const series: Series | null = library.fetchSeries(seriesId);
   if (series !== null) {
     setSeries(series);
@@ -66,9 +63,7 @@ export async function importSeries(
   series: Series,
   setStatusText: (statusText: string) => void
 ): Promise<Series> {
-  log.debug(
-    `Importing series ${series.sourceId} from extension ${series.extensionId}`
-  );
+  log.debug(`Importing series ${series.sourceId} from extension ${series.extensionId}`);
   setStatusText(`Adding "${series.title}" to your library...`);
 
   const chapters: Chapter[] = await ipcRenderer.invoke(
@@ -113,20 +108,13 @@ export function toggleChapterRead(
 async function reloadSeries(series: Series): Promise<Error | void> {
   log.info(`Reloading series ${series.id} - ${series.title}`);
   if (series.id === undefined) {
-    return new Promise((resolve) =>
-      resolve(Error('Series does not have database ID'))
-    );
+    return new Promise((resolve) => resolve(Error('Series does not have database ID')));
   }
 
   if (
-    (await ipcRenderer.invoke(
-      ipcChannels.EXTENSION_MANAGER.GET,
-      series.extensionId
-    )) === undefined
+    (await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET, series.extensionId)) === undefined
   ) {
-    return new Promise((resolve) =>
-      resolve(Error('Could not retrieve extension data'))
-    );
+    return new Promise((resolve) => resolve(Error('Could not retrieve extension data')));
   }
 
   let newSeries: Series | undefined = await ipcRenderer.invoke(
@@ -136,9 +124,7 @@ async function reloadSeries(series: Series): Promise<Error | void> {
     series.sourceId
   );
   if (newSeries === undefined)
-    return new Promise((resolve) =>
-      resolve(Error('Could not get series from extension'))
-    );
+    return new Promise((resolve) => resolve(Error('Could not get series from extension')));
 
   const newChapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
@@ -155,9 +141,7 @@ async function reloadSeries(series: Series): Promise<Error | void> {
   }
 
   const oldChapters: Chapter[] = library.fetchChapters(series.id);
-  const orphanedChapterIds: string[] = oldChapters.map(
-    (chapter: Chapter) => chapter.id || ''
-  );
+  const orphanedChapterIds: string[] = oldChapters.map((chapter: Chapter) => chapter.id || '');
 
   const chapters: Chapter[] = newChapters.map((chapter: Chapter) => {
     const matchingChapter: Chapter | undefined = oldChapters.find(
@@ -167,10 +151,7 @@ async function reloadSeries(series: Series): Promise<Error | void> {
       chapter.id = matchingChapter.id;
       chapter.read = matchingChapter.read;
 
-      orphanedChapterIds.splice(
-        orphanedChapterIds.indexOf(matchingChapter.id),
-        1
-      );
+      orphanedChapterIds.splice(orphanedChapterIds.indexOf(matchingChapter.id), 1);
     }
     return chapter;
   });
@@ -187,10 +168,7 @@ async function reloadSeries(series: Series): Promise<Error | void> {
   // there is no existing thumbnail
   const thumbnailPath = await getThumbnailPath(series);
   if (thumbnailPath !== null) {
-    if (
-      newSeries.remoteCoverUrl !== series.remoteCoverUrl ||
-      !fs.existsSync(thumbnailPath)
-    ) {
+    if (newSeries.remoteCoverUrl !== series.remoteCoverUrl || !fs.existsSync(thumbnailPath)) {
       log.debug(`Updating cover for series ${newSeries.id}`);
       deleteThumbnail(series);
       downloadCover(newSeries);
@@ -215,9 +193,7 @@ export async function reloadSeriesList(
 
   // eslint-disable-next-line no-restricted-syntax
   for (const series of sortedSeriesList) {
-    setStatusText(
-      `Reloading library (${cur}/${seriesList.length}) - ${series.title}`
-    );
+    setStatusText(`Reloading library (${cur}/${seriesList.length}) - ${series.title}`);
     // eslint-disable-next-line no-await-in-loop
     const ret = await reloadSeries(series);
     if (ret instanceof Error) {
@@ -235,9 +211,7 @@ export async function reloadSeriesList(
         : `Reloaded series "${seriesList[0].title}"`;
   } else {
     statusMessage =
-      errs > 0
-        ? `Reloaded ${cur} series with ${errs} errors`
-        : `Reloaded ${cur} series`;
+      errs > 0 ? `Reloaded ${cur} series with ${errs} errors` : `Reloaded ${cur} series`;
   }
 
   setSeriesList(library.fetchSeriesList());
@@ -261,22 +235,17 @@ export function migrateSeriesTags() {
   const seriesList: Series[] = library.fetchSeriesList();
   seriesList.forEach((series) => {
     const tags: string[] = [];
-    [
-      'formats',
-      'genres',
-      'demographics',
-      'contentWarnings',
-      'themes',
-      'tagKeys',
-    ].forEach((oldField) => {
-      if (oldField in series) {
-        // @ts-expect-error handling deprecated key
-        tags.push(...series[oldField]);
-        // @ts-expect-error handling deprecated key
-        delete series[oldField];
+    ['formats', 'genres', 'demographics', 'contentWarnings', 'themes', 'tagKeys'].forEach(
+      (oldField) => {
+        if (oldField in series) {
+          // @ts-expect-error handling deprecated key
+          tags.push(...series[oldField]);
+          // @ts-expect-error handling deprecated key
+          delete series[oldField];
 
-        library.upsertSeries({ ...series, tags });
+          library.upsertSeries({ ...series, tags });
+        }
       }
-    });
+    );
   });
 }

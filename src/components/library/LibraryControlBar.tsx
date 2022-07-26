@@ -8,11 +8,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import styles from './LibraryControlBar.css';
 import { reloadSeriesList } from '../../features/library/utils';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
-import {
-  filterState,
-  reloadingSeriesListState,
-  seriesListState,
-} from '../../state/libraryStates';
+import { filterState, reloadingSeriesListState, seriesListState } from '../../state/libraryStates';
 import { statusTextState } from '../../state/statusBarStates';
 import {
   libraryFilterStatusState,
@@ -34,19 +30,14 @@ const LIBRARY_SORT_TEXT = {
 
 const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
-  const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(
-    reloadingSeriesListState
-  );
+  const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const setFilter = useSetRecoilState(filterState);
   const setStatusText = useSetRecoilState(statusTextState);
-  const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(
-    libraryFilterStatusState
-  );
+  const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(libraryFilterStatusState);
   const [libraryFilterProgress, setLibraryFilterProgress] = useRecoilState(
     libraryFilterProgressState
   );
-  const [libraryColumns, setLibraryColumns] =
-    useRecoilState(libraryColumnsState);
+  const [libraryColumns, setLibraryColumns] = useRecoilState(libraryColumnsState);
   const [libraryViews, setLibraryViews] = useRecoilState(libraryViewsState);
   const [librarySort, setLibrarySort] = useRecoilState(librarySortState);
   const [viewSubmenu, setViewSubmenu] = useState('');
@@ -59,12 +50,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
         type="primary"
         onClick={() => {
           if (!reloadingSeriesList) {
-            reloadSeriesList(
-              seriesList,
-              setSeriesList,
-              setReloadingSeriesList,
-              setStatusText
-            );
+            reloadSeriesList(seriesList, setSeriesList, setReloadingSeriesList, setStatusText);
           }
         }}
       >
@@ -73,18 +59,13 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
       <Dropdown
         className={styles.libraryViewDropdown}
         overlay={
-          <Menu
-            openKeys={[viewSubmenu]}
-            onOpenChange={(keys) => setViewSubmenu(keys.pop() || '')}
-          >
+          <Menu openKeys={[viewSubmenu]} onOpenChange={(keys) => setViewSubmenu(keys.pop() || '')}>
             <Menu.SubMenu key="Columns" title="Columns" popupOffset={[-4, 0]}>
               {[2, 4, 6, 8].map((value) => (
                 <Menu.Item
                   key={`columns-${value}`}
                   onClick={() => setLibraryColumns(value)}
-                  className={
-                    libraryColumns === value ? styles.enabledMenuItem : ''
-                  }
+                  className={libraryColumns === value ? styles.enabledMenuItem : ''}
                 >
                   {value}
                 </Menu.Item>
@@ -94,22 +75,14 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               <Menu.Item
                 key={LibraryView.Grid}
                 onClick={() => setLibraryViews(LibraryView.Grid)}
-                className={
-                  libraryViews === LibraryView.Grid
-                    ? styles.enabledMenuItem
-                    : ''
-                }
+                className={libraryViews === LibraryView.Grid ? styles.enabledMenuItem : ''}
               >
                 Grid
               </Menu.Item>
               <Menu.Item
                 key={LibraryView.List}
                 onClick={() => setLibraryViews(LibraryView.List)}
-                className={
-                  libraryViews === LibraryView.List
-                    ? styles.enabledMenuItem
-                    : ''
-                }
+                className={libraryViews === LibraryView.List ? styles.enabledMenuItem : ''}
               >
                 List
               </Menu.Item>
@@ -119,9 +92,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
                 <Menu.Item
                   key={value}
                   onClick={() => setLibrarySort(value)}
-                  className={
-                    librarySort === value ? styles.enabledMenuItem : ''
-                  }
+                  className={librarySort === value ? styles.enabledMenuItem : ''}
                 >
                   {LIBRARY_SORT_TEXT[value]}
                 </Menu.Item>
@@ -146,36 +117,27 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
                 <Menu.Item
                   key={value}
                   onClick={() => setLibraryFilterProgress(value)}
-                  className={
-                    libraryFilterProgress === value
-                      ? styles.enabledMenuItem
-                      : ''
-                  }
+                  className={libraryFilterProgress === value ? styles.enabledMenuItem : ''}
                 >
                   {value}
                 </Menu.Item>
               ))}
             </Menu.SubMenu>
             <Menu.SubMenu key="Status" title="Status" popupOffset={[-4, 0]}>
-              {[[null, 'Any'], ...Object.entries(SeriesStatus)].map(
-                ([seriesStatus, text]) => (
-                  <Menu.Item
-                    key={text}
-                    onClick={() =>
-                      setLibraryFilterStatus(seriesStatus as SeriesStatus)
-                    }
-                    className={
-                      libraryFilterStatus === seriesStatus ||
-                      (libraryFilterProgress === undefined &&
-                        seriesStatus === null)
-                        ? styles.enabledMenuItem
-                        : ''
-                    }
-                  >
-                    {text}
-                  </Menu.Item>
-                )
-              )}
+              {[[null, 'Any'], ...Object.entries(SeriesStatus)].map(([seriesStatus, text]) => (
+                <Menu.Item
+                  key={text}
+                  onClick={() => setLibraryFilterStatus(seriesStatus as SeriesStatus)}
+                  className={
+                    libraryFilterStatus === seriesStatus ||
+                    (libraryFilterProgress === undefined && seriesStatus === null)
+                      ? styles.enabledMenuItem
+                      : ''
+                  }
+                >
+                  {text}
+                </Menu.Item>
+              ))}
             </Menu.SubMenu>
           </Menu>
         }

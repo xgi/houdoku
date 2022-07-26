@@ -8,9 +8,7 @@ import { showingSettingsModalState } from '../../state/readerStates';
 type Props = {};
 
 const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
-  const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(
-    showingSettingsModalState
-  );
+  const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(showingSettingsModalState);
 
   return (
     <Modal

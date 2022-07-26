@@ -29,16 +29,10 @@ const SeriesList: React.FC<Props> = (props: Props) => {
       if (props.filterStatus !== null && series.status !== props.filterStatus) {
         return false;
       }
-      if (
-        props.filterProgress === ProgressFilter.Unread &&
-        series.numberUnread === 0
-      ) {
+      if (props.filterProgress === ProgressFilter.Unread && series.numberUnread === 0) {
         return false;
       }
-      if (
-        props.filterProgress === ProgressFilter.Finished &&
-        series.numberUnread > 0
-      ) {
+      if (props.filterProgress === ProgressFilter.Finished && series.numberUnread > 0) {
         return false;
       }
 
@@ -47,21 +41,13 @@ const SeriesList: React.FC<Props> = (props: Props) => {
 
     switch (props.librarySort) {
       case LibrarySort.UnreadAsc:
-        return filteredList.sort(
-          (a: Series, b: Series) => a.numberUnread - b.numberUnread
-        );
+        return filteredList.sort((a: Series, b: Series) => a.numberUnread - b.numberUnread);
       case LibrarySort.UnreadDesc:
-        return filteredList.sort(
-          (a: Series, b: Series) => b.numberUnread - a.numberUnread
-        );
+        return filteredList.sort((a: Series, b: Series) => b.numberUnread - a.numberUnread);
       case LibrarySort.TitleAsc:
-        return filteredList.sort((a: Series, b: Series) =>
-          a.title.localeCompare(b.title)
-        );
+        return filteredList.sort((a: Series, b: Series) => a.title.localeCompare(b.title));
       case LibrarySort.TitleDesc:
-        return filteredList.sort((a: Series, b: Series) =>
-          b.title.localeCompare(a.title)
-        );
+        return filteredList.sort((a: Series, b: Series) => b.title.localeCompare(a.title));
       default:
         return filteredList;
     }
@@ -87,9 +73,7 @@ const SeriesList: React.FC<Props> = (props: Props) => {
       title: 'Author(s)',
       key: 'authors',
       render: (series: any) => {
-        return series.authors.map((author: any) => (
-          <Tag key={author}>{author}</Tag>
-        ));
+        return series.authors.map((author: any) => <Tag key={author}>{author}</Tag>);
       },
     },
     {
@@ -97,16 +81,10 @@ const SeriesList: React.FC<Props> = (props: Props) => {
       key: 'title',
       render: (series: any) => {
         const inLibrary: boolean | undefined =
-          props.inLibraryFunc === undefined
-            ? undefined
-            : props.inLibraryFunc(series);
+          props.inLibraryFunc === undefined ? undefined : props.inLibraryFunc(series);
 
         return (
-          <Button
-            onClick={() => props.clickFunc(series, inLibrary)}
-            type="primary"
-            key={series}
-          >
+          <Button onClick={() => props.clickFunc(series, inLibrary)} type="primary" key={series}>
             Continue
           </Button>
         );
@@ -114,13 +92,7 @@ const SeriesList: React.FC<Props> = (props: Props) => {
     },
   ];
 
-  return (
-    <Table
-      columns={listColumns}
-      dataSource={getFilteredList(props.seriesList)}
-      rowKey="id"
-    />
-  );
+  return <Table columns={listColumns} dataSource={getFilteredList(props.seriesList)} rowKey="id" />;
 };
 
 export default SeriesList;

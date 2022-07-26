@@ -17,9 +17,7 @@ import { customDownloadsDirState } from '../../state/settingStates';
 const { Text } = Typography;
 const { confirm } = Modal;
 
-const defaultDownloadsDir = await ipcRenderer.invoke(
-  ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
-);
+const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
@@ -32,9 +30,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadDownloads = async () => {
-    const downloadedList = getDownloadedList(
-      customDownloadsDir || defaultDownloadsDir
-    );
+    const downloadedList = getDownloadedList(customDownloadsDir || defaultDownloadsDir);
     const tempTreeData = downloadedList.seriesList.map((series) => {
       if (series.id === undefined) return {};
 
@@ -42,28 +38,20 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
         title: `${series.title} [id:${series.id}]`,
         key: `series-${series.id}`,
         children: downloadedList.chapterLists[series.id]
-          .sort(
-            (a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
-          )
+          .sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber))
           .reverse()
           .map((chapter) => {
-            const groupStr =
-              chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
+            const groupStr = chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
 
             return {
               title: (
                 <>
-                  <div
-                    className="flag-container"
-                    style={{ display: 'inline-block' }}
-                  >
+                  <div className="flag-container" style={{ display: 'inline-block' }}>
                     <img
                       src={flags}
                       title={Languages[chapter.languageKey].name}
                       alt={Languages[chapter.languageKey].name}
-                      className={`flag flag-${
-                        Languages[chapter.languageKey].flagCode
-                      }`}
+                      className={`flag flag-${Languages[chapter.languageKey].flagCode}`}
                     />
                   </div>
                   <span style={{ paddingLeft: 4 }}>
@@ -129,8 +117,8 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
         type="info"
         message={
           <>
-            You can download chapters for offline reading from the series page
-            in your library. Your downloaded chapters are saved in{' '}
+            You can download chapters for offline reading from the series page in your library. Your
+            downloaded chapters are saved in{' '}
             <Text code>
               <a
                 href={`file:///${customDownloadsDir || defaultDownloadsDir}`}
@@ -144,10 +132,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
         }
       />
       <Row className={styles.controlRow}>
-        <Button
-          className={styles.refreshButton}
-          onClick={() => loadDownloads()}
-        >
+        <Button className={styles.refreshButton} onClick={() => loadDownloads()}>
           {loading ? <SyncOutlined spin /> : 'Refresh List'}
         </Button>
         {checkedChapters.length > 0 ? (
@@ -163,9 +148,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
           checkable
           selectable={false}
           onCheck={(keys: any) =>
-            setCheckedChapters(
-              keys.filter((key: string) => !key.startsWith('series-'))
-            )
+            setCheckedChapters(keys.filter((key: string) => !key.startsWith('series-')))
           }
           treeData={treeData}
         />

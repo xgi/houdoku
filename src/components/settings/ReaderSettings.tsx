@@ -11,12 +11,7 @@ import {
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { useRecoilState } from 'recoil';
 import styles from './ReaderSettings.css';
-import {
-  ReadingDirection,
-  PageStyle,
-  ReaderSetting,
-  DefaultSettings,
-} from '../../models/types';
+import { ReadingDirection, PageStyle, ReaderSetting, DefaultSettings } from '../../models/types';
 import {
   fitContainToHeightState,
   fitContainToWidthState,
@@ -48,39 +43,27 @@ type Props = {};
 
 const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [showingResetKeybindsModal, setShowingKeybindsModal] = useState(false);
-  const [fitContainToWidth, setFitContainToWidth] = useRecoilState(
-    fitContainToWidthState
-  );
-  const [fitContainToHeight, setFitContainToHeight] = useRecoilState(
-    fitContainToHeightState
-  );
+  const [fitContainToWidth, setFitContainToWidth] = useRecoilState(fitContainToWidthState);
+  const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
   const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
   const [pageStyle, setPageStyle] = useRecoilState(pageStyleState);
-  const [readingDirection, setReadingDirection] = useRecoilState(
-    readingDirectionState
-  );
+  const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
   const [preloadAmount, setPreloadAmount] = useRecoilState(preloadAmountState);
-  const [overlayPageNumber, setOverlayPageNumber] = useRecoilState(
-    overlayPageNumberState
-  );
+  const [overlayPageNumber, setOverlayPageNumber] = useRecoilState(overlayPageNumberState);
   const [hideScrollbar, setHideScrollbar] = useRecoilState(hideScrollbarState);
-  const [keyPreviousPage, setKeyPreviousPage] =
-    useRecoilState(keyPreviousPageState);
+  const [keyPreviousPage, setKeyPreviousPage] = useRecoilState(keyPreviousPageState);
   const [keyFirstPage, setKeyFirstPage] = useRecoilState(keyFirstPageState);
   const [keyNextPage, setKeyNextPage] = useRecoilState(keyNextPageState);
   const [keyLastPage, setKeyLastPage] = useRecoilState(keyLastPageState);
-  const [keyPreviousChapter, setKeyPreviousChapter] = useRecoilState(
-    keyPreviousChapterState
+  const [keyPreviousChapter, setKeyPreviousChapter] = useRecoilState(keyPreviousChapterState);
+  const [keyNextChapter, setKeyNextChapter] = useRecoilState(keyNextChapterState);
+  const [keyToggleReadingDirection, setKeyToggleReadingDirection] = useRecoilState(
+    keyToggleReadingDirectionState
   );
-  const [keyNextChapter, setKeyNextChapter] =
-    useRecoilState(keyNextChapterState);
-  const [keyToggleReadingDirection, setKeyToggleReadingDirection] =
-    useRecoilState(keyToggleReadingDirectionState);
-  const [keyTogglePageStyle, setKeyTogglePageStyle] = useRecoilState(
-    keyTogglePageStyleState
+  const [keyTogglePageStyle, setKeyTogglePageStyle] = useRecoilState(keyTogglePageStyleState);
+  const [keyToggleShowingSettingsModal, setKeyToggleShowingSettingsModal] = useRecoilState(
+    keyToggleShowingSettingsModalState
   );
-  const [keyToggleShowingSettingsModal, setKeyToggleShowingSettingsModal] =
-    useRecoilState(keyToggleShowingSettingsModalState);
   const [keyToggleShowingSidebar, setKeyToggleShowingSidebar] = useRecoilState(
     keyToggleShowingSidebarState
   );
@@ -88,8 +71,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
     keyToggleShowingHeaderState
   );
   const [keyExit, setKeyExit] = useRecoilState(keyExitState);
-  const [keyCloseOrBack, setKeyCloseOrBack] =
-    useRecoilState(keyCloseOrBackState);
+  const [keyCloseOrBack, setKeyCloseOrBack] = useRecoilState(keyCloseOrBackState);
 
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
@@ -161,16 +143,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const updateKeySetting = (
-    e: React.KeyboardEvent,
-    readerSetting: ReaderSetting
-  ) => {
+  const updateKeySetting = (e: React.KeyboardEvent, readerSetting: ReaderSetting) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (
-      !['Control', 'Shift', 'Meta', 'Command', 'Alt', 'Option'].includes(e.key)
-    ) {
+    if (!['Control', 'Shift', 'Meta', 'Command', 'Alt', 'Option'].includes(e.key)) {
       const metaStr = `${e.metaKey ? 'meta+' : ''}`;
       const ctrlStr = `${e.ctrlKey ? 'ctrl+' : ''}`;
       const altStr = `${e.altKey ? 'alt+' : ''}`;
@@ -204,9 +181,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           setShowingKeybindsModal(false);
         }}
       >
-        <Paragraph>
-          This will overwrite your current keyboard shortcuts.
-        </Paragraph>
+        <Paragraph>This will overwrite your current keyboard shortcuts.</Paragraph>
       </Modal>
       <Paragraph className={styles.settingName}>Page Style</Paragraph>
       <Row className={styles.row}>
@@ -217,9 +192,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
               ${styles.toggleButton}
               ${pageStyle === PageStyle.Single ? styles.active : ''}
             `}
-            onClick={() =>
-              updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Single)
-            }
+            onClick={() => updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Single)}
           >
             Single
           </Button>
@@ -229,9 +202,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
               ${styles.toggleButton}
               ${pageStyle === PageStyle.Double ? styles.active : ''}
             `}
-            onClick={() =>
-              updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Double)
-            }
+            onClick={() => updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Double)}
           >
             Double
           </Button>
@@ -241,9 +212,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
               ${styles.toggleButton}
               ${pageStyle === PageStyle.LongStrip ? styles.active : ''}
             `}
-            onClick={() =>
-              updateReaderSetting(ReaderSetting.PageStyle, PageStyle.LongStrip)
-            }
+            onClick={() => updateReaderSetting(ReaderSetting.PageStyle, PageStyle.LongStrip)}
           >
             Long Strip
           </Button>
@@ -256,17 +225,10 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             icon={<RightSquareOutlined />}
             className={`
               ${styles.toggleButton}
-              ${
-                readingDirection === ReadingDirection.LeftToRight
-                  ? styles.active
-                  : ''
-              }
+              ${readingDirection === ReadingDirection.LeftToRight ? styles.active : ''}
             `}
             onClick={() =>
-              updateReaderSetting(
-                ReaderSetting.ReadingDirection,
-                ReadingDirection.LeftToRight
-              )
+              updateReaderSetting(ReaderSetting.ReadingDirection, ReadingDirection.LeftToRight)
             }
           >
             Left-to-Right
@@ -275,17 +237,10 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             icon={<LeftSquareOutlined />}
             className={`
               ${styles.toggleButton}
-              ${
-                readingDirection === ReadingDirection.RightToLeft
-                  ? styles.active
-                  : ''
-              }
+              ${readingDirection === ReadingDirection.RightToLeft ? styles.active : ''}
             `}
             onClick={() =>
-              updateReaderSetting(
-                ReaderSetting.ReadingDirection,
-                ReadingDirection.RightToLeft
-              )
+              updateReaderSetting(ReaderSetting.ReadingDirection, ReadingDirection.RightToLeft)
             }
           >
             Right-to-Left
@@ -298,12 +253,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           <Checkbox
             className={styles.checkbox}
             checked={fitContainToWidth}
-            onClick={() =>
-              updateReaderSetting(
-                ReaderSetting.FitContainToWidth,
-                !fitContainToWidth
-              )
-            }
+            onClick={() => updateReaderSetting(ReaderSetting.FitContainToWidth, !fitContainToWidth)}
           >
             Contain to width
           </Checkbox>
@@ -312,10 +262,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             className={styles.checkbox}
             checked={fitContainToHeight}
             onClick={() =>
-              updateReaderSetting(
-                ReaderSetting.FitContainToHeight,
-                !fitContainToHeight
-              )
+              updateReaderSetting(ReaderSetting.FitContainToHeight, !fitContainToHeight)
             }
           >
             Contain to height
@@ -325,20 +272,14 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             className={styles.checkbox}
             checked={fitStretch}
             disabled={!(fitContainToHeight || fitContainToWidth)}
-            onClick={() =>
-              updateReaderSetting(ReaderSetting.FitStretch, !fitStretch)
-            }
+            onClick={() => updateReaderSetting(ReaderSetting.FitStretch, !fitStretch)}
           >
             Stretch small pages
           </Checkbox>
         </div>
       </Row>
       <Collapse ghost className={styles.something}>
-        <Panel
-          className={styles.keybindsPanel}
-          header="Keyboard Shortcuts"
-          key="1"
-        >
+        <Panel className={styles.keybindsPanel} header="Keyboard Shortcuts" key="1">
           {[
             {
               name: 'Next Page',
@@ -415,10 +356,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
                     className={styles.shortcutResetButton}
                     icon={<UndoOutlined />}
                     onClick={() =>
-                      updateReaderSetting(
-                        entry.setting,
-                        DefaultSettings[entry.setting]
-                      )
+                      updateReaderSetting(entry.setting, DefaultSettings[entry.setting])
                     }
                   >
                     Reset
@@ -427,10 +365,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
               </div>
             </Row>
           ))}
-          <Button
-            className={styles.resetAllButton}
-            onClick={() => setShowingKeybindsModal(true)}
-          >
+          <Button className={styles.resetAllButton} onClick={() => setShowingKeybindsModal(true)}>
             Reset All Shortcuts
           </Button>
         </Panel>

@@ -1,24 +1,12 @@
 import React from 'react';
 import { Row, Card, Progress, Collapse, Badge, Button } from 'antd';
-import {
-  CaretRightOutlined,
-  CloseOutlined,
-  PauseOutlined,
-} from '@ant-design/icons';
+import { CaretRightOutlined, CloseOutlined, PauseOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import Title from 'antd/lib/typography/Title';
 import { useRecoilValue } from 'recoil';
 import styles from './DownloadsStatus.css';
-import {
-  downloaderClient,
-  DownloadError,
-  DownloadTask,
-} from '../../services/downloader';
-import {
-  currentTaskState,
-  downloadErrorsState,
-  queueState,
-} from '../../state/downloaderStates';
+import { downloaderClient, DownloadError, DownloadTask } from '../../services/downloader';
+import { currentTaskState, downloadErrorsState, queueState } from '../../state/downloaderStates';
 
 const { Panel } = Collapse;
 
@@ -38,16 +26,15 @@ const DownloadsStatus: React.FC<Props> = (props: Props) => {
         ? Math.round((currentTask.page / currentTask.totalPages) * 1000) / 10
         : 0;
 
-    const pageStr = `${
-      currentTask.page === undefined ? '0' : currentTask.page
-    }/${currentTask.totalPages === undefined ? '??' : currentTask.totalPages}`;
+    const pageStr = `${currentTask.page === undefined ? '0' : currentTask.page}/${
+      currentTask.totalPages === undefined ? '??' : currentTask.totalPages
+    }`;
 
     return (
       <Card className={styles.currentTaskCard} bordered={false}>
         <Progress type="circle" percent={percent} />
         <Title level={4} className={styles.taskTitle}>
-          {currentTask.series.title} - Chapter{' '}
-          {currentTask.chapter.chapterNumber}
+          {currentTask.series.title} - Chapter {currentTask.chapter.chapterNumber}
         </Title>
         <Paragraph className={styles.taskDetails}>Page {pageStr}</Paragraph>
       </Card>
@@ -87,10 +74,7 @@ const DownloadsStatus: React.FC<Props> = (props: Props) => {
       if (queue.length > 0) {
         return (
           <Row>
-            <Button
-              icon={<CaretRightOutlined />}
-              onClick={() => downloaderClient.start()}
-            >
+            <Button icon={<CaretRightOutlined />} onClick={() => downloaderClient.start()}>
               Resume Download
             </Button>
             <Button
@@ -108,10 +92,7 @@ const DownloadsStatus: React.FC<Props> = (props: Props) => {
 
     return (
       <Row>
-        <Button
-          icon={<PauseOutlined />}
-          onClick={() => downloaderClient.pause()}
-        >
+        <Button icon={<PauseOutlined />} onClick={() => downloaderClient.pause()}>
           Pause Download
         </Button>
         <Button
@@ -125,11 +106,7 @@ const DownloadsStatus: React.FC<Props> = (props: Props) => {
     );
   };
 
-  if (
-    currentTask === null &&
-    queue.length === 0 &&
-    downloadErrors.length === 0
-  ) {
+  if (currentTask === null && queue.length === 0 && downloadErrors.length === 0) {
     return <Paragraph>There are no downloads queued.</Paragraph>;
   }
 

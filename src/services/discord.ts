@@ -37,9 +37,7 @@ export const createDiscordIpcHandlers = (ipcMain: IpcMain) => {
       const activity = getActivity(startTime, series, chapter);
 
       if (client === null) {
-        log.debug(
-          "Request to set Discord activity, but client isn't set; connecting..."
-        );
+        log.debug("Request to set Discord activity, but client isn't set; connecting...");
         const clientId = '856668322672934932';
         client = new DiscordRPC.Client({ transport: 'ipc' });
 

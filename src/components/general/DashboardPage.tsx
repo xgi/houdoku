@@ -39,9 +39,7 @@ type Props = {};
 const DashboardPage: React.FC<Props> = (props: Props) => {
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const [, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
-  const [completedStartReload, setCompletedStartReload] = useRecoilState(
-    completedStartReloadState
-  );
+  const [completedStartReload, setCompletedStartReload] = useRecoilState(completedStartReloadState);
   const setStatusText = useSetRecoilState(statusTextState);
   const refreshOnStart = useRecoilValue(refreshOnStartState);
 
@@ -69,10 +67,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         <div className="logo" />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1" icon={<BookOutlined />}>
-            <Link
-              to={routes.LIBRARY}
-              onClick={() => setSeriesList(library.fetchSeriesList())}
-            >
+            <Link to={routes.LIBRARY} onClick={() => setSeriesList(library.fetchSeriesList())}>
               Library
             </Link>
           </Menu.Item>

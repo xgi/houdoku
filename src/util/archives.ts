@@ -36,9 +36,7 @@ export async function extract(
   internalFilenames: string[],
   baseOutputPath: string
 ): Promise<string[]> {
-  log.info(
-    `Extracting ${internalFilenames.length} files from ${archive} to ${baseOutputPath}`
-  );
+  log.info(`Extracting ${internalFilenames.length} files from ${archive} to ${baseOutputPath}`);
 
   if (!fs.existsSync(baseOutputPath)) {
     fs.mkdirSync(baseOutputPath, { recursive: true });
@@ -48,9 +46,7 @@ export async function extract(
   const existingFilenames = walk(baseOutputPath).filter((file) =>
     constants.IMAGE_EXTENSIONS.some((ext) => file.endsWith(`.${ext}`))
   );
-  existingFilenames.forEach((existingFilename) =>
-    fs.unlinkSync(existingFilename)
-  );
+  existingFilenames.forEach((existingFilename) => fs.unlinkSync(existingFilename));
 
   // remove existing directories
   fs.readdirSync(baseOutputPath, { withFileTypes: true })
@@ -59,10 +55,7 @@ export async function extract(
       try {
         fs.rmdirSync(path.join(baseOutputPath, dirent.name));
       } catch (e) {
-        log.error(
-          `Could not remove directory in extracted location: ${dirent.name}`,
-          e
-        );
+        log.error(`Could not remove directory in extracted location: ${dirent.name}`, e);
       }
     });
 
@@ -90,11 +83,7 @@ export async function extract(
   return Promise.all(
     internalFilenames.map(async (internalFilename) => {
       return new Promise((resolve, reject) => {
-        const outputPath = path.join(
-          baseOutputPath,
-          subdirectory,
-          path.basename(internalFilename)
-        );
+        const outputPath = path.join(baseOutputPath, subdirectory, path.basename(internalFilename));
 
         const file = zip.file(internalFilename);
         if (file) {

@@ -14,22 +14,16 @@ type Props = {
 
 const InstalledExtensionsModal: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(true);
-  const [extensionMetadataList, setExtensionMetadataList] = useState<
-    ExtensionMetadata[]
-  >([]);
+  const [extensionMetadataList, setExtensionMetadataList] = useState<ExtensionMetadata[]>([]);
 
   const loadExtensionList = async () => {
     setLoading(true);
     log.debug('Loading extension metadata list for installed extensions modal');
 
-    const list = await ipcRenderer.invoke(
-      ipcChannels.EXTENSION_MANAGER.GET_ALL
-    );
+    const list = await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL);
 
     setExtensionMetadataList(
-      list.filter(
-        (metadata: ExtensionMetadata) => metadata.name !== 'filesystem'
-      )
+      list.filter((metadata: ExtensionMetadata) => metadata.name !== 'filesystem')
     );
 
     setLoading(false);
@@ -72,9 +66,7 @@ const InstalledExtensionsModal: React.FC<Props> = (props: Props) => {
       onCancel={props.toggleVisible}
     >
       <div className={styles.controlRow}>
-        <Paragraph>
-          Loaded {extensionMetadataList.length} extension(s)
-        </Paragraph>
+        <Paragraph>Loaded {extensionMetadataList.length} extension(s)</Paragraph>
         <Button className={styles.reloadButton} onClick={reloadExtensions}>
           Reload Extensions
         </Button>
@@ -85,10 +77,7 @@ const InstalledExtensionsModal: React.FC<Props> = (props: Props) => {
         bordered
         dataSource={extensionMetadataList}
         renderItem={(item) => (
-          <List.Item
-            key={item.id}
-            extra={<Paragraph>{item.version}</Paragraph>}
-          >
+          <List.Item key={item.id} extra={<Paragraph>{item.version}</Paragraph>}>
             {/* {item.name} <a href={item.url}>{item.url}</a>) */}
             <List.Item.Meta
               title={

@@ -8,8 +8,7 @@ export function getDownloadedList(downloadsDir: string): {
   seriesList: Series[];
   chapterLists: { [seriesId: string]: Chapter[] };
 } {
-  const downloadedChapterPaths: string[] =
-    getAllDownloadedChapterPaths(downloadsDir);
+  const downloadedChapterPaths: string[] = getAllDownloadedChapterPaths(downloadsDir);
 
   const seriesList: Series[] = [];
   const chapterLists: { [seriesId: string]: Chapter[] } = {};
@@ -19,11 +18,8 @@ export function getDownloadedList(downloadsDir: string): {
     const chapterId = path.basename(chapterPath);
     const seriesId = path.basename(path.dirname(chapterPath));
 
-    const existingSeries: Series | undefined = seriesList.find(
-      (s) => s.id === seriesId
-    );
-    const series: Series | null =
-      existingSeries || library.fetchSeries(seriesId);
+    const existingSeries: Series | undefined = seriesList.find((s) => s.id === seriesId);
+    const series: Series | null = existingSeries || library.fetchSeries(seriesId);
     if (series === null) return;
     if (!existingSeries) {
       seriesList.push(series);

@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Alert,
-  Button,
-  Col,
-  Input,
-  Row,
-  Spin,
-  Collapse,
-  Typography,
-  Switch,
-} from 'antd';
+import { Alert, Button, Col, Input, Row, Spin, Collapse, Typography, Switch } from 'antd';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { useRecoilState } from 'recoil';
@@ -29,9 +19,7 @@ const { Panel } = Collapse;
 type Props = {};
 
 const TrackerSettings: React.FC<Props> = (props: Props) => {
-  const [trackerAutoUpdate, setTrackerAutoUpdate] = useRecoilState(
-    trackerAutoUpdateState
-  );
+  const [trackerAutoUpdate, setTrackerAutoUpdate] = useRecoilState(trackerAutoUpdateState);
   const [loading, setLoading] = useState(true);
   const [accessCodes, setAccessCodes] = useState<{
     [trackerId: string]: string;
@@ -61,9 +49,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
     setLoading(true);
 
     setAuthUrls(
-      await ipcRenderer
-        .invoke(ipcChannels.TRACKER.GET_AUTH_URLS)
-        .catch((e) => log.error(e))
+      await ipcRenderer.invoke(ipcChannels.TRACKER.GET_AUTH_URLS).catch((e) => log.error(e))
     );
 
     setUsernames({
@@ -77,10 +63,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
   const saveAccessToken = async (trackerId: string, accessToken: string) => {
     setLoading(true);
 
-    persistantStore.write(
-      `${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${trackerId}`,
-      accessToken
-    );
+    persistantStore.write(`${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${trackerId}`, accessToken);
     await ipcRenderer
       .invoke(ipcChannels.TRACKER.SET_ACCESS_TOKEN, trackerId, accessToken)
       .catch((e) => log.error(e));
@@ -150,8 +133,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
                 {usernames[trackerMetadata.id] ? (
                   <div>
                     <span>
-                      Logged in as{' '}
-                      <Text code>{usernames[trackerMetadata.id]}</Text>
+                      Logged in as <Text code>{usernames[trackerMetadata.id]}</Text>
                     </span>
                     <Button
                       className={styles.unlinkButton}
@@ -170,17 +152,11 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
             }
           >
             <Row className={styles.step}>
-              <Col span={6}>
-                1) Open the authentication page in your browser
-              </Col>
+              <Col span={6}>1) Open the authentication page in your browser</Col>
               <Col span={2} />
               <Col span={16}>
                 <Paragraph>
-                  <a
-                    href={authUrls[trackerMetadata.id]}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <a href={authUrls[trackerMetadata.id]} target="_blank" rel="noreferrer">
                     {authUrls[trackerMetadata.id]}
                   </a>
                 </Paragraph>
@@ -207,10 +183,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
               <Col span={16}>
                 <Button
                   onClick={() =>
-                    submitAccessCode(
-                      trackerMetadata.id,
-                      accessCodes[trackerMetadata.id]
-                    )
+                    submitAccessCode(trackerMetadata.id, accessCodes[trackerMetadata.id])
                   }
                 >
                   Submit

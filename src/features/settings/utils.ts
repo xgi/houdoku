@@ -13,18 +13,10 @@ import persistantStore from '../../util/persistantStore';
 import storeKeys from '../../constants/storeKeys.json';
 
 type StoreValues = {
-  [key in
-    | GeneralSetting
-    | ReaderSetting
-    | TrackerSetting
-    | IntegrationSetting]?: string | null;
+  [key in GeneralSetting | ReaderSetting | TrackerSetting | IntegrationSetting]?: string | null;
 };
 
-type Setting =
-  | GeneralSetting
-  | ReaderSetting
-  | TrackerSetting
-  | IntegrationSetting;
+type Setting = GeneralSetting | ReaderSetting | TrackerSetting | IntegrationSetting;
 
 type SettingEnum =
   | typeof GeneralSetting
@@ -32,10 +24,7 @@ type SettingEnum =
   | typeof TrackerSetting
   | typeof IntegrationSetting;
 
-const getStoreValues = (
-  storePrefix: string,
-  settingEnum: SettingEnum
-): StoreValues => {
+const getStoreValues = (storePrefix: string, settingEnum: SettingEnum): StoreValues => {
   const values: StoreValues = {};
   Object.values(settingEnum).forEach((setting: Setting) => {
     values[setting] = persistantStore.read(`${storePrefix}${setting}`);
@@ -43,9 +32,7 @@ const getStoreValues = (
   return values;
 };
 
-const parseStoreValues = (
-  storeValues: StoreValues
-): { [key in Setting]?: any } => {
+const parseStoreValues = (storeValues: StoreValues): { [key in Setting]?: any } => {
   const settings: { [key in Setting]?: any } = {};
   Object.entries(storeValues)
     .filter(([, value]) => value !== null)
@@ -73,18 +60,10 @@ const parseStoreValues = (
 
 export const getAllStoredSettings = () => {
   const settings = {
-    ...parseStoreValues(
-      getStoreValues(storeKeys.SETTINGS.GENERAL_PREFIX, GeneralSetting)
-    ),
-    ...parseStoreValues(
-      getStoreValues(storeKeys.SETTINGS.READER_PREFIX, ReaderSetting)
-    ),
-    ...parseStoreValues(
-      getStoreValues(storeKeys.SETTINGS.TRACKER_PREFIX, TrackerSetting)
-    ),
-    ...parseStoreValues(
-      getStoreValues(storeKeys.SETTINGS.INTEGRATION_PREFIX, IntegrationSetting)
-    ),
+    ...parseStoreValues(getStoreValues(storeKeys.SETTINGS.GENERAL_PREFIX, GeneralSetting)),
+    ...parseStoreValues(getStoreValues(storeKeys.SETTINGS.READER_PREFIX, ReaderSetting)),
+    ...parseStoreValues(getStoreValues(storeKeys.SETTINGS.TRACKER_PREFIX, TrackerSetting)),
+    ...parseStoreValues(getStoreValues(storeKeys.SETTINGS.INTEGRATION_PREFIX, IntegrationSetting)),
   };
 
   log.info(`Using settings: ${JSON.stringify(settings)}`);
@@ -107,16 +86,11 @@ export function saveTrackerSetting(key: TrackerSetting, value: any) {
 }
 
 export function saveIntegrationSetting(key: IntegrationSetting, value: any) {
-  persistantStore.write(
-    `${storeKeys.SETTINGS.INTEGRATION_PREFIX}${key}`,
-    value
-  );
+  persistantStore.write(`${storeKeys.SETTINGS.INTEGRATION_PREFIX}${key}`, value);
   log.info(`Set IntegrationSetting ${key} to ${value}`);
 }
 
-export function nextReadingDirection(
-  readingDirection: ReadingDirection
-): ReadingDirection {
+export function nextReadingDirection(readingDirection: ReadingDirection): ReadingDirection {
   return readingDirection === ReadingDirection.LeftToRight
     ? ReadingDirection.RightToLeft
     : ReadingDirection.LeftToRight;

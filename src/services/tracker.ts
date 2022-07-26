@@ -1,10 +1,7 @@
 import { IpcMain } from 'electron';
 import log from 'electron-log';
 import { TrackerClientInterface } from '../models/interface';
-import {
-  AniListTrackerClient,
-  AniListTrackerMetadata,
-} from './trackers/anilist';
+import { AniListTrackerClient, AniListTrackerMetadata } from './trackers/anilist';
 import { MALTrackerClient, MALTrackerMetadata } from './trackers/myanimelist';
 import ipcChannels from '../constants/ipcChannels.json';
 import { TrackEntry, TrackerSeries, TrackStatus } from '../models/types';
@@ -23,10 +20,7 @@ function getAuthUrls(): { [trackerId: string]: string } {
   return authUrls;
 }
 
-function getToken(
-  trackerId: string,
-  accessCode: string
-): Promise<string | null> {
+function getToken(trackerId: string, accessCode: string): Promise<string | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
   log.info(`Getting access token for tracker ${trackerId}`);
   return tracker.getToken(accessCode);
@@ -44,42 +38,28 @@ function search(trackerId: string, query: string): Promise<TrackerSeries[]> {
   return tracker.search(query);
 }
 
-function getLibraryEntry(
-  trackerId: string,
-  seriesId: string
-): Promise<TrackEntry | null> {
+function getLibraryEntry(trackerId: string, seriesId: string): Promise<TrackEntry | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
   log.info(`Getting library entry for ${seriesId} from tracker ${trackerId}`);
   return tracker.getLibraryEntry(seriesId);
 }
 
-function addLibraryEntry(
-  trackerId: string,
-  trackEntry: TrackEntry
-): Promise<TrackEntry | null> {
+function addLibraryEntry(trackerId: string, trackEntry: TrackEntry): Promise<TrackEntry | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(
-    `Adding library entry for ${trackEntry.seriesId} from tracker ${trackerId}`
-  );
+  log.info(`Adding library entry for ${trackEntry.seriesId} from tracker ${trackerId}`);
 
   const validatedTrackEntry = {
     ...trackEntry,
     progress: trackEntry.progress === undefined ? 0 : trackEntry.progress,
-    status:
-      trackEntry.status === undefined ? TrackStatus.Reading : trackEntry.status,
+    status: trackEntry.status === undefined ? TrackStatus.Reading : trackEntry.status,
   };
 
   return tracker.addLibraryEntry(validatedTrackEntry);
 }
 
-function updateLibraryEntry(
-  trackerId: string,
-  trackEntry: TrackEntry
-): Promise<TrackEntry | null> {
+function updateLibraryEntry(trackerId: string, trackEntry: TrackEntry): Promise<TrackEntry | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(
-    `Updating library entry for ${trackEntry.seriesId} from tracker ${trackerId}`
-  );
+  log.info(`Updating library entry for ${trackEntry.seriesId} from tracker ${trackerId}`);
   return tracker.updateLibraryEntry(trackEntry);
 }
 
@@ -94,32 +74,23 @@ export const createTrackerIpcHandlers = (ipcMain: IpcMain) => {
   log.debug('Creating tracker IPC handlers in main...');
 
   ipcMain.handle(ipcChannels.TRACKER_MANAGER.GET_ALL, async () => {
-    return Object.values(TRACKER_CLIENTS).map(
-      (client: TrackerClientInterface) => client.getMetadata()
+    return Object.values(TRACKER_CLIENTS).map((client: TrackerClientInterface) =>
+      client.getMetadata()
     );
   });
 
   ipcMain.handle(ipcChannels.TRACKER.GET_AUTH_URLS, () => {
     return getAuthUrls();
   });
-  ipcMain.handle(
-    ipcChannels.TRACKER.GET_TOKEN,
-    (_event, trackerId: string, accessCode: string) => {
-      return getToken(trackerId, accessCode);
-    }
-  );
-  ipcMain.handle(
-    ipcChannels.TRACKER.GET_USERNAME,
-    (_event, trackerId: string) => {
-      return getUsername(trackerId);
-    }
-  );
-  ipcMain.handle(
-    ipcChannels.TRACKER.SEARCH,
-    (_event, trackerId: string, query: string) => {
-      return search(trackerId, query);
-    }
-  );
+  ipcMain.handle(ipcChannels.TRACKER.GET_TOKEN, (_event, trackerId: string, accessCode: string) => {
+    return getToken(trackerId, accessCode);
+  });
+  ipcMain.handle(ipcChannels.TRACKER.GET_USERNAME, (_event, trackerId: string) => {
+    return getUsername(trackerId);
+  });
+  ipcMain.handle(ipcChannels.TRACKER.SEARCH, (_event, trackerId: string, query: string) => {
+    return search(trackerId, query);
+  });
   ipcMain.handle(
     ipcChannels.TRACKER.GET_LIBRARY_ENTRY,
     (_event, trackerId: string, seriesId: string) => {

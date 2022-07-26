@@ -3,12 +3,7 @@ import { Button, Col, Modal, Row, Select, Spin, Switch } from 'antd';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import {
-  Language,
-  LanguageKey,
-  Languages,
-  SettingType,
-} from 'houdoku-extension-lib';
+import { Language, LanguageKey, Languages, SettingType } from 'houdoku-extension-lib';
 import styles from './ExtensionSettingsModal.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 import storeKeys from '../../constants/storeKeys.json';
@@ -40,21 +35,13 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
   const loadExtensionSettings = async () => {
     setLoading(true);
     setExtensionSettings({});
-    log.debug(
-      `Extension settings modal loading client for ${extensionSettings}`
-    );
+    log.debug(`Extension settings modal loading client for ${extensionSettings}`);
 
     setExtensionSettingTypes(
-      await ipcRenderer.invoke(
-        ipcChannels.EXTENSION.GET_SETTING_TYPES,
-        props.extensionId
-      )
+      await ipcRenderer.invoke(ipcChannels.EXTENSION.GET_SETTING_TYPES, props.extensionId)
     );
     setExtensionSettings(
-      await ipcRenderer.invoke(
-        ipcChannels.EXTENSION.GET_SETTINGS,
-        props.extensionId
-      )
+      await ipcRenderer.invoke(ipcChannels.EXTENSION.GET_SETTINGS, props.extensionId)
     );
     setLoading(false);
   };
@@ -80,12 +67,7 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
   ) => {
     switch (settingType) {
       case SettingType.BOOLEAN:
-        return (
-          <Switch
-            defaultChecked={curVal}
-            onChange={(value: boolean) => onChangeFn(value)}
-          />
-        );
+        return <Switch defaultChecked={curVal} onChange={(value: boolean) => onChangeFn(value)} />;
       case SettingType.LANGUAGE_KEY_ARRAY:
         return (
           <Select
@@ -113,8 +95,7 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
             {renderControl(
               extensionSettingTypes[key],
               extensionSettings[key],
-              (newValue: unknown) =>
-                setExtensionSettings({ ...extensionSettings, [key]: newValue })
+              (newValue: unknown) => setExtensionSettings({ ...extensionSettings, [key]: newValue })
             )}
           </Col>
         </Row>
@@ -170,11 +151,7 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
         <Button className={styles.button} onClick={props.toggleVisible}>
           Cancel
         </Button>
-        <Button
-          className={styles.button}
-          type="primary"
-          onClick={saveExtensionSettings}
-        >
+        <Button className={styles.button} type="primary" onClick={saveExtensionSettings}>
           Save Settings
         </Button>
       </Row>

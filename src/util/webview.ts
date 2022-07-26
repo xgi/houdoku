@@ -9,9 +9,7 @@ export const loadInWebView = async (
 ): Promise<WebviewResponse> => {
   if (spoofWindow === null) {
     return new Promise<WebviewResponse>((_resolve, reject) =>
-      reject(
-        new Error('Tried to load URL in webview but spoof window was null')
-      )
+      reject(new Error('Tried to load URL in webview but spoof window was null'))
     );
   }
 
@@ -21,26 +19,21 @@ export const loadInWebView = async (
       const hasClearanceCookie =
         cookies.filter((cookie) => cookie.name === 'cf_clearance').length > 0;
 
-      if (
-        spoofWindow.webContents.getTitle().includes('Just a moment...') &&
-        !hasClearanceCookie
-      ) {
+      if (spoofWindow.webContents.getTitle().includes('Just a moment...') && !hasClearanceCookie) {
         return;
       }
 
-      spoofWindow?.webContents
-        .executeJavaScript('document.body.innerHTML')
-        .then((value) => {
-          // eslint-disable-next-line promise/always-return
-          if (value) {
-            const pageUrl = spoofWindow.webContents.getURL();
-            const pageTitle = spoofWindow.webContents.getTitle();
+      spoofWindow?.webContents.executeJavaScript('document.body.innerHTML').then((value) => {
+        // eslint-disable-next-line promise/always-return
+        if (value) {
+          const pageUrl = spoofWindow.webContents.getURL();
+          const pageTitle = spoofWindow.webContents.getTitle();
 
-            resolve({ text: value, url: pageUrl, title: pageTitle });
-          } else {
-            reject(new Error('Finished loading page, but it has no content'));
-          }
-        });
+          resolve({ text: value, url: pageUrl, title: pageTitle });
+        } else {
+          reject(new Error('Finished loading page, but it has no content'));
+        }
+      });
     };
 
     spoofWindow.webContents.removeAllListeners('did-finish-load');
@@ -51,9 +44,7 @@ export const loadInWebView = async (
   }).then(async (response) => {
     spoofWindow.webContents.stop();
     spoofWindow.webContents.setBackgroundThrottling(true);
-    await spoofWindow.webContents.executeJavaScript(
-      'document.body.innerHTML = ""'
-    );
+    await spoofWindow.webContents.executeJavaScript('document.body.innerHTML = ""');
     return response;
   });
 };

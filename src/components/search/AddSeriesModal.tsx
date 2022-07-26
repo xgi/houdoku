@@ -47,9 +47,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
         )
         .then((series?: Series) => {
           if (series !== undefined) {
-            log.debug(
-              `AddSeriesModal found matching series ${series?.sourceId}`
-            );
+            log.debug(`AddSeriesModal found matching series ${series?.sourceId}`);
             setCustomSeries(series);
           }
           return series;
