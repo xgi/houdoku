@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Menu, Button, Modal, Tooltip, Checkbox, Collapse } from 'antd';
+import { Row, Button, Modal, Tooltip, Checkbox, Collapse } from 'antd';
 import {
   UndoOutlined,
   FileOutlined,
@@ -18,63 +18,37 @@ import {
   DefaultSettings,
 } from '../../models/types';
 import { RootState } from '../../store';
+import { useRecoilState } from 'recoil';
 import {
-  setFitContainToHeight,
-  setFitContainToWidth,
-  setFitStretch,
-  setHideScrollbar,
-  setKeybinding,
-  setOverlayPageNumber,
-  setPageStyle,
-  setPreloadAmount,
-  setReadingDirection,
-} from '../../features/settings/actions';
+  fitContainToHeightState,
+  fitContainToWidthState,
+  fitStretchState,
+  hideScrollbarState,
+  keyCloseOrBackState,
+  keyExitState,
+  keyFirstPageState,
+  keyLastPageState,
+  keyNextChapterState,
+  keyNextPageState,
+  keyPreviousChapterState,
+  keyPreviousPageState,
+  keyTogglePageStyleState,
+  keyToggleReadingDirectionState,
+  keyToggleShowingHeaderState,
+  keyToggleShowingSettingsModalState,
+  keyToggleShowingSidebarState,
+  overlayPageNumberState,
+  pageStyleState,
+  preloadAmountState,
+  readingDirectionState,
+} from '../../state/settingStates';
 
 const { Panel } = Collapse;
 
-const mapState = (state: RootState) => ({
-  fitContainToWidth: state.settings.fitContainToWidth,
-  fitContainToHeight: state.settings.fitContainToHeight,
-  fitStretch: state.settings.fitStretch,
-  pageStyle: state.settings.pageStyle,
-  readingDirection: state.settings.readingDirection,
-  preloadAmount: state.settings.preloadAmount,
-  overlayPageNumber: state.settings.overlayPageNumber,
-  hideScrollbar: state.settings.hideScrollbar,
-  keyPreviousPage: state.settings.keyPreviousPage,
-  keyFirstPage: state.settings.keyFirstPage,
-  keyNextPage: state.settings.keyNextPage,
-  keyLastPage: state.settings.keyLastPage,
-  keyPreviousChapter: state.settings.keyPreviousChapter,
-  keyNextChapter: state.settings.keyNextChapter,
-  keyToggleReadingDirection: state.settings.keyToggleReadingDirection,
-  keyTogglePageStyle: state.settings.keyTogglePageStyle,
-  keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
-  keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
-  keyToggleShowingHeader: state.settings.keyToggleShowingHeader,
-  keyExit: state.settings.keyExit,
-  keyCloseOrBack: state.settings.keyCloseOrBack,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setFitContainToWidth: (value: boolean) =>
-    dispatch(setFitContainToWidth(value)),
-  setFitContainToHeight: (value: boolean) =>
-    dispatch(setFitContainToHeight(value)),
-  setFitStretch: (value: boolean) => dispatch(setFitStretch(value)),
-  setPageStyle: (value: PageStyle) => dispatch(setPageStyle(value)),
-  setReadingDirection: (value: ReadingDirection) =>
-    dispatch(setReadingDirection(value)),
-  setPreloadAmount: (preloadAmount: number) =>
-    dispatch(setPreloadAmount(preloadAmount)),
-  setOverlayPageNumber: (overlayPageNumber: boolean) =>
-    dispatch(setOverlayPageNumber(overlayPageNumber)),
-  setHideScrollbar: (hideScrollbar: boolean) =>
-    dispatch(setHideScrollbar(hideScrollbar)),
-  setKeybinding: (keySetting: ReaderSetting, value: string) =>
-    dispatch(setKeybinding(keySetting, value)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -84,47 +58,113 @@ type Props = PropsFromRedux & {};
 
 const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [showingResetKeybindsModal, setShowingKeybindsModal] = useState(false);
+  const [fitContainToWidth, setFitContainToWidth] = useRecoilState(
+    fitContainToWidthState
+  );
+  const [fitContainToHeight, setFitContainToHeight] = useRecoilState(
+    fitContainToHeightState
+  );
+  const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
+  const [pageStyle, setPageStyle] = useRecoilState(pageStyleState);
+  const [readingDirection, setReadingDirection] = useRecoilState(
+    readingDirectionState
+  );
+  const [preloadAmount, setPreloadAmount] = useRecoilState(preloadAmountState);
+  const [overlayPageNumber, setOverlayPageNumber] = useRecoilState(
+    overlayPageNumberState
+  );
+  const [hideScrollbar, setHideScrollbar] = useRecoilState(hideScrollbarState);
+  const [keyPreviousPage, setKeyPreviousPage] =
+    useRecoilState(keyPreviousPageState);
+  const [keyFirstPage, setKeyFirstPage] = useRecoilState(keyFirstPageState);
+  const [keyNextPage, setKeyNextPage] = useRecoilState(keyNextPageState);
+  const [keyLastPage, setKeyLastPage] = useRecoilState(keyLastPageState);
+  const [keyPreviousChapter, setKeyPreviousChapter] = useRecoilState(
+    keyPreviousChapterState
+  );
+  const [keyNextChapter, setKeyNextChapter] =
+    useRecoilState(keyNextChapterState);
+  const [keyToggleReadingDirection, setKeyToggleReadingDirection] =
+    useRecoilState(keyToggleReadingDirectionState);
+  const [keyTogglePageStyle, setKeyTogglePageStyle] = useRecoilState(
+    keyTogglePageStyleState
+  );
+  const [keyToggleShowingSettingsModal, setKeyToggleShowingSettingsModal] =
+    useRecoilState(keyToggleShowingSettingsModalState);
+  const [keyToggleShowingSidebar, setKeyToggleShowingSidebar] = useRecoilState(
+    keyToggleShowingSidebarState
+  );
+  const [keyToggleShowingHeader, setKeyToggleShowingHeader] = useRecoilState(
+    keyToggleShowingHeaderState
+  );
+  const [keyExit, setKeyExit] = useRecoilState(keyExitState);
+  const [keyCloseOrBack, setKeyCloseOrBack] =
+    useRecoilState(keyCloseOrBackState);
 
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
       case ReaderSetting.ReadingDirection:
-        props.setReadingDirection(value);
+        setReadingDirection(value);
         break;
       case ReaderSetting.FitContainToWidth:
-        props.setFitContainToWidth(value);
+        setFitContainToWidth(value);
         break;
       case ReaderSetting.FitContainToHeight:
-        props.setFitContainToHeight(value);
+        setFitContainToHeight(value);
         break;
       case ReaderSetting.FitStretch:
-        props.setFitStretch(value);
+        setFitStretch(value);
         break;
       case ReaderSetting.PageStyle:
-        props.setPageStyle(value);
+        setPageStyle(value);
         break;
       case ReaderSetting.PreloadAmount:
-        props.setPreloadAmount(value);
+        setPreloadAmount(value);
         break;
       case ReaderSetting.OverlayPageNumber:
-        props.setOverlayPageNumber(value);
+        setOverlayPageNumber(value);
         break;
       case ReaderSetting.HideScrollbar:
-        props.setHideScrollbar(value);
+        setHideScrollbar(value);
         break;
       case ReaderSetting.KeyPreviousPage:
+        setKeyPreviousPage(value);
+        break;
       case ReaderSetting.KeyFirstPage:
+        setKeyFirstPage(value);
+        break;
       case ReaderSetting.KeyNextPage:
+        setKeyNextPage(value);
+        break;
       case ReaderSetting.KeyLastPage:
+        setKeyLastPage(value);
+        break;
       case ReaderSetting.KeyPreviousChapter:
+        setKeyPreviousChapter(value);
+        break;
       case ReaderSetting.KeyNextChapter:
+        setKeyNextChapter(value);
+        break;
       case ReaderSetting.KeyToggleReadingDirection:
+        setKeyToggleReadingDirection(value);
+        break;
       case ReaderSetting.KeyTogglePageStyle:
+        setKeyTogglePageStyle(value);
+        break;
       case ReaderSetting.KeyToggleShowingSettingsModal:
+        setKeyToggleShowingSettingsModal(value);
+        break;
       case ReaderSetting.KeyToggleShowingSidebar:
+        setKeyToggleShowingSidebar(value);
+        break;
       case ReaderSetting.KeyToggleShowingHeader:
+        setKeyToggleShowingHeader(value);
+        break;
       case ReaderSetting.KeyExit:
+        setKeyExit(value);
+        break;
       case ReaderSetting.KeyCloseOrBack:
-        props.setKeybinding(readerSetting, value);
+        setKeyCloseOrBack(value);
         break;
       default:
         break;
@@ -185,7 +225,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             icon={<FileOutlined />}
             className={`
               ${styles.toggleButton}
-              ${props.pageStyle === PageStyle.Single ? styles.active : ''}
+              ${pageStyle === PageStyle.Single ? styles.active : ''}
             `}
             onClick={() =>
               updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Single)
@@ -197,7 +237,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             icon={<ReadOutlined />}
             className={`
               ${styles.toggleButton}
-              ${props.pageStyle === PageStyle.Double ? styles.active : ''}
+              ${pageStyle === PageStyle.Double ? styles.active : ''}
             `}
             onClick={() =>
               updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Double)
@@ -209,7 +249,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             icon={<DownSquareOutlined />}
             className={`
               ${styles.toggleButton}
-              ${props.pageStyle === PageStyle.LongStrip ? styles.active : ''}
+              ${pageStyle === PageStyle.LongStrip ? styles.active : ''}
             `}
             onClick={() =>
               updateReaderSetting(ReaderSetting.PageStyle, PageStyle.LongStrip)
@@ -227,7 +267,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             className={`
               ${styles.toggleButton}
               ${
-                props.readingDirection === ReadingDirection.LeftToRight
+                readingDirection === ReadingDirection.LeftToRight
                   ? styles.active
                   : ''
               }
@@ -246,7 +286,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             className={`
               ${styles.toggleButton}
               ${
-                props.readingDirection === ReadingDirection.RightToLeft
+                readingDirection === ReadingDirection.RightToLeft
                   ? styles.active
                   : ''
               }
@@ -267,11 +307,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         <div>
           <Checkbox
             className={styles.checkbox}
-            checked={props.fitContainToWidth}
+            checked={fitContainToWidth}
             onClick={() =>
               updateReaderSetting(
                 ReaderSetting.FitContainToWidth,
-                !props.fitContainToWidth
+                !fitContainToWidth
               )
             }
           >
@@ -280,11 +320,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           <br />
           <Checkbox
             className={styles.checkbox}
-            checked={props.fitContainToHeight}
+            checked={fitContainToHeight}
             onClick={() =>
               updateReaderSetting(
                 ReaderSetting.FitContainToHeight,
-                !props.fitContainToHeight
+                !fitContainToHeight
               )
             }
           >
@@ -293,10 +333,10 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           <br />
           <Checkbox
             className={styles.checkbox}
-            checked={props.fitStretch}
-            disabled={!(props.fitContainToHeight || props.fitContainToWidth)}
+            checked={fitStretch}
+            disabled={!(fitContainToHeight || fitContainToWidth)}
             onClick={() =>
-              updateReaderSetting(ReaderSetting.FitStretch, !props.fitStretch)
+              updateReaderSetting(ReaderSetting.FitStretch, !fitStretch)
             }
           >
             Stretch small pages
@@ -312,62 +352,62 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           {[
             {
               name: 'Next Page',
-              value: props.keyNextPage,
+              value: keyNextPage,
               setting: ReaderSetting.KeyNextPage,
             },
             {
               name: 'Previous Page',
-              value: props.keyPreviousPage,
+              value: keyPreviousPage,
               setting: ReaderSetting.KeyPreviousPage,
             },
             {
               name: 'First Page',
-              value: props.keyFirstPage,
+              value: keyFirstPage,
               setting: ReaderSetting.KeyFirstPage,
             },
             {
               name: 'Last Page',
-              value: props.keyLastPage,
+              value: keyLastPage,
               setting: ReaderSetting.KeyLastPage,
             },
             {
               name: 'Next Chapter',
-              value: props.keyNextChapter,
+              value: keyNextChapter,
               setting: ReaderSetting.KeyNextChapter,
             },
             {
               name: 'Previous Chapter',
-              value: props.keyPreviousChapter,
+              value: keyPreviousChapter,
               setting: ReaderSetting.KeyPreviousChapter,
             },
             {
               name: 'Exit Reader',
-              value: props.keyExit,
+              value: keyExit,
               setting: ReaderSetting.KeyExit,
             },
             {
               name: 'Close/Back',
-              value: props.keyCloseOrBack,
+              value: keyCloseOrBack,
               setting: ReaderSetting.KeyCloseOrBack,
             },
             {
               name: 'Toggle Reading Direction',
-              value: props.keyToggleReadingDirection,
+              value: keyToggleReadingDirection,
               setting: ReaderSetting.KeyToggleReadingDirection,
             },
             {
               name: 'Toggle Page Style',
-              value: props.keyTogglePageStyle,
+              value: keyTogglePageStyle,
               setting: ReaderSetting.KeyTogglePageStyle,
             },
             {
               name: 'Show Settings Menu',
-              value: props.keyToggleShowingSettingsModal,
+              value: keyToggleShowingSettingsModal,
               setting: ReaderSetting.KeyToggleShowingSettingsModal,
             },
             {
               name: 'Toggle Menu Bar',
-              value: props.keyToggleShowingHeader,
+              value: keyToggleShowingHeader,
               setting: ReaderSetting.KeyToggleShowingHeader,
             },
           ].map((entry) => (

@@ -7,15 +7,16 @@ import { ipcRenderer } from 'electron';
 import styles from './GeneralSettings.css';
 import { GeneralSetting } from '../../models/types';
 import { RootState } from '../../store';
-import {
-  setAutoCheckForExtensionUpdates,
-  setAutoCheckForUpdates,
-  setChapterLanguages,
-  setCustomDownloadsDir,
-  setRefreshOnStart,
-} from '../../features/settings/actions';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { createBackup, restoreBackup } from '../../util/backup';
+import { useRecoilState } from 'recoil';
+import {
+  autoCheckForExtensionUpdatesState,
+  autoCheckForUpdatesState,
+  chapterLanguagesState,
+  customDownloadsDirState,
+  refreshOnStartState,
+} from '../../state/settingStates';
 
 const { Option } = Select;
 
@@ -31,27 +32,10 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
-const mapState = (state: RootState) => ({
-  chapterLanguages: state.settings.chapterLanguages,
-  refreshOnStart: state.settings.refreshOnStart,
-  autoCheckForUpdates: state.settings.autoCheckForUpdates,
-  autoCheckForExtensionUpdates: state.settings.autoCheckForExtensionUpdates,
-  customDownloadsDir: state.settings.customDownloadsDir,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setChapterLanguages: (chapterLanguages: LanguageKey[]) =>
-    dispatch(setChapterLanguages(chapterLanguages)),
-  setRefreshOnStart: (refreshOnStart: boolean) =>
-    dispatch(setRefreshOnStart(refreshOnStart)),
-  setAutoCheckForUpdates: (autoCheckForUpdates: boolean) =>
-    dispatch(setAutoCheckForUpdates(autoCheckForUpdates)),
-  setAutoCheckForExtensionUpdates: (autoCheckForExtensionUpdates: boolean) =>
-    dispatch(setAutoCheckForExtensionUpdates(autoCheckForExtensionUpdates)),
-  setCustomDownloadsDir: (customDownloadsDir: string) =>
-    dispatch(setCustomDownloadsDir(customDownloadsDir)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -60,23 +44,37 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const GeneralSettings: React.FC<Props> = (props: Props) => {
+  const [chapterLanguages, setChapterLanguages] = useRecoilState(
+    chapterLanguagesState
+  );
+  const [refreshOnStart, setRefreshOnStart] =
+    useRecoilState(refreshOnStartState);
+  const [autoCheckForUpdates, setAutoCheckForUpdates] = useRecoilState(
+    autoCheckForUpdatesState
+  );
+  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] =
+    useRecoilState(autoCheckForExtensionUpdatesState);
+  const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(
+    customDownloadsDirState
+  );
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
     switch (generalSetting) {
       case GeneralSetting.ChapterLanguages:
-        props.setChapterLanguages(value);
+        setChapterLanguages(value);
         break;
       case GeneralSetting.RefreshOnStart:
-        props.setRefreshOnStart(value);
+        setRefreshOnStart(value);
         break;
       case GeneralSetting.AutoCheckForUpdates:
-        props.setAutoCheckForUpdates(value);
+        setAutoCheckForUpdates(value);
         break;
       case GeneralSetting.AutoCheckForExtensionUpdates:
-        props.setAutoCheckForExtensionUpdates(value);
+        setAutoCheckForExtensionUpdates(value);
         break;
       case GeneralSetting.CustomDownloadsDir:
-        props.setCustomDownloadsDir(value);
+        setCustomDownloadsDir(value);
         break;
       default:
         break;
@@ -93,7 +91,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
             allowClear
             style={{ width: '100%' }}
             placeholder="Select languages..."
-            defaultValue={props.chapterLanguages}
+            defaultValue={chapterLanguages}
             onChange={(value) =>
               updateGeneralSetting(GeneralSetting.ChapterLanguages, value)
             }
@@ -106,7 +104,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         <Col span={10}>Refresh Library on Startup</Col>
         <Col span={14}>
           <Switch
-            checked={props.refreshOnStart}
+            checked={refreshOnStart}
             onChange={(checked: boolean) =>
               updateGeneralSetting(GeneralSetting.RefreshOnStart, checked)
             }
@@ -117,7 +115,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         <Col span={10}>Check For Houdoku Updates Automatically</Col>
         <Col span={14}>
           <Switch
-            checked={props.autoCheckForUpdates}
+            checked={autoCheckForUpdates}
             onChange={(checked: boolean) =>
               updateGeneralSetting(GeneralSetting.AutoCheckForUpdates, checked)
             }
@@ -128,7 +126,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         <Col span={10}>Check For Extension Updates Automatically</Col>
         <Col span={14}>
           <Switch
-            checked={props.autoCheckForExtensionUpdates}
+            checked={autoCheckForExtensionUpdates}
             onChange={(checked: boolean) =>
               updateGeneralSetting(
                 GeneralSetting.AutoCheckForExtensionUpdates,
@@ -144,8 +142,8 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
           <div className={styles.downloadLocationGroup}>
             <Input
               className={styles.downloadDirInput}
-              value={props.customDownloadsDir || defaultDownloadsDir}
-              title={props.customDownloadsDir || defaultDownloadsDir}
+              value={customDownloadsDir || defaultDownloadsDir}
+              title={customDownloadsDir || defaultDownloadsDir}
               placeholder="Downloads location..."
               disabled
             />

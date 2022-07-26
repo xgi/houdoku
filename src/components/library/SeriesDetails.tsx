@@ -53,6 +53,11 @@ import {
   seriesState,
 } from '../../state/libraryStates';
 import { statusTextState } from '../../state/statusBarStates';
+import {
+  chapterLanguagesState,
+  trackerAutoUpdateState,
+  customDownloadsDirState,
+} from '../../state/settingStates';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -64,11 +69,7 @@ if (!fs.existsSync(thumbnailsDir)) {
   fs.mkdirSync(thumbnailsDir);
 }
 
-const mapState = (state: RootState) => ({
-  chapterLanguages: state.settings.chapterLanguages,
-  trackerAutoUpdate: state.settings.trackerAutoUpdate,
-  customDownloadsDir: state.settings.customDownloadsDir,
-});
+const mapState = (state: RootState) => ({});
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
@@ -110,6 +111,9 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     reloadingSeriesListState
   );
   const setStatusText = useSetRecoilState(statusTextState);
+  const chapterLanguages = useRecoilValue(chapterLanguagesState);
+  const trackerAutoUpdate = useRecoilValue(trackerAutoUpdateState);
+  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
@@ -161,8 +165,8 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     return chapterList
       .filter(
         (chapter: Chapter) =>
-          (props.chapterLanguages.includes(chapter.languageKey) ||
-            props.chapterLanguages.length === 0) &&
+          (chapterLanguages.includes(chapter.languageKey) ||
+            chapterLanguages.length === 0) &&
           chapter.title.toLowerCase().includes(chapterFilterTitle) &&
           chapter.groupName.toLowerCase().includes(chapterFilterGroup)
       )
@@ -185,7 +189,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         !getChapterDownloaded(
           series,
           chapter,
-          props.customDownloadsDir || defaultDownloadsDir
+          customDownloadsDir || defaultDownloadsDir
         )
       ) {
         queue.push(chapter);
@@ -199,7 +203,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             ({
               chapter,
               series,
-              downloadsDir: props.customDownloadsDir || defaultDownloadsDir,
+              downloadsDir: customDownloadsDir || defaultDownloadsDir,
             } as DownloadTask)
         )
       );
@@ -236,7 +240,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         const isDownloaded = getChapterDownloaded(
           series,
           chapter,
-          props.customDownloadsDir || defaultDownloadsDir
+          customDownloadsDir || defaultDownloadsDir
         );
 
         if (!isDownloaded && chapterNumber > prevChapterNumber) {
@@ -325,7 +329,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                   series,
                   setSeriesList,
                   values.deleteDownloads,
-                  props.customDownloadsDir || defaultDownloadsDir
+                  customDownloadsDir || defaultDownloadsDir
                 );
                 history.push(routes.LIBRARY);
               }

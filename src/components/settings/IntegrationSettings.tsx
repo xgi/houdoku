@@ -5,17 +5,13 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import styles from './IntegrationSettings.css';
 import { IntegrationSetting } from '../../models/types';
 import { RootState } from '../../store';
-import { setDiscordPresenceEnabled } from '../../features/settings/actions';
+import { useRecoilState } from 'recoil';
+import { discordPresenceEnabledState } from '../../state/settingStates';
 
-const mapState = (state: RootState) => ({
-  discordPresenceEnabled: state.settings.discordPresenceEnabled,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setDiscordPresenceEnabled: (discordPresenceEnabled: boolean) =>
-    dispatch(setDiscordPresenceEnabled(discordPresenceEnabled)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -24,13 +20,17 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const IntegrationSettings: React.FC<Props> = (props: Props) => {
+  const [discordPresenceEnabled, setDiscordPresenceEnabled] = useRecoilState(
+    discordPresenceEnabledState
+  );
+
   const updateIntegrationSetting = (
     integrationSetting: IntegrationSetting,
     value: any
   ) => {
     switch (integrationSetting) {
       case IntegrationSetting.DiscordPresenceEnabled:
-        props.setDiscordPresenceEnabled(value);
+        setDiscordPresenceEnabled(value);
         break;
       default:
         break;
@@ -43,7 +43,7 @@ const IntegrationSettings: React.FC<Props> = (props: Props) => {
         <Col span={10}>Use Discord Rich Presence</Col>
         <Col span={14}>
           <Switch
-            checked={props.discordPresenceEnabled}
+            checked={discordPresenceEnabled}
             onChange={(checked: boolean) =>
               updateIntegrationSetting(
                 IntegrationSetting.DiscordPresenceEnabled,

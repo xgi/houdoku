@@ -9,16 +9,17 @@ import {
   pageDataListState,
   pageNumberState,
 } from '../../state/readerStates';
+import {
+  fitContainToWidthState,
+  fitContainToHeightState,
+  fitStretchState,
+  pageStyleState,
+  readingDirectionState,
+  overlayPageNumberState,
+  hideScrollbarState,
+} from '../../state/settingStates';
 
-const mapState = (state: RootState) => ({
-  fitContainToWidth: state.settings.fitContainToWidth,
-  fitContainToHeight: state.settings.fitContainToHeight,
-  fitStretch: state.settings.fitStretch,
-  pageStyle: state.settings.pageStyle,
-  readingDirection: state.settings.readingDirection,
-  overlayPageNumber: state.settings.overlayPageNumber,
-  hideScrollbar: state.settings.hideScrollbar,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({
@@ -40,6 +41,13 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
   const lastPageNumber = useRecoilValue(lastPageNumberState);
   const pageDataList = useRecoilValue(pageDataListState);
+  const fitContainToWidth = useRecoilValue(fitContainToWidthState);
+  const fitContainToHeight = useRecoilValue(fitContainToHeightState);
+  const fitStretch = useRecoilValue(fitStretchState);
+  const pageStyle = useRecoilValue(pageStyleState);
+  const readingDirection = useRecoilValue(readingDirectionState);
+  const overlayPageNumber = useRecoilValue(overlayPageNumberState);
+  const hideScrollbar = useRecoilValue(hideScrollbarState);
 
   const viewerContainerClickHandler = (
     e: React.MouseEvent,
@@ -65,8 +73,8 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const getPageImage = (num: number, showing: boolean) => {
     let isLeft = false;
     let isRight = false;
-    if (props.pageStyle === PageStyle.Double) {
-      if (props.readingDirection === ReadingDirection.LeftToRight) {
+    if (pageStyle === PageStyle.Double) {
+      if (readingDirection === ReadingDirection.LeftToRight) {
         isLeft = num === pageNumber;
         isRight = num === pageNumber + 1;
       } else {
@@ -85,11 +93,10 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       ${styles.pageImage}
       ${isLeft ? styles.left : ''}
       ${isRight ? styles.right : ''}
-      ${props.fitContainToWidth ? styles.containWidth : ''}
-      ${props.fitContainToHeight ? styles.containHeight : ''}
+      ${fitContainToWidth ? styles.containWidth : ''}
+      ${fitContainToHeight ? styles.containHeight : ''}
       ${
-        props.fitStretch &&
-        (props.fitContainToWidth || props.fitContainToHeight)
+        fitStretch && (fitContainToWidth || fitContainToHeight)
           ? styles.grow
           : ''
       }
@@ -108,13 +115,13 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     for (let i = 1; i <= lastPageNumber; i += 1) {
       const showing =
         i === pageNumber ||
-        (props.pageStyle === PageStyle.Double && i === pageNumber + 1);
+        (pageStyle === PageStyle.Double && i === pageNumber + 1);
       pageImages.push(getPageImage(i, showing));
     }
 
     // in the Double style, the image on the right needs to be at a later index
     // in the array -- therefore in right-to-left mode, we need to reverse the array
-    if (props.readingDirection === ReadingDirection.RightToLeft) {
+    if (readingDirection === ReadingDirection.RightToLeft) {
       pageImages = pageImages.reverse();
     }
 
@@ -122,11 +129,10 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       <div
         className={`
             ${styles.page}
-            ${props.fitContainToWidth ? styles.containWidth : ''}
-            ${props.fitContainToHeight ? styles.containHeight : ''}
+            ${fitContainToWidth ? styles.containWidth : ''}
+            ${fitContainToHeight ? styles.containHeight : ''}
             ${
-              props.fitStretch &&
-              (props.fitContainToWidth || props.fitContainToHeight)
+              fitStretch && (fitContainToWidth || fitContainToHeight)
                 ? styles.grow
                 : ''
             }
@@ -154,11 +160,10 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           key={i}
           className={`
             ${styles.page}
-            ${props.fitContainToWidth ? styles.containWidth : ''}
-            ${props.fitContainToHeight ? styles.containHeight : ''}
+            ${fitContainToWidth ? styles.containWidth : ''}
+            ${fitContainToHeight ? styles.containHeight : ''}
             ${
-              props.fitStretch &&
-              (props.fitContainToWidth || props.fitContainToHeight)
+              fitStretch && (fitContainToWidth || fitContainToHeight)
                 ? styles.grow
                 : ''
             }
@@ -181,7 +186,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     const readerPage = root?.firstElementChild;
 
     if (root && readerPage) {
-      if (props.pageStyle === PageStyle.LongStrip) {
+      if (pageStyle === PageStyle.LongStrip) {
         root.onscroll = () => {
           if (viewerContainer.current) {
             let imageHeightSum = 0;
@@ -215,7 +220,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.pageStyle, lastPageNumber, pageNumber]);
+  }, [pageStyle, lastPageNumber, pageNumber]);
 
   /**
    * Scrolls to the current page number when it is changed.
@@ -225,7 +230,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
    * to the button of the previous page.
    */
   useEffect(() => {
-    if (props.pageStyle === PageStyle.LongStrip) {
+    if (pageStyle === PageStyle.LongStrip) {
       if (skipChangePageNumEffect) {
         setSkipChangePageNumEffect(false);
       } else if (viewerContainer.current) {
@@ -250,7 +255,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       if (root) root.scrollTop = 0;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.pageStyle, pageNumber, lastPageNumber]);
+  }, [pageStyle, pageNumber, lastPageNumber]);
 
   return (
     <>
@@ -259,10 +264,10 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         ref={viewerContainer}
         className={`
           ${styles.container}
-          ${props.hideScrollbar ? styles.noScrollbar : ''}`}
-        onClick={(e) => viewerContainerClickHandler(e, props.pageStyle)}
+          ${hideScrollbar ? styles.noScrollbar : ''}`}
+        onClick={(e) => viewerContainerClickHandler(e, pageStyle)}
       >
-        {props.pageStyle === PageStyle.LongStrip
+        {pageStyle === PageStyle.LongStrip
           ? getSeparatePageContainers()
           : getSinglePageContainer()}
       </div>

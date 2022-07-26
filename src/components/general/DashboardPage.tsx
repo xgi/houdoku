@@ -10,7 +10,7 @@ import {
   DownloadOutlined,
   InfoCircleOutlined,
 } from '@ant-design/icons';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import log from 'electron-log';
 import { RootState } from '../../store';
 import SeriesDetails from '../library/SeriesDetails';
@@ -31,13 +31,11 @@ import {
 } from '../../state/libraryStates';
 import library from '../../services/library';
 import { statusTextState } from '../../state/statusBarStates';
+import { refreshOnStartState } from '../../state/settingStates';
 
 const { Content, Sider } = Layout;
 
-const mapState = (state: RootState) => ({
-  refreshOnStart: state.settings.refreshOnStart,
-  autoCheckForUpdates: state.settings.autoCheckForUpdates,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({});
@@ -55,13 +53,10 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
     completedStartReloadState
   );
   const setStatusText = useSetRecoilState(statusTextState);
+  const refreshOnStart = useRecoilValue(refreshOnStartState);
 
   useEffect(() => {
-    if (
-      props.refreshOnStart &&
-      !completedStartReload &&
-      seriesList.length > 0
-    ) {
+    if (refreshOnStart && !completedStartReload && seriesList.length > 0) {
       setReloadingSeriesList(true);
       reloadSeriesList(
         library.fetchSeriesList(),

@@ -19,22 +19,18 @@ import storeKeys from '../../constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
 import { AniListTrackerMetadata } from '../../services/trackers/anilist';
 import { TrackerSetting } from '../../models/types';
-import { setTrackerAutoUpdate } from '../../features/settings/actions';
 import { RootState } from '../../store';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
+import { useRecoilState } from 'recoil';
+import { trackerAutoUpdateState } from '../../state/settingStates';
 
 const { Text, Paragraph } = Typography;
 const { Panel } = Collapse;
 
-const mapState = (state: RootState) => ({
-  trackerAutoUpdate: state.settings.trackerAutoUpdate,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setTrackerAutoUpdate: (trackerAutoUpdate: boolean) =>
-    dispatch(setTrackerAutoUpdate(trackerAutoUpdate)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -43,6 +39,9 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & {};
 
 const TrackerSettings: React.FC<Props> = (props: Props) => {
+  const [trackerAutoUpdate, setTrackerAutoUpdate] = useRecoilState(
+    trackerAutoUpdateState
+  );
   const [loading, setLoading] = useState(true);
   const [accessCodes, setAccessCodes] = useState<{
     [trackerId: string]: string;
@@ -55,7 +54,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
   const updateTrackerSetting = (trackerSetting: TrackerSetting, value: any) => {
     switch (trackerSetting) {
       case TrackerSetting.TrackerAutoUpdate:
-        props.setTrackerAutoUpdate(value);
+        setTrackerAutoUpdate(value);
         break;
       default:
         break;
@@ -136,7 +135,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
         <Col span={10}>Update Progress Automatically</Col>
         <Col span={14}>
           <Switch
-            checked={props.trackerAutoUpdate}
+            checked={trackerAutoUpdate}
             onChange={(checked: boolean) =>
               updateTrackerSetting(TrackerSetting.TrackerAutoUpdate, checked)
             }

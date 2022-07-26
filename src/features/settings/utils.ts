@@ -6,6 +6,8 @@ import {
   ReaderSetting,
   TrackerSetting,
   SettingTypes,
+  ReadingDirection,
+  PageStyle,
 } from '../../models/types';
 import persistantStore from '../../util/persistantStore';
 import storeKeys from '../../constants/storeKeys.json';
@@ -110,4 +112,20 @@ export function saveIntegrationSetting(key: IntegrationSetting, value: any) {
     value
   );
   log.info(`Set IntegrationSetting ${key} to ${value}`);
+}
+
+export function nextReadingDirection(
+  readingDirection: ReadingDirection
+): ReadingDirection {
+  return readingDirection === ReadingDirection.LeftToRight
+    ? ReadingDirection.RightToLeft
+    : ReadingDirection.LeftToRight;
+}
+
+export function nextPageStyle(pageStyle: PageStyle): PageStyle {
+  return {
+    [PageStyle.Single]: PageStyle.Double,
+    [PageStyle.Double]: PageStyle.LongStrip,
+    [PageStyle.LongStrip]: PageStyle.Single,
+  }[pageStyle];
 }

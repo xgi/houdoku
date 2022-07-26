@@ -27,21 +27,23 @@ import { RootState } from '../../store';
 import styles from './ReaderHeader.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
 import {
-  setReadingDirection,
-  setPageStyle,
-  setFitStretch,
-  toggleReadingDirection,
-  togglePageStyle,
-  setFitContainToWidth,
-  setFitContainToHeight,
-} from '../../features/settings/actions';
-import {
   chapterState,
   lastPageNumberState,
   pageNumberState,
   relevantChapterListState,
   showingSettingsModalState,
 } from '../../state/readerStates';
+import {
+  fitContainToHeightState,
+  fitContainToWidthState,
+  fitStretchState,
+  pageStyleState,
+  readingDirectionState,
+} from '../../state/settingStates';
+import {
+  nextPageStyle,
+  nextReadingDirection,
+} from '../../features/settings/utils';
 
 const { Text } = Typography;
 
@@ -67,27 +69,10 @@ const ICONS_READING_DIRECTION = {
   [ReadingDirection.RightToLeft]: <LeftSquareOutlined />,
 };
 
-const mapState = (state: RootState) => ({
-  pageStyle: state.settings.pageStyle,
-  fitContainToWidth: state.settings.fitContainToWidth,
-  fitContainToHeight: state.settings.fitContainToHeight,
-  fitStretch: state.settings.fitStretch,
-  readingDirection: state.settings.readingDirection,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setFitContainToWidth: (value: boolean) =>
-    dispatch(setFitContainToWidth(value)),
-  setFitContainToHeight: (value: boolean) =>
-    dispatch(setFitContainToHeight(value)),
-  setFitStretch: (value: boolean) => dispatch(setFitStretch(value)),
-  setPageStyle: (value: PageStyle) => dispatch(setPageStyle(value)),
-  togglePageStyle: () => dispatch(togglePageStyle()),
-  setReadingDirection: (value: ReadingDirection) =>
-    dispatch(setReadingDirection(value)),
-  toggleReadingDirection: () => dispatch(toggleReadingDirection()),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -108,38 +93,49 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const lastPageNumber = useRecoilValue(lastPageNumberState);
   const chapter = useRecoilValue(chapterState);
   const relevantChapterList = useRecoilValue(relevantChapterListState);
+  const [pageStyle, setPageStyle] = useRecoilState(pageStyleState);
+  const [fitContainToWidth, setFitContainToWidth] = useRecoilState(
+    fitContainToWidthState
+  );
+  const [fitContainToHeight, setFitContainToHeight] = useRecoilState(
+    fitContainToHeightState
+  );
+  const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
+  const [readingDirection, setReadingDirection] = useRecoilState(
+    readingDirectionState
+  );
 
   const getFitButtonContent = (): {
     text: string;
     icon: JSX.Element;
     func: () => void;
   } => {
-    if (props.fitContainToHeight && props.fitContainToWidth) {
+    if (fitContainToHeight && fitContainToWidth) {
       return {
         text: 'Fit Both',
         icon: <FullscreenOutlined />,
         func: () => {
-          props.setFitContainToHeight(false);
-          props.setFitContainToWidth(false);
+          setFitContainToHeight(false);
+          setFitContainToWidth(false);
         },
       };
     }
-    if (props.fitContainToWidth) {
+    if (fitContainToWidth) {
       return {
         text: 'Fit Width',
         icon: <ColumnWidthOutlined />,
         func: () => {
-          props.setFitContainToWidth(false);
-          props.setFitContainToHeight(true);
+          setFitContainToWidth(false);
+          setFitContainToHeight(true);
         },
       };
     }
-    if (props.fitContainToHeight) {
+    if (fitContainToHeight) {
       return {
         text: 'Fit Height',
         icon: <ColumnHeightOutlined />,
         func: () => {
-          props.setFitContainToWidth(true);
+          setFitContainToWidth(true);
         },
       };
     }
@@ -147,7 +143,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       text: 'No Limit',
       icon: <StopOutlined />,
       func: () => {
-        props.setFitContainToWidth(true);
+        setFitContainToWidth(true);
       },
     };
   };
@@ -179,9 +175,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            (props.readingDirection === ReadingDirection.LeftToRight &&
+            (readingDirection === ReadingDirection.LeftToRight &&
               props.getAdjacentChapterId(true) === null) ||
-            (props.readingDirection === ReadingDirection.RightToLeft &&
+            (readingDirection === ReadingDirection.RightToLeft &&
               props.getAdjacentChapterId(false) === null)
           }
           onClick={() => props.changeChapter(true)}
@@ -215,9 +211,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            (props.readingDirection === ReadingDirection.LeftToRight &&
+            (readingDirection === ReadingDirection.LeftToRight &&
               props.getAdjacentChapterId(false) === null) ||
-            (props.readingDirection === ReadingDirection.RightToLeft &&
+            (readingDirection === ReadingDirection.RightToLeft &&
               props.getAdjacentChapterId(true) === null)
           }
           onClick={() => props.changeChapter(false)}
@@ -230,9 +226,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            (props.readingDirection === ReadingDirection.LeftToRight &&
+            (readingDirection === ReadingDirection.LeftToRight &&
               pageNumber <= 1) ||
-            (props.readingDirection === ReadingDirection.RightToLeft &&
+            (readingDirection === ReadingDirection.RightToLeft &&
               pageNumber >= lastPageNumber)
           }
           onClick={() => props.changePage(true, true)}
@@ -242,10 +238,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            (props.readingDirection === ReadingDirection.RightToLeft &&
+            (readingDirection === ReadingDirection.RightToLeft &&
               pageNumber === lastPageNumber &&
               props.getAdjacentChapterId(false) === null) ||
-            (props.readingDirection === ReadingDirection.LeftToRight &&
+            (readingDirection === ReadingDirection.LeftToRight &&
               pageNumber <= 1 &&
               props.getAdjacentChapterId(true) === null)
           }
@@ -271,8 +267,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           }
         >
           <Text className={`${styles.field}`}>{`${pageNumber}${
-            props.pageStyle === PageStyle.Double &&
-            pageNumber !== lastPageNumber
+            pageStyle === PageStyle.Double && pageNumber !== lastPageNumber
               ? `-${pageNumber + 1}`
               : ''
           } / ${lastPageNumber}`}</Text>
@@ -280,10 +275,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            (props.readingDirection === ReadingDirection.LeftToRight &&
+            (readingDirection === ReadingDirection.LeftToRight &&
               pageNumber === lastPageNumber &&
               props.getAdjacentChapterId(false) === null) ||
-            (props.readingDirection === ReadingDirection.RightToLeft &&
+            (readingDirection === ReadingDirection.RightToLeft &&
               pageNumber <= 1 &&
               props.getAdjacentChapterId(true) === null)
           }
@@ -294,9 +289,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         <button
           className={`${styles.button} ${styles.arrowButton}`}
           disabled={
-            (props.readingDirection === ReadingDirection.LeftToRight &&
+            (readingDirection === ReadingDirection.LeftToRight &&
               pageNumber >= lastPageNumber) ||
-            (props.readingDirection === ReadingDirection.RightToLeft &&
+            (readingDirection === ReadingDirection.RightToLeft &&
               pageNumber <= 1)
           }
           onClick={() => props.changePage(false, true)}
@@ -308,9 +303,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.pageStyleButton}`}
-          onClick={() => props.togglePageStyle()}
+          onClick={() => setPageStyle(nextPageStyle(pageStyle))}
         >
-          {ICONS_PAGE_STYLE[props.pageStyle]} {TEXT_PAGE_STYLE[props.pageStyle]}
+          {ICONS_PAGE_STYLE[pageStyle]} {TEXT_PAGE_STYLE[pageStyle]}
         </button>
       </div>
 
@@ -319,21 +314,22 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.stretchButton}`}
-          onClick={() => props.setFitStretch(!props.fitStretch)}
-          disabled={!(props.fitContainToHeight || props.fitContainToWidth)}
+          onClick={() => setFitStretch(!fitStretch)}
+          disabled={!(fitContainToHeight || fitContainToWidth)}
         >
-          {props.fitStretch ? <CheckOutlined /> : <CloseOutlined />} Stretch to
-          Fill
+          {fitStretch ? <CheckOutlined /> : <CloseOutlined />} Stretch to Fill
         </button>
       </div>
 
       <div className={styles.buttonGroup}>
         <button
           className={`${styles.button} ${styles.stretchButton}`}
-          onClick={() => props.toggleReadingDirection()}
+          onClick={() =>
+            setReadingDirection(nextReadingDirection(readingDirection))
+          }
         >
-          {ICONS_READING_DIRECTION[props.readingDirection]}{' '}
-          {TEXT_READING_DIRECTION[props.readingDirection]}
+          {ICONS_READING_DIRECTION[readingDirection]}{' '}
+          {TEXT_READING_DIRECTION[readingDirection]}
         </button>
       </div>
 

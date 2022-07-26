@@ -11,40 +11,23 @@ import { reloadSeriesList } from '../../features/library/utils';
 import { RootState } from '../../store';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import {
-  setLibraryColumns,
-  setLibraryViews,
-  setLibraryFilterProgress,
-  setLibraryFilterStatus,
-  setLibrarySort,
-} from '../../features/settings/actions';
-import {
   filterState,
   reloadingSeriesListState,
   seriesListState,
 } from '../../state/libraryStates';
 import { statusTextState } from '../../state/statusBarStates';
+import {
+  libraryFilterStatusState,
+  libraryFilterProgressState,
+  libraryColumnsState,
+  libraryViewsState,
+  librarySortState,
+} from '../../state/settingStates';
 
-const mapState = (state: RootState) => ({
-  libraryFilterStatus: state.settings.libraryFilterStatus,
-  libraryFilterProgress: state.settings.libraryFilterProgress,
-  libraryColumns: state.settings.libraryColumns,
-  libraryViews: state.settings.libraryViews,
-  librarySort: state.settings.librarySort,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setLibraryFilterStatus: (status: SeriesStatus | null) =>
-    dispatch(setLibraryFilterStatus(status)),
-  setLibraryFilterProgress: (progressFilter: ProgressFilter) =>
-    dispatch(setLibraryFilterProgress(progressFilter)),
-  setLibraryColumns: (libraryColumns: number) =>
-    dispatch(setLibraryColumns(libraryColumns)),
-  setLibraryViews: (libraryViews: LibraryView) =>
-    dispatch(setLibraryViews(libraryViews)),
-  setLibrarySort: (librarySort: LibrarySort) =>
-    dispatch(setLibrarySort(librarySort)),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -66,6 +49,16 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   );
   const setFilter = useSetRecoilState(filterState);
   const setStatusText = useSetRecoilState(statusTextState);
+  const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(
+    libraryFilterStatusState
+  );
+  const [libraryFilterProgress, setLibraryFilterProgress] = useRecoilState(
+    libraryFilterProgressState
+  );
+  const [libraryColumns, setLibraryColumns] =
+    useRecoilState(libraryColumnsState);
+  const [libraryViews, setLibraryViews] = useRecoilState(libraryViewsState);
+  const [librarySort, setLibrarySort] = useRecoilState(librarySortState);
   const [viewSubmenu, setViewSubmenu] = useState('');
   const [filterSubmenu, setFilterSubmenu] = useState('');
 
@@ -98,9 +91,9 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               {[2, 4, 6, 8].map((value) => (
                 <Menu.Item
                   key={`columns-${value}`}
-                  onClick={() => props.setLibraryColumns(value)}
+                  onClick={() => setLibraryColumns(value)}
                   className={
-                    props.libraryColumns === value ? styles.enabledMenuItem : ''
+                    libraryColumns === value ? styles.enabledMenuItem : ''
                   }
                 >
                   {value}
@@ -110,9 +103,9 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
             <Menu.SubMenu key="Layout" title="Layout" popupOffset={[-4, 0]}>
               <Menu.Item
                 key={LibraryView.Grid}
-                onClick={() => props.setLibraryViews(LibraryView.Grid)}
+                onClick={() => setLibraryViews(LibraryView.Grid)}
                 className={
-                  props.libraryViews === LibraryView.Grid
+                  libraryViews === LibraryView.Grid
                     ? styles.enabledMenuItem
                     : ''
                 }
@@ -121,9 +114,9 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               </Menu.Item>
               <Menu.Item
                 key={LibraryView.List}
-                onClick={() => props.setLibraryViews(LibraryView.List)}
+                onClick={() => setLibraryViews(LibraryView.List)}
                 className={
-                  props.libraryViews === LibraryView.List
+                  libraryViews === LibraryView.List
                     ? styles.enabledMenuItem
                     : ''
                 }
@@ -135,9 +128,9 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               {Object.values(LibrarySort).map((value) => (
                 <Menu.Item
                   key={value}
-                  onClick={() => props.setLibrarySort(value)}
+                  onClick={() => setLibrarySort(value)}
                   className={
-                    props.librarySort === value ? styles.enabledMenuItem : ''
+                    librarySort === value ? styles.enabledMenuItem : ''
                   }
                 >
                   {LIBRARY_SORT_TEXT[value]}
@@ -162,9 +155,9 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               {Object.values(ProgressFilter).map((value) => (
                 <Menu.Item
                   key={value}
-                  onClick={() => props.setLibraryFilterProgress(value)}
+                  onClick={() => setLibraryFilterProgress(value)}
                   className={
-                    props.libraryFilterProgress === value
+                    libraryFilterProgress === value
                       ? styles.enabledMenuItem
                       : ''
                   }
@@ -179,11 +172,11 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
                   <Menu.Item
                     key={text}
                     onClick={() =>
-                      props.setLibraryFilterStatus(seriesStatus as SeriesStatus)
+                      setLibraryFilterStatus(seriesStatus as SeriesStatus)
                     }
                     className={
-                      props.libraryFilterStatus === seriesStatus ||
-                      (props.libraryFilterProgress === undefined &&
+                      libraryFilterStatus === seriesStatus ||
+                      (libraryFilterProgress === undefined &&
                         seriesStatus === null)
                         ? styles.enabledMenuItem
                         : ''

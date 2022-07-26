@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Chapter, Series, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { connect, ConnectedProps } from 'react-redux';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import routes from '../../constants/routes.json';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
 import ChapterTableContextMenu from './ChapterTableContextMenu';
@@ -22,16 +22,17 @@ import {
   chapterListState,
   seriesState,
 } from '../../state/libraryStates';
+import {
+  chapterLanguagesState,
+  trackerAutoUpdateState,
+  customDownloadsDirState,
+} from '../../state/settingStates';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
-const mapState = (state: RootState) => ({
-  chapterLanguages: state.settings.chapterLanguages,
-  trackerAutoUpdate: state.settings.trackerAutoUpdate,
-  customDownloadsDir: state.settings.customDownloadsDir,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({});
@@ -52,6 +53,9 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const [chapterFilterGroup, setChapterFilterGroup] = useRecoilState(
     chapterFilterGroupState
   );
+  const chapterLanguages = useRecoilValue(chapterLanguagesState);
+  const trackerAutoUpdate = useRecoilValue(trackerAutoUpdateState);
+  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const [showingContextMenu, setShowingContextMenu] = useState(false);
   const [contextMenuLocation, setContextMenuLocation] = useState<{
     x: number;
@@ -68,8 +72,8 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const getFilteredChapterList = () => {
     return chapterList.filter(
       (chapter: Chapter) =>
-        (props.chapterLanguages.includes(chapter.languageKey) ||
-          props.chapterLanguages.length === 0) &&
+        (chapterLanguages.includes(chapter.languageKey) ||
+          chapterLanguages.length === 0) &&
         chapter.title !== null &&
         chapter.title.toLowerCase().includes(chapterFilterTitle) &&
         chapter.groupName !== null &&
@@ -129,7 +133,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
                 setChapterList,
                 setSeries
               );
-              if (!record.read && props.trackerAutoUpdate) {
+              if (!record.read && trackerAutoUpdate) {
                 sendProgressToTrackers(record, props.series);
               }
             }}
@@ -148,7 +152,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
             checked={getChapterDownloaded(
               props.series,
               record,
-              props.customDownloadsDir || defaultDownloadsDir
+              customDownloadsDir || defaultDownloadsDir
             )}
             disabled
           />

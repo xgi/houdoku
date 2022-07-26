@@ -12,23 +12,13 @@ import {
   SeriesSourceType,
 } from 'houdoku-extension-lib';
 import Paragraph from 'antd/lib/typography/Paragraph';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { RootState } from '../../store';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
 import { ReadingDirection, PageStyle } from '../../models/types';
 import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
-import {
-  setFitContainToHeight,
-  setFitContainToWidth,
-  setFitStretch,
-  setPageStyle,
-  setPreloadAmount,
-  setReadingDirection,
-  togglePageStyle,
-  toggleReadingDirection,
-} from '../../features/settings/actions';
 import { toggleChapterRead } from '../../features/library/utils';
 import { useForceUpdate } from '../../util/reactutil';
 import ReaderViewer from './ReaderViewer';
@@ -45,53 +35,20 @@ import library from '../../services/library';
 import { updateTitlebarText } from '../../util/titlebar';
 import * as libraryStates from '../../state/libraryStates';
 import * as readerStates from '../../state/readerStates';
+import * as settingStates from '../../state/settingStates';
+import {
+  nextPageStyle,
+  nextReadingDirection,
+} from '../../features/settings/utils';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
-const mapState = (state: RootState) => ({
-  customDownloadsDir: state.settings.customDownloadsDir,
-  pageStyle: state.settings.pageStyle,
-  fitContainToWidth: state.settings.fitContainToWidth,
-  fitContainToHeight: state.settings.fitContainToHeight,
-  fitStretch: state.settings.fitStretch,
-  readingDirection: state.settings.readingDirection,
-  preloadAmount: state.settings.preloadAmount,
-  trackerAutoUpdate: state.settings.trackerAutoUpdate,
-  discordPresenceEnabled: state.settings.discordPresenceEnabled,
-  keyPreviousPage: state.settings.keyPreviousPage,
-  keyFirstPage: state.settings.keyFirstPage,
-  keyNextPage: state.settings.keyNextPage,
-  keyLastPage: state.settings.keyLastPage,
-  keyPreviousChapter: state.settings.keyPreviousChapter,
-  keyNextChapter: state.settings.keyNextChapter,
-  keyToggleReadingDirection: state.settings.keyToggleReadingDirection,
-  keyTogglePageStyle: state.settings.keyTogglePageStyle,
-  keyToggleShowingSettingsModal: state.settings.keyToggleShowingSettingsModal,
-  keyToggleShowingSidebar: state.settings.keyToggleShowingSidebar,
-  keyToggleShowingHeader: state.settings.keyToggleShowingHeader,
-  keyExit: state.settings.keyExit,
-  keyCloseOrBack: state.settings.keyCloseOrBack,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapDispatch = (dispatch: any) => ({
-  setFitContainToWidth: (value: boolean) =>
-    dispatch(setFitContainToWidth(value)),
-  setFitContainToHeight: (value: boolean) =>
-    dispatch(setFitContainToHeight(value)),
-  setFitStretch: (value: boolean) => dispatch(setFitStretch(value)),
-  setPageStyle: (value: PageStyle) => dispatch(setPageStyle(value)),
-  togglePageStyle: () => dispatch(togglePageStyle()),
-  setReadingDirection: (value: ReadingDirection) =>
-    dispatch(setReadingDirection(value)),
-  toggleReadingDirection: () => dispatch(toggleReadingDirection()),
-  setPreloadAmount: (preloadAmount: number) =>
-    dispatch(setPreloadAmount(preloadAmount)),
-  sendProgressToTrackers: (chapter: Chapter, series: Series) =>
-    sendProgressToTrackers(chapter, series),
-});
+const mapDispatch = (dispatch: any) => ({});
 
 const connector = connect(mapState, mapDispatch);
 type PropsFromRedux = ConnectedProps<typeof connector>;
@@ -144,6 +101,46 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const [showingNoNextChapter, setShowingNoNextChapter] = useRecoilState(
     readerStates.showingNoNextChapterState
   );
+  const customDownloadsDir = useRecoilValue(
+    settingStates.customDownloadsDirState
+  );
+  const [pageStyle, setPageStyle] = useRecoilState(
+    settingStates.pageStyleState
+  );
+  const [readingDirection, setReadingDirection] = useRecoilState(
+    settingStates.readingDirectionState
+  );
+  const trackerAutoUpdate = useRecoilValue(
+    settingStates.trackerAutoUpdateState
+  );
+  const discordPresenceEnabled = useRecoilValue(
+    settingStates.discordPresenceEnabledState
+  );
+  const keyPreviousPage = useRecoilValue(settingStates.keyPreviousPageState);
+  const keyFirstPage = useRecoilValue(settingStates.keyFirstPageState);
+  const keyNextPage = useRecoilValue(settingStates.keyNextPageState);
+  const keyLastPage = useRecoilValue(settingStates.keyLastPageState);
+  const keyPreviousChapter = useRecoilValue(
+    settingStates.keyPreviousChapterState
+  );
+  const keyNextChapter = useRecoilValue(settingStates.keyNextChapterState);
+  const keyToggleReadingDirection = useRecoilValue(
+    settingStates.keyToggleReadingDirectionState
+  );
+  const keyTogglePageStyle = useRecoilValue(
+    settingStates.keyTogglePageStyleState
+  );
+  const keyToggleShowingSettingsModal = useRecoilValue(
+    settingStates.keyToggleShowingSettingsModalState
+  );
+  const keyToggleShowingSidebar = useRecoilValue(
+    settingStates.keyToggleShowingSidebarState
+  );
+  const keyToggleShowingHeader = useRecoilValue(
+    settingStates.keyToggleShowingHeaderState
+  );
+  const keyExit = useRecoilValue(settingStates.keyExitState);
+  const keyCloseOrBack = useRecoilValue(settingStates.keyCloseOrBackState);
 
   /**
    * Populate the relevantChapterList prop.
@@ -196,7 +193,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     const chapterDownloadPath: string = getChapterDownloadPath(
       series,
       chapter,
-      props.customDownloadsDir || defaultDownloadsDir
+      customDownloadsDir || defaultDownloadsDir
     );
 
     const newPageUrls: string[] = await ipcRenderer
@@ -263,7 +260,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           : 'Unknown Chapter'
       }${chapter.title ? ` - ${chapter.title}` : ''}`
     );
-    if (props.discordPresenceEnabled) {
+    if (discordPresenceEnabled) {
       ipcRenderer.invoke(
         ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY,
         series,
@@ -275,7 +272,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       getChapterDownloaded(
         series,
         chapter,
-        props.customDownloadsDir || defaultDownloadsDir
+        customDownloadsDir || defaultDownloadsDir
       )
     ) {
       loadDownloadedChapterData(series, chapter);
@@ -395,18 +392,18 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const removeKeybindings = () => {
     Mousetrap.unbind(
       Object.values([
-        props.keyPreviousPage,
-        props.keyFirstPage,
-        props.keyNextPage,
-        props.keyLastPage,
-        props.keyPreviousChapter,
-        props.keyNextChapter,
-        props.keyToggleReadingDirection,
-        props.keyTogglePageStyle,
-        props.keyToggleShowingSettingsModal,
-        props.keyToggleShowingSidebar,
-        props.keyExit,
-        props.keyCloseOrBack,
+        keyPreviousPage,
+        keyFirstPage,
+        keyNextPage,
+        keyLastPage,
+        keyPreviousChapter,
+        keyNextChapter,
+        keyToggleReadingDirection,
+        keyTogglePageStyle,
+        keyToggleShowingSettingsModal,
+        keyToggleShowingSidebar,
+        keyExit,
+        keyCloseOrBack,
       ])
     );
   };
@@ -429,7 +426,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     updateTitlebarText();
 
-    if (props.discordPresenceEnabled) {
+    if (discordPresenceEnabled) {
       ipcRenderer.invoke(ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY);
     }
 
@@ -450,7 +447,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    */
   const changePage = (left: boolean, toBound = false) => {
     if (toBound) {
-      if (props.readingDirection === ReadingDirection.LeftToRight) {
+      if (readingDirection === ReadingDirection.LeftToRight) {
         setPageNumber(left ? 1 : lastPageNumber);
       } else {
         setPageNumber(left ? lastPageNumber : 1);
@@ -459,10 +456,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     }
 
     let delta = left ? -1 : 1;
-    if (props.readingDirection === ReadingDirection.RightToLeft) {
+    if (readingDirection === ReadingDirection.RightToLeft) {
       delta = -delta;
     }
-    if (props.pageStyle === PageStyle.Double) {
+    if (pageStyle === PageStyle.Double) {
       delta *= 2;
     }
 
@@ -482,27 +479,29 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * These need to be removed (with removeKeybindings) when changing to another page.
    */
   const addKeybindings = () => {
-    Mousetrap.bind(props.keyPreviousPage, () => changePage(true));
-    Mousetrap.bind(props.keyFirstPage, () => changePage(true, true));
-    Mousetrap.bind(props.keyNextPage, () => changePage(false));
-    Mousetrap.bind(props.keyLastPage, () => changePage(false, true));
-    Mousetrap.bind(props.keyPreviousChapter, () => changeChapter(true));
-    Mousetrap.bind(props.keyNextChapter, () => changeChapter(false));
-    Mousetrap.bind(props.keyToggleReadingDirection, () =>
-      props.toggleReadingDirection()
+    Mousetrap.bind(keyPreviousPage, () => changePage(true));
+    Mousetrap.bind(keyFirstPage, () => changePage(true, true));
+    Mousetrap.bind(keyNextPage, () => changePage(false));
+    Mousetrap.bind(keyLastPage, () => changePage(false, true));
+    Mousetrap.bind(keyPreviousChapter, () => changeChapter(true));
+    Mousetrap.bind(keyNextChapter, () => changeChapter(false));
+    Mousetrap.bind(keyToggleReadingDirection, () =>
+      setReadingDirection(nextReadingDirection(readingDirection))
     );
-    Mousetrap.bind(props.keyTogglePageStyle, () => props.togglePageStyle());
-    Mousetrap.bind(props.keyToggleShowingSettingsModal, () =>
+    Mousetrap.bind(keyTogglePageStyle, () =>
+      setPageStyle(nextPageStyle(pageStyle))
+    );
+    Mousetrap.bind(keyToggleShowingSettingsModal, () =>
       setShowingSettingsModal(!showingSettingsModal)
     );
-    Mousetrap.bind(props.keyToggleShowingSidebar, () =>
+    Mousetrap.bind(keyToggleShowingSidebar, () =>
       setShowingSidebar(showingSidebar)
     );
-    Mousetrap.bind(props.keyToggleShowingHeader, () =>
+    Mousetrap.bind(keyToggleShowingHeader, () =>
       setShowingHeader(!showingHeader)
     );
-    Mousetrap.bind(props.keyExit, exitPage);
-    Mousetrap.bind(props.keyCloseOrBack, exitPage);
+    Mousetrap.bind(keyExit, exitPage);
+    Mousetrap.bind(keyCloseOrBack, exitPage);
   };
 
   useEffect(() => {
@@ -526,8 +525,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           setLibrarySeries
         );
         setReaderChapter({ ...readerChapter, read: true });
-        if (props.trackerAutoUpdate)
-          props.sendProgressToTrackers(readerChapter, readerSeries);
+        if (trackerAutoUpdate)
+          sendProgressToTrackers(readerChapter, readerSeries);
       }
     }
 
@@ -552,8 +551,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   }, [
     showingNoNextChapter,
     showingSettingsModal,
-    props.readingDirection,
-    props.pageStyle,
+    readingDirection,
+    pageStyle,
     readerChapter,
     pageNumber,
     lastPageNumber,

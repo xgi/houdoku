@@ -5,7 +5,7 @@ import Paragraph from 'antd/lib/typography/Paragraph';
 import { Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { Modal } from 'antd';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './Library.css';
 import routes from '../../constants/routes.json';
 import { removeSeries } from '../../features/library/utils';
@@ -16,17 +16,17 @@ import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesList from '../general/SeriesList';
 import { LibraryView } from '../../models/types';
 import { filterState, seriesListState } from '../../state/libraryStates';
-import { statusTextState } from '../../state/statusBarStates';
+import {
+  libraryFilterStatusState,
+  libraryFilterProgressState,
+  libraryColumnsState,
+  librarySortState,
+  libraryViewsState,
+} from '../../state/settingStates';
 
 const { confirm } = Modal;
 
-const mapState = (state: RootState) => ({
-  libraryFilterStatus: state.settings.libraryFilterStatus,
-  libraryFilterProgress: state.settings.libraryFilterProgress,
-  libraryColumns: state.settings.libraryColumns,
-  libraryView: state.settings.libraryViews,
-  librarySort: state.settings.librarySort,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({});
@@ -41,6 +41,11 @@ const Library: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const filter = useRecoilValue(filterState);
+  const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
+  const libraryFilterProgress = useRecoilValue(libraryFilterProgressState);
+  const libraryColumns = useRecoilValue(libraryColumnsState);
+  const libraryView = useRecoilValue(libraryViewsState);
+  const librarySort = useRecoilValue(librarySortState);
 
   const goToSeries = async (series: Series) => {
     if (series.id !== undefined) {
@@ -84,15 +89,15 @@ const Library: React.FC<Props> = (props: Props) => {
   const renderSeries = () => {
     return (
       <>
-        {props.libraryView === LibraryView.Grid ? (
+        {libraryView === LibraryView.Grid ? (
           <div className={styles.seriesGrid}>
             <SeriesGrid
-              columns={props.libraryColumns}
+              columns={libraryColumns}
               seriesList={seriesList}
               filter={filter}
-              filterStatus={props.libraryFilterStatus}
-              filterProgress={props.libraryFilterProgress}
-              librarySort={props.librarySort}
+              filterStatus={libraryFilterStatus}
+              filterProgress={libraryFilterProgress}
+              librarySort={librarySort}
               clickFunc={goToSeries}
               inLibraryFunc={undefined}
             />
@@ -102,9 +107,9 @@ const Library: React.FC<Props> = (props: Props) => {
             <SeriesList
               seriesList={seriesList}
               filter={filter}
-              filterStatus={props.libraryFilterStatus}
-              filterProgress={props.libraryFilterProgress}
-              librarySort={props.librarySort}
+              filterStatus={libraryFilterStatus}
+              filterProgress={libraryFilterProgress}
+              librarySort={librarySort}
               clickFunc={goToSeries}
               inLibraryFunc={undefined}
             />

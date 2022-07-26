@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import log from 'electron-log';
 import { Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styles from './MyDownloads.css';
 import { RootState } from '../../store';
 import { getDownloadedList } from '../../features/downloader/utils';
@@ -14,6 +14,7 @@ import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
 import flags from '../../img/flags.png';
 import { statusTextState } from '../../state/statusBarStates';
+import { customDownloadsDirState } from '../../state/settingStates';
 
 const { Text } = Typography;
 const { confirm } = Modal;
@@ -22,9 +23,7 @@ const defaultDownloadsDir = await ipcRenderer.invoke(
   ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR
 );
 
-const mapState = (state: RootState) => ({
-  customDownloadsDir: state.settings.customDownloadsDir,
-});
+const mapState = (state: RootState) => ({});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapDispatch = (dispatch: any) => ({});
@@ -40,10 +39,11 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
   const [treeData, setTreeData] = useState<any[]>([]);
   const setStatusText = useSetRecoilState(statusTextState);
+  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadDownloads = async () => {
     const downloadedList = getDownloadedList(
-      props.customDownloadsDir || defaultDownloadsDir
+      customDownloadsDir || defaultDownloadsDir
     );
     const tempTreeData = downloadedList.seriesList.map((series) => {
       if (series.id === undefined) return {};
@@ -112,7 +112,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
             await deleteDownloadedChapter(
               series,
               chapter,
-              props.customDownloadsDir || defaultDownloadsDir
+              customDownloadsDir || defaultDownloadsDir
             );
           })
         )
@@ -143,13 +143,11 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
             in your library. Your downloaded chapters are saved in{' '}
             <Text code>
               <a
-                href={`file:///${
-                  props.customDownloadsDir || defaultDownloadsDir
-                }`}
+                href={`file:///${customDownloadsDir || defaultDownloadsDir}`}
                 target="_blank"
                 rel="noreferrer"
               >
-                {props.customDownloadsDir || defaultDownloadsDir}
+                {customDownloadsDir || defaultDownloadsDir}
               </a>
             </Text>
           </>

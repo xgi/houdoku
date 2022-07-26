@@ -4,7 +4,7 @@ import { HashRouter as Router, Switch, Route } from 'react-router-dom';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { configuredStore } from './store';
 import persistantStore from './util/persistantStore';
 import routes from './constants/routes.json';
@@ -24,6 +24,10 @@ import {
   queueState,
   runningState,
 } from './state/downloaderStates';
+import {
+  autoCheckForExtensionUpdatesState,
+  autoCheckForUpdatesState,
+} from './state/settingStates';
 
 const store = configuredStore();
 
@@ -92,35 +96,6 @@ ipcRenderer.on(ipcChannels.WINDOW.SET_FULLSCREEN, (_event, fullscreen) => {
   }
 });
 
-if (store.getState().settings.autoCheckForUpdates) {
-  ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
-} else {
-  log.debug('Skipping update check, autoCheckForUpdates is disabled');
-}
-
-if (store.getState().settings.autoCheckForExtensionUpdates) {
-  ipcRenderer
-    .invoke(ipcChannels.EXTENSION_MANAGER.CHECK_FOR_UPDATESS)
-    .then(
-      (updates: {
-        [key: string]: { metadata: ExtensionMetadata; newVersion: string };
-      }) => {
-        // eslint-disable-next-line promise/always-return
-        if (Object.values(updates).length > 0) {
-          ipcRenderer.invoke(
-            ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG,
-            updates
-          );
-        }
-      }
-    )
-    .catch((err: Error) => log.error(err));
-} else {
-  log.debug(
-    'Skipping extension update check, autoCheckForExtensionUpdates is disabled'
-  );
-}
-
 export default function App() {
   const [loading, setLoading] = useState(true);
   const setSeriesList = useSetRecoilState(seriesListState);
@@ -129,6 +104,10 @@ export default function App() {
   const setQueue = useSetRecoilState(queueState);
   const setCurrentTask = useSetRecoilState(currentTaskState);
   const setDownloadErrors = useSetRecoilState(downloadErrorsState);
+  const autoCheckForUpdates = useRecoilValue(autoCheckForUpdatesState);
+  const autoCheckForExtensionUpdates = useRecoilValue(
+    autoCheckForExtensionUpdatesState
+  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -157,6 +136,40 @@ export default function App() {
       // demographic, content warnings). These have now been consolidated into the
       // field 'tags'.
       migrateSeriesTags();
+
+      // If AutoCheckForUpdates setting is enabled, check for client updates now
+      if (autoCheckForUpdates) {
+        ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
+      } else {
+        log.debug('Skipping update check, autoCheckForUpdates is disabled');
+      }
+
+      // If AutoCheckForExtensionUpdates setting is enabled, check for extension updates now
+      if (autoCheckForExtensionUpdates) {
+        ipcRenderer
+          .invoke(ipcChannels.EXTENSION_MANAGER.CHECK_FOR_UPDATESS)
+          .then(
+            (updates: {
+              [key: string]: {
+                metadata: ExtensionMetadata;
+                newVersion: string;
+              };
+            }) => {
+              // eslint-disable-next-line promise/always-return
+              if (Object.values(updates).length > 0) {
+                ipcRenderer.invoke(
+                  ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG,
+                  updates
+                );
+              }
+            }
+          )
+          .catch((err: Error) => log.error(err));
+      } else {
+        log.debug(
+          'Skipping extension update check, autoCheckForExtensionUpdates is disabled'
+        );
+      }
 
       loadSeriesList(setSeriesList);
       setLoading(false);
