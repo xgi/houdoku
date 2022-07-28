@@ -106,6 +106,7 @@ export enum ReaderSetting {
   KeyToggleShowingHeader = 'KeyToggleShowingHeader',
   KeyExit = 'KeyExit',
   KeyCloseOrBack = 'KeyCloseOrBack',
+  LongStripMargin = 'LongStripMargin',
 }
 
 export enum TrackerSetting {

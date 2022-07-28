@@ -54,3 +54,7 @@ img {
 .pageImage.right {
   margin-left: 0;
 }
+
+.pageImage.margin {
+  padding-bottom: 10px;
+}

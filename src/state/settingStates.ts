@@ -84,6 +84,7 @@ export const keyToggleShowingSidebarState = atomFromSetting<string>(ReaderSettin
 export const keyToggleShowingHeaderState = atomFromSetting<string>(ReaderSetting.KeyToggleShowingHeader);
 export const keyExitState = atomFromSetting<string>(ReaderSetting.KeyExit);
 export const keyCloseOrBackState = atomFromSetting<string>(ReaderSetting.KeyCloseOrBack);
+export const longStripMarginState = atomFromSetting<boolean>(ReaderSetting.LongStripMargin);
 
 export const trackerAutoUpdateState = atomFromSetting<boolean>(TrackerSetting.TrackerAutoUpdate);
 
