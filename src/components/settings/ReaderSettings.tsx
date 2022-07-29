@@ -34,6 +34,7 @@ import {
   pageStyleState,
   preloadAmountState,
   readingDirectionState,
+  longStripMarginState,
 } from '../../state/settingStates';
 
 const { Panel } = Collapse;
@@ -72,6 +73,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   );
   const [keyExit, setKeyExit] = useRecoilState(keyExitState);
   const [keyCloseOrBack, setKeyCloseOrBack] = useRecoilState(keyCloseOrBackState);
+  const [longStripMargin, setLongStripMargin] = useRecoilState(longStripMarginState);
 
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
@@ -137,6 +139,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         break;
       case ReaderSetting.KeyCloseOrBack:
         setKeyCloseOrBack(value);
+        break;
+      case ReaderSetting.LongStripMargin:
+        setLongStripMargin(value);
         break;
       default:
         break;
@@ -216,6 +221,18 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           >
             Long Strip
           </Button>
+        </div>
+      </Row>
+      <Row className={styles.row}>
+        <div>
+          <Checkbox
+            className={styles.checkbox}
+            checked={longStripMargin}
+            disabled={pageStyle !== PageStyle.LongStrip}
+            onClick={() => updateReaderSetting(ReaderSetting.LongStripMargin, !longStripMargin)}
+          >
+            Long Strip Margin
+          </Checkbox>
         </div>
       </Row>
       <Paragraph className={styles.settingName}>Reading Direction</Paragraph>

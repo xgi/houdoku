@@ -10,6 +10,7 @@ import {
   pageStyleState,
   readingDirectionState,
   hideScrollbarState,
+  longStripMarginState,
 } from '../../state/settingStates';
 
 const ROOT_ID = 'root';
@@ -30,6 +31,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const pageStyle = useRecoilValue(pageStyleState);
   const readingDirection = useRecoilValue(readingDirectionState);
   const hideScrollbar = useRecoilValue(hideScrollbarState);
+  const longStripMargin = useRecoilValue(longStripMarginState);
 
   const viewerContainerClickHandler = (e: React.MouseEvent) => {
     if (pageStyle === PageStyle.LongStrip) {
@@ -75,6 +77,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       ${fitContainToWidth ? styles.containWidth : ''}
       ${fitContainToHeight ? styles.containHeight : ''}
       ${fitStretch && (fitContainToWidth || fitContainToHeight) ? styles.grow : ''}
+      ${pageStyle === PageStyle.LongStrip && longStripMargin ? styles.margin : ''}
     `}
       />
     );
