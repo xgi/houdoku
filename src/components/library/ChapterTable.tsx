@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { useState } from 'react';
-import { Table, Checkbox, Button, Input, Empty } from 'antd';
+import { Table, Checkbox, Button, Input, Empty, TablePaginationConfig } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Chapter, Series, Languages } from 'houdoku-extension-lib';
@@ -24,9 +24,23 @@ import {
   chapterLanguagesState,
   trackerAutoUpdateState,
   customDownloadsDirState,
+  chapterListVolOrderState,
+  chapterListChOrderState,
+  chapterListPageSizeState,
 } from '../../state/settingStates';
+import { TableColumnSortOrder } from '../../models/types';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
+
+const columnOrderMap = {
+  [TableColumnSortOrder.Ascending]: 'ascend',
+  [TableColumnSortOrder.Descending]: 'descend',
+  [TableColumnSortOrder.None]: '',
+};
+const columnOrderReverseMap: { [key: string]: TableColumnSortOrder } = {
+  ascend: TableColumnSortOrder.Ascending,
+  descend: TableColumnSortOrder.Descending,
+};
 
 type Props = {
   series: Series;
@@ -37,6 +51,9 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const [chapterList, setChapterList] = useRecoilState(chapterListState);
   const [chapterFilterTitle, setChapterFilterTitle] = useRecoilState(chapterFilterTitleState);
   const [chapterFilterGroup, setChapterFilterGroup] = useRecoilState(chapterFilterGroupState);
+  const [chapterListVolOrder, setChapterListVolOrder] = useRecoilState(chapterListVolOrderState);
+  const [chapterListChOrder, setChapterListChOrder] = useRecoilState(chapterListChOrderState);
+  const [chapterListPageSize, setChapterListPageSize] = useRecoilState(chapterListPageSizeState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const trackerAutoUpdate = useRecoilValue(trackerAutoUpdateState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
@@ -50,6 +67,29 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   });
   const [contextMenuChapter, setContextMenuChapter] = useState<Chapter | undefined>();
   const forceUpdate = useForceUpdate();
+
+  const handleTableChange = (
+    pagination: TablePaginationConfig,
+    _filters: unknown,
+    sorter: any,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _extra: unknown
+  ) => {
+    // pagination states
+    if (pagination.pageSize) setChapterListPageSize(pagination.pageSize);
+
+    // sorter states
+    const sorterRows: { column?: string; order?: string; field: string; columnKey: string }[] =
+      sorter?.length > 1 ? sorter : [sorter];
+    const chOrder = sorterRows.find((row) => row.field === 'chapterNumber');
+    const volOrder = sorterRows.find((row) => row.field === 'volumeNumber');
+    setChapterListChOrder(
+      chOrder && chOrder.order ? columnOrderReverseMap[chOrder.order] : TableColumnSortOrder.None
+    );
+    setChapterListVolOrder(
+      volOrder && volOrder.order ? columnOrderReverseMap[volOrder.order] : TableColumnSortOrder.None
+    );
+  };
 
   const getFilteredChapterList = () => {
     return chapterList.filter(
@@ -170,6 +210,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       title: 'Vol',
       dataIndex: 'volumeNumber',
       key: 'volumeNumber',
+      defaultSortOrder: columnOrderMap[chapterListVolOrder],
       width: '8%',
       align: 'center',
       sorter: {
@@ -182,7 +223,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
       title: 'Ch',
       dataIndex: 'chapterNumber',
       key: 'chapterNumber',
-      defaultSortOrder: 'descend',
+      defaultSortOrder: columnOrderMap[chapterListChOrder],
       width: '7%',
       align: 'center',
       sorter: {
@@ -255,6 +296,8 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
             },
           };
         }}
+        onChange={handleTableChange}
+        pagination={{ pageSize: chapterListPageSize }}
         dataSource={filteredList}
         // @ts-expect-error cleanup column render types
         columns={columns}
