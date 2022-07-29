@@ -66,6 +66,7 @@ export enum GeneralSetting {
   LibraryFilterProgress = 'LibraryFilterProgress',
   ChapterListVolOrder = 'ChapterListVolOrder',
   ChapterListChOrder = 'ChapterListChOrder',
+  ChapterListPageSize = 'ChapterListPageSize',
 }
 
 export enum ProgressFilter {
@@ -152,6 +153,7 @@ export const SettingTypes = {
   [GeneralSetting.LibraryFilterProgress]: SettingType.STRING,
   [GeneralSetting.ChapterListVolOrder]: SettingType.STRING,
   [GeneralSetting.ChapterListChOrder]: SettingType.STRING,
+  [GeneralSetting.ChapterListPageSize]: SettingType.NUMBER,
 
   [ReaderSetting.FitContainToWidth]: SettingType.BOOLEAN,
   [ReaderSetting.FitContainToHeight]: SettingType.BOOLEAN,
@@ -193,6 +195,7 @@ export const DefaultSettings = {
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
   [GeneralSetting.ChapterListVolOrder]: TableColumnSortOrder.None,
   [GeneralSetting.ChapterListChOrder]: TableColumnSortOrder.Descending,
+  [GeneralSetting.ChapterListPageSize]: 10,
 
   [ReaderSetting.ReadingDirection]: ReadingDirection.LeftToRight,
   [ReaderSetting.PageStyle]: PageStyle.Single,
