@@ -228,7 +228,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           <Checkbox
             className={styles.checkbox}
             checked={longStripMargin}
-            disabled={pageStyle != PageStyle.LongStrip}
+            disabled={pageStyle !== PageStyle.LongStrip}
             onClick={() => updateReaderSetting(ReaderSetting.LongStripMargin, !longStripMargin)}
           >
             Long Strip Margin
