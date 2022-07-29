@@ -64,6 +64,8 @@ export enum GeneralSetting {
   LibrarySort = 'LibrarySort',
   LibraryFilterStatus = 'LibraryFilterStatus',
   LibraryFilterProgress = 'LibraryFilterProgress',
+  ChapterListVolOrder = 'ChapterListVolOrder',
+  ChapterListChOrder = 'ChapterListChOrder',
 }
 
 export enum ProgressFilter {
@@ -127,6 +129,12 @@ export enum PageStyle {
   LongStrip = 'LongStrip',
 }
 
+export enum TableColumnSortOrder {
+  Ascending = 'Ascending',
+  Descending = 'Descending',
+  None = 'None',
+}
+
 export enum AppLoadStep {
   DatabaseMigrate = 'DatabaseMigrate',
 }
@@ -142,6 +150,8 @@ export const SettingTypes = {
   [GeneralSetting.LibrarySort]: SettingType.STRING,
   [GeneralSetting.LibraryFilterStatus]: SettingType.STRING,
   [GeneralSetting.LibraryFilterProgress]: SettingType.STRING,
+  [GeneralSetting.ChapterListVolOrder]: SettingType.STRING,
+  [GeneralSetting.ChapterListChOrder]: SettingType.STRING,
 
   [ReaderSetting.FitContainToWidth]: SettingType.BOOLEAN,
   [ReaderSetting.FitContainToHeight]: SettingType.BOOLEAN,
@@ -181,6 +191,8 @@ export const DefaultSettings = {
   [GeneralSetting.LibrarySort]: LibrarySort.TitleAsc,
   [GeneralSetting.LibraryFilterStatus]: null,
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,
+  [GeneralSetting.ChapterListVolOrder]: TableColumnSortOrder.None,
+  [GeneralSetting.ChapterListChOrder]: TableColumnSortOrder.Descending,
 
   [ReaderSetting.ReadingDirection]: ReadingDirection.LeftToRight,
   [ReaderSetting.PageStyle]: PageStyle.Single,
