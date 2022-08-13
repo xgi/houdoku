@@ -110,6 +110,7 @@ export enum ReaderSetting {
   KeyExit = 'KeyExit',
   KeyCloseOrBack = 'KeyCloseOrBack',
   LongStripMargin = 'LongStripMargin',
+  OffsetDoubleSpreads = 'OffsetDoubleSpreads',
 }
 
 export enum TrackerSetting {
@@ -164,6 +165,8 @@ export const SettingTypes = {
   [ReaderSetting.PreloadAmount]: SettingType.NUMBER,
   [ReaderSetting.OverlayPageNumber]: SettingType.BOOLEAN,
   [ReaderSetting.HideScrollbar]: SettingType.BOOLEAN,
+  [ReaderSetting.LongStripMargin]: SettingType.BOOLEAN,
+  [ReaderSetting.OffsetDoubleSpreads]: SettingType.BOOLEAN,
   [ReaderSetting.KeyPreviousPage]: SettingType.STRING,
   [ReaderSetting.KeyFirstPage]: SettingType.STRING,
   [ReaderSetting.KeyNextPage]: SettingType.STRING,
@@ -206,6 +209,8 @@ export const DefaultSettings = {
   [ReaderSetting.PreloadAmount]: 2,
   [ReaderSetting.OverlayPageNumber]: false,
   [ReaderSetting.HideScrollbar]: false,
+  [ReaderSetting.LongStripMargin]: false,
+  [ReaderSetting.OffsetDoubleSpreads]: false,
   [ReaderSetting.KeyPreviousPage]: 'left',
   [ReaderSetting.KeyFirstPage]: 'ctrl+left',
   [ReaderSetting.KeyNextPage]: 'right',

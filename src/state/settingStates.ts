@@ -1,4 +1,4 @@
-import { Language, LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
+import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
 import { atom, AtomEffect, RecoilState } from 'recoil';
 import {
   getAllStoredSettings,
@@ -89,6 +89,7 @@ export const keyToggleShowingHeaderState = atomFromSetting<string>(ReaderSetting
 export const keyExitState = atomFromSetting<string>(ReaderSetting.KeyExit);
 export const keyCloseOrBackState = atomFromSetting<string>(ReaderSetting.KeyCloseOrBack);
 export const longStripMarginState = atomFromSetting<boolean>(ReaderSetting.LongStripMargin);
+export const offsetDoubleSpreadsState = atomFromSetting<boolean>(ReaderSetting.OffsetDoubleSpreads);
 
 export const trackerAutoUpdateState = atomFromSetting<boolean>(TrackerSetting.TrackerAutoUpdate);
 

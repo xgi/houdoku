@@ -30,6 +30,7 @@ import {
   pageNumberState,
   relevantChapterListState,
   showingSettingsModalState,
+  pageGroupListState,
 } from '../../state/readerStates';
 import {
   fitContainToHeightState,
@@ -76,6 +77,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
   const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(showingSettingsModalState);
   const lastPageNumber = useRecoilValue(lastPageNumberState);
+  const pageGroupList = useRecoilValue(pageGroupListState);
   const chapter = useRecoilValue(chapterState);
   const relevantChapterList = useRecoilValue(relevantChapterListState);
   const [pageStyle, setPageStyle] = useRecoilState(pageStyleState);
@@ -83,6 +85,17 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
   const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
   const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
+
+  const getCurrentPageNumText = () => {
+    let text = `${pageNumber}`;
+    if (pageStyle === PageStyle.Double) {
+      const curGroup = pageGroupList.find((group) => group.includes(pageNumber));
+      if (curGroup && curGroup.length > 1) {
+        text = `${curGroup[0]}-${curGroup[1]}`;
+      }
+    }
+    return `${text} / ${lastPageNumber}`;
+  };
 
   const getFitButtonContent = (): {
     text: string;
@@ -232,11 +245,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             </Menu>
           }
         >
-          <Text className={`${styles.field}`}>{`${pageNumber}${
-            pageStyle === PageStyle.Double && pageNumber !== lastPageNumber
-              ? `-${pageNumber + 1}`
-              : ''
-          } / ${lastPageNumber}`}</Text>
+          <Text className={`${styles.field}`}>{getCurrentPageNumText()}</Text>
         </Dropdown>
         <button
           className={`${styles.button} ${styles.arrowButton}`}

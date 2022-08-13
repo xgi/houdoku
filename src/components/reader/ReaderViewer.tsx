@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './ReaderViewer.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
-import { lastPageNumberState, pageDataListState, pageNumberState } from '../../state/readerStates';
+import {
+  lastPageNumberState,
+  pageDataListState,
+  pageGroupListState,
+  pageNumberState,
+} from '../../state/readerStates';
 import {
   fitContainToWidthState,
   fitContainToHeightState,
@@ -17,6 +22,7 @@ const ROOT_ID = 'root';
 
 type Props = {
   changePage: (left: boolean, toBound?: boolean) => void;
+  updatePageGroupList: () => void;
 };
 
 const ReaderViewer: React.FC<Props> = (props: Props) => {
@@ -25,6 +31,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
   const lastPageNumber = useRecoilValue(lastPageNumberState);
   const pageDataList = useRecoilValue(pageDataListState);
+  const pageGroupList = useRecoilValue(pageGroupListState);
   const fitContainToWidth = useRecoilValue(fitContainToWidthState);
   const fitContainToHeight = useRecoilValue(fitContainToHeightState);
   const fitStretch = useRecoilValue(fitStretchState);
@@ -54,22 +61,25 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const getPageImage = (num: number, showing: boolean) => {
     let isLeft = false;
     let isRight = false;
-    if (pageStyle === PageStyle.Double) {
+    const pageGroup = pageGroupList.find((group) => group.includes(pageNumber));
+    if (pageStyle === PageStyle.Double && pageGroup && pageGroup.length > 1) {
       if (readingDirection === ReadingDirection.LeftToRight) {
-        isLeft = num === pageNumber;
-        isRight = num === pageNumber + 1;
+        isLeft = num === pageGroup[0];
+        isRight = num === pageGroup[1];
       } else {
-        isRight = num === pageNumber;
-        isLeft = num === pageNumber + 1;
+        isRight = num === pageGroup[0];
+        isLeft = num === pageGroup[1];
       }
     }
 
     return (
       <img
         key={num}
+        data-num={num}
         src={pageDataList[num - 1]}
         alt={`Page ${num}`}
         style={showing ? {} : { display: 'none' }}
+        onLoad={props.updatePageGroupList}
         className={`
       ${styles.pageImage}
       ${isLeft ? styles.left : ''}
@@ -91,7 +101,14 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const getSinglePageContainer = () => {
     let pageImages = [];
     for (let i = 1; i <= lastPageNumber; i += 1) {
-      const showing = i === pageNumber || (pageStyle === PageStyle.Double && i === pageNumber + 1);
+      const pageGroup = pageGroupList.find((group) => group.includes(pageNumber));
+
+      let shownInDouble = false;
+      if (pageStyle === PageStyle.Double && pageGroup !== undefined) {
+        shownInDouble = pageGroup.includes(i);
+      }
+
+      const showing = i === pageNumber || shownInDouble;
       pageImages.push(getPageImage(i, showing));
     }
 

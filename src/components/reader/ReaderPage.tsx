@@ -53,6 +53,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const [lastPageNumber, setLastPageNumber] = useRecoilState(readerStates.lastPageNumberState);
   const setPageUrls = useSetRecoilState(readerStates.pageUrlsState);
   const [pageDataList, setPageDataList] = useRecoilState(readerStates.pageDataListState);
+  const [pageGroupList, setPageGroupList] = useRecoilState(readerStates.pageGroupListState);
   const [relevantChapterList, setRelevantChapterList] = useRecoilState(
     readerStates.relevantChapterListState
   );
@@ -71,6 +72,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   );
   const trackerAutoUpdate = useRecoilValue(settingStates.trackerAutoUpdateState);
   const discordPresenceEnabled = useRecoilValue(settingStates.discordPresenceEnabledState);
+  const offsetDoubleSpreadsState = useRecoilValue(settingStates.offsetDoubleSpreadsState);
   const keyPreviousPage = useRecoilValue(settingStates.keyPreviousPageState);
   const keyFirstPage = useRecoilValue(settingStates.keyFirstPageState);
   const keyNextPage = useRecoilValue(settingStates.keyNextPageState);
@@ -366,8 +368,17 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     if (readingDirection === ReadingDirection.RightToLeft) {
       delta = -delta;
     }
+
     if (pageStyle === PageStyle.Double) {
-      delta *= 2;
+      const curGroupIndex = pageGroupList.findIndex((group) => group.includes(pageNumber));
+      if (curGroupIndex + delta < 0) {
+        delta = -pageNumber;
+      } else if (curGroupIndex + delta >= pageGroupList.length) {
+        delta = lastPageNumber - pageNumber + 1;
+      } else {
+        const newPageNumber = pageGroupList[curGroupIndex + delta][0];
+        delta = newPageNumber - pageNumber;
+      }
     }
 
     if (showingNoNextChapter) {
@@ -378,6 +389,56 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       }
     } else {
       setPageNumber(pageNumber + delta);
+    }
+  };
+
+  const updatePageGroupList = () => {
+    if (pageStyle === PageStyle.Double) {
+      const imgTags = document.getElementsByTagName('img');
+      const newPageGroupList: number[][] = [];
+      let tempPageGroup: number[] = [];
+      let nextForcedSpread = 1;
+
+      if (imgTags) {
+        const sortedImgTags = Object.values(imgTags).sort((a, b) => {
+          const keyA = a.getAttribute('data-num');
+          const keyB = b.getAttribute('data-num');
+          if (keyA && keyB) {
+            return parseInt(keyA, 10) - parseInt(keyB, 10);
+          }
+          return 0;
+        });
+
+        sortedImgTags.forEach((img) => {
+          const imgKey = img.getAttribute('data-num');
+          if (imgKey) {
+            const pageNum = parseInt(imgKey, 10);
+            const isSpread = img.width > img.height;
+
+            if (offsetDoubleSpreadsState && isSpread) {
+              nextForcedSpread = pageNum + 1;
+            }
+
+            if (isSpread || (offsetDoubleSpreadsState && nextForcedSpread === pageNum)) {
+              if (tempPageGroup.length > 0) {
+                newPageGroupList.push(tempPageGroup);
+              }
+              newPageGroupList.push([pageNum]);
+              tempPageGroup = [];
+            } else {
+              tempPageGroup.push(pageNum);
+              if (tempPageGroup.length === 2) {
+                newPageGroupList.push(tempPageGroup);
+                tempPageGroup = [];
+              }
+            }
+          }
+        });
+
+        if (tempPageGroup.length > 0) newPageGroupList.push(tempPageGroup);
+
+        setPageGroupList(newPageGroupList);
+      }
     }
   };
 
@@ -409,6 +470,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     addRootStyles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showingHeader]);
+
+  useEffect(() => {
+    updatePageGroupList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offsetDoubleSpreadsState]);
 
   useEffect(() => {
     // mark the chapter as read if past a certain page threshold
@@ -451,6 +517,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     readerChapter,
     pageNumber,
     lastPageNumber,
+    pageGroupList,
   ]);
 
   useEffect(() => {
@@ -484,7 +551,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           {pageDataList.length === 0 ? (
             <ReaderLoader extensionId={readerSeries?.extensionId} />
           ) : (
-            <ReaderViewer changePage={changePage} />
+            <ReaderViewer changePage={changePage} updatePageGroupList={updatePageGroupList} />
           )}
         </>
       )}

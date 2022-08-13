@@ -35,6 +35,7 @@ import {
   preloadAmountState,
   readingDirectionState,
   longStripMarginState,
+  offsetDoubleSpreadsState,
 } from '../../state/settingStates';
 
 const { Panel } = Collapse;
@@ -74,6 +75,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [keyExit, setKeyExit] = useRecoilState(keyExitState);
   const [keyCloseOrBack, setKeyCloseOrBack] = useRecoilState(keyCloseOrBackState);
   const [longStripMargin, setLongStripMargin] = useRecoilState(longStripMarginState);
+  const [offsetDoubleSpreads, setOffsetDoubleSpreads] = useRecoilState(offsetDoubleSpreadsState);
 
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
@@ -142,6 +144,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         break;
       case ReaderSetting.LongStripMargin:
         setLongStripMargin(value);
+        break;
+      case ReaderSetting.OffsetDoubleSpreads:
+        setOffsetDoubleSpreads(value);
         break;
       default:
         break;
@@ -232,6 +237,20 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
             onClick={() => updateReaderSetting(ReaderSetting.LongStripMargin, !longStripMargin)}
           >
             Long Strip Margin
+          </Checkbox>
+        </div>
+      </Row>
+      <Row className={styles.row}>
+        <div>
+          <Checkbox
+            className={styles.checkbox}
+            checked={offsetDoubleSpreads}
+            disabled={pageStyle !== PageStyle.Double}
+            onClick={() =>
+              updateReaderSetting(ReaderSetting.OffsetDoubleSpreads, !offsetDoubleSpreads)
+            }
+          >
+            Offset Double Spreads
           </Checkbox>
         </div>
       </Row>

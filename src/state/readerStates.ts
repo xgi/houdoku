@@ -21,6 +21,11 @@ export const pageDataListState = atom({
   default: [] as string[],
 });
 
+export const pageGroupListState = atom({
+  key: 'readerPageGroupListState',
+  default: [] as number[][],
+});
+
 export const seriesState = atom({
   key: 'readerSeriesState',
   default: undefined as Series | undefined,
