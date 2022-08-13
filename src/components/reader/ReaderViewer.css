@@ -43,8 +43,12 @@ img {
   overflow-y: hidden;
 }
 
-.pageImage.grow:not(.containHeight) {
+.pageImage.grow:is(.containWidth) {
   width: 100%;
+}
+
+.pageImage.grow:is(.containHeight) {
+  height: 100%;
 }
 
 .pageImage.left {
