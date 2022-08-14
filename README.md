@@ -56,7 +56,8 @@ yarn start
 **UI**: The interface uses React components. Most base components (text, buttons, links, etc.) come from the [antd](https://ant.design)
 framework. Each component has a CSS file for custom styles.
 
-**State**: Redux (and react-redux) is used for state management. There are several defined "features" (located in `src/features/`) which encompass the majority of user-initiated functionality. Using React Hooks is acceptable, but discouraged, for small components. This is a convenience; preferably all state should be handled by Redux.
+**State**: [Recoil](https://recoiljs.org) is used for state management. Hooks are used for small
+non-shared behavior. 
 
 **Storage**: Library data and settings are saved with `localStorage`. Thumbnails are stored in
 the user-data path.
