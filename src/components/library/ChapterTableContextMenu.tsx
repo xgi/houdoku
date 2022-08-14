@@ -12,7 +12,7 @@ import { toggleChapterRead } from '../../features/library/utils';
 import routes from '../../constants/routes.json';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { chapterListState, seriesState } from '../../state/libraryStates';
-import { customDownloadsDirState } from '../../state/settingStates';
+import { chapterLanguagesState, customDownloadsDirState } from '../../state/settingStates';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -33,6 +33,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   const setChapterList = useSetRecoilState(chapterListState);
   const setSeries = useSetRecoilState(seriesState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
+  const chapterLanguages = useRecoilValue(chapterLanguagesState);
 
   if (!props.visible) return <></>;
 
@@ -69,7 +70,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   const handleToggleRead = () => {
     props.close();
     if (props.chapter !== undefined) {
-      toggleChapterRead(props.chapter, props.series, setChapterList, setSeries);
+      toggleChapterRead(props.chapter, props.series, setChapterList, setSeries, chapterLanguages);
     }
   };
 
@@ -77,7 +78,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     props.close();
     getPreviousChapters().forEach((chapter: Chapter) => {
       if ((read && !chapter.read) || (!read && chapter.read)) {
-        toggleChapterRead(chapter, props.series, setChapterList, setSeries);
+        toggleChapterRead(chapter, props.series, setChapterList, setSeries, chapterLanguages);
       }
     });
   };

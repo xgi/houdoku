@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, LanguageKey, Series } from 'houdoku-extension-lib';
 import {
   deleteAllDownloadedChapters,
   deleteThumbnail,
@@ -13,12 +13,14 @@ import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
 import { getNumberUnreadChapters } from '../../util/comparison';
 
-const updateSeriesNumberUnread = (series: Series) => {
+const updateSeriesNumberUnread = (series: Series, chapterLanguages: LanguageKey[]) => {
   if (series.id !== undefined) {
     const chapters: Chapter[] = library.fetchChapters(series.id);
     library.upsertSeries({
       ...series,
-      numberUnread: getNumberUnreadChapters(chapters),
+      numberUnread: getNumberUnreadChapters(
+        chapters.filter((chapter) => chapterLanguages.includes(chapter.languageKey))
+      ),
     });
   }
 };
@@ -61,7 +63,8 @@ export function removeSeries(
 
 export async function importSeries(
   series: Series,
-  setStatusText: (statusText: string) => void
+  setStatusText: (statusText: string) => void,
+  chapterLanguages: LanguageKey[]
 ): Promise<Series> {
   log.debug(`Importing series ${series.sourceId} from extension ${series.extensionId}`);
   setStatusText(`Adding "${series.title}" to your library...`);
@@ -75,7 +78,7 @@ export async function importSeries(
 
   const addedSeries = library.upsertSeries(series);
   library.upsertChapters(chapters, addedSeries);
-  updateSeriesNumberUnread(addedSeries);
+  updateSeriesNumberUnread(addedSeries, chapterLanguages);
 
   log.debug(`Imported series ${series.sourceId} with database ID ${series.id}`);
   setStatusText(`Added "${addedSeries.title}" to your library.`);
@@ -86,7 +89,8 @@ export function toggleChapterRead(
   chapter: Chapter,
   series: Series,
   setChapterList: (chapterList: Chapter[]) => void,
-  setSeries: (series: Series) => void
+  setSeries: (series: Series) => void,
+  chapterLanguages: LanguageKey[]
 ) {
   log.debug(
     `Toggling chapter read status for series ${series.title} chapterNum ${chapter.chapterNumber}`
@@ -96,7 +100,7 @@ export function toggleChapterRead(
 
   if (series.id !== undefined) {
     library.upsertChapters([newChapter], series);
-    updateSeriesNumberUnread(series);
+    updateSeriesNumberUnread(series, chapterLanguages);
     if (series.id !== undefined) {
       loadChapterList(series.id, setChapterList);
       loadSeries(series.id, setSeries);
@@ -105,7 +109,10 @@ export function toggleChapterRead(
 }
 
 // eslint-disable-next-line consistent-return
-async function reloadSeries(series: Series): Promise<Error | void> {
+async function reloadSeries(
+  series: Series,
+  chapterLanguages: LanguageKey[]
+): Promise<Error | void> {
   log.info(`Reloading series ${series.id} - ${series.title}`);
   if (series.id === undefined) {
     return new Promise((resolve) => resolve(Error('Series does not have database ID')));
@@ -162,7 +169,7 @@ async function reloadSeries(series: Series): Promise<Error | void> {
     library.removeChapters(orphanedChapterIds, newSeries.id);
   }
 
-  updateSeriesNumberUnread(newSeries);
+  updateSeriesNumberUnread(newSeries, chapterLanguages);
 
   // download the cover as a thumbnail if the remote URL has changed or
   // there is no existing thumbnail
@@ -180,7 +187,8 @@ export async function reloadSeriesList(
   seriesList: Series[],
   setSeriesList: (seriesList: Series[]) => void,
   setReloadingSeriesList: (reloadingSeriesList: boolean) => void,
-  setStatusText: (statusText: string) => void
+  setStatusText: (statusText: string) => void,
+  chapterLanguages: LanguageKey[]
 ) {
   log.debug(`Reloading series list...`);
   setReloadingSeriesList(true);
@@ -195,7 +203,7 @@ export async function reloadSeriesList(
   for (const series of sortedSeriesList) {
     setStatusText(`Reloading library (${cur}/${seriesList.length}) - ${series.title}`);
     // eslint-disable-next-line no-await-in-loop
-    const ret = await reloadSeries(series);
+    const ret = await reloadSeries(series, chapterLanguages);
     if (ret instanceof Error) {
       log.error(ret);
       errs += 1;

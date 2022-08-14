@@ -29,7 +29,7 @@ import {
 } from '../../state/libraryStates';
 import library from '../../services/library';
 import { statusTextState } from '../../state/statusBarStates';
-import { refreshOnStartState } from '../../state/settingStates';
+import { chapterLanguagesState, refreshOnStartState } from '../../state/settingStates';
 
 const { Content, Sider } = Layout;
 
@@ -42,6 +42,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const [completedStartReload, setCompletedStartReload] = useRecoilState(completedStartReloadState);
   const setStatusText = useSetRecoilState(statusTextState);
   const refreshOnStart = useRecoilValue(refreshOnStartState);
+  const chapterLanguages = useRecoilValue(chapterLanguagesState);
 
   useEffect(() => {
     if (refreshOnStart && !completedStartReload && seriesList.length > 0) {
@@ -50,7 +51,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         library.fetchSeriesList(),
         setSeriesList,
         setReloadingSeriesList,
-        setStatusText
+        setStatusText,
+        chapterLanguages
       )
         // eslint-disable-next-line promise/always-return
         .then(() => {

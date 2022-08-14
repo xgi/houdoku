@@ -4,7 +4,7 @@ import { Button, Input, Dropdown, Menu } from 'antd';
 import { DownOutlined, SyncOutlined } from '@ant-design/icons';
 import { Header } from 'antd/lib/layout/layout';
 import { SeriesStatus } from 'houdoku-extension-lib';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import styles from './LibraryControlBar.css';
 import { reloadSeriesList } from '../../features/library/utils';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
@@ -16,6 +16,7 @@ import {
   libraryColumnsState,
   libraryViewsState,
   librarySortState,
+  chapterLanguagesState,
 } from '../../state/settingStates';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -40,6 +41,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [libraryColumns, setLibraryColumns] = useRecoilState(libraryColumnsState);
   const [libraryViews, setLibraryViews] = useRecoilState(libraryViewsState);
   const [librarySort, setLibrarySort] = useRecoilState(librarySortState);
+  const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const [viewSubmenu, setViewSubmenu] = useState('');
   const [filterSubmenu, setFilterSubmenu] = useState('');
 
@@ -50,7 +52,13 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
         type="primary"
         onClick={() => {
           if (!reloadingSeriesList) {
-            reloadSeriesList(seriesList, setSeriesList, setReloadingSeriesList, setStatusText);
+            reloadSeriesList(
+              seriesList,
+              setSeriesList,
+              setReloadingSeriesList,
+              setStatusText,
+              chapterLanguages
+            );
           }
         }}
       >

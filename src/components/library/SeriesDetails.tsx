@@ -391,7 +391,13 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
               className={styles.refreshButton}
               onClick={() => {
                 if (series !== undefined && !reloadingSeriesList)
-                  reloadSeriesList([series], setSeriesList, setReloadingSeriesList, setStatusText)
+                  reloadSeriesList(
+                    [series],
+                    setSeriesList,
+                    setReloadingSeriesList,
+                    setStatusText,
+                    chapterLanguages
+                  )
                     .then(loadContent)
                     .catch((e) => log.error(e));
               }}

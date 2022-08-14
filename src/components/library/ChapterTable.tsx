@@ -145,7 +145,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
           <Checkbox
             checked={record.read}
             onChange={() => {
-              toggleChapterRead(record, props.series, setChapterList, setSeries);
+              toggleChapterRead(record, props.series, setChapterList, setSeries, chapterLanguages);
               if (!record.read && trackerAutoUpdate) {
                 sendProgressToTrackers(record, props.series);
               }

@@ -73,6 +73,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const trackerAutoUpdate = useRecoilValue(settingStates.trackerAutoUpdateState);
   const discordPresenceEnabled = useRecoilValue(settingStates.discordPresenceEnabledState);
   const offsetDoubleSpreadsState = useRecoilValue(settingStates.offsetDoubleSpreadsState);
+  const chapterLanguages = useRecoilValue(settingStates.chapterLanguagesState);
   const keyPreviousPage = useRecoilValue(settingStates.keyPreviousPageState);
   const keyFirstPage = useRecoilValue(settingStates.keyFirstPageState);
   const keyNextPage = useRecoilValue(settingStates.keyNextPageState);
@@ -485,7 +486,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       lastPageNumber > 0
     ) {
       if (pageNumber >= Math.floor(0.8 * lastPageNumber)) {
-        toggleChapterRead(readerChapter, readerSeries, setChapterList, setLibrarySeries);
+        toggleChapterRead(
+          readerChapter,
+          readerSeries,
+          setChapterList,
+          setLibrarySeries,
+          chapterLanguages
+        );
         setReaderChapter({ ...readerChapter, read: true });
         if (trackerAutoUpdate) sendProgressToTrackers(readerChapter, readerSeries);
       }
