@@ -25,12 +25,11 @@ import {
   searchResultsState,
   showingAddModalState,
 } from '../../state/searchStates';
+import { libraryColumnsState } from '../../state/settingStates';
 
 type SearchParams = {
   text?: string;
 };
-
-const RESULTS_PAGE_SIZE = 8;
 
 const { Text, Paragraph } = Typography;
 const { info } = Modal;
@@ -47,11 +46,23 @@ const Search: React.FC<Props> = (props: Props) => {
   const [nextSourcePage, setNextSourcePage] = useState(1);
   const [sourceHasMore, setSourceHasMore] = useState(false);
   const seriesList = useRecoilValue(seriesListState);
+  const libraryColumns = useRecoilValue(libraryColumnsState);
   const [searchExtension, setSearchExtension] = useRecoilState(searchExtensionState);
   const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
   const [addModalSeries, setAddModalSeries] = useRecoilState(addModalSeriesState);
   const [addModalEditable, setAddModalEditable] = useRecoilState(addModalEditableState);
   const [showingAddModal, setShowingAddModal] = useRecoilState(showingAddModalState);
+
+  const getPageSize = (columns: number) => {
+    return (
+      {
+        2: 4,
+        4: 8,
+        6: 24,
+        8: 40,
+      }[columns] || 8
+    );
+  };
 
   const getSearchExtensionMetadata = () => {
     return extensionList.find((metadata: ExtensionMetadata) => metadata.id === searchExtension);
@@ -200,8 +211,8 @@ const Search: React.FC<Props> = (props: Props) => {
     return (
       <div className={styles.seriesGrid}>
         <SeriesGrid
-          columns={4}
-          seriesList={searchResults.slice(0, curViewingPage * RESULTS_PAGE_SIZE)}
+          columns={libraryColumns}
+          seriesList={searchResults.slice(0, curViewingPage * getPageSize(libraryColumns))}
           filter=""
           filterProgress={ProgressFilter.All}
           filterStatus={null}
@@ -299,13 +310,14 @@ const Search: React.FC<Props> = (props: Props) => {
             <>
               {renderSeriesGrid()}
               <div className={styles.footerContainer}>
-                {sourceHasMore || searchResults.length > curViewingPage * RESULTS_PAGE_SIZE ? (
+                {sourceHasMore ||
+                searchResults.length > curViewingPage * getPageSize(libraryColumns) ? (
                   <Button
                     className={styles.loadMoreButton}
                     onClick={() => {
                       if (
                         sourceHasMore &&
-                        searchResults.length < (curViewingPage + 1) * RESULTS_PAGE_SIZE
+                        searchResults.length < (curViewingPage + 1) * getPageSize(libraryColumns)
                       ) {
                         handleSearch(searchParams, nextSourcePage, true);
                       }
