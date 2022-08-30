@@ -111,6 +111,7 @@ export enum ReaderSetting {
   KeyCloseOrBack = 'KeyCloseOrBack',
   LongStripMargin = 'LongStripMargin',
   OffsetDoubleSpreads = 'OffsetDoubleSpreads',
+  OptimizeContrast = 'OptimizeContrast',
 }
 
 export enum TrackerSetting {
@@ -167,6 +168,7 @@ export const SettingTypes = {
   [ReaderSetting.HideScrollbar]: SettingType.BOOLEAN,
   [ReaderSetting.LongStripMargin]: SettingType.BOOLEAN,
   [ReaderSetting.OffsetDoubleSpreads]: SettingType.BOOLEAN,
+  [ReaderSetting.OptimizeContrast]: SettingType.BOOLEAN,
   [ReaderSetting.KeyPreviousPage]: SettingType.STRING,
   [ReaderSetting.KeyFirstPage]: SettingType.STRING,
   [ReaderSetting.KeyNextPage]: SettingType.STRING,
@@ -211,6 +213,7 @@ export const DefaultSettings = {
   [ReaderSetting.HideScrollbar]: false,
   [ReaderSetting.LongStripMargin]: false,
   [ReaderSetting.OffsetDoubleSpreads]: false,
+  [ReaderSetting.OptimizeContrast]: false,
   [ReaderSetting.KeyPreviousPage]: 'left',
   [ReaderSetting.KeyFirstPage]: 'ctrl+left',
   [ReaderSetting.KeyNextPage]: 'right',

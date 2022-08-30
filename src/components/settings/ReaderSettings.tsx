@@ -36,6 +36,7 @@ import {
   readingDirectionState,
   longStripMarginState,
   offsetDoubleSpreadsState,
+  optimizeContrastState,
 } from '../../state/settingStates';
 
 const { Panel } = Collapse;
@@ -76,6 +77,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [keyCloseOrBack, setKeyCloseOrBack] = useRecoilState(keyCloseOrBackState);
   const [longStripMargin, setLongStripMargin] = useRecoilState(longStripMarginState);
   const [offsetDoubleSpreads, setOffsetDoubleSpreads] = useRecoilState(offsetDoubleSpreadsState);
+  const [optimizeContrast, setOptimizeContrast] = useRecoilState(optimizeContrastState);
 
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
@@ -147,6 +149,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         break;
       case ReaderSetting.OffsetDoubleSpreads:
         setOffsetDoubleSpreads(value);
+        break;
+      case ReaderSetting.OptimizeContrast:
+        setOptimizeContrast(value);
         break;
       default:
         break;
@@ -314,7 +319,19 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           </Checkbox>
         </div>
       </Row>
-      <Collapse ghost className={styles.something}>
+      <Paragraph className={styles.settingName}>Rendering</Paragraph>
+      <Row className={styles.row}>
+        <div>
+          <Checkbox
+            className={styles.checkbox}
+            checked={optimizeContrast}
+            onClick={() => updateReaderSetting(ReaderSetting.OptimizeContrast, !optimizeContrast)}
+          >
+            Optimize contrast
+          </Checkbox>
+        </div>
+      </Row>
+      <Collapse ghost>
         <Panel className={styles.keybindsPanel} header="Keyboard Shortcuts" key="1">
           {[
             {

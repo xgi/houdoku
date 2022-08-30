@@ -16,6 +16,7 @@ import {
   readingDirectionState,
   hideScrollbarState,
   longStripMarginState,
+  optimizeContrastState,
 } from '../../state/settingStates';
 
 const ROOT_ID = 'root';
@@ -39,6 +40,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const readingDirection = useRecoilValue(readingDirectionState);
   const hideScrollbar = useRecoilValue(hideScrollbarState);
   const longStripMargin = useRecoilValue(longStripMarginState);
+  const optimizeContrast = useRecoilValue(optimizeContrastState);
 
   const viewerContainerClickHandler = (e: React.MouseEvent) => {
     if (pageStyle === PageStyle.LongStrip) {
@@ -82,6 +84,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         onLoad={props.updatePageGroupList}
         className={`
       ${styles.pageImage}
+      ${optimizeContrast ? styles.optimizeContrast : ''}
       ${isLeft ? styles.left : ''}
       ${isRight ? styles.right : ''}
       ${fitContainToWidth ? styles.containWidth : ''}

@@ -29,6 +29,10 @@ img {
   height: unset;
 }
 
+.pageImage.optimizeContrast {
+  image-rendering: -webkit-optimize-contrast;
+}
+
 .pageImage.containWidth {
   max-width: 100%;
   min-width: 0;
