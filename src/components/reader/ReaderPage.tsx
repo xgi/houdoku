@@ -67,6 +67,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   );
   const customDownloadsDir = useRecoilValue(settingStates.customDownloadsDirState);
   const [pageStyle, setPageStyle] = useRecoilState(settingStates.pageStyleState);
+  const [offsetDoubleSpreads, setOffsetDoubleSpreads] = useRecoilState(
+    settingStates.offsetDoubleSpreadsState
+  );
   const [readingDirection, setReadingDirection] = useRecoilState(
     settingStates.readingDirectionState
   );
@@ -82,6 +85,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const keyNextChapter = useRecoilValue(settingStates.keyNextChapterState);
   const keyToggleReadingDirection = useRecoilValue(settingStates.keyToggleReadingDirectionState);
   const keyTogglePageStyle = useRecoilValue(settingStates.keyTogglePageStyleState);
+  const keyToggleOffsetDoubleSpreads = useRecoilValue(
+    settingStates.keyToggleOffsetDoubleSpreadsState
+  );
   const keyToggleShowingSettingsModal = useRecoilValue(
     settingStates.keyToggleShowingSettingsModalState
   );
@@ -458,6 +464,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       setReadingDirection(nextReadingDirection(readingDirection))
     );
     Mousetrap.bind(keyTogglePageStyle, () => setPageStyle(nextPageStyle(pageStyle)));
+    Mousetrap.bind(keyToggleOffsetDoubleSpreads, () =>
+      setOffsetDoubleSpreads(!offsetDoubleSpreads)
+    );
     Mousetrap.bind(keyToggleShowingSettingsModal, () =>
       setShowingSettingsModal(!showingSettingsModal)
     );
@@ -519,6 +528,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   }, [
     showingNoNextChapter,
     showingSettingsModal,
+    showingHeader,
     readingDirection,
     pageStyle,
     readerChapter,

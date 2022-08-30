@@ -51,7 +51,7 @@
   background-color: var(--color-foreground-alt) !important;
 }
 
-.exitButton, .pageStyleButton, .fitButton, .stretchButton, .settingsButton {
+.exitButton, .pageStyleButton, .offsetButton, .fitButton, .stretchButton, .settingsButton {
   padding-left: 6px;
   padding-right: 6px;
 }
@@ -61,7 +61,6 @@
 }
 
 .field {
-
   background: var(--color-background);
   color: var(--color-foreground);
 

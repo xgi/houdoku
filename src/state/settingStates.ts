@@ -86,6 +86,7 @@ export const keyTogglePageStyleState = atomFromSetting<string>(ReaderSetting.Key
 export const keyToggleShowingSettingsModalState = atomFromSetting<string>(ReaderSetting.KeyToggleShowingSettingsModal);
 export const keyToggleShowingSidebarState = atomFromSetting<string>(ReaderSetting.KeyToggleShowingSidebar);
 export const keyToggleShowingHeaderState = atomFromSetting<string>(ReaderSetting.KeyToggleShowingHeader);
+export const keyToggleOffsetDoubleSpreadsState = atomFromSetting<string>(ReaderSetting.KeyToggleOffsetDoubleSpreads);
 export const keyExitState = atomFromSetting<string>(ReaderSetting.KeyExit);
 export const keyCloseOrBackState = atomFromSetting<string>(ReaderSetting.KeyCloseOrBack);
 export const longStripMarginState = atomFromSetting<boolean>(ReaderSetting.LongStripMargin);

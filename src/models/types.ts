@@ -112,6 +112,7 @@ export enum ReaderSetting {
   LongStripMargin = 'LongStripMargin',
   OffsetDoubleSpreads = 'OffsetDoubleSpreads',
   OptimizeContrast = 'OptimizeContrast',
+  KeyToggleOffsetDoubleSpreads = 'KeyToggleOffsetDoubleSpreads',
 }
 
 export enum TrackerSetting {
@@ -182,6 +183,7 @@ export const SettingTypes = {
   [ReaderSetting.KeyToggleShowingHeader]: SettingType.STRING,
   [ReaderSetting.KeyExit]: SettingType.STRING,
   [ReaderSetting.KeyCloseOrBack]: SettingType.STRING,
+  [ReaderSetting.KeyToggleOffsetDoubleSpreads]: SettingType.STRING,
 
   [TrackerSetting.TrackerAutoUpdate]: SettingType.BOOLEAN,
 
@@ -227,6 +229,7 @@ export const DefaultSettings = {
   [ReaderSetting.KeyToggleShowingHeader]: 'm',
   [ReaderSetting.KeyExit]: 'backspace',
   [ReaderSetting.KeyCloseOrBack]: 'escape',
+  [ReaderSetting.KeyToggleOffsetDoubleSpreads]: 'u',
 
   [TrackerSetting.TrackerAutoUpdate]: true,
 

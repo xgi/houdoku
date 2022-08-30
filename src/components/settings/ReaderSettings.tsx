@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Row, Button, Modal, Tooltip, Checkbox, Collapse } from 'antd';
+import { Row, Button, Modal, Checkbox, Collapse } from 'antd';
 import {
-  UndoOutlined,
   FileOutlined,
   ReadOutlined,
   DownSquareOutlined,
@@ -16,7 +15,6 @@ import {
   fitContainToHeightState,
   fitContainToWidthState,
   fitStretchState,
-  hideScrollbarState,
   keyCloseOrBackState,
   keyExitState,
   keyFirstPageState,
@@ -29,14 +27,12 @@ import {
   keyToggleReadingDirectionState,
   keyToggleShowingHeaderState,
   keyToggleShowingSettingsModalState,
-  keyToggleShowingSidebarState,
-  overlayPageNumberState,
   pageStyleState,
-  preloadAmountState,
   readingDirectionState,
   longStripMarginState,
   offsetDoubleSpreadsState,
   optimizeContrastState,
+  keyToggleOffsetDoubleSpreadsState,
 } from '../../state/settingStates';
 
 const { Panel } = Collapse;
@@ -51,9 +47,6 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
   const [pageStyle, setPageStyle] = useRecoilState(pageStyleState);
   const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
-  const [preloadAmount, setPreloadAmount] = useRecoilState(preloadAmountState);
-  const [overlayPageNumber, setOverlayPageNumber] = useRecoilState(overlayPageNumberState);
-  const [hideScrollbar, setHideScrollbar] = useRecoilState(hideScrollbarState);
   const [keyPreviousPage, setKeyPreviousPage] = useRecoilState(keyPreviousPageState);
   const [keyFirstPage, setKeyFirstPage] = useRecoilState(keyFirstPageState);
   const [keyNextPage, setKeyNextPage] = useRecoilState(keyNextPageState);
@@ -64,11 +57,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
     keyToggleReadingDirectionState
   );
   const [keyTogglePageStyle, setKeyTogglePageStyle] = useRecoilState(keyTogglePageStyleState);
+  const [keyToggleOffsetDoubleSpreads, setKeyToggleOffsetDoubleSpreads] = useRecoilState(
+    keyToggleOffsetDoubleSpreadsState
+  );
   const [keyToggleShowingSettingsModal, setKeyToggleShowingSettingsModal] = useRecoilState(
     keyToggleShowingSettingsModalState
-  );
-  const [keyToggleShowingSidebar, setKeyToggleShowingSidebar] = useRecoilState(
-    keyToggleShowingSidebarState
   );
   const [keyToggleShowingHeader, setKeyToggleShowingHeader] = useRecoilState(
     keyToggleShowingHeaderState
@@ -96,15 +89,6 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.PageStyle:
         setPageStyle(value);
         break;
-      case ReaderSetting.PreloadAmount:
-        setPreloadAmount(value);
-        break;
-      case ReaderSetting.OverlayPageNumber:
-        setOverlayPageNumber(value);
-        break;
-      case ReaderSetting.HideScrollbar:
-        setHideScrollbar(value);
-        break;
       case ReaderSetting.KeyPreviousPage:
         setKeyPreviousPage(value);
         break;
@@ -129,11 +113,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.KeyTogglePageStyle:
         setKeyTogglePageStyle(value);
         break;
+      case ReaderSetting.KeyToggleOffsetDoubleSpreads:
+        setKeyToggleOffsetDoubleSpreads(value);
+        break;
       case ReaderSetting.KeyToggleShowingSettingsModal:
         setKeyToggleShowingSettingsModal(value);
-        break;
-      case ReaderSetting.KeyToggleShowingSidebar:
-        setKeyToggleShowingSidebar(value);
         break;
       case ReaderSetting.KeyToggleShowingHeader:
         setKeyToggleShowingHeader(value);
@@ -385,6 +369,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
               setting: ReaderSetting.KeyTogglePageStyle,
             },
             {
+              name: 'Toggle Double Page Offset',
+              value: keyToggleOffsetDoubleSpreads,
+              setting: ReaderSetting.KeyToggleOffsetDoubleSpreads,
+            },
+            {
               name: 'Show Settings Menu',
               value: keyToggleShowingSettingsModal,
               setting: ReaderSetting.KeyToggleShowingSettingsModal,
@@ -404,17 +393,12 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
                 >
                   {entry.value}
                 </Button>
-                <Tooltip title="Reset">
-                  <Button
-                    className={styles.shortcutResetButton}
-                    icon={<UndoOutlined />}
-                    onClick={() =>
-                      updateReaderSetting(entry.setting, DefaultSettings[entry.setting])
-                    }
-                  >
-                    Reset
-                  </Button>
-                </Tooltip>
+                <Button
+                  className={styles.shortcutResetButton}
+                  onClick={() => updateReaderSetting(entry.setting, DefaultSettings[entry.setting])}
+                >
+                  Reset
+                </Button>
               </div>
             </Row>
           ))}

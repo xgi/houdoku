@@ -36,6 +36,7 @@ import {
   fitContainToHeightState,
   fitContainToWidthState,
   fitStretchState,
+  offsetDoubleSpreadsState,
   pageStyleState,
   readingDirectionState,
 } from '../../state/settingStates';
@@ -85,6 +86,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
   const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
   const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
+  const [offsetDoubleSpreads, setOffsetDoubleSpreads] = useRecoilState(offsetDoubleSpreadsState);
 
   const getCurrentPageNumText = () => {
     let text = `${pageNumber}`;
@@ -281,6 +283,19 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           {ICONS_PAGE_STYLE[pageStyle]} {TEXT_PAGE_STYLE[pageStyle]}
         </button>
       </div>
+
+      {pageStyle === PageStyle.Double ? (
+        <div className={styles.buttonGroup}>
+          <button
+            className={`${styles.button} ${styles.offsetButton}`}
+            onClick={() => setOffsetDoubleSpreads(!offsetDoubleSpreads)}
+          >
+            {offsetDoubleSpreads ? <CheckOutlined /> : <CloseOutlined />} Offset Spreads
+          </button>
+        </div>
+      ) : (
+        ''
+      )}
 
       <div className={styles.buttonGroup}>{renderFitButton()}</div>
 
