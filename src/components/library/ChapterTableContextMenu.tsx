@@ -17,7 +17,7 @@ import { chapterLanguagesState, customDownloadsDirState } from '../../state/sett
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 const WIDTH = 150;
-const HEIGHT = 180;
+const HEIGHT = 130;
 
 type Props = {
   location: { x: number; y: number };
