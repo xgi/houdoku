@@ -1,7 +1,7 @@
 {
   "name": "houdoku",
   "productName": "Houdoku",
-  "version": "2.9.3",
+  "version": "2.9.4",
   "description": "Manga reader and library manager for the desktop",
   "main": "./main.prod.js",
   "author": {
