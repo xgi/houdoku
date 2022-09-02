@@ -62,7 +62,7 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
       <Form form={removalForm} name="removal_form" initialValues={{ deleteDownloads: false }}>
         <Paragraph>This action is irreversible.</Paragraph>
         <Form.Item className={styles.formItem} name="deleteDownloads" valuePropName="checked">
-          <Checkbox>Delete downloaded chapters</Checkbox>
+          <Checkbox>Also delete downloaded chapters</Checkbox>
         </Form.Item>
       </Form>
     </Modal>
