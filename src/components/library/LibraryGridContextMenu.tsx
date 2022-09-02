@@ -10,7 +10,7 @@ import { seriesListState } from '../../state/libraryStates';
 import SeriesExtensionNotFoundModalContent from './SeriesExtensionNotFoundModalContent';
 
 const WIDTH = 150;
-const HEIGHT = 180;
+const HEIGHT = 50;
 
 type Props = {
   visible: boolean;
