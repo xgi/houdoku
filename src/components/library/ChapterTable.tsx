@@ -58,7 +58,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const trackerAutoUpdate = useRecoilValue(trackerAutoUpdateState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const [showingContextMenu, setShowingContextMenu] = useState(false);
-  const [contextMenuLocation, setContextMenuLocation] = useState<{
+  const [contextMenuPosition, setContextMenuPosition] = useState<{
     x: number;
     y: number;
   }>({
@@ -261,7 +261,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   return (
     <>
       <ChapterTableContextMenu
-        location={contextMenuLocation}
+        position={contextMenuPosition}
         visible={showingContextMenu}
         series={props.series}
         chapter={contextMenuChapter}
@@ -290,7 +290,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
               setShowingContextMenu(false);
             },
             onContextMenu: (event) => {
-              setContextMenuLocation({ x: event.clientX, y: event.clientY });
+              setContextMenuPosition({ x: event.clientX, y: event.clientY });
               setContextMenuChapter(record);
               setShowingContextMenu(true);
             },

@@ -1,16 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Paragraph from 'antd/lib/typography/Paragraph';
 import { Series } from 'houdoku-extension-lib';
-import { ipcRenderer } from 'electron';
-import { Modal } from 'antd';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import styles from './Library.css';
-import routes from '../../constants/routes.json';
-import { removeSeries } from '../../features/library/utils';
+import { goToSeries } from '../../features/library/utils';
 import SeriesGrid from '../general/SeriesGrid';
 import LibraryControlBar from './LibraryControlBar';
-import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesList from '../general/SeriesList';
 import { LibraryView } from '../../models/types';
 import { filterState, seriesListState } from '../../state/libraryStates';
@@ -21,14 +17,16 @@ import {
   librarySortState,
   libraryViewsState,
 } from '../../state/settingStates';
-
-const { confirm } = Modal;
+import SeriesExtensionNotFoundModalContent from './SeriesExtensionNotFoundModalContent';
+import RemoveSeriesModal from './RemoveSeriesModal';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
 const Library: React.FC<Props> = (props: Props) => {
   const history = useHistory();
+  const [showingRemoveModal, setShowingRemoveModal] = useState(false);
+  const [removeModalSeries, setRemoveModalSeries] = useState<Series | null>(null);
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const filter = useRecoilValue(filterState);
   const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
@@ -37,42 +35,22 @@ const Library: React.FC<Props> = (props: Props) => {
   const libraryView = useRecoilValue(libraryViewsState);
   const librarySort = useRecoilValue(librarySortState);
 
-  const goToSeries = async (series: Series) => {
-    if (series.id !== undefined) {
-      if (
-        (await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET, series.extensionId)) ===
-        undefined
-      ) {
-        confirm({
-          okType: 'primary',
-          okText: 'Remove Series',
-          okButtonProps: {
-            danger: true,
-          },
-          onOk: () => {
-            removeSeries(series, setSeriesList);
-          },
-          maskClosable: true,
-          content: (
-            <>
-              <Paragraph>The extension for this series was not found.</Paragraph>
-              <Paragraph>
-                To access the series, please reinstall the extension. Or, you may remove it from
-                your library now.
-              </Paragraph>
-              <Paragraph type="secondary">(extension: {series.extensionId})</Paragraph>
-            </>
-          ),
-        });
-      } else {
-        history.push(`${routes.SERIES}/${series.id}`);
-      }
-    }
-  };
+  const clickFunc = (series: Series) =>
+    goToSeries(
+      series,
+      setSeriesList,
+      <SeriesExtensionNotFoundModalContent series={series} />,
+      history
+    );
 
   const renderSeries = () => {
     return (
       <>
+        <RemoveSeriesModal
+          series={removeModalSeries}
+          showing={showingRemoveModal}
+          close={() => setShowingRemoveModal(false)}
+        />
         {libraryView === LibraryView.Grid ? (
           <div className={styles.seriesGrid}>
             <SeriesGrid
@@ -82,8 +60,13 @@ const Library: React.FC<Props> = (props: Props) => {
               filterStatus={libraryFilterStatus}
               filterProgress={libraryFilterProgress}
               librarySort={librarySort}
-              clickFunc={goToSeries}
+              contextMenuEnabled
+              clickFunc={clickFunc}
               inLibraryFunc={undefined}
+              showRemoveModal={(series: Series) => {
+                setRemoveModalSeries(series);
+                setShowingRemoveModal(true);
+              }}
             />
           </div>
         ) : (
@@ -94,7 +77,7 @@ const Library: React.FC<Props> = (props: Props) => {
               filterStatus={libraryFilterStatus}
               filterProgress={libraryFilterProgress}
               librarySort={librarySort}
-              clickFunc={goToSeries}
+              clickFunc={clickFunc}
               inLibraryFunc={undefined}
             />
           </div>

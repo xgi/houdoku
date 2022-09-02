@@ -1,14 +1,13 @@
 import fs from 'fs';
 import path from 'path';
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   Typography,
   Button,
   Descriptions,
   Affix,
   Modal,
-  Checkbox,
   Form,
   Tag,
   Dropdown,
@@ -26,7 +25,7 @@ import styles from './SeriesDetails.css';
 import blankCover from '../../img/blank_cover.png';
 import routes from '../../constants/routes.json';
 import { getBannerImageUrl } from '../../services/mediasource';
-import { reloadSeriesList, removeSeries } from '../../features/library/utils';
+import { reloadSeriesList } from '../../features/library/utils';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesTrackerModal from './SeriesTrackerModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
@@ -51,6 +50,7 @@ import {
   trackerAutoUpdateState,
   customDownloadsDirState,
 } from '../../state/settingStates';
+import RemoveSeriesModal from './RemoveSeriesModal';
 
 const { Title } = Typography;
 const { confirm } = Modal;
@@ -71,13 +71,11 @@ type Props = {};
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams<ParamTypes>();
-  const history = useHistory();
   const [extensionMetadata, setExtensionMetadata] = useState<ExtensionMetadata | undefined>();
   const [showingTrackerModal, setShowingTrackerModal] = useState(false);
   const [showingRemoveModal, setShowingRemoveModal] = useState(false);
   const [showingEditModal, setShowingEditModal] = useState(false);
   const [showingDownloadXModal, setShowingDownloadXModal] = useState(false);
-  const [removalForm] = Form.useForm();
   const [downloadXForm] = Form.useForm();
   const [series, setSeries] = useRecoilState(seriesState);
   const setSeriesList = useSetRecoilState(seriesListState);
@@ -88,7 +86,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const setStatusText = useSetRecoilState(statusTextState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
-  const trackerAutoUpdate = useRecoilValue(trackerAutoUpdateState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadContent = async () => {
@@ -263,40 +260,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           setSeries(newSeries);
         }}
       />
-      <Modal
-        visible={showingRemoveModal}
-        title="Remove this series from your library?"
-        onCancel={() => setShowingRemoveModal(false)}
-        okText="Remove"
-        okButtonProps={{ danger: true }}
-        onOk={() => {
-          removalForm
-            .validateFields()
-            .then((values) => {
-              // eslint-disable-next-line promise/always-return
-              if (series !== undefined) {
-                log.info(`Removing series ${series.id}`);
-                removeSeries(
-                  series,
-                  setSeriesList,
-                  values.deleteDownloads,
-                  customDownloadsDir || defaultDownloadsDir
-                );
-                history.push(routes.LIBRARY);
-              }
-            })
-            .catch((info) => {
-              log.error(info);
-            });
-        }}
-      >
-        <Form form={removalForm} name="removal_form" initialValues={{ deleteDownloads: false }}>
-          <Paragraph>This action is irreversible.</Paragraph>
-          <Form.Item className={styles.formItem} name="deleteDownloads" valuePropName="checked">
-            <Checkbox>Delete downloaded chapters</Checkbox>
-          </Form.Item>
-        </Form>
-      </Modal>
+      <RemoveSeriesModal
+        series={series}
+        showing={showingRemoveModal}
+        close={() => setShowingRemoveModal(false)}
+      />
       <Modal
         visible={showingDownloadXModal}
         onCancel={() => setShowingDownloadXModal(false)}

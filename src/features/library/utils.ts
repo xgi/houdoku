@@ -2,6 +2,9 @@ import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Chapter, LanguageKey, Series } from 'houdoku-extension-lib';
+import { Modal } from 'antd';
+import { ReactNode } from 'react';
+import { SetterOrUpdater } from 'recoil';
 import {
   deleteAllDownloadedChapters,
   deleteThumbnail,
@@ -12,6 +15,7 @@ import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
 import { getNumberUnreadChapters } from '../../util/comparison';
+import routes from '../../constants/routes.json';
 
 const updateSeriesNumberUnread = (series: Series, chapterLanguages: LanguageKey[]) => {
   if (series.id !== undefined) {
@@ -256,4 +260,33 @@ export function migrateSeriesTags() {
       }
     );
   });
+}
+
+export async function goToSeries(
+  series: Series,
+  setSeriesList: SetterOrUpdater<Series[]>,
+  notFoundContent: ReactNode,
+  history: any
+) {
+  if (series.id !== undefined) {
+    if (
+      (await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET, series.extensionId)) ===
+      undefined
+    ) {
+      Modal.confirm({
+        okType: 'primary',
+        okText: 'Remove Series',
+        okButtonProps: {
+          danger: true,
+        },
+        onOk: () => {
+          removeSeries(series, setSeriesList);
+        },
+        maskClosable: true,
+        content: notFoundContent,
+      });
+    } else {
+      history.push(`${routes.SERIES}/${series.id}`);
+    }
+  }
 }

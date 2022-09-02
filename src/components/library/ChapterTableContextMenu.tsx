@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable react/display-name */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { CaretRightOutlined, CheckOutlined, DownloadOutlined } from '@ant-design/icons';
 import { Chapter, Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
@@ -20,7 +20,7 @@ const WIDTH = 150;
 const HEIGHT = 130;
 
 type Props = {
-  location: { x: number; y: number };
+  position: { x: number; y: number };
   visible: boolean;
   series: Series;
   chapter: Chapter | undefined;
@@ -34,8 +34,6 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   const setSeries = useSetRecoilState(seriesState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
-
-  if (!props.visible) return <></>;
 
   const getPreviousChapters = () => {
     return props.chapterList.filter((chapter: Chapter) => {
@@ -83,15 +81,28 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     });
   };
 
-  // eslint-disable-next-line prefer-const
-  let { x, y } = props.location;
-  if (props.location.x + WIDTH > window.innerWidth) {
-    x = props.location.x - WIDTH;
+  let { x, y } = props.position;
+  if (props.position.x + WIDTH > window.innerWidth) {
+    x = props.position.x - WIDTH;
   }
-  if (props.location.y + HEIGHT > window.innerHeight) {
-    y = props.location.y - HEIGHT;
+  if (props.position.y + HEIGHT > window.innerHeight) {
+    y = props.position.y - HEIGHT;
   }
 
+  useEffect(() => {
+    const mousedownListener = (e: MouseEvent) => {
+      if (e.clientX < x || e.clientX > x + WIDTH || e.clientY < y || e.clientY > y + HEIGHT) {
+        props.close();
+      }
+    };
+
+    document.addEventListener('mousedown', mousedownListener);
+    return () => {
+      document.removeEventListener('mousedown', mousedownListener);
+    };
+  });
+
+  if (!props.visible) return <></>;
   return (
     <div
       className={styles.container}

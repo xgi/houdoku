@@ -216,6 +216,7 @@ const Search: React.FC<Props> = (props: Props) => {
           filter=""
           filterProgress={ProgressFilter.All}
           filterStatus={null}
+          contextMenuEnabled={false}
           clickFunc={(series: Series, isInLibrary: boolean | undefined = undefined) => {
             if (isInLibrary) {
               showInLibraryMessage(series);
@@ -226,6 +227,7 @@ const Search: React.FC<Props> = (props: Props) => {
             }
           }}
           inLibraryFunc={inLibrary}
+          showRemoveModal={undefined}
         />
       </div>
     );

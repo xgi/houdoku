@@ -85,7 +85,7 @@ const SeriesList: React.FC<Props> = (props: Props) => {
 
         return (
           <Button onClick={() => props.clickFunc(series, inLibrary)} type="primary" key={series}>
-            Continue
+            View
           </Button>
         );
       },

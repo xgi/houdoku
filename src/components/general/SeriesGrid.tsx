@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col } from 'antd';
 import { ipcRenderer } from 'electron';
 import Title from 'antd/lib/typography/Title';
@@ -11,6 +11,7 @@ import styles from './SeriesGrid.css';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
 import constants from '../../constants/constants.json';
+import LibraryGridContextMenu from '../library/LibraryGridContextMenu';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -24,11 +25,23 @@ type Props = {
   filterStatus: SeriesStatus | null;
   filterProgress: ProgressFilter;
   librarySort?: LibrarySort;
+  contextMenuEnabled: boolean;
   clickFunc: (series: Series, inLibrary: boolean | undefined) => void;
   inLibraryFunc: ((series: Series) => boolean) | undefined;
+  showRemoveModal: ((series: Series) => void) | undefined;
 };
 
 const SeriesGrid: React.FC<Props> = (props: Props) => {
+  const [showingContextMenu, setShowingContextMenu] = useState(false);
+  const [contextMenuSeries, setContextMenuSeries] = useState<Series | null>(null);
+  const [contextMenuPosition, setContextMenuPosition] = useState<{
+    x: number;
+    y: number;
+  }>({
+    x: 0,
+    y: 0,
+  });
+
   /**
    * Get the cover image source of a series.
    * If the series id is non-undefined (i.e. it is in the user's library) we first try to find the
@@ -126,32 +139,54 @@ const SeriesGrid: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Row gutter={[16, 16]}>
-      {getFilteredList(props.seriesList).map((series: Series) => {
-        const coverSource = getImageSource(series).replaceAll('\\', '/');
-        const inLibrary: boolean | undefined =
-          props.inLibraryFunc === undefined ? undefined : props.inLibraryFunc(series);
+    <>
+      {props.contextMenuEnabled ? (
+        <LibraryGridContextMenu
+          position={contextMenuPosition}
+          series={contextMenuSeries}
+          showRemoveModal={() => {
+            if (props.showRemoveModal !== undefined && contextMenuSeries) {
+              props.showRemoveModal(contextMenuSeries);
+            }
+          }}
+          visible={showingContextMenu}
+          close={() => setShowingContextMenu(false)}
+        />
+      ) : (
+        ''
+      )}
+      <Row gutter={[16, 16]}>
+        {getFilteredList(props.seriesList).map((series: Series) => {
+          const coverSource = getImageSource(series).replaceAll('\\', '/');
+          const inLibrary: boolean | undefined =
+            props.inLibraryFunc === undefined ? undefined : props.inLibraryFunc(series);
 
-        return (
-          <Col span={24 / props.columns} key={`${series.id}-${series.title}`}>
-            <div
-              className={styles.coverContainer}
-              onClick={() => props.clickFunc(series, inLibrary)}
-              style={{
-                backgroundImage: `linear-gradient(0deg, #000000cc, #00000000 40%, #00000000), url("${coverSource}")`,
-                height: `calc(105vw / ${props.columns})`,
-              }}
-            >
-              {renderUnreadBadge(series)}
-              {inLibrary ? renderInLibraryBadge() : ''}
-              <Title level={5} className={styles.seriesTitle}>
-                {series.title}
-              </Title>
-            </div>
-          </Col>
-        );
-      })}
-    </Row>
+          return (
+            <Col span={24 / props.columns} key={`${series.id}-${series.title}`}>
+              <div
+                className={styles.coverContainer}
+                onClick={() => props.clickFunc(series, inLibrary)}
+                onContextMenu={(e) => {
+                  setContextMenuPosition({ x: e.clientX, y: e.clientY });
+                  setContextMenuSeries(series);
+                  setShowingContextMenu(true);
+                }}
+                style={{
+                  backgroundImage: `linear-gradient(0deg, #000000cc, #00000000 40%, #00000000), url("${coverSource}")`,
+                  height: `calc(105vw / ${props.columns})`,
+                }}
+              >
+                {renderUnreadBadge(series)}
+                {inLibrary ? renderInLibraryBadge() : ''}
+                <Title level={5} className={styles.seriesTitle}>
+                  {series.title}
+                </Title>
+              </div>
+            </Col>
+          );
+        })}
+      </Row>
+    </>
   );
 };
 
