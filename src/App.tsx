@@ -4,6 +4,8 @@ import log from 'electron-log';
 import { ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
+import { NotificationsProvider } from '@mantine/notifications';
 import persistantStore from './util/persistantStore';
 import routes from './constants/routes.json';
 import DashboardPage from './components/general/DashboardPage';
@@ -96,6 +98,10 @@ export default function App() {
   const autoCheckForUpdates = useRecoilValue(autoCheckForUpdatesState);
   const autoCheckForExtensionUpdates = useRecoilValue(autoCheckForExtensionUpdatesState);
 
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (loading) {
@@ -164,14 +170,24 @@ export default function App() {
   }
 
   return (
-    <Router>
-      <Switch>
-        <Route path={`${routes.READER}/:series_id/:chapter_id`} exact component={ReaderPage} />
-        <Route path={routes.SERIES} component={DashboardPage} />
-        <Route path={routes.SEARCH} component={DashboardPage} />
-        <Route path={routes.SETTINGS} component={DashboardPage} />
-        <Route path={routes.LIBRARY} component={DashboardPage} />
-      </Switch>
-    </Router>
+    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+      <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+        <NotificationsProvider>
+          <Router>
+            <Switch>
+              <Route
+                path={`${routes.READER}/:series_id/:chapter_id`}
+                exact
+                component={ReaderPage}
+              />
+              <Route path={routes.SERIES} component={DashboardPage} />
+              <Route path={routes.SEARCH} component={DashboardPage} />
+              <Route path={routes.SETTINGS} component={DashboardPage} />
+              <Route path={routes.LIBRARY} component={DashboardPage} />
+            </Switch>
+          </Router>
+        </NotificationsProvider>
+      </MantineProvider>
+    </ColorSchemeProvider>
   );
 }
