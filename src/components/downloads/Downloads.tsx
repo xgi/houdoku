@@ -1,22 +1,26 @@
+import { Tabs } from '@mantine/core';
 import React from 'react';
-import { Tabs } from 'antd';
 import DownloadsStatus from './DownloadsStatus';
 import MyDownloads from './MyDownloads';
 
-const { TabPane } = Tabs;
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface Props {}
 
 const Downloads: React.FC<Props> = (props: Props) => {
   return (
-    <Tabs defaultActiveKey="1" tabPosition="top">
-      <TabPane tab="My Downloads" key={1}>
+    <Tabs defaultValue="downloads">
+      <Tabs.List>
+        <Tabs.Tab value="downloads">My Downloads</Tabs.Tab>
+        <Tabs.Tab value="queue">Queue</Tabs.Tab>
+      </Tabs.List>
+
+      <Tabs.Panel value="downloads" pt="md">
         <MyDownloads />
-      </TabPane>
-      <TabPane tab="Queue" key={2}>
+      </Tabs.Panel>
+
+      <Tabs.Panel value="queue" pt="md">
         <DownloadsStatus />
-      </TabPane>
+      </Tabs.Panel>
     </Tabs>
   );
 };
