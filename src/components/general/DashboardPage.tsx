@@ -63,7 +63,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   return (
     <AppShell
       padding="md"
-      fixed={false}
       navbar={
         <Navbar width={{ base: 200 }} p="xs">
           <Navbar.Section grow>
