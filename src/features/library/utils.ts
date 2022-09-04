@@ -2,9 +2,10 @@ import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Chapter, LanguageKey, Series } from 'houdoku-extension-lib';
-import { Modal } from 'antd';
-import { ReactNode } from 'react';
+import React from 'react';
 import { SetterOrUpdater } from 'recoil';
+import { openConfirmModal } from '@mantine/modals';
+import { Text } from '@mantine/core';
 import {
   deleteAllDownloadedChapters,
   deleteThumbnail,
@@ -265,7 +266,6 @@ export function migrateSeriesTags() {
 export async function goToSeries(
   series: Series,
   setSeriesList: SetterOrUpdater<Series[]>,
-  notFoundContent: ReactNode,
   history: any
 ) {
   if (series.id !== undefined) {
@@ -273,17 +273,16 @@ export async function goToSeries(
       (await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET, series.extensionId)) ===
       undefined
     ) {
-      Modal.confirm({
-        okType: 'primary',
-        okText: 'Remove Series',
-        okButtonProps: {
-          danger: true,
-        },
-        onOk: () => {
-          removeSeries(series, setSeriesList);
-        },
-        maskClosable: true,
-        content: notFoundContent,
+      openConfirmModal({
+        title: 'Extension not found',
+        centered: true,
+        children: React.createElement(Text, { size: 'sm' }, [
+          'The extension for this series is not loaded. To view the series, please reinstall the extension. Or, you may remove the series from your library.',
+          React.createElement(Text, { color: 'dimmed' }, `(extension: ${series.extensionId})`),
+        ]),
+        labels: { confirm: 'Remove from library', cancel: 'Cancel' },
+        confirmProps: { color: 'red' },
+        onConfirm: () => removeSeries(series, setSeriesList),
       });
     } else {
       history.push(`${routes.SERIES}/${series.id}`);

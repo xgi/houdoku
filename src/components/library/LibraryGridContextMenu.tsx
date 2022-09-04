@@ -1,23 +1,22 @@
 /* eslint-disable react/button-has-type */
 import React, { useEffect } from 'react';
-import { CaretRightOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Series } from 'houdoku-extension-lib';
 import { useHistory } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import styles from './LibraryGridContextMenu.css';
+import { Menu } from '@mantine/core';
+import { IconTrash, IconEye } from '@tabler/icons';
 import { goToSeries } from '../../features/library/utils';
 import { seriesListState } from '../../state/libraryStates';
-import SeriesExtensionNotFoundModalContent from './SeriesExtensionNotFoundModalContent';
 
-const WIDTH = 150;
-const HEIGHT = 50;
+const WIDTH = 200;
+const ESTIMATED_HEIGHT = 85;
 
 type Props = {
   visible: boolean;
   position: { x: number; y: number };
   series: Series | null;
   close: () => void;
-  showRemoveModal: (() => void) | undefined;
+  showRemoveModal: (series: Series) => void;
 };
 
 const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
@@ -28,24 +27,32 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
   if (props.position.x + WIDTH > window.innerWidth) {
     x = props.position.x - WIDTH;
   }
-  if (props.position.y + HEIGHT > window.innerHeight) {
-    y = props.position.y - HEIGHT;
+  if (props.position.y + ESTIMATED_HEIGHT > window.innerHeight) {
+    y = props.position.y - ESTIMATED_HEIGHT;
   }
 
   const viewFunc = () => {
     if (props.series) {
-      goToSeries(
-        props.series,
-        setSeriesList,
-        <SeriesExtensionNotFoundModalContent series={props.series} />,
-        history
-      );
+      goToSeries(props.series, setSeriesList, history);
+      props.close();
+    }
+  };
+
+  const removeFunc = () => {
+    if (props.series) {
+      props.showRemoveModal(props.series);
+      props.close();
     }
   };
 
   useEffect(() => {
     const mousedownListener = (e: MouseEvent) => {
-      if (e.clientX < x || e.clientX > x + WIDTH || e.clientY < y || e.clientY > y + HEIGHT) {
+      if (
+        e.clientX < x ||
+        e.clientX > x + WIDTH ||
+        e.clientY < y ||
+        e.clientY > y + ESTIMATED_HEIGHT
+      ) {
         props.close();
       }
     };
@@ -58,29 +65,27 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
 
   if (!props.visible) return <></>;
   return (
-    <div
-      className={styles.container}
-      style={{
-        width: WIDTH,
-        left: x,
-        top: y,
-      }}
+    <Menu
+      shadow="md"
+      width={WIDTH}
+      opened
+      styles={() => ({
+        dropdown: {
+          left: x,
+          top: y,
+        },
+      })}
     >
-      <button className={styles.button} onClick={viewFunc}>
-        <CaretRightOutlined /> View
-      </button>
-      <button
-        className={styles.button}
-        onClick={() => {
-          if (props.showRemoveModal) props.showRemoveModal();
-          props.close();
-        }}
-      >
-        <DeleteOutlined /> Remove
-      </button>
-    </div>
+      <Menu.Dropdown style={{ position: 'absolute', left: x, top: y }}>
+        <Menu.Item icon={<IconEye size={14} />} onClick={viewFunc}>
+          View
+        </Menu.Item>
+        <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={removeFunc}>
+          Remove from library
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
   );
 };
 
-export { WIDTH as ContextMenuWidth, HEIGHT as ContextMenuHeight };
 export default LibraryGridContextMenu;

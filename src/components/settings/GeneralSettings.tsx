@@ -57,7 +57,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Grid>
+    <Grid mb="md">
       <Grid.Col span={5}>Chapter Languages</Grid.Col>
       <Grid.Col span={7}>
         <MultiSelect
