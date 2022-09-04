@@ -67,13 +67,13 @@ h4.ant-typography {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-foreground-alt);
+  background: #25262B; /* dark 6 */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-foreground);
+  background: #868E96; /* gray 6 */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-7);
+  background: #495057; /* gray 7 */
 }
