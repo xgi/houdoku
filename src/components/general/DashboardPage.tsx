@@ -64,7 +64,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
     <AppShell
       padding="md"
       navbar={
-        <Navbar width={{ base: 200 }} p="xs">
+        <Navbar width={{ base: 200 }} pt={28} p="xs">
           <Navbar.Section grow>
             <DashboardSidebarLink
               icon={<IconBooks size={16} />}

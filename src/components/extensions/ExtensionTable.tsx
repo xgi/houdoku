@@ -199,7 +199,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <ScrollArea style={{ height: '80vh' }} pr="sm">
+    <ScrollArea style={{ height: 'calc(100vh - 24px - 72px)' }} pr="xl" mr={-16}>
       <Table>
         <thead>
           <tr>

@@ -290,7 +290,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           {showingKeybinds ? 'Hide' : 'Show'} keybinds
         </Button>
       </Group>
-      <Collapse in={showingKeybinds} ml="sm">
+      <Collapse in={showingKeybinds} ml="sm" pb="md">
         <Table verticalSpacing="xs" style={{ maxWidth: 400 }}>
           <tbody>
             {[
