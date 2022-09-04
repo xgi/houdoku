@@ -4,7 +4,7 @@ import log from 'electron-log';
 import { RegistrySearchResults, RegistrySearchPackage } from 'aki-plugin-manager';
 import { gt } from 'semver';
 import { ExtensionMetadata, LanguageKey, Languages } from 'houdoku-extension-lib';
-import { ActionIcon, Button, Group, Mark, Table, Text } from '@mantine/core';
+import { ActionIcon, Button, Group, Mark, ScrollArea, Table, Text } from '@mantine/core';
 import { IconSettings, IconTrash } from '@tabler/icons';
 import { useListState } from '@mantine/hooks';
 import { ExtensionTableRow } from '../../models/types';
@@ -199,20 +199,22 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th> </th>
-          <th>Name</th>
-          <th>URL</th>
-          <th>
-            <Text align="center">Version</Text>
-          </th>
-          <th> </th>
-        </tr>
-      </thead>
-      <tbody>{renderRows()}</tbody>
-    </Table>
+    <ScrollArea style={{ height: '80vh' }} pr="sm">
+      <Table>
+        <thead>
+          <tr>
+            <th> </th>
+            <th>Name</th>
+            <th>URL</th>
+            <th>
+              <Text align="center">Version</Text>
+            </th>
+            <th> </th>
+          </tr>
+        </thead>
+        <tbody>{renderRows()}</tbody>
+      </Table>
+    </ScrollArea>
   );
 };
 
