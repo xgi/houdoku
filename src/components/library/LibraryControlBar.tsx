@@ -1,11 +1,18 @@
 /* eslint-disable react/jsx-boolean-value */
-import React, { useState } from 'react';
-import { Button, Input, Dropdown, Menu } from 'antd';
-import { DownOutlined, SyncOutlined } from '@ant-design/icons';
-import { Header } from 'antd/lib/layout/layout';
+import React from 'react';
 import { SeriesStatus } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import styles from './LibraryControlBar.css';
+import { Button, Group, Input, Menu } from '@mantine/core';
+import {
+  IconArrowDown,
+  IconArrowUp,
+  IconCheck,
+  IconHash,
+  IconLayoutGrid,
+  IconLayoutList,
+  IconLetterA,
+  IconSearch,
+} from '@tabler/icons';
 import { reloadSeriesList } from '../../features/library/utils';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import { filterState, reloadingSeriesListState, seriesListState } from '../../state/libraryStates';
@@ -22,14 +29,15 @@ import {
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const LIBRARY_SORT_TEXT = {
-  [LibrarySort.TitleAsc]: 'Title Asc',
-  [LibrarySort.TitleDesc]: 'Title Desc',
-  [LibrarySort.UnreadAsc]: 'Unread Asc',
-  [LibrarySort.UnreadDesc]: 'Unread Desc',
+const SORT_ICONS = {
+  [LibrarySort.TitleAsc]: <IconArrowUp size={14} />,
+  [LibrarySort.TitleDesc]: <IconArrowDown size={14} />,
+  [LibrarySort.UnreadAsc]: <IconArrowUp size={14} />,
+  [LibrarySort.UnreadDesc]: <IconArrowDown size={14} />,
 };
 
-const LibraryControlBar: React.FC<Props> = (props: Props) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const LibraryControlBar: React.FC<Props> = (_props: Props) => {
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const setFilter = useSetRecoilState(filterState);
@@ -42,124 +50,152 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [libraryViews, setLibraryViews] = useRecoilState(libraryViewsState);
   const [librarySort, setLibrarySort] = useRecoilState(librarySortState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
-  const [viewSubmenu, setViewSubmenu] = useState('');
-  const [filterSubmenu, setFilterSubmenu] = useState('');
+
+  const refreshHandler = () => {
+    if (!reloadingSeriesList) {
+      reloadSeriesList(
+        seriesList,
+        setSeriesList,
+        setReloadingSeriesList,
+        setStatusText,
+        chapterLanguages
+      );
+    }
+  };
 
   return (
-    <Header className={styles.header}>
-      <Button
-        className={styles.reloadButton}
-        type="primary"
-        onClick={() => {
-          if (!reloadingSeriesList) {
-            reloadSeriesList(
-              seriesList,
-              setSeriesList,
-              setReloadingSeriesList,
-              setStatusText,
-              chapterLanguages
-            );
-          }
-        }}
-      >
-        {reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
-      </Button>
-      <Dropdown
-        className={styles.libraryViewDropdown}
-        overlay={
-          <Menu openKeys={[viewSubmenu]} onOpenChange={(keys) => setViewSubmenu(keys.pop() || '')}>
-            <Menu.SubMenu key="Columns" title="Columns" popupOffset={[-4, 0]}>
+    <Group position="apart" mb="md" noWrap>
+      <Group position="left" align="left" spacing="xs" noWrap>
+        <Button onClick={refreshHandler}>
+          {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}{' '}
+        </Button>
+        <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
+          <Menu.Target>
+            <Button variant="default">Layout</Button>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Label>View</Menu.Label>
+            <Menu.Item
+              icon={<IconLayoutGrid size={14} />}
+              onClick={() => setLibraryViews(LibraryView.Grid)}
+              rightSection={libraryViews === LibraryView.Grid ? <IconCheck size={14} /> : ''}
+            >
+              Grid
+            </Menu.Item>
+            <Menu.Item
+              icon={<IconLayoutList size={14} />}
+              onClick={() => setLibraryViews(LibraryView.List)}
+              rightSection={libraryViews === LibraryView.List ? <IconCheck size={14} /> : ''}
+            >
+              List
+            </Menu.Item>
+            <Menu.Divider />
+            <Menu.Label>Sort</Menu.Label>
+            <Menu.Item
+              icon={<IconLetterA size={14} />}
+              onClick={() =>
+                setLibrarySort(
+                  librarySort === LibrarySort.TitleAsc
+                    ? LibrarySort.TitleDesc
+                    : LibrarySort.TitleAsc
+                )
+              }
+              rightSection={
+                [LibrarySort.TitleAsc, LibrarySort.TitleDesc].includes(librarySort)
+                  ? SORT_ICONS[librarySort]
+                  : ''
+              }
+            >
+              Title
+            </Menu.Item>
+            <Menu.Item
+              icon={<IconHash size={14} />}
+              onClick={() =>
+                setLibrarySort(
+                  librarySort === LibrarySort.UnreadDesc
+                    ? LibrarySort.UnreadAsc
+                    : LibrarySort.UnreadDesc
+                )
+              }
+              rightSection={
+                [LibrarySort.UnreadAsc, LibrarySort.UnreadDesc].includes(librarySort)
+                  ? SORT_ICONS[librarySort]
+                  : ''
+              }
+            >
+              Unread
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+
+        <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
+          <Menu.Target>
+            <Button variant="default">Filters</Button>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            <Menu.Label>Progress</Menu.Label>
+            {Object.values(ProgressFilter).map((value) => (
+              <Menu.Item
+                key={value}
+                onClick={() => setLibraryFilterProgress(value)}
+                rightSection={libraryFilterProgress === value ? <IconCheck size={14} /> : ''}
+              >
+                {value}
+              </Menu.Item>
+            ))}
+            <Menu.Divider />
+            <Menu.Label>Status</Menu.Label>
+            {[[null, 'Any'], ...Object.entries(SeriesStatus)].map(([seriesStatus, text]) => (
+              <Menu.Item
+                key={text}
+                onClick={() => setLibraryFilterStatus(seriesStatus as SeriesStatus)}
+                rightSection={
+                  libraryFilterStatus === seriesStatus ||
+                  (libraryFilterProgress === undefined && seriesStatus === null) ? (
+                    <IconCheck size={14} />
+                  ) : (
+                    ''
+                  )
+                }
+              >
+                {text}
+              </Menu.Item>
+            ))}
+          </Menu.Dropdown>
+        </Menu>
+
+        {libraryViews === LibraryView.Grid ? (
+          <Menu shadow="md" trigger="hover" closeOnItemClick={false} width="target">
+            <Menu.Target>
+              <Button variant="default">Columns</Button>
+            </Menu.Target>
+
+            <Menu.Dropdown>
               {[2, 4, 6, 8].map((value) => (
                 <Menu.Item
                   key={`columns-${value}`}
                   onClick={() => setLibraryColumns(value)}
-                  className={libraryColumns === value ? styles.enabledMenuItem : ''}
+                  rightSection={libraryColumns === value ? <IconCheck size={14} /> : ''}
                 >
                   {value}
                 </Menu.Item>
               ))}
-            </Menu.SubMenu>
-            <Menu.SubMenu key="Layout" title="Layout" popupOffset={[-4, 0]}>
-              <Menu.Item
-                key={LibraryView.Grid}
-                onClick={() => setLibraryViews(LibraryView.Grid)}
-                className={libraryViews === LibraryView.Grid ? styles.enabledMenuItem : ''}
-              >
-                Grid
-              </Menu.Item>
-              <Menu.Item
-                key={LibraryView.List}
-                onClick={() => setLibraryViews(LibraryView.List)}
-                className={libraryViews === LibraryView.List ? styles.enabledMenuItem : ''}
-              >
-                List
-              </Menu.Item>
-            </Menu.SubMenu>
-            <Menu.SubMenu key="Sort" title="Sort" popupOffset={[-4, 0]}>
-              {Object.values(LibrarySort).map((value) => (
-                <Menu.Item
-                  key={value}
-                  onClick={() => setLibrarySort(value)}
-                  className={librarySort === value ? styles.enabledMenuItem : ''}
-                >
-                  {LIBRARY_SORT_TEXT[value]}
-                </Menu.Item>
-              ))}
-            </Menu.SubMenu>
+            </Menu.Dropdown>
           </Menu>
-        }
-      >
-        <Button>
-          View <DownOutlined />
-        </Button>
-      </Dropdown>
-      <Dropdown
-        className={styles.statusDropdown}
-        overlay={
-          <Menu
-            openKeys={[filterSubmenu]}
-            onOpenChange={(keys) => setFilterSubmenu(keys.pop() || '')}
-          >
-            <Menu.SubMenu key="Progress" title="Progress" popupOffset={[-4, 0]}>
-              {Object.values(ProgressFilter).map((value) => (
-                <Menu.Item
-                  key={value}
-                  onClick={() => setLibraryFilterProgress(value)}
-                  className={libraryFilterProgress === value ? styles.enabledMenuItem : ''}
-                >
-                  {value}
-                </Menu.Item>
-              ))}
-            </Menu.SubMenu>
-            <Menu.SubMenu key="Status" title="Status" popupOffset={[-4, 0]}>
-              {[[null, 'Any'], ...Object.entries(SeriesStatus)].map(([seriesStatus, text]) => (
-                <Menu.Item
-                  key={text}
-                  onClick={() => setLibraryFilterStatus(seriesStatus as SeriesStatus)}
-                  className={
-                    libraryFilterStatus === seriesStatus ||
-                    (libraryFilterProgress === undefined && seriesStatus === null)
-                      ? styles.enabledMenuItem
-                      : ''
-                  }
-                >
-                  {text}
-                </Menu.Item>
-              ))}
-            </Menu.SubMenu>
-          </Menu>
-        }
-      >
-        <Button>
-          Filter <DownOutlined />
-        </Button>
-      </Dropdown>
-      <Input
-        className={styles.seriesFilter}
-        placeholder="Search your library..."
-        onChange={(e) => setFilter(e.target.value)}
-      />
-    </Header>
+        ) : (
+          ''
+        )}
+      </Group>
+      <Group position="right" align="right" noWrap>
+        <Input
+          placeholder="Search library..."
+          icon={<IconSearch size={16} />}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}
+        />
+      </Group>
+    </Group>
   );
 };
 

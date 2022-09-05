@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { Series } from 'houdoku-extension-lib';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import styles from './Library.css';
-import { goToSeries } from '../../features/library/utils';
+import { useRecoilValue } from 'recoil';
+import { ScrollArea, Text } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
-import SeriesList from '../general/SeriesList';
-import { LibraryView } from '../../models/types';
+import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import { filterState, seriesListState } from '../../state/libraryStates';
 import {
   libraryFilterStatusState,
@@ -17,51 +13,84 @@ import {
 } from '../../state/settingStates';
 import LibraryGrid from './LibraryGrid';
 import RemoveSeriesModal from './RemoveSeriesModal';
+import LibraryList from './LibraryList';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const Library: React.FC<Props> = (props: Props) => {
-  const history = useHistory();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Library: React.FC<Props> = (_props: Props) => {
   const [removeModalShowing, setRemoveModalShowing] = useState(false);
   const [removeModalSeries, setRemoveModalSeries] = useState<Series | null>(null);
-  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
+  const seriesList = useRecoilValue(seriesListState);
   const filter = useRecoilValue(filterState);
   const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
   const libraryFilterProgress = useRecoilValue(libraryFilterProgressState);
   const libraryView = useRecoilValue(libraryViewsState);
   const librarySort = useRecoilValue(librarySortState);
 
-  const renderSeries = () => {
+  /**
+   * Get a filtered (and sorted) list of series after applying the specified filters.
+   * @param seriesList the list of series to filter
+   * @returns a sorted list of series matching all filter props
+   */
+  const getFilteredList = (): Series[] => {
+    const filteredList = seriesList.filter((series: Series) => {
+      if (!series) return false;
+
+      if (!series.title.toLowerCase().includes(filter.toLowerCase())) return false;
+      if (libraryFilterStatus !== null && series.status !== libraryFilterStatus) {
+        return false;
+      }
+      if (libraryFilterProgress === ProgressFilter.Unread && series.numberUnread === 0) {
+        return false;
+      }
+      if (libraryFilterProgress === ProgressFilter.Finished && series.numberUnread > 0) {
+        return false;
+      }
+
+      return true;
+    });
+
+    switch (librarySort) {
+      case LibrarySort.UnreadAsc:
+        return filteredList.sort((a: Series, b: Series) => a.numberUnread - b.numberUnread);
+      case LibrarySort.UnreadDesc:
+        return filteredList.sort((a: Series, b: Series) => b.numberUnread - a.numberUnread);
+      case LibrarySort.TitleAsc:
+        return filteredList.sort((a: Series, b: Series) => a.title.localeCompare(b.title));
+      case LibrarySort.TitleDesc:
+        return filteredList.sort((a: Series, b: Series) => b.title.localeCompare(a.title));
+      default:
+        return filteredList;
+    }
+  };
+
+  const renderLibrary = () => {
     return (
       <>
         <RemoveSeriesModal
           series={removeModalSeries}
           showing={removeModalShowing}
-          close={() => setRemoveModalSeries(null)}
+          close={() => setRemoveModalShowing(false)}
         />
 
         {libraryView === LibraryView.Grid ? (
-          <div className={styles.seriesGrid}>
-            <LibraryGrid
-              showRemoveModal={(series) => {
-                setRemoveModalSeries(series);
-                setRemoveModalShowing(true);
-              }}
-            />
-          </div>
+          <LibraryGrid
+            getFilteredList={getFilteredList}
+            showRemoveModal={(series) => {
+              setRemoveModalSeries(series);
+              setRemoveModalShowing(true);
+            }}
+          />
         ) : (
-          <div className={styles.seriesList}>
-            <SeriesList
-              seriesList={seriesList}
-              filter={filter}
-              filterStatus={libraryFilterStatus}
-              filterProgress={libraryFilterProgress}
-              librarySort={librarySort}
-              clickFunc={(series: Series) => goToSeries(series, setSeriesList, history)}
-              inLibraryFunc={undefined}
-            />
-          </div>
+          <LibraryList
+            getFilteredList={getFilteredList}
+            showRemoveModal={(series) => {
+              setRemoveModalSeries(series);
+              setRemoveModalShowing(true);
+            }}
+          />
         )}
       </>
     );
@@ -69,20 +98,20 @@ const Library: React.FC<Props> = (props: Props) => {
 
   const renderEmptyMessage = () => {
     return (
-      <div className={styles.emptyMessageContainer}>
-        <Paragraph>
-          Your library is empty. Install extensions from the tab on the left,
-          <br />
-          and then go to Add Series to start building your library.
-        </Paragraph>
-      </div>
+      <Text align="center" style={{ paddingTop: '30vh' }}>
+        Your library is empty. Install extensions from the tab on the left,
+        <br />
+        and then go to Add Series to start building your library.
+      </Text>
     );
   };
 
   return (
     <>
       <LibraryControlBar />
-      {seriesList.length > 0 ? renderSeries() : renderEmptyMessage()}
+      <ScrollArea style={{ height: 'calc(100vh - 24px - 72px)' }} pr="xl" mr={-16}>
+        {seriesList.length > 0 ? renderLibrary() : renderEmptyMessage()}
+      </ScrollArea>
     </>
   );
 };

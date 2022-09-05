@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Series } from 'houdoku-extension-lib';
 import { useHistory } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { Menu } from '@mantine/core';
+import { Menu, Portal } from '@mantine/core';
 import { IconTrash, IconEye } from '@tabler/icons';
 import { goToSeries } from '../../features/library/utils';
 import { seriesListState } from '../../state/libraryStates';
@@ -65,26 +65,28 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
 
   if (!props.visible) return <></>;
   return (
-    <Menu
-      shadow="md"
-      width={WIDTH}
-      opened
-      styles={() => ({
-        dropdown: {
-          left: x,
-          top: y,
-        },
-      })}
-    >
-      <Menu.Dropdown style={{ position: 'absolute', left: x, top: y }}>
-        <Menu.Item icon={<IconEye size={14} />} onClick={viewFunc}>
-          View
-        </Menu.Item>
-        <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={removeFunc}>
-          Remove from library
-        </Menu.Item>
-      </Menu.Dropdown>
-    </Menu>
+    <Portal>
+      <Menu
+        shadow="md"
+        width={WIDTH}
+        opened
+        styles={() => ({
+          dropdown: {
+            left: x,
+            top: y,
+          },
+        })}
+      >
+        <Menu.Dropdown style={{ position: 'absolute', left: x, top: y }}>
+          <Menu.Item icon={<IconEye size={14} />} onClick={viewFunc}>
+            View
+          </Menu.Item>
+          <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={removeFunc}>
+            Remove from library
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    </Portal>
   );
 };
 

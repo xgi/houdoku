@@ -4,21 +4,15 @@ import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { Series } from 'houdoku-extension-lib';
 import { SimpleGrid, Title } from '@mantine/core';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useHistory } from 'react-router-dom';
-import { LibrarySort, ProgressFilter } from '../../models/types';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
 import constants from '../../constants/constants.json';
 import LibraryGridContextMenu from './LibraryGridContextMenu';
 import styles from './LibraryGrid.css';
-import { seriesListState, filterState } from '../../state/libraryStates';
-import {
-  libraryFilterStatusState,
-  libraryFilterProgressState,
-  libraryColumnsState,
-  librarySortState,
-} from '../../state/settingStates';
+import { seriesListState } from '../../state/libraryStates';
+import { libraryColumnsState } from '../../state/settingStates';
 import { goToSeries } from '../../features/library/utils';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
@@ -27,17 +21,14 @@ if (!fs.existsSync(thumbnailsDir)) {
 }
 
 type Props = {
+  getFilteredList: () => Series[];
   showRemoveModal: (series: Series) => void;
 };
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
   const history = useHistory();
-  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
-  const filter = useRecoilValue(filterState);
-  const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
-  const libraryFilterProgress = useRecoilValue(libraryFilterProgressState);
+  const setSeriesList = useSetRecoilState(seriesListState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
-  const librarySort = useRecoilValue(librarySortState);
   const [showingContextMenu, setShowingContextMenu] = useState(false);
   const [contextMenuSeries, setContextMenuSeries] = useState<Series | null>(null);
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
@@ -64,43 +55,6 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     }
 
     return series.remoteCoverUrl === '' ? blankCover : series.remoteCoverUrl;
-  };
-
-  /**
-   * Get a filtered (and sorted) list of series after applying the specified filters.
-   * @param seriesList the list of series to filter
-   * @returns a sorted list of series matching all filter props
-   */
-  const getFilteredList = (): Series[] => {
-    const filteredList = seriesList.filter((series: Series) => {
-      if (!series) return false;
-
-      if (!series.title.toLowerCase().includes(filter.toLowerCase())) return false;
-      if (libraryFilterStatus !== null && series.status !== libraryFilterStatus) {
-        return false;
-      }
-      if (libraryFilterProgress === ProgressFilter.Unread && series.numberUnread === 0) {
-        return false;
-      }
-      if (libraryFilterProgress === ProgressFilter.Finished && series.numberUnread > 0) {
-        return false;
-      }
-
-      return true;
-    });
-
-    switch (librarySort) {
-      case LibrarySort.UnreadAsc:
-        return filteredList.sort((a: Series, b: Series) => a.numberUnread - b.numberUnread);
-      case LibrarySort.UnreadDesc:
-        return filteredList.sort((a: Series, b: Series) => b.numberUnread - a.numberUnread);
-      case LibrarySort.TitleAsc:
-        return filteredList.sort((a: Series, b: Series) => a.title.localeCompare(b.title));
-      case LibrarySort.TitleDesc:
-        return filteredList.sort((a: Series, b: Series) => b.title.localeCompare(a.title));
-      default:
-        return filteredList;
-    }
   };
 
   /**
@@ -139,7 +93,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
       />
 
       <SimpleGrid cols={libraryColumns} spacing="xs">
-        {getFilteredList().map((series: Series) => {
+        {props.getFilteredList().map((series: Series) => {
           const coverSource = getImageSource(series).replaceAll('\\', '/');
 
           return (

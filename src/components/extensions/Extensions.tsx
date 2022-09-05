@@ -53,8 +53,8 @@ const Extensions: React.FC<Props> = (props: Props) => {
         toggleVisible={() => setShowingSettingsModal(!showingSettingsModal)}
         extensionId={settingsModalExtension}
       />
-      <Group position="apart" mb="md">
-        <Group position="left" align="left" spacing="xs">
+      <Group position="apart" mb="md" noWrap>
+        <Group position="left" align="left" spacing="xs" noWrap>
           <Button variant="default" onClick={() => doSearchRegistry()}>
             Refresh Extension List
           </Button>
@@ -62,7 +62,7 @@ const Extensions: React.FC<Props> = (props: Props) => {
             View Installed Extensions
           </Button>
         </Group>
-        <Group position="right" align="right">
+        <Group position="right" align="right" noWrap>
           <Input
             placeholder="Filter extensions..."
             icon={<IconSearch size={16} />}

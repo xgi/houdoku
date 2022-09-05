@@ -33,7 +33,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
 
     setDataSource(
       props.registryResults.objects
-        .map((object: any) => {
+        .map((object) => {
           const pkg: RegistrySearchPackage = object.package;
           const description = JSON.parse(pkg.description);
 
