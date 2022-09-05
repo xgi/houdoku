@@ -1,4 +1,4 @@
-import { LanguageKey, SettingType } from 'houdoku-extension-lib';
+import { LanguageKey, Series, SettingType } from 'houdoku-extension-lib';
 
 export type ExtensionTableRow = {
   pkgName: string;
@@ -51,6 +51,15 @@ export type TrackEntry = {
   scoreFormat?: TrackScoreFormat;
   progress?: number;
   status?: TrackStatus;
+};
+
+export type SearchParams = {
+  text?: string;
+};
+
+export type SearchResult = {
+  seriesList: Series[];
+  hasMore: boolean;
 };
 
 export enum GeneralSetting {

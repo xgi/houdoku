@@ -1,0 +1,20 @@
+.coverContainer {
+  position: relative;
+  opacity: 0.8;
+  background-size: cover;
+}
+
+.coverContainer:hover {
+  opacity: 0.5;
+}
+
+.seriesTitle {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  text-shadow: #000 0 0 4px;
+  line-height: 1.2;
+  user-select: none;
+  color: white;
+}

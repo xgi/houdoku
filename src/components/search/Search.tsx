@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Alert, Input, Dropdown, Menu, Modal, Typography, Spin } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
 import {
   ExtensionMetadata,
@@ -11,9 +9,9 @@ import {
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import styles from './Search.css';
-import { ProgressFilter } from '../../models/types';
-import SeriesGrid from '../general/SeriesGrid';
+import { Alert, Button, ScrollArea, Text } from '@mantine/core';
+import { IconInfoCircle } from '@tabler/icons';
+import { openModal } from '@mantine/modals';
 import AddSeriesModal from './AddSeriesModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -21,34 +19,36 @@ import { seriesListState } from '../../state/libraryStates';
 import {
   addModalEditableState,
   addModalSeriesState,
+  curViewingPageState,
+  nextSourcePageState,
   searchExtensionState,
-  searchResultsState,
+  searchParamsState,
+  searchResultState,
   showingAddModalState,
 } from '../../state/searchStates';
 import { libraryColumnsState } from '../../state/settingStates';
+import SearchGrid from './SearchGrid';
+import SearchControlBar from './SearchControlBar';
 
-type SearchParams = {
+export type SearchParams = {
   text?: string;
 };
-
-const { Text, Paragraph } = Typography;
-const { info } = Modal;
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const Search: React.FC<Props> = (props: Props) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const Search: React.FC<Props> = (_props: Props) => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
-  const [searchParams, setSearchParams] = useState<SearchParams>({});
-  const [curViewingPage, setCurViewingPage] = useState(1);
-  const [nextSourcePage, setNextSourcePage] = useState(1);
-  const [sourceHasMore, setSourceHasMore] = useState(false);
+  const [searchParams, setSearchParams] = useRecoilState(searchParamsState);
+  const [curViewingPage, setCurViewingPage] = useRecoilState(curViewingPageState);
+  const [nextSourcePage, setNextSourcePage] = useRecoilState(nextSourcePageState);
+  const [searchResult, setSearchResult] = useRecoilState(searchResultState);
   const seriesList = useRecoilValue(seriesListState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
-  const [searchExtension, setSearchExtension] = useRecoilState(searchExtensionState);
-  const [searchResults, setSearchResults] = useRecoilState(searchResultsState);
+  const searchExtension = useRecoilValue(searchExtensionState);
   const [addModalSeries, setAddModalSeries] = useRecoilState(addModalSeriesState);
   const [addModalEditable, setAddModalEditable] = useRecoilState(addModalEditableState);
   const [showingAddModal, setShowingAddModal] = useRecoilState(showingAddModalState);
@@ -64,10 +64,6 @@ const Search: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const getSearchExtensionMetadata = () => {
-    return extensionList.find((metadata: ExtensionMetadata) => metadata.id === searchExtension);
-  };
-
   const inLibrary = (series: Series): boolean => {
     return (
       seriesList.find(
@@ -78,32 +74,10 @@ const Search: React.FC<Props> = (props: Props) => {
     );
   };
 
-  const showInLibraryMessage = (series: Series) => {
-    info({
-      content: (
-        <>
-          <Paragraph>&quot;{series.title}&quot; is already in your library.</Paragraph>
-
-          <Paragraph>
-            <Text type="secondary">Source ID:</Text>{' '}
-            <Text type="secondary" code>
-              {series.sourceId}
-            </Text>
-            <br />
-            <Text type="secondary">Extension:</Text>{' '}
-            <Text type="secondary" code>
-              {series.extensionId}
-            </Text>
-          </Paragraph>
-        </>
-      ),
-    });
-  };
-
   const handleSearch = async (params: SearchParams, page = 1, loadingMore = false) => {
     setLoading(true);
     if (!loadingMore) {
-      setSearchResults([]);
+      setSearchResult({ seriesList: [], hasMore: false });
       setCurViewingPage(1);
     }
 
@@ -114,24 +88,37 @@ const Search: React.FC<Props> = (props: Props) => {
 
     await respPromise
       .then((resp: SeriesListResponse) => {
-        setSearchResults(
+        setSearchResult({
           // eslint-disable-next-line promise/always-return
-          loadingMore ? searchResults.concat(resp.seriesList) : resp.seriesList
-        );
-        setSourceHasMore(resp.hasMore);
+          seriesList: loadingMore
+            ? searchResult.seriesList.concat(resp.seriesList)
+            : resp.seriesList,
+          hasMore: resp.hasMore,
+        });
         setNextSourcePage(page + 1);
       })
       .finally(() => setLoading(false))
       .catch((e) => log.error(e));
   };
 
-  const handleSearchFilesystem = (path: string, sourceType: SeriesSourceType) => {
+  const handleSearchFilesystem = (path: string) => {
     ipcRenderer
-      .invoke(ipcChannels.EXTENSION.GET_SERIES, FS_METADATA.id, sourceType, path)
+      .invoke(ipcChannels.EXTENSION.GET_SERIES, FS_METADATA.id, SeriesSourceType.STANDARD, path)
       .then((series: Series) => {
         // eslint-disable-next-line promise/always-return
-        if (inLibrary(series)) {
-          showInLibraryMessage(series);
+        if (!inLibrary(series)) {
+          openModal({
+            title: 'Already in library',
+            children: (
+              <Text size="sm" mb="sm">
+                The series{' '}
+                <Text color="teal" inherit component="span" italic>
+                  {series.title}
+                </Text>{' '}
+                is already in your library.
+              </Text>
+            ),
+          });
         } else {
           setAddModalSeries(series);
           setAddModalEditable(searchExtension === FS_METADATA.id);
@@ -142,112 +129,35 @@ const Search: React.FC<Props> = (props: Props) => {
   };
 
   const renderAlert = () => {
-    const metadata = getSearchExtensionMetadata();
+    const metadata = extensionList.find((item: ExtensionMetadata) => item.id === searchExtension);
     if (metadata && metadata.notice.length > 0) {
       return (
-        <Alert
-          className={styles.alert}
-          message={`Notice: ${metadata.notice}`}
-          description={
-            metadata.noticeUrl.length > 0 ? (
-              <Paragraph>
-                For more information, see here:{' '}
-                <a href={metadata.noticeUrl} target="_blank" rel="noreferrer">
-                  {metadata.noticeUrl}
-                </a>
-              </Paragraph>
-            ) : (
-              ''
-            )
-          }
-          type="warning"
-        />
+        <Alert icon={<IconInfoCircle size={16} />} title="Extension information" color="indigo">
+          <Text>{metadata.notice}</Text>
+          <Text>
+            For more information, see here:{' '}
+            <a href={metadata.noticeUrl} target="_blank" rel="noreferrer">
+              {metadata.noticeUrl}
+            </a>
+          </Text>
+        </Alert>
       );
     }
     return <></>;
   };
 
-  const renderFilesystemInputs = () => {
-    return (
-      <div className={styles.fsInputContainer}>
-        <Button
-          onClick={() =>
-            ipcRenderer
-              .invoke(ipcChannels.APP.SHOW_OPEN_DIALOG, true, [], 'Select Series Directory')
-              .then((fileList: string) => {
-                // eslint-disable-next-line promise/always-return
-                if (fileList.length > 0) {
-                  handleSearchFilesystem(fileList[0], SeriesSourceType.STANDARD);
-                }
-              })
-          }
-        >
-          Select Directory
-        </Button>
-      </div>
-    );
-  };
-
-  const renderExtensionMenu = () => {
-    return (
-      <Menu
-        onClick={(e: any) => {
-          setSearchResults([]);
-          setNextSourcePage(1);
-          setSearchParams({});
-          setSearchExtension(e.item.props['data-value']);
-        }}
-      >
-        {extensionList.map((metadata: ExtensionMetadata) => (
-          <Menu.Item key={metadata.id} data-value={metadata.id}>
-            {metadata.name}
-          </Menu.Item>
-        ))}
-      </Menu>
-    );
-  };
-
-  const renderSeriesGrid = () => {
-    return (
-      <div className={styles.seriesGrid}>
-        <SeriesGrid
-          columns={libraryColumns}
-          seriesList={searchResults.slice(0, curViewingPage * getPageSize(libraryColumns))}
-          filter=""
-          filterProgress={ProgressFilter.All}
-          filterStatus={null}
-          contextMenuEnabled={false}
-          clickFunc={(series: Series, isInLibrary: boolean | undefined = undefined) => {
-            if (isInLibrary) {
-              showInLibraryMessage(series);
-            } else {
-              setAddModalSeries(series);
-              setAddModalEditable(searchExtension === FS_METADATA.id);
-              setShowingAddModal(!showingAddModal);
-            }
-          }}
-          inLibraryFunc={inLibrary}
-          showRemoveModal={undefined}
-        />
-      </div>
-    );
-  };
-
-  const getExtensionList = async () => {
-    setExtensionList(await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL));
-  };
-
   useEffect(() => {
-    setSearchResults([]);
-    setSourceHasMore(false);
+    setSearchParams({});
+    setSearchResult({ seriesList: [], hasMore: false });
     setNextSourcePage(1);
     setCurViewingPage(1);
-    setSearchParams({});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   useEffect(() => {
-    getExtensionList()
+    ipcRenderer
+      .invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL)
+      .then((list: ExtensionMetadata[]) => setExtensionList(list))
       .then(() => handleSearch(searchParams))
       .catch((err: Error) => log.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -266,76 +176,36 @@ const Search: React.FC<Props> = (props: Props) => {
           setAddModalEditable(false);
         }}
       />
-      <div>
-        <div className={styles.searchBar}>
-          <Dropdown className={styles.extensionDropdown} overlay={renderExtensionMenu()}>
-            <Button>
-              Extension: {getSearchExtensionMetadata()?.name} <DownOutlined />
-            </Button>
-          </Dropdown>
-          {searchExtension !== FS_METADATA.id ? (
-            <>
-              <Input
-                className={styles.searchField}
-                placeholder="Search for a series..."
-                allowClear
-                value={searchParams.text}
-                onChange={(e) => setSearchParams({ ...searchParams, text: e.target.value })}
-                onPressEnter={() => handleSearch(searchParams)}
-              />
-              <Button onClick={() => handleSearch(searchParams)}>Search</Button>
-            </>
-          ) : (
-            <div className={styles.searchField} />
-          )}
-        </div>
-        {renderAlert()}
-        {searchExtension === FS_METADATA.id ? renderFilesystemInputs() : <></>}
-      </div>
-
-      {searchExtension === FS_METADATA.id ? (
-        <></>
-      ) : (
-        <>
-          {searchResults.length === 0 ? (
-            <div className={styles.loadingContainer}>
-              {loading ? (
-                <>
-                  <Spin />
-                  <Paragraph>Searching from extension...</Paragraph>
-                </>
-              ) : (
-                <Paragraph>Sorry, no series were found with the current settings.</Paragraph>
-              )}
-            </div>
-          ) : (
-            <>
-              {renderSeriesGrid()}
-              <div className={styles.footerContainer}>
-                {sourceHasMore ||
-                searchResults.length > curViewingPage * getPageSize(libraryColumns) ? (
-                  <Button
-                    className={styles.loadMoreButton}
-                    onClick={() => {
-                      if (
-                        sourceHasMore &&
-                        searchResults.length < (curViewingPage + 1) * getPageSize(libraryColumns)
-                      ) {
-                        handleSearch(searchParams, nextSourcePage, true);
-                      }
-                      setCurViewingPage(curViewingPage + 1);
-                    }}
-                  >
-                    Load More
-                  </Button>
-                ) : (
-                  <></>
-                )}
-              </div>
-            </>
-          )}
-        </>
-      )}
+      <SearchControlBar
+        extensionList={extensionList}
+        handleSearch={handleSearch}
+        handleSearchFilesystem={handleSearchFilesystem}
+      />
+      <ScrollArea style={{ height: 'calc(100vh - 24px - 72px)' }} pr="xl" mr={-16}>
+        {searchResult.seriesList.length > 0 ? (
+          <SearchGrid loading={loading} getPageSize={getPageSize} inLibrary={inLibrary} />
+        ) : (
+          renderAlert()
+        )}
+        {searchResult.hasMore ||
+        searchResult.seriesList.length > curViewingPage * getPageSize(libraryColumns) ? (
+          <Button
+            onClick={() => {
+              if (
+                searchResult.hasMore &&
+                searchResult.seriesList.length < (curViewingPage + 1) * getPageSize(libraryColumns)
+              ) {
+                handleSearch(searchParams, nextSourcePage, true);
+              }
+              setCurViewingPage(curViewingPage + 1);
+            }}
+          >
+            Load More
+          </Button>
+        ) : (
+          <></>
+        )}
+      </ScrollArea>
     </>
   );
 };
