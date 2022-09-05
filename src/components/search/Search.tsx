@@ -9,7 +9,7 @@ import {
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Alert, Button, ScrollArea, Text } from '@mantine/core';
+import { Alert, Button, Center, ScrollArea, Text } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons';
 import { openModal } from '@mantine/modals';
 import AddSeriesModal from './AddSeriesModal';
@@ -146,6 +146,32 @@ const Search: React.FC<Props> = (_props: Props) => {
     return <></>;
   };
 
+  const renderLoadMoreButton = () => {
+    if (
+      searchResult.hasMore ||
+      searchResult.seriesList.length > curViewingPage * getPageSize(libraryColumns)
+    ) {
+      return (
+        <Center my="md">
+          <Button
+            onClick={() => {
+              if (
+                searchResult.hasMore &&
+                searchResult.seriesList.length < (curViewingPage + 1) * getPageSize(libraryColumns)
+              ) {
+                handleSearch(searchParams, nextSourcePage, true);
+              }
+              setCurViewingPage(curViewingPage + 1);
+            }}
+          >
+            Load More
+          </Button>
+        </Center>
+      );
+    }
+    return <></>;
+  };
+
   useEffect(() => {
     setSearchParams({});
     setSearchResult({ seriesList: [], hasMore: false });
@@ -187,24 +213,7 @@ const Search: React.FC<Props> = (_props: Props) => {
         ) : (
           renderAlert()
         )}
-        {searchResult.hasMore ||
-        searchResult.seriesList.length > curViewingPage * getPageSize(libraryColumns) ? (
-          <Button
-            onClick={() => {
-              if (
-                searchResult.hasMore &&
-                searchResult.seriesList.length < (curViewingPage + 1) * getPageSize(libraryColumns)
-              ) {
-                handleSearch(searchParams, nextSourcePage, true);
-              }
-              setCurViewingPage(curViewingPage + 1);
-            }}
-          >
-            Load More
-          </Button>
-        ) : (
-          <></>
-        )}
+        {renderLoadMoreButton()}
       </ScrollArea>
     </>
   );
