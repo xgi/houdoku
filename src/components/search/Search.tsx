@@ -106,7 +106,7 @@ const Search: React.FC<Props> = (_props: Props) => {
       .invoke(ipcChannels.EXTENSION.GET_SERIES, FS_METADATA.id, SeriesSourceType.STANDARD, path)
       .then((series: Series) => {
         // eslint-disable-next-line promise/always-return
-        if (!inLibrary(series)) {
+        if (inLibrary(series)) {
           openModal({
             title: 'Already in library',
             children: (
@@ -197,8 +197,8 @@ const Search: React.FC<Props> = (_props: Props) => {
         visible={showingAddModal}
         series={addModalSeries}
         editable={addModalEditable}
-        toggleVisible={() => {
-          setShowingAddModal(!showingAddModal);
+        close={() => {
+          setShowingAddModal(false);
           setAddModalEditable(false);
         }}
       />

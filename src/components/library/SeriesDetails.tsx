@@ -249,8 +249,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       <EditSeriesModal
         series={series}
         visible={showingEditModal}
-        editable
-        toggleVisible={() => setShowingEditModal(!showingEditModal)}
+        close={() => setShowingEditModal(false)}
         saveCallback={(newSeries) => {
           if (newSeries.remoteCoverUrl !== series?.remoteCoverUrl) {
             log.debug(`Updating cover for series ${series?.id}`);
