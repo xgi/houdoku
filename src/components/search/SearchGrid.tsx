@@ -60,7 +60,7 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
               cursor: inLibrary ? 'not-allowed' : 'pointer',
             }}
           >
-            {inLibrary ? <Overlay opacity={0.7} color="black" /> : ''}
+            {inLibrary ? <Overlay opacity={0.5} color="#2B8A3E" /> : ''}
             <Title className={styles.seriesTitle} order={5} lineClamp={3} p={4}>
               {series.title}
             </Title>
