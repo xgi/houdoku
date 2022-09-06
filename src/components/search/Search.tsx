@@ -164,7 +164,7 @@ const Search: React.FC<Props> = (_props: Props) => {
               setCurViewingPage(curViewingPage + 1);
             }}
           >
-            Load More
+            {loading ? 'Loading...' : 'Load More'}
           </Button>
         </Center>
       );
@@ -208,11 +208,8 @@ const Search: React.FC<Props> = (_props: Props) => {
         handleSearchFilesystem={handleSearchFilesystem}
       />
       <ScrollArea style={{ height: 'calc(100vh - 24px - 72px)' }} pr="xl" mr={-16}>
-        {searchResult.seriesList.length > 0 ? (
-          <SearchGrid loading={loading} getPageSize={getPageSize} inLibrary={inLibrary} />
-        ) : (
-          renderAlert()
-        )}
+        {!loading && searchResult.seriesList.length === 0 ? renderAlert() : ''}
+        <SearchGrid loading={loading} getPageSize={getPageSize} inLibrary={inLibrary} />
         {renderLoadMoreButton()}
       </ScrollArea>
     </>

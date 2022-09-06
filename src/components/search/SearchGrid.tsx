@@ -70,15 +70,16 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
   };
 
   const renderLoadingSkeleton = () => {
-    return [1, 2, 3, 4, 5, 6, 7, 8].map(() => (
-      <Skeleton style={{ height: `calc(105vw / ${libraryColumns})` }} />
+    return [...Array(props.getPageSize(libraryColumns)).keys()].map((x) => (
+      <Skeleton key={`skeleton-${x}`} style={{ height: `calc(105vw / ${libraryColumns})` }} />
     ));
   };
 
   return (
     <>
       <SimpleGrid cols={libraryColumns} spacing="xs">
-        {props.loading ? renderLoadingSkeleton() : renderSeriesGrid()}
+        {renderSeriesGrid()}
+        {props.loading ? renderLoadingSkeleton() : ''}
       </SimpleGrid>
     </>
   );
