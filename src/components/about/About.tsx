@@ -1,6 +1,6 @@
 import React from 'react';
 import { ipcRenderer } from 'electron';
-import { Title, Text, Button } from '@mantine/core';
+import { Title, Text, Button, Mark } from '@mantine/core';
 import packageJson from '../../../package.json';
 import ipcChannels from '../../constants/ipcChannels.json';
 
@@ -19,15 +19,20 @@ const About: React.FC<Props> = (props: Props) => {
       </Title>
       <Button onClick={handleUpdateCheck}>Check for Updates</Button>
       <Text pb="xs" pt="xs">
-        Houdoku is a desktop manga reader. To add a series to your library, click the &quot;Add
-        Series&quot; tab on the left panel and search for the series from a supported content
-        source.
+        Houdoku is a desktop manga reader. To add a series to your library, click the{' '}
+        <Text component="span" color="teal" weight={700}>
+          Add Series
+        </Text>{' '}
+        tab on the left panel and search for the series from a supported content source.
       </Text>
       <Text pb="xs">
-        This app does not host manga -- it retrieves them from public websites (&quot;content
+        This app does not host manga, it retrieves them from public websites (&quot;content
         sources&quot;). Support for content sources is provided through various extensions, which
-        can be installed/updated from the Extensions tab. You can select which content source to use
-        for each series on the Add Series page.
+        can be installed/updated from the{' '}
+        <Text component="span" color="violet" weight={700}>
+          Extensions
+        </Text>{' '}
+        tab.
       </Text>
       <Text pb="xs">
         Houdoku is open source. Please report issues or request features on GitHub.
