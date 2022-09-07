@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal } from '@mantine/core';
 import {
+  IconArrowBigDownLines,
+  IconArrowBigUpLines,
   IconChecks,
   IconDownload,
   IconEye,
@@ -22,7 +24,7 @@ import { chapterLanguagesState, customDownloadsDirState } from '../../state/sett
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 const WIDTH = 200;
-const HEIGHT = 130;
+const HEIGHT = 220;
 
 type Props = {
   position: { x: number; y: number };
@@ -30,6 +32,7 @@ type Props = {
   series: Series;
   chapter: Chapter | undefined;
   chapterList: Chapter[];
+  setDownloadModalProps: (chapter: Chapter, direction: 'next' | 'previous') => void;
   close: () => void;
 };
 
@@ -52,6 +55,13 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
         } as DownloadTask,
       ]);
       downloaderClient.start();
+    }
+  };
+
+  const handleDownloadMultiple = (direction: 'next' | 'previous') => {
+    props.close();
+    if (props.chapter !== undefined) {
+      props.setDownloadModalProps(props.chapter, direction);
     }
   };
 
@@ -151,8 +161,22 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
             </Menu.Item>
           )}
 
+          <Menu.Divider />
+
           <Menu.Item icon={<IconDownload size={14} />} onClick={handleDownload}>
             Download
+          </Menu.Item>
+          <Menu.Item
+            icon={<IconArrowBigUpLines size={14} />}
+            onClick={() => handleDownloadMultiple('next')}
+          >
+            Download next X
+          </Menu.Item>
+          <Menu.Item
+            icon={<IconArrowBigDownLines size={14} />}
+            onClick={() => handleDownloadMultiple('previous')}
+          >
+            Download previous X
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>

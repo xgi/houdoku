@@ -51,6 +51,7 @@ import {
 import { TableColumnSortOrder } from '../../models/types';
 import { downloaderClient, DownloadTask } from '../../services/downloader';
 import { currentTaskState } from '../../state/downloaderStates';
+import DownloadModal from './DownloadModal';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -89,6 +90,13 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const downloaderCurrentTask = useRecoilValue(currentTaskState);
   const [sortedFilteredChapterList, setSortedFilteredChapterList] = useState<Chapter[]>([]);
   const [currentTextFilter, setCurrentTextFilter] = useState<'title' | 'group' | null>(null);
+  const [downloadModalProps, setDownloadModalProps] = useState<{
+    chapter: Chapter | null;
+    direction: 'next' | 'previous';
+  }>({
+    chapter: null,
+    direction: 'next',
+  });
 
   useEffect(() => {
     if (downloaderCurrentTask?.page === 2) forceUpdate();
@@ -252,7 +260,18 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         series={props.series}
         chapter={contextMenuChapter}
         chapterList={sortedFilteredChapterList}
+        setDownloadModalProps={(chapter, direction) =>
+          setDownloadModalProps({ chapter, direction })
+        }
         close={() => setShowingContextMenu(false)}
+      />
+
+      <DownloadModal
+        series={props.series}
+        chapter={downloadModalProps.chapter}
+        direction={downloadModalProps.direction}
+        chapterList={sortedFilteredChapterList}
+        close={() => setDownloadModalProps({ ...downloadModalProps, chapter: null })}
       />
 
       <Table>
