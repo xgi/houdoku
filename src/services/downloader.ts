@@ -1,9 +1,13 @@
 /* eslint-disable no-underscore-dangle */
+import React from 'react';
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import { Chapter, PageRequesterData, Series } from 'houdoku-extension-lib';
 import log from 'electron-log';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import { showNotification, updateNotification } from '@mantine/notifications';
+import { IconCheck } from '@tabler/icons';
 import { getChapterDownloadPath } from '../util/filesystem';
 import ipcChannels from '../constants/ipcChannels.json';
 
@@ -21,9 +25,24 @@ export type DownloadError = {
   errorStr: string;
 };
 
-class DownloaderClient {
-  setStatusTextState?: (text: string | undefined) => void;
+const showDownloadNotification = (
+  notificationId: string,
+  task: DownloadTask | null,
+  queueSize?: number
+) => {
+  if (!task) return;
 
+  const queueStr = queueSize && queueSize > 0 ? ` (${queueSize} downloads queued)` : '';
+  updateNotification({
+    id: notificationId,
+    title: `Downloading ${task.series.title} chapter ${task.chapter.chapterNumber}`,
+    message: `Page ${task.page || 0}/${task.totalPages || '??'}${queueStr}`,
+    loading: true,
+    autoClose: false,
+  });
+};
+
+class DownloaderClient {
   setRunningState?: (running: boolean) => void;
 
   setQueueState?: (queue: DownloadTask[]) => void;
@@ -41,13 +60,11 @@ class DownloaderClient {
   downloadErrors: DownloadError[] = [];
 
   setStateFunctions = (
-    setStatusTextState: (text: string | undefined) => void,
     setRunningState: (running: boolean) => void,
     setQueueState: (queue: DownloadTask[]) => void,
     setCurrentTaskState: (currentTask: DownloadTask | null) => void,
     setDownloadErrorsState: (downloadErrors: DownloadError[]) => void
   ) => {
-    this.setStatusTextState = setStatusTextState;
     this.setRunningState = setRunningState;
     this.setQueueState = setQueueState;
     this.setCurrentTaskState = setCurrentTaskState;
@@ -89,6 +106,10 @@ class DownloaderClient {
       return;
     }
 
+    const startingQueueSize = this.queue.length;
+    const notificationId = uuidv4();
+    showNotification({ id: notificationId, message: 'Starting download...', loading: true });
+
     this.setRunning(true);
     while (this.running && this.queue.length > 0) {
       const task: DownloadTask | undefined = this.queue[0];
@@ -102,6 +123,7 @@ class DownloaderClient {
         chapter: task.chapter,
         downloadsDir: task.downloadsDir,
       });
+      showDownloadNotification(notificationId, this.currentTask, this.queue.length);
 
       // eslint-disable-next-line no-await-in-loop
       const chapterPath = await getChapterDownloadPath(
@@ -155,14 +177,6 @@ class DownloaderClient {
         const pageNumPadded = String(i).padStart(pageUrls.length.toString().length, '0');
         const pagePath = path.join(chapterPath, `${pageNumPadded}.${ext}`);
 
-        if (this.setStatusTextState) {
-          const queueStr = this.queue.length > 0 ? ` [+${this.queue.length} in queue]` : '';
-
-          this.setStatusTextState(
-            `Downloading ${task.series.title} chapter ${task.chapter.chapterNumber} (${i}/${pageUrls.length})${queueStr}`
-          );
-        }
-
         // eslint-disable-next-line no-await-in-loop
         await fetch(pageUrl)
           .then((response) => response.arrayBuffer())
@@ -192,21 +206,22 @@ class DownloaderClient {
           page: i,
           totalPages: pageUrls.length,
         });
+        showDownloadNotification(notificationId, this.currentTask, this.queue.length);
       }
 
       if (!this.running) {
         // task was paused, add it back to the start of the queue
         this.setQueue([{ ...task, page: i }, ...this.queue]);
       }
-
-      if (this.setStatusTextState) {
-        if (this.running) {
-          this.setStatusTextState(
-            `Finished downloading ${task.series.title} chapter ${task.chapter.chapterNumber}`
-          );
-        }
-      }
     }
+
+    updateNotification({
+      id: notificationId,
+      title: `Downloaded ${this.currentTask?.series.title} chapter ${this.currentTask?.chapter.chapterNumber}`,
+      message: startingQueueSize > 1 ? `Downloaded ${startingQueueSize} chapters` : '',
+      color: 'teal',
+      icon: React.createElement(IconCheck, { size: 16 }),
+    });
 
     this.setRunning(false);
     this.setCurrentTask(null);

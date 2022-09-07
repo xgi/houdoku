@@ -190,13 +190,7 @@ export default function App() {
       });
 
       // Give the downloader client access to the state modifiers
-      downloaderClient.setStateFunctions(
-        setStatusText,
-        setRunning,
-        setQueue,
-        setCurrentTask,
-        setDownloadErrors
-      );
+      downloaderClient.setStateFunctions(setRunning, setQueue, setCurrentTask, setDownloadErrors);
 
       // Previously the series object had separate tag fields (themes, formats, genres,
       // demographic, content warnings). These have now been consolidated into the
