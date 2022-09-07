@@ -12,7 +12,7 @@ import routes from '../../constants/routes.json';
 import { ReadingDirection, PageStyle } from '../../models/types';
 import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
-import { toggleChapterRead } from '../../features/library/utils';
+import { markChapters } from '../../features/library/utils';
 import { useForceUpdate } from '../../util/reactutil';
 import ReaderViewer from './ReaderViewer';
 import ReaderHeader from './ReaderHeader';
@@ -495,9 +495,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       lastPageNumber > 0
     ) {
       if (pageNumber >= Math.floor(0.8 * lastPageNumber)) {
-        toggleChapterRead(
-          readerChapter,
+        markChapters(
+          [readerChapter],
           readerSeries,
+          !readerChapter.read,
           setChapterList,
           setLibrarySeries,
           chapterLanguages

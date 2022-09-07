@@ -1,4 +1,3 @@
-/* eslint-disable react/button-has-type */
 import React, { useEffect } from 'react';
 import { Series } from 'houdoku-extension-lib';
 import { useHistory } from 'react-router-dom';

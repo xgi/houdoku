@@ -90,26 +90,20 @@ export async function importSeries(
   return addedSeries;
 }
 
-export function toggleChapterRead(
-  chapter: Chapter,
+export function markChapters(
+  chapters: Chapter[],
   series: Series,
+  read: boolean,
   setChapterList: (chapterList: Chapter[]) => void,
   setSeries: (series: Series) => void,
   chapterLanguages: LanguageKey[]
 ) {
-  log.debug(
-    `Toggling chapter read status for series ${series.title} chapterNum ${chapter.chapterNumber}`
-  );
-
-  const newChapter: Chapter = { ...chapter, read: !chapter.read };
-
   if (series.id !== undefined) {
-    library.upsertChapters([newChapter], series);
+    const newChapters = chapters.map((chapter) => ({ ...chapter, read }));
+    library.upsertChapters(newChapters, series);
     updateSeriesNumberUnread(series, chapterLanguages);
-    if (series.id !== undefined) {
-      loadChapterList(series.id, setChapterList);
-      loadSeries(series.id, setSeries);
-    }
+    loadChapterList(series.id, setChapterList);
+    loadSeries(series.id, setSeries);
   }
 }
 
