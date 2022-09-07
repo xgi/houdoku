@@ -217,6 +217,7 @@ class DownloaderClient {
   };
 
   add = (tasks: DownloadTask[]) => {
+    // TODO: don't allow duplicate tasks, or tasks that are already in the queue
     this.setQueue([...this.queue, ...tasks]);
   };
 
