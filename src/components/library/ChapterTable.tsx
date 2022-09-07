@@ -1,7 +1,5 @@
 /* eslint-disable react/display-name */
 import React, { useEffect, useState } from 'react';
-import { TablePaginationConfig } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Chapter, Series, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
@@ -10,8 +8,10 @@ import {
   ActionIcon,
   Button,
   Center,
+  CloseButton,
   Divider,
   Group,
+  Input,
   Pagination,
   Select,
   Table,
@@ -22,6 +22,7 @@ import {
   IconDownload,
   IconEye,
   IconFileCheck,
+  IconSearch,
   IconSortAscending,
   IconSortDescending,
 } from '@tabler/icons';
@@ -58,10 +59,6 @@ const columnOrderMap = {
   [TableColumnSortOrder.Descending]: <IconSortDescending size={16} />,
   [TableColumnSortOrder.None]: <IconArrowsSort size={16} />,
 };
-const columnOrderReverseMap: { [key: string]: TableColumnSortOrder } = {
-  ascend: TableColumnSortOrder.Ascending,
-  descend: TableColumnSortOrder.Descending,
-};
 
 type Props = {
   series: Series;
@@ -91,6 +88,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const forceUpdate = useForceUpdate();
   const downloaderCurrentTask = useRecoilValue(currentTaskState);
   const [sortedFilteredChapterList, setSortedFilteredChapterList] = useState<Chapter[]>([]);
+  const [currentTextFilter, setCurrentTextFilter] = useState<'title' | 'group' | null>(null);
 
   useEffect(() => {
     if (downloaderCurrentTask?.page === 2) forceUpdate();
@@ -134,6 +132,8 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
     chapterFilterTitle,
     chapterLanguages,
   ]);
+
+  useEffect(() => setCurrentPage(1), [chapterFilterGroup, chapterFilterTitle, chapterLanguages]);
 
   const getNextUnreadChapter = () => {
     return sortedFilteredChapterList
@@ -260,8 +260,57 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
           <tr>
             <th> </th>
             <th> </th>
-            <th>Title</th>
-            <th>Group</th>
+            {currentTextFilter ? (
+              <th colSpan={2}>
+                <Input
+                  autoFocus
+                  placeholder={`Filter ${currentTextFilter}...`}
+                  size="xs"
+                  rightSection={
+                    <CloseButton
+                      onClick={() => {
+                        setCurrentTextFilter(null);
+                        setChapterFilterTitle('');
+                        setChapterFilterGroup('');
+                      }}
+                    />
+                  }
+                  onChange={(value: React.ChangeEvent<HTMLInputElement>) => {
+                    if (currentTextFilter === 'title') setChapterFilterTitle(value.target.value);
+                    if (currentTextFilter === 'group') setChapterFilterGroup(value.target.value);
+                  }}
+                />
+              </th>
+            ) : (
+              <th>
+                <Group position="center" spacing={5} noWrap>
+                  <Text>Title</Text>
+                  <ActionIcon
+                    variant="transparent"
+                    size={16}
+                    onClick={() => setCurrentTextFilter('title')}
+                  >
+                    <IconSearch />
+                  </ActionIcon>
+                </Group>
+              </th>
+            )}
+            {currentTextFilter ? (
+              ''
+            ) : (
+              <th>
+                <Group position="center" spacing={5} noWrap>
+                  <Text>Group</Text>
+                  <ActionIcon
+                    variant="transparent"
+                    size={16}
+                    onClick={() => setCurrentTextFilter('group')}
+                  >
+                    <IconSearch />
+                  </ActionIcon>
+                </Group>
+              </th>
+            )}
             <th>
               <Group position="center" spacing={0} noWrap>
                 <Text>Vol</Text>
