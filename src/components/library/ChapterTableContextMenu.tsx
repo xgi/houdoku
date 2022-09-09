@@ -5,8 +5,8 @@ import { useHistory } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal } from '@mantine/core';
 import {
-  IconArrowBigDownLines,
-  IconArrowBigUpLines,
+  IconArrowBigLeftLines,
+  IconArrowBigRightLines,
   IconChecks,
   IconDownload,
   IconEye,
@@ -167,13 +167,13 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
             Download
           </Menu.Item>
           <Menu.Item
-            icon={<IconArrowBigUpLines size={14} />}
+            icon={<IconArrowBigRightLines size={14} />}
             onClick={() => handleDownloadMultiple('next')}
           >
             Download next X
           </Menu.Item>
           <Menu.Item
-            icon={<IconArrowBigDownLines size={14} />}
+            icon={<IconArrowBigLeftLines size={14} />}
             onClick={() => handleDownloadMultiple('previous')}
           >
             Download previous X

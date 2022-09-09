@@ -79,12 +79,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               route={routes.SEARCH}
             />
             <DashboardSidebarLink
-              icon={<IconSettings size={16} />}
-              color="blue"
-              label="Settings"
-              route={routes.SETTINGS}
-            />
-            <DashboardSidebarLink
               icon={<IconPuzzle size={16} />}
               color="grape"
               label="Extensions"
@@ -95,6 +89,12 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               color="red"
               label="Downloads"
               route={routes.DOWNLOADS}
+            />
+            <DashboardSidebarLink
+              icon={<IconSettings size={16} />}
+              color="blue"
+              label="Settings"
+              route={routes.SETTINGS}
             />
             <DashboardSidebarLink
               icon={<IconInfoCircle size={16} />}

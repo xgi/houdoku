@@ -150,10 +150,10 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
             {[[null, 'Any'], ...Object.entries(SeriesStatus)].map(([seriesStatus, text]) => (
               <Menu.Item
                 key={text}
-                onClick={() => setLibraryFilterStatus(seriesStatus as SeriesStatus)}
+                onClick={() => setLibraryFilterStatus(seriesStatus ? (text as SeriesStatus) : null)}
                 rightSection={
-                  libraryFilterStatus === seriesStatus ||
-                  (libraryFilterProgress === undefined && seriesStatus === null) ? (
+                  libraryFilterStatus === text ||
+                  (libraryFilterStatus === null && seriesStatus === null) ? (
                     <IconCheck size={14} />
                   ) : (
                     ''
