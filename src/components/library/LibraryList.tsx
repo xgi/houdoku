@@ -23,7 +23,7 @@ const LibraryList: React.FC<Props> = (props: Props) => {
   const renderRows = () => {
     return props.getFilteredList().map((series) => {
       return (
-        <tr>
+        <tr key={`${series.id}-${series.title}`}>
           <td>
             {series.numberUnread > 0 ? <Badge color="violet">{series.numberUnread}</Badge> : ''}{' '}
             {series.title}

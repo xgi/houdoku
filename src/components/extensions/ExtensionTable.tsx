@@ -137,7 +137,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
   const renderRows = () => {
     return dataSource.map((row) => {
       return (
-        <tr>
+        <tr key={row.id}>
           <td>{renderFlag(row)}</td>
           <td>{row.friendlyName}</td>
           <td>{row.url}</td>
