@@ -1,14 +1,27 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Dropdown, InputNumber, List, Menu, Modal, Row, Spin, Tabs } from 'antd';
-import { DownOutlined, CheckOutlined, ArrowRightOutlined } from '@ant-design/icons';
 import Paragraph from 'antd/lib/typography/Paragraph';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, shell } from 'electron';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
-import Search from 'antd/lib/input/Search';
-import styles from './SeriesTrackerModal.css';
+import {
+  Button,
+  Group,
+  Input,
+  Loader,
+  Modal,
+  Stack,
+  Tabs,
+  Text,
+  Image,
+  Grid,
+  Select,
+  NumberInput,
+  ActionIcon,
+  Skeleton,
+} from '@mantine/core';
+import { IconCheck, IconExternalLink, IconSearch } from '@tabler/icons';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { AniListTrackerMetadata } from '../../services/trackers/anilist';
 import {
@@ -20,8 +33,6 @@ import {
 } from '../../models/types';
 import { updateSeriesTrackerKeys } from '../../features/library/utils';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
-
-const { TabPane } = Tabs;
 
 const TRACKER_METADATAS = [AniListTrackerMetadata, MALTrackerMetadata];
 
@@ -122,36 +133,65 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   const renderTrackerSeriesList = (trackerId: string) => {
     return (
       <>
-        <Search
-          className={styles.titleSearch}
-          defaultValue={searchText}
+        {trackerSeriesLists[trackerId] && trackerSeriesLists[trackerId].length > 0 ? (
+          <Stack spacing="xs">
+            {trackerSeriesLists[trackerId].map((trackerSeries) => (
+              <Grid gutter="xs" align="center">
+                <Grid.Col span={2}>
+                  <Image
+                    src={trackerSeries.coverUrl}
+                    alt={trackerSeries.title}
+                    style={{ width: '100%' }}
+                  />
+                </Grid.Col>
+                <Grid.Col span={8}>
+                  <Text weight={700} lineClamp={2}>
+                    {trackerSeries.title}
+                  </Text>
+                  <Text lineClamp={2}>{trackerSeries.description}</Text>
+                </Grid.Col>
+                <Grid.Col span={2}>
+                  <Button
+                    variant="default"
+                    onClick={() => applySeriesTrackerKey(trackerId, trackerSeries.id)}
+                  >
+                    Link
+                  </Button>
+                </Grid.Col>
+              </Grid>
+            ))}
+          </Stack>
+        ) : (
+          <Text>No series found.</Text>
+        )}
+      </>
+    );
+  };
+
+  const renderTrackerSearch = (trackerId: string) => {
+    return (
+      <>
+        <Input
+          autoFocus
           placeholder="Search for series..."
-          onSearch={(value) => setSearchText(value)}
+          defaultValue={searchText}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+          onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === 'Enter') loadTrackerData();
+          }}
+          icon={<IconSearch size={16} />}
+          my="xs"
         />
-        <List
-          header={null}
-          footer={null}
-          bordered
-          dataSource={trackerSeriesLists[trackerId]}
-          renderItem={(item) => (
-            <List.Item
-              key={item.id}
-              extra={
-                <Button onClick={() => applySeriesTrackerKey(trackerId, item.id)}>Link</Button>
-              }
-            >
-              <List.Item.Meta
-                avatar={<img className={styles.coverImg} src={item.coverUrl} alt="cover" />}
-                title={<Paragraph className={styles.listItemTitle}>{item.title}</Paragraph>}
-                description={
-                  <Paragraph className={styles.listItemDescription}>
-                    {item.description.substr(0, 80)}...
-                  </Paragraph>
-                }
-              />
-            </List.Item>
-          )}
-        />
+
+        {loading ? (
+          <Stack spacing="xs" mt="xs">
+            {[0, 1, 2, 3, 4].map(() => (
+              <Skeleton height={85} />
+            ))}
+          </Stack>
+        ) : (
+          renderTrackerSeriesList(trackerId)
+        )}
       </>
     );
   };
@@ -162,59 +202,37 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
     return (
       <>
-        <Row className={styles.row}>
-          <Col span={8}>Status</Col>
-          <Col span={8}>
-            <Dropdown
-              overlay={
-                <Menu
-                  onClick={(e: any) =>
-                    sendTrackEntry(trackerMetadata.id, {
-                      ...trackEntry,
-                      status: e.item.props['data-value'] as TrackStatus,
-                    })
-                  }
-                >
-                  <Menu.Item key={1} data-value={TrackStatus.Completed}>
-                    {TrackStatus.Completed}
-                  </Menu.Item>
-                  <Menu.Item key={2} data-value={TrackStatus.Dropped}>
-                    {TrackStatus.Dropped}
-                  </Menu.Item>
-                  <Menu.Item key={3} data-value={TrackStatus.Paused}>
-                    {TrackStatus.Paused}
-                  </Menu.Item>
-                  <Menu.Item key={4} data-value={TrackStatus.Planning}>
-                    {TrackStatus.Planning}
-                  </Menu.Item>
-                  <Menu.Item key={5} data-value={TrackStatus.Reading}>
-                    {TrackStatus.Reading}
-                  </Menu.Item>
-                </Menu>
-              }
-            >
-              <Button>
-                {trackEntry?.status} <DownOutlined />
-              </Button>
-            </Dropdown>
-          </Col>
-          <Col>
-            <Button
-              type="primary"
-              onClick={() =>
-                window.open(`${trackerMetadata.url}/manga/${trackEntry.seriesId}`, '_blank')
-              }
-            >
-              {trackerMetadata.name} <ArrowRightOutlined rotate={-45} />
-            </Button>
-          </Col>
-        </Row>
-        <Row className={styles.row}>
-          <Col span={8}>Progress</Col>
-          <Col span={16}>
-            <span>
-              <InputNumber
-                className={styles.progressInput}
+        <Grid gutter="xs" mt="xs" align="center">
+          <Grid.Col span={3}>
+            <Text>Status</Text>
+          </Grid.Col>
+          <Grid.Col span={9}>
+            <Group noWrap spacing="xs">
+              <Select
+                value={trackEntry?.status}
+                data={[
+                  TrackStatus.Completed,
+                  TrackStatus.Dropped,
+                  TrackStatus.Paused,
+                  TrackStatus.Planning,
+                  TrackStatus.Reading,
+                ]}
+                onChange={(value: string) =>
+                  sendTrackEntry(trackerMetadata.id, {
+                    ...trackEntry,
+                    status: value as TrackStatus,
+                  })
+                }
+              />
+            </Group>
+          </Grid.Col>
+
+          <Grid.Col span={3}>
+            <Text>Progress</Text>
+          </Grid.Col>
+          <Grid.Col span={9}>
+            <Group noWrap spacing="xs">
+              <NumberInput
                 min={0}
                 value={trackEntry.progress}
                 onChange={(value) =>
@@ -224,52 +242,54 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
                   })
                 }
               />
-              <Button
-                className={styles.progressSubmitButton}
-                icon={<CheckOutlined />}
+              <ActionIcon
+                variant="default"
+                size="lg"
                 onClick={() => sendTrackEntry(trackerMetadata.id, trackEntry)}
-              />
-            </span>
-          </Col>
-        </Row>
-        <Row className={styles.row}>
-          <Col span={8}>Score</Col>
-          <Col span={16}>
-            <Dropdown
-              overlay={
-                <Menu
-                  onClick={(e: any) => {
-                    sendTrackEntry(trackerMetadata.id, {
-                      ...trackEntry,
-                      score: parseInt(e.item.props['data-value'], 10),
-                    });
-                  }}
-                >
-                  {SCORE_FORMAT_OPTIONS[trackEntry.scoreFormat || TrackScoreFormat.POINT_10].map(
-                    (value: number) => (
-                      <Menu.Item key={value} data-value={value}>
-                        {value}
-                      </Menu.Item>
-                    )
-                  )}
-                </Menu>
+              >
+                <IconCheck size={20} />
+              </ActionIcon>
+            </Group>
+          </Grid.Col>
+
+          <Grid.Col span={3}>
+            <Text>Score</Text>
+          </Grid.Col>
+          <Grid.Col span={9}>
+            <Select
+              value={trackEntry?.score !== undefined ? `${trackEntry.score}` : undefined}
+              data={SCORE_FORMAT_OPTIONS[trackEntry.scoreFormat || TrackScoreFormat.POINT_10].map(
+                (x) => x.toString()
+              )}
+              onChange={(value: string) =>
+                sendTrackEntry(trackerMetadata.id, {
+                  ...trackEntry,
+                  score: parseInt(value, 10),
+                })
               }
-            >
-              <Button>
-                {trackEntry.score === undefined ? '-' : trackEntry.score} <DownOutlined />
-              </Button>
-            </Dropdown>
-          </Col>
-        </Row>
-        <Paragraph className={styles.unlinkText}>
-          <a
+            />
+          </Grid.Col>
+        </Grid>
+        <Group position="right" mt="md" mb={0} spacing="xs">
+          <Button
+            variant="default"
             onClick={() => {
               applySeriesTrackerKey(trackerMetadata.id, '');
             }}
           >
-            Unlink this series.
-          </a>
-        </Paragraph>
+            Unlink
+          </Button>
+          <Button
+            variant="default"
+            leftIcon={<IconExternalLink />}
+            onClick={() =>
+              shell.openExternal(`${trackerMetadata.url}/manga/${trackEntry.seriesId}`)
+            }
+          >
+            View on {trackerMetadata.name}
+          </Button>
+          <Button onClick={() => props.toggleVisible()}>Save</Button>
+        </Group>
       </>
     );
   };
@@ -278,30 +298,28 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     if (!usernames[trackerMetadata.id]) {
       if (loading) {
         return (
-          <div className={styles.loaderContainer}>
-            <Spin />
-            <Paragraph>Loading from {trackerMetadata.name}...</Paragraph>
-          </div>
+          <Group mt="sm" position="center">
+            <Loader />
+            <Text>Loading from {trackerMetadata.name}...</Text>
+          </Group>
         );
       }
 
       return (
-        <Paragraph>
-          In order to track this series, please link your {trackerMetadata.name} account through the
-          Settings tab on the left.
-        </Paragraph>
+        <Text mt="xs">
+          In order to track this series, please link your {trackerMetadata.name} account through the{' '}
+          <Text component="span" color="blue" weight={700}>
+            Settings
+          </Text>{' '}
+          tab.
+        </Text>
       );
     }
 
     return props.series.trackerKeys && props.series.trackerKeys[trackerMetadata.id]
       ? renderTrackEntry(trackerMetadata)
-      : renderTrackerSeriesList(trackerMetadata.id);
+      : renderTrackerSearch(trackerMetadata.id);
   };
-
-  useEffect(() => {
-    loadTrackerData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchText]);
 
   useEffect(() => {
     setSearchText(props.series.title);
@@ -316,12 +334,20 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   }, [props.series, props.visible]);
 
   return (
-    <Modal title="Trackers" visible={props.visible} footer={null} onCancel={props.toggleVisible}>
-      <Tabs tabPosition="top" className={styles.tabs}>
+    <Modal title="Trackers" opened={props.visible} onClose={props.toggleVisible}>
+      <Tabs defaultValue={TRACKER_METADATAS[0].id}>
+        <Tabs.List>
+          {TRACKER_METADATAS.map((trackerMetadata) => (
+            <Tabs.Tab value={trackerMetadata.id} key={trackerMetadata.id}>
+              {trackerMetadata.name}
+            </Tabs.Tab>
+          ))}
+        </Tabs.List>
+
         {TRACKER_METADATAS.map((trackerMetadata) => (
-          <TabPane tab={trackerMetadata.name} key={trackerMetadata.id}>
+          <Tabs.Panel value={trackerMetadata.id} key={trackerMetadata.id}>
             {renderTrackerContent(trackerMetadata)}
-          </TabPane>
+          </Tabs.Panel>
         ))}
       </Tabs>
     </Modal>

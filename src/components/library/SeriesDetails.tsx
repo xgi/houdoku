@@ -44,6 +44,7 @@ import { chapterLanguagesState } from '../../state/settingStates';
 import RemoveSeriesModal from './RemoveSeriesModal';
 import { reloadSeriesList } from '../../features/library/utils';
 import routes from '../../constants/routes.json';
+import { FS_METADATA } from '../../services/extensions/filesystem';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -188,7 +189,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         close={() => setShowingRemoveModal(false)}
       />
 
-      <Affix position={{ top: 29, left: 205 }}>
+      <Affix position={{ top: 29, left: 205 }} zIndex={0}>
         <Link to={routes.LIBRARY}>
           <Button
             size="sm"
@@ -222,43 +223,45 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             backgroundColor: theme.colors.dark[6],
           })}
         >
-          {seriesBannerUrl === null ? (
-            <></>
-          ) : (
-            <BackgroundImage
-              src={seriesBannerUrl}
-              title={series.title}
-              style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-            >
-              <Stack align="flex-end" justify="flex-end" style={{ height: '100%' }}>
-                <Group mx="sm" my={2} spacing="xs">
-                  <Button size="sm" variant="default" onClick={() => setShowingRemoveModal(true)}>
-                    Remove
+          <BackgroundImage
+            src={seriesBannerUrl || ''}
+            style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+          >
+            <Stack align="flex-end" justify="flex-end" style={{ height: '100%' }}>
+              <Group mx="sm" my={4} spacing="xs">
+                <Button size="sm" variant="default" onClick={() => setShowingRemoveModal(true)}>
+                  Remove
+                </Button>
+                <Button size="sm" variant="default" onClick={() => setShowingTrackerModal(true)}>
+                  Trackers
+                </Button>
+                {series.extensionId === FS_METADATA.id ? (
+                  <Button size="sm" variant="default" onClick={() => setShowingEditModal(true)}>
+                    Edit
                   </Button>
-                  <Button size="sm" variant="default" onClick={() => setShowingTrackerModal(true)}>
-                    Trackers
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={() => {
-                      if (series !== undefined && !reloadingSeriesList)
-                        reloadSeriesList(
-                          [series],
-                          setSeriesList,
-                          setReloadingSeriesList,
-                          setStatusText,
-                          chapterLanguages
-                        )
-                          .then(loadContent)
-                          .catch((e) => log.error(e));
-                    }}
-                  >
-                    {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}
-                  </Button>
-                </Group>
-              </Stack>
-            </BackgroundImage>
-          )}
+                ) : (
+                  ''
+                )}
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (series !== undefined && !reloadingSeriesList)
+                      reloadSeriesList(
+                        [series],
+                        setSeriesList,
+                        setReloadingSeriesList,
+                        setStatusText,
+                        chapterLanguages
+                      )
+                        .then(loadContent)
+                        .catch((e) => log.error(e));
+                  }}
+                >
+                  {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}
+                </Button>
+              </Group>
+            </Stack>
+          </BackgroundImage>
         </Box>
       </Box>
 
@@ -269,8 +272,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         <Grid.Col span={19}>
           <Group position="apart" mt="xs" mb="xs" align="center" noWrap>
             <Title order={4} lineClamp={1}>
-              this name could be very long and even go all the way to the other side and keep going
-              further than that by the way
+              {series.title}
             </Title>
             <Text>{extensionMetadata?.name}</Text>
           </Group>
