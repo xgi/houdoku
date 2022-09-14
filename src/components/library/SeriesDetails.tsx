@@ -1,39 +1,34 @@
 import fs from 'fs';
 import path from 'path';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import {
-  Typography,
-  Button,
-  Descriptions,
-  Affix,
-  Modal,
-  Form,
-  Tag,
-  Dropdown,
-  Menu,
-  InputNumber,
-} from 'antd';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
-import Paragraph from 'antd/lib/typography/Paragraph';
-import { Chapter, Series, Languages, ExtensionMetadata } from 'houdoku-extension-lib';
+import { Series, Languages, ExtensionMetadata } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  Affix,
+  BackgroundImage,
+  Badge,
+  Box,
+  Button,
+  Grid,
+  Group,
+  Image,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
+import { IconArrowLeft } from '@tabler/icons';
 import ChapterTable from './ChapterTable';
-import styles from './SeriesDetails.css';
 import blankCover from '../../img/blank_cover.png';
-import routes from '../../constants/routes.json';
 import { getBannerImageUrl } from '../../services/mediasource';
-import { reloadSeriesList } from '../../features/library/utils';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesTrackerModal from './SeriesTrackerModal';
-import { FS_METADATA } from '../../services/extensions/filesystem';
 import EditSeriesModal from './EditSeriesModal';
-import { deleteThumbnail, getChapterDownloaded } from '../../util/filesystem';
+import { deleteThumbnail } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import library from '../../services/library';
-import { downloaderClient, DownloadTask } from '../../services/downloader';
 import constants from '../../constants/constants.json';
 import {
   chapterFilterGroupState,
@@ -45,22 +40,15 @@ import {
   seriesState,
 } from '../../state/libraryStates';
 import { statusTextState } from '../../state/statusBarStates';
-import {
-  chapterLanguagesState,
-  trackerAutoUpdateState,
-  customDownloadsDirState,
-} from '../../state/settingStates';
+import { chapterLanguagesState } from '../../state/settingStates';
 import RemoveSeriesModal from './RemoveSeriesModal';
-
-const { Title } = Typography;
-const { confirm } = Modal;
+import { reloadSeriesList } from '../../features/library/utils';
+import routes from '../../constants/routes.json';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
   fs.mkdirSync(thumbnailsDir);
 }
-
-const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 interface ParamTypes {
   id: string;
@@ -71,22 +59,20 @@ type Props = {};
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
   const { id } = useParams<ParamTypes>();
+  const location = useLocation();
   const [extensionMetadata, setExtensionMetadata] = useState<ExtensionMetadata | undefined>();
   const [showingTrackerModal, setShowingTrackerModal] = useState(false);
   const [showingRemoveModal, setShowingRemoveModal] = useState(false);
   const [showingEditModal, setShowingEditModal] = useState(false);
-  const [showingDownloadXModal, setShowingDownloadXModal] = useState(false);
-  const [downloadXForm] = Form.useForm();
   const [series, setSeries] = useRecoilState(seriesState);
   const setSeriesList = useSetRecoilState(seriesListState);
-  const [chapterList, setChapterList] = useRecoilState(chapterListState);
+  const setChapterList = useSetRecoilState(chapterListState);
   const [seriesBannerUrl, setSeriesBannerUrl] = useRecoilState(seriesBannerUrlState);
-  const chapterFilterTitle = useRecoilValue(chapterFilterTitleState);
-  const chapterFilterGroup = useRecoilValue(chapterFilterGroupState);
+  const setChapterFilterTitle = useSetRecoilState(chapterFilterTitleState);
+  const setChapterFilterGroup = useSetRecoilState(chapterFilterGroupState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const setStatusText = useSetRecoilState(statusTextState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
-  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
@@ -111,6 +97,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
+  useEffect(() => {
+    setChapterFilterTitle('');
+    setChapterFilterGroup('');
+  }, [location, setChapterFilterGroup, setChapterFilterTitle]);
+
   if (series === undefined) {
     return (
       <div>
@@ -128,112 +119,44 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     return blankCover;
   };
 
-  const getSortedFilteredChapterList = () => {
-    return chapterList
-      .filter(
-        (chapter: Chapter) =>
-          (chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0) &&
-          chapter.title.toLowerCase().includes(chapterFilterTitle) &&
-          chapter.groupName.toLowerCase().includes(chapterFilterGroup)
-      )
-      .sort((a: Chapter, b: Chapter) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber));
-  };
-
-  const handleDownloadChapters = (chapters: Chapter[], largeAmountWarning = true) => {
-    if (series === undefined) return;
-
-    const queue: Chapter[] = [];
-    chapters.forEach((chapter) => {
-      if (
-        series &&
-        !getChapterDownloaded(series, chapter, customDownloadsDir || defaultDownloadsDir)
-      ) {
-        queue.push(chapter);
-      }
-    });
-
-    const func = () => {
-      downloaderClient.add(
-        queue.map(
-          (chapter: Chapter) =>
-            ({
-              chapter,
-              series,
-              downloadsDir: customDownloadsDir || defaultDownloadsDir,
-            } as DownloadTask)
-        )
-      );
-      downloaderClient.start();
-    };
-
-    if (queue.length >= 3 && largeAmountWarning) {
-      confirm({
-        title: `Download ${queue.length} chapters?`,
-        icon: <ExclamationCircleOutlined />,
-        content: 'You can view, pause, or cancel from the Downloads tab on the left.',
-        onOk() {
-          func();
-        },
-      });
-    } else {
-      func();
-    }
-  };
-
-  const getNextChaptersToDownload = (amount: number) => {
-    const result: Chapter[] = [];
-    let prevChapterNumber = -1;
-
-    const sortedList = getSortedFilteredChapterList();
-    const startIndex = sortedList.map((c) => c.read).lastIndexOf(true);
-    sortedList.slice(startIndex === -1 ? 0 : startIndex + 1).every((chapter) => {
-      if (series === undefined) return false;
-
-      const chapterNumber = parseFloat(chapter.chapterNumber);
-      const isDownloaded = getChapterDownloaded(
-        series,
-        chapter,
-        customDownloadsDir || defaultDownloadsDir
-      );
-
-      if (!isDownloaded && chapterNumber > prevChapterNumber) {
-        result.push(chapter);
-        prevChapterNumber = chapterNumber;
-      }
-
-      // stop iterating once we have enough chapters by returning false
-      return amount > result.length;
-    });
-
-    return result;
-  };
-
-  const renderSeriesDescriptions = () => {
+  const renderDetailsGrid = () => {
     const language = Languages[series.originalLanguageKey];
     const languageStr = language !== undefined && 'name' in language ? language.name : '';
 
+    const getCol = (heading: string, content: string) => (
+      <Grid.Col span={3}>
+        <Text ml={4} color="dimmed" size="sm">
+          <b>{heading}</b>
+        </Text>
+        <Box
+          sx={(theme) => ({
+            backgroundColor: theme.colors.dark[6],
+            padding: '6px 12px',
+          })}
+        >
+          <Text size="sm" lineClamp={1} title={content}>
+            {content}
+          </Text>
+        </Box>
+      </Grid.Col>
+    );
+
     return (
-      <Descriptions className={styles.descriptions} column={4}>
-        <Descriptions.Item className={styles.descriptionItem} label="Author">
-          {series.authors.join('; ')}
-        </Descriptions.Item>
-        <Descriptions.Item className={styles.descriptionItem} label="Artist">
-          {series.artists.join('; ')}
-        </Descriptions.Item>
-        <Descriptions.Item className={styles.descriptionItem} label="Status">
-          {series.status}
-        </Descriptions.Item>
-        <Descriptions.Item className={styles.descriptionItem} label="Language">
-          {languageStr}
-        </Descriptions.Item>
-        <Descriptions.Item className={styles.descriptionItem} label="Tags" span={4}>
-          <div>
+      <Grid my="xs" gutter="xs">
+        {getCol('Author', series.authors.join('; ') || 'Unknown')}
+        {getCol('Artist', series.artists.join('; ') || 'Unknown')}
+        {getCol('Status', series.status)}
+        {getCol('Language', languageStr)}
+        <Grid.Col span={12}>
+          <Group spacing="xs">
             {series.tags.map((tag: string) => (
-              <Tag key={tag}>{tag}</Tag>
+              <Badge key={tag} color="indigo">
+                {tag}
+              </Badge>
             ))}
-          </div>
-        </Descriptions.Item>
-      </Descriptions>
+          </Group>
+        </Grid.Col>
+      </Grid>
     );
   };
 
@@ -264,135 +187,99 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
         showing={showingRemoveModal}
         close={() => setShowingRemoveModal(false)}
       />
-      <Modal
-        visible={showingDownloadXModal}
-        onCancel={() => setShowingDownloadXModal(false)}
-        okText="Download"
-        // okButtonProps={{ danger: true }}
-        onOk={() => {
-          downloadXForm
-            .validateFields()
-            .then((values) =>
-              handleDownloadChapters(getNextChaptersToDownload(values.amount), false)
-            )
-            .catch((info) => {
-              log.error(info);
-            })
-            .finally(() => setShowingDownloadXModal(false))
-            .catch((info) => {
-              log.error(info);
-            });
-        }}
-      >
-        <Form form={downloadXForm} name="download_x_form" initialValues={{ amount: 3 }}>
-          <div className={styles.downloadXRow}>
-            Download next{' '}
-            <Form.Item className={styles.formItem} name="amount" valuePropName="value">
-              <InputNumber min={1} />
-            </Form.Item>{' '}
-            chapters
-          </div>
-        </Form>
-      </Modal>
-      <Link to={routes.LIBRARY}>
-        <Affix className={styles.backButtonAffix}>
-          <Button onClick={() => setSeriesList(library.fetchSeriesList())}>
-            ◀ Back to library
+
+      <Affix position={{ top: 29, left: 205 }}>
+        <Link to={routes.LIBRARY}>
+          <Button
+            size="sm"
+            leftIcon={<IconArrowLeft size={16} />}
+            variant="default"
+            onClick={() => setSeriesList(library.fetchSeriesList())}
+          >
+            Back to library
           </Button>
-        </Affix>
-      </Link>
-      <div className={styles.backgroundContainer}>
-        <div className={styles.backgroundImageContainer}>
-          {seriesBannerUrl === null ? <></> : <img src={seriesBannerUrl} alt={series.title} />}
-        </div>
-        <div className={styles.controlContainer}>
-          <div className={styles.controlRow}>
-            <Button className={styles.removeButton} onClick={() => setShowingRemoveModal(true)}>
-              Remove Series
-            </Button>
-            {series.extensionId === FS_METADATA.id ? (
-              <Button className={styles.editButton} onClick={() => setShowingEditModal(true)}>
-                Edit Details
-              </Button>
-            ) : (
-              ''
-            )}
-            <Button className={styles.trackerButton} onClick={() => setShowingTrackerModal(true)}>
-              Trackers
-            </Button>
-            <Dropdown
-              overlay={
-                <Menu>
-                  <Menu.Item onClick={() => handleDownloadChapters(getNextChaptersToDownload(1))}>
-                    Next chapter
-                  </Menu.Item>
-                  <Menu.Item onClick={() => handleDownloadChapters(getNextChaptersToDownload(5))}>
-                    Next 5 chapters
-                  </Menu.Item>
-                  <Menu.Item onClick={() => handleDownloadChapters(getNextChaptersToDownload(10))}>
-                    Next 10 chapters
-                  </Menu.Item>
-                  <Menu.Item onClick={() => setShowingDownloadXModal(true)}>
-                    Next X chapters
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={() =>
-                      handleDownloadChapters(
-                        getSortedFilteredChapterList().filter((chapter) => !chapter.read)
-                      )
-                    }
+        </Link>
+      </Affix>
+
+      <Box
+        sx={(theme) => ({
+          textAlign: 'center',
+          marginLeft: -theme.spacing.md,
+          marginRight: -theme.spacing.md,
+          marginTop: -theme.spacing.md,
+          overflow: 'hidden',
+        })}
+      >
+        <Box
+          sx={(theme) => ({
+            height: 180,
+            background:
+              `linear-gradient(135deg, ${theme.colors.dark[8]} 25%, transparent 25%) -50px 0,` +
+              `linear-gradient(225deg, ${theme.colors.dark[8]} 25%, transparent 25%) -50px 0,` +
+              `linear-gradient(315deg, ${theme.colors.dark[8]} 25%, transparent 25%),` +
+              `linear-gradient(45deg, ${theme.colors.dark[8]} 25%, transparent 25%)`,
+            backgroundSize: '100px 100px',
+            backgroundColor: theme.colors.dark[6],
+          })}
+        >
+          {seriesBannerUrl === null ? (
+            <></>
+          ) : (
+            <BackgroundImage
+              src={seriesBannerUrl}
+              title={series.title}
+              style={{ objectFit: 'cover', height: '100%', width: '100%' }}
+            >
+              <Stack align="flex-end" justify="flex-end" style={{ height: '100%' }}>
+                <Group mx="sm" my={2} spacing="xs">
+                  <Button size="sm" variant="default" onClick={() => setShowingRemoveModal(true)}>
+                    Remove
+                  </Button>
+                  <Button size="sm" variant="default" onClick={() => setShowingTrackerModal(true)}>
+                    Trackers
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      if (series !== undefined && !reloadingSeriesList)
+                        reloadSeriesList(
+                          [series],
+                          setSeriesList,
+                          setReloadingSeriesList,
+                          setStatusText,
+                          chapterLanguages
+                        )
+                          .then(loadContent)
+                          .catch((e) => log.error(e));
+                    }}
                   >
-                    Unread
-                  </Menu.Item>
-                  <Menu.Item onClick={() => handleDownloadChapters(getSortedFilteredChapterList())}>
-                    All
-                  </Menu.Item>
-                </Menu>
-              }
-              placement="bottomLeft"
-            >
-              <Button className={styles.downloadButton}>Download</Button>
-            </Dropdown>
-            <Button
-              type="primary"
-              className={styles.refreshButton}
-              onClick={() => {
-                if (series !== undefined && !reloadingSeriesList)
-                  reloadSeriesList(
-                    [series],
-                    setSeriesList,
-                    setReloadingSeriesList,
-                    setStatusText,
-                    chapterLanguages
-                  )
-                    .then(loadContent)
-                    .catch((e) => log.error(e));
-              }}
-            >
-              {reloadingSeriesList ? <SyncOutlined spin /> : 'Refresh'}
-            </Button>
-          </div>
-        </div>
-      </div>
-      <div className={styles.headerContainer}>
-        <div>
-          <img className={styles.coverImage} src={getThumbnailPath(series.id)} alt={series.title} />
-        </div>
-        <div className={styles.headerDetailsContainer}>
-          <div className={styles.headerTitleRow}>
-            <Title level={4}>{series.title}</Title>
-            {extensionMetadata !== undefined && 'name' in extensionMetadata ? (
-              <Paragraph>{extensionMetadata.name}</Paragraph>
-            ) : (
-              ''
-            )}
-          </div>
-          <Paragraph ellipsis={{ rows: 5, expandable: true, symbol: 'more' }}>
-            {series.description}
-          </Paragraph>
-        </div>
-      </div>
-      {renderSeriesDescriptions()}
+                    {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}
+                  </Button>
+                </Group>
+              </Stack>
+            </BackgroundImage>
+          )}
+        </Box>
+      </Box>
+
+      <Grid columns={24} gutter="xs">
+        <Grid.Col span={5}>
+          <Image src={getThumbnailPath(series.id)} alt={series.title} width="100%" mt="-50%" />
+        </Grid.Col>
+        <Grid.Col span={19}>
+          <Group position="apart" mt="xs" mb="xs" align="center" noWrap>
+            <Title order={4} lineClamp={1}>
+              this name could be very long and even go all the way to the other side and keep going
+              further than that by the way
+            </Title>
+            <Text>{extensionMetadata?.name}</Text>
+          </Group>
+          <Text lineClamp={4}>{series.description}</Text>
+        </Grid.Col>
+      </Grid>
+
+      {renderDetailsGrid()}
+
       <ChapterTable series={series} />
     </>
   );
