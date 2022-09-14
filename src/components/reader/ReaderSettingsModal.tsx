@@ -1,6 +1,6 @@
 import React from 'react';
-import { Modal } from 'antd';
 import { useRecoilState } from 'recoil';
+import { Modal } from '@mantine/core';
 import ReaderSettings from '../settings/ReaderSettings';
 import { showingSettingsModalState } from '../../state/readerStates';
 
@@ -12,10 +12,10 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
 
   return (
     <Modal
+      opened={showingSettingsModal}
+      // centered
       title="Reader Settings"
-      visible={showingSettingsModal}
-      footer={null}
-      onCancel={() => setShowingSettingsModal(!showingSettingsModal)}
+      onClose={() => setShowingSettingsModal(!showingSettingsModal)}
     >
       <ReaderSettings />
     </Modal>

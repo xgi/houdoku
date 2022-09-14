@@ -32,7 +32,7 @@
 }
 
 .title {
-  color: var(--color-6) !important;
+  color: rgba(94, 141, 135, 1) !important;
   /* font-weight: normal !important; */
   margin-top: 1.2em;
   text-transform: uppercase;

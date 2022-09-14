@@ -1,8 +1,8 @@
-import { Spin } from 'antd';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import React, { useEffect, useState } from 'react';
+import { Loader } from '@mantine/core';
 import styles from './ReaderLoader.css';
 import ipcChannels from '../../constants/ipcChannels.json';
 
@@ -28,7 +28,7 @@ const ReaderLoader: React.FC<Props> = (props: Props) => {
 
   return (
     <div className={styles.container}>
-      <Spin size="large" />
+      <Loader />
       {extensionMessage ? <p>{extensionMessage}</p> : <></>}
     </div>
   );

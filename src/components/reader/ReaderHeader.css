@@ -5,10 +5,6 @@
 }
 
 .container {
-  background-color: var(--color-background-alt);
-  font-family: 'Segoe UI', sans-serif;
-  font-size: 12px;
-
   height: var(--reader-header-height);
   width: 100%;
   min-width: var(--reader-header-min-width);
@@ -22,60 +18,4 @@
 
   z-index: 300;
   user-select: none;
-}
-
-.buttonGroup {
-  display: flex;
-  flex-direction: row;
-}
-
-.button {
-  cursor: pointer;
-  background: var(--color-background) !important;
-  color: var(--color-foreground) !important;
-
-  height: var(--reader-header-inner-height);
-  margin: auto !important;
-  padding: 0;
-  border: none;
-  outline: none;
-}
-
-.button:hover:not(.button:disabled) {
-  background-color: var(--color-foreground-alt) !important;
-  color: var(--color-foreground-header) !important;
-}
-
-.button:disabled {
-  cursor: not-allowed;
-  background-color: var(--color-foreground-alt) !important;
-}
-
-.exitButton, .pageStyleButton, .offsetButton, .fitButton, .stretchButton, .settingsButton {
-  padding-left: 6px;
-  padding-right: 6px;
-}
-
-.arrowButton {
-  width: 20px;
-}
-
-.field {
-  background: var(--color-background);
-  color: var(--color-foreground);
-
-  cursor: pointer;
-  height: var(--reader-header-inner-height);
-
-  margin: auto;
-  padding-left: 6px;
-  padding-right: 6px;
-
-  display: flex;
-  align-items: center;
-}
-
-.field:hover {
-  background-color: var(--color-foreground-alt);
-  color: var(--color-foreground-header);
 }
