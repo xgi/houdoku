@@ -57,6 +57,7 @@ export const chapterLanguagesState = atomFromSetting<LanguageKey[]>(GeneralSetti
 export const autoCheckForUpdatesState = atomFromSetting<boolean>(GeneralSetting.AutoCheckForUpdates);
 export const refreshOnStartState = atomFromSetting<boolean>(GeneralSetting.RefreshOnStart);
 export const autoCheckForExtensionUpdatesState = atomFromSetting<boolean>(GeneralSetting.AutoCheckForExtensionUpdates);
+export const confirmRemoveSeriesState = atomFromSetting<boolean>(GeneralSetting.ConfirmRemoveSeries);
 export const customDownloadsDirState = atomFromSetting<string>(GeneralSetting.CustomDownloadsDir);
 export const libraryColumnsState = atomFromSetting<number>(GeneralSetting.LibraryColumns);
 export const libraryViewsState = atomFromSetting<LibraryView>(GeneralSetting.LibraryViews);

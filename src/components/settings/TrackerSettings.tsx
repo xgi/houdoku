@@ -116,7 +116,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
       </Alert>
 
       <Grid pt="sm">
-        <Grid.Col span={5}>Update Progress Automatically</Grid.Col>
+        <Grid.Col span={5}>Update progress automatically</Grid.Col>
         <Grid.Col span={7}>
           <Switch
             size="md"

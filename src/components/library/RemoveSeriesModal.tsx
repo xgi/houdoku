@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Series } from 'houdoku-extension-lib';
 import { useHistory } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { ipcRenderer } from 'electron';
 import { Button, Checkbox, Group, Modal, Text } from '@mantine/core';
 import ipcChannels from '../../constants/ipcChannels.json';
 import routes from '../../constants/routes.json';
 import { removeSeries } from '../../features/library/utils';
 import { seriesListState } from '../../state/libraryStates';
-import { customDownloadsDirState } from '../../state/settingStates';
+import { confirmRemoveSeriesState, customDownloadsDirState } from '../../state/settingStates';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -21,7 +21,9 @@ type Props = {
 const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
   const history = useHistory();
   const [deleteDownloads, setDeleteDownloads] = useState(false);
+  const [dontAskAgain, setDontAskAgain] = useState(false);
   const setSeriesList = useSetRecoilState(seriesListState);
+  const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const removeFunc = () => {
@@ -32,10 +34,22 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
         deleteDownloads,
         customDownloadsDir || defaultDownloadsDir
       );
+
+      if (dontAskAgain) setConfirmRemoveSeries(false);
       history.push(routes.LIBRARY);
     }
     props.close();
   };
+
+  useEffect(() => {
+    setDeleteDownloads(false);
+    setDontAskAgain(false);
+
+    if (props.showing && !confirmRemoveSeries) {
+      removeFunc();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.showing]);
 
   return (
     <Modal
@@ -55,6 +69,12 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
         label="Also delete downloaded chapters"
         checked={deleteDownloads}
         onChange={(e) => setDeleteDownloads(e.target.checked)}
+      />
+      <Checkbox
+        mt="xs"
+        label="Don't ask again"
+        checked={dontAskAgain}
+        onChange={(e) => setDontAskAgain(e.target.checked)}
       />
       <Group position="right" mt="sm">
         <Button variant="default" onClick={props.close}>

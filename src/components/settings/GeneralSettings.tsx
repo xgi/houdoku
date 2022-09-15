@@ -11,6 +11,7 @@ import {
   autoCheckForExtensionUpdatesState,
   autoCheckForUpdatesState,
   chapterLanguagesState,
+  confirmRemoveSeriesState,
   customDownloadsDirState,
   refreshOnStartState,
 } from '../../state/settingStates';
@@ -31,6 +32,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
   const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(
     autoCheckForExtensionUpdatesState
   );
+  const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
   const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(customDownloadsDirState);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,6 +50,9 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
       case GeneralSetting.AutoCheckForExtensionUpdates:
         setAutoCheckForExtensionUpdates(value);
         break;
+      case GeneralSetting.ConfirmRemoveSeries:
+        setConfirmRemoveSeries(value);
+        break;
       case GeneralSetting.CustomDownloadsDir:
         setCustomDownloadsDir(value);
         break;
@@ -58,7 +63,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
 
   return (
     <Grid mb="md">
-      <Grid.Col span={5}>Chapter Languages</Grid.Col>
+      <Grid.Col span={5}>Chapter languages</Grid.Col>
       <Grid.Col span={7}>
         <MultiSelect
           data={languageOptions}
@@ -69,7 +74,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         />
       </Grid.Col>
 
-      <Grid.Col span={5}>Refresh Library on Startup</Grid.Col>
+      <Grid.Col span={5}>Refresh library on startup</Grid.Col>
       <Grid.Col span={7}>
         <Switch
           size="md"
@@ -78,7 +83,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         />
       </Grid.Col>
 
-      <Grid.Col span={5}>Check For Houdoku Updates Automatically</Grid.Col>
+      <Grid.Col span={5}>Check for Houdoku updates automatically</Grid.Col>
       <Grid.Col span={7}>
         <Switch
           size="md"
@@ -89,7 +94,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         />
       </Grid.Col>
 
-      <Grid.Col span={5}>Check For Extension Updates Automatically</Grid.Col>
+      <Grid.Col span={5}>Check for extension updates automatically</Grid.Col>
       <Grid.Col span={7}>
         <Switch
           size="md"
@@ -100,7 +105,18 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         />
       </Grid.Col>
 
-      <Grid.Col span={5}>Custom Downloads Location</Grid.Col>
+      <Grid.Col span={5}>Confirm removing series from library</Grid.Col>
+      <Grid.Col span={7}>
+        <Switch
+          size="md"
+          checked={confirmRemoveSeries}
+          onChange={(e) =>
+            updateGeneralSetting(GeneralSetting.ConfirmRemoveSeries, e.target.checked)
+          }
+        />
+      </Grid.Col>
+
+      <Grid.Col span={5}>Custom downloads location</Grid.Col>
       <Grid.Col span={7}>
         <Input
           component="button"
@@ -126,7 +142,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         </Input>
       </Grid.Col>
 
-      <Grid.Col span={5}>Backup Library</Grid.Col>
+      <Grid.Col span={5}>Backup library</Grid.Col>
       <Grid.Col span={7}>
         <Group spacing="sm">
           <Button variant="default" onClick={createBackup}>

@@ -99,9 +99,13 @@ const Library: React.FC<Props> = (_props: Props) => {
   const renderEmptyMessage = () => {
     return (
       <Text align="center" style={{ paddingTop: '30vh' }}>
-        Your library is empty. Install extensions from the tab on the left,
+        Your library is empty. Install <Text component="span" color="violet" weight={700}>
+          Extensions
+        </Text> from the tab on the left,
         <br />
-        and then go to Add Series to start building your library.
+        and then go to <Text component="span" color="teal" weight={700}>
+          Add Series
+        </Text> to start building your library.
       </Text>
     );
   };
