@@ -11,7 +11,6 @@ import { deleteDownloadedChapter } from '../../util/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
 import flags from '../../img/flags.png';
-import { statusTextState } from '../../state/statusBarStates';
 import { customDownloadsDirState } from '../../state/settingStates';
 
 const { Text } = Typography;
@@ -26,7 +25,6 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
   const [treeData, setTreeData] = useState<any[]>([]);
-  const setStatusText = useSetRecoilState(statusTextState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadDownloads = async () => {
@@ -96,7 +94,6 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
         )
           // eslint-disable-next-line promise/always-return
           .then(() => {
-            setStatusText(`Deleted ${count} downloaded chapter(s)`);
             setCheckedChapters([]);
             loadDownloads();
           })

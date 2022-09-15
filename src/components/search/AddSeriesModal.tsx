@@ -10,7 +10,6 @@ import { importSeries } from '../../features/library/utils';
 import library from '../../services/library';
 import { downloadCover } from '../../util/download';
 import { seriesListState } from '../../state/libraryStates';
-import { statusTextState } from '../../state/statusBarStates';
 import { chapterLanguagesState } from '../../state/settingStates';
 
 type Props = {
@@ -22,7 +21,6 @@ type Props = {
 
 const AddSeriesModal: React.FC<Props> = (props: Props) => {
   const [, setSeriesList] = useRecoilState(seriesListState);
-  const setStatusText = useSetRecoilState(statusTextState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const [customSeries, setCustomSeries] = useState<Series>();
   const [loading, setLoading] = useState(true);

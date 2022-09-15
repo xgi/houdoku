@@ -3,7 +3,6 @@
     "CHECK_FOR_UPDATES": "check-for-updates",
     "PERFORM_UPDATE": "perform-update",
     "UPDATE_AND_RESTART": "update-and-restart",
-    "SET_STATUS": "set-status",
     "SEND_NOTIFICATION": "send-notification",
     "LOAD_STORED_EXTENSION_SETTINGS": "load-stored-extension-settings",
     "SHOW_OPEN_DIALOG": "show-open-dialog",

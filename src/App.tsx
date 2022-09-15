@@ -34,7 +34,6 @@ import { TrackerMetadata } from './models/types';
 import { loadSeriesList, migrateSeriesTags } from './features/library/utils';
 import AppLoading from './components/general/AppLoading';
 import { seriesListState } from './state/libraryStates';
-import { statusTextState } from './state/statusBarStates';
 import { downloaderClient } from './services/downloader';
 import {
   currentTaskState,
@@ -163,7 +162,6 @@ ipcRenderer.on(ipcChannels.APP.SHOW_RESTART_UPDATE_DIALOG, () => {
 export default function App() {
   const [loading, setLoading] = useState(true);
   const setSeriesList = useSetRecoilState(seriesListState);
-  const setStatusText = useSetRecoilState(statusTextState);
   const setRunning = useSetRecoilState(runningState);
   const setQueue = useSetRecoilState(queueState);
   const setCurrentTask = useSetRecoilState(currentTaskState);
@@ -183,11 +181,6 @@ export default function App() {
       /**
        * Add any additional preload steps here (e.g. data migration, verifications, etc)
        */
-
-      // Allow the main thread to set status messages
-      ipcRenderer.on(ipcChannels.APP.SET_STATUS, (_event, text) => {
-        setStatusText(text);
-      });
 
       // Give the downloader client access to the state modifiers
       downloaderClient.setStateFunctions(setRunning, setQueue, setCurrentTask, setDownloadErrors);
