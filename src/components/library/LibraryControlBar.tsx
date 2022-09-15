@@ -16,7 +16,6 @@ import {
 import { reloadSeriesList } from '../../features/library/utils';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import { filterState, reloadingSeriesListState, seriesListState } from '../../state/libraryStates';
-import { statusTextState } from '../../state/statusBarStates';
 import {
   libraryFilterStatusState,
   libraryFilterProgressState,
@@ -41,7 +40,6 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const setFilter = useSetRecoilState(filterState);
-  const setStatusText = useSetRecoilState(statusTextState);
   const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(libraryFilterStatusState);
   const [libraryFilterProgress, setLibraryFilterProgress] = useRecoilState(
     libraryFilterProgressState
@@ -53,13 +51,7 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
 
   const refreshHandler = () => {
     if (!reloadingSeriesList) {
-      reloadSeriesList(
-        seriesList,
-        setSeriesList,
-        setReloadingSeriesList,
-        setStatusText,
-        chapterLanguages
-      );
+      reloadSeriesList(seriesList, setSeriesList, setReloadingSeriesList, chapterLanguages);
     }
   };
 

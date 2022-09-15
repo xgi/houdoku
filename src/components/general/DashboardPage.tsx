@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import log from 'electron-log';
 import {
   IconBooks,
@@ -26,7 +26,6 @@ import {
   seriesListState,
 } from '../../state/libraryStates';
 import library from '../../services/library';
-import { statusTextState } from '../../state/statusBarStates';
 import { chapterLanguagesState, refreshOnStartState } from '../../state/settingStates';
 import DashboardSidebarLink from './DashboardSidebarLink';
 
@@ -37,18 +36,15 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const [, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const [completedStartReload, setCompletedStartReload] = useRecoilState(completedStartReloadState);
-  const setStatusText = useSetRecoilState(statusTextState);
   const refreshOnStart = useRecoilValue(refreshOnStartState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
 
   useEffect(() => {
     if (refreshOnStart && !completedStartReload && seriesList.length > 0) {
-      setReloadingSeriesList(true);
       reloadSeriesList(
         library.fetchSeriesList(),
         setSeriesList,
         setReloadingSeriesList,
-        setStatusText,
         chapterLanguages
       )
         // eslint-disable-next-line promise/always-return

@@ -4,8 +4,11 @@ import log from 'electron-log';
 import { Chapter, LanguageKey, Series } from 'houdoku-extension-lib';
 import React from 'react';
 import { SetterOrUpdater } from 'recoil';
-import { openConfirmModal } from '@mantine/modals';
-import { Text } from '@mantine/core';
+import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
+import { Button, Group, List, Text } from '@mantine/core';
+import { v4 as uuidv4 } from 'uuid';
+import { showNotification, updateNotification } from '@mantine/notifications';
+import { IconAlertTriangle, IconCheck, IconX } from '@tabler/icons';
 import {
   deleteAllDownloadedChapters,
   deleteThumbnail,
@@ -68,11 +71,24 @@ export function removeSeries(
 
 export async function importSeries(
   series: Series,
-  setStatusText: (statusText: string) => void,
   chapterLanguages: LanguageKey[]
 ): Promise<Series> {
   log.debug(`Importing series ${series.sourceId} from extension ${series.extensionId}`);
-  setStatusText(`Adding "${series.title}" to your library...`);
+
+  const notificationId = uuidv4();
+  showNotification({
+    id: notificationId,
+    title: 'Adding series...',
+    message: (
+      <Text>
+        Adding{' '}
+        <Text color="teal" component="span" italic>
+          {series.title}
+        </Text>
+      </Text>
+    ),
+    loading: true,
+  });
 
   const chapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
@@ -86,7 +102,20 @@ export async function importSeries(
   updateSeriesNumberUnread(addedSeries, chapterLanguages);
 
   log.debug(`Imported series ${series.sourceId} with database ID ${series.id}`);
-  setStatusText(`Added "${addedSeries.title}" to your library.`);
+  updateNotification({
+    id: notificationId,
+    title: 'Added series',
+    message: (
+      <Text>
+        Added{' '}
+        <Text color="teal" component="span" italic>
+          {series.title}
+        </Text>
+      </Text>
+    ),
+    color: 'teal',
+    icon: React.createElement(IconCheck, { size: 16 }),
+  });
   return addedSeries;
 }
 
@@ -186,44 +215,99 @@ export async function reloadSeriesList(
   seriesList: Series[],
   setSeriesList: (seriesList: Series[]) => void,
   setReloadingSeriesList: (reloadingSeriesList: boolean) => void,
-  setStatusText: (statusText: string) => void,
   chapterLanguages: LanguageKey[]
 ) {
   log.debug(`Reloading series list...`);
   setReloadingSeriesList(true);
 
+  const notificationId = uuidv4();
+  showNotification({ id: notificationId, message: 'Refreshing library...', loading: true });
+
   const sortedSeriesList = [...seriesList].sort((a: Series, b: Series) =>
     a.title.localeCompare(b.title)
   );
   let cur = 0;
-  let errs = 0;
+  const failedToUpdate: Series[] = [];
 
   // eslint-disable-next-line no-restricted-syntax
   for (const series of sortedSeriesList) {
-    setStatusText(`Reloading library (${cur}/${seriesList.length}) - ${series.title}`);
+    updateNotification({
+      id: notificationId,
+      title: `Refreshing library...`,
+      message: `Reloading series ${cur}/${sortedSeriesList.length}`,
+      loading: true,
+      autoClose: false,
+    });
+
     // eslint-disable-next-line no-await-in-loop
     const ret = await reloadSeries(series, chapterLanguages);
     if (ret instanceof Error) {
       log.error(ret);
-      errs += 1;
+      failedToUpdate.push(series);
     }
     cur += 1;
   }
 
-  let statusMessage = '';
-  if (cur === 1) {
-    statusMessage =
-      errs > 0
-        ? `Error occurred while reloading series "${seriesList[0].title}"`
-        : `Reloaded series "${seriesList[0].title}"`;
+  setSeriesList(library.fetchSeriesList());
+  if (cur === 1 && failedToUpdate.length > 0) {
+    updateNotification({
+      id: notificationId,
+      title: `Library refresh failed`,
+      message: `Error while reloading series "${seriesList[0].title}"`,
+      color: 'red',
+      icon: React.createElement(IconX, { size: 16 }),
+    });
+  } else if (failedToUpdate.length > 0) {
+    updateNotification({
+      id: notificationId,
+      title: `Library refreshed with errors`,
+      message: (
+        <Text>
+          Reloaded {cur} series (
+          <Text
+            component="a"
+            variant="link"
+            onClick={() =>
+              openModal({
+                title: 'Library Update Failed',
+                children: (
+                  <>
+                    <Text>Failed to reload the following series:</Text>
+                    <List pb="sm">
+                      {failedToUpdate.map((series) => (
+                        <List.Item key={series?.id}>{series.title}</List.Item>
+                      ))}
+                    </List>
+                    <Group position="right">
+                      <Button variant="default" onClick={() => closeAllModals()} mt="md">
+                        Okay
+                      </Button>
+                    </Group>
+                  </>
+                ),
+              })
+            }
+          >
+            {failedToUpdate.length} errors
+          </Text>
+          )
+        </Text>
+      ),
+      color: 'yellow',
+      icon: React.createElement(IconAlertTriangle, { size: 16 }),
+      autoClose: false,
+    });
   } else {
-    statusMessage =
-      errs > 0 ? `Reloaded ${cur} series with ${errs} errors` : `Reloaded ${cur} series`;
+    updateNotification({
+      id: notificationId,
+      title: `Library refreshed`,
+      message: `Reloaded ${cur} series`,
+      color: 'teal',
+      icon: React.createElement(IconCheck, { size: 16 }),
+    });
   }
 
-  setSeriesList(library.fetchSeriesList());
   setReloadingSeriesList(false);
-  setStatusText(statusMessage);
 }
 
 export function updateSeries(series: Series) {

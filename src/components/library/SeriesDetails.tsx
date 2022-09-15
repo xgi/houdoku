@@ -39,7 +39,6 @@ import {
   seriesListState,
   seriesState,
 } from '../../state/libraryStates';
-import { statusTextState } from '../../state/statusBarStates';
 import { chapterLanguagesState } from '../../state/settingStates';
 import RemoveSeriesModal from './RemoveSeriesModal';
 import { reloadSeriesList } from '../../features/library/utils';
@@ -72,7 +71,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const setChapterFilterTitle = useSetRecoilState(chapterFilterTitleState);
   const setChapterFilterGroup = useSetRecoilState(chapterFilterGroupState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
-  const setStatusText = useSetRecoilState(statusTextState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
 
   const loadContent = async () => {
@@ -250,7 +248,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                         [series],
                         setSeriesList,
                         setReloadingSeriesList,
-                        setStatusText,
                         chapterLanguages
                       )
                         .then(loadContent)

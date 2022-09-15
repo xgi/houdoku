@@ -59,7 +59,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
 
   const handleAdd = () => {
     if (customSeries !== undefined) {
-      importSeries(customSeries, setStatusText, chapterLanguages)
+      importSeries(customSeries, chapterLanguages)
         // eslint-disable-next-line promise/always-return
         .then((addedSeries) => {
           setSeriesList(library.fetchSeriesList());
