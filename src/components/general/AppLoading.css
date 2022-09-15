@@ -10,15 +10,19 @@
   20% {
     transform: rotate(45deg);
   }
+
   40% {
     transform: rotate(-60deg);
   }
+
   60% {
     transform: rotate(15deg);
   }
+
   80% {
     transform: rotate(-80deg);
   }
+
   100% {
     transform: rotate(0deg);
   }
@@ -29,16 +33,4 @@
   animation-fill-mode: both;
   animation-iteration-count: infinite;
   animation-name: swing;
-}
-
-.title {
-  color: rgba(94, 141, 135, 1) !important;
-  /* font-weight: normal !important; */
-  margin-top: 1.2em;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.paragraph {
-  text-align: center;
 }

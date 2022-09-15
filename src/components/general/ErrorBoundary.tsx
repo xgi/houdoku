@@ -1,15 +1,10 @@
 /* eslint-disable react/prefer-stateless-function */
-import Title from 'antd/lib/typography/Title';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
 import React, { ReactNode, Component, ErrorInfo } from 'react';
-import { Collapse, Typography } from 'antd';
-import styles from './ErrorBoundary.css';
+import { Accordion, Box, Center, Code, Container, Kbd, Text, Title } from '@mantine/core';
 import packageJson from '../../../package.json';
 import ipcChannels from '../../constants/ipcChannels.json';
-
-const { Text, Paragraph } = Typography;
-const { Panel } = Collapse;
 
 const LOGS_DIR = await ipcRenderer.invoke(ipcChannels.GET_PATH.LOGS_DIR);
 
@@ -43,48 +38,71 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.error) {
       return (
-        <div className={styles.spaceContainer}>
-          <div className={styles.container}>
-            <Title level={3}>Sorry, something went wrong.</Title>
-            <Paragraph>
-              An error occurred while loading the page. Normally we would show more specific
-              information, but the error caused the renderer to break, so we can only show you this
-              page instead.
-            </Paragraph>
-            <Title level={4}>What to do</Title>
-            <div className={styles.list}>
-              <Paragraph>
-                - Press <Text keyboard>Ctrl + R</Text> to reload the client.
-              </Paragraph>
-              <Paragraph>
-                - You can open the console by pressing <Text keyboard>Ctrl + Shift + I</Text>, which
-                may contain additional information about the error.
-              </Paragraph>
-              <Paragraph>
-                -{' '}
-                <a href={`${packageJson.repository.url}/issues`} target="_blank" rel="noreferrer">
-                  Report an issue on GitHub
-                </a>
-                . Please copy the expanded error information below, as well as the steps you took
-                before seeing this page.
-              </Paragraph>
-            </div>
-            <Title level={4}>Error details</Title>
-            <Paragraph>
-              Additional logs in{' '}
-              <Text code>
-                <a href={`file:///${LOGS_DIR}`} target="_blank" rel="noreferrer">
-                  {LOGS_DIR}
-                </a>
+        <Container>
+          <Center>
+            <Box style={{ maxWidth: 500 }} mt={80}>
+              <Title order={3}>Sorry, something went wrong.</Title>
+              <Text>
+                An error occurred while loading the page. Normally we would show more specific
+                information, but the error caused the renderer to break, so we can only show you
+                this page instead.
               </Text>
-            </Paragraph>
-            <Collapse className={styles.errorCollapse} defaultActiveKey={[]}>
-              <Panel header={`${this.state.error.name}: ${this.state.error.message}`} key="1">
-                <p>{this.state.error.stack}</p>
-              </Panel>
-            </Collapse>
-          </div>
-        </div>
+              <Title order={4} mt="xs">
+                What to do
+              </Title>
+              <Box ml="lg">
+                <Text>
+                  - Press <Kbd>Ctrl</Kbd>+<Kbd>R</Kbd> to reload the client.
+                </Text>
+                <Text>
+                  - You can open the console by pressing <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+
+                  <Kbd>I</Kbd>, which may contain additional information about the error.
+                </Text>
+                <Text>
+                  -{' '}
+                  <Text
+                    variant="link"
+                    component="a"
+                    style={{ cursor: 'pointer' }}
+                    href={`${packageJson.repository.url}/issues`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Report an issue on GitHub
+                  </Text>
+                  . Please copy the expanded error information below, as well as the steps you took
+                  before seeing this page.
+                </Text>
+              </Box>
+              <Title order={4} mt="xs">
+                Error details
+              </Title>
+              <Text>
+                Additional logs in{' '}
+                <Code>
+                  <Text
+                    variant="link"
+                    component="a"
+                    href={`file:///${LOGS_DIR}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {LOGS_DIR}
+                  </Text>
+                </Code>
+              </Text>
+
+              <Accordion mt="xs">
+                <Accordion.Item value="details">
+                  <Accordion.Control>
+                    {this.state.error.name}: {this.state.error.message}
+                  </Accordion.Control>
+                  <Accordion.Panel>{this.state.error.stack}</Accordion.Panel>
+                </Accordion.Item>
+              </Accordion>
+            </Box>
+          </Center>
+        </Container>
       );
     }
     return this.props.children;

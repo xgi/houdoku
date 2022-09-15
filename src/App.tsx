@@ -42,6 +42,7 @@ import {
   runningState,
 } from './state/downloaderStates';
 import { autoCheckForExtensionUpdatesState, autoCheckForUpdatesState } from './state/settingStates';
+import { ErrorBoundary } from './components/general/ErrorBoundary';
 
 const loadStoredExtensionSettings = () => {
   log.info('Loading stored extension settings...');
@@ -254,23 +255,25 @@ export default function App() {
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-        <ModalsProvider>
-          <NotificationsProvider>
-            <Router>
-              <Switch>
-                <Route
-                  path={`${routes.READER}/:series_id/:chapter_id`}
-                  exact
-                  component={ReaderPage}
-                />
-                <Route path={routes.SERIES} component={DashboardPage} />
-                <Route path={routes.SEARCH} component={DashboardPage} />
-                <Route path={routes.SETTINGS} component={DashboardPage} />
-                <Route path={routes.LIBRARY} component={DashboardPage} />
-              </Switch>
-            </Router>
-          </NotificationsProvider>
-        </ModalsProvider>
+        <ErrorBoundary>
+          <ModalsProvider>
+            <NotificationsProvider>
+              <Router>
+                <Switch>
+                  <Route
+                    path={`${routes.READER}/:series_id/:chapter_id`}
+                    exact
+                    component={ReaderPage}
+                  />
+                  <Route path={routes.SERIES} component={DashboardPage} />
+                  <Route path={routes.SEARCH} component={DashboardPage} />
+                  <Route path={routes.SETTINGS} component={DashboardPage} />
+                  <Route path={routes.LIBRARY} component={DashboardPage} />
+                </Switch>
+              </Router>
+            </NotificationsProvider>
+          </ModalsProvider>
+        </ErrorBoundary>
       </MantineProvider>
     </ColorSchemeProvider>
   );

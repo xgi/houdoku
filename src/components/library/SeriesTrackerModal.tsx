@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useState } from 'react';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer, shell } from 'electron';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
@@ -198,7 +197,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
   const renderTrackEntry = (trackerMetadata: TrackerMetadata) => {
     const trackEntry = trackEntries[trackerMetadata.id];
-    if (trackEntry === undefined) return <Paragraph>Failed to define tracker entry.</Paragraph>;
+    if (trackEntry === undefined) return <Text>Failed to define tracker entry.</Text>;
 
     return (
       <>

@@ -1,6 +1,4 @@
 import React from 'react';
-import { Button, Col, Dropdown, Menu, Row } from 'antd';
-import { DownOutlined, UploadOutlined } from '@ant-design/icons';
 import { Language, Series, SeriesStatus, Languages, LanguageKey } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import {

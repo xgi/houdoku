@@ -3,7 +3,6 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
-@import '~antd/dist/antd.dark.css';
 @import 'style/colors.css';
 @import 'style/titlebar.css';
 @import 'style/flags.css';
@@ -25,41 +24,6 @@ body {
 
 #titlebar.hidden+#root {
   --titlebar-height: 0px;
-}
-
-h4.ant-typography {
-  font-size: 18px;
-}
-
-.ant-table-thead>tr>th {
-  font-weight: bold;
-  user-select: none;
-}
-
-.ant-descriptions-item-container {
-  align-items: center;
-}
-
-.ant-dropdown-menu {
-  max-height: 200px;
-  overflow: auto;
-}
-
-.ant-dropdown-menu .ant-dropdown-menu-sub {
-  min-width: 100px;
-  text-align: center;
-}
-
-.ant-alert {
-  padding: 8px 15px !important;
-}
-
-.ant-alert-message {
-  font-size: 14px !important;
-}
-
-.ant-alert-description>.ant-typography {
-  margin-bottom: 0 !important;
 }
 
 ::-webkit-scrollbar {
