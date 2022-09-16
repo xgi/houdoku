@@ -144,7 +144,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       <Grid my="xs" gutter="xs">
         {getCol('Author', series.authors.join('; ') || 'Unknown')}
         {getCol('Artist', series.artists.join('; ') || 'Unknown')}
-        {getCol('Status', series.status)}
+        {getCol('Status', series.status || 'Unknown')}
         {getCol('Language', languageStr)}
         <Grid.Col span={12}>
           <Group spacing="xs">
