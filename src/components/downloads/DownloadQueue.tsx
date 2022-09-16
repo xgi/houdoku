@@ -1,6 +1,16 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { Box, ScrollArea, Stack, Text, Title, Progress, Group, Button } from '@mantine/core';
+import {
+  Box,
+  ScrollArea,
+  Stack,
+  Text,
+  Title,
+  Progress,
+  Group,
+  Button,
+  Center,
+} from '@mantine/core';
 import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons';
 import { downloaderClient, DownloadTask } from '../../services/downloader';
 import { currentTaskState, queueState } from '../../state/downloaderStates';
@@ -89,7 +99,9 @@ const DownloadQueue: React.FC<Props> = (props: Props) => {
           {currentTask ? renderTask(currentTask) : ''}
           {queue.map((task: DownloadTask) => renderTask(task))}
           {currentTask === null && queue.length === 0 ? (
-            <Text>There are no downloads queued.</Text>
+            <Center style={{ height: '36vh', minHeight: 225 }}>
+              <Text>There are no downloads queued.</Text>
+            </Center>
           ) : (
             ''
           )}

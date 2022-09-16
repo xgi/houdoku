@@ -139,6 +139,18 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   return (
     <>
       {renderHeader()}
+      {seriesList.length === 0 ? (
+        <Text>
+          You don&apos;t have any downloaded chapters. You can download chapters from the series
+          page in your{' '}
+          <Text component="span" color="orange" weight={700}>
+            Library
+          </Text>
+          .
+        </Text>
+      ) : (
+        ''
+      )}
       <Accordion
         radius="xs"
         chevronPosition="left"
