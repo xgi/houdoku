@@ -7,7 +7,7 @@ import log from 'electron-log';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { showNotification, updateNotification } from '@mantine/notifications';
-import { IconCheck } from '@tabler/icons';
+import { IconCheck, IconPlayerPause } from '@tabler/icons';
 import { getChapterDownloadPath } from '../util/filesystem';
 import ipcChannels from '../constants/ipcChannels.json';
 
@@ -111,6 +111,7 @@ class DownloaderClient {
     showNotification({ id: notificationId, message: 'Starting download...', loading: true });
 
     this.setRunning(true);
+    let tasksCompleted = 0;
     while (this.running && this.queue.length > 0) {
       const task: DownloadTask | undefined = this.queue[0];
       this.setQueue(this.queue.slice(1));
@@ -208,16 +209,28 @@ class DownloaderClient {
       if (!this.running) {
         // task was paused, add it back to the start of the queue
         this.setQueue([{ ...task, page: i, totalPages: pageUrls.length }, ...this.queue]);
+      } else {
+        tasksCompleted += 1;
       }
     }
 
-    updateNotification({
-      id: notificationId,
-      title: `Downloaded ${this.currentTask?.series.title} chapter ${this.currentTask?.chapter.chapterNumber}`,
-      message: startingQueueSize > 1 ? `Downloaded ${startingQueueSize} chapters` : '',
-      color: 'teal',
-      icon: React.createElement(IconCheck, { size: 16 }),
-    });
+    if (this.running) {
+      updateNotification({
+        id: notificationId,
+        title: `Downloaded ${this.currentTask?.series.title} chapter ${this.currentTask?.chapter.chapterNumber}`,
+        message: startingQueueSize > 1 ? `Downloaded ${tasksCompleted} chapters` : '',
+        color: 'teal',
+        icon: React.createElement(IconCheck, { size: 16 }),
+      });
+    } else {
+      updateNotification({
+        id: notificationId,
+        title: `Download paused`,
+        message: startingQueueSize > 1 ? `Finished ${tasksCompleted} downloads` : '',
+        color: 'yellow',
+        icon: React.createElement(IconPlayerPause, { size: 16 }),
+      });
+    }
 
     this.setRunning(false);
     this.setCurrentTask(null);
