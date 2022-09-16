@@ -53,11 +53,10 @@ yarn start
 
 **Application**: This is an Electron application. The majority of the functionality is performed in the renderer thread. Exceptions are for cases like accessing the window class (i.e. to support minimizing the window), locating application directories, and for working with extensions. The renderer can invoke these functions through ipc.
 
-**UI**: The interface uses React components. Most base components (text, buttons, links, etc.) come from the [antd](https://ant.design)
-framework. Each component has a CSS file for custom styles.
+**UI**: The interface uses React components. Most base components (text, buttons, links, etc.) come from [Mantine](https://mantine.dev/).
 
 **State**: [Recoil](https://recoiljs.org) is used for state management. Hooks are used for small
-non-shared behavior. 
+non-shared behavior.
 
 **Storage**: Library data and settings are saved with `localStorage`. Thumbnails are stored in
 the user-data path.
