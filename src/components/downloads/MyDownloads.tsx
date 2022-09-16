@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Modal, Row, Tree, Typography } from 'antd';
-import { SyncOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import log from 'electron-log';
-import { Languages } from 'houdoku-extension-lib';
+import { Chapter, Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import styles from './MyDownloads.css';
+import { useRecoilValue } from 'recoil';
+import { Accordion, Badge, Button, Checkbox, Group, Stack, Text, Title } from '@mantine/core';
+import { IconTrash } from '@tabler/icons';
+import { openConfirmModal } from '@mantine/modals';
 import { getDownloadedList } from '../../features/downloader/utils';
 import { deleteDownloadedChapter } from '../../util/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
-import flags from '../../img/flags.png';
-import { statusTextState } from '../../state/statusBarStates';
 import { customDownloadsDirState } from '../../state/settingStates';
-
-const { Text } = Typography;
-const { confirm } = Modal;
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -23,86 +18,117 @@ const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAUL
 type Props = {};
 
 const MyDownloads: React.FC<Props> = (props: Props) => {
-  const [loading, setLoading] = useState(false);
+  const [seriesList, setSeriesList] = useState<Series[]>([]);
+  const [chapterLists, setChapterLists] = useState<{ [key: string]: Chapter[] }>({});
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
-  const [treeData, setTreeData] = useState<any[]>([]);
-  const setStatusText = useSetRecoilState(statusTextState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadDownloads = async () => {
     const downloadedList = getDownloadedList(customDownloadsDir || defaultDownloadsDir);
-    const tempTreeData = downloadedList.seriesList.map((series) => {
-      if (series.id === undefined) return {};
-
-      return {
-        title: `${series.title} [id:${series.id}]`,
-        key: `series-${series.id}`,
-        children: downloadedList.chapterLists[series.id]
-          .sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber))
-          .reverse()
-          .map((chapter) => {
-            const groupStr = chapter.groupName === '' ? '' : ` [${chapter.groupName}]`;
-
-            return {
-              title: (
-                <>
-                  <div className="flag-container" style={{ display: 'inline-block' }}>
-                    <img
-                      src={flags}
-                      title={Languages[chapter.languageKey].name}
-                      alt={Languages[chapter.languageKey].name}
-                      className={`flag flag-${Languages[chapter.languageKey].flagCode}`}
-                    />
-                  </div>
-                  <span style={{ paddingLeft: 4 }}>
-                    Chapter {chapter.chapterNumber}
-                    {groupStr} [id:{chapter.id}]
-                  </span>
-                </>
-              ),
-              key: `${series.id};${chapter.id}`,
-            };
-          }),
-      };
-    });
-
-    setTreeData(tempTreeData);
+    setSeriesList(downloadedList.seriesList);
+    setChapterLists(downloadedList.chapterLists);
   };
 
-  const deleteSelected = async () => {
-    const count = checkedChapters.length;
-    log.debug(`Prompting to delete ${count} downloaded chapters`);
+  const deleteChecked = async () => {
+    const toDelete = new Set(checkedChapters);
+    log.debug(`Deleting ${toDelete.size} downloaded chapters`);
 
-    confirm({
-      title: 'Delete the selected chapters?',
-      icon: <ExclamationCircleOutlined />,
-      content: 'This action is irreversible.',
-      onOk() {
-        Promise.all(
-          checkedChapters.map(async (key: string) => {
-            const seriesId = key.split(';')[0];
-            const chapterId = key.split(';')[1];
+    Promise.all(
+      [...toDelete].map(async (chapterId: string) => {
+        let seriesId: string | undefined;
+        Object.entries(chapterLists).forEach(([curSeriesId, chapters]) => {
+          if (chapters.find((chapter) => chapter.id && chapter.id === chapterId)) {
+            seriesId = curSeriesId;
+          }
+        });
+        if (!seriesId) return;
 
-            const series = library.fetchSeries(seriesId);
-            const chapter = library.fetchChapter(seriesId, chapterId);
-            if (series === null || chapter === null) return;
+        const series = library.fetchSeries(seriesId);
+        const chapter = library.fetchChapter(seriesId, chapterId);
+        if (series === null || chapter === null) return;
 
-            await deleteDownloadedChapter(
-              series,
-              chapter,
-              customDownloadsDir || defaultDownloadsDir
-            );
-          })
-        )
-          // eslint-disable-next-line promise/always-return
-          .then(() => {
-            setStatusText(`Deleted ${count} downloaded chapter(s)`);
-            setCheckedChapters([]);
-            loadDownloads();
-          })
-          .catch((err) => log.error(err));
-      },
+        await deleteDownloadedChapter(series, chapter, customDownloadsDir || defaultDownloadsDir);
+      })
+    )
+      // eslint-disable-next-line promise/always-return
+      .then(() => {
+        setCheckedChapters([]);
+        loadDownloads();
+      })
+      .catch((err) => log.error(err));
+  };
+
+  const promptDeleteChecked = async () => {
+    const count = new Set(checkedChapters).size;
+
+    if (count > 1) {
+      openConfirmModal({
+        title: 'Deleting downloaded chapters',
+        children: (
+          <Text size="sm">
+            Are you sure you want to delete{' '}
+            <Text color="teal" component="span" weight={700}>
+              {count}
+            </Text>{' '}
+            downloaded chapters?
+          </Text>
+        ),
+        labels: { confirm: 'Delete', cancel: 'Cancel' },
+        confirmProps: { color: 'red' },
+        onConfirm: deleteChecked,
+      });
+    } else {
+      deleteChecked();
+    }
+  };
+
+  const renderHeader = () => {
+    return (
+      <Group mb="xs" position="apart">
+        <Title order={3}>My Downloads</Title>
+        <Group spacing="xs">
+          <Button
+            size="xs"
+            color="red"
+            disabled={checkedChapters.length === 0}
+            leftIcon={<IconTrash size={16} />}
+            onClick={promptDeleteChecked}
+          >
+            Delete Selected
+          </Button>
+          <Button size="xs" onClick={loadDownloads}>
+            Refresh
+          </Button>
+        </Group>
+      </Group>
+    );
+  };
+
+  const handleChangeSeriesCheckbox = (seriesId: string | undefined) => {
+    if (!seriesId) return;
+
+    const chapterIds: string[] = [];
+    chapterLists[seriesId].forEach((chapter) => {
+      if (chapter.id) chapterIds.push(chapter.id);
     });
+
+    if (chapterIds.every((id) => checkedChapters.includes(id))) {
+      setCheckedChapters(checkedChapters.filter((id) => !chapterIds.includes(id)));
+    } else {
+      setCheckedChapters([...checkedChapters, ...chapterIds]);
+    }
+  };
+
+  const handleChangeChapterCheckbox = (chapterId: string | undefined, checked: boolean) => {
+    if (!chapterId) return;
+
+    if (checked) {
+      if (!checkedChapters.includes(chapterId)) {
+        setCheckedChapters([chapterId, ...checkedChapters]);
+      }
+    } else {
+      setCheckedChapters(checkedChapters.filter((id) => id !== chapterId));
+    }
   };
 
   useEffect(() => {
@@ -112,49 +138,88 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Alert
-        className={styles.infoAlert}
-        type="info"
-        message={
-          <>
-            You can download chapters for offline reading from the series page in your library. Your
-            downloaded chapters are saved in{' '}
-            <Text code>
-              <a
-                href={`file:///${customDownloadsDir || defaultDownloadsDir}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {customDownloadsDir || defaultDownloadsDir}
-              </a>
-            </Text>
-          </>
-        }
-      />
-      <Row className={styles.controlRow}>
-        <Button className={styles.refreshButton} onClick={() => loadDownloads()}>
-          {loading ? <SyncOutlined spin /> : 'Refresh List'}
-        </Button>
-        {checkedChapters.length > 0 ? (
-          <Button type="primary" danger onClick={() => deleteSelected()}>
-            Delete Selected
-          </Button>
-        ) : (
-          ''
-        )}
-      </Row>
-      {treeData.length > 0 ? (
-        <Tree
-          checkable
-          selectable={false}
-          onCheck={(keys: any) =>
-            setCheckedChapters(keys.filter((key: string) => !key.startsWith('series-')))
-          }
-          treeData={treeData}
-        />
+      {renderHeader()}
+      {seriesList.length === 0 ? (
+        <Text>
+          You don&apos;t have any downloaded chapters. You can download chapters from the series
+          page in your{' '}
+          <Text component="span" color="orange" weight={700}>
+            Library
+          </Text>
+          .
+        </Text>
       ) : (
-        <></>
+        ''
       )}
+      <Accordion
+        radius="xs"
+        chevronPosition="left"
+        multiple
+        styles={(theme) => ({
+          control: {
+            height: 0,
+            '&:hover': {
+              backgroundColor: theme.colors.dark[7],
+            },
+          },
+        })}
+      >
+        {seriesList.map((series) => {
+          if (!series.id) return '';
+
+          const numChapters = chapterLists[series.id].length;
+          const numSelected = chapterLists[series.id].filter(
+            (chapter) => chapter.id && checkedChapters.includes(chapter.id)
+          ).length;
+
+          let badgeColor: string | undefined;
+          if (numSelected > 0) badgeColor = 'yellow';
+          if (numSelected === numChapters) badgeColor = 'teal';
+
+          return (
+            <Accordion.Item value={series.id} key={series.id}>
+              <Accordion.Control>
+                <Group position="apart">
+                  <Group>
+                    <Checkbox
+                      checked={numSelected === numChapters}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onChange={() => handleChangeSeriesCheckbox(series.id)}
+                    />
+                    <Text>{series.title}</Text>
+                  </Group>
+                  <Badge radius={0} color={badgeColor}>
+                    {numSelected}/{numChapters} selected
+                  </Badge>
+                </Group>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Stack spacing={4}>
+                  {chapterLists[series.id]
+                    .sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber))
+                    .reverse()
+                    .map((chapter) => {
+                      if (!chapter.id) return '';
+                      return (
+                        <Checkbox
+                          key={chapter.id}
+                          ml={40}
+                          label={`Chapter ${chapter.chapterNumber} [id:${chapter.id}]`}
+                          checked={checkedChapters.includes(chapter.id)}
+                          onChange={(e) =>
+                            handleChangeChapterCheckbox(chapter.id, e.target.checked)
+                          }
+                        />
+                      );
+                    })}
+                </Stack>
+              </Accordion.Panel>
+            </Accordion.Item>
+          );
+        })}
+      </Accordion>
     </>
   );
 };

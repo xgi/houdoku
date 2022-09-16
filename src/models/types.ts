@@ -1,4 +1,4 @@
-import { LanguageKey, SettingType } from 'houdoku-extension-lib';
+import { LanguageKey, Series, SettingType } from 'houdoku-extension-lib';
 
 export type ExtensionTableRow = {
   pkgName: string;
@@ -53,11 +53,21 @@ export type TrackEntry = {
   status?: TrackStatus;
 };
 
+export type SearchParams = {
+  text?: string;
+};
+
+export type SearchResult = {
+  seriesList: Series[];
+  hasMore: boolean;
+};
+
 export enum GeneralSetting {
   ChapterLanguages = 'ChapterLanguages',
   RefreshOnStart = 'RefreshOnStart',
   AutoCheckForUpdates = 'AutoCheckForUpdates',
   AutoCheckForExtensionUpdates = 'AutoCheckForExtensionUpdates',
+  ConfirmRemoveSeries = 'ConfirmRemoveSeries',
   CustomDownloadsDir = 'CustomDownloadsDir',
   LibraryColumns = 'LibraryColumns',
   LibraryViews = 'LibraryViews',
@@ -149,6 +159,7 @@ export const SettingTypes = {
   [GeneralSetting.RefreshOnStart]: SettingType.BOOLEAN,
   [GeneralSetting.AutoCheckForUpdates]: SettingType.BOOLEAN,
   [GeneralSetting.AutoCheckForExtensionUpdates]: SettingType.BOOLEAN,
+  [GeneralSetting.ConfirmRemoveSeries]: SettingType.BOOLEAN,
   [GeneralSetting.CustomDownloadsDir]: SettingType.STRING,
   [GeneralSetting.LibraryColumns]: SettingType.NUMBER,
   [GeneralSetting.LibraryViews]: SettingType.STRING,
@@ -195,6 +206,7 @@ export const DefaultSettings = {
   [GeneralSetting.RefreshOnStart]: true,
   [GeneralSetting.AutoCheckForUpdates]: true,
   [GeneralSetting.AutoCheckForExtensionUpdates]: true,
+  [GeneralSetting.ConfirmRemoveSeries]: true,
   [GeneralSetting.CustomDownloadsDir]: '',
   [GeneralSetting.LibraryColumns]: 4,
   [GeneralSetting.LibraryViews]: LibraryView.Grid,

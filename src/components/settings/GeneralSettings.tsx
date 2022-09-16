@@ -1,10 +1,9 @@
 import React from 'react';
-import { Select, Col, Row, Button, Input, Tooltip, Switch } from 'antd';
-import { SelectOutlined, UndoOutlined } from '@ant-design/icons';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useRecoilState } from 'recoil';
-import styles from './GeneralSettings.css';
+import { Button, Grid, Group, Input, MultiSelect, Switch } from '@mantine/core';
+import { IconArrowBack } from '@tabler/icons';
 import { GeneralSetting } from '../../models/types';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { createBackup, restoreBackup } from '../../util/backup';
@@ -12,19 +11,14 @@ import {
   autoCheckForExtensionUpdatesState,
   autoCheckForUpdatesState,
   chapterLanguagesState,
+  confirmRemoveSeriesState,
   customDownloadsDirState,
   refreshOnStartState,
 } from '../../state/settingStates';
 
-const { Option } = Select;
-
 const languageOptions = Object.values(Languages)
   .filter((language) => language.key !== LanguageKey.MULTI)
-  .map((language: Language) => (
-    <Option key={language.key} value={language.key}>
-      {language.name}
-    </Option>
-  ));
+  .map((language: Language) => ({ value: language.key, label: language.name }));
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -38,6 +32,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
   const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(
     autoCheckForExtensionUpdatesState
   );
+  const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
   const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(customDownloadsDirState);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,6 +50,9 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
       case GeneralSetting.AutoCheckForExtensionUpdates:
         setAutoCheckForExtensionUpdates(value);
         break;
+      case GeneralSetting.ConfirmRemoveSeries:
+        setConfirmRemoveSeries(value);
+        break;
       case GeneralSetting.CustomDownloadsDir:
         setCustomDownloadsDir(value);
         break;
@@ -64,141 +62,125 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <>
-      <Row className={styles.row}>
-        <Col span={10}>Chapter Languages</Col>
-        <Col span={14}>
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: '100%' }}
-            placeholder="Select languages..."
-            defaultValue={chapterLanguages}
-            onChange={(value) => updateGeneralSetting(GeneralSetting.ChapterLanguages, value)}
-          >
-            {languageOptions}
-          </Select>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Refresh Library on Startup</Col>
-        <Col span={14}>
-          <Switch
-            checked={refreshOnStart}
-            onChange={(checked: boolean) =>
-              updateGeneralSetting(GeneralSetting.RefreshOnStart, checked)
-            }
-          />
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Check For Houdoku Updates Automatically</Col>
-        <Col span={14}>
-          <Switch
-            checked={autoCheckForUpdates}
-            onChange={(checked: boolean) =>
-              updateGeneralSetting(GeneralSetting.AutoCheckForUpdates, checked)
-            }
-          />
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Check For Extension Updates Automatically</Col>
-        <Col span={14}>
-          <Switch
-            checked={autoCheckForExtensionUpdates}
-            onChange={(checked: boolean) =>
-              updateGeneralSetting(GeneralSetting.AutoCheckForExtensionUpdates, checked)
-            }
-          />
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Custom Downloads Location</Col>
-        <Col span={14}>
-          <div className={styles.downloadLocationGroup}>
-            <Input
-              className={styles.downloadDirInput}
-              value={customDownloadsDir || defaultDownloadsDir}
-              title={customDownloadsDir || defaultDownloadsDir}
-              placeholder="Downloads location..."
-              disabled
-            />
-            <Tooltip title="Select directory">
-              <Button
-                icon={<SelectOutlined />}
-                onClick={() =>
-                  ipcRenderer
-                    .invoke(
-                      ipcChannels.APP.SHOW_OPEN_DIALOG,
-                      true,
-                      [],
-                      'Select Downloads Directory'
-                    )
-                    .then((fileList: string) => {
-                      // eslint-disable-next-line promise/always-return
-                      if (fileList.length > 0) {
-                        updateGeneralSetting(GeneralSetting.CustomDownloadsDir, fileList[0]);
-                      }
-                    })
-                }
-              />
-            </Tooltip>
-            <Tooltip title="Reset">
-              <Button
-                icon={<UndoOutlined />}
-                onClick={() => updateGeneralSetting(GeneralSetting.CustomDownloadsDir, '')}
-              />
-            </Tooltip>
-          </div>
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={10}>Backup Library</Col>
-        <Col span={14}>
-          {/* <Input
-            className={styles.downloadDirInput}
-            value={props.customDownloadsDir || defaultDownloadsDir}
-            title={props.customDownloadsDir || defaultDownloadsDir}
-            placeholder="Downloads location..."
-            disabled
-          /> */}
+    <Grid mb="md">
+      <Grid.Col span={5}>Chapter languages</Grid.Col>
+      <Grid.Col span={7}>
+        <MultiSelect
+          data={languageOptions}
+          placeholder="Select languages (leave blank for all)"
+          searchable
+          value={chapterLanguages}
+          onChange={(value) => updateGeneralSetting(GeneralSetting.ChapterLanguages, value)}
+        />
+      </Grid.Col>
 
-          <div className={styles.backupButtonGroup}>
-            <Button onClick={createBackup}>Create Backup</Button>
-            <Button
-              onClick={() =>
-                ipcRenderer
-                  .invoke(
-                    ipcChannels.APP.SHOW_OPEN_DIALOG,
-                    false,
-                    [
-                      {
-                        name: 'Houdoku Series Backup',
-                        extensions: ['json'],
-                      },
-                    ],
-                    'Select series backup file'
-                  )
-                  .then((fileList: string) => {
-                    // eslint-disable-next-line promise/always-return
-                    if (fileList.length > 0) {
-                      return ipcRenderer.invoke(ipcChannels.APP.READ_ENTIRE_FILE, fileList[0]);
-                    }
-                    return false;
-                  })
-                  .then((fileContent: string) => {
-                    // eslint-disable-next-line promise/always-return
-                    if (fileContent) restoreBackup(fileContent);
-                  })
-              }
-            >
-              Restore Backup
-            </Button>
-          </div>
-        </Col>
-      </Row>
-    </>
+      <Grid.Col span={5}>Refresh library on startup</Grid.Col>
+      <Grid.Col span={7}>
+        <Switch
+          size="md"
+          checked={refreshOnStart}
+          onChange={(e) => updateGeneralSetting(GeneralSetting.RefreshOnStart, e.target.checked)}
+        />
+      </Grid.Col>
+
+      <Grid.Col span={5}>Check for Houdoku updates automatically</Grid.Col>
+      <Grid.Col span={7}>
+        <Switch
+          size="md"
+          checked={autoCheckForUpdates}
+          onChange={(e) =>
+            updateGeneralSetting(GeneralSetting.AutoCheckForUpdates, e.target.checked)
+          }
+        />
+      </Grid.Col>
+
+      <Grid.Col span={5}>Check for extension updates automatically</Grid.Col>
+      <Grid.Col span={7}>
+        <Switch
+          size="md"
+          checked={autoCheckForExtensionUpdates}
+          onChange={(e) =>
+            updateGeneralSetting(GeneralSetting.AutoCheckForExtensionUpdates, e.target.checked)
+          }
+        />
+      </Grid.Col>
+
+      <Grid.Col span={5}>Confirm removing series from library</Grid.Col>
+      <Grid.Col span={7}>
+        <Switch
+          size="md"
+          checked={confirmRemoveSeries}
+          onChange={(e) =>
+            updateGeneralSetting(GeneralSetting.ConfirmRemoveSeries, e.target.checked)
+          }
+        />
+      </Grid.Col>
+
+      <Grid.Col span={5}>Custom downloads location</Grid.Col>
+      <Grid.Col span={7}>
+        <Input
+          component="button"
+          rightSection={
+            <IconArrowBack
+              size={20}
+              style={{ display: 'block', opacity: 0.5 }}
+              onClick={() => updateGeneralSetting(GeneralSetting.CustomDownloadsDir, '')}
+            />
+          }
+          onClick={() =>
+            ipcRenderer
+              .invoke(ipcChannels.APP.SHOW_OPEN_DIALOG, true, [], 'Select Downloads Directory')
+              .then((fileList: string) => {
+                // eslint-disable-next-line promise/always-return
+                if (fileList.length > 0) {
+                  updateGeneralSetting(GeneralSetting.CustomDownloadsDir, fileList[0]);
+                }
+              })
+          }
+        >
+          {customDownloadsDir || defaultDownloadsDir}
+        </Input>
+      </Grid.Col>
+
+      <Grid.Col span={5}>Backup library</Grid.Col>
+      <Grid.Col span={7}>
+        <Group spacing="sm">
+          <Button variant="default" onClick={createBackup}>
+            Create Backup
+          </Button>
+          <Button
+            variant="default"
+            onClick={() =>
+              ipcRenderer
+                .invoke(
+                  ipcChannels.APP.SHOW_OPEN_DIALOG,
+                  false,
+                  [
+                    {
+                      name: 'Houdoku Backup',
+                      extensions: ['json'],
+                    },
+                  ],
+                  'Select backup file'
+                )
+                .then((fileList: string) => {
+                  // eslint-disable-next-line promise/always-return
+                  if (fileList.length > 0) {
+                    return ipcRenderer.invoke(ipcChannels.APP.READ_ENTIRE_FILE, fileList[0]);
+                  }
+                  return false;
+                })
+                .then((fileContent: string) => {
+                  // eslint-disable-next-line promise/always-return
+                  if (fileContent) restoreBackup(fileContent);
+                })
+            }
+          >
+            Restore Backup
+          </Button>
+        </Group>
+      </Grid.Col>
+    </Grid>
   );
 };
 

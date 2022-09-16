@@ -1,30 +1,35 @@
 import React from 'react';
-import { Tabs } from 'antd';
+import { Tabs } from '@mantine/core';
 import TrackerSettings from './TrackerSettings';
 import IntegrationSettings from './IntegrationSettings';
 import ReaderSettings from './ReaderSettings';
 import GeneralSettings from './GeneralSettings';
 
-const { TabPane } = Tabs;
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface Props {}
 
 const Settings: React.FC<Props> = (props: Props) => {
   return (
-    <Tabs defaultActiveKey="1" tabPosition="top">
-      <TabPane tab="General" key={1}>
+    <Tabs defaultValue="general">
+      <Tabs.List>
+        <Tabs.Tab value="general">General</Tabs.Tab>
+        <Tabs.Tab value="reader">Reader</Tabs.Tab>
+        <Tabs.Tab value="trackers">Trackers</Tabs.Tab>
+        <Tabs.Tab value="integrations">Integrations</Tabs.Tab>
+      </Tabs.List>
+
+      <Tabs.Panel value="general" pt="md">
         <GeneralSettings />
-      </TabPane>
-      <TabPane tab="Reader" key={2}>
+      </Tabs.Panel>
+      <Tabs.Panel value="reader" pt="md">
         <ReaderSettings />
-      </TabPane>
-      <TabPane tab="Trackers" key={3}>
+      </Tabs.Panel>
+      <Tabs.Panel value="trackers" pt="md">
         <TrackerSettings />
-      </TabPane>
-      <TabPane tab="Integrations" key={4}>
+      </Tabs.Panel>
+      <Tabs.Panel value="integrations" pt="md">
         <IntegrationSettings />
-      </TabPane>
+      </Tabs.Panel>
     </Tabs>
   );
 };

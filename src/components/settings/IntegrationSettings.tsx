@@ -1,8 +1,6 @@
 import React from 'react';
-import { Col, Row, Switch } from 'antd';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { useRecoilState } from 'recoil';
-import styles from './IntegrationSettings.css';
+import { Grid, Switch, Text } from '@mantine/core';
 import { IntegrationSetting } from '../../models/types';
 import { discordPresenceEnabledState } from '../../state/settingStates';
 
@@ -25,27 +23,24 @@ const IntegrationSettings: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <>
-      <Row className={styles.row}>
-        <Col span={10}>Use Discord Rich Presence</Col>
-        <Col span={14}>
-          <Switch
-            checked={discordPresenceEnabled}
-            onChange={(checked: boolean) =>
-              updateIntegrationSetting(IntegrationSetting.DiscordPresenceEnabled, checked)
-            }
-          />
-        </Col>
-      </Row>
-      <Row className={styles.row}>
-        <Col span={20}>
-          <Paragraph>
-            To use Discord Rich Presence, make sure &quot;Display current activity as a status
-            message&quot; is enabled in your Discord settings (under the Activity Status tab).
-          </Paragraph>
-        </Col>
-      </Row>
-    </>
+    <Grid>
+      <Grid.Col span={5}>Use Discord Rich Presence</Grid.Col>
+      <Grid.Col span={7}>
+        <Switch
+          size="md"
+          checked={discordPresenceEnabled}
+          onChange={(e) =>
+            updateIntegrationSetting(IntegrationSetting.DiscordPresenceEnabled, e.target.checked)
+          }
+        />
+      </Grid.Col>
+      <Grid.Col span={12}>
+        <Text color="dimmed">
+          To use Discord Rich Presence, make sure &quot;Display current activity as a status
+          message&quot; is enabled in your Discord settings (under the Activity Status tab).
+        </Text>
+      </Grid.Col>
+    </Grid>
   );
 };
 

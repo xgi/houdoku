@@ -1,27 +1,27 @@
 /* eslint-disable react/button-has-type */
 import React from 'react';
-import { Typography, Dropdown, Menu } from 'antd';
-import {
-  FullscreenOutlined,
-  ColumnWidthOutlined,
-  ColumnHeightOutlined,
-  FileOutlined,
-  ReadOutlined,
-  RightSquareOutlined,
-  LeftSquareOutlined,
-  DownSquareOutlined,
-  SettingOutlined,
-  ArrowLeftOutlined,
-  RightOutlined,
-  LeftOutlined,
-  VerticalLeftOutlined,
-  VerticalRightOutlined,
-  CloseOutlined,
-  StopOutlined,
-} from '@ant-design/icons';
 import { Chapter } from 'houdoku-extension-lib';
-import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  IconArrowAutofitHeight,
+  IconArrowAutofitWidth,
+  IconArrowBigLeft,
+  IconArrowBigRight,
+  IconArrowLeft,
+  IconArrowsMaximize,
+  IconBook,
+  IconCheck,
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+  IconCircleOff,
+  IconFile,
+  IconSettings,
+  IconSpacingVertical,
+  IconX,
+} from '@tabler/icons';
+import { Box, Button, Center, Group, MantineTheme, Menu, ScrollArea } from '@mantine/core';
 import styles from './ReaderHeader.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
 import {
@@ -42,8 +42,6 @@ import {
 } from '../../state/settingStates';
 import { nextPageStyle, nextReadingDirection } from '../../features/settings/utils';
 
-const { Text } = Typography;
-
 const TEXT_PAGE_STYLE = {
   [PageStyle.Single]: 'Single Page',
   [PageStyle.Double]: 'Double Page',
@@ -51,9 +49,9 @@ const TEXT_PAGE_STYLE = {
 };
 
 const ICONS_PAGE_STYLE = {
-  [PageStyle.Single]: <FileOutlined />,
-  [PageStyle.Double]: <ReadOutlined />,
-  [PageStyle.LongStrip]: <DownSquareOutlined />,
+  [PageStyle.Single]: <IconFile size={14} />,
+  [PageStyle.Double]: <IconBook size={14} />,
+  [PageStyle.LongStrip]: <IconSpacingVertical size={14} />,
 };
 
 const TEXT_READING_DIRECTION = {
@@ -62,8 +60,8 @@ const TEXT_READING_DIRECTION = {
 };
 
 const ICONS_READING_DIRECTION = {
-  [ReadingDirection.LeftToRight]: <RightSquareOutlined />,
-  [ReadingDirection.RightToLeft]: <LeftSquareOutlined />,
+  [ReadingDirection.LeftToRight]: <IconArrowBigRight size={14} />,
+  [ReadingDirection.RightToLeft]: <IconArrowBigLeft size={14} />,
 };
 
 type Props = {
@@ -88,6 +86,24 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
   const [offsetDoubleSpreads, setOffsetDoubleSpreads] = useRecoilState(offsetDoubleSpreadsState);
 
+  const buttonStyles = (theme: MantineTheme) => ({
+    root: {
+      height: 24,
+      fontSize: 12,
+      color: theme.colors.gray[4],
+      backgroundColor: theme.colors.dark[7],
+      '&:hover': {
+        backgroundColor: theme.colors.dark[4],
+      },
+    },
+    leftIcon: {
+      marginRight: 4,
+    },
+    rightIcon: {
+      marginLeft: 0,
+    },
+  });
+
   const getCurrentPageNumText = () => {
     let text = `${pageNumber}`;
     if (pageStyle === PageStyle.Double) {
@@ -99,234 +115,262 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
     return `${text} / ${lastPageNumber}`;
   };
 
-  const getFitButtonContent = (): {
-    text: string;
-    icon: JSX.Element;
-    func: () => void;
-  } => {
+  const renderFitButton = () => {
+    let opts = {
+      text: 'No Limit',
+      icon: <IconCircleOff size={14} />,
+      func: () => {
+        setFitContainToWidth(true);
+      },
+    };
     if (fitContainToHeight && fitContainToWidth) {
-      return {
+      opts = {
         text: 'Fit Both',
-        icon: <FullscreenOutlined />,
+        icon: <IconArrowsMaximize size={14} />,
         func: () => {
           setFitContainToHeight(false);
           setFitContainToWidth(false);
         },
       };
+    } else {
+      if (fitContainToWidth) {
+        opts = {
+          text: 'Fit Width',
+          icon: <IconArrowAutofitWidth size={14} />,
+          func: () => {
+            setFitContainToWidth(false);
+            setFitContainToHeight(true);
+          },
+        };
+      }
+      if (fitContainToHeight) {
+        opts = {
+          text: 'Fit Height',
+          icon: <IconArrowAutofitHeight size={14} />,
+          func: () => {
+            setFitContainToWidth(true);
+          },
+        };
+      }
     }
-    if (fitContainToWidth) {
-      return {
-        text: 'Fit Width',
-        icon: <ColumnWidthOutlined />,
-        func: () => {
-          setFitContainToWidth(false);
-          setFitContainToHeight(true);
-        },
-      };
-    }
-    if (fitContainToHeight) {
-      return {
-        text: 'Fit Height',
-        icon: <ColumnHeightOutlined />,
-        func: () => {
-          setFitContainToWidth(true);
-        },
-      };
-    }
-    return {
-      text: 'No Limit',
-      icon: <StopOutlined />,
-      func: () => {
-        setFitContainToWidth(true);
-      },
-    };
-  };
 
-  const renderFitButton = () => {
-    const fitButtonContent = getFitButtonContent();
     return (
-      <button className={`${styles.button} ${styles.fitButton}`} onClick={fitButtonContent.func}>
-        {fitButtonContent.icon} {fitButtonContent.text}
-      </button>
+      <Button compact styles={buttonStyles} radius={0} leftIcon={opts.icon} onClick={opts.func}>
+        {opts.text}
+      </Button>
     );
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.buttonGroup}>
-        <button className={`${styles.button} ${styles.exitButton}`} onClick={props.exitPage}>
-          <ArrowLeftOutlined /> Go Back
-        </button>
-      </div>
-
-      <div className={styles.buttonGroup}>
-        <button
-          className={`${styles.button} ${styles.arrowButton}`}
-          disabled={
-            (readingDirection === ReadingDirection.LeftToRight &&
-              props.getAdjacentChapterId(true) === null) ||
-            (readingDirection === ReadingDirection.RightToLeft &&
-              props.getAdjacentChapterId(false) === null)
-          }
-          onClick={() => props.changeChapter(true)}
-        >
-          <LeftOutlined />
-        </button>
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={(e: any) => {
-                props.setChapter(e.item.props['data-value']);
-              }}
-            >
-              {relevantChapterList.map((relevantChapter: Chapter) => (
-                <Menu.Item key={relevantChapter.id} data-value={relevantChapter.id}>
-                  {`Chapter ${relevantChapter.chapterNumber}`}
-                </Menu.Item>
-              ))}
-            </Menu>
-          }
-        >
-          <Text className={`${styles.field}`}>
-            {chapter && chapter.chapterNumber
-              ? `Chapter ${chapter.chapterNumber}`
-              : 'Unknown Chapter'}
-          </Text>
-        </Dropdown>
-        <button
-          className={`${styles.button} ${styles.arrowButton}`}
-          disabled={
-            (readingDirection === ReadingDirection.LeftToRight &&
-              props.getAdjacentChapterId(false) === null) ||
-            (readingDirection === ReadingDirection.RightToLeft &&
-              props.getAdjacentChapterId(true) === null)
-          }
-          onClick={() => props.changeChapter(false)}
-        >
-          <RightOutlined />
-        </button>
-      </div>
-
-      <div className={styles.buttonGroup}>
-        <button
-          className={`${styles.button} ${styles.arrowButton}`}
-          disabled={
-            (readingDirection === ReadingDirection.LeftToRight && pageNumber <= 1) ||
-            (readingDirection === ReadingDirection.RightToLeft && pageNumber >= lastPageNumber)
-          }
-          onClick={() => props.changePage(true, true)}
-        >
-          <VerticalRightOutlined />
-        </button>
-        <button
-          className={`${styles.button} ${styles.arrowButton}`}
-          disabled={
-            (readingDirection === ReadingDirection.RightToLeft &&
-              pageNumber === lastPageNumber &&
-              props.getAdjacentChapterId(false) === null) ||
-            (readingDirection === ReadingDirection.LeftToRight &&
-              pageNumber <= 1 &&
-              props.getAdjacentChapterId(true) === null)
-          }
-          onClick={() => props.changePage(true)}
-        >
-          <LeftOutlined />
-        </button>
-        <Dropdown
-          overlay={
-            <Menu
-              onClick={(e: any) => {
-                setPageNumber(e.item.props['data-value']);
-              }}
-            >
-              {Array.from({ length: lastPageNumber }, (_v, k) => k + 1).map((i: number) => (
-                <Menu.Item key={i} data-value={i}>
-                  Page {i}
-                </Menu.Item>
-              ))}
-            </Menu>
-          }
-        >
-          <Text className={`${styles.field}`}>{getCurrentPageNumText()}</Text>
-        </Dropdown>
-        <button
-          className={`${styles.button} ${styles.arrowButton}`}
-          disabled={
-            (readingDirection === ReadingDirection.LeftToRight &&
-              pageNumber === lastPageNumber &&
-              props.getAdjacentChapterId(false) === null) ||
-            (readingDirection === ReadingDirection.RightToLeft &&
-              pageNumber <= 1 &&
-              props.getAdjacentChapterId(true) === null)
-          }
-          onClick={() => props.changePage(false)}
-        >
-          <RightOutlined />
-        </button>
-        <button
-          className={`${styles.button} ${styles.arrowButton}`}
-          disabled={
-            (readingDirection === ReadingDirection.LeftToRight && pageNumber >= lastPageNumber) ||
-            (readingDirection === ReadingDirection.RightToLeft && pageNumber <= 1)
-          }
-          onClick={() => props.changePage(false, true)}
-        >
-          <VerticalLeftOutlined />
-        </button>
-      </div>
-
-      <div className={styles.buttonGroup}>
-        <button
-          className={`${styles.button} ${styles.pageStyleButton}`}
-          onClick={() => setPageStyle(nextPageStyle(pageStyle))}
-        >
-          {ICONS_PAGE_STYLE[pageStyle]} {TEXT_PAGE_STYLE[pageStyle]}
-        </button>
-      </div>
-
-      {pageStyle === PageStyle.Double ? (
-        <div className={styles.buttonGroup}>
-          <button
-            className={`${styles.button} ${styles.offsetButton}`}
-            onClick={() => setOffsetDoubleSpreads(!offsetDoubleSpreads)}
+    <Box
+      className={styles.container}
+      sx={(theme) => ({
+        backgroundColor: theme.colors.dark[6],
+      })}
+    >
+      <Center>
+        <Group spacing={4} noWrap>
+          <Button
+            compact
+            styles={buttonStyles}
+            radius={0}
+            leftIcon={<IconArrowLeft size={14} />}
+            onClick={props.exitPage}
           >
-            {offsetDoubleSpreads ? <CheckOutlined /> : <CloseOutlined />} Offset Spreads
-          </button>
-        </div>
-      ) : (
-        ''
-      )}
+            Go Back
+          </Button>
 
-      <div className={styles.buttonGroup}>{renderFitButton()}</div>
+          <Group spacing={0} noWrap>
+            <Button
+              px={2}
+              compact
+              styles={buttonStyles}
+              radius={0}
+              rightIcon={<IconChevronLeft size={16} />}
+              disabled={
+                (readingDirection === ReadingDirection.LeftToRight &&
+                  props.getAdjacentChapterId(true) === null) ||
+                (readingDirection === ReadingDirection.RightToLeft &&
+                  props.getAdjacentChapterId(false) === null)
+              }
+              onClick={() => props.changeChapter(true)}
+            />
+            <Menu shadow="md" width={110} trigger="hover">
+              <Menu.Target>
+                <Button compact styles={buttonStyles} radius={0} pb={2}>
+                  {chapter && chapter.chapterNumber
+                    ? `Chapter ${chapter.chapterNumber}`
+                    : 'Unknown Chapter'}
+                </Button>
+              </Menu.Target>
 
-      <div className={styles.buttonGroup}>
-        <button
-          className={`${styles.button} ${styles.stretchButton}`}
-          onClick={() => setFitStretch(!fitStretch)}
-          disabled={!(fitContainToHeight || fitContainToWidth)}
-        >
-          {fitStretch ? <CheckOutlined /> : <CloseOutlined />} Stretch to Fill
-        </button>
-      </div>
+              <Menu.Dropdown>
+                <ScrollArea.Autosize maxHeight={220} style={{ width: 100 }}>
+                  {relevantChapterList.map((relevantChapter: Chapter) => (
+                    <Menu.Item
+                      key={relevantChapter.id}
+                      onClick={() => {
+                        if (relevantChapter.id) props.setChapter(relevantChapter.id);
+                      }}
+                    >
+                      {`Chapter ${relevantChapter.chapterNumber}`}
+                    </Menu.Item>
+                  ))}
+                </ScrollArea.Autosize>
+              </Menu.Dropdown>
+            </Menu>
+            <Button
+              px={2}
+              compact
+              styles={buttonStyles}
+              radius={0}
+              rightIcon={<IconChevronRight size={16} />}
+              disabled={
+                (readingDirection === ReadingDirection.LeftToRight &&
+                  props.getAdjacentChapterId(false) === null) ||
+                (readingDirection === ReadingDirection.RightToLeft &&
+                  props.getAdjacentChapterId(true) === null)
+              }
+              onClick={() => props.changeChapter(false)}
+            />
+          </Group>
 
-      <div className={styles.buttonGroup}>
-        <button
-          className={`${styles.button} ${styles.stretchButton}`}
-          onClick={() => setReadingDirection(nextReadingDirection(readingDirection))}
-        >
-          {ICONS_READING_DIRECTION[readingDirection]} {TEXT_READING_DIRECTION[readingDirection]}
-        </button>
-      </div>
+          <Group spacing={0} noWrap>
+            <Button
+              px={2}
+              compact
+              styles={buttonStyles}
+              radius={0}
+              rightIcon={<IconChevronsLeft size={16} />}
+              disabled={
+                (readingDirection === ReadingDirection.LeftToRight && pageNumber <= 1) ||
+                (readingDirection === ReadingDirection.RightToLeft && pageNumber >= lastPageNumber)
+              }
+              onClick={() => props.changePage(true, true)}
+            />
+            <Button
+              px={2}
+              compact
+              styles={buttonStyles}
+              radius={0}
+              rightIcon={<IconChevronLeft size={16} />}
+              disabled={
+                (readingDirection === ReadingDirection.RightToLeft &&
+                  pageNumber === lastPageNumber &&
+                  props.getAdjacentChapterId(false) === null) ||
+                (readingDirection === ReadingDirection.LeftToRight &&
+                  pageNumber <= 1 &&
+                  props.getAdjacentChapterId(true) === null)
+              }
+              onClick={() => props.changePage(true)}
+            />
+            <Menu shadow="md" width={110} trigger="hover">
+              <Menu.Target>
+                <Button compact styles={buttonStyles} radius={0} px={4} pb={2}>
+                  {getCurrentPageNumText()}
+                </Button>
+              </Menu.Target>
 
-      <div className={styles.buttonGroup}>
-        <button
-          className={`${styles.button} ${styles.settingsButton}`}
-          onClick={() => setShowingSettingsModal(!showingSettingsModal)}
-        >
-          <SettingOutlined /> Settings
-        </button>
-      </div>
-    </div>
+              <Menu.Dropdown>
+                <ScrollArea.Autosize maxHeight={220} style={{ width: 100 }}>
+                  {Array.from({ length: lastPageNumber }, (_v, k) => k + 1).map((i: number) => (
+                    <Menu.Item key={i} onClick={() => setPageNumber(i)}>
+                      Page {i}
+                    </Menu.Item>
+                  ))}
+                </ScrollArea.Autosize>
+              </Menu.Dropdown>
+            </Menu>
+            <Button
+              px={2}
+              compact
+              styles={buttonStyles}
+              radius={0}
+              rightIcon={<IconChevronRight size={16} />}
+              disabled={
+                (readingDirection === ReadingDirection.LeftToRight &&
+                  pageNumber === lastPageNumber &&
+                  props.getAdjacentChapterId(false) === null) ||
+                (readingDirection === ReadingDirection.RightToLeft &&
+                  pageNumber <= 1 &&
+                  props.getAdjacentChapterId(true) === null)
+              }
+              onClick={() => props.changePage(false)}
+            />
+            <Button
+              px={2}
+              compact
+              styles={buttonStyles}
+              radius={0}
+              rightIcon={<IconChevronsRight size={16} />}
+              disabled={
+                (readingDirection === ReadingDirection.LeftToRight &&
+                  pageNumber >= lastPageNumber) ||
+                (readingDirection === ReadingDirection.RightToLeft && pageNumber <= 1)
+              }
+              onClick={() => props.changePage(false, true)}
+            />
+          </Group>
+
+          <Button
+            compact
+            styles={buttonStyles}
+            radius={0}
+            leftIcon={ICONS_PAGE_STYLE[pageStyle]}
+            onClick={() => setPageStyle(nextPageStyle(pageStyle))}
+          >
+            {TEXT_PAGE_STYLE[pageStyle]}
+          </Button>
+
+          {pageStyle === PageStyle.Double ? (
+            <Button
+              compact
+              styles={buttonStyles}
+              radius={0}
+              leftIcon={offsetDoubleSpreads ? <IconCheck size={14} /> : <IconX size={14} />}
+              onClick={() => setOffsetDoubleSpreads(!offsetDoubleSpreads)}
+            >
+              Offset Spreads
+            </Button>
+          ) : (
+            ''
+          )}
+
+          {renderFitButton()}
+
+          <Button
+            compact
+            styles={buttonStyles}
+            radius={0}
+            leftIcon={fitStretch ? <IconCheck size={14} /> : <IconX size={14} />}
+            disabled={!(fitContainToHeight || fitContainToWidth)}
+            onClick={() => setFitStretch(!fitStretch)}
+          >
+            Stretch to Fill
+          </Button>
+
+          <Button
+            compact
+            styles={buttonStyles}
+            radius={0}
+            leftIcon={ICONS_READING_DIRECTION[readingDirection]}
+            onClick={() => setReadingDirection(nextReadingDirection(readingDirection))}
+          >
+            {TEXT_READING_DIRECTION[readingDirection]}
+          </Button>
+
+          <Button
+            compact
+            styles={buttonStyles}
+            radius={0}
+            leftIcon={<IconSettings size={14} />}
+            onClick={() => setShowingSettingsModal(!showingSettingsModal)}
+          >
+            Settings
+          </Button>
+        </Group>
+      </Center>
+    </Box>
   );
 };
 

@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Row, Spin } from 'antd';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import styles from './AddSeriesModal.css';
+import { Button, Center, Group, Loader, Modal, Stack, Text } from '@mantine/core';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesEditControls from '../general/SeriesEditControls';
 import { importSeries } from '../../features/library/utils';
 import library from '../../services/library';
 import { downloadCover } from '../../util/download';
 import { seriesListState } from '../../state/libraryStates';
-import { statusTextState } from '../../state/statusBarStates';
 import { chapterLanguagesState } from '../../state/settingStates';
 
 type Props = {
   series: Series | undefined;
   visible: boolean;
   editable: boolean | undefined;
-  toggleVisible: () => void;
+  close: () => void;
 };
 
 const AddSeriesModal: React.FC<Props> = (props: Props) => {
   const [, setSeriesList] = useRecoilState(seriesListState);
-  const setStatusText = useSetRecoilState(statusTextState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const [customSeries, setCustomSeries] = useState<Series>();
   const [loading, setLoading] = useState(true);
@@ -61,50 +57,50 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
 
   const handleAdd = () => {
     if (customSeries !== undefined) {
-      importSeries(customSeries, setStatusText, chapterLanguages)
+      importSeries(customSeries, chapterLanguages)
         // eslint-disable-next-line promise/always-return
         .then((addedSeries) => {
           setSeriesList(library.fetchSeriesList());
           downloadCover(addedSeries);
         })
         .catch((e) => log.error(e));
-      props.toggleVisible();
+      props.close();
     }
   };
 
-  if (loading || customSeries === undefined) {
+  const renderContent = () => {
+    if (loading || customSeries === undefined) {
+      return (
+        <Center>
+          <Stack align="center">
+            <Loader />
+            <Text>Loading series details...</Text>
+          </Stack>
+        </Center>
+      );
+    }
+
     return (
-      <Modal
-        title="Add Series to Library"
-        visible={props.visible}
-        footer={null}
-        onCancel={props.toggleVisible}
-      >
-        <div className={styles.loaderContainer}>
-          <Spin />
-          <Paragraph>Loading series details...</Paragraph>
-        </div>
-      </Modal>
+      <>
+        <SeriesEditControls
+          series={customSeries}
+          setSeries={(series: Series) => setCustomSeries(series)}
+          editable={props.editable === true}
+        />
+
+        <Group position="right" mt="sm">
+          <Button variant="default" onClick={props.close}>
+            Cancel
+          </Button>
+          <Button onClick={handleAdd}>Add Series</Button>
+        </Group>
+      </>
     );
-  }
+  };
 
   return (
-    <Modal
-      title="Add Series to Library"
-      visible={props.visible}
-      footer={null}
-      onCancel={props.toggleVisible}
-    >
-      <SeriesEditControls
-        series={customSeries}
-        setSeries={(series: Series) => setCustomSeries(series)}
-        editable={props.editable === true}
-      />
-      <Row className={styles.buttonRow}>
-        <Button className={styles.button} onClick={handleAdd}>
-          Add Series
-        </Button>
-      </Row>
+    <Modal title="Add Series" opened={props.visible} onClose={props.close}>
+      {renderContent()}
     </Modal>
   );
 };

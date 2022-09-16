@@ -1,14 +1,21 @@
-/* eslint-disable react/button-has-type */
-/* eslint-disable react/display-name */
-import React, { useEffect } from 'react';
-import { CaretRightOutlined, CheckOutlined, DownloadOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
 import { Chapter, Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useHistory } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import styles from './ChapterTableContextMenu.css';
+import { Menu, Portal } from '@mantine/core';
+import {
+  IconArrowBigLeftLines,
+  IconArrowBigRightLines,
+  IconChecks,
+  IconDownload,
+  IconEye,
+  IconEyeOff,
+  IconPlayerPlay,
+  IconX,
+} from '@tabler/icons';
 import { downloaderClient, DownloadTask } from '../../services/downloader';
-import { toggleChapterRead } from '../../features/library/utils';
+import { markChapters } from '../../features/library/utils';
 import routes from '../../constants/routes.json';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { chapterListState, seriesState } from '../../state/libraryStates';
@@ -16,8 +23,8 @@ import { chapterLanguagesState, customDownloadsDirState } from '../../state/sett
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
-const WIDTH = 150;
-const HEIGHT = 130;
+const WIDTH = 200;
+const HEIGHT = 220;
 
 type Props = {
   position: { x: number; y: number };
@@ -25,6 +32,7 @@ type Props = {
   series: Series;
   chapter: Chapter | undefined;
   chapterList: Chapter[];
+  setDownloadModalProps: (chapter: Chapter, direction: 'next' | 'previous') => void;
   close: () => void;
 };
 
@@ -34,15 +42,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   const setSeries = useSetRecoilState(seriesState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
-
-  const getPreviousChapters = () => {
-    return props.chapterList.filter((chapter: Chapter) => {
-      return (
-        props.chapter !== undefined &&
-        parseFloat(chapter.chapterNumber) < parseFloat(props.chapter.chapterNumber)
-      );
-    });
-  };
+  const [previousChapters, setPreviousChapters] = useState<Chapter[]>([]);
 
   const handleDownload = () => {
     props.close();
@@ -58,6 +58,13 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const handleDownloadMultiple = (direction: 'next' | 'previous') => {
+    props.close();
+    if (props.chapter !== undefined) {
+      props.setDownloadModalProps(props.chapter, direction);
+    }
+  };
+
   const handleRead = () => {
     props.close();
     if (props.chapter !== undefined) {
@@ -68,17 +75,20 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   const handleToggleRead = () => {
     props.close();
     if (props.chapter !== undefined) {
-      toggleChapterRead(props.chapter, props.series, setChapterList, setSeries, chapterLanguages);
+      markChapters(
+        [props.chapter],
+        props.series,
+        !props.chapter.read,
+        setChapterList,
+        setSeries,
+        chapterLanguages
+      );
     }
   };
 
   const handleMarkPrevious = (read: boolean) => {
     props.close();
-    getPreviousChapters().forEach((chapter: Chapter) => {
-      if ((read && !chapter.read) || (!read && chapter.read)) {
-        toggleChapterRead(chapter, props.series, setChapterList, setSeries, chapterLanguages);
-      }
-    });
+    markChapters(previousChapters, props.series, read, setChapterList, setSeries, chapterLanguages);
   };
 
   let { x, y } = props.position;
@@ -102,33 +112,75 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     };
   });
 
-  if (!props.visible) return <></>;
+  useEffect(() => {
+    setPreviousChapters(
+      props.chapterList.filter(
+        (chapter: Chapter) =>
+          props.chapter !== undefined &&
+          parseFloat(chapter.chapterNumber) < parseFloat(props.chapter.chapterNumber)
+      )
+    );
+  }, [props.chapter, props.chapterList]);
+
+  if (!props.visible || !props.chapter) return <></>;
   return (
-    <div
-      className={styles.container}
-      style={{
-        width: WIDTH,
-        left: x,
-        top: y,
-      }}
-    >
-      <button className={styles.button} onClick={() => handleRead()}>
-        <CaretRightOutlined /> Read
-      </button>
-      <button className={styles.button} onClick={() => handleToggleRead()}>
-        <CheckOutlined /> Toggle read
-      </button>
-      <button className={styles.button} onClick={() => handleMarkPrevious(true)}>
-        Mark previous read
-      </button>
-      <button className={styles.button} onClick={() => handleMarkPrevious(false)}>
-        Mark previous unread
-      </button>
-      <hr className={styles.divider} />
-      <button className={styles.button} onClick={() => handleDownload()}>
-        <DownloadOutlined /> Download
-      </button>
-    </div>
+    <Portal>
+      <Menu
+        shadow="md"
+        width={WIDTH}
+        opened
+        styles={() => ({
+          dropdown: {
+            left: x,
+            top: y,
+          },
+        })}
+      >
+        <Menu.Dropdown style={{ position: 'absolute', left: x, top: y }}>
+          <Menu.Item icon={<IconPlayerPlay size={14} />} onClick={handleRead}>
+            Read chapter
+          </Menu.Item>
+
+          {props.chapter.read ? (
+            <Menu.Item icon={<IconEyeOff size={14} />} onClick={handleToggleRead}>
+              Mark unread
+            </Menu.Item>
+          ) : (
+            <Menu.Item icon={<IconEye size={14} />} onClick={handleToggleRead}>
+              Mark read
+            </Menu.Item>
+          )}
+
+          {previousChapters.every((chapter) => chapter.read) ? (
+            <Menu.Item icon={<IconX size={14} />} onClick={() => handleMarkPrevious(false)}>
+              Mark previous unread
+            </Menu.Item>
+          ) : (
+            <Menu.Item icon={<IconChecks size={14} />} onClick={() => handleMarkPrevious(true)}>
+              Mark previous read
+            </Menu.Item>
+          )}
+
+          <Menu.Divider />
+
+          <Menu.Item icon={<IconDownload size={14} />} onClick={handleDownload}>
+            Download
+          </Menu.Item>
+          <Menu.Item
+            icon={<IconArrowBigRightLines size={14} />}
+            onClick={() => handleDownloadMultiple('next')}
+          >
+            Download next X
+          </Menu.Item>
+          <Menu.Item
+            icon={<IconArrowBigLeftLines size={14} />}
+            onClick={() => handleDownloadMultiple('previous')}
+          >
+            Download previous X
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    </Portal>
   );
 };
 

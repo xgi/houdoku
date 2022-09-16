@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
-import { Row, Button, Modal, Checkbox, Collapse } from 'antd';
-import {
-  FileOutlined,
-  ReadOutlined,
-  DownSquareOutlined,
-  LeftSquareOutlined,
-  RightSquareOutlined,
-} from '@ant-design/icons';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { useRecoilState } from 'recoil';
-import styles from './ReaderSettings.css';
+import {
+  Table,
+  Text,
+  SegmentedControl,
+  Center,
+  Box,
+  Checkbox,
+  Button,
+  Collapse,
+  Group,
+} from '@mantine/core';
+import {
+  IconArrowBigLeft,
+  IconArrowBigRight,
+  IconBook,
+  IconFile,
+  IconSpacingVertical,
+} from '@tabler/icons';
 import { ReadingDirection, PageStyle, ReaderSetting, DefaultSettings } from '../../models/types';
 import {
   fitContainToHeightState,
@@ -35,13 +43,11 @@ import {
   keyToggleOffsetDoubleSpreadsState,
 } from '../../state/settingStates';
 
-const { Panel } = Collapse;
-
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
 const ReaderSettings: React.FC<Props> = (props: Props) => {
-  const [showingResetKeybindsModal, setShowingKeybindsModal] = useState(false);
+  const [showingKeybinds, setShowingKeybinds] = useState(false);
   const [fitContainToWidth, setFitContainToWidth] = useRecoilState(fitContainToWidthState);
   const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
   const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
@@ -167,245 +173,230 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Modal
-        visible={showingResetKeybindsModal}
-        title="Reset all keyboard shortcuts to the default?"
-        onCancel={() => setShowingKeybindsModal(false)}
-        okText="Reset"
-        okButtonProps={{ danger: true }}
-        onOk={() => {
-          Object.values(ReaderSetting).forEach((readerSetting) =>
-            updateReaderSetting(readerSetting, DefaultSettings[readerSetting])
-          );
-          setShowingKeybindsModal(false);
-        }}
-      >
-        <Paragraph>This will overwrite your current keyboard shortcuts.</Paragraph>
-      </Modal>
-      <Paragraph className={styles.settingName}>Page Style</Paragraph>
-      <Row className={styles.row}>
-        <div className={styles.toggleContainer}>
-          <Button
-            icon={<FileOutlined />}
-            className={`
-              ${styles.toggleButton}
-              ${pageStyle === PageStyle.Single ? styles.active : ''}
-            `}
-            onClick={() => updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Single)}
-          >
-            Single
-          </Button>
-          <Button
-            icon={<ReadOutlined />}
-            className={`
-              ${styles.toggleButton}
-              ${pageStyle === PageStyle.Double ? styles.active : ''}
-            `}
-            onClick={() => updateReaderSetting(ReaderSetting.PageStyle, PageStyle.Double)}
-          >
-            Double
-          </Button>
-          <Button
-            icon={<DownSquareOutlined />}
-            className={`
-              ${styles.toggleButton}
-              ${pageStyle === PageStyle.LongStrip ? styles.active : ''}
-            `}
-            onClick={() => updateReaderSetting(ReaderSetting.PageStyle, PageStyle.LongStrip)}
-          >
-            Long Strip
-          </Button>
-        </div>
-      </Row>
-      <Row className={styles.row}>
-        <div>
-          <Checkbox
-            className={styles.checkbox}
-            checked={longStripMargin}
-            disabled={pageStyle !== PageStyle.LongStrip}
-            onClick={() => updateReaderSetting(ReaderSetting.LongStripMargin, !longStripMargin)}
-          >
-            Long Strip Margin
-          </Checkbox>
-        </div>
-      </Row>
-      <Row className={styles.row}>
-        <div>
-          <Checkbox
-            className={styles.checkbox}
-            checked={offsetDoubleSpreads}
-            disabled={pageStyle !== PageStyle.Double}
-            onClick={() =>
-              updateReaderSetting(ReaderSetting.OffsetDoubleSpreads, !offsetDoubleSpreads)
-            }
-          >
-            Offset Double Spreads
-          </Checkbox>
-        </div>
-      </Row>
-      <Paragraph className={styles.settingName}>Reading Direction</Paragraph>
-      <Row className={styles.row}>
-        <div className={styles.toggleContainer}>
-          <Button
-            icon={<RightSquareOutlined />}
-            className={`
-              ${styles.toggleButton}
-              ${readingDirection === ReadingDirection.LeftToRight ? styles.active : ''}
-            `}
-            onClick={() =>
-              updateReaderSetting(ReaderSetting.ReadingDirection, ReadingDirection.LeftToRight)
-            }
-          >
-            Left-to-Right
-          </Button>
-          <Button
-            icon={<LeftSquareOutlined />}
-            className={`
-              ${styles.toggleButton}
-              ${readingDirection === ReadingDirection.RightToLeft ? styles.active : ''}
-            `}
-            onClick={() =>
-              updateReaderSetting(ReaderSetting.ReadingDirection, ReadingDirection.RightToLeft)
-            }
-          >
-            Right-to-Left
-          </Button>
-        </div>
-      </Row>
-      <Paragraph className={styles.settingName}>Image Sizing</Paragraph>
-      <Row className={styles.row}>
-        <div>
-          <Checkbox
-            className={styles.checkbox}
-            checked={fitContainToWidth}
-            onClick={() => updateReaderSetting(ReaderSetting.FitContainToWidth, !fitContainToWidth)}
-          >
-            Contain to width
-          </Checkbox>
-          <br />
-          <Checkbox
-            className={styles.checkbox}
-            checked={fitContainToHeight}
-            onClick={() =>
-              updateReaderSetting(ReaderSetting.FitContainToHeight, !fitContainToHeight)
-            }
-          >
-            Contain to height
-          </Checkbox>
-          <br />
-          <Checkbox
-            className={styles.checkbox}
-            checked={fitStretch}
-            disabled={!(fitContainToHeight || fitContainToWidth)}
-            onClick={() => updateReaderSetting(ReaderSetting.FitStretch, !fitStretch)}
-          >
-            Stretch small pages
-          </Checkbox>
-        </div>
-      </Row>
-      <Paragraph className={styles.settingName}>Rendering</Paragraph>
-      <Row className={styles.row}>
-        <div>
-          <Checkbox
-            className={styles.checkbox}
-            checked={optimizeContrast}
-            onClick={() => updateReaderSetting(ReaderSetting.OptimizeContrast, !optimizeContrast)}
-          >
-            Optimize contrast
-          </Checkbox>
-        </div>
-      </Row>
-      <Collapse ghost>
-        <Panel className={styles.keybindsPanel} header="Keyboard Shortcuts" key="1">
-          {[
-            {
-              name: 'Next Page',
-              value: keyNextPage,
-              setting: ReaderSetting.KeyNextPage,
-            },
-            {
-              name: 'Previous Page',
-              value: keyPreviousPage,
-              setting: ReaderSetting.KeyPreviousPage,
-            },
-            {
-              name: 'First Page',
-              value: keyFirstPage,
-              setting: ReaderSetting.KeyFirstPage,
-            },
-            {
-              name: 'Last Page',
-              value: keyLastPage,
-              setting: ReaderSetting.KeyLastPage,
-            },
-            {
-              name: 'Next Chapter',
-              value: keyNextChapter,
-              setting: ReaderSetting.KeyNextChapter,
-            },
-            {
-              name: 'Previous Chapter',
-              value: keyPreviousChapter,
-              setting: ReaderSetting.KeyPreviousChapter,
-            },
-            {
-              name: 'Exit Reader',
-              value: keyExit,
-              setting: ReaderSetting.KeyExit,
-            },
-            {
-              name: 'Close/Back',
-              value: keyCloseOrBack,
-              setting: ReaderSetting.KeyCloseOrBack,
-            },
-            {
-              name: 'Toggle Reading Direction',
-              value: keyToggleReadingDirection,
-              setting: ReaderSetting.KeyToggleReadingDirection,
-            },
-            {
-              name: 'Toggle Page Style',
-              value: keyTogglePageStyle,
-              setting: ReaderSetting.KeyTogglePageStyle,
-            },
-            {
-              name: 'Toggle Double Page Offset',
-              value: keyToggleOffsetDoubleSpreads,
-              setting: ReaderSetting.KeyToggleOffsetDoubleSpreads,
-            },
-            {
-              name: 'Show Settings Menu',
-              value: keyToggleShowingSettingsModal,
-              setting: ReaderSetting.KeyToggleShowingSettingsModal,
-            },
-            {
-              name: 'Toggle Menu Bar',
-              value: keyToggleShowingHeader,
-              setting: ReaderSetting.KeyToggleShowingHeader,
-            },
-          ].map((entry) => (
-            <Row className={styles.keybindRow} key={entry.setting}>
-              <div className={styles.keybindName}>{entry.name}</div>
-              <div>
-                <Button
-                  className={styles.shortcutButton}
-                  onKeyDownCapture={(e) => updateKeySetting(e, entry.setting)}
-                >
-                  {entry.value}
-                </Button>
-                <Button
-                  className={styles.shortcutResetButton}
-                  onClick={() => updateReaderSetting(entry.setting, DefaultSettings[entry.setting])}
-                >
-                  Reset
-                </Button>
-              </div>
-            </Row>
-          ))}
-          <Button className={styles.resetAllButton} onClick={() => setShowingKeybindsModal(true)}>
-            Reset All Shortcuts
-          </Button>
-        </Panel>
+      <Text>Page Style</Text>
+      <SegmentedControl
+        mb="xs"
+        data={[
+          {
+            value: PageStyle.Single,
+            label: (
+              <Center>
+                <IconFile size={16} />
+                <Box ml={10}>Single</Box>
+              </Center>
+            ),
+          },
+          {
+            value: PageStyle.Double,
+            label: (
+              <Center>
+                <IconBook size={16} />
+                <Box ml={10}>Double</Box>
+              </Center>
+            ),
+          },
+          {
+            value: PageStyle.LongStrip,
+            label: (
+              <Center>
+                <IconSpacingVertical size={16} />
+                <Box ml={10}>Long Strip</Box>
+              </Center>
+            ),
+          },
+        ]}
+        value={pageStyle}
+        onChange={(value) => updateReaderSetting(ReaderSetting.PageStyle, value)}
+      />
+
+      <Checkbox
+        label="Long strip margin"
+        ml="sm"
+        pb="xs"
+        disabled={pageStyle !== PageStyle.LongStrip}
+        checked={longStripMargin}
+        onChange={(e) => updateReaderSetting(ReaderSetting.LongStripMargin, e.target.checked)}
+      />
+      <Checkbox
+        label="Offset double spreads"
+        ml="sm"
+        disabled={pageStyle !== PageStyle.Double}
+        checked={offsetDoubleSpreads}
+        onChange={(e) => updateReaderSetting(ReaderSetting.OffsetDoubleSpreads, e.target.checked)}
+      />
+
+      <Text pt="sm">Reading Direction</Text>
+      <SegmentedControl
+        data={[
+          {
+            value: ReadingDirection.LeftToRight,
+            label: (
+              <Center>
+                <IconArrowBigRight size={16} />
+                <Box ml={10}>Left-to-Right</Box>
+              </Center>
+            ),
+          },
+          {
+            value: ReadingDirection.RightToLeft,
+            label: (
+              <Center>
+                <IconArrowBigLeft size={16} />
+                <Box ml={10}>Right-to-Left</Box>
+              </Center>
+            ),
+          },
+        ]}
+        value={readingDirection}
+        onChange={(value) => updateReaderSetting(ReaderSetting.ReadingDirection, value)}
+      />
+
+      <Text pb="xs">Image Sizing</Text>
+      <Checkbox
+        label="Contain to width"
+        ml="sm"
+        pb="xs"
+        checked={fitContainToWidth}
+        onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToWidth, e.target.checked)}
+      />
+      <Checkbox
+        label="Contain to height"
+        ml="sm"
+        pb="xs"
+        checked={fitContainToHeight}
+        onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToHeight, e.target.checked)}
+      />
+      <Checkbox
+        label="Stretch small pages"
+        ml="sm"
+        pb="xs"
+        disabled={!(fitContainToHeight || fitContainToWidth)}
+        checked={fitStretch}
+        onChange={(e) => updateReaderSetting(ReaderSetting.FitStretch, e.target.checked)}
+      />
+
+      <Text pb="xs">Rendering</Text>
+      <Checkbox
+        label="Optimize image contrast"
+        ml="sm"
+        pb="xs"
+        checked={optimizeContrast}
+        onChange={(e) => updateReaderSetting(ReaderSetting.OptimizeContrast, e.target.checked)}
+      />
+
+      <Text pb="xs">Key Bindings</Text>
+      <Group ml="sm">
+        <Button variant="default" onClick={() => setShowingKeybinds(!showingKeybinds)}>
+          {showingKeybinds ? 'Hide' : 'Show'} keybinds
+        </Button>
+      </Group>
+      <Collapse in={showingKeybinds} ml="sm" pb="md">
+        <Table verticalSpacing="xs" style={{ maxWidth: 400 }}>
+          <tbody>
+            {[
+              {
+                name: 'Next Page',
+                value: keyNextPage,
+                setting: ReaderSetting.KeyNextPage,
+              },
+              {
+                name: 'Previous Page',
+                value: keyPreviousPage,
+                setting: ReaderSetting.KeyPreviousPage,
+              },
+              {
+                name: 'First Page',
+                value: keyFirstPage,
+                setting: ReaderSetting.KeyFirstPage,
+              },
+              {
+                name: 'Last Page',
+                value: keyLastPage,
+                setting: ReaderSetting.KeyLastPage,
+              },
+              {
+                name: 'Next Chapter',
+                value: keyNextChapter,
+                setting: ReaderSetting.KeyNextChapter,
+              },
+              {
+                name: 'Previous Chapter',
+                value: keyPreviousChapter,
+                setting: ReaderSetting.KeyPreviousChapter,
+              },
+              {
+                name: 'Exit Reader',
+                value: keyExit,
+                setting: ReaderSetting.KeyExit,
+              },
+              {
+                name: 'Close/Back',
+                value: keyCloseOrBack,
+                setting: ReaderSetting.KeyCloseOrBack,
+              },
+              {
+                name: 'Toggle Reading Direction',
+                value: keyToggleReadingDirection,
+                setting: ReaderSetting.KeyToggleReadingDirection,
+              },
+              {
+                name: 'Toggle Page Style',
+                value: keyTogglePageStyle,
+                setting: ReaderSetting.KeyTogglePageStyle,
+              },
+              {
+                name: 'Toggle Double Page Offset',
+                value: keyToggleOffsetDoubleSpreads,
+                setting: ReaderSetting.KeyToggleOffsetDoubleSpreads,
+              },
+              {
+                name: 'Show Settings Menu',
+                value: keyToggleShowingSettingsModal,
+                setting: ReaderSetting.KeyToggleShowingSettingsModal,
+              },
+              {
+                name: 'Toggle Menu Bar',
+                value: keyToggleShowingHeader,
+                setting: ReaderSetting.KeyToggleShowingHeader,
+              },
+            ].map((entry) => (
+              <tr key={entry.setting}>
+                <td>{entry.name}</td>
+                <td>
+                  <Button
+                    variant="default"
+                    size="xs"
+                    fullWidth
+                    onKeyDownCapture={(e: any) => updateKeySetting(e, entry.setting)}
+                    sx={(theme) => ({
+                      '&:focus': {
+                        backgroundColor: theme.colors.dark[3],
+                      },
+                    })}
+                  >
+                    {entry.value}
+                  </Button>
+                </td>
+                <td>
+                  {entry.value !== DefaultSettings[entry.setting] ? (
+                    <Button
+                      variant="default"
+                      size="xs"
+                      fullWidth
+                      onClick={() =>
+                        updateReaderSetting(entry.setting, DefaultSettings[entry.setting])
+                      }
+                    >
+                      Reset
+                    </Button>
+                  ) : (
+                    <></>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </Collapse>
     </>
   );

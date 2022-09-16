@@ -4,6 +4,26 @@ import log from 'electron-log';
 import { ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  Box,
+  Button,
+  ColorScheme,
+  ColorSchemeProvider,
+  Group,
+  List,
+  MantineProvider,
+  Text,
+} from '@mantine/core';
+import { closeAllModals, ModalsProvider, openConfirmModal, openModal } from '@mantine/modals';
+import {
+  NotificationProps,
+  NotificationsProvider,
+  showNotification,
+  updateNotification,
+} from '@mantine/notifications';
+import { IconCheck, IconX } from '@tabler/icons';
+import { UpdateInfo } from 'electron-updater';
+import parse from 'html-react-parser';
 import persistantStore from './util/persistantStore';
 import routes from './constants/routes.json';
 import DashboardPage from './components/general/DashboardPage';
@@ -14,7 +34,6 @@ import { TrackerMetadata } from './models/types';
 import { loadSeriesList, migrateSeriesTags } from './features/library/utils';
 import AppLoading from './components/general/AppLoading';
 import { seriesListState } from './state/libraryStates';
-import { statusTextState } from './state/statusBarStates';
 import { downloaderClient } from './services/downloader';
 import {
   currentTaskState,
@@ -23,6 +42,7 @@ import {
   runningState,
 } from './state/downloaderStates';
 import { autoCheckForExtensionUpdatesState, autoCheckForUpdatesState } from './state/settingStates';
+import { ErrorBoundary } from './components/general/ErrorBoundary';
 
 const loadStoredExtensionSettings = () => {
   log.info('Loading stored extension settings...');
@@ -84,17 +104,75 @@ ipcRenderer.on(ipcChannels.WINDOW.SET_FULLSCREEN, (_event, fullscreen) => {
     document.getElementById('titlebar')?.classList.remove('hidden');
   }
 });
+ipcRenderer.on(
+  ipcChannels.APP.SEND_NOTIFICATION,
+  (_event, props: NotificationProps, isUpdate = false, iconName?: 'check' | 'x') => {
+    log.info(`Sending notification: ${props}`);
+    const iconNode =
+      iconName !== undefined
+        ? { check: <IconCheck size={16} />, x: <IconX size={16} /> }[iconName]
+        : undefined;
+
+    if (isUpdate && props.id !== undefined) {
+      updateNotification({ ...props, id: props.id, icon: iconNode });
+    } else {
+      showNotification({
+        ...props,
+        icon: iconNode,
+      });
+    }
+  }
+);
+
+ipcRenderer.on(ipcChannels.APP.SHOW_PERFORM_UPDATE_DIALOG, (_event, updateInfo: UpdateInfo) => {
+  openConfirmModal({
+    title: 'Update Available',
+    children: (
+      <>
+        <Text mb="sm">
+          Houdoku v{updateInfo.version} was released on{' '}
+          {new Date(updateInfo.releaseDate).toLocaleDateString()}.
+        </Text>
+        <Box
+          sx={(theme) => ({
+            backgroundColor:
+              theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+          })}
+          p="xs"
+        >
+          <Text size="sm">{parse(updateInfo.releaseNotes as string)}</Text>
+        </Box>
+      </>
+    ),
+    labels: { confirm: 'Download Update', cancel: 'Not now' },
+    onCancel: () => log.info('User opted not to perform update'),
+    onConfirm: () => ipcRenderer.invoke(ipcChannels.APP.PERFORM_UPDATE),
+  });
+});
+
+ipcRenderer.on(ipcChannels.APP.SHOW_RESTART_UPDATE_DIALOG, () => {
+  openConfirmModal({
+    title: 'Restart Required',
+    children: <Text>Houdoku needs to restart to finish installing updates. Restart now?</Text>,
+    labels: { confirm: 'Restart Now', cancel: 'Later' },
+    onCancel: () => log.info('User opted not to restart to update'),
+    onConfirm: () => ipcRenderer.invoke(ipcChannels.APP.UPDATE_AND_RESTART),
+  });
+});
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const setSeriesList = useSetRecoilState(seriesListState);
-  const setStatusText = useSetRecoilState(statusTextState);
   const setRunning = useSetRecoilState(runningState);
   const setQueue = useSetRecoilState(queueState);
   const setCurrentTask = useSetRecoilState(currentTaskState);
   const setDownloadErrors = useSetRecoilState(downloadErrorsState);
   const autoCheckForUpdates = useRecoilValue(autoCheckForUpdatesState);
   const autoCheckForExtensionUpdates = useRecoilValue(autoCheckForExtensionUpdatesState);
+
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
+  const toggleColorScheme = (value?: ColorScheme) =>
+    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -105,19 +183,8 @@ export default function App() {
        * Add any additional preload steps here (e.g. data migration, verifications, etc)
        */
 
-      // Allow the main thread to set status messages
-      ipcRenderer.on(ipcChannels.APP.SET_STATUS, (_event, text) => {
-        setStatusText(text);
-      });
-
       // Give the downloader client access to the state modifiers
-      downloaderClient.setStateFunctions(
-        setStatusText,
-        setRunning,
-        setQueue,
-        setCurrentTask,
-        setDownloadErrors
-      );
+      downloaderClient.setStateFunctions(setRunning, setQueue, setCurrentTask, setDownloadErrors);
 
       // Previously the series object had separate tag fields (themes, formats, genres,
       // demographic, content warnings). These have now been consolidated into the
@@ -144,7 +211,29 @@ export default function App() {
             }) => {
               // eslint-disable-next-line promise/always-return
               if (Object.values(updates).length > 0) {
-                ipcRenderer.invoke(ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG, updates);
+                openModal({
+                  title: 'Extension Updates Available',
+                  children: (
+                    <>
+                      <List pb="sm">
+                        {Object.values(updates).map((update) => (
+                          <List.Item key={update.metadata.id}>
+                            {update.metadata.name} ({update.metadata.version}→{update.newVersion})
+                          </List.Item>
+                        ))}
+                      </List>
+                      <Text>
+                        Please go to the Extensions tab to update. You can disable this message in
+                        the settings.
+                      </Text>
+                      <Group position="right">
+                        <Button variant="default" onClick={() => closeAllModals()} mt="md">
+                          Okay
+                        </Button>
+                      </Group>
+                    </>
+                  ),
+                });
               }
             }
           )
@@ -159,19 +248,33 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
-  if (loading) {
-    return <AppLoading />;
-  }
-
   return (
-    <Router>
-      <Switch>
-        <Route path={`${routes.READER}/:series_id/:chapter_id`} exact component={ReaderPage} />
-        <Route path={routes.SERIES} component={DashboardPage} />
-        <Route path={routes.SEARCH} component={DashboardPage} />
-        <Route path={routes.SETTINGS} component={DashboardPage} />
-        <Route path={routes.LIBRARY} component={DashboardPage} />
-      </Switch>
-    </Router>
+    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+      <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+        <ErrorBoundary>
+          <ModalsProvider>
+            <NotificationsProvider>
+              {loading ? (
+                <AppLoading />
+              ) : (
+                <Router>
+                  <Switch>
+                    <Route
+                      path={`${routes.READER}/:series_id/:chapter_id`}
+                      exact
+                      component={ReaderPage}
+                    />
+                    <Route path={routes.SERIES} component={DashboardPage} />
+                    <Route path={routes.SEARCH} component={DashboardPage} />
+                    <Route path={routes.SETTINGS} component={DashboardPage} />
+                    <Route path={routes.LIBRARY} component={DashboardPage} />
+                  </Switch>
+                </Router>
+              )}
+            </NotificationsProvider>
+          </ModalsProvider>
+        </ErrorBoundary>
+      </MantineProvider>
+    </ColorSchemeProvider>
   );
 }

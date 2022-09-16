@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Modal, Row, Select, Spin, Switch } from 'antd';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Language, LanguageKey, Languages, SettingType } from 'houdoku-extension-lib';
-import styles from './ExtensionSettingsModal.css';
+import { SettingType } from 'houdoku-extension-lib';
+import { Button, Group, Modal, Switch, Text } from '@mantine/core';
 import ipcChannels from '../../constants/ipcChannels.json';
 import storeKeys from '../../constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
-
-const { Option } = Select;
-
-const languageOptions = Object.values(Languages).map((language: Language) => (
-  <Option key={language.key} value={language.key}>
-    {language.name}
-  </Option>
-));
 
 type Props = {
   visible: boolean;
@@ -24,7 +14,6 @@ type Props = {
 };
 
 const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
-  const [loading, setLoading] = useState(true);
   const [extensionSettingTypes, setExtensionSettingTypes] = useState<{
     [key: string]: SettingType;
   }>({});
@@ -33,7 +22,6 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
   }>({});
 
   const loadExtensionSettings = async () => {
-    setLoading(true);
     setExtensionSettings({});
     log.debug(`Extension settings modal loading client for ${extensionSettings}`);
 
@@ -43,7 +31,6 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
     setExtensionSettings(
       await ipcRenderer.invoke(ipcChannels.EXTENSION.GET_SETTINGS, props.extensionId)
     );
-    setLoading(false);
   };
 
   const saveExtensionSettings = async () => {
@@ -67,38 +54,21 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
   ) => {
     switch (settingType) {
       case SettingType.BOOLEAN:
-        return <Switch defaultChecked={curVal} onChange={(value: boolean) => onChangeFn(value)} />;
-      case SettingType.LANGUAGE_KEY_ARRAY:
-        return (
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: '100%' }}
-            placeholder="Select languages..."
-            defaultValue={curVal}
-            onChange={(value: LanguageKey[]) => onChangeFn(value)}
-          >
-            {languageOptions}
-          </Select>
-        );
+        return <Switch defaultChecked={curVal} onChange={(e) => onChangeFn(e.target.checked)} />;
       default:
-        return <Paragraph>(no control for this setting)</Paragraph>;
+        return <></>;
     }
   };
 
   const renderRows = () => {
     return Object.keys(extensionSettings).map((key: string) => {
       return (
-        <Row key={key} className={styles.row}>
-          <Col span={14}>{key}</Col>
-          <Col span={10}>
-            {renderControl(
-              extensionSettingTypes[key],
-              extensionSettings[key],
-              (newValue: unknown) => setExtensionSettings({ ...extensionSettings, [key]: newValue })
-            )}
-          </Col>
-        </Row>
+        <Group position="apart" mb="xs">
+          <Text>{key}</Text>
+          {renderControl(extensionSettingTypes[key], extensionSettings[key], (newValue: unknown) =>
+            setExtensionSettings({ ...extensionSettings, [key]: newValue })
+          )}
+        </Group>
       );
     });
   };
@@ -110,51 +80,15 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.visible, props.extensionId]);
 
-  if (loading) {
-    return (
-      <Modal
-        title="Extension Settings"
-        visible={props.visible}
-        footer={null}
-        onCancel={props.toggleVisible}
-      >
-        <div className={styles.loaderContainer}>
-          <Spin />
-          <Paragraph>Loading settings for this extension...</Paragraph>
-        </div>
-      </Modal>
-    );
-  }
-
-  if (Object.keys(extensionSettings).length === 0) {
-    return (
-      <Modal
-        title="Extension Settings"
-        visible={props.visible}
-        footer={null}
-        onCancel={props.toggleVisible}
-      >
-        <Paragraph>This extension does not provide any settings.</Paragraph>
-      </Modal>
-    );
-  }
-
   return (
-    <Modal
-      title="Extension Settings"
-      visible={props.visible}
-      footer={null}
-      onCancel={props.toggleVisible}
-    >
+    <Modal title="Extension Settings" opened={props.visible} onClose={props.toggleVisible}>
       {renderRows()}
-      <Row className={styles.buttonRow}>
-        <Button className={styles.button} onClick={props.toggleVisible}>
+      <Group position="right" mt="sm">
+        <Button variant="default" onClick={props.toggleVisible}>
           Cancel
         </Button>
-        <Button className={styles.button} type="primary" onClick={saveExtensionSettings}>
-          Save Settings
-        </Button>
-      </Row>
+        <Button onClick={saveExtensionSettings}>Save Settings</Button>
+      </Group>
     </Modal>
   );
 };

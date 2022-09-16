@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import aki, { RegistrySearchResults } from 'aki-plugin-manager';
-import { Row, Button, Spin, Input } from 'antd';
 import log from 'electron-log';
-import { SearchOutlined } from '@ant-design/icons';
 import { useLocation } from 'react-router-dom';
-import Paragraph from 'antd/lib/typography/Paragraph';
-import Title from 'antd/lib/typography/Title';
-import styles from './Extensions.css';
+import { Button, Group, Input, Loader, Text } from '@mantine/core';
+import { IconSearch } from '@tabler/icons';
 import ExtensionTable from './ExtensionTable';
 import InstalledExtensionsModal from './InstalledExtensionsModal';
 import ExtensionSettingsModal from './ExtensionSettingsModal';
@@ -56,28 +53,36 @@ const Extensions: React.FC<Props> = (props: Props) => {
         toggleVisible={() => setShowingSettingsModal(!showingSettingsModal)}
         extensionId={settingsModalExtension}
       />
-      <Title className={styles.title} level={4}>
-        Extensions
-      </Title>
-      <Row className={styles.row}>
-        <Button className={styles.reloadButton} onClick={() => doSearchRegistry()}>
-          Refresh Extension List
-        </Button>
-        <Button onClick={() => setShowingInstalledModal(true)}>View Installed Extensions</Button>
-        <div className={styles.spacer} />
-        <Input
-          className={styles.filterInput}
-          placeholder="Filter extensions..."
-          suffix={<SearchOutlined />}
-          onChange={(e: any) => setFilterText(e.target.value)}
-        />
-      </Row>
+      <Group position="apart" mb="md" noWrap>
+        <Group position="left" align="left" spacing="xs" noWrap>
+          <Button variant="default" onClick={() => doSearchRegistry()}>
+            Refresh Extension List
+          </Button>
+          <Button variant="default" onClick={() => setShowingInstalledModal(true)}>
+            View Installed Extensions
+          </Button>
+        </Group>
+        <Group position="right" align="right" noWrap>
+          <Input
+            placeholder="Filter extensions..."
+            icon={<IconSearch size={16} />}
+            value={filterText}
+            onChange={(e: any) => setFilterText(e.target.value)}
+          />
+        </Group>
+      </Group>
+
       {searchResults === undefined ? (
-        <div className={styles.loadingContainer}>
-          <Spin />
+        <>
+          <Group position="center" mt="xl" mb="sm">
+            <Loader />
+            <Text>Loading extension list...</Text>
+            {/* <Spin />
           <Paragraph>Loading extension list...</Paragraph>
-          <Paragraph>This requires an internet connection.</Paragraph>
-        </div>
+          <Paragraph>This requires an internet connection.</Paragraph> */}
+          </Group>
+          <Text align="center">This requires an internet connection.</Text>
+        </>
       ) : (
         <ExtensionTable
           registryResults={searchResults}

@@ -12,18 +12,9 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import fs from 'fs';
 import path from 'path';
-import {
-  app,
-  BrowserWindow,
-  shell,
-  ipcMain,
-  dialog,
-  MessageBoxReturnValue,
-  OpenDialogReturnValue,
-} from 'electron';
-import { autoUpdater, UpdateCheckResult } from 'electron-updater';
+import { app, BrowserWindow, shell, ipcMain, dialog, OpenDialogReturnValue } from 'electron';
 import log from 'electron-log';
-import { ExtensionMetadata, WebviewFunc } from 'houdoku-extension-lib';
+import { WebviewFunc } from 'houdoku-extension-lib';
 import { walk } from './util/filesystem';
 import { createExtensionIpcHandlers, loadExtensions } from './services/extension';
 import { loadInWebView } from './util/webview';
@@ -31,6 +22,7 @@ import ipcChannels from './constants/ipcChannels.json';
 import packageJson from '../package.json';
 import { createTrackerIpcHandlers } from './services/tracker';
 import { createDiscordIpcHandlers } from './services/discord';
+import { createUpdaterIpcHandlers } from './services/updater';
 
 log.info(`Starting Houdoku main process (client version ${packageJson.version})`);
 
@@ -183,94 +175,6 @@ ipcMain.handle(ipcChannels.GET_ALL_FILES, (_event, rootPath: string) => {
   return walk(rootPath);
 });
 
-ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
-  log.debug('Handling check for updates request...');
-  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
-    log.info('Skipping update check because we are in dev environment');
-    return;
-  }
-
-  autoUpdater.logger = log;
-  autoUpdater.autoDownload = false;
-
-  const MB = 10 ** -6;
-  const round = (x: number) => Math.ceil(x * 100) / 100;
-
-  event.sender.send(ipcChannels.APP.SET_STATUS, `Checking for updates...`);
-
-  autoUpdater.on('download-progress', (progress) => {
-    log.debug(`Downloading update: ${progress.transferred}/${progress.total}`);
-    event.sender.send(
-      ipcChannels.APP.SET_STATUS,
-      `Downloading update: ${round(progress.percent)}% (${round(progress.transferred * MB)}/${round(
-        progress.total * MB
-      )} MB) - ${round(progress.bytesPerSecond * MB)} MB/sec`
-    );
-  });
-
-  autoUpdater.on('update-downloaded', () => {
-    log.debug(`Finished update download`);
-    event.sender.send(
-      ipcChannels.APP.SET_STATUS,
-      `Downloaded update successfully. Please restart Houdoku.`
-    );
-    dialog
-      .showMessageBox({
-        type: 'info',
-        title: 'Restart to Update',
-        message: `Houdoku needs to be restarted in order to install the update. Restart now?`,
-        buttons: ['Restart Houdoku', 'No'],
-      })
-      .then((value: MessageBoxReturnValue) => {
-        // eslint-disable-next-line promise/always-return
-        if (value.response === 0) {
-          autoUpdater.quitAndInstall();
-        }
-      })
-      .catch((err) => log.error(err));
-  });
-
-  autoUpdater.on('error', (err: Error) => {
-    log.error(`Updater encountered error: ${err}`);
-    event.sender.send(ipcChannels.APP.SET_STATUS, `Error while updating: ${err}`);
-  });
-
-  autoUpdater
-    .checkForUpdates()
-    // eslint-disable-next-line promise/always-return
-    .then((result: UpdateCheckResult) => {
-      if (result.updateInfo.version === packageJson.version) {
-        log.info(`Already up-to-date at version ${packageJson.version}`);
-        event.sender.send(ipcChannels.APP.SET_STATUS, `Houdoku is up-to-date.`);
-        return null;
-      }
-
-      log.info(
-        `Found update to version ${result.updateInfo.version} (from ${packageJson.version})`
-      );
-      event.sender.send(
-        ipcChannels.APP.SET_STATUS,
-        `Update available: version ${result.updateInfo.version}`
-      );
-
-      return dialog.showMessageBox({
-        type: 'info',
-        title: 'Update Available',
-        message: `An update for Houdoku is available. Download it now?\n\nVersion: ${result.updateInfo.version}\nDate: ${result.updateInfo.releaseDate}`,
-        buttons: ['Download Update', 'No'],
-      });
-    })
-    .then((value: MessageBoxReturnValue | null) => {
-      if (value === null) return null;
-
-      if (value.response === 0) {
-        return autoUpdater.downloadUpdate();
-      }
-      return null;
-    })
-    .catch((e) => log.error(e));
-});
-
 ipcMain.handle(
   ipcChannels.APP.SHOW_OPEN_DIALOG,
   (
@@ -308,31 +212,6 @@ ipcMain.handle(ipcChannels.APP.READ_ENTIRE_FILE, (_event, filepath: string) => {
   return fs.readFileSync(filepath).toString();
 });
 
-ipcMain.handle(
-  ipcChannels.APP.SHOW_EXTENSION_UPDATE_DIALOG,
-  (
-    _event,
-    updates: {
-      [key: string]: { metadata: ExtensionMetadata; newVersion: string };
-    }
-  ) => {
-    log.info('Showing extension update dialog...');
-
-    const updatesStr = Object.values(updates)
-      .map(
-        (update) => `- ${update.metadata.name} (${update.metadata.version}→${update.newVersion})`
-      )
-      .join('\n');
-
-    dialog.showMessageBox({
-      type: 'info',
-      title: 'Extension Updates Available',
-      message: `Updates are available for the following extensions:\n\n${updatesStr}\n\nPlease go to the Extensions tab to update.\nYou can disable this message in the settings.`,
-      buttons: ['OK'],
-    });
-  }
-);
-
 // create ipc handlers for specific extension functionality
 const webviewFn: WebviewFunc = (url, options) => loadInWebView(spoofWindow, url, options);
 createExtensionIpcHandlers(ipcMain, pluginsDir, extractDir, webviewFn);
@@ -340,3 +219,5 @@ loadExtensions(pluginsDir, extractDir, webviewFn);
 
 createTrackerIpcHandlers(ipcMain);
 createDiscordIpcHandlers(ipcMain);
+
+createUpdaterIpcHandlers(ipcMain);

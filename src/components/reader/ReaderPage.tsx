@@ -5,14 +5,14 @@ import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { PageRequesterData, Chapter, Series, SeriesSourceType } from 'houdoku-extension-lib';
-import Paragraph from 'antd/lib/typography/Paragraph';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { Text } from '@mantine/core';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
 import { ReadingDirection, PageStyle } from '../../models/types';
 import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
-import { toggleChapterRead } from '../../features/library/utils';
+import { markChapters } from '../../features/library/utils';
 import { useForceUpdate } from '../../util/reactutil';
 import ReaderViewer from './ReaderViewer';
 import ReaderHeader from './ReaderHeader';
@@ -495,9 +495,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       lastPageNumber > 0
     ) {
       if (pageNumber >= Math.floor(0.8 * lastPageNumber)) {
-        toggleChapterRead(
-          readerChapter,
+        markChapters(
+          [readerChapter],
           readerSeries,
+          !readerChapter.read,
           setChapterList,
           setLibrarySeries,
           chapterLanguages
@@ -561,7 +562,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
       {showingNoNextChapter ? (
         <div className={styles.finalChapterContainer}>
-          <Paragraph>There&apos;s no next chapter.</Paragraph>
+          <Text>There&apos;s no next chapter.</Text>
         </div>
       ) : (
         <>

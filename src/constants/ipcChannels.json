@@ -1,10 +1,13 @@
 {
   "APP": {
     "CHECK_FOR_UPDATES": "check-for-updates",
-    "SET_STATUS": "set-status",
+    "PERFORM_UPDATE": "perform-update",
+    "UPDATE_AND_RESTART": "update-and-restart",
+    "SEND_NOTIFICATION": "send-notification",
     "LOAD_STORED_EXTENSION_SETTINGS": "load-stored-extension-settings",
     "SHOW_OPEN_DIALOG": "show-open-dialog",
-    "SHOW_EXTENSION_UPDATE_DIALOG": "show-extension-update-dialog",
+    "SHOW_RESTART_UPDATE_DIALOG": "show-restart-update-dialog",
+    "SHOW_PERFORM_UPDATE_DIALOG": "show-perform-update-dialog",
     "READ_ENTIRE_FILE": "read-entire-file"
   },
   "WINDOW": {

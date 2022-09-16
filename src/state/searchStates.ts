@@ -1,15 +1,11 @@
 import { Series } from 'houdoku-extension-lib';
 import { atom } from 'recoil';
+import { SearchParams, SearchResult } from '../models/types';
 import { FS_METADATA } from '../services/extensions/filesystem';
 
 export const searchExtensionState = atom({
   key: 'searchSearchExtensionState',
   default: FS_METADATA.id,
-});
-
-export const searchResultsState = atom({
-  key: 'searchSearchResultsState',
-  default: [] as Series[],
 });
 
 export const addModalSeriesState = atom({
@@ -25,4 +21,24 @@ export const addModalEditableState = atom({
 export const showingAddModalState = atom({
   key: 'searchShowingAddModalState',
   default: false,
+});
+
+export const searchParamsState = atom<SearchParams>({
+  key: 'searchSearchParamsState',
+  default: {},
+});
+
+export const searchResultState = atom<SearchResult>({
+  key: 'searchSearchResultState',
+  default: { seriesList: [], hasMore: false },
+});
+
+export const curViewingPageState = atom({
+  key: 'searchCurViewingPageState',
+  default: 1,
+});
+
+export const nextSourcePageState = atom({
+  key: 'searchNextSourcePageState',
+  default: 1,
 });

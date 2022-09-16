@@ -1,0 +1,30 @@
+.coverContainer {
+  position: relative;
+  opacity: 0.8;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.coverContainer:hover {
+  opacity: 0.5;
+}
+
+.seriesTitle {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  text-shadow: #000 0 0 4px;
+  line-height: 1.2;
+  user-select: none;
+  color: white;
+}
+
+.seriesUnreadBadge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  user-select: none;
+  z-index: 1;
+  color: white;
+}

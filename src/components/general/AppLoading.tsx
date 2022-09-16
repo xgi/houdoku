@@ -1,7 +1,5 @@
 import React from 'react';
-import Paragraph from 'antd/lib/typography/Paragraph';
-import { Image } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Title, Text, Image } from '@mantine/core';
 import styles from './AppLoading.css';
 import { AppLoadStep } from '../../models/types';
 import logo from '../../img/logo.svg';
@@ -16,14 +14,20 @@ const AppLoading: React.FC<Props> = (props: Props) => {
   return (
     <div className={styles.container}>
       <Image className={styles.logo} src={logo} width={96} height={96} />
-      <Title level={5} className={styles.title}>
-        houdoku is loading
+      <Title
+        order={5}
+        mt="sm"
+        autoCapitalize="characters"
+        color="teal"
+        style={{ letterSpacing: 1 }}
+      >
+        HOUDOKU IS LOADING
       </Title>
-      <Paragraph className={styles.paragraph}>
+      <Text size={16} align="center" mt="md">
         If this message does not disappear automatically,
         <br />
         please restart the client.
-      </Paragraph>
+      </Text>
     </div>
   );
 };
