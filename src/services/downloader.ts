@@ -118,11 +118,7 @@ class DownloaderClient {
         break;
       }
 
-      this.setCurrentTask({
-        series: task.series,
-        chapter: task.chapter,
-        downloadsDir: task.downloadsDir,
-      });
+      this.setCurrentTask(task);
       showDownloadNotification(notificationId, this.currentTask, this.queue.length);
 
       // eslint-disable-next-line no-await-in-loop
@@ -211,7 +207,7 @@ class DownloaderClient {
 
       if (!this.running) {
         // task was paused, add it back to the start of the queue
-        this.setQueue([{ ...task, page: i }, ...this.queue]);
+        this.setQueue([{ ...task, page: i, totalPages: pageUrls.length }, ...this.queue]);
       }
     }
 
