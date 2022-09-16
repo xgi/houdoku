@@ -27,7 +27,10 @@ const updateSeriesNumberUnread = (series: Series, chapterLanguages: LanguageKey[
     library.upsertSeries({
       ...series,
       numberUnread: getNumberUnreadChapters(
-        chapters.filter((chapter) => chapterLanguages.includes(chapter.languageKey))
+        chapters.filter(
+          (chapter) =>
+            chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0
+        )
       ),
     });
   }

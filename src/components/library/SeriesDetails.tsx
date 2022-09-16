@@ -242,6 +242,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                 )}
                 <Button
                   size="sm"
+                  loading={reloadingSeriesList}
                   onClick={() => {
                     if (series !== undefined && !reloadingSeriesList)
                       reloadSeriesList(

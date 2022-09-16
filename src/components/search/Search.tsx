@@ -136,9 +136,15 @@ const Search: React.FC<Props> = (_props: Props) => {
           <Text>{metadata.notice}</Text>
           <Text>
             For more information, see here:{' '}
-            <a href={metadata.noticeUrl} target="_blank" rel="noreferrer">
+            <Text
+              variant="link"
+              component="a"
+              href={metadata.noticeUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
               {metadata.noticeUrl}
-            </a>
+            </Text>
           </Text>
         </Alert>
       );

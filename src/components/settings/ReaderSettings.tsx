@@ -175,7 +175,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
     <>
       <Text>Page Style</Text>
       <SegmentedControl
-        pb="xs"
+        mb="xs"
         data={[
           {
             value: PageStyle.Single,

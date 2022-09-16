@@ -54,9 +54,9 @@ const InstalledExtensionsModal: React.FC<Props> = (props: Props) => {
             <Group position="apart">
               <Text>
                 {item.name} -{' '}
-                <a href={item.url} target="_blank" rel="noreferrer">
+                <Text variant="link" component="a" href={item.url} target="_blank" rel="noreferrer">
                   {item.url}
-                </a>
+                </Text>
               </Text>
               <Text>{item.version}</Text>
             </Group>

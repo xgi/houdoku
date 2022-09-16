@@ -58,7 +58,7 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
   return (
     <Group position="apart" mb="md" noWrap>
       <Group position="left" align="left" spacing="xs" noWrap>
-        <Button onClick={refreshHandler}>
+        <Button onClick={refreshHandler} loading={reloadingSeriesList}>
           {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}{' '}
         </Button>
         <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>

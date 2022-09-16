@@ -39,31 +39,51 @@ const About: React.FC<Props> = (props: Props) => {
       </Text>
       <Text>
         Website:{' '}
-        <a href={packageJson.homepage} target="_blank" rel="noreferrer">
+        <Text
+          variant="link"
+          component="a"
+          href={packageJson.homepage}
+          target="_blank"
+          rel="noreferrer"
+        >
           {packageJson.homepage}
-        </a>
+        </Text>
       </Text>
       <Text>
         Documentation:{' '}
-        <a href={`${packageJson.homepage}/docs`} target="_blank" rel="noreferrer">
+        <Text
+          variant="link"
+          component="a"
+          href={`${packageJson.homepage}/docs`}
+          target="_blank"
+          rel="noreferrer"
+        >
           {packageJson.homepage}/docs
-        </a>
+        </Text>
       </Text>
       <Text>
         Repository:{' '}
-        <a href={packageJson.repository.url} target="_blank" rel="noreferrer">
+        <Text
+          variant="link"
+          component="a"
+          href={packageJson.repository.url}
+          target="_blank"
+          rel="noreferrer"
+        >
           {packageJson.repository.url}
-        </a>
+        </Text>
       </Text>
       <Text>
         License: MIT (
-        <a
+        <Text
+          variant="link"
+          component="a"
           href={`${packageJson.repository.url}/blob/master/LICENSE.txt`}
           target="_blank"
           rel="noreferrer"
         >
           view text
-        </a>
+        </Text>
         )
       </Text>
     </>
