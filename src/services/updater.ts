@@ -25,6 +25,15 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
         // eslint-disable-next-line promise/always-return
         if (result.updateInfo.version === packageJson.version) {
           log.info(`Already up-to-date at version ${packageJson.version}`);
+          event.sender.send(
+            ipcChannels.APP.SEND_NOTIFICATION,
+            {
+              title: 'Houdoku is up-to-date!',
+              color: 'teal',
+            },
+            false,
+            'check'
+          );
           return;
         }
 
