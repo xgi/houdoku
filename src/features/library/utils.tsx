@@ -96,7 +96,6 @@ export async function importSeries(
   const chapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
     series.extensionId,
-    series.sourceType,
     series.sourceId
   );
 
@@ -158,7 +157,6 @@ async function reloadSeries(
   let newSeries: Series | undefined = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_SERIES,
     series.extensionId,
-    series.sourceType,
     series.sourceId
   );
   if (newSeries === undefined)
@@ -167,7 +165,6 @@ async function reloadSeries(
   const newChapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
     series.extensionId,
-    series.sourceType,
     series.sourceId
   );
 

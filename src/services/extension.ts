@@ -2,7 +2,6 @@ import {
   PageRequesterData,
   Chapter,
   Series,
-  SeriesSourceType,
   WebviewFunc,
   ExtensionClientInterface,
   SettingType,
@@ -12,13 +11,12 @@ import {
 import aki, { RegistrySearchPackage, RegistrySearchResults } from 'aki-plugin-manager';
 import { IpcMain } from 'electron';
 import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
-import DOMParser from 'dom-parser';
 import log from 'electron-log';
 import { gt } from 'semver';
+import { JSDOM } from 'jsdom';
+import { UtilFunctions } from 'houdoku-extension-lib/dist/interface';
 import { FSExtensionClient, FS_METADATA } from './extensions/filesystem';
 import ipcChannels from '../constants/ipcChannels.json';
-
-const domParser = new DOMParser();
 
 const EXTENSION_CLIENTS: { [key: string]: ExtensionClientInterface } = {};
 
@@ -43,7 +41,8 @@ export async function loadExtensions(
     log.info(`Unloaded extension ${extMetadata.name} (ID ${extensionId})`);
   });
 
-  const fsExtensionClient = new FSExtensionClient(fetch, webviewFn, domParser);
+  const docFn = (html?: string | Buffer) => new JSDOM(html).window.document;
+  const fsExtensionClient = new FSExtensionClient(new UtilFunctions(fetch, webviewFn, docFn));
   fsExtensionClient.setExtractPath(extractDir);
   EXTENSION_CLIENTS[fsExtensionClient.getMetadata().id] = fsExtensionClient;
 
@@ -71,7 +70,7 @@ export async function loadExtensions(
         }
       };
 
-      const client = new mod.ExtensionClient(fetchWrappedFn, webviewFn, domParser);
+      const client = new mod.ExtensionClient(new UtilFunctions(fetchWrappedFn, webviewFn, docFn));
 
       log.info(`Loaded extension "${pluginName}" version ${pluginDetails[1]}`);
       EXTENSION_CLIENTS[client.getMetadata().id] = client;
@@ -87,15 +86,10 @@ export async function loadExtensions(
  * to the id for the series after being imported.
  *
  * @param extensionId
- * @param sourceType the type of the series source
  * @param seriesId
  * @returns promise for the matching series
  */
-function getSeries(
-  extensionId: string,
-  sourceType: SeriesSourceType,
-  seriesId: string
-): Promise<Series | undefined> {
+function getSeries(extensionId: string, seriesId: string): Promise<Series | undefined> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
     `Getting series ${seriesId} from extension ${extensionId} (v=${
@@ -103,7 +97,7 @@ function getSeries(
     })`
   );
 
-  return extension.getSeries(sourceType, seriesId).catch((err: Error) => {
+  return extension.getSeries(seriesId).catch((err: Error) => {
     log.error(err);
     return undefined;
   });
@@ -117,15 +111,10 @@ function getSeries(
  * different groups or in different languages).
  *
  * @param extensionId
- * @param sourceType the type of the series source
  * @param seriesId
  * @returns promise for a list of chapters
  */
-function getChapters(
-  extensionId: string,
-  sourceType: SeriesSourceType,
-  seriesId: string
-): Promise<Chapter[]> {
+function getChapters(extensionId: string, seriesId: string): Promise<Chapter[]> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
     `Getting chapters for series ${seriesId} from extension ${extensionId} (v=${
@@ -133,7 +122,7 @@ function getChapters(
     })`
   );
 
-  return extension.getChapters(sourceType, seriesId).catch((err: Error) => {
+  return extension.getChapters(seriesId).catch((err: Error) => {
     log.error(err);
     return [];
   });
@@ -146,14 +135,12 @@ function getChapters(
  * unique for each chapter (it will only work for the chapter with id specified to this function).
  *
  * @param extensionId
- * @param sourceType the type of the series source
  * @param seriesSourceId
  * @param chapterSourceId
  * @returns promise for the PageRequesterData for this chapter
  */
 function getPageRequesterData(
   extensionId: string,
-  sourceType: SeriesSourceType,
   seriesSourceId: string,
   chapterSourceId: string
 ): Promise<PageRequesterData> {
@@ -164,12 +151,10 @@ function getPageRequesterData(
     })`
   );
 
-  return extension
-    .getPageRequesterData(sourceType, seriesSourceId, chapterSourceId)
-    .catch((err: Error) => {
-      log.error(err);
-      return { server: '', hash: '', numPages: 0, pageFilenames: [] };
-    });
+  return extension.getPageRequesterData(seriesSourceId, chapterSourceId).catch((err: Error) => {
+    log.error(err);
+    return { server: '', hash: '', numPages: 0, pageFilenames: [] };
+  });
 }
 
 /**
@@ -194,16 +179,19 @@ function getPageUrls(extensionId: string, pageRequesterData: PageRequesterData):
 /**
  * Get data for a page.
  *
- * The value from this function (within the promise) can be put inside the src tag of an HTML <img>.
- * In most cases it is simply a promise for the provided URL; however, that cannot be guaranteed
- * since we may also need to load data from an archive.
+ * The value from this function (within the promise) is either a string that can be put inside
+ * the src of an HTML <img> (usually a URL), or an ArrayBuffer that can be made into a Blob.
  *
  * @param extensionId
  * @param series
  * @param url the URL for the page from getPageUrls
  * @returns promise for page data that can be put inside an <img> src
  */
-async function getPageData(extensionId: string, series: Series, url: string): Promise<string> {
+async function getPageData(
+  extensionId: string,
+  series: Series,
+  url: string
+): Promise<string | ArrayBuffer> {
   return EXTENSION_CLIENTS[extensionId].getPageData(series, url).catch((err: Error) => {
     log.error(err);
     return '';
@@ -386,26 +374,20 @@ export const createExtensionIpcHandlers = (
 
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_SERIES,
-    (_event, extensionId: string, sourceType: SeriesSourceType, seriesId: string) => {
-      return getSeries(extensionId, sourceType, seriesId);
+    (_event, extensionId: string, seriesId: string) => {
+      return getSeries(extensionId, seriesId);
     }
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_CHAPTERS,
-    (_event, extensionId: string, sourceType: SeriesSourceType, seriesId: string) => {
-      return getChapters(extensionId, sourceType, seriesId);
+    (_event, extensionId: string, seriesId: string) => {
+      return getChapters(extensionId, seriesId);
     }
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
-    (
-      _event,
-      extensionId: string,
-      sourceType: SeriesSourceType,
-      seriesSourceId: string,
-      chapterSourceId: string
-    ) => {
-      return getPageRequesterData(extensionId, sourceType, seriesSourceId, chapterSourceId);
+    (_event, extensionId: string, seriesSourceId: string, chapterSourceId: string) => {
+      return getPageRequesterData(extensionId, seriesSourceId, chapterSourceId);
     }
   );
   ipcMain.handle(

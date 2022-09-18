@@ -15,6 +15,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain, dialog, OpenDialogReturnValue } from 'electron';
 import log from 'electron-log';
 import { WebviewFunc } from 'houdoku-extension-lib';
+import fetch from 'node-fetch';
 import { walk } from './util/filesystem';
 import { createExtensionIpcHandlers, loadExtensions } from './services/extension';
 import { loadInWebView } from './util/webview';

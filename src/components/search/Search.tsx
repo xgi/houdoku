@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import {
-  ExtensionMetadata,
-  Series,
-  SeriesListResponse,
-  SeriesSourceType,
-} from 'houdoku-extension-lib';
+import { ExtensionMetadata, Series, SeriesListResponse } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -103,7 +98,7 @@ const Search: React.FC<Props> = (_props: Props) => {
 
   const handleSearchFilesystem = (path: string) => {
     ipcRenderer
-      .invoke(ipcChannels.EXTENSION.GET_SERIES, FS_METADATA.id, SeriesSourceType.STANDARD, path)
+      .invoke(ipcChannels.EXTENSION.GET_SERIES, FS_METADATA.id, path)
       .then((series: Series) => {
         // eslint-disable-next-line promise/always-return
         if (inLibrary(series)) {

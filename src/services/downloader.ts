@@ -137,7 +137,6 @@ class DownloaderClient {
         .invoke(
           ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
           task.series.extensionId,
-          task.series.sourceType,
           task.series.sourceId,
           task.chapter.sourceId
         )

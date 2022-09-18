@@ -37,12 +37,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
         `AddSeriesModal is retrieving details for series ${props.series.sourceId} from extension ${props.series.extensionId}`
       );
       ipcRenderer
-        .invoke(
-          ipcChannels.EXTENSION.GET_SERIES,
-          props.series.extensionId,
-          props.series.sourceType,
-          props.series.sourceId
-        )
+        .invoke(ipcChannels.EXTENSION.GET_SERIES, props.series.extensionId, props.series.sourceId)
         .then((series?: Series) => {
           if (series !== undefined) {
             log.debug(`AddSeriesModal found matching series ${series?.sourceId}`);

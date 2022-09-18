@@ -12,7 +12,6 @@ import {
   Chapter,
   LanguageKey,
   Series,
-  SeriesSourceType,
   SeriesStatus,
   ExtensionClientAbstract,
   GetSettingsFunc,
@@ -92,13 +91,12 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     return FS_METADATA;
   };
 
-  getSeries: GetSeriesFunc = (sourceType: SeriesSourceType, id: string) => {
+  getSeries: GetSeriesFunc = (id: string) => {
     const dirName = path.basename(id);
     const series: Series = {
       id: undefined,
       extensionId: FS_METADATA.id,
       sourceId: id,
-      sourceType,
       title: dirName.trim(),
       altTitles: [],
       description: '',
@@ -117,7 +115,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     });
   };
 
-  getChapters: GetChaptersFunc = (_sourceType: SeriesSourceType, id: string) => {
+  getChapters: GetChaptersFunc = (id: string) => {
     const fileList = walk(id);
     const chapterPaths: Set<string> = new Set();
     fileList.forEach((file: string) => {
@@ -149,7 +147,6 @@ export class FSExtensionClient extends ExtensionClientAbstract {
   };
 
   getPageRequesterData: GetPageRequesterDataFunc = (
-    _sourceType: SeriesSourceType,
     _seriesSourceId: string,
     chapterSourceId: string
   ) => {

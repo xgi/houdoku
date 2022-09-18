@@ -4,7 +4,7 @@ import { useParams, useHistory, useLocation } from 'react-router-dom';
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { PageRequesterData, Chapter, Series, SeriesSourceType } from 'houdoku-extension-lib';
+import { PageRequesterData, Chapter, Series } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Text } from '@mantine/core';
 import styles from './ReaderPage.css';
@@ -146,7 +146,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       .invoke(
         ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
         FS_METADATA.id,
-        SeriesSourceType.STANDARD,
         '',
         chapterDownloadPath
       )
@@ -208,7 +207,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       .invoke(
         ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
         series.extensionId,
-        series.sourceType,
         series.sourceId,
         chapter.sourceId
       )
@@ -223,9 +221,16 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setLastPageNumber(newPageUrls.length);
 
     Promise.all(
-      newPageUrls.map((pageUrl) =>
-        ipcRenderer.invoke(ipcChannels.EXTENSION.GET_PAGE_DATA, FS_METADATA.id, series, pageUrl)
-      )
+      newPageUrls.map((pageUrl) => {
+        return ipcRenderer
+          .invoke(ipcChannels.EXTENSION.GET_PAGE_DATA, series.extensionId, series, pageUrl)
+          .then((data) => {
+            if (typeof data === 'string') {
+              return data;
+            }
+            return URL.createObjectURL(new Blob([data]));
+          });
+      })
     )
       // eslint-disable-next-line promise/always-return
       .then((newPageDataList: string[]) => {
