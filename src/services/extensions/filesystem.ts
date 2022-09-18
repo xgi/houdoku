@@ -5,7 +5,7 @@ import {
   GetPageRequesterDataFunc,
   GetPageUrlsFunc,
   GetSearchFunc,
-  GetPageDataFunc,
+  GetImageFunc,
   ExtensionMetadata,
   PageRequesterData,
   GetDirectoryFunc,
@@ -189,7 +189,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     return pageRequesterData.pageFilenames;
   };
 
-  getPageData: GetPageDataFunc = (_series: Series, url: string) => {
+  getImage: GetImageFunc = (_series: Series, url: string) => {
     return new Promise((resolve) => {
       resolve(url);
     });

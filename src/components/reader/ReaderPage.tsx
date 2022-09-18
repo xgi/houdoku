@@ -157,7 +157,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     Promise.all(
       newPageUrls.map((pageUrl) =>
-        ipcRenderer.invoke(ipcChannels.EXTENSION.GET_PAGE_DATA, FS_METADATA.id, series, pageUrl)
+        ipcRenderer.invoke(ipcChannels.EXTENSION.GET_IMAGE, FS_METADATA.id, series, pageUrl)
       )
     )
       // eslint-disable-next-line promise/always-return
@@ -223,7 +223,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     Promise.all(
       newPageUrls.map((pageUrl) => {
         return ipcRenderer
-          .invoke(ipcChannels.EXTENSION.GET_PAGE_DATA, series.extensionId, series, pageUrl)
+          .invoke(ipcChannels.EXTENSION.GET_IMAGE, series.extensionId, series, pageUrl)
           .then((data) => {
             if (typeof data === 'string') {
               return data;

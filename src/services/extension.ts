@@ -161,11 +161,11 @@ function getPageRequesterData(
  * Get page URLs for a chapter.
  *
  * The values from this function CANNOT be safely used as an image source; they must be passed to
- * getPageData which is strictly for that purpose.
+ * getImage which is strictly for that purpose.
  *
  * @param extensionId
  * @param pageRequesterData the PageRequesterData from getPageRequesterData for this chapter
- * @returns a list of urls for this chapter which can be passed to getPageData
+ * @returns a list of urls for this chapter which can be passed to getImage
  */
 function getPageUrls(extensionId: string, pageRequesterData: PageRequesterData): string[] {
   try {
@@ -177,22 +177,21 @@ function getPageUrls(extensionId: string, pageRequesterData: PageRequesterData):
 }
 
 /**
- * Get data for a page.
+ * Get resolved data for an image.
  *
- * The value from this function (within the promise) is either a string that can be put inside
- * the src of an HTML <img> (usually a URL), or an ArrayBuffer that can be made into a Blob.
+ * The return value should either be a string to put inside the src tag of an HTML <img> (usually
+ * the URL itself), or an ArrayBuffer that can be made into a Blob.
  *
- * @param extensionId
- * @param series
- * @param url the URL for the page from getPageUrls
- * @returns promise for page data that can be put inside an <img> src
+ * @param series the series the image belongs to
+ * @param url the url for this page, e.g. from GetPageUrlsFunc or Series.remoteCoverUrl
+ * @returns promise for the data as described above
  */
-async function getPageData(
+async function getImage(
   extensionId: string,
   series: Series,
   url: string
 ): Promise<string | ArrayBuffer> {
-  return EXTENSION_CLIENTS[extensionId].getPageData(series, url).catch((err: Error) => {
+  return EXTENSION_CLIENTS[extensionId].getImage(series, url).catch((err: Error) => {
     log.error(err);
     return '';
   });
@@ -397,9 +396,9 @@ export const createExtensionIpcHandlers = (
     }
   );
   ipcMain.handle(
-    ipcChannels.EXTENSION.GET_PAGE_DATA,
+    ipcChannels.EXTENSION.GET_IMAGE,
     (_event, extensionId: string, series: Series, url: string) => {
-      return getPageData(extensionId, series, url);
+      return getImage(extensionId, series, url);
     }
   );
   ipcMain.handle(

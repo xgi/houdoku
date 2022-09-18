@@ -26,6 +26,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-promise-executor-return': 'off',
     'import/no-import-module-exports': 'off',
+    'promise/always-return': 'off',
     'no-param-reassign': ['error', { props: false }],
 
     'prettier/prettier': [

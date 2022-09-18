@@ -1,7 +1,9 @@
 import fs from 'fs';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
+import { ipcRenderer } from 'electron';
 import { getThumbnailPath } from './filesystem';
+import ipcChannels from '../constants/ipcChannels.json';
 
 /**
  * Download a series' cover to the filesystem.
@@ -17,7 +19,15 @@ export async function downloadCover(series: Series) {
     `Downloading cover for series ${series.id} (sourceId=${series.sourceId}, extId=${series.extensionId}) from ${series.remoteCoverUrl}`
   );
 
-  fetch(series.remoteCoverUrl)
+  ipcRenderer
+    .invoke(ipcChannels.EXTENSION.GET_IMAGE, series.extensionId, series, series.remoteCoverUrl)
+    .then((data) => {
+      if (typeof data === 'string') {
+        return data;
+      }
+      return URL.createObjectURL(new Blob([data]));
+    })
+    .then((url) => fetch(url))
     .then((response) => response.arrayBuffer())
     .then((buffer) => {
       fs.writeFile(thumbnailPath, Buffer.from(buffer), (err) => {
@@ -25,7 +35,6 @@ export async function downloadCover(series: Series) {
           log.error(err);
         }
       });
-      return true;
     })
     .catch((e: Error) => log.error(e));
 }

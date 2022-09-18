@@ -45,7 +45,8 @@ export async function getThumbnailPath(series: Series): Promise<string | null> {
     fs.mkdirSync(thumbnailsDir);
   }
 
-  const ext = series.remoteCoverUrl.split('.').pop();
+  const extMatch = series.remoteCoverUrl.match(/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i);
+  const ext = extMatch ? extMatch[1] : 'jpg';
   return path.join(thumbnailsDir, `${series.id}.${ext}`);
 }
 

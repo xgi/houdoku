@@ -1,22 +1,12 @@
 import React from 'react';
 import { Language, Series, SeriesStatus, Languages, LanguageKey } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
-import {
-  ActionIcon,
-  Center,
-  Grid,
-  Group,
-  Input,
-  MultiSelect,
-  Select,
-  Stack,
-  Text,
-} from '@mantine/core';
+import { ActionIcon, Grid, Group, Input, MultiSelect, Select, Stack, Text } from '@mantine/core';
 import { IconUpload } from '@tabler/icons';
 import styles from './SeriesEditControls.css';
-import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
 import constants from '../../constants/constants.json';
+import ExtensionImage from './ExtensionImage';
 
 type Props = {
   series: Series;
@@ -29,9 +19,10 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
     <>
       <Grid gutter="xs">
         <Grid.Col span={4}>
-          <img
+          <ExtensionImage
             className={styles.coverImage}
-            src={props.series.remoteCoverUrl === '' ? blankCover : props.series.remoteCoverUrl}
+            url={props.series.remoteCoverUrl}
+            series={props.series}
             alt={props.series.title}
           />
         </Grid.Col>

@@ -8,7 +8,8 @@
     "SHOW_OPEN_DIALOG": "show-open-dialog",
     "SHOW_RESTART_UPDATE_DIALOG": "show-restart-update-dialog",
     "SHOW_PERFORM_UPDATE_DIALOG": "show-perform-update-dialog",
-    "READ_ENTIRE_FILE": "read-entire-file"
+    "READ_ENTIRE_FILE": "read-entire-file",
+    "CREATE_OBJECT_URL": "create-object-url"
   },
   "WINDOW": {
     "MINIMIZE": "window-minimize",
@@ -37,7 +38,7 @@
     "GET_CHAPTERS": "extension-getChapters",
     "GET_PAGE_REQUESTER_DATA": "extension-getPageRequesterData",
     "GET_PAGE_URLS": "extension-getPageUrls",
-    "GET_PAGE_DATA": "extension-getPageData",
+    "GET_IMAGE": "extension-getImage",
     "SEARCH": "extension-search",
     "DIRECTORY": "extension-directory",
     "GET_SETTING_TYPES": "extension-getSettingTypes",

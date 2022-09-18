@@ -3,7 +3,7 @@ import path from 'path';
 import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { Series } from 'houdoku-extension-lib';
-import { SimpleGrid, Title } from '@mantine/core';
+import { Overlay, SimpleGrid, Title } from '@mantine/core';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useHistory } from 'react-router-dom';
 import blankCover from '../../img/blank_cover.png';
@@ -14,6 +14,7 @@ import styles from './LibraryGrid.css';
 import { seriesListState } from '../../state/libraryStates';
 import { libraryColumnsState } from '../../state/settingStates';
 import { goToSeries } from '../../features/library/utils';
+import ExtensionImage from '../general/ExtensionImage';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -74,6 +75,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
           className={styles.seriesUnreadBadge}
           sx={(theme) => ({ backgroundColor: theme.colors.red[7] })}
           px={4}
+          style={{ zIndex: 10 }}
         >
           {series.numberUnread}
         </Title>
@@ -107,12 +109,28 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                 setShowingContextMenu(true);
               }}
               style={{
-                backgroundImage: `linear-gradient(0deg, #000000cc, #00000000 40%, #00000000), url("${coverSource}")`,
                 height: `calc(105vw / ${libraryColumns})`,
               }}
             >
+              <Overlay
+                gradient="linear-gradient(0deg, #000000cc, #00000000 40%, #00000000)"
+                zIndex={5}
+              />
+              <ExtensionImage
+                url={coverSource}
+                series={series}
+                alt={series.title}
+                width="100%"
+                height="100%"
+              />
               {renderUnreadBadge(series)}
-              <Title className={styles.seriesTitle} order={5} lineClamp={3} p={4}>
+              <Title
+                className={styles.seriesTitle}
+                order={5}
+                lineClamp={3}
+                p={4}
+                style={{ zIndex: 10 }}
+              >
                 {series.title}
               </Title>
             </div>

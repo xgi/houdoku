@@ -7,6 +7,7 @@ import {
   pageDataListState,
   pageGroupListState,
   pageNumberState,
+  seriesState,
 } from '../../state/readerStates';
 import {
   fitContainToWidthState,
@@ -18,6 +19,7 @@ import {
   longStripMarginState,
   optimizeContrastState,
 } from '../../state/settingStates';
+import ExtensionImage from '../general/ExtensionImage';
 
 const ROOT_ID = 'root';
 
@@ -28,6 +30,7 @@ type Props = {
 
 const ReaderViewer: React.FC<Props> = (props: Props) => {
   const viewerContainer = useRef<HTMLDivElement>(null);
+  const series = useRecoilValue(seriesState);
   const [skipChangePageNumEffect, setSkipChangePageNumEffect] = useState(false);
   const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
   const lastPageNumber = useRecoilValue(lastPageNumberState);
@@ -75,10 +78,12 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     }
 
     return (
-      <img
+      <ExtensionImage
+        // @ts-expect-error ignoring ensured series prop in this context
+        series={series}
         key={num}
         data-num={num}
-        src={pageDataList[num - 1]}
+        url={pageDataList[num - 1]}
         alt={`Page ${num}`}
         style={showing ? {} : { display: 'none' }}
         onLoad={props.updatePageGroupList}

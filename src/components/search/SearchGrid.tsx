@@ -16,6 +16,7 @@ import {
   searchExtensionState,
 } from '../../state/searchStates';
 import { FS_METADATA } from '../../services/extensions/filesystem';
+import ExtensionImage from '../general/ExtensionImage';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -55,11 +56,21 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
               setShowingAddModal(!showingAddModal);
             }}
             style={{
-              backgroundImage: `linear-gradient(0deg, #000000cc, #00000000 40%, #00000000), url("${series.remoteCoverUrl}")`,
               height: `calc(105vw / ${libraryColumns})`,
               cursor: inLibrary ? 'not-allowed' : 'pointer',
             }}
           >
+            <Overlay
+              gradient="linear-gradient(0deg, #000000cc, #00000000 40%, #00000000)"
+              zIndex={5}
+            />
+            <ExtensionImage
+              url={series.remoteCoverUrl}
+              series={series}
+              alt={series.title}
+              width="100%"
+              height="100%"
+            />
             {inLibrary ? <Overlay opacity={0.5} color="#2B8A3E" /> : ''}
             <Title className={styles.seriesTitle} order={5} lineClamp={3} p={4}>
               {series.title}
