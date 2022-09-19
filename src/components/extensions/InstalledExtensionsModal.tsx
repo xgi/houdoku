@@ -50,7 +50,7 @@ const InstalledExtensionsModal: React.FC<Props> = (props: Props) => {
 
       {extensionMetadataList.map((item) => {
         return (
-          <Box mb="sm">
+          <Box key={item.id} mb="sm">
             <Group position="apart">
               <Text>
                 {item.name} -{' '}
