@@ -2,7 +2,7 @@
   "name": "houdoku",
   "productName": "Houdoku",
   "description": "Manga reader and library manager for the desktop",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "scripts": {
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
     "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
@@ -164,7 +164,7 @@
     "electron-builder": "^23.0.3",
     "electron-devtools-installer": "^3.2.0",
     "electron-notarize": "^1.0.0",
-    "electron-rebuild": "^3.2.5",
+    "electron-rebuild": "^3.2.9",
     "eslint": "^8.5.0",
     "eslint-config-airbnb": "^19.0.2",
     "eslint-config-airbnb-typescript": "^16.1.0",
@@ -203,6 +203,7 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "dependencies": {
+    "canvas": "file:.erb/pkg/canvas",
     "@emotion/react": "^11.10.4",
     "@mantine/core": "^5.2.4",
     "@mantine/hooks": "^5.2.4",
