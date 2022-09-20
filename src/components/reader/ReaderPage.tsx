@@ -13,7 +13,6 @@ import { ReadingDirection, PageStyle } from '../../models/types';
 import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
 import { markChapters } from '../../features/library/utils';
-import { useForceUpdate } from '../../util/reactutil';
 import ReaderViewer from './ReaderViewer';
 import ReaderHeader from './ReaderHeader';
 import ReaderLoader from './ReaderLoader';
@@ -43,7 +42,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const { series_id, chapter_id } = useParams<ParamTypes>();
   const history = useHistory();
   const location = useLocation();
-  const forceUpdate = useForceUpdate();
   const setChapterList = useSetRecoilState(libraryStates.chapterListState);
   const setLibrarySeries = useSetRecoilState(libraryStates.seriesState);
   const [readerSeries, setReaderSeries] = useRecoilState(readerStates.seriesState);
@@ -51,8 +49,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
   const [pageNumber, setPageNumber] = useRecoilState(readerStates.pageNumberState);
   const [lastPageNumber, setLastPageNumber] = useRecoilState(readerStates.lastPageNumberState);
-  const setPageUrls = useSetRecoilState(readerStates.pageUrlsState);
-  const [pageDataList, setPageDataList] = useRecoilState(readerStates.pageDataListState);
+  const [pageUrls, setPageUrls] = useRecoilState(readerStates.pageUrlsState);
   const [pageGroupList, setPageGroupList] = useRecoilState(readerStates.pageGroupListState);
   const [relevantChapterList, setRelevantChapterList] = useRecoilState(
     readerStates.relevantChapterListState
@@ -154,18 +151,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       );
     setPageUrls(newPageUrls);
     setLastPageNumber(newPageUrls.length);
-
-    Promise.all(
-      newPageUrls.map((pageUrl) =>
-        ipcRenderer.invoke(ipcChannels.EXTENSION.GET_IMAGE, FS_METADATA.id, series, pageUrl)
-      )
-    )
-      // eslint-disable-next-line promise/always-return
-      .then((newPageDataList: string[]) => {
-        setPageDataList(newPageDataList);
-        forceUpdate();
-      })
-      .catch((e) => log.error(e));
   };
 
   /**
@@ -219,25 +204,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       );
     setPageUrls(newPageUrls);
     setLastPageNumber(newPageUrls.length);
-
-    Promise.all(
-      newPageUrls.map((pageUrl) => {
-        return ipcRenderer
-          .invoke(ipcChannels.EXTENSION.GET_IMAGE, series.extensionId, series, pageUrl)
-          .then((data) => {
-            if (typeof data === 'string') {
-              return data;
-            }
-            return URL.createObjectURL(new Blob([data]));
-          });
-      })
-    )
-      // eslint-disable-next-line promise/always-return
-      .then((newPageDataList: string[]) => {
-        setPageDataList(newPageDataList);
-        forceUpdate();
-      })
-      .catch((e) => log.error(e));
   };
 
   /**
@@ -274,7 +240,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setPageNumber(1);
     setPageUrls([]);
     setLastPageNumber(0);
-    setPageDataList([]);
 
     loadChapterData(id, series_id);
   };
@@ -339,7 +304,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setPageNumber(1);
     setPageUrls([]);
     setLastPageNumber(0);
-    setPageDataList([]);
     setRelevantChapterList([]);
     setShowingNoNextChapter(false);
     removeRootStyles();
@@ -571,7 +535,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         </div>
       ) : (
         <>
-          {pageDataList.length === 0 ? (
+          {pageUrls.length === 0 ? (
             <ReaderLoader extensionId={readerSeries?.extensionId} />
           ) : (
             <ReaderViewer changePage={changePage} updatePageGroupList={updatePageGroupList} />

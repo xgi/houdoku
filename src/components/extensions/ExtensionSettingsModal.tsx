@@ -63,7 +63,7 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
   const renderRows = () => {
     return Object.keys(extensionSettings).map((key: string) => {
       return (
-        <Group position="apart" mb="xs">
+        <Group position="apart" mb="xs" key={key}>
           <Text>{key}</Text>
           {renderControl(extensionSettingTypes[key], extensionSettings[key], (newValue: unknown) =>
             setExtensionSettings({ ...extensionSettings, [key]: newValue })

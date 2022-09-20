@@ -5295,10 +5295,10 @@ hosted-git-info@^4.0.2:
   dependencies:
     lru-cache "^6.0.0"
 
-houdoku-extension-lib@^1.8.2-alpha.1:
-  version "1.8.2-alpha.1"
-  resolved "https://registry.yarnpkg.com/houdoku-extension-lib/-/houdoku-extension-lib-1.8.2-alpha.1.tgz#1634138fffd7898f452477e32f43350f0368eebb"
-  integrity sha512-qJ6otrMUU006Ok0TcIHrWkH1DOipvsyRKzJA1kYmDzQWLyPSd38ZolgeLKQAYf0r8PT9yjJPwnwIze/JCiQfCA==
+houdoku-extension-lib@^1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/houdoku-extension-lib/-/houdoku-extension-lib-1.8.3.tgz#b4f0b0aa135836d0025232dcbe358b5e4b8e28c8"
+  integrity sha512-R53Ejpow6t0hEjHto5nuAj7T90pyylD6jR6Vp1QHH5ZMivY7l3x0oymVrnm/6t5SE8B+jHohWMo/yskcAxbDiQ==
 
 hpack.js@^2.1.6:
   version "2.1.6"

@@ -129,18 +129,22 @@ const Search: React.FC<Props> = (_props: Props) => {
       return (
         <Alert icon={<IconInfoCircle size={16} />} title="Extension information" color="indigo">
           <Text>{metadata.notice}</Text>
-          <Text>
-            For more information, see here:{' '}
-            <Text
-              variant="link"
-              component="a"
-              href={metadata.noticeUrl}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {metadata.noticeUrl}
+          {metadata.noticeUrl ? (
+            <Text>
+              For more information, see here:{' '}
+              <Text
+                variant="link"
+                component="a"
+                href={metadata.noticeUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {metadata.noticeUrl}
+              </Text>
             </Text>
-          </Text>
+          ) : (
+            ''
+          )}
         </Alert>
       );
     }
@@ -155,6 +159,7 @@ const Search: React.FC<Props> = (_props: Props) => {
       return (
         <Center my="md">
           <Button
+            loading={loading}
             onClick={() => {
               if (
                 searchResult.hasMore &&

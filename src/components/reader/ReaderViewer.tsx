@@ -4,9 +4,9 @@ import styles from './ReaderViewer.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
 import {
   lastPageNumberState,
-  pageDataListState,
   pageGroupListState,
   pageNumberState,
+  pageUrlsState,
   seriesState,
 } from '../../state/readerStates';
 import {
@@ -34,7 +34,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const [skipChangePageNumEffect, setSkipChangePageNumEffect] = useState(false);
   const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
   const lastPageNumber = useRecoilValue(lastPageNumberState);
-  const pageDataList = useRecoilValue(pageDataListState);
+  const pageUrls = useRecoilValue(pageUrlsState);
   const pageGroupList = useRecoilValue(pageGroupListState);
   const fitContainToWidth = useRecoilValue(fitContainToWidthState);
   const fitContainToHeight = useRecoilValue(fitContainToHeightState);
@@ -83,9 +83,10 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         series={series}
         key={num}
         data-num={num}
-        url={pageDataList[num - 1]}
+        url={pageUrls[num - 1]}
         alt={`Page ${num}`}
         style={showing ? {} : { display: 'none' }}
+        loadingDisplay="spinner"
         onLoad={props.updatePageGroupList}
         className={`
       ${styles.pageImage}

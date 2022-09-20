@@ -16,11 +16,6 @@ export const pageUrlsState = atom({
   default: [] as string[],
 });
 
-export const pageDataListState = atom({
-  key: 'readerPageDataListState',
-  default: [] as string[],
-});
-
 export const pageGroupListState = atom({
   key: 'readerPageGroupListState',
   default: [] as number[][],
