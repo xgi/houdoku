@@ -9,7 +9,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Text } from '@mantine/core';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
-import { ReadingDirection, PageStyle } from '../../models/types';
+import { ReadingDirection, PageStyle, OffsetPages } from '../../models/types';
 import { selectMostSimilarChapter } from '../../util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
 import { markChapters } from '../../features/library/utils';
@@ -25,7 +25,11 @@ import { updateTitlebarText } from '../../util/titlebar';
 import * as libraryStates from '../../state/libraryStates';
 import * as readerStates from '../../state/readerStates';
 import * as settingStates from '../../state/settingStates';
-import { nextPageStyle, nextReadingDirection } from '../../features/settings/utils';
+import {
+  nextOffsetPages,
+  nextPageStyle,
+  nextReadingDirection,
+} from '../../features/settings/utils';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -64,15 +68,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   );
   const customDownloadsDir = useRecoilValue(settingStates.customDownloadsDirState);
   const [pageStyle, setPageStyle] = useRecoilState(settingStates.pageStyleState);
-  const [offsetDoubleSpreads, setOffsetDoubleSpreads] = useRecoilState(
-    settingStates.offsetDoubleSpreadsState
-  );
+  const [offsetPages, setOffsetPages] = useRecoilState(settingStates.offsetPagesState);
   const [readingDirection, setReadingDirection] = useRecoilState(
     settingStates.readingDirectionState
   );
   const trackerAutoUpdate = useRecoilValue(settingStates.trackerAutoUpdateState);
   const discordPresenceEnabled = useRecoilValue(settingStates.discordPresenceEnabledState);
-  const offsetDoubleSpreadsState = useRecoilValue(settingStates.offsetDoubleSpreadsState);
   const chapterLanguages = useRecoilValue(settingStates.chapterLanguagesState);
   const keyPreviousPage = useRecoilValue(settingStates.keyPreviousPageState);
   const keyFirstPage = useRecoilValue(settingStates.keyFirstPageState);
@@ -391,11 +392,15 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
             const pageNum = parseInt(imgKey, 10);
             const isSpread = img.width > img.height;
 
-            if (offsetDoubleSpreadsState && isSpread) {
+            const canOffset =
+              offsetPages === OffsetPages.All ||
+              (offsetPages === OffsetPages.First && pageNum === 1);
+
+            if (canOffset && isSpread) {
               nextForcedSpread = pageNum + 1;
             }
 
-            if (isSpread || (offsetDoubleSpreadsState && nextForcedSpread === pageNum)) {
+            if (isSpread || (canOffset && nextForcedSpread === pageNum)) {
               if (tempPageGroup.length > 0) {
                 newPageGroupList.push(tempPageGroup);
               }
@@ -434,7 +439,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     );
     Mousetrap.bind(keyTogglePageStyle, () => setPageStyle(nextPageStyle(pageStyle)));
     Mousetrap.bind(keyToggleOffsetDoubleSpreads, () =>
-      setOffsetDoubleSpreads(!offsetDoubleSpreads)
+      setOffsetPages(nextOffsetPages(offsetPages))
     );
     Mousetrap.bind(keyToggleShowingSettingsModal, () =>
       setShowingSettingsModal(!showingSettingsModal)
@@ -453,7 +458,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     updatePageGroupList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offsetDoubleSpreadsState]);
+  }, [offsetPages]);
 
   useEffect(() => {
     // mark the chapter as read if past a certain page threshold
@@ -505,6 +510,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     pageNumber,
     lastPageNumber,
     pageGroupList,
+    offsetPages,
   ]);
 
   useEffect(() => {

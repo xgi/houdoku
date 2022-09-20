@@ -13,6 +13,7 @@ import {
   IntegrationSetting,
   LibrarySort,
   LibraryView,
+  OffsetPages,
   PageStyle,
   ProgressFilter,
   ReaderSetting,
@@ -91,7 +92,7 @@ export const keyToggleOffsetDoubleSpreadsState = atomFromSetting<string>(ReaderS
 export const keyExitState = atomFromSetting<string>(ReaderSetting.KeyExit);
 export const keyCloseOrBackState = atomFromSetting<string>(ReaderSetting.KeyCloseOrBack);
 export const longStripMarginState = atomFromSetting<boolean>(ReaderSetting.LongStripMargin);
-export const offsetDoubleSpreadsState = atomFromSetting<boolean>(ReaderSetting.OffsetDoubleSpreads);
+export const offsetPagesState = atomFromSetting<OffsetPages>(ReaderSetting.OffsetPages);
 export const optimizeContrastState = atomFromSetting<boolean>(ReaderSetting.OptimizeContrast);
 
 export const trackerAutoUpdateState = atomFromSetting<boolean>(TrackerSetting.TrackerAutoUpdate);

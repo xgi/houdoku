@@ -8,6 +8,7 @@ import {
   SettingTypes,
   ReadingDirection,
   PageStyle,
+  OffsetPages,
 } from '../../models/types';
 import persistantStore from '../../util/persistantStore';
 import storeKeys from '../../constants/storeKeys.json';
@@ -102,4 +103,12 @@ export function nextPageStyle(pageStyle: PageStyle): PageStyle {
     [PageStyle.Double]: PageStyle.LongStrip,
     [PageStyle.LongStrip]: PageStyle.Single,
   }[pageStyle];
+}
+
+export function nextOffsetPages(offsetPages: OffsetPages): OffsetPages {
+  return {
+    [OffsetPages.All]: OffsetPages.None,
+    [OffsetPages.None]: OffsetPages.First,
+    [OffsetPages.First]: OffsetPages.All,
+  }[offsetPages];
 }

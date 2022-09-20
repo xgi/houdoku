@@ -10,6 +10,7 @@ import {
   Button,
   Collapse,
   Group,
+  Radio,
 } from '@mantine/core';
 import {
   IconArrowBigLeft,
@@ -18,7 +19,13 @@ import {
   IconFile,
   IconSpacingVertical,
 } from '@tabler/icons';
-import { ReadingDirection, PageStyle, ReaderSetting, DefaultSettings } from '../../models/types';
+import {
+  ReadingDirection,
+  PageStyle,
+  ReaderSetting,
+  DefaultSettings,
+  OffsetPages,
+} from '../../models/types';
 import {
   fitContainToHeightState,
   fitContainToWidthState,
@@ -38,7 +45,7 @@ import {
   pageStyleState,
   readingDirectionState,
   longStripMarginState,
-  offsetDoubleSpreadsState,
+  offsetPagesState,
   optimizeContrastState,
   keyToggleOffsetDoubleSpreadsState,
 } from '../../state/settingStates';
@@ -75,7 +82,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [keyExit, setKeyExit] = useRecoilState(keyExitState);
   const [keyCloseOrBack, setKeyCloseOrBack] = useRecoilState(keyCloseOrBackState);
   const [longStripMargin, setLongStripMargin] = useRecoilState(longStripMarginState);
-  const [offsetDoubleSpreads, setOffsetDoubleSpreads] = useRecoilState(offsetDoubleSpreadsState);
+  const [offsetPages, setOffsetPages] = useRecoilState(offsetPagesState);
   const [optimizeContrast, setOptimizeContrast] = useRecoilState(optimizeContrastState);
 
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
@@ -137,8 +144,8 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.LongStripMargin:
         setLongStripMargin(value);
         break;
-      case ReaderSetting.OffsetDoubleSpreads:
-        setOffsetDoubleSpreads(value);
+      case ReaderSetting.OffsetPages:
+        setOffsetPages(value);
         break;
       case ReaderSetting.OptimizeContrast:
         setOptimizeContrast(value);
@@ -212,21 +219,44 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       <Checkbox
         label="Long strip margin"
         ml="sm"
-        pb="xs"
         disabled={pageStyle !== PageStyle.LongStrip}
         checked={longStripMargin}
         onChange={(e) => updateReaderSetting(ReaderSetting.LongStripMargin, e.target.checked)}
       />
-      <Checkbox
+      <Radio.Group
+        ml="sm"
+        pb="sm"
+        value={offsetPages}
+        onChange={(value: OffsetPages) => setOffsetPages(value)}
+      >
+        <Radio
+          value={OffsetPages.First}
+          label="Offset first page"
+          disabled={pageStyle !== PageStyle.Double}
+        />
+        <Radio
+          value={OffsetPages.All}
+          label="Offset all"
+          disabled={pageStyle !== PageStyle.Double}
+        />
+        <Radio
+          value={OffsetPages.None}
+          label="No offset"
+          disabled={pageStyle !== PageStyle.Double}
+        />
+      </Radio.Group>
+
+      {/* <Checkbox
         label="Offset double spreads"
         ml="sm"
         disabled={pageStyle !== PageStyle.Double}
-        checked={offsetDoubleSpreads}
-        onChange={(e) => updateReaderSetting(ReaderSetting.OffsetDoubleSpreads, e.target.checked)}
-      />
+        checked={offsetPages}
+        onChange={(e) => updateReaderSetting(ReaderSetting.OffsetPages, e.target.checked)}
+      /> */}
 
-      <Text pt="sm">Reading Direction</Text>
+      <Text>Reading Direction</Text>
       <SegmentedControl
+        pb="sm"
         data={[
           {
             value: ReadingDirection.LeftToRight,
@@ -269,7 +299,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       <Checkbox
         label="Stretch small pages"
         ml="sm"
-        pb="xs"
+        pb="sm"
         disabled={!(fitContainToHeight || fitContainToWidth)}
         checked={fitStretch}
         onChange={(e) => updateReaderSetting(ReaderSetting.FitStretch, e.target.checked)}
@@ -279,7 +309,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       <Checkbox
         label="Optimize image contrast"
         ml="sm"
-        pb="xs"
+        pb="sm"
         checked={optimizeContrast}
         onChange={(e) => updateReaderSetting(ReaderSetting.OptimizeContrast, e.target.checked)}
       />

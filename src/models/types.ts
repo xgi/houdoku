@@ -120,7 +120,7 @@ export enum ReaderSetting {
   KeyExit = 'KeyExit',
   KeyCloseOrBack = 'KeyCloseOrBack',
   LongStripMargin = 'LongStripMargin',
-  OffsetDoubleSpreads = 'OffsetDoubleSpreads',
+  OffsetPages = 'OffsetPages',
   OptimizeContrast = 'OptimizeContrast',
   KeyToggleOffsetDoubleSpreads = 'KeyToggleOffsetDoubleSpreads',
 }
@@ -142,6 +142,12 @@ export enum PageStyle {
   Single = 'Single',
   Double = 'Double',
   LongStrip = 'LongStrip',
+}
+
+export enum OffsetPages {
+  All = 'All',
+  First = 'First',
+  None = 'None',
 }
 
 export enum TableColumnSortOrder {
@@ -179,7 +185,7 @@ export const SettingTypes = {
   [ReaderSetting.OverlayPageNumber]: SettingType.BOOLEAN,
   [ReaderSetting.HideScrollbar]: SettingType.BOOLEAN,
   [ReaderSetting.LongStripMargin]: SettingType.BOOLEAN,
-  [ReaderSetting.OffsetDoubleSpreads]: SettingType.BOOLEAN,
+  [ReaderSetting.OffsetPages]: SettingType.STRING,
   [ReaderSetting.OptimizeContrast]: SettingType.BOOLEAN,
   [ReaderSetting.KeyPreviousPage]: SettingType.STRING,
   [ReaderSetting.KeyFirstPage]: SettingType.STRING,
@@ -226,7 +232,7 @@ export const DefaultSettings = {
   [ReaderSetting.OverlayPageNumber]: false,
   [ReaderSetting.HideScrollbar]: false,
   [ReaderSetting.LongStripMargin]: false,
-  [ReaderSetting.OffsetDoubleSpreads]: false,
+  [ReaderSetting.OffsetPages]: OffsetPages.None,
   [ReaderSetting.OptimizeContrast]: false,
   [ReaderSetting.KeyPreviousPage]: 'left',
   [ReaderSetting.KeyFirstPage]: 'ctrl+left',

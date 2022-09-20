@@ -35,8 +35,9 @@ const ExtensionImage: React.FC<Props> = (props: Props) => {
           .then((data) => {
             if (typeof data === 'string') {
               setResolvedUrl(data);
+            } else {
+              setResolvedUrl(URL.createObjectURL(new Blob([data])));
             }
-            setResolvedUrl(URL.createObjectURL(new Blob([data])));
           })
           .catch((e) => log.error(e));
       } else {

@@ -17,13 +17,14 @@ import {
   IconChevronsRight,
   IconCircleOff,
   IconFile,
+  IconLetterF,
   IconSettings,
   IconSpacingVertical,
   IconX,
 } from '@tabler/icons';
 import { Box, Button, Center, Group, MantineTheme, Menu, ScrollArea } from '@mantine/core';
 import styles from './ReaderHeader.css';
-import { ReadingDirection, PageStyle } from '../../models/types';
+import { ReadingDirection, PageStyle, OffsetPages } from '../../models/types';
 import {
   chapterState,
   lastPageNumberState,
@@ -36,11 +37,15 @@ import {
   fitContainToHeightState,
   fitContainToWidthState,
   fitStretchState,
-  offsetDoubleSpreadsState,
+  offsetPagesState,
   pageStyleState,
   readingDirectionState,
 } from '../../state/settingStates';
-import { nextPageStyle, nextReadingDirection } from '../../features/settings/utils';
+import {
+  nextOffsetPages,
+  nextPageStyle,
+  nextReadingDirection,
+} from '../../features/settings/utils';
 
 const TEXT_PAGE_STYLE = {
   [PageStyle.Single]: 'Single Page',
@@ -64,6 +69,18 @@ const ICONS_READING_DIRECTION = {
   [ReadingDirection.RightToLeft]: <IconArrowBigLeft size={14} />,
 };
 
+const TEXT_OFFSET_PAGES = {
+  [OffsetPages.All]: 'Offset All',
+  [OffsetPages.First]: 'Offset First',
+  [OffsetPages.None]: 'No Offset',
+};
+
+const ICONS_OFFSET_PAGES = {
+  [OffsetPages.All]: <IconCheck size={14} />,
+  [OffsetPages.First]: <IconLetterF size={14} />,
+  [OffsetPages.None]: <IconX size={14} />,
+};
+
 type Props = {
   changePage: (left: boolean, toBound?: boolean) => void;
   setChapter: (id: string) => void;
@@ -84,7 +101,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
   const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
   const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
-  const [offsetDoubleSpreads, setOffsetDoubleSpreads] = useRecoilState(offsetDoubleSpreadsState);
+  const [offsetPages, setOffsetPages] = useRecoilState(offsetPagesState);
 
   const buttonStyles = (theme: MantineTheme) => ({
     root: {
@@ -327,10 +344,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
               compact
               styles={buttonStyles}
               radius={0}
-              leftIcon={offsetDoubleSpreads ? <IconCheck size={14} /> : <IconX size={14} />}
-              onClick={() => setOffsetDoubleSpreads(!offsetDoubleSpreads)}
+              leftIcon={ICONS_OFFSET_PAGES[offsetPages]}
+              onClick={() => setOffsetPages(nextOffsetPages(offsetPages))}
             >
-              Offset Spreads
+              {TEXT_OFFSET_PAGES[offsetPages]}
             </Button>
           ) : (
             ''
