@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { SettingType } from 'houdoku-extension-lib';
-import { Button, Group, Modal, Switch, Text } from '@mantine/core';
+import { Button, Group, Input, Modal, Switch, Text } from '@mantine/core';
 import ipcChannels from '../../constants/ipcChannels.json';
 import storeKeys from '../../constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
@@ -55,6 +55,13 @@ const ExtensionSettingsModal: React.FC<Props> = (props: Props) => {
     switch (settingType) {
       case SettingType.BOOLEAN:
         return <Switch defaultChecked={curVal} onChange={(e) => onChangeFn(e.target.checked)} />;
+      case SettingType.STRING:
+        return (
+          <Input
+            value={curVal}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeFn(e.target.value)}
+          />
+        );
       default:
         return <></>;
     }
