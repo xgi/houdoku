@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import fs from 'fs';
@@ -169,32 +170,22 @@ class DownloaderClient {
       let i = startPage;
       for (i; i <= pageUrls.length && this.running; i += 1) {
         const pageUrl = pageUrls[i - 1];
-        const ext = pageUrl.split('.').pop()?.split('?v')[0];
+        const extMatch = pageUrl.match(/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i);
+        const ext = extMatch ? extMatch[1] : 'jpg';
         const pageNumPadded = String(i).padStart(pageUrls.length.toString().length, '0');
         const pagePath = path.join(chapterPath, `${pageNumPadded}.${ext}`);
 
-        // eslint-disable-next-line no-await-in-loop
-        await fetch(pageUrl)
-          .then((response) => response.arrayBuffer())
-          // eslint-disable-next-line promise/always-return
-          .then((buffer) => {
-            fs.writeFile(pagePath, Buffer.from(buffer), (err) => {
-              if (err)
-                this._handleDownloadError({
-                  chapter: task.chapter,
-                  series: task.series,
-                  errorStr: `${err.name}: ${err.message}`,
-                } as DownloadError);
-            });
-          })
-          .catch((err: Error) => {
-            this._handleDownloadError({
-              chapter: task.chapter,
-              series: task.series,
-              errorStr: `${err.name}: ${err.message}`,
-            } as DownloadError);
+        const arrayBuffer: ArrayBuffer = await ipcRenderer
+          .invoke(ipcChannels.EXTENSION.GET_IMAGE, task.series.extensionId, task.series, pageUrl)
+          .then(async (data) => {
+            if (typeof data === 'string') {
+              // eslint-disable-next-line promise/no-nesting
+              return fetch(pageUrl).then((response) => response.arrayBuffer());
+            }
+            return data;
           });
 
+        fs.writeFileSync(pagePath, Buffer.from(arrayBuffer));
         this.setCurrentTask({
           series: task.series,
           chapter: task.chapter,
