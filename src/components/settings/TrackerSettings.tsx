@@ -8,12 +8,13 @@ import {
   Button,
   Group,
   Code,
-  Stepper,
   Alert,
   Grid,
   Switch,
   Input,
   Loader,
+  Box,
+  Timeline,
 } from '@mantine/core';
 import { IconExternalLink, IconInfoCircle } from '@tabler/icons';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -130,71 +131,75 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
 
       <Accordion chevronPosition="left" mx="auto" pt="sm">
         {[AniListTrackerMetadata, MALTrackerMetadata].map((trackerMetadata) => (
-          <Accordion.Item value={trackerMetadata.id}>
-            <Accordion.Control>
-              <Group position="apart">
-                <Text>{trackerMetadata.name}</Text>
-                {usernames[trackerMetadata.id] ? (
-                  <Group position="right">
-                    <Text>
-                      Logged in as <Code>{usernames[trackerMetadata.id]}</Code>
-                    </Text>
-                    <Button
-                      compact
-                      color="red"
-                      radius={0}
-                      onClick={(e: any) => {
-                        e.stopPropagation();
-                        saveAccessToken(trackerMetadata.id, '');
-                      }}
-                    >
-                      Unlink
-                    </Button>
-                  </Group>
-                ) : (
-                  <Text>Not logged in.</Text>
-                )}
-              </Group>
-            </Accordion.Control>
+          <Accordion.Item value={trackerMetadata.id} key={trackerMetadata.id}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Accordion.Control>
+                <Group position="apart">
+                  <Text>{trackerMetadata.name}</Text>
+                  {usernames[trackerMetadata.id] ? (
+                    <Group position="right">
+                      <Text>
+                        Logged in as <Code>{usernames[trackerMetadata.id]}</Code>
+                      </Text>
+                    </Group>
+                  ) : (
+                    <Text>Not logged in.</Text>
+                  )}
+                </Group>
+              </Accordion.Control>
+              {usernames[trackerMetadata.id] ? (
+                <Button
+                  ml="xs"
+                  compact
+                  color="red"
+                  radius={0}
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    saveAccessToken(trackerMetadata.id, '');
+                  }}
+                >
+                  Unlink
+                </Button>
+              ) : undefined}
+            </Box>
+
             <Accordion.Panel>
-              <Stepper active={-1} orientation="vertical">
-                <Stepper.Step
-                  label={
-                    <Button
-                      variant="default"
-                      leftIcon={<IconExternalLink />}
-                      onClick={() => shell.openExternal(authUrls[trackerMetadata.id])}
-                    >
-                      Authenticate on {trackerMetadata.name}
-                    </Button>
-                  }
-                />
-                <Stepper.Step
-                  label={
-                    <Input
-                      placeholder="Paste access code..."
-                      value={accessCodes[trackerMetadata.id]}
-                      onChange={(e: any) =>
-                        setAccessCodes({
-                          ...accessCodes,
-                          [trackerMetadata.id]: e.target.value,
-                        })
-                      }
-                    />
-                  }
-                />
-                <Stepper.Step
-                  label={
-                    <Button
-                      onClick={() =>
-                        submitAccessCode(trackerMetadata.id, accessCodes[trackerMetadata.id])
-                      }
-                    >
-                      Submit
-                    </Button>
-                  }
-                />
-              </Stepper>
+              <Timeline active={-1} bulletSize={36} lineWidth={2} mt="sm">
+                <Timeline.Item bullet={1}>
+                  <Button
+                    ml="sm"
+                    variant="default"
+                    leftIcon={<IconExternalLink />}
+                    onClick={() => shell.openExternal(authUrls[trackerMetadata.id])}
+                  >
+                    Authenticate on {trackerMetadata.name}
+                  </Button>
+                </Timeline.Item>
+                <Timeline.Item bullet={2}>
+                  <Input
+                    ml="sm"
+                    style={{ maxWidth: 280 }}
+                    placeholder="Paste access code..."
+                    value={accessCodes[trackerMetadata.id] || ''}
+                    onChange={(e: any) =>
+                      setAccessCodes({
+                        ...accessCodes,
+                        [trackerMetadata.id]: e.target.value,
+                      })
+                    }
+                  />
+                </Timeline.Item>
+                <Timeline.Item bullet={3}>
+                  <Button
+                    ml="sm"
+                    onClick={() =>
+                      submitAccessCode(trackerMetadata.id, accessCodes[trackerMetadata.id])
+                    }
+                  >
+                    Submit
+                  </Button>
+                </Timeline.Item>
+              </Timeline>
             </Accordion.Panel>
           </Accordion.Item>
         ))}
