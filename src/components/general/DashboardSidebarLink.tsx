@@ -1,6 +1,6 @@
 import React from 'react';
 import { Group, ThemeIcon, UnstyledButton, Text } from '@mantine/core';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   icon: React.ReactNode;
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const DashboardSidebarLink: React.FC<Props> = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <UnstyledButton
@@ -26,7 +26,7 @@ const DashboardSidebarLink: React.FC<Props> = (props: Props) => {
             theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
         },
       })}
-      onClick={() => history.push(props.route)}
+      onClick={() => navigate(props.route)}
     >
       <Group>
         <ThemeIcon color={props.color} variant="light">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Chapter, Series } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal } from '@mantine/core';
 import {
@@ -37,7 +37,7 @@ type Props = {
 };
 
 const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const setChapterList = useSetRecoilState(chapterListState);
   const setSeries = useSetRecoilState(seriesState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
@@ -68,7 +68,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   const handleRead = () => {
     props.close();
     if (props.chapter !== undefined) {
-      history.push(`${routes.READER}/${props.series.id}/${props.chapter.id}`);
+      navigate(`${routes.READER}/${props.series.id}/${props.chapter.id}`);
     }
   };
 

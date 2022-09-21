@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Series } from 'houdoku-extension-lib';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { Menu, Portal } from '@mantine/core';
 import { IconTrash, IconEye } from '@tabler/icons';
@@ -19,7 +19,7 @@ type Props = {
 };
 
 const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const setSeriesList = useSetRecoilState(seriesListState);
 
   let { x, y } = props.position;
@@ -32,7 +32,7 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
 
   const viewFunc = () => {
     if (props.series) {
-      goToSeries(props.series, setSeriesList, history);
+      goToSeries(props.series, setSeriesList, navigate);
       props.close();
     }
   };

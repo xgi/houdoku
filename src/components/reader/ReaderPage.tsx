@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 import React, { useEffect } from 'react';
-import { useParams, useHistory, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
@@ -36,15 +36,15 @@ const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAUL
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-interface ParamTypes {
+type ParamTypes = {
   series_id: string;
   chapter_id: string;
-}
+};
 
 const ReaderPage: React.FC<Props> = (props: Props) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { series_id, chapter_id } = useParams<ParamTypes>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const setChapterList = useSetRecoilState(libraryStates.chapterListState);
   const setLibrarySeries = useSetRecoilState(libraryStates.seriesState);
@@ -242,7 +242,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setPageUrls([]);
     setLastPageNumber(0);
 
-    loadChapterData(id, series_id);
+    loadChapterData(id, series_id!);
   };
 
   /**
@@ -317,9 +317,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     }
 
     if (readerSeries !== undefined) {
-      history.push(`${routes.SERIES}/${readerSeries.id}`);
+      navigate(`${routes.SERIES}/${readerSeries.id}`);
     } else {
-      history.push(routes.LIBRARY);
+      navigate(routes.LIBRARY);
     }
   };
 
@@ -516,7 +516,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     addRootStyles();
     addKeybindings();
-    loadChapterData(chapter_id, series_id);
+    loadChapterData(chapter_id!, series_id!);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 

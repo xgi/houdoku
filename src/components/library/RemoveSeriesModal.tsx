@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from 'houdoku-extension-lib';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { ipcRenderer } from 'electron';
 import { Button, Checkbox, Group, Modal, Text } from '@mantine/core';
@@ -19,7 +19,7 @@ type Props = {
 };
 
 const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [deleteDownloads, setDeleteDownloads] = useState(false);
   const [dontAskAgain, setDontAskAgain] = useState(false);
   const setSeriesList = useSetRecoilState(seriesListState);
@@ -36,7 +36,7 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
       );
 
       if (dontAskAgain) setConfirmRemoveSeries(false);
-      history.push(routes.LIBRARY);
+      navigate(routes.LIBRARY);
     }
     props.close();
   };

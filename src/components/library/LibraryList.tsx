@@ -1,6 +1,6 @@
 import React from 'react';
 import { Series } from 'houdoku-extension-lib';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { ActionIcon, Badge, Button, Group, Table, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons';
@@ -13,11 +13,11 @@ type Props = {
 };
 
 const LibraryList: React.FC<Props> = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const setSeriesList = useSetRecoilState(seriesListState);
 
   const viewFunc = (series: Series) => {
-    goToSeries(series, setSeriesList, history);
+    goToSeries(series, setSeriesList, navigate);
   };
 
   const renderRows = () => {

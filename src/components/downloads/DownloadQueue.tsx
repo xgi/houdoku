@@ -61,6 +61,7 @@ const DownloadQueue: React.FC<Props> = (props: Props) => {
   const renderTask = (task: DownloadTask) => {
     return (
       <Box
+        key={`${task.series.id}-${task.chapter.id}`}
         mr="sm"
         p="xs"
         sx={(theme) => ({

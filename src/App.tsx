@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HashRouter as Router, Switch, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
@@ -258,17 +258,13 @@ export default function App() {
                 <AppLoading />
               ) : (
                 <Router>
-                  <Switch>
+                  <Routes>
                     <Route
                       path={`${routes.READER}/:series_id/:chapter_id`}
-                      exact
-                      component={ReaderPage}
+                      element={<ReaderPage />}
                     />
-                    <Route path={routes.SERIES} component={DashboardPage} />
-                    <Route path={routes.SEARCH} component={DashboardPage} />
-                    <Route path={routes.SETTINGS} component={DashboardPage} />
-                    <Route path={routes.LIBRARY} component={DashboardPage} />
-                  </Switch>
+                    <Route path="*" element={<DashboardPage />} />
+                  </Routes>
                 </Router>
               )}
             </NotificationsProvider>

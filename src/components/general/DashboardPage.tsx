@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import log from 'electron-log';
 import {
@@ -108,29 +108,15 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         },
       })}
     >
-      <Switch>
-        <Route path={`${routes.SERIES}/:id`} exact>
-          <SeriesDetails />
-        </Route>
-        <Route path={routes.SETTINGS} exact>
-          <Settings />
-        </Route>
-        <Route path={routes.ABOUT} exact>
-          <About />
-        </Route>
-        <Route path={routes.SEARCH} exact>
-          <Search />
-        </Route>
-        <Route path={routes.EXTENSIONS} exact>
-          <Extensions />
-        </Route>
-        <Route path={routes.DOWNLOADS} exact>
-          <Downloads />
-        </Route>
-        <Route path={routes.LIBRARY}>
-          <Library />
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path={`${routes.SERIES}/:id`} element={<SeriesDetails />} />
+        <Route path={`${routes.SETTINGS}/*`} element={<Settings />} />
+        <Route path={`${routes.ABOUT}/*`} element={<About />} />
+        <Route path={`${routes.SEARCH}/*`} element={<Search />} />
+        <Route path={`${routes.EXTENSIONS}/*`} element={<Extensions />} />
+        <Route path={`${routes.DOWNLOADS}/*`} element={<Downloads />} />
+        <Route path="*" element={<Library />} />
+      </Routes>
     </AppShell>
   );
 };

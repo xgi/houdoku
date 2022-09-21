@@ -5,7 +5,7 @@ import { ipcRenderer } from 'electron';
 import { Series } from 'houdoku-extension-lib';
 import { Overlay, SimpleGrid, Title } from '@mantine/core';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
 import constants from '../../constants/constants.json';
@@ -27,7 +27,7 @@ type Props = {
 };
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const setSeriesList = useSetRecoilState(seriesListState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
   const [showingContextMenu, setShowingContextMenu] = useState(false);
@@ -35,7 +35,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
   const viewFunc = (series: Series) => {
-    goToSeries(series, setSeriesList, history);
+    goToSeries(series, setSeriesList, navigate);
   };
 
   /**

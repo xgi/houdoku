@@ -344,7 +344,7 @@ export function migrateSeriesTags() {
 export async function goToSeries(
   series: Series,
   setSeriesList: SetterOrUpdater<Series[]>,
-  history: any
+  navigate: any
 ) {
   if (series.id !== undefined) {
     if (
@@ -354,16 +354,23 @@ export async function goToSeries(
       openConfirmModal({
         title: 'Extension not found',
         centered: true,
-        children: React.createElement(Text, { size: 'sm' }, [
-          'The extension for this series is not loaded. To view the series, please reinstall the extension. Or, you may remove the series from your library.',
-          React.createElement(Text, { color: 'dimmed' }, `(extension: ${series.extensionId})`),
-        ]),
+        children: (
+          <>
+            <Text>
+              The extension for this series is not loaded. To view the series, please reinstall the
+              extension. Or, you may remove the series from your library.
+            </Text>
+            <Text color="dimmed" mt="xs">
+              (extension: {series.extensionId})
+            </Text>
+          </>
+        ),
         labels: { confirm: 'Remove from library', cancel: 'Cancel' },
         confirmProps: { color: 'red' },
         onConfirm: () => removeSeries(series, setSeriesList),
       });
     } else {
-      history.push(`${routes.SERIES}/${series.id}`);
+      navigate(`${routes.SERIES}/${series.id}`);
     }
   }
 }
