@@ -15,6 +15,7 @@ import {
   Grid,
   Group,
   Image,
+  ScrollArea,
   Stack,
   Text,
   Title,
@@ -274,7 +275,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             </Title>
             <Text>{extensionMetadata?.name}</Text>
           </Group>
-          <Text lineClamp={4}>{series.description}</Text>
+          <ScrollArea style={{ height: 100 }}>{series.description}</ScrollArea>
         </Grid.Col>
       </Grid>
 
