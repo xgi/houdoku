@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Series } from 'houdoku-extension-lib';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { ScrollArea, Text } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
@@ -14,6 +14,7 @@ import {
 import LibraryGrid from './LibraryGrid';
 import RemoveSeriesModal from './RemoveSeriesModal';
 import LibraryList from './LibraryList';
+import library from '../../services/library';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
@@ -22,7 +23,7 @@ type Props = {};
 const Library: React.FC<Props> = (_props: Props) => {
   const [removeModalShowing, setRemoveModalShowing] = useState(false);
   const [removeModalSeries, setRemoveModalSeries] = useState<Series | null>(null);
-  const seriesList = useRecoilValue(seriesListState);
+  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const filter = useRecoilValue(filterState);
   const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
   const libraryFilterProgress = useRecoilValue(libraryFilterProgressState);
@@ -113,6 +114,8 @@ const Library: React.FC<Props> = (_props: Props) => {
       </Text>
     );
   };
+
+  useEffect(() => setSeriesList(library.fetchSeriesList()), [setSeriesList]);
 
   return (
     <>
