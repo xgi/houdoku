@@ -246,17 +246,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         />
       </Radio.Group>
 
-      {/* <Checkbox
-        label="Offset double spreads"
-        ml="sm"
-        disabled={pageStyle !== PageStyle.Double}
-        checked={offsetPages}
-        onChange={(e) => updateReaderSetting(ReaderSetting.OffsetPages, e.target.checked)}
-      /> */}
-
       <Text>Reading Direction</Text>
       <SegmentedControl
-        pb="sm"
+        mb="sm"
         data={[
           {
             value: ReadingDirection.LeftToRight,

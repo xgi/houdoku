@@ -198,7 +198,12 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
               <Accordion.Panel>
                 <Stack spacing={4}>
                   {chapterLists[series.id]
-                    .sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber))
+                    .sort(
+                      (a, b) =>
+                        parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber) ||
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        a.id!.localeCompare(b.id!)
+                    )
                     .reverse()
                     .map((chapter) => {
                       if (!chapter.id) return '';

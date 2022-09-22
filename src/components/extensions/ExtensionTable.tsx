@@ -176,6 +176,7 @@ const ExtensionTable: React.FC<Props> = (props: Props) => {
               )}
               {row.installedVersion === undefined ? (
                 <Button
+                  loading={installingExtensions.includes(row.pkgName)}
                   variant="default"
                   onClick={() => handleInstall(row.pkgName, row.friendlyName, row.availableVersion)}
                 >

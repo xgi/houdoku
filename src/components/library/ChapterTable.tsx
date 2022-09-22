@@ -116,16 +116,16 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         .sort((a, b) => {
           const volumeComp = {
             [TableColumnSortOrder.Ascending]:
-              parseInt(a.volumeNumber, 10) - parseInt(b.volumeNumber, 10),
+              parseFloat(a.volumeNumber) - parseFloat(b.volumeNumber),
             [TableColumnSortOrder.Descending]:
-              parseInt(b.volumeNumber, 10) - parseInt(a.volumeNumber, 10),
+              parseFloat(b.volumeNumber) - parseFloat(a.volumeNumber),
             [TableColumnSortOrder.None]: 0,
           }[chapterListVolOrder];
           const chapterComp = {
             [TableColumnSortOrder.Ascending]:
-              parseInt(a.chapterNumber, 10) - parseInt(b.chapterNumber, 10),
+              parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber),
             [TableColumnSortOrder.Descending]:
-              parseInt(b.chapterNumber, 10) - parseInt(a.chapterNumber, 10),
+              parseFloat(b.chapterNumber) - parseFloat(a.chapterNumber),
             [TableColumnSortOrder.None]: 0,
           }[chapterListChOrder];
 
