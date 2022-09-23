@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ExtensionMetadata, Series, SeriesListResponse } from 'houdoku-extension-lib';
+import { ExtensionMetadata, FilterOption, Series, SeriesListResponse } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -15,6 +15,7 @@ import {
   addModalEditableState,
   addModalSeriesState,
   curViewingPageState,
+  filterValuesMapState,
   nextSourcePageState,
   searchExtensionState,
   searchParamsState,
@@ -24,6 +25,7 @@ import {
 import { libraryColumnsState } from '../../state/settingStates';
 import SearchGrid from './SearchGrid';
 import SearchControlBar from './SearchControlBar';
+import SearchFilterDrawer from './SearchFilterDrawer';
 
 export type SearchParams = {
   text?: string;
@@ -38,6 +40,7 @@ const Search: React.FC<Props> = (_props: Props) => {
   const [loading, setLoading] = useState(false);
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
   const [searchParams, setSearchParams] = useRecoilState(searchParamsState);
+  const [filterValuesMap, setFilterValuesMap] = useRecoilState(filterValuesMapState);
   const [curViewingPage, setCurViewingPage] = useRecoilState(curViewingPageState);
   const [nextSourcePage, setNextSourcePage] = useRecoilState(nextSourcePageState);
   const [searchResult, setSearchResult] = useRecoilState(searchResultState);
@@ -47,6 +50,7 @@ const Search: React.FC<Props> = (_props: Props) => {
   const [addModalSeries, setAddModalSeries] = useRecoilState(addModalSeriesState);
   const [addModalEditable, setAddModalEditable] = useRecoilState(addModalEditableState);
   const [showingAddModal, setShowingAddModal] = useRecoilState(showingAddModalState);
+  const [filterOptions, setFilterOptions] = useState<FilterOption[]>([]);
 
   const getPageSize = (columns: number) => {
     return (
@@ -78,8 +82,19 @@ const Search: React.FC<Props> = (_props: Props) => {
 
     const respPromise =
       !params.text || params.text.length === 0
-        ? ipcRenderer.invoke(ipcChannels.EXTENSION.DIRECTORY, searchExtension, page)
-        : ipcRenderer.invoke(ipcChannels.EXTENSION.SEARCH, searchExtension, params.text, page);
+        ? ipcRenderer.invoke(
+            ipcChannels.EXTENSION.DIRECTORY,
+            searchExtension,
+            page,
+            filterValuesMap[searchExtension]
+          )
+        : ipcRenderer.invoke(
+            ipcChannels.EXTENSION.SEARCH,
+            searchExtension,
+            params.text,
+            page,
+            filterValuesMap[searchExtension]
+          );
 
     await respPromise
       .then((resp: SeriesListResponse) => {
@@ -190,6 +205,17 @@ const Search: React.FC<Props> = (_props: Props) => {
     ipcRenderer
       .invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL)
       .then((list: ExtensionMetadata[]) => setExtensionList(list))
+      .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION.GET_FILTER_OPTIONS, searchExtension))
+      .then((opts: FilterOption[]) => {
+        setFilterValuesMap({
+          ...filterValuesMap,
+          [searchExtension]: {
+            ...Object.fromEntries(opts.map((opt) => [opt.id, opt.defaultValue])),
+            ...filterValuesMap[searchExtension],
+          },
+        });
+        setFilterOptions(opts);
+      })
       .then(() => handleSearch(searchParams))
       .catch((err: Error) => log.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -208,6 +234,7 @@ const Search: React.FC<Props> = (_props: Props) => {
           setAddModalEditable(false);
         }}
       />
+      <SearchFilterDrawer filterOptions={filterOptions} />
       <SearchControlBar
         extensionList={extensionList}
         handleSearch={handleSearch}

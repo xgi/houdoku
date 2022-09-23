@@ -7,6 +7,8 @@ import {
   SettingType,
   ExtensionMetadata,
   SeriesListResponse,
+  FilterValues,
+  FilterOption,
 } from 'houdoku-extension-lib';
 import aki, { RegistrySearchPackage, RegistrySearchResults } from 'aki-plugin-manager';
 import { IpcMain } from 'electron';
@@ -205,28 +207,18 @@ async function getImage(
  * are utilized at the extension's discretion
  * @returns promise for SeriesListResponse
  */
-function search(extensionId: string, text: string, page: number): Promise<SeriesListResponse> {
+function search(
+  extensionId: string,
+  text: string,
+  page: number,
+  filterValues: FilterValues
+): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
     `Searching for "${text}" from extension ${extensionId} (v=${extension.getMetadata().version})`
   );
 
-  let adjustedText: string = text;
-
-  const paramsRegExp = /\S*:\S*/g;
-  const matchParams: RegExpMatchArray | null = text.match(paramsRegExp);
-
-  let params: { [key: string]: string } = {};
-  if (matchParams !== null) {
-    matchParams.forEach((match: string) => {
-      const parts: string[] = match.split(':');
-      params = { [parts[0]]: parts[1], ...params };
-    });
-
-    adjustedText = text.replace(paramsRegExp, '');
-  }
-
-  return extension.getSearch(adjustedText, params, page).catch((err: Error) => {
+  return extension.getSearch(text, page, filterValues).catch((err: Error) => {
     log.error(err);
     return { seriesList: [], hasMore: false };
   });
@@ -238,13 +230,17 @@ function search(extensionId: string, text: string, page: number): Promise<Series
  * @param extensionId
  * @returns promise for SeriesListResponse
  */
-function directory(extensionId: string, page: number): Promise<SeriesListResponse> {
+function directory(
+  extensionId: string,
+  page: number,
+  filterValues: FilterValues
+): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
     `Getting directory from extension ${extensionId} (v=${extension.getMetadata().version})`
   );
 
-  return extension.getDirectory(page).catch((err: Error) => {
+  return extension.getDirectory(page, filterValues).catch((err: Error) => {
     log.error(err);
     return { seriesList: [], hasMore: false };
   });
@@ -302,6 +298,25 @@ function setSettings(extensionId: string, settings: { [key: string]: unknown }):
     extension.setSettings(settings);
   } catch (err) {
     log.error(err);
+  }
+}
+
+/**
+ * Get an extension's filter options.
+ *
+ * @returns List[FilterOption]
+ */
+function getFilterOptions(extensionId: string): FilterOption[] {
+  const extension = EXTENSION_CLIENTS[extensionId];
+  // log.info(
+  //   `Getting filter options from extension ${extensionId} (v=${extension.getMetadata().version})`
+  // );
+
+  try {
+    return extension.getFilterOptions();
+  } catch (err) {
+    log.error(err);
+    return [];
   }
 }
 
@@ -403,13 +418,16 @@ export const createExtensionIpcHandlers = (
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.SEARCH,
-    (_event, extensionId: string, text: string, page: number) => {
-      return search(extensionId, text, page);
+    (_event, extensionId: string, text: string, page: number, filterValues: FilterValues) => {
+      return search(extensionId, text, page, filterValues);
     }
   );
-  ipcMain.handle(ipcChannels.EXTENSION.DIRECTORY, (_event, extensionId: string, page: number) => {
-    return directory(extensionId, page);
-  });
+  ipcMain.handle(
+    ipcChannels.EXTENSION.DIRECTORY,
+    (_event, extensionId: string, page: number, filterValues: FilterValues) => {
+      return directory(extensionId, page, filterValues);
+    }
+  );
   ipcMain.handle(ipcChannels.EXTENSION.GET_SETTING_TYPES, (_event, extensionId: string) => {
     return getSettingTypes(extensionId);
   });
@@ -422,4 +440,7 @@ export const createExtensionIpcHandlers = (
       return setSettings(extensionId, settings);
     }
   );
+  ipcMain.handle(ipcChannels.EXTENSION.GET_FILTER_OPTIONS, (_event, extensionId: string) => {
+    return getFilterOptions(extensionId);
+  });
 };

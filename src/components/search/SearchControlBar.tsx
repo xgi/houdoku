@@ -1,11 +1,15 @@
 /* eslint-disable react/jsx-boolean-value */
 import React from 'react';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
-import { useRecoilState } from 'recoil';
-import { Button, Group, Input, Select } from '@mantine/core';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { Button, Group, Indicator, Input, Select } from '@mantine/core';
 import { ipcRenderer } from 'electron';
 import { SearchParams } from '../../models/types';
-import { searchExtensionState, searchParamsState } from '../../state/searchStates';
+import {
+  searchExtensionState,
+  searchParamsState,
+  showingFilterDrawerState,
+} from '../../state/searchStates';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 
@@ -18,6 +22,7 @@ interface Props {
 const SearchControlBar: React.FC<Props> = (props: Props) => {
   const [searchExtension, setSearchExtension] = useRecoilState(searchExtensionState);
   const [searchParams, setSearchParams] = useRecoilState(searchParamsState);
+  const setShowingFilterDrawer = useSetRecoilState(showingFilterDrawerState);
 
   const renderSearchControls = () => {
     if (searchExtension === FS_METADATA.id) {
@@ -52,6 +57,9 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
           }}
         />
         <Button onClick={() => props.handleSearch(searchParams)}>Search</Button>
+        <Button variant="default" onClick={() => setShowingFilterDrawer(true)}>
+          Options
+        </Button>
       </>
     );
   };

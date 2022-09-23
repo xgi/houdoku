@@ -1,4 +1,4 @@
-import { Series } from 'houdoku-extension-lib';
+import { Series, FilterValues } from 'houdoku-extension-lib';
 import { atom } from 'recoil';
 import { SearchParams, SearchResult } from '../models/types';
 import { FS_METADATA } from '../services/extensions/filesystem';
@@ -41,4 +41,14 @@ export const curViewingPageState = atom({
 export const nextSourcePageState = atom({
   key: 'searchNextSourcePageState',
   default: 1,
+});
+
+export const showingFilterDrawerState = atom({
+  key: 'searchShowingFilterDrawerState',
+  default: false,
+});
+
+export const filterValuesMapState = atom<{ [extensionId: string]: FilterValues }>({
+  key: 'searchFilterValuesMapState',
+  default: {},
 });
