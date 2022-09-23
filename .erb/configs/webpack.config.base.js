@@ -4,11 +4,9 @@
 
 import path from 'path';
 import webpack from 'webpack';
-import { dependencies } from '../../src/package.json';
 
 export default {
   externals: [
-    ...Object.keys(dependencies || {}),
     {
       'electron-debug': 'electron-debug',
       'utf-8-validate': 'utf-8-validate',

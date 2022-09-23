@@ -3,7 +3,7 @@ import log from 'electron-log';
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { v4 as uuidv4 } from 'uuid';
 import ipcChannels from '../constants/ipcChannels.json';
-import packageJson from '../package.json';
+import packageJson from '../../package.json';
 
 // eslint-disable-next-line import/prefer-default-export
 export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
