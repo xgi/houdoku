@@ -2,9 +2,8 @@
 import React from 'react';
 import { ExtensionMetadata } from 'houdoku-extension-lib';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { Button, Group, Indicator, Input, Select } from '@mantine/core';
+import { Button, Group, Input, Select } from '@mantine/core';
 import { ipcRenderer } from 'electron';
-import { SearchParams } from '../../models/types';
 import {
   searchExtensionState,
   searchParamsState,
@@ -15,7 +14,7 @@ import ipcChannels from '../../constants/ipcChannels.json';
 
 interface Props {
   extensionList: ExtensionMetadata[];
-  handleSearch: (params: SearchParams, page?: number, loadingMore?: boolean) => void;
+  handleSearch: (page?: number, loadingMore?: boolean) => void;
   handleSearchFilesystem: (path: string) => void;
 }
 
@@ -53,10 +52,10 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
             setSearchParams({ ...searchParams, text: e.target.value })
           }
           onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === 'Enter') props.handleSearch(searchParams);
+            if (e.key === 'Enter') props.handleSearch();
           }}
         />
-        <Button onClick={() => props.handleSearch(searchParams)}>Search</Button>
+        <Button onClick={() => props.handleSearch()}>Search</Button>
         <Button variant="default" onClick={() => setShowingFilterDrawer(true)}>
           Options
         </Button>

@@ -1,0 +1,13 @@
+{
+  "name": "houdoku",
+  "productName": "Houdoku",
+  "version": "2.10.1",
+  "description": "Manga reader and library manager for the desktop",
+  "main": "./main.prod.js",
+  "author": {
+    "name": "Jake Robertson",
+    "email": "jake@faltro.com",
+    "url": "https://faltro.com"
+  },
+  "license": "MIT"
+}

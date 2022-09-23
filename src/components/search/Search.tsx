@@ -73,7 +73,7 @@ const Search: React.FC<Props> = (_props: Props) => {
     );
   };
 
-  const handleSearch = async (params: SearchParams, page = 1, loadingMore = false) => {
+  const handleSearch = async (page = 1, loadingMore = false) => {
     setLoading(true);
     if (!loadingMore) {
       setSearchResult({ seriesList: [], hasMore: false });
@@ -81,19 +81,19 @@ const Search: React.FC<Props> = (_props: Props) => {
     }
 
     const respPromise =
-      !params.text || params.text.length === 0
+      !searchParams.text || searchParams.text.length === 0
         ? ipcRenderer.invoke(
             ipcChannels.EXTENSION.DIRECTORY,
             searchExtension,
             page,
-            filterValuesMap[searchExtension]
+            filterValuesMap[searchExtension] || {}
           )
         : ipcRenderer.invoke(
             ipcChannels.EXTENSION.SEARCH,
             searchExtension,
-            params.text,
+            searchParams.text,
             page,
-            filterValuesMap[searchExtension]
+            filterValuesMap[searchExtension] || {}
           );
 
     await respPromise
@@ -180,7 +180,7 @@ const Search: React.FC<Props> = (_props: Props) => {
                 searchResult.hasMore &&
                 searchResult.seriesList.length < (curViewingPage + 1) * getPageSize(libraryColumns)
               ) {
-                handleSearch(searchParams, nextSourcePage, true);
+                handleSearch(nextSourcePage, true);
               }
               setCurViewingPage(curViewingPage + 1);
             }}
@@ -216,7 +216,7 @@ const Search: React.FC<Props> = (_props: Props) => {
         });
         setFilterOptions(opts);
       })
-      .then(() => handleSearch(searchParams))
+      .then(() => handleSearch())
       .catch((err: Error) => log.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchExtension]);
@@ -234,7 +234,7 @@ const Search: React.FC<Props> = (_props: Props) => {
           setAddModalEditable(false);
         }}
       />
-      <SearchFilterDrawer filterOptions={filterOptions} />
+      <SearchFilterDrawer filterOptions={filterOptions} onClose={() => handleSearch()} />
       <SearchControlBar
         extensionList={extensionList}
         handleSearch={handleSearch}

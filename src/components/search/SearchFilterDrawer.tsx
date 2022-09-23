@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-boolean-value */
 import React from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -15,19 +14,29 @@ import {
   FilterCheckbox,
   FilterHeader,
   FilterInput,
+  FilterMultiToggle,
   FilterOption,
   FilterOptionType,
   FilterSelect,
   FilterSeparator,
+  FilterSort,
+  FilterSortValue,
+  FilterTriStateCheckbox,
+  MultiToggleValues,
+  TriState,
 } from 'houdoku-extension-lib';
 import {
   filterValuesMapState,
   searchExtensionState,
   showingFilterDrawerState,
 } from '../../state/searchStates';
+import SearchFilterMultiToggle from './filter/SearchFilterMultiToggle';
+import SearchFilterSort from './filter/SearchFilterSort';
+import SearchFilterTriCheckbox from './filter/SearchFilterTriCheckbox';
 
 interface Props {
   filterOptions: FilterOption[];
+  onClose?: () => void;
 }
 
 const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
@@ -59,6 +68,17 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const renderTriCheckbox = (option: FilterTriStateCheckbox) => {
+    return (
+      <SearchFilterTriCheckbox
+        key={option.id}
+        label={option.label}
+        value={getOptionValue(option) as TriState}
+        onChange={(value) => setOptionValue(option.id, value)}
+      />
+    );
+  };
+
   const renderInput = (option: FilterInput) => {
     return (
       <TextInput
@@ -77,7 +97,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
     return (
       <Select
         key={option.id}
-        label={option.label}
+        label={`${option.label}: ${getOptionValue(option) as string}`}
         value={getOptionValue(option) as string}
         data={option.options}
         onChange={(value: string) => setOptionValue(option.id, value)}
@@ -85,12 +105,42 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const renderMultiToggle = (option: FilterMultiToggle) => {
+    return (
+      <SearchFilterMultiToggle
+        key={option.id}
+        label={option.label}
+        canExclude={option.isTriState}
+        fields={option.fields || []}
+        values={getOptionValue(option) as MultiToggleValues}
+        onChange={(values) => setOptionValue(option.id, values)}
+      />
+    );
+  };
+
+  const renderSort = (option: FilterSort) => {
+    return (
+      <SearchFilterSort
+        key={option.id}
+        label={option.label}
+        supportsBothDirections={option.supportsBothDirections}
+        fields={option.fields || []}
+        value={getOptionValue(option) as FilterSortValue}
+        onChange={(value) => setOptionValue(option.id, value)}
+      />
+    );
+  };
+
   const renderHeader = (option: FilterHeader) => {
-    return <Title order={(option.order as TitleOrder) || 4}>{option.label}</Title>;
+    return (
+      <Title key={option.id} order={(option.order as TitleOrder) || 4}>
+        {option.label}
+      </Title>
+    );
   };
 
   const renderSeparator = (option: FilterSeparator) => {
-    return <Divider my="sm" />;
+    return <Divider key={option.id} my="sm" />;
   };
 
   const renderControls = () => {
@@ -98,10 +148,16 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
       switch (option.kind) {
         case FilterOptionType.Checkbox:
           return renderCheckbox(option as FilterCheckbox);
+        case FilterOptionType.TriStateCheckbox:
+          return renderTriCheckbox(option as FilterTriStateCheckbox);
         case FilterOptionType.Input:
           return renderInput(option as FilterInput);
         case FilterOptionType.Select:
           return renderSelect(option as FilterSelect);
+        case FilterOptionType.MultiToggle:
+          return renderMultiToggle(option as FilterMultiToggle);
+        case FilterOptionType.Sort:
+          return renderSort(option as FilterSort);
         case FilterOptionType.Header:
           return renderHeader(option as FilterHeader);
         case FilterOptionType.Separator:
@@ -115,7 +171,10 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
   return (
     <Drawer
       opened={showingFilterDrawer}
-      onClose={() => setShowingFilterDrawer(false)}
+      onClose={() => {
+        setShowingFilterDrawer(false);
+        if (props.onClose !== undefined) props.onClose();
+      }}
       position="right"
       padding="xl"
       title="Search Options"
