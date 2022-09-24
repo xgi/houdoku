@@ -53,10 +53,6 @@ export type TrackEntry = {
   status?: TrackStatus;
 };
 
-export type SearchParams = {
-  text?: string;
-};
-
 export type SearchResult = {
   seriesList: Series[];
   hasMore: boolean;

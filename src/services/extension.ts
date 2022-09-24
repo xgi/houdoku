@@ -215,7 +215,9 @@ function search(
 ): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
-    `Searching for "${text}" from extension ${extensionId} (v=${extension.getMetadata().version})`
+    `Searching for "${text}" page=${page} from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
   );
 
   return extension.getSearch(text, page, filterValues).catch((err: Error) => {
@@ -237,7 +239,9 @@ function directory(
 ): Promise<SeriesListResponse> {
   const extension = EXTENSION_CLIENTS[extensionId];
   log.info(
-    `Getting directory from extension ${extensionId} (v=${extension.getMetadata().version})`
+    `Getting directory page=${page} from extension ${extensionId} (v=${
+      extension.getMetadata().version
+    })`
   );
 
   return extension.getDirectory(page, filterValues).catch((err: Error) => {

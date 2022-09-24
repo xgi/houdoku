@@ -4,7 +4,7 @@ import { ExtensionMetadata, FilterOption, Series, SeriesListResponse } from 'hou
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Alert, Button, Center, ScrollArea, Text } from '@mantine/core';
+import { Alert, Text } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons';
 import { openModal } from '@mantine/modals';
 import AddSeriesModal from './AddSeriesModal';
@@ -14,22 +14,16 @@ import { seriesListState } from '../../state/libraryStates';
 import {
   addModalEditableState,
   addModalSeriesState,
-  curViewingPageState,
   filterValuesMapState,
   nextSourcePageState,
   searchExtensionState,
-  searchParamsState,
+  searchTextState,
   searchResultState,
   showingAddModalState,
 } from '../../state/searchStates';
-import { libraryColumnsState } from '../../state/settingStates';
 import SearchGrid from './SearchGrid';
 import SearchControlBar from './SearchControlBar';
 import SearchFilterDrawer from './SearchFilterDrawer';
-
-export type SearchParams = {
-  text?: string;
-};
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
@@ -39,29 +33,16 @@ const Search: React.FC<Props> = (_props: Props) => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
-  const [searchParams, setSearchParams] = useRecoilState(searchParamsState);
+  const [searchText, setSearchText] = useRecoilState(searchTextState);
   const [filterValuesMap, setFilterValuesMap] = useRecoilState(filterValuesMapState);
-  const [curViewingPage, setCurViewingPage] = useRecoilState(curViewingPageState);
   const [nextSourcePage, setNextSourcePage] = useRecoilState(nextSourcePageState);
   const [searchResult, setSearchResult] = useRecoilState(searchResultState);
   const seriesList = useRecoilValue(seriesListState);
-  const libraryColumns = useRecoilValue(libraryColumnsState);
   const searchExtension = useRecoilValue(searchExtensionState);
   const [addModalSeries, setAddModalSeries] = useRecoilState(addModalSeriesState);
   const [addModalEditable, setAddModalEditable] = useRecoilState(addModalEditableState);
   const [showingAddModal, setShowingAddModal] = useRecoilState(showingAddModalState);
   const [filterOptions, setFilterOptions] = useState<FilterOption[]>([]);
-
-  const getPageSize = (columns: number) => {
-    return (
-      {
-        2: 4,
-        4: 8,
-        6: 24,
-        8: 40,
-      }[columns] || 8
-    );
-  };
 
   const inLibrary = (series: Series): boolean => {
     return (
@@ -73,42 +54,41 @@ const Search: React.FC<Props> = (_props: Props) => {
     );
   };
 
-  const handleSearch = async (page = 1, loadingMore = false) => {
-    setLoading(true);
-    if (!loadingMore) {
-      setSearchResult({ seriesList: [], hasMore: false });
-      setCurViewingPage(1);
+  const handleSearch = async (fresh = false) => {
+    if (!loading) {
+      setLoading(true);
+
+      const page = fresh ? 1 : nextSourcePage;
+      const curSeriesList = fresh ? [] : searchResult.seriesList;
+      if (fresh) setSearchResult({ seriesList: [], hasMore: false });
+
+      const respPromise =
+        searchText.length === 0
+          ? ipcRenderer.invoke(
+              ipcChannels.EXTENSION.DIRECTORY,
+              searchExtension,
+              page,
+              filterValuesMap[searchExtension] || {}
+            )
+          : ipcRenderer.invoke(
+              ipcChannels.EXTENSION.SEARCH,
+              searchExtension,
+              searchText,
+              page,
+              filterValuesMap[searchExtension] || {}
+            );
+
+      await respPromise
+        .then((resp: SeriesListResponse) => {
+          setSearchResult({
+            seriesList: curSeriesList.concat(resp.seriesList),
+            hasMore: resp.hasMore,
+          });
+          setNextSourcePage(page + 1);
+        })
+        .finally(() => setLoading(false))
+        .catch((e) => log.error(e));
     }
-
-    const respPromise =
-      !searchParams.text || searchParams.text.length === 0
-        ? ipcRenderer.invoke(
-            ipcChannels.EXTENSION.DIRECTORY,
-            searchExtension,
-            page,
-            filterValuesMap[searchExtension] || {}
-          )
-        : ipcRenderer.invoke(
-            ipcChannels.EXTENSION.SEARCH,
-            searchExtension,
-            searchParams.text,
-            page,
-            filterValuesMap[searchExtension] || {}
-          );
-
-    await respPromise
-      .then((resp: SeriesListResponse) => {
-        setSearchResult({
-          // eslint-disable-next-line promise/always-return
-          seriesList: loadingMore
-            ? searchResult.seriesList.concat(resp.seriesList)
-            : resp.seriesList,
-          hasMore: resp.hasMore,
-        });
-        setNextSourcePage(page + 1);
-      })
-      .finally(() => setLoading(false))
-      .catch((e) => log.error(e));
   };
 
   const handleSearchFilesystem = (path: string) => {
@@ -166,38 +146,10 @@ const Search: React.FC<Props> = (_props: Props) => {
     return <></>;
   };
 
-  const renderLoadMoreButton = () => {
-    if (
-      searchResult.hasMore ||
-      searchResult.seriesList.length > curViewingPage * getPageSize(libraryColumns)
-    ) {
-      return (
-        <Center my="md">
-          <Button
-            loading={loading}
-            onClick={() => {
-              if (
-                searchResult.hasMore &&
-                searchResult.seriesList.length < (curViewingPage + 1) * getPageSize(libraryColumns)
-              ) {
-                handleSearch(nextSourcePage, true);
-              }
-              setCurViewingPage(curViewingPage + 1);
-            }}
-          >
-            {loading ? 'Loading...' : 'Load More'}
-          </Button>
-        </Center>
-      );
-    }
-    return <></>;
-  };
-
   useEffect(() => {
-    setSearchParams({});
+    setSearchText('');
     setSearchResult({ seriesList: [], hasMore: false });
     setNextSourcePage(1);
-    setCurViewingPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
@@ -216,7 +168,7 @@ const Search: React.FC<Props> = (_props: Props) => {
         });
         setFilterOptions(opts);
       })
-      .then(() => handleSearch())
+      .then(() => handleSearch(true))
       .catch((err: Error) => log.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchExtension]);
@@ -234,17 +186,15 @@ const Search: React.FC<Props> = (_props: Props) => {
           setAddModalEditable(false);
         }}
       />
-      <SearchFilterDrawer filterOptions={filterOptions} onClose={() => handleSearch()} />
+      <SearchFilterDrawer filterOptions={filterOptions} onClose={() => handleSearch(true)} />
       <SearchControlBar
         extensionList={extensionList}
         handleSearch={handleSearch}
         handleSearchFilesystem={handleSearchFilesystem}
       />
-      <ScrollArea style={{ height: 'calc(100vh - 24px - 72px)' }} pr="xl" mr={-16}>
-        {!loading && searchResult.seriesList.length === 0 ? renderAlert() : ''}
-        <SearchGrid loading={loading} getPageSize={getPageSize} inLibrary={inLibrary} />
-        {renderLoadMoreButton()}
-      </ScrollArea>
+
+      {!loading && searchResult.seriesList.length === 0 ? renderAlert() : ''}
+      <SearchGrid loading={loading} inLibrary={inLibrary} handleSearch={handleSearch} />
     </>
   );
 };

@@ -6,7 +6,7 @@ import { Button, Group, Input, Select } from '@mantine/core';
 import { ipcRenderer } from 'electron';
 import {
   searchExtensionState,
-  searchParamsState,
+  searchTextState,
   showingFilterDrawerState,
 } from '../../state/searchStates';
 import { FS_METADATA } from '../../services/extensions/filesystem';
@@ -14,13 +14,13 @@ import ipcChannels from '../../constants/ipcChannels.json';
 
 interface Props {
   extensionList: ExtensionMetadata[];
-  handleSearch: (page?: number, loadingMore?: boolean) => void;
+  handleSearch: (fresh?: boolean) => void;
   handleSearchFilesystem: (path: string) => void;
 }
 
 const SearchControlBar: React.FC<Props> = (props: Props) => {
   const [searchExtension, setSearchExtension] = useRecoilState(searchExtensionState);
-  const [searchParams, setSearchParams] = useRecoilState(searchParamsState);
+  const setSearchText = useSetRecoilState(searchTextState);
   const setShowingFilterDrawer = useSetRecoilState(showingFilterDrawerState);
 
   const renderSearchControls = () => {
@@ -48,14 +48,12 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
         <Input
           style={{ width: '100%' }}
           placeholder="Search for a series..."
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setSearchParams({ ...searchParams, text: e.target.value })
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
           onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === 'Enter') props.handleSearch();
+            if (e.key === 'Enter') props.handleSearch(true);
           }}
         />
-        <Button onClick={() => props.handleSearch()}>Search</Button>
+        <Button onClick={() => props.handleSearch(true)}>Search</Button>
         <Button variant="default" onClick={() => setShowingFilterDrawer(true)}>
           Options
         </Button>
