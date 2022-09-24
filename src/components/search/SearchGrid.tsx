@@ -1,5 +1,5 @@
 import fs from 'fs';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ipcRenderer } from 'electron';
 import { Series } from 'houdoku-extension-lib';
 import { Overlay, SimpleGrid, Skeleton, Title, ScrollArea } from '@mantine/core';
@@ -36,8 +36,8 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
   const setAddModalEditable = useSetRecoilState(addModalEditableState);
   const [showingAddModal, setShowingAddModal] = useRecoilState(showingAddModalState);
 
-  const [scrollPosition, onScrollPositionChange] = useState({ x: 0, y: 0 });
   const viewport = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const renderSeriesGrid = () => {
     return searchResult.seriesList.map((series: Series) => {
@@ -94,22 +94,30 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    if (viewport.current && searchResult.seriesList.length === 0)
-      viewport.current.scrollTo({ top: 0 });
-  }, [searchResult.seriesList]);
+    if (!props.loading && viewport.current) {
+      if (searchResult.seriesList.length === 0) {
+        viewport.current.scrollTo({ top: 0 });
+      } else if (
+        viewport.current &&
+        gridRef.current &&
+        gridRef.current.clientHeight < viewport.current.clientHeight
+      )
+        props.handleSearch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.loading]);
 
-  useEffect(() => {
+  const handleScroll = (position: { x: number; y: number }) => {
     if (!viewport.current || !searchResult.hasMore) return;
 
     const distanceFromBottom =
-      viewport.current.scrollHeight - (viewport.current.clientHeight + scrollPosition.y);
+      viewport.current.scrollHeight - (viewport.current.clientHeight + position.y);
     const ratioOfVisibleHeight = distanceFromBottom / viewport.current.clientHeight;
 
-    if (ratioOfVisibleHeight < 0.5) {
+    if (ratioOfVisibleHeight < 0.3) {
       props.handleSearch();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrollPosition]);
+  };
 
   return (
     <>
@@ -118,9 +126,9 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
         pr="xl"
         mr={-16}
         viewportRef={viewport}
-        onScrollPositionChange={onScrollPositionChange}
+        onScrollPositionChange={handleScroll}
       >
-        <SimpleGrid cols={libraryColumns} spacing="xs">
+        <SimpleGrid cols={libraryColumns} spacing="xs" ref={gridRef}>
           {renderSeriesGrid()}
           {props.loading ? renderLoadingSkeleton() : ''}
         </SimpleGrid>
