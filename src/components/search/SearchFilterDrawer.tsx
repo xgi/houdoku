@@ -4,6 +4,7 @@ import {
   Checkbox,
   Divider,
   Drawer,
+  ScrollArea,
   Select,
   Stack,
   TextInput,
@@ -97,7 +98,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
     return (
       <Select
         key={option.id}
-        label={`${option.label}: ${getOptionValue(option) as string}`}
+        label={option.label}
         value={getOptionValue(option) as string}
         data={option.options}
         onChange={(value: string) => setOptionValue(option.id, value)}
@@ -184,7 +185,11 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
         },
       })}
     >
-      <Stack spacing="xs">{renderControls()}</Stack>
+      <ScrollArea style={{ height: 'calc(100vh - 84px)' }} type="hover" offsetScrollbars mr={-24}>
+        <Stack spacing="xs" style={{ width: 272 }}>
+          {renderControls()}
+        </Stack>
+      </ScrollArea>
     </Drawer>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, ScrollArea, Button } from '@mantine/core';
+import { Menu, ScrollArea, Button, Text, Grid } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
 import { MultiToggleValues, TriState } from 'houdoku-extension-lib';
 
@@ -25,6 +25,11 @@ const SearchFilterMultiToggle: React.FC<Props> = (props: Props) => {
     setValue(key, newValue);
   };
 
+  const numNonIgnored = Object.entries(props.values).reduce(
+    (sum, [, value]) => sum + (value === TriState.IGNORE ? 0 : 1),
+    0
+  );
+
   return (
     <Menu
       shadow="md"
@@ -45,7 +50,15 @@ const SearchFilterMultiToggle: React.FC<Props> = (props: Props) => {
     >
       <Menu.Target>
         <Button variant="default" onContextMenu={() => props.onChange({})}>
-          {props.label}
+          <Grid style={{ width: 500 }}>
+            <Grid.Col span={2} />
+            <Grid.Col span={8}>
+              <Text align="center">{props.label}</Text>
+            </Grid.Col>
+            <Grid.Col span={2}>
+              <Text align="right">{numNonIgnored || undefined}</Text>
+            </Grid.Col>
+          </Grid>
         </Button>
       </Menu.Target>
 
