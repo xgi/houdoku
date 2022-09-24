@@ -94,6 +94,11 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
+    if (viewport.current && searchResult.seriesList.length === 0)
+      viewport.current.scrollTo({ top: 0 });
+  }, [searchResult.seriesList]);
+
+  useEffect(() => {
     if (!viewport.current || !searchResult.hasMore) return;
 
     const distanceFromBottom =

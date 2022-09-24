@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   Checkbox,
@@ -39,13 +39,14 @@ import SearchFilterCycle from './filter/SearchFilterCycle';
 
 interface Props {
   filterOptions: FilterOption[];
-  onClose?: () => void;
+  onClose?: (wasChanged: boolean) => void;
 }
 
 const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
   const searchExtension = useRecoilValue(searchExtensionState);
   const [showingFilterDrawer, setShowingFilterDrawer] = useRecoilState(showingFilterDrawerState);
   const [filterValuesMap, setFilterValuesMap] = useRecoilState(filterValuesMapState);
+  const [wasChanged, setWasChanged] = useState(false);
 
   const getOptionValue = (option: FilterOption): unknown => {
     if (searchExtension in filterValuesMap && option.id in filterValuesMap[searchExtension]) {
@@ -58,6 +59,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
     const filterValues = filterValuesMap[searchExtension] || {};
     const newFilterValues = { ...filterValues, [optionId]: value };
     setFilterValuesMap({ ...filterValuesMap, [searchExtension]: newFilterValues });
+    setWasChanged(true);
   };
 
   const renderCheckbox = (option: FilterCheckbox) => {
@@ -185,12 +187,16 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
     });
   };
 
+  useEffect(() => {
+    if (showingFilterDrawer) setWasChanged(false);
+  }, [showingFilterDrawer]);
+
   return (
     <Drawer
       opened={showingFilterDrawer}
       onClose={() => {
         setShowingFilterDrawer(false);
-        if (props.onClose !== undefined) props.onClose();
+        if (props.onClose !== undefined) props.onClose(wasChanged);
       }}
       position="right"
       padding="xl"

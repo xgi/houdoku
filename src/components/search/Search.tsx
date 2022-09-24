@@ -186,7 +186,12 @@ const Search: React.FC<Props> = (_props: Props) => {
           setAddModalEditable(false);
         }}
       />
-      <SearchFilterDrawer filterOptions={filterOptions} onClose={() => handleSearch(true)} />
+      <SearchFilterDrawer
+        filterOptions={filterOptions}
+        onClose={(wasChanged) => {
+          if (wasChanged) handleSearch(true);
+        }}
+      />
       <SearchControlBar
         extensionList={extensionList}
         hasFilterOptions={filterOptions && filterOptions.length > 0}
