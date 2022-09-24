@@ -189,6 +189,7 @@ const Search: React.FC<Props> = (_props: Props) => {
       <SearchFilterDrawer filterOptions={filterOptions} onClose={() => handleSearch(true)} />
       <SearchControlBar
         extensionList={extensionList}
+        hasFilterOptions={filterOptions && filterOptions.length > 0}
         handleSearch={handleSearch}
         handleSearchFilesystem={handleSearchFilesystem}
       />

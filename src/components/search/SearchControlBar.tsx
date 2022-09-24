@@ -14,6 +14,7 @@ import ipcChannels from '../../constants/ipcChannels.json';
 
 interface Props {
   extensionList: ExtensionMetadata[];
+  hasFilterOptions: boolean;
   handleSearch: (fresh?: boolean) => void;
   handleSearchFilesystem: (path: string) => void;
 }
@@ -54,9 +55,11 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
           }}
         />
         <Button onClick={() => props.handleSearch(true)}>Search</Button>
-        <Button variant="default" onClick={() => setShowingFilterDrawer(true)}>
-          Options
-        </Button>
+        {props.hasFilterOptions ? (
+          <Button variant="default" onClick={() => setShowingFilterDrawer(true)}>
+            Options
+          </Button>
+        ) : undefined}
       </>
     );
   };
