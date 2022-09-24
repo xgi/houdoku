@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import {
   FilterCheckbox,
+  FilterCycle,
   FilterHeader,
   FilterInput,
   FilterMultiToggle,
@@ -34,6 +35,7 @@ import {
 import SearchFilterMultiToggle from './filter/SearchFilterMultiToggle';
 import SearchFilterSort from './filter/SearchFilterSort';
 import SearchFilterTriCheckbox from './filter/SearchFilterTriCheckbox';
+import SearchFilterCycle from './filter/SearchFilterCycle';
 
 interface Props {
   filterOptions: FilterOption[];
@@ -132,6 +134,18 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
     );
   };
 
+  const renderCycle = (option: FilterCycle) => {
+    return (
+      <SearchFilterCycle
+        key={option.id}
+        label={option.label}
+        value={getOptionValue(option) as string}
+        options={option.options || []}
+        onChange={(value) => setOptionValue(option.id, value)}
+      />
+    );
+  };
+
   const renderHeader = (option: FilterHeader) => {
     return (
       <Title key={option.id} order={(option.order as TitleOrder) || 4}>
@@ -141,7 +155,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
   };
 
   const renderSeparator = (option: FilterSeparator) => {
-    return <Divider key={option.id} my="sm" />;
+    return <Divider key={option.id} my="xs" />;
   };
 
   const renderControls = () => {
@@ -159,6 +173,8 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
           return renderMultiToggle(option as FilterMultiToggle);
         case FilterOptionType.Sort:
           return renderSort(option as FilterSort);
+        case FilterOptionType.Cycle:
+          return renderCycle(option as FilterCycle);
         case FilterOptionType.Header:
           return renderHeader(option as FilterHeader);
         case FilterOptionType.Separator:
