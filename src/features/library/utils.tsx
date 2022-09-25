@@ -74,7 +74,8 @@ export function removeSeries(
 
 export async function importSeries(
   series: Series,
-  chapterLanguages: LanguageKey[]
+  chapterLanguages: LanguageKey[],
+  getFirst = false
 ): Promise<Series> {
   log.debug(`Importing series ${series.sourceId} from extension ${series.extensionId}`);
 
@@ -91,19 +92,29 @@ export async function importSeries(
       </Text>
     ),
     loading: true,
+    autoClose: false,
   });
+
+  let seriesToAdd = series;
+  if (getFirst) {
+    seriesToAdd = await ipcRenderer.invoke(
+      ipcChannels.EXTENSION.GET_SERIES,
+      series.extensionId,
+      series.sourceId
+    );
+  }
 
   const chapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
-    series.extensionId,
-    series.sourceId
+    seriesToAdd.extensionId,
+    seriesToAdd.sourceId
   );
 
-  const addedSeries = library.upsertSeries(series);
+  const addedSeries = library.upsertSeries(seriesToAdd);
   library.upsertChapters(chapters, addedSeries);
   updateSeriesNumberUnread(addedSeries, chapterLanguages);
 
-  log.debug(`Imported series ${series.sourceId} with database ID ${series.id}`);
+  log.debug(`Imported series ${addedSeries.sourceId} with database ID ${addedSeries.id}`);
   updateNotification({
     id: notificationId,
     title: 'Added series',
@@ -111,7 +122,7 @@ export async function importSeries(
       <Text>
         Added{' '}
         <Text color="teal" component="span" italic>
-          {series.title}
+          {addedSeries.title}
         </Text>
       </Text>
     ),

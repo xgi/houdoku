@@ -16,6 +16,7 @@ import {
 } from '../../state/searchStates';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ExtensionImage from '../general/ExtensionImage';
+import { importQueueState } from '../../state/libraryStates';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -35,9 +36,14 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
   const setAddModalSeries = useSetRecoilState(addModalSeriesState);
   const setAddModalEditable = useSetRecoilState(addModalEditableState);
   const [showingAddModal, setShowingAddModal] = useRecoilState(showingAddModalState);
+  const [importQueue, setImportQueue] = useRecoilState(importQueueState);
 
-  const viewport = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  const handleImport = async (incompleteSeries: Series) => {
+    setImportQueue([...importQueue, { series: incompleteSeries, getFirst: true }]);
+  };
 
   const renderSeriesGrid = () => {
     return searchResult.seriesList.map((series: Series) => {
@@ -54,6 +60,7 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
             setAddModalEditable(searchExtension === FS_METADATA.id);
             setShowingAddModal(!showingAddModal);
           }}
+          onContextMenu={() => handleImport(series)}
           style={{
             height: `calc(105vw / ${libraryColumns})`,
             cursor: inLibrary ? 'not-allowed' : 'pointer',
@@ -94,13 +101,13 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    if (!props.loading && viewport.current) {
+    if (!props.loading && viewportRef.current) {
       if (searchResult.seriesList.length === 0) {
-        viewport.current.scrollTo({ top: 0 });
+        viewportRef.current.scrollTo({ top: 0 });
       } else if (
-        viewport.current &&
+        viewportRef.current &&
         gridRef.current &&
-        gridRef.current.clientHeight < viewport.current.clientHeight
+        gridRef.current.clientHeight < viewportRef.current.clientHeight
       )
         props.handleSearch();
     }
@@ -108,11 +115,11 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
   }, [props.loading]);
 
   const handleScroll = (position: { x: number; y: number }) => {
-    if (!viewport.current || !searchResult.hasMore) return;
+    if (!viewportRef.current || !searchResult.hasMore) return;
 
     const distanceFromBottom =
-      viewport.current.scrollHeight - (viewport.current.clientHeight + position.y);
-    const ratioOfVisibleHeight = distanceFromBottom / viewport.current.clientHeight;
+      viewportRef.current.scrollHeight - (viewportRef.current.clientHeight + position.y);
+    const ratioOfVisibleHeight = distanceFromBottom / viewportRef.current.clientHeight;
 
     if (ratioOfVisibleHeight < 0.3) {
       props.handleSearch();
@@ -125,7 +132,7 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
         style={{ height: 'calc(100vh - 24px - 72px)' }}
         pr="xl"
         mr={-16}
-        viewportRef={viewport}
+        viewportRef={viewportRef}
         onScrollPositionChange={handleScroll}
       >
         <SimpleGrid cols={libraryColumns} spacing="xs" ref={gridRef}>

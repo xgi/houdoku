@@ -14,7 +14,7 @@ import { AppShell, Navbar } from '@mantine/core';
 import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
 import routes from '../../constants/routes.json';
-import { reloadSeriesList } from '../../features/library/utils';
+import { importSeries, reloadSeriesList } from '../../features/library/utils';
 import Settings from '../settings/Settings';
 import About from '../about/About';
 import Library from '../library/Library';
@@ -22,12 +22,15 @@ import Extensions from '../extensions/Extensions';
 import Downloads from '../downloads/Downloads';
 import {
   completedStartReloadState,
+  importingState,
+  importQueueState,
   reloadingSeriesListState,
   seriesListState,
 } from '../../state/libraryStates';
 import library from '../../services/library';
 import { chapterLanguagesState, refreshOnStartState } from '../../state/settingStates';
 import DashboardSidebarLink from './DashboardSidebarLink';
+import { downloadCover } from '../../util/download';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
@@ -38,6 +41,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const [completedStartReload, setCompletedStartReload] = useRecoilState(completedStartReloadState);
   const refreshOnStart = useRecoilValue(refreshOnStartState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
+  const [importQueue, setImportQueue] = useRecoilState(importQueueState);
+  const [importing, setImporting] = useRecoilState(importingState);
 
   useEffect(() => {
     if (refreshOnStart && !completedStartReload && seriesList.length > 0) {
@@ -55,6 +60,23 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [seriesList]);
+
+  useEffect(() => {
+    if (!importing && importQueue.length > 0) {
+      setImporting(true);
+      const task = importQueue[0];
+      setImportQueue(importQueue.slice(1));
+
+      importSeries(task.series, chapterLanguages, task.getFirst)
+        .then((addedSeries) => {
+          setSeriesList(library.fetchSeriesList());
+          setImporting(false);
+          downloadCover(addedSeries);
+        })
+        .catch((e) => log.error(e));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [importQueue, importing]);
 
   return (
     <AppShell

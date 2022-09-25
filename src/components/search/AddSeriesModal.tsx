@@ -2,15 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { Button, Center, Group, Loader, Modal, Stack, Text } from '@mantine/core';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesEditControls from '../general/SeriesEditControls';
-import { importSeries } from '../../features/library/utils';
-import library from '../../services/library';
-import { downloadCover } from '../../util/download';
-import { seriesListState } from '../../state/libraryStates';
-import { chapterLanguagesState } from '../../state/settingStates';
+import { importQueueState } from '../../state/libraryStates';
 
 type Props = {
   series: Series | undefined;
@@ -20,13 +16,12 @@ type Props = {
 };
 
 const AddSeriesModal: React.FC<Props> = (props: Props) => {
-  const [, setSeriesList] = useRecoilState(seriesListState);
-  const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const [customSeries, setCustomSeries] = useState<Series>();
-  const [loading, setLoading] = useState(true);
+  const [loadingDetails, setLoadingDetails] = useState(true);
+  const [importQueue, setImportQueue] = useRecoilState(importQueueState);
 
   useEffect(() => {
-    setLoading(true);
+    setLoadingDetails(true);
 
     if (props.series !== undefined) {
       // we can't guarantee the provided series has all of the available fields (since
@@ -45,26 +40,20 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
           }
           return series;
         })
-        .finally(() => setLoading(false))
+        .finally(() => setLoadingDetails(false))
         .catch((e) => log.error(e));
     }
   }, [props.series]);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (customSeries !== undefined) {
-      importSeries(customSeries, chapterLanguages)
-        // eslint-disable-next-line promise/always-return
-        .then((addedSeries) => {
-          setSeriesList(library.fetchSeriesList());
-          downloadCover(addedSeries);
-        })
-        .catch((e) => log.error(e));
+      setImportQueue([...importQueue, { series: customSeries, getFirst: false }]);
       props.close();
     }
   };
 
   const renderContent = () => {
-    if (loading || customSeries === undefined) {
+    if (loadingDetails || customSeries === undefined) {
       return (
         <Center>
           <Stack align="center">

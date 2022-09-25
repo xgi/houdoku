@@ -58,6 +58,11 @@ export type SearchResult = {
   hasMore: boolean;
 };
 
+export type ImportTask = {
+  series: Series;
+  getFirst: boolean;
+};
+
 export enum GeneralSetting {
   ChapterLanguages = 'ChapterLanguages',
   RefreshOnStart = 'RefreshOnStart',

@@ -1,5 +1,6 @@
 import { Chapter, Series } from 'houdoku-extension-lib';
 import { atom } from 'recoil';
+import { ImportTask } from '../models/types';
 
 export const seriesListState = atom({
   key: 'librarySeriesList',
@@ -19,6 +20,16 @@ export const chapterListState = atom({
 export const reloadingSeriesListState = atom({
   key: 'reloadingSeriesListState',
   default: false,
+});
+
+export const importingState = atom({
+  key: 'libraryImportingState',
+  default: false,
+});
+
+export const importQueueState = atom<ImportTask[]>({
+  key: 'libraryImportQueue',
+  default: [],
 });
 
 export const filterState = atom({
