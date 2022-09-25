@@ -58,11 +58,11 @@ export const chapterFilterGroupState = atom({
 });
 
 export const categoryListState = atom<Category[]>({
-  key: 'libraryCategoryList',
+  key: 'libraryCategoryListState',
   default: [],
 });
 
-export const filterCategoriesState = atom<{ [key: string]: TriState }>({
-  key: 'libraryFilterCategoriesState',
-  default: {},
+export const filterCategoryState = atom({
+  key: 'libraryFilterCategoryState',
+  default: '',
 });

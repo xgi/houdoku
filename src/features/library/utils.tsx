@@ -179,6 +179,7 @@ async function reloadSeries(
   } else {
     newSeries.id = series.id;
     newSeries.trackerKeys = series.trackerKeys;
+    newSeries.categories = series.categories;
   }
 
   const oldChapters: Chapter[] = library.fetchChapters(series.id);

@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Series } from 'houdoku-extension-lib';
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
-import { Menu, Portal } from '@mantine/core';
-import { IconTrash, IconEye } from '@tabler/icons';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { Menu, Portal, ScrollArea } from '@mantine/core';
+import { IconTrash, IconEye, IconSquareCheck, IconSquare, IconPlus } from '@tabler/icons';
 import { goToSeries } from '../../features/library/utils';
-import { seriesListState } from '../../state/libraryStates';
+import { categoryListState, seriesListState } from '../../state/libraryStates';
+import library from '../../services/library';
 
 const WIDTH = 200;
-const ESTIMATED_HEIGHT = 85;
+const MAX_HEIGHT = 220;
 
 type Props = {
   visible: boolean;
@@ -21,14 +22,10 @@ type Props = {
 const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
   const setSeriesList = useSetRecoilState(seriesListState);
-
-  let { x, y } = props.position;
-  if (props.position.x + WIDTH > window.innerWidth) {
-    x = props.position.x - WIDTH;
-  }
-  if (props.position.y + ESTIMATED_HEIGHT > window.innerHeight) {
-    y = props.position.y - ESTIMATED_HEIGHT;
-  }
+  const [menuHeight, setMenuHeight] = useState(MAX_HEIGHT);
+  const availableCategories = useRecoilValue(categoryListState);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [sanitizedPos, setSanitizedPos] = useState<{ x: number; y: number }>(props.position);
 
   const viewFunc = () => {
     if (props.series) {
@@ -44,13 +41,52 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
     }
   };
 
+  const handleToggleCategory = (categoryId: string) => {
+    if (props.series) {
+      let newCategories: string[] = [...categories, categoryId];
+      if (categories.includes(categoryId)) {
+        newCategories = categories.filter((cat) => cat !== categoryId);
+      }
+      setCategories(newCategories);
+    }
+  };
+
+  useEffect(() => {
+    const newPos = { ...props.position };
+    if (props.position.x + WIDTH > window.innerWidth) {
+      newPos.x = props.position.x - WIDTH;
+    }
+    if (props.position.y + menuHeight > window.innerHeight) {
+      newPos.y = props.position.y - menuHeight;
+    }
+    setSanitizedPos(newPos);
+  }, [props.position, menuHeight]);
+
+  useEffect(() => {
+    if (props.series) {
+      library.upsertSeries({
+        ...props.series,
+        categories,
+      });
+      setSeriesList(library.fetchSeriesList());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categories]);
+
+  useEffect(() => {
+    const totalItemHeight = (3 + availableCategories.length) * 40 + 30;
+    setMenuHeight(Math.min(MAX_HEIGHT, totalItemHeight));
+
+    setCategories(props.series?.categories || []);
+  }, [availableCategories.length, props.series]);
+
   useEffect(() => {
     const mousedownListener = (e: MouseEvent) => {
       if (
-        e.clientX < x ||
-        e.clientX > x + WIDTH ||
-        e.clientY < y ||
-        e.clientY > y + ESTIMATED_HEIGHT
+        e.clientX < sanitizedPos.x ||
+        e.clientX > sanitizedPos.x + WIDTH ||
+        e.clientY < sanitizedPos.y ||
+        e.clientY > sanitizedPos.y + menuHeight
       ) {
         props.close();
       }
@@ -71,18 +107,37 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
         opened
         styles={() => ({
           dropdown: {
-            left: x,
-            top: y,
+            left: sanitizedPos.x,
+            top: sanitizedPos.y,
           },
         })}
       >
-        <Menu.Dropdown style={{ position: 'absolute', left: x, top: y }}>
-          <Menu.Item icon={<IconEye size={14} />} onClick={viewFunc}>
-            View
-          </Menu.Item>
-          <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={removeFunc}>
-            Remove from library
-          </Menu.Item>
+        <Menu.Dropdown style={{ position: 'absolute', left: sanitizedPos.x, top: sanitizedPos.y }}>
+          <ScrollArea.Autosize maxHeight={MAX_HEIGHT - 10}>
+            <Menu.Item icon={<IconEye size={14} />} onClick={viewFunc}>
+              View
+            </Menu.Item>
+            <Menu.Item color="red" icon={<IconTrash size={14} />} onClick={removeFunc}>
+              Remove
+            </Menu.Item>
+
+            {availableCategories.length > 0 ? (
+              <Menu.Divider style={{ width: WIDTH - 10 }} />
+            ) : undefined}
+
+            {availableCategories.map((category) => {
+              const hasCategory = categories.includes(category.id);
+              return (
+                <Menu.Item
+                  key={category.id}
+                  icon={hasCategory ? <IconSquareCheck size={14} /> : <IconSquare size={14} />}
+                  onClick={() => handleToggleCategory(category.id)}
+                >
+                  {category.label}
+                </Menu.Item>
+              );
+            })}
+          </ScrollArea.Autosize>
         </Menu.Dropdown>
       </Menu>
     </Portal>

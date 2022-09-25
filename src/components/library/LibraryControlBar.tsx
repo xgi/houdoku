@@ -1,25 +1,25 @@
 /* eslint-disable react/jsx-boolean-value */
 import React from 'react';
-import { SeriesStatus, TriState } from 'houdoku-extension-lib';
+import { SeriesStatus } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Button, Group, Input, Menu } from '@mantine/core';
+import { Button, Group, Input, Menu, ScrollArea } from '@mantine/core';
 import {
   IconArrowDown,
   IconArrowUp,
   IconCheck,
   IconColumns,
+  IconEdit,
   IconHash,
   IconLayoutGrid,
   IconLayoutList,
   IconLetterA,
   IconSearch,
-  IconX,
 } from '@tabler/icons';
 import { reloadSeriesList } from '../../features/library/utils';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import {
   categoryListState,
-  filterCategoriesState,
+  filterCategoryState,
   filterState,
   reloadingSeriesListState,
   seriesListState,
@@ -43,25 +43,13 @@ const SORT_ICONS = {
   [LibrarySort.UnreadDesc]: <IconArrowDown size={14} />,
 };
 
-const TRISTATE_ICONS = {
-  [TriState.IGNORE]: undefined,
-  [TriState.INCLUDE]: <IconCheck size={14} />,
-  [TriState.EXCLUDE]: <IconX size={14} />,
-};
-
-const TRISTATE_NEXT = {
-  [TriState.IGNORE]: TriState.INCLUDE,
-  [TriState.INCLUDE]: TriState.EXCLUDE,
-  [TriState.EXCLUDE]: TriState.IGNORE,
-};
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LibraryControlBar: React.FC<Props> = (_props: Props) => {
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const availableCategories = useRecoilValue(categoryListState);
   const setFilter = useSetRecoilState(filterState);
-  const [filterCategories, setFilterCategories] = useRecoilState(filterCategoriesState);
+  const [filterCategory, setFilterCategory] = useRecoilState(filterCategoryState);
   const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(libraryFilterStatusState);
   const [libraryFilterProgress, setLibraryFilterProgress] = useRecoilState(
     libraryFilterProgressState
@@ -200,34 +188,41 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
 
         <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
           <Menu.Target>
-            <Button variant="default">Categories</Button>
+            <Button variant="default" onContextMenu={() => setFilterCategory('')}>
+              Category
+            </Button>
           </Menu.Target>
 
           <Menu.Dropdown>
-            {availableCategories.map((availableCategory) => {
-              const value = filterCategories[availableCategory.id] || TriState.IGNORE;
+            <ScrollArea.Autosize maxHeight={320}>
+              {availableCategories.map((availableCategory) => {
+                return (
+                  <Menu.Item
+                    key={availableCategory.id}
+                    onClick={() => {
+                      if (availableCategory.id === filterCategory) setFilterCategory('');
+                      else setFilterCategory(availableCategory.id);
+                    }}
+                    rightSection={
+                      availableCategory.id === filterCategory ? <IconCheck size={14} /> : undefined
+                    }
+                  >
+                    {availableCategory.label}
+                  </Menu.Item>
+                );
+              })}
 
-              return (
-                <Menu.Item
-                  key={availableCategory.id}
-                  onClick={() =>
-                    setFilterCategories({
-                      ...filterCategories,
-                      [availableCategory.id]: TRISTATE_NEXT[value],
-                    })
-                  }
-                  onContextMenu={() =>
-                    setFilterCategories({
-                      ...filterCategories,
-                      [availableCategory.id]: TriState.IGNORE,
-                    })
-                  }
-                  rightSection={TRISTATE_ICONS[value]}
-                >
-                  {availableCategory.label}
-                </Menu.Item>
-              );
-            })}
+              {availableCategories.length > 0 ? (
+                <Menu.Divider style={{ width: '100%' }} />
+              ) : undefined}
+
+              <Menu.Item
+                icon={<IconEdit size={14} />}
+                onClick={() => console.log('new category TODO')}
+              >
+                Edit categories
+              </Menu.Item>
+            </ScrollArea.Autosize>
           </Menu.Dropdown>
         </Menu>
       </Group>

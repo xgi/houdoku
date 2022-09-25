@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Series, TriState } from 'houdoku-extension-lib';
+import { Series } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { ScrollArea, Text } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
-import { filterCategoriesState, filterState, seriesListState } from '../../state/libraryStates';
+import { filterCategoryState, filterState, seriesListState } from '../../state/libraryStates';
 import {
   libraryFilterStatusState,
   libraryFilterProgressState,
@@ -25,7 +25,7 @@ const Library: React.FC<Props> = (_props: Props) => {
   const [removeModalSeries, setRemoveModalSeries] = useState<Series | null>(null);
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const filter = useRecoilValue(filterState);
-  const filterCategories = useRecoilValue(filterCategoriesState);
+  const filterCategory = useRecoilValue(filterCategoryState);
   const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
   const libraryFilterProgress = useRecoilValue(libraryFilterProgressState);
   const libraryView = useRecoilValue(libraryViewsState);
@@ -51,15 +51,9 @@ const Library: React.FC<Props> = (_props: Props) => {
         return false;
       }
 
-      const categories = series.categories || [];
-      const matchesFilterCategories = Object.entries(filterCategories)
-        .map(([categoryId, value]) => {
-          if (value === TriState.INCLUDE) return categories.includes(categoryId);
-          if (value === TriState.EXCLUDE) return !categories.includes(categoryId);
-          return true;
-        })
-        .every((matches) => matches);
-      if (!matchesFilterCategories) return false;
+      if (filterCategory) {
+        if (!series.categories || !series.categories.includes(filterCategory)) return false;
+      }
 
       return true;
     });
