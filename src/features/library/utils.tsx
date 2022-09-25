@@ -36,11 +36,6 @@ const updateSeriesNumberUnread = (series: Series, chapterLanguages: LanguageKey[
   }
 };
 
-export function loadSeriesList(setSeriesList: (seriesList: Series[]) => void) {
-  const seriesList: Series[] = library.fetchSeriesList();
-  setSeriesList(seriesList);
-}
-
 export function loadSeries(seriesId: string, setSeries: (series: Series) => void) {
   const series: Series | null = library.fetchSeries(seriesId);
   if (series !== null) {
@@ -69,7 +64,7 @@ export function removeSeries(
   if (deleteDownloadedChapters) {
     deleteAllDownloadedChapters(series, downloadsDir);
   }
-  loadSeriesList(setSeriesList);
+  setSeriesList(library.fetchSeriesList());
 }
 
 export async function importSeries(

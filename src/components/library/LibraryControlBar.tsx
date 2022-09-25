@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 import React from 'react';
-import { SeriesStatus } from 'houdoku-extension-lib';
+import { SeriesStatus, TriState } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button, Group, Input, Menu } from '@mantine/core';
 import {
@@ -13,10 +13,17 @@ import {
   IconLayoutList,
   IconLetterA,
   IconSearch,
+  IconX,
 } from '@tabler/icons';
 import { reloadSeriesList } from '../../features/library/utils';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
-import { filterState, reloadingSeriesListState, seriesListState } from '../../state/libraryStates';
+import {
+  categoryListState,
+  filterCategoriesState,
+  filterState,
+  reloadingSeriesListState,
+  seriesListState,
+} from '../../state/libraryStates';
 import {
   libraryFilterStatusState,
   libraryFilterProgressState,
@@ -36,11 +43,25 @@ const SORT_ICONS = {
   [LibrarySort.UnreadDesc]: <IconArrowDown size={14} />,
 };
 
+const TRISTATE_ICONS = {
+  [TriState.IGNORE]: undefined,
+  [TriState.INCLUDE]: <IconCheck size={14} />,
+  [TriState.EXCLUDE]: <IconX size={14} />,
+};
+
+const TRISTATE_NEXT = {
+  [TriState.IGNORE]: TriState.INCLUDE,
+  [TriState.INCLUDE]: TriState.EXCLUDE,
+  [TriState.EXCLUDE]: TriState.IGNORE,
+};
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LibraryControlBar: React.FC<Props> = (_props: Props) => {
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
+  const availableCategories = useRecoilValue(categoryListState);
   const setFilter = useSetRecoilState(filterState);
+  const [filterCategories, setFilterCategories] = useRecoilState(filterCategoriesState);
   const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(libraryFilterStatusState);
   const [libraryFilterProgress, setLibraryFilterProgress] = useRecoilState(
     libraryFilterProgressState
@@ -174,6 +195,39 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
                 {text}
               </Menu.Item>
             ))}
+          </Menu.Dropdown>
+        </Menu>
+
+        <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
+          <Menu.Target>
+            <Button variant="default">Categories</Button>
+          </Menu.Target>
+
+          <Menu.Dropdown>
+            {availableCategories.map((availableCategory) => {
+              const value = filterCategories[availableCategory.id] || TriState.IGNORE;
+
+              return (
+                <Menu.Item
+                  key={availableCategory.id}
+                  onClick={() =>
+                    setFilterCategories({
+                      ...filterCategories,
+                      [availableCategory.id]: TRISTATE_NEXT[value],
+                    })
+                  }
+                  onContextMenu={() =>
+                    setFilterCategories({
+                      ...filterCategories,
+                      [availableCategory.id]: TriState.IGNORE,
+                    })
+                  }
+                  rightSection={TRISTATE_ICONS[value]}
+                >
+                  {availableCategory.label}
+                </Menu.Item>
+              );
+            })}
           </Menu.Dropdown>
         </Menu>
       </Group>

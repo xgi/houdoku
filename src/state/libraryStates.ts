@@ -1,8 +1,8 @@
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series, TriState } from 'houdoku-extension-lib';
 import { atom } from 'recoil';
-import { ImportTask } from '../models/types';
+import { Category, ImportTask } from '../models/types';
 
-export const seriesListState = atom({
+export const seriesListState = atom<Series[]>({
   key: 'librarySeriesList',
   default: [] as Series[],
 });
@@ -55,4 +55,14 @@ export const chapterFilterTitleState = atom({
 export const chapterFilterGroupState = atom({
   key: 'chapterFilterGroupState',
   default: '',
+});
+
+export const categoryListState = atom<Category[]>({
+  key: 'libraryCategoryList',
+  default: [],
+});
+
+export const filterCategoriesState = atom<{ [key: string]: TriState }>({
+  key: 'libraryFilterCategoriesState',
+  default: {},
 });

@@ -63,6 +63,11 @@ export type ImportTask = {
   getFirst: boolean;
 };
 
+export type Category = {
+  id: string;
+  label: string;
+};
+
 export enum GeneralSetting {
   ChapterLanguages = 'ChapterLanguages',
   RefreshOnStart = 'RefreshOnStart',

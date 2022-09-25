@@ -31,9 +31,9 @@ import ReaderPage from './components/reader/ReaderPage';
 import ipcChannels from './constants/ipcChannels.json';
 import storeKeys from './constants/storeKeys.json';
 import { TrackerMetadata } from './models/types';
-import { loadSeriesList, migrateSeriesTags } from './features/library/utils';
+import { migrateSeriesTags } from './features/library/utils';
 import AppLoading from './components/general/AppLoading';
-import { seriesListState } from './state/libraryStates';
+import { categoryListState, seriesListState } from './state/libraryStates';
 import { downloaderClient } from './services/downloader';
 import {
   currentTaskState,
@@ -43,6 +43,7 @@ import {
 } from './state/downloaderStates';
 import { autoCheckForExtensionUpdatesState, autoCheckForUpdatesState } from './state/settingStates';
 import { ErrorBoundary } from './components/general/ErrorBoundary';
+import library from './services/library';
 
 const loadStoredExtensionSettings = () => {
   log.info('Loading stored extension settings...');
@@ -163,6 +164,7 @@ ipcRenderer.on(ipcChannels.APP.SHOW_RESTART_UPDATE_DIALOG, () => {
 export default function App() {
   const [loading, setLoading] = useState(true);
   const setSeriesList = useSetRecoilState(seriesListState);
+  const setCategoryList = useSetRecoilState(categoryListState);
   const setRunning = useSetRecoilState(runningState);
   const setQueue = useSetRecoilState(queueState);
   const setCurrentTask = useSetRecoilState(currentTaskState);
@@ -242,7 +244,8 @@ export default function App() {
         log.debug('Skipping extension update check, autoCheckForExtensionUpdates is disabled');
       }
 
-      loadSeriesList(setSeriesList);
+      setSeriesList(library.fetchSeriesList());
+      setCategoryList(library.fetchCategoryList());
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

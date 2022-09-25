@@ -2,6 +2,7 @@ import { Chapter, Series } from 'houdoku-extension-lib';
 import { v4 as uuidv4 } from 'uuid';
 import persistantStore from '../util/persistantStore';
 import storeKeys from '../constants/storeKeys.json';
+import { Category } from '../models/types';
 
 const fetchSeriesList = (): Series[] => {
   const val = persistantStore.read(`${storeKeys.LIBRARY.SERIES_LIST}`);
@@ -84,6 +85,26 @@ const removeChapters = (chapterIds: string[], seriesId: string): void => {
   );
 };
 
+const fetchCategoryList = (): Category[] => {
+  const val = persistantStore.read(`${storeKeys.LIBRARY.CATEGORY_LIST}`);
+  return val === null ? [] : JSON.parse(val);
+};
+
+const upsertCategory = (category: Category) => {
+  const existingList = fetchCategoryList().filter((cat: Category) => cat.id !== category.id);
+  persistantStore.write(
+    `${storeKeys.LIBRARY.CATEGORY_LIST}`,
+    JSON.stringify([...existingList, category])
+  );
+};
+
+const removeCategory = (categoryId: string): void => {
+  persistantStore.write(
+    `${storeKeys.LIBRARY.CATEGORY_LIST}`,
+    JSON.stringify(fetchCategoryList().filter((cat: Category) => cat.id !== categoryId))
+  );
+};
+
 export default {
   fetchSeriesList,
   fetchSeries,
@@ -93,4 +114,7 @@ export default {
   upsertChapters,
   removeSeries,
   removeChapters,
+  fetchCategoryList,
+  upsertCategory,
+  removeCategory,
 };
