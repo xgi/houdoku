@@ -110,6 +110,7 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
       if (searchResult.seriesList.length === 0) {
         viewportRef.current.scrollTo({ top: 0 });
       } else if (
+        searchResult.hasMore &&
         viewportRef.current &&
         gridRef.current &&
         gridRef.current.clientHeight < viewportRef.current.clientHeight

@@ -18,6 +18,7 @@ import {
   SetSettingsFunc,
   GetSettingTypesFunc,
   SeriesListResponse,
+  GetFilterOptionsFunc,
 } from 'houdoku-extension-lib';
 import { extract, getArchiveFiles } from '../../util/archives';
 import { walk } from '../../util/filesystem';
@@ -216,4 +217,6 @@ export class FSExtensionClient extends ExtensionClientAbstract {
   };
 
   setSettings: SetSettingsFunc = () => {};
+
+  getFilterOptions: GetFilterOptionsFunc = () => [];
 }

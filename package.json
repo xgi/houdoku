@@ -2,7 +2,7 @@
   "name": "houdoku",
   "productName": "Houdoku",
   "description": "Manga reader and library manager for the desktop",
-  "version": "2.10.1",
+  "version": "2.10.2",
   "scripts": {
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
     "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
@@ -178,7 +178,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "file-loader": "^6.0.0",
     "formdata-node": "^4.3.1",
-    "houdoku-extension-lib": "^1.9.0-alpha.10",
+    "houdoku-extension-lib": "^1.9.0",
     "identity-obj-proxy": "^3.0.0",
     "mini-css-extract-plugin": "^2.4.5",
     "opencollective-postinstall": "^2.0.3",
