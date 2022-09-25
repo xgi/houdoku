@@ -1,5 +1,5 @@
 import fs from 'fs';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { Series } from 'houdoku-extension-lib';
 import { Overlay, SimpleGrid, Skeleton, Title, ScrollArea } from '@mantine/core';
@@ -16,7 +16,7 @@ import {
 } from '../../state/searchStates';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ExtensionImage from '../general/ExtensionImage';
-import { importQueueState } from '../../state/libraryStates';
+import SearchGridContextMenu from './SearchGridContextMenu';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -30,19 +30,22 @@ type Props = {
 };
 
 const SearchGrid: React.FC<Props> = (props: Props) => {
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
   const searchResult = useRecoilValue(searchResultState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
   const searchExtension = useRecoilValue(searchExtensionState);
   const setAddModalSeries = useSetRecoilState(addModalSeriesState);
   const setAddModalEditable = useSetRecoilState(addModalEditableState);
   const [showingAddModal, setShowingAddModal] = useRecoilState(showingAddModalState);
-  const [importQueue, setImportQueue] = useRecoilState(importQueueState);
+  const [showingContextMenu, setShowingContextMenu] = useState(false);
+  const [contextMenuSeries, setContextMenuSeries] = useState<Series | null>(null);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
-  const viewportRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  const handleImport = async (incompleteSeries: Series) => {
-    setImportQueue([...importQueue, { series: incompleteSeries, getFirst: true }]);
+  const handleOpenAddModal = (series: Series) => {
+    setAddModalSeries(series);
+    setAddModalEditable(searchExtension === FS_METADATA.id);
+    setShowingAddModal(!showingAddModal);
   };
 
   const renderSeriesGrid = () => {
@@ -55,12 +58,14 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
           className={styles.coverContainer}
           onClick={() => {
             if (inLibrary) return;
-
-            setAddModalSeries(series);
-            setAddModalEditable(searchExtension === FS_METADATA.id);
-            setShowingAddModal(!showingAddModal);
+            handleOpenAddModal(series);
           }}
-          onContextMenu={() => handleImport(series)}
+          onContextMenu={(e) => {
+            if (inLibrary) return;
+            setContextMenuPosition({ x: e.clientX, y: e.clientY });
+            setContextMenuSeries(series);
+            setShowingContextMenu(true);
+          }}
           style={{
             height: `calc(105vw / ${libraryColumns})`,
             cursor: inLibrary ? 'not-allowed' : 'pointer',
@@ -128,6 +133,13 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
 
   return (
     <>
+      <SearchGridContextMenu
+        position={contextMenuPosition}
+        series={contextMenuSeries}
+        visible={showingContextMenu}
+        close={() => setShowingContextMenu(false)}
+        openAddModal={handleOpenAddModal}
+      />
       <ScrollArea
         style={{ height: 'calc(100vh - 24px - 72px)' }}
         pr="xl"
