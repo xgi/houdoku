@@ -7,6 +7,7 @@ import {
   IconArrowDown,
   IconArrowUp,
   IconCheck,
+  IconColumns,
   IconHash,
   IconLayoutGrid,
   IconLayoutList,
@@ -118,6 +119,24 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
             >
               Unread
             </Menu.Item>
+            <Menu.Divider />
+            <Menu.Item
+              icon={<IconColumns size={14} />}
+              disabled={libraryViews !== LibraryView.Grid}
+              onClick={() =>
+                setLibraryColumns(
+                  {
+                    2: 4,
+                    4: 6,
+                    6: 8,
+                    8: 2,
+                  }[libraryColumns as 2 | 4 | 6 | 8]
+                )
+              }
+              rightSection={libraryColumns}
+            >
+              Columns
+            </Menu.Item>
           </Menu.Dropdown>
         </Menu>
 
@@ -157,28 +176,6 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
             ))}
           </Menu.Dropdown>
         </Menu>
-
-        {libraryViews === LibraryView.Grid ? (
-          <Menu shadow="md" trigger="hover" closeOnItemClick={false} width="target">
-            <Menu.Target>
-              <Button variant="default">Columns</Button>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              {[2, 4, 6, 8].map((value) => (
-                <Menu.Item
-                  key={`columns-${value}`}
-                  onClick={() => setLibraryColumns(value)}
-                  rightSection={libraryColumns === value ? <IconCheck size={14} /> : ''}
-                >
-                  {value}
-                </Menu.Item>
-              ))}
-            </Menu.Dropdown>
-          </Menu>
-        ) : (
-          ''
-        )}
       </Group>
       <Group position="right" align="right" noWrap>
         <Input
