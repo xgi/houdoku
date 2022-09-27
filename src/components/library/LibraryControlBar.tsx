@@ -23,6 +23,7 @@ import {
   filterState,
   reloadingSeriesListState,
   seriesListState,
+  showingLibraryCtxMenuState,
 } from '../../state/libraryStates';
 import {
   libraryFilterStatusState,
@@ -33,8 +34,9 @@ import {
   chapterLanguagesState,
 } from '../../state/settingStates';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+type Props = {
+  showEditCategoriesModal: () => void;
+};
 
 const SORT_ICONS = {
   [LibrarySort.TitleAsc]: <IconArrowUp size={14} />,
@@ -43,8 +45,7 @@ const SORT_ICONS = {
   [LibrarySort.UnreadDesc]: <IconArrowDown size={14} />,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const LibraryControlBar: React.FC<Props> = (_props: Props) => {
+const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const availableCategories = useRecoilValue(categoryListState);
@@ -58,6 +59,7 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
   const [libraryViews, setLibraryViews] = useRecoilState(libraryViewsState);
   const [librarySort, setLibrarySort] = useRecoilState(librarySortState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
+  const [showingContextMenu, setShowingContextMenu] = useRecoilState(showingLibraryCtxMenuState);
 
   const refreshHandler = () => {
     if (!reloadingSeriesList) {
@@ -68,12 +70,18 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
   return (
     <Group position="apart" mb="md" noWrap>
       <Group position="left" align="left" spacing="xs" noWrap>
-        <Button onClick={refreshHandler} loading={reloadingSeriesList}>
+        <Button
+          onClick={refreshHandler}
+          loading={reloadingSeriesList}
+          onMouseEnter={() => setShowingContextMenu(false)}
+        >
           {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}{' '}
         </Button>
         <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
           <Menu.Target>
-            <Button variant="default">Layout</Button>
+            <Button variant="default" onMouseEnter={() => setShowingContextMenu(false)}>
+              Layout
+            </Button>
           </Menu.Target>
 
           <Menu.Dropdown>
@@ -151,7 +159,9 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
 
         <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
           <Menu.Target>
-            <Button variant="default">Filters</Button>
+            <Button variant="default" onMouseEnter={() => setShowingContextMenu(false)}>
+              Filters
+            </Button>
           </Menu.Target>
 
           <Menu.Dropdown>
@@ -186,9 +196,13 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
           </Menu.Dropdown>
         </Menu>
 
-        <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
+        <Menu shadow="md" trigger="hover" closeOnItemClick={true} width={200}>
           <Menu.Target>
-            <Button variant="default" onContextMenu={() => setFilterCategory('')}>
+            <Button
+              variant="default"
+              onContextMenu={() => setFilterCategory('')}
+              onMouseEnter={() => setShowingContextMenu(false)}
+            >
               Category
             </Button>
           </Menu.Target>
@@ -198,6 +212,7 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
               {availableCategories.map((availableCategory) => {
                 return (
                   <Menu.Item
+                    pr="lg"
                     key={availableCategory.id}
                     onClick={() => {
                       if (availableCategory.id === filterCategory) setFilterCategory('');
@@ -218,7 +233,7 @@ const LibraryControlBar: React.FC<Props> = (_props: Props) => {
 
               <Menu.Item
                 icon={<IconEdit size={14} />}
-                onClick={() => console.log('new category TODO')}
+                onClick={() => props.showEditCategoriesModal()}
               >
                 Edit categories
               </Menu.Item>

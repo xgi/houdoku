@@ -15,6 +15,7 @@ import LibraryGrid from './LibraryGrid';
 import RemoveSeriesModal from './RemoveSeriesModal';
 import LibraryList from './LibraryList';
 import library from '../../services/library';
+import EditCategoriesModal from './EditCategoriesModal';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
@@ -23,6 +24,7 @@ type Props = {};
 const Library: React.FC<Props> = (_props: Props) => {
   const [removeModalShowing, setRemoveModalShowing] = useState(false);
   const [removeModalSeries, setRemoveModalSeries] = useState<Series | null>(null);
+  const [editCategoriesModalShowing, setEditCategoriesModalShowing] = useState(false);
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const filter = useRecoilValue(filterState);
   const filterCategory = useRecoilValue(filterCategoryState);
@@ -80,6 +82,10 @@ const Library: React.FC<Props> = (_props: Props) => {
           showing={removeModalShowing}
           close={() => setRemoveModalShowing(false)}
         />
+        <EditCategoriesModal
+          showing={editCategoriesModalShowing}
+          close={() => setEditCategoriesModalShowing(false)}
+        />
 
         {libraryView === LibraryView.Grid ? (
           <LibraryGrid
@@ -124,7 +130,7 @@ const Library: React.FC<Props> = (_props: Props) => {
 
   return (
     <>
-      <LibraryControlBar />
+      <LibraryControlBar showEditCategoriesModal={() => setEditCategoriesModalShowing(true)} />
       <ScrollArea style={{ height: 'calc(100vh - 24px - 72px)' }} pr="xl" mr={-16}>
         {seriesList.length > 0 ? renderLibrary() : renderEmptyMessage()}
       </ScrollArea>

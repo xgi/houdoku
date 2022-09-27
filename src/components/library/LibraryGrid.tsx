@@ -4,14 +4,14 @@ import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
 import { Series } from 'houdoku-extension-lib';
 import { Overlay, SimpleGrid, Title } from '@mantine/core';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
 import constants from '../../constants/constants.json';
 import LibraryGridContextMenu from './LibraryGridContextMenu';
 import styles from './LibraryGrid.css';
-import { seriesListState } from '../../state/libraryStates';
+import { seriesListState, showingLibraryCtxMenuState } from '../../state/libraryStates';
 import { libraryColumnsState } from '../../state/settingStates';
 import { goToSeries } from '../../features/library/utils';
 import ExtensionImage from '../general/ExtensionImage';
@@ -30,7 +30,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
   const setSeriesList = useSetRecoilState(seriesListState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
-  const [showingContextMenu, setShowingContextMenu] = useState(false);
+  const [showingContextMenu, setShowingContextMenu] = useRecoilState(showingLibraryCtxMenuState);
   const [contextMenuSeries, setContextMenuSeries] = useState<Series | null>(null);
   const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
