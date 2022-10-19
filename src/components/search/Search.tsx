@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import { ExtensionMetadata, FilterOption, Series, SeriesListResponse } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
@@ -30,10 +29,9 @@ type Props = {};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Search: React.FC<Props> = (_props: Props) => {
-  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
-  const [searchText, setSearchText] = useRecoilState(searchTextState);
+  const searchText = useRecoilValue(searchTextState);
   const [filterValuesMap, setFilterValuesMap] = useRecoilState(filterValuesMapState);
   const [nextSourcePage, setNextSourcePage] = useRecoilState(nextSourcePageState);
   const [searchResult, setSearchResult] = useRecoilState(searchResultState);
@@ -145,13 +143,6 @@ const Search: React.FC<Props> = (_props: Props) => {
     }
     return <></>;
   };
-
-  useEffect(() => {
-    setSearchText('');
-    setSearchResult({ seriesList: [], hasMore: false });
-    setNextSourcePage(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
 
   useEffect(() => {
     ipcRenderer
