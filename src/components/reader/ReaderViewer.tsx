@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { flushSync } from 'react-dom';
 import styles from './ReaderViewer.css';
 import { ReadingDirection, PageStyle } from '../../models/types';
 import {
@@ -199,8 +200,12 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
             }
 
             if (pageNumber !== childNum && childNum <= lastPageNumber && childNum > 0) {
-              setSkipChangePageNumEffect(true);
-              setPageNumber(childNum);
+              // TODO: force ignore automatic batching. Prefer to replace this with
+              // detection from ScrollArea
+              flushSync(() => {
+                setSkipChangePageNumEffect(true);
+                setPageNumber(childNum);
+              });
             }
           }
         };
