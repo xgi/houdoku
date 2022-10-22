@@ -81,6 +81,7 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
             alt={series.title}
             width="100%"
             height="100%"
+            style={{ objectFit: 'cover' }}
           />
           {inLibrary ? <Overlay opacity={0.5} color="#2B8A3E" /> : ''}
           <Title className={styles.seriesTitle} order={5} lineClamp={3} p={4}>

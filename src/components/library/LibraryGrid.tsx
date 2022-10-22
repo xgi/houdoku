@@ -122,6 +122,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                 alt={series.title}
                 width="100%"
                 height="100%"
+                style={{ objectFit: 'cover' }}
               />
               {renderUnreadBadge(series)}
               <Title
