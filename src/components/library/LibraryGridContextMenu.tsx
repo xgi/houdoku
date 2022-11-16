@@ -3,11 +3,12 @@ import { Series } from 'houdoku-extension-lib';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal, ScrollArea } from '@mantine/core';
-import { IconTrash, IconEye, IconSquareCheck, IconSquare, IconPlus } from '@tabler/icons';
+import { IconTrash, IconEye, IconSquareCheck, IconSquare } from '@tabler/icons';
 import { goToSeries } from '../../features/library/utils';
 import { categoryListState, seriesListState } from '../../state/libraryStates';
 import library from '../../services/library';
 
+const ELEMENT_ID = 'LibraryGridContextMenu';
 const WIDTH = 200;
 const MAX_HEIGHT = 220;
 
@@ -98,21 +99,19 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
     };
   });
 
+  useEffect(() => {
+    const element = document.getElementById(ELEMENT_ID);
+    if (element) {
+      element.style.setProperty('left', `${sanitizedPos.x}px`);
+      element.style.setProperty('top', `${sanitizedPos.y}px`);
+    }
+  }, [sanitizedPos]);
+
   if (!props.visible) return <></>;
   return (
     <Portal>
-      <Menu
-        shadow="md"
-        width={WIDTH}
-        opened
-        styles={() => ({
-          dropdown: {
-            left: sanitizedPos.x,
-            top: sanitizedPos.y,
-          },
-        })}
-      >
-        <Menu.Dropdown style={{ position: 'absolute', left: sanitizedPos.x, top: sanitizedPos.y }}>
+      <Menu shadow="md" width={WIDTH} opened>
+        <Menu.Dropdown id="LibraryGridContextMenu">
           <ScrollArea.Autosize maxHeight={MAX_HEIGHT - 10}>
             <Menu.Item icon={<IconEye size={14} />} onClick={viewFunc}>
               View

@@ -23,6 +23,7 @@ import { chapterLanguagesState, customDownloadsDirState } from '../../state/sett
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
+const ELEMENT_ID = 'ChapterTableContextMenu';
 const WIDTH = 200;
 const HEIGHT = 220;
 
@@ -43,6 +44,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const [previousChapters, setPreviousChapters] = useState<Chapter[]>([]);
+  const [sanitizedPos, setSanitizedPos] = useState<{ x: number; y: number }>(props.position);
 
   const handleDownload = () => {
     props.close();
@@ -91,17 +93,25 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     markChapters(previousChapters, props.series, read, setChapterList, setSeries, chapterLanguages);
   };
 
-  let { x, y } = props.position;
-  if (props.position.x + WIDTH > window.innerWidth) {
-    x = props.position.x - WIDTH;
-  }
-  if (props.position.y + HEIGHT > window.innerHeight) {
-    y = props.position.y - HEIGHT;
-  }
+  useEffect(() => {
+    const newPos = { ...props.position };
+    if (props.position.x + WIDTH > window.innerWidth) {
+      newPos.x = props.position.x - WIDTH;
+    }
+    if (props.position.y + HEIGHT > window.innerHeight) {
+      newPos.y = props.position.y - HEIGHT;
+    }
+    setSanitizedPos(newPos);
+  }, [props.position]);
 
   useEffect(() => {
     const mousedownListener = (e: MouseEvent) => {
-      if (e.clientX < x || e.clientX > x + WIDTH || e.clientY < y || e.clientY > y + HEIGHT) {
+      if (
+        e.clientX < sanitizedPos.x ||
+        e.clientX > sanitizedPos.x + WIDTH ||
+        e.clientY < sanitizedPos.y ||
+        e.clientY > sanitizedPos.y + HEIGHT
+      ) {
         props.close();
       }
     };
@@ -122,21 +132,19 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     );
   }, [props.chapter, props.chapterList]);
 
+  useEffect(() => {
+    const element = document.getElementById(ELEMENT_ID);
+    if (element) {
+      element.style.setProperty('left', `${sanitizedPos.x}px`);
+      element.style.setProperty('top', `${sanitizedPos.y}px`);
+    }
+  }, [sanitizedPos]);
+
   if (!props.visible || !props.chapter) return <></>;
   return (
     <Portal>
-      <Menu
-        shadow="md"
-        width={WIDTH}
-        opened
-        styles={() => ({
-          dropdown: {
-            left: x,
-            top: y,
-          },
-        })}
-      >
-        <Menu.Dropdown style={{ position: 'absolute', left: x, top: y }}>
+      <Menu shadow="md" width={WIDTH} opened>
+        <Menu.Dropdown id={ELEMENT_ID}>
           <Menu.Item icon={<IconPlayerPlay size={14} />} onClick={handleRead}>
             Read chapter
           </Menu.Item>
