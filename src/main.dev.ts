@@ -155,6 +155,12 @@ ipcMain.handle(ipcChannels.WINDOW.CLOSE, () => {
   mainWindow?.close();
 });
 
+ipcMain.handle(ipcChannels.WINDOW.TOGGLE_FULLSCREEN, () => {
+  const nowFullscreen = !mainWindow?.fullScreen;
+  mainWindow?.setFullScreen(nowFullscreen);
+  mainWindow?.webContents.send(ipcChannels.WINDOW.SET_FULLSCREEN, nowFullscreen);
+});
+
 ipcMain.handle(ipcChannels.GET_PATH.THUMBNAILS_DIR, () => {
   return thumbnailsDir;
 });

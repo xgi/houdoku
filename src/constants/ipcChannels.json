@@ -15,7 +15,8 @@
     "MINIMIZE": "window-minimize",
     "MAX_RESTORE": "window-max-restore",
     "CLOSE": "window-close",
-    "SET_FULLSCREEN": "set-fullscreen"
+    "SET_FULLSCREEN": "set-fullscreen",
+    "TOGGLE_FULLSCREEN": "toggle-fullscreen"
   },
   "GET_PATH": {
     "THUMBNAILS_DIR": "get-thumbnails-dir",

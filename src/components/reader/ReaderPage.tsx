@@ -91,6 +91,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   );
   const keyToggleShowingSidebar = useRecoilValue(settingStates.keyToggleShowingSidebarState);
   const keyToggleShowingHeader = useRecoilValue(settingStates.keyToggleShowingHeaderState);
+  const keyToggleFullscreen = useRecoilValue(settingStates.keyToggleFullscreenState);
   const keyExit = useRecoilValue(settingStates.keyExitState);
   const keyCloseOrBack = useRecoilValue(settingStates.keyCloseOrBackState);
 
@@ -446,6 +447,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     );
     Mousetrap.bind(keyToggleShowingSidebar, () => setShowingSidebar(showingSidebar));
     Mousetrap.bind(keyToggleShowingHeader, () => setShowingHeader(!showingHeader));
+    Mousetrap.bind(keyToggleFullscreen, () =>
+      ipcRenderer.invoke(ipcChannels.WINDOW.TOGGLE_FULLSCREEN)
+    );
     Mousetrap.bind(keyExit, exitPage);
     Mousetrap.bind(keyCloseOrBack, exitPage);
   };

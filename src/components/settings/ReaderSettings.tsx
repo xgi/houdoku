@@ -48,6 +48,7 @@ import {
   offsetPagesState,
   optimizeContrastState,
   keyToggleOffsetDoubleSpreadsState,
+  keyToggleFullscreenState,
 } from '../../state/settingStates';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -79,6 +80,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [keyToggleShowingHeader, setKeyToggleShowingHeader] = useRecoilState(
     keyToggleShowingHeaderState
   );
+  const [keyToggleFullscreen, setKeyToggleFullscreen] = useRecoilState(keyToggleFullscreenState);
   const [keyExit, setKeyExit] = useRecoilState(keyExitState);
   const [keyCloseOrBack, setKeyCloseOrBack] = useRecoilState(keyCloseOrBackState);
   const [longStripMargin, setLongStripMargin] = useRecoilState(longStripMarginState);
@@ -134,6 +136,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         break;
       case ReaderSetting.KeyToggleShowingHeader:
         setKeyToggleShowingHeader(value);
+        break;
+      case ReaderSetting.KeyToggleFullscreen:
+        setKeyToggleFullscreen(value);
         break;
       case ReaderSetting.KeyExit:
         setKeyExit(value);
@@ -370,6 +375,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
                 name: 'Toggle Double Page Offset',
                 value: keyToggleOffsetDoubleSpreads,
                 setting: ReaderSetting.KeyToggleOffsetDoubleSpreads,
+              },
+              {
+                name: 'Toggle Fullscreen',
+                value: keyToggleFullscreen,
+                setting: ReaderSetting.KeyToggleFullscreen,
               },
               {
                 name: 'Show Settings Menu',
