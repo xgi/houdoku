@@ -137,6 +137,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     if (element) {
       element.style.setProperty('left', `${sanitizedPos.x}px`);
       element.style.setProperty('top', `${sanitizedPos.y}px`);
+      element.style.removeProperty('display');
     }
   }, [sanitizedPos]);
 
@@ -144,7 +145,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   return (
     <Portal>
       <Menu shadow="md" width={WIDTH} opened>
-        <Menu.Dropdown id={ELEMENT_ID}>
+        <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }}>
           <Menu.Item icon={<IconPlayerPlay size={14} />} onClick={handleRead}>
             Read chapter
           </Menu.Item>

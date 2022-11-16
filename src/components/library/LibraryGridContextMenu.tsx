@@ -104,6 +104,7 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
     if (element) {
       element.style.setProperty('left', `${sanitizedPos.x}px`);
       element.style.setProperty('top', `${sanitizedPos.y}px`);
+      element.style.removeProperty('display');
     }
   }, [sanitizedPos]);
 
@@ -111,7 +112,7 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
   return (
     <Portal>
       <Menu shadow="md" width={WIDTH} opened>
-        <Menu.Dropdown id="LibraryGridContextMenu">
+        <Menu.Dropdown id="LibraryGridContextMenu" style={{ display: 'none' }}>
           <ScrollArea.Autosize maxHeight={MAX_HEIGHT - 10}>
             <Menu.Item icon={<IconEye size={14} />} onClick={viewFunc}>
               View
