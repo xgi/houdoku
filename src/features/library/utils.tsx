@@ -20,6 +20,7 @@ import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
 import { getNumberUnreadChapters } from '../../util/comparison';
 import routes from '../../constants/routes.json';
+import { Category } from '../../models/types';
 
 const updateSeriesNumberUnread = (series: Series, chapterLanguages: LanguageKey[]) => {
   if (series.id !== undefined) {
@@ -222,7 +223,8 @@ export async function reloadSeriesList(
   seriesList: Series[],
   setSeriesList: (seriesList: Series[]) => void,
   setReloadingSeriesList: (reloadingSeriesList: boolean) => void,
-  chapterLanguages: LanguageKey[]
+  chapterLanguages: LanguageKey[],
+  categoryList: Category[]
 ) {
   log.debug(`Reloading series list...`);
   setReloadingSeriesList(true);
@@ -233,15 +235,28 @@ export async function reloadSeriesList(
   const sortedSeriesList = [...seriesList].sort((a: Series, b: Series) =>
     a.title.localeCompare(b.title)
   );
+
+  const categoryIdsToSkip = categoryList
+    .filter((category) => category.refreshEnabled === false)
+    .map((category) => category.id);
+  const filteredSeriesList =
+    sortedSeriesList.length <= 1
+      ? sortedSeriesList
+      : sortedSeriesList.filter(
+          (series) =>
+            !series.categories ||
+            !series.categories.some((category) => categoryIdsToSkip.includes(category))
+        );
+
   let cur = 0;
   const failedToUpdate: Series[] = [];
 
   // eslint-disable-next-line no-restricted-syntax
-  for (const series of sortedSeriesList) {
+  for (const series of filteredSeriesList) {
     updateNotification({
       id: notificationId,
       title: `Refreshing library...`,
-      message: `Reloading series ${cur}/${sortedSeriesList.length}`,
+      message: `Reloading series ${cur}/${filteredSeriesList.length}`,
       loading: true,
       autoClose: false,
     });

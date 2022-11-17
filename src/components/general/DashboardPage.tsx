@@ -21,6 +21,7 @@ import Library from '../library/Library';
 import Extensions from '../extensions/Extensions';
 import Downloads from '../downloads/Downloads';
 import {
+  categoryListState,
   completedStartReloadState,
   importingState,
   importQueueState,
@@ -43,6 +44,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const [importQueue, setImportQueue] = useRecoilState(importQueueState);
   const [importing, setImporting] = useRecoilState(importingState);
+  const categoryList = useRecoilValue(categoryListState);
 
   useEffect(() => {
     if (refreshOnStart && !completedStartReload && seriesList.length > 0) {
@@ -50,7 +52,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         library.fetchSeriesList(),
         setSeriesList,
         setReloadingSeriesList,
-        chapterLanguages
+        chapterLanguages,
+        categoryList
       )
         // eslint-disable-next-line promise/always-return
         .then(() => {

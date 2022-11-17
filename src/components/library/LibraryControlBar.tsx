@@ -59,11 +59,18 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [libraryViews, setLibraryViews] = useRecoilState(libraryViewsState);
   const [librarySort, setLibrarySort] = useRecoilState(librarySortState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
-  const [showingContextMenu, setShowingContextMenu] = useRecoilState(showingLibraryCtxMenuState);
+  const categoryList = useRecoilValue(categoryListState);
+  const setShowingContextMenu = useSetRecoilState(showingLibraryCtxMenuState);
 
   const refreshHandler = () => {
     if (!reloadingSeriesList) {
-      reloadSeriesList(seriesList, setSeriesList, setReloadingSeriesList, chapterLanguages);
+      reloadSeriesList(
+        seriesList,
+        setSeriesList,
+        setReloadingSeriesList,
+        chapterLanguages,
+        categoryList
+      );
     }
   };
 

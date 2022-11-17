@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
-import { ActionIcon, Group, Modal, Stack, TextInput } from '@mantine/core';
-import { IconAlertCircle, IconCheck, IconTrash } from '@tabler/icons';
+import { ActionIcon, Group, Modal, Stack, TextInput, Tooltip } from '@mantine/core';
+import { IconAlertCircle, IconCheck, IconRefresh, IconRefreshOff, IconTrash } from '@tabler/icons';
 import { categoryListState, filterCategoryState } from '../../state/libraryStates';
 import library from '../../services/library';
 import { Category } from '../../models/types';
@@ -26,10 +26,17 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.showing]);
 
-  const updateCategoryLabel = (categoryId: string, label: string) => {
+  const updateCategory = (
+    categoryId: string,
+    opts: { label?: string; refreshEnabled?: boolean }
+  ) => {
     const categoryIdx = tempCategoryList.findIndex((cat) => cat.id === categoryId);
     const newTempCategoryList = [...tempCategoryList];
-    newTempCategoryList[categoryIdx] = { ...newTempCategoryList[categoryIdx], label };
+    newTempCategoryList[categoryIdx] = {
+      ...newTempCategoryList[categoryIdx],
+      label: opts.label || tempCategoryList[categoryIdx].label,
+      refreshEnabled: opts.refreshEnabled,
+    };
     setTempCategoryList(newTempCategoryList);
   };
 
@@ -63,22 +70,54 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
       <Stack spacing={4} pr="sm">
         {tempCategoryList.map((category) => {
           return (
-            <Group noWrap key={category.id} spacing="xs">
+            <Group noWrap key={category.id} spacing={0}>
               <TextInput
                 value={category.label}
                 radius={0}
+                mr={4}
                 style={{ width: '100%' }}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  updateCategoryLabel(category.id, e.target.value)
+                  updateCategory(category.id, { label: e.target.value })
                 }
               />
-              <ActionIcon color="red" mx={0} px={0}>
-                {promptRemoveCategoryIds.includes(category.id) ? (
-                  <IconAlertCircle size={18} onClick={() => removeCategory(category.id)} />
-                ) : (
-                  <IconTrash size={18} onClick={() => promptRemoveCategory(category.id)} />
-                )}
-              </ActionIcon>
+
+              <Tooltip.Floating
+                label="Enable Refreshing"
+                sx={(theme) => ({
+                  backgroundColor: theme.colors.dark[8],
+                  marginLeft: theme.spacing.xs,
+                })}
+              >
+                <ActionIcon mx={4}>
+                  {category.refreshEnabled || category.refreshEnabled === undefined ? (
+                    <IconRefresh
+                      size={18}
+                      onClick={() => updateCategory(category.id, { refreshEnabled: false })}
+                    />
+                  ) : (
+                    <IconRefreshOff
+                      size={18}
+                      onClick={() => updateCategory(category.id, { refreshEnabled: true })}
+                    />
+                  )}
+                </ActionIcon>
+              </Tooltip.Floating>
+
+              <Tooltip.Floating
+                label="Delete Category"
+                sx={(theme) => ({
+                  backgroundColor: theme.colors.dark[8],
+                  marginLeft: theme.spacing.xs,
+                })}
+              >
+                <ActionIcon color="red">
+                  {promptRemoveCategoryIds.includes(category.id) ? (
+                    <IconAlertCircle size={18} onClick={() => removeCategory(category.id)} />
+                  ) : (
+                    <IconTrash size={18} onClick={() => promptRemoveCategory(category.id)} />
+                  )}
+                </ActionIcon>
+              </Tooltip.Floating>
             </Group>
           );
         })}

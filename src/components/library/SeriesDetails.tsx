@@ -32,6 +32,7 @@ import { downloadCover } from '../../util/download';
 import library from '../../services/library';
 import constants from '../../constants/constants.json';
 import {
+  categoryListState,
   chapterFilterGroupState,
   chapterFilterTitleState,
   chapterListState,
@@ -59,7 +60,7 @@ interface ParamTypes {
 type Props = {};
 
 const SeriesDetails: React.FC<Props> = (props: Props) => {
-  const { id } = useParams<ParamTypes>();
+  const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const [extensionMetadata, setExtensionMetadata] = useState<ExtensionMetadata | undefined>();
   const [showingTrackerModal, setShowingTrackerModal] = useState(false);
@@ -73,15 +74,16 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const setChapterFilterGroup = useSetRecoilState(chapterFilterGroupState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
+  const categoryList = useRecoilValue(categoryListState);
 
   const loadContent = async () => {
     log.debug(`Series page is loading details from database for series ${id}`);
 
-    const storedSeries: Series | null = library.fetchSeries(id);
+    const storedSeries: Series | null = library.fetchSeries(id!);
     if (storedSeries === null) return;
 
     setSeries(storedSeries);
-    setChapterList(library.fetchChapters(id));
+    setChapterList(library.fetchChapters(id!));
 
     setExtensionMetadata(
       await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET, storedSeries.extensionId)
@@ -250,7 +252,8 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                         [series],
                         setSeriesList,
                         setReloadingSeriesList,
-                        chapterLanguages
+                        chapterLanguages,
+                        categoryList
                       )
                         .then(loadContent)
                         .catch((e) => log.error(e));
