@@ -75,12 +75,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const trackerAutoUpdate = useRecoilValue(settingStates.trackerAutoUpdateState);
   const discordPresenceEnabled = useRecoilValue(settingStates.discordPresenceEnabledState);
   const chapterLanguages = useRecoilValue(settingStates.chapterLanguagesState);
-  const keyPreviousPage = useRecoilValue(settingStates.keyPreviousPageState);
+  const keyPageLeft = useRecoilValue(settingStates.keyPageLeftState);
   const keyFirstPage = useRecoilValue(settingStates.keyFirstPageState);
-  const keyNextPage = useRecoilValue(settingStates.keyNextPageState);
+  const keyPageRight = useRecoilValue(settingStates.keyPageRightState);
   const keyLastPage = useRecoilValue(settingStates.keyLastPageState);
-  const keyPreviousChapter = useRecoilValue(settingStates.keyPreviousChapterState);
-  const keyNextChapter = useRecoilValue(settingStates.keyNextChapterState);
+  const keyChapterLeft = useRecoilValue(settingStates.keyChapterLeftState);
+  const keyChapterRight = useRecoilValue(settingStates.keyChapterRightState);
   const keyToggleReadingDirection = useRecoilValue(settingStates.keyToggleReadingDirectionState);
   const keyTogglePageStyle = useRecoilValue(settingStates.keyTogglePageStyleState);
   const keyToggleOffsetDoubleSpreads = useRecoilValue(
@@ -288,12 +288,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const removeKeybindings = () => {
     Mousetrap.unbind(
       Object.values([
-        keyPreviousPage,
+        keyPageLeft,
         keyFirstPage,
-        keyNextPage,
+        keyPageRight,
         keyLastPage,
-        keyPreviousChapter,
-        keyNextChapter,
+        keyChapterLeft,
+        keyChapterRight,
         keyToggleReadingDirection,
         keyTogglePageStyle,
         keyToggleShowingSettingsModal,
@@ -437,12 +437,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * These need to be removed (with removeKeybindings) when changing to another page.
    */
   const addKeybindings = () => {
-    Mousetrap.bind(keyPreviousPage, () => changePage(true));
+    Mousetrap.bind(keyPageLeft, () => changePage(true));
     Mousetrap.bind(keyFirstPage, () => changePage(true, true));
-    Mousetrap.bind(keyNextPage, () => changePage(false));
+    Mousetrap.bind(keyPageRight, () => changePage(false));
     Mousetrap.bind(keyLastPage, () => changePage(false, true));
-    Mousetrap.bind(keyPreviousChapter, () => changeChapter('left'));
-    Mousetrap.bind(keyNextChapter, () => changeChapter('right'));
+    Mousetrap.bind(keyChapterLeft, () => changeChapter('left'));
+    Mousetrap.bind(keyChapterRight, () => changeChapter('right'));
     Mousetrap.bind(keyToggleReadingDirection, () =>
       setReadingDirection(nextReadingDirection(readingDirection))
     );

@@ -34,10 +34,10 @@ import {
   keyExitState,
   keyFirstPageState,
   keyLastPageState,
-  keyNextChapterState,
-  keyNextPageState,
-  keyPreviousChapterState,
-  keyPreviousPageState,
+  keyChapterRightState,
+  keyPageRightState,
+  keyChapterLeftState,
+  keyPageLeftState,
   keyTogglePageStyleState,
   keyToggleReadingDirectionState,
   keyToggleShowingHeaderState,
@@ -61,12 +61,12 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
   const [pageStyle, setPageStyle] = useRecoilState(pageStyleState);
   const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
-  const [keyPreviousPage, setKeyPreviousPage] = useRecoilState(keyPreviousPageState);
+  const [keyPageLeft, setKeyPageLeft] = useRecoilState(keyPageLeftState);
   const [keyFirstPage, setKeyFirstPage] = useRecoilState(keyFirstPageState);
-  const [keyNextPage, setKeyNextPage] = useRecoilState(keyNextPageState);
+  const [keyPageRight, setKeyPageRight] = useRecoilState(keyPageRightState);
   const [keyLastPage, setKeyLastPage] = useRecoilState(keyLastPageState);
-  const [keyPreviousChapter, setKeyPreviousChapter] = useRecoilState(keyPreviousChapterState);
-  const [keyNextChapter, setKeyNextChapter] = useRecoilState(keyNextChapterState);
+  const [keyChapterLeft, setKeyChapterLeft] = useRecoilState(keyChapterLeftState);
+  const [keyChapterRight, setKeyChapterRight] = useRecoilState(keyChapterRightState);
   const [keyToggleReadingDirection, setKeyToggleReadingDirection] = useRecoilState(
     keyToggleReadingDirectionState
   );
@@ -104,23 +104,23 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.PageStyle:
         setPageStyle(value);
         break;
-      case ReaderSetting.KeyPreviousPage:
-        setKeyPreviousPage(value);
+      case ReaderSetting.KeyPageLeft:
+        setKeyPageLeft(value);
         break;
       case ReaderSetting.KeyFirstPage:
         setKeyFirstPage(value);
         break;
-      case ReaderSetting.KeyNextPage:
-        setKeyNextPage(value);
+      case ReaderSetting.KeyPageRight:
+        setKeyPageRight(value);
         break;
       case ReaderSetting.KeyLastPage:
         setKeyLastPage(value);
         break;
-      case ReaderSetting.KeyPreviousChapter:
-        setKeyPreviousChapter(value);
+      case ReaderSetting.KeyChapterLeft:
+        setKeyChapterLeft(value);
         break;
-      case ReaderSetting.KeyNextChapter:
-        setKeyNextChapter(value);
+      case ReaderSetting.KeyChapterRight:
+        setKeyChapterRight(value);
         break;
       case ReaderSetting.KeyToggleReadingDirection:
         setKeyToggleReadingDirection(value);
@@ -322,14 +322,14 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
           <tbody>
             {[
               {
-                name: 'Next Page',
-                value: keyNextPage,
-                setting: ReaderSetting.KeyNextPage,
+                name: 'Turn Page Right',
+                value: keyPageRight,
+                setting: ReaderSetting.KeyPageRight,
               },
               {
-                name: 'Previous Page',
-                value: keyPreviousPage,
-                setting: ReaderSetting.KeyPreviousPage,
+                name: 'Turn Page Left',
+                value: keyPageLeft,
+                setting: ReaderSetting.KeyPageLeft,
               },
               {
                 name: 'First Page',
@@ -342,14 +342,14 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
                 setting: ReaderSetting.KeyLastPage,
               },
               {
-                name: 'Next Chapter',
-                value: keyNextChapter,
-                setting: ReaderSetting.KeyNextChapter,
+                name: 'Change Chapter Right',
+                value: keyChapterRight,
+                setting: ReaderSetting.KeyChapterRight,
               },
               {
-                name: 'Previous Chapter',
-                value: keyPreviousChapter,
-                setting: ReaderSetting.KeyPreviousChapter,
+                name: 'Change Chapter Left',
+                value: keyChapterLeft,
+                setting: ReaderSetting.KeyChapterLeft,
               },
               {
                 name: 'Exit Reader',
