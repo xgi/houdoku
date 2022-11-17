@@ -132,7 +132,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setRelevantChapterList(newRelevantChapterList);
   };
 
-  const loadDownloadedChapterData = async (series: Series, chapter: Chapter) => {
+  const loadDownloadedChapterData = async (
+    series: Series,
+    chapter: Chapter,
+    desiredPage?: number
+  ) => {
     log.debug(`Reader is loading downloaded chapter data for chapter ${chapter.id}`);
 
     const chapterDownloadPath: string = getChapterDownloadPath(
@@ -153,6 +157,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       );
     setPageUrls(newPageUrls);
     setLastPageNumber(newPageUrls.length);
+    if (desiredPage) setPageNumber(Math.min(newPageUrls.length, desiredPage));
   };
 
   /**
@@ -163,7 +168,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * @param chapterId the chapter to view. If it does not exist, this method returns immediately
    * @param seriesId the id of the series the chapter is from
    */
-  const loadChapterData = async (chapterId: string, seriesId: string) => {
+  const loadChapterData = async (chapterId: string, seriesId: string, desiredPage?: number) => {
     log.debug(`Reader is loading chapter data for chapter ${chapterId}`);
 
     const chapter: Chapter | null = library.fetchChapter(seriesId, chapterId);
@@ -186,7 +191,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     }
 
     if (getChapterDownloaded(series, chapter, customDownloadsDir || defaultDownloadsDir)) {
-      loadDownloadedChapterData(series, chapter);
+      loadDownloadedChapterData(series, chapter, desiredPage);
       return;
     }
 
@@ -206,6 +211,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       );
     setPageUrls(newPageUrls);
     setLastPageNumber(newPageUrls.length);
+    if (desiredPage) setPageNumber(Math.min(newPageUrls.length, desiredPage));
   };
 
   /**
@@ -238,12 +244,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * The chapter does not necessarily need to be included in relevantChapterList.
    * @param id the chapter id
    */
-  const setChapter = (id: string) => {
-    setPageNumber(1);
+  const setChapter = (id: string, desiredPage?: number) => {
+    setPageNumber(desiredPage || 1);
     setPageUrls([]);
     setLastPageNumber(0);
 
-    loadChapterData(id, series_id!);
+    loadChapterData(id, series_id!, desiredPage);
   };
 
   /**
@@ -252,7 +258,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * without doing anything.
    * @return whether the chapter was actually changed or not
    */
-  const changeChapter = (direction: 'left' | 'right' | 'next' | 'previous') => {
+  const changeChapter = (
+    direction: 'left' | 'right' | 'next' | 'previous',
+    fromPageMovement?: boolean
+  ) => {
     let previous = false;
     if (direction === 'left' || direction === 'right') {
       previous =
@@ -264,7 +273,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     const newChapterId = getAdjacentChapterId(previous);
     if (newChapterId === null) return false;
-    setChapter(newChapterId);
+    const desiredPage = fromPageMovement && previous ? Infinity : 1;
+    setChapter(newChapterId, desiredPage);
     return true;
   };
 
@@ -341,6 +351,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * @param toBound whether to get the final page in this direction (i.e. the first or last page)
    */
   const changePage = (left: boolean, toBound = false) => {
+    if (lastPageNumber === 0) return;
+
     if (toBound) {
       if (readingDirection === ReadingDirection.LeftToRight) {
         setPageNumber(left ? 1 : lastPageNumber);
@@ -496,14 +508,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     // if we go past the last page or before the first page, change the chapter
     if (pageNumber > lastPageNumber && lastPageNumber !== 0) {
-      const changed = changeChapter('next');
+      const changed = changeChapter('next', true);
       if (!changed) {
         setShowingNoNextChapter(true);
-        setPageNumber(lastPageNumber);
       }
     } else if (pageNumber <= 0) {
-      const changed = changeChapter('previous');
-      if (!changed) setPageNumber(1);
+      changeChapter('previous', true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);

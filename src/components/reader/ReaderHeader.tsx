@@ -129,7 +129,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
         text = `${curGroup[0]}-${curGroup[1]}`;
       }
     }
-    return `${text} / ${lastPageNumber}`;
+    return `${text} / ${lastPageNumber}`.replace('Infinity', '??');
   };
 
   const renderFitButton = () => {
