@@ -250,10 +250,18 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
    * Change to an adjacent chapter.
    * Adjacent chapter is determined using getAdjacentChapterId. If not found, this method returns
    * without doing anything.
-   * @param previous whether to get the previous chapter (as opposed to the next)
    * @return whether the chapter was actually changed or not
    */
-  const changeChapter = (previous: boolean) => {
+  const changeChapter = (direction: 'left' | 'right' | 'next' | 'previous') => {
+    let previous = false;
+    if (direction === 'left' || direction === 'right') {
+      previous =
+        (direction === 'left' && readingDirection === ReadingDirection.LeftToRight) ||
+        (direction === 'right' && readingDirection === ReadingDirection.RightToLeft);
+    } else {
+      previous = direction === 'previous';
+    }
+
     const newChapterId = getAdjacentChapterId(previous);
     if (newChapterId === null) return false;
     setChapter(newChapterId);
@@ -433,8 +441,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     Mousetrap.bind(keyFirstPage, () => changePage(true, true));
     Mousetrap.bind(keyNextPage, () => changePage(false));
     Mousetrap.bind(keyLastPage, () => changePage(false, true));
-    Mousetrap.bind(keyPreviousChapter, () => changeChapter(true));
-    Mousetrap.bind(keyNextChapter, () => changeChapter(false));
+    Mousetrap.bind(keyPreviousChapter, () => changeChapter('left'));
+    Mousetrap.bind(keyNextChapter, () => changeChapter('right'));
     Mousetrap.bind(keyToggleReadingDirection, () =>
       setReadingDirection(nextReadingDirection(readingDirection))
     );
@@ -488,13 +496,13 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
     // if we go past the last page or before the first page, change the chapter
     if (pageNumber > lastPageNumber && lastPageNumber !== 0) {
-      const changed = changeChapter(false);
+      const changed = changeChapter('next');
       if (!changed) {
         setShowingNoNextChapter(true);
         setPageNumber(lastPageNumber);
       }
     } else if (pageNumber <= 0) {
-      const changed = changeChapter(true);
+      const changed = changeChapter('previous');
       if (!changed) setPageNumber(1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

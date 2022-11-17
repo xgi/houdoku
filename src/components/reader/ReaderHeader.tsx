@@ -84,7 +84,7 @@ const ICONS_OFFSET_PAGES = {
 type Props = {
   changePage: (left: boolean, toBound?: boolean) => void;
   setChapter: (id: string) => void;
-  changeChapter: (previous: boolean) => void;
+  changeChapter: (direction: 'left' | 'right' | 'next' | 'previous') => void;
   getAdjacentChapterId: (previous: boolean) => string | null;
   exitPage: () => void;
 };
@@ -210,7 +210,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 (readingDirection === ReadingDirection.RightToLeft &&
                   props.getAdjacentChapterId(false) === null)
               }
-              onClick={() => props.changeChapter(true)}
+              onClick={() => props.changeChapter('left')}
             />
             <Menu shadow="md" width={110} trigger="hover">
               <Menu.Target>
@@ -248,7 +248,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 (readingDirection === ReadingDirection.RightToLeft &&
                   props.getAdjacentChapterId(true) === null)
               }
-              onClick={() => props.changeChapter(false)}
+              onClick={() => props.changeChapter('right')}
             />
           </Group>
 
