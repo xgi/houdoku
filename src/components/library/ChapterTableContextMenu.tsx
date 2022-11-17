@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal } from '@mantine/core';
 import {
-  IconArrowBigLeftLines,
-  IconArrowBigRightLines,
   IconChecks,
   IconDownload,
   IconEye,
@@ -25,7 +23,7 @@ const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAUL
 
 const ELEMENT_ID = 'ChapterTableContextMenu';
 const WIDTH = 200;
-const HEIGHT = 220;
+const HEIGHT = 150;
 
 type Props = {
   position: { x: number; y: number };
@@ -33,7 +31,6 @@ type Props = {
   series: Series;
   chapter: Chapter | undefined;
   chapterList: Chapter[];
-  setDownloadModalProps: (chapter: Chapter, direction: 'next' | 'previous') => void;
   close: () => void;
 };
 
@@ -57,13 +54,6 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
         } as DownloadTask,
       ]);
       downloaderClient.start();
-    }
-  };
-
-  const handleDownloadMultiple = (direction: 'next' | 'previous') => {
-    props.close();
-    if (props.chapter !== undefined) {
-      props.setDownloadModalProps(props.chapter, direction);
     }
   };
 
@@ -170,22 +160,8 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
             </Menu.Item>
           )}
 
-          <Menu.Divider />
-
           <Menu.Item icon={<IconDownload size={14} />} onClick={handleDownload}>
             Download
-          </Menu.Item>
-          <Menu.Item
-            icon={<IconArrowBigRightLines size={14} />}
-            onClick={() => handleDownloadMultiple('next')}
-          >
-            Download next X
-          </Menu.Item>
-          <Menu.Item
-            icon={<IconArrowBigLeftLines size={14} />}
-            onClick={() => handleDownloadMultiple('previous')}
-          >
-            Download previous X
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>
