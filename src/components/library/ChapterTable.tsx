@@ -39,6 +39,7 @@ import {
   chapterFilterTitleState,
   chapterListState,
   seriesState,
+  sortedFilteredChapterListState,
 } from '../../state/libraryStates';
 import {
   chapterLanguagesState,
@@ -87,51 +88,12 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const [contextMenuChapter, setContextMenuChapter] = useState<Chapter | undefined>();
   const forceUpdate = useForceUpdate();
   const downloaderCurrentTask = useRecoilValue(currentTaskState);
-  const [sortedFilteredChapterList, setSortedFilteredChapterList] = useState<Chapter[]>([]);
+  const sortedFilteredChapterList = useRecoilValue(sortedFilteredChapterListState);
   const [currentTextFilter, setCurrentTextFilter] = useState<'title' | 'group' | null>(null);
 
   useEffect(() => {
     if (downloaderCurrentTask?.page === 2) forceUpdate();
   }, [downloaderCurrentTask, forceUpdate]);
-
-  useEffect(() => {
-    setSortedFilteredChapterList(
-      chapterList
-        .filter(
-          (chapter: Chapter) =>
-            (chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0) &&
-            chapter.title !== null &&
-            chapter.title.toLowerCase().includes(chapterFilterTitle) &&
-            chapter.groupName !== null &&
-            chapter.groupName.toLowerCase().includes(chapterFilterGroup)
-        )
-        .sort((a, b) => {
-          const volumeComp = {
-            [TableColumnSortOrder.Ascending]:
-              parseFloat(a.volumeNumber) - parseFloat(b.volumeNumber),
-            [TableColumnSortOrder.Descending]:
-              parseFloat(b.volumeNumber) - parseFloat(a.volumeNumber),
-            [TableColumnSortOrder.None]: 0,
-          }[chapterListVolOrder];
-          const chapterComp = {
-            [TableColumnSortOrder.Ascending]:
-              parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber),
-            [TableColumnSortOrder.Descending]:
-              parseFloat(b.chapterNumber) - parseFloat(a.chapterNumber),
-            [TableColumnSortOrder.None]: 0,
-          }[chapterListChOrder];
-
-          return volumeComp || chapterComp;
-        })
-    );
-  }, [
-    chapterList,
-    chapterListVolOrder,
-    chapterListChOrder,
-    chapterFilterGroup,
-    chapterFilterTitle,
-    chapterLanguages,
-  ]);
 
   useEffect(() => setCurrentPage(1), [chapterFilterGroup, chapterFilterTitle, chapterLanguages]);
 
