@@ -112,7 +112,7 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
   return (
     <Portal>
       <Menu shadow="md" width={WIDTH} opened>
-        <Menu.Dropdown id="LibraryGridContextMenu" style={{ display: 'none' }}>
+        <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }}>
           <ScrollArea.Autosize maxHeight={MAX_HEIGHT - 10}>
             <Menu.Item icon={<IconEye size={14} />} onClick={viewFunc}>
               View
