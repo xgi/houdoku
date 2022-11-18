@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from 'houdoku-extension-lib';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ScrollArea, Text } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
-import { filterCategoryState, filterState, seriesListState } from '../../state/libraryStates';
+import {
+  activeSeriesListState,
+  filterCategoryState,
+  filterState,
+  seriesListState,
+} from '../../state/libraryStates';
 import {
   libraryFilterStatusState,
   libraryFilterProgressState,
@@ -25,7 +30,8 @@ const Library: React.FC<Props> = (_props: Props) => {
   const [removeModalShowing, setRemoveModalShowing] = useState(false);
   const [removeModalSeries, setRemoveModalSeries] = useState<Series | null>(null);
   const [editCategoriesModalShowing, setEditCategoriesModalShowing] = useState(false);
-  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
+  const setSeriesList = useSetRecoilState(seriesListState);
+  const activeSeriesList = useRecoilValue(activeSeriesListState);
   const filter = useRecoilValue(filterState);
   const filterCategory = useRecoilValue(filterCategoryState);
   const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
@@ -35,11 +41,12 @@ const Library: React.FC<Props> = (_props: Props) => {
 
   /**
    * Get a filtered (and sorted) list of series after applying the specified filters.
+   * TODO: this can probably be moved into a Recoil selector
    * @param seriesList the list of series to filter
    * @returns a sorted list of series matching all filter props
    */
   const getFilteredList = (): Series[] => {
-    const filteredList = seriesList.filter((series: Series) => {
+    const filteredList = activeSeriesList.filter((series: Series) => {
       if (!series) return false;
 
       if (!series.title.toLowerCase().includes(filter.toLowerCase())) return false;
@@ -132,7 +139,7 @@ const Library: React.FC<Props> = (_props: Props) => {
     <>
       <LibraryControlBar showEditCategoriesModal={() => setEditCategoriesModalShowing(true)} />
       <ScrollArea style={{ height: 'calc(100vh - 24px - 72px)' }} pr="xl" mr={-16}>
-        {seriesList.length > 0 ? renderLibrary() : renderEmptyMessage()}
+        {activeSeriesList.length > 0 ? renderLibrary() : renderEmptyMessage()}
       </ScrollArea>
     </>
   );

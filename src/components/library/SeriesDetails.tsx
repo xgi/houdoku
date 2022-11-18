@@ -20,7 +20,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { IconArrowLeft } from '@tabler/icons';
+import { IconArrowLeft, IconHeart } from '@tabler/icons';
 import ChapterTable from './ChapterTable';
 import blankCover from '../../img/blank_cover.png';
 import { getBannerImageUrl } from '../../services/mediasource';
@@ -52,10 +52,6 @@ if (!fs.existsSync(thumbnailsDir)) {
   fs.mkdirSync(thumbnailsDir);
 }
 
-interface ParamTypes {
-  id: string;
-}
-
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
@@ -67,7 +63,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const [showingRemoveModal, setShowingRemoveModal] = useState(false);
   const [showingEditModal, setShowingEditModal] = useState(false);
   const [series, setSeries] = useRecoilState(seriesState);
-  const setSeriesList = useSetRecoilState(seriesListState);
+  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const setChapterList = useSetRecoilState(chapterListState);
   const [seriesBannerUrl, setSeriesBannerUrl] = useRecoilState(seriesBannerUrlState);
   const setChapterFilterTitle = useSetRecoilState(chapterFilterTitleState);
@@ -77,7 +73,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const categoryList = useRecoilValue(categoryListState);
 
   const loadContent = async () => {
-    log.debug(`Series page is loading details from database for series ${id}`);
+    log.info(`Series page is loading details from database for series ${id}`);
 
     const storedSeries: Series | null = library.fetchSeries(id!);
     if (storedSeries === null) return;
@@ -97,20 +93,14 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     loadContent();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id, seriesList]);
 
   useEffect(() => {
     setChapterFilterTitle('');
     setChapterFilterGroup('');
   }, [location, setChapterFilterGroup, setChapterFilterTitle]);
 
-  if (series === undefined) {
-    return (
-      <div>
-        <p>Loading...</p>
-      </div>
-    );
-  }
+  if (series === undefined) return <></>;
 
   const getThumbnailPath = (seriesId?: string) => {
     const fileExtensions = constants.IMAGE_EXTENSIONS;
@@ -118,7 +108,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       const thumbnailPath = path.join(thumbnailsDir, `${seriesId}.${fileExtensions[i]}`);
       if (fs.existsSync(thumbnailPath)) return thumbnailPath;
     }
-    return blankCover;
+    return series.remoteCoverUrl || blankCover;
   };
 
   const renderDetailsGrid = () => {
@@ -162,7 +152,6 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
     );
   };
 
-  if (series === undefined) return <></>;
   return (
     <>
       <SeriesTrackerModal
@@ -191,17 +180,45 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
       />
 
       <Affix position={{ top: 29, left: 205 }} zIndex={0}>
-        <Link to={routes.LIBRARY}>
+        {series.preview ? (
+          <Link to={routes.SEARCH}>
+            <Button size="sm" leftIcon={<IconArrowLeft size={16} />} variant="default">
+              Back to search
+            </Button>
+          </Link>
+        ) : (
+          <Link to={routes.LIBRARY}>
+            <Button
+              size="sm"
+              leftIcon={<IconArrowLeft size={16} />}
+              variant="default"
+              onClick={() => setSeriesList(library.fetchSeriesList())}
+            >
+              Back to library
+            </Button>
+          </Link>
+        )}
+      </Affix>
+
+      {series.preview ? (
+        <Affix position={{ top: 29, right: 20 }} zIndex={0}>
           <Button
             size="sm"
-            leftIcon={<IconArrowLeft size={16} />}
-            variant="default"
-            onClick={() => setSeriesList(library.fetchSeriesList())}
+            color="teal"
+            leftIcon={<IconHeart size={16} />}
+            variant="filled"
+            onClick={() => {
+              downloadCover(series);
+              library.upsertSeries({ ...series, preview: false });
+              setSeriesList(library.fetchSeriesList());
+            }}
           >
-            Back to library
+            Add to library
           </Button>
-        </Link>
-      </Affix>
+        </Affix>
+      ) : (
+        ''
+      )}
 
       <Box
         sx={(theme) => ({
@@ -230,37 +247,47 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           >
             <Stack align="flex-end" justify="flex-end" style={{ height: '100%' }}>
               <Group mx="sm" my={4} spacing="xs">
-                <Button size="sm" variant="default" onClick={() => setShowingRemoveModal(true)}>
-                  Remove
-                </Button>
-                <Button size="sm" variant="default" onClick={() => setShowingTrackerModal(true)}>
-                  Trackers
-                </Button>
-                {series.extensionId === FS_METADATA.id ? (
-                  <Button size="sm" variant="default" onClick={() => setShowingEditModal(true)}>
-                    Edit
-                  </Button>
-                ) : (
+                {series.preview ? (
                   ''
+                ) : (
+                  <>
+                    <Button size="sm" variant="default" onClick={() => setShowingRemoveModal(true)}>
+                      Remove
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="default"
+                      onClick={() => setShowingTrackerModal(true)}
+                    >
+                      Trackers
+                    </Button>
+                    {series.extensionId === FS_METADATA.id ? (
+                      <Button size="sm" variant="default" onClick={() => setShowingEditModal(true)}>
+                        Edit
+                      </Button>
+                    ) : (
+                      ''
+                    )}
+                    <Button
+                      size="sm"
+                      loading={reloadingSeriesList}
+                      onClick={() => {
+                        if (series !== undefined && !reloadingSeriesList)
+                          reloadSeriesList(
+                            [series],
+                            setSeriesList,
+                            setReloadingSeriesList,
+                            chapterLanguages,
+                            categoryList
+                          )
+                            .then(loadContent)
+                            .catch((e) => log.error(e));
+                      }}
+                    >
+                      {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}
+                    </Button>
+                  </>
                 )}
-                <Button
-                  size="sm"
-                  loading={reloadingSeriesList}
-                  onClick={() => {
-                    if (series !== undefined && !reloadingSeriesList)
-                      reloadSeriesList(
-                        [series],
-                        setSeriesList,
-                        setReloadingSeriesList,
-                        chapterLanguages,
-                        categoryList
-                      )
-                        .then(loadContent)
-                        .catch((e) => log.error(e));
-                  }}
-                >
-                  {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}
-                </Button>
               </Group>
             </Stack>
           </BackgroundImage>

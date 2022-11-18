@@ -1,10 +1,18 @@
 import { Chapter, Series, TriState } from 'houdoku-extension-lib';
-import { atom } from 'recoil';
+import { atom, selector } from 'recoil';
 import { Category, ImportTask } from '../models/types';
 
 export const seriesListState = atom<Series[]>({
   key: 'librarySeriesList',
   default: [] as Series[],
+});
+
+export const activeSeriesListState = selector({
+  key: 'activeLibrarySeriesList',
+  get: ({ get }) => {
+    const seriesList = get(seriesListState);
+    return seriesList.filter((series) => !series.preview);
+  },
 });
 
 export const seriesState = atom({

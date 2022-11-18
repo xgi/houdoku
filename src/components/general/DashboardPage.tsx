@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import log from 'electron-log';
 import {
   IconBooks,
@@ -21,6 +21,7 @@ import Library from '../library/Library';
 import Extensions from '../extensions/Extensions';
 import Downloads from '../downloads/Downloads';
 import {
+  activeSeriesListState,
   categoryListState,
   completedStartReloadState,
   importingState,
@@ -37,7 +38,8 @@ import { downloadCover } from '../../util/download';
 interface Props {}
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
-  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
+  const setSeriesList = useSetRecoilState(seriesListState);
+  const activeSeriesList = useRecoilValue(activeSeriesListState);
   const [, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const [completedStartReload, setCompletedStartReload] = useRecoilState(completedStartReloadState);
   const refreshOnStart = useRecoilValue(refreshOnStartState);
@@ -47,7 +49,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const categoryList = useRecoilValue(categoryListState);
 
   useEffect(() => {
-    if (refreshOnStart && !completedStartReload && seriesList.length > 0) {
+    if (refreshOnStart && !completedStartReload && activeSeriesList.length > 0) {
       reloadSeriesList(
         library.fetchSeriesList(),
         setSeriesList,
@@ -62,7 +64,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         .catch((e) => log.error(e));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seriesList]);
+  }, [activeSeriesList]);
 
   useEffect(() => {
     if (!importing && importQueue.length > 0) {
@@ -74,7 +76,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         .then((addedSeries) => {
           setSeriesList(library.fetchSeriesList());
           setImporting(false);
-          downloadCover(addedSeries);
+          if (!task.series.preview) downloadCover(addedSeries);
         })
         .catch((e) => log.error(e));
     }

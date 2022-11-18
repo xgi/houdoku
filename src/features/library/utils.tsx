@@ -76,20 +76,22 @@ export async function importSeries(
   log.debug(`Importing series ${series.sourceId} from extension ${series.extensionId}`);
 
   const notificationId = uuidv4();
-  showNotification({
-    id: notificationId,
-    title: 'Adding series...',
-    message: (
-      <Text>
-        Adding{' '}
-        <Text color="teal" component="span" italic>
-          {series.title}
+  if (!series.preview) {
+    showNotification({
+      id: notificationId,
+      title: 'Adding series...',
+      message: (
+        <Text>
+          Adding{' '}
+          <Text color="teal" component="span" italic>
+            {series.title}
+          </Text>
         </Text>
-      </Text>
-    ),
-    loading: true,
-    autoClose: false,
-  });
+      ),
+      loading: true,
+      autoClose: false,
+    });
+  }
 
   let seriesToAdd = series;
   if (getFirst) {
@@ -106,25 +108,30 @@ export async function importSeries(
     seriesToAdd.sourceId
   );
 
-  const addedSeries = library.upsertSeries(seriesToAdd);
+  const addedSeries = library.upsertSeries({
+    ...seriesToAdd,
+    id: series.id,
+  });
   library.upsertChapters(chapters, addedSeries);
   updateSeriesNumberUnread(addedSeries, chapterLanguages);
 
   log.debug(`Imported series ${addedSeries.sourceId} with database ID ${addedSeries.id}`);
-  updateNotification({
-    id: notificationId,
-    title: 'Added series',
-    message: (
-      <Text>
-        Added{' '}
-        <Text color="teal" component="span" italic>
-          {addedSeries.title}
+  if (!series.preview) {
+    updateNotification({
+      id: notificationId,
+      title: 'Added series',
+      message: (
+        <Text>
+          Added{' '}
+          <Text color="teal" component="span" italic>
+            {addedSeries.title}
+          </Text>
         </Text>
-      </Text>
-    ),
-    color: 'teal',
-    icon: React.createElement(IconCheck, { size: 16 }),
-  });
+      ),
+      color: 'teal',
+      icon: React.createElement(IconCheck, { size: 16 }),
+    });
+  }
   return addedSeries;
 }
 

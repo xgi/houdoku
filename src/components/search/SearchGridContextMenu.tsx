@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from 'houdoku-extension-lib';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal } from '@mantine/core';
-import { IconEye, IconBookUpload } from '@tabler/icons';
-import { importQueueState } from '../../state/libraryStates';
+import { IconEye, IconBookUpload, IconPlayerPlay } from '@tabler/icons';
+import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
+import { importingState, importQueueState, seriesListState } from '../../state/libraryStates';
+import { goToSeries } from '../../features/library/utils';
 
 const ELEMENT_ID = 'SearchGridContextMenu';
 const WIDTH = 200;
-const ESTIMATED_HEIGHT = 85;
+const ESTIMATED_HEIGHT = 110;
 
 type Props = {
   visible: boolean;
@@ -18,8 +21,13 @@ type Props = {
 };
 
 const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
+  const navigate = useNavigate();
   const [importQueue, setImportQueue] = useRecoilState(importQueueState);
   const [sanitizedPos, setSanitizedPos] = useState<{ x: number; y: number }>(props.position);
+  const [loadingPreview, setLoadingPreview] = useState(false);
+  const [previewSeries, setPreviewSeries] = useState<Series>();
+  const importing = useRecoilValue(importingState);
+  const setSeriesList = useSetRecoilState(seriesListState);
 
   useEffect(() => {
     const newPos = { ...props.position };
@@ -45,6 +53,24 @@ const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
       props.close();
     }
   };
+
+  const previewFunc = () => {
+    if (props.series) {
+      const tempPreviewSeries = { ...props.series, id: uuidv4(), preview: true };
+      setPreviewSeries(tempPreviewSeries);
+      setImportQueue([...importQueue, { series: tempPreviewSeries, getFirst: false }]);
+      setLoadingPreview(true);
+    }
+  };
+
+  useEffect(() => {
+    if (loadingPreview && previewSeries && !importing) {
+      setLoadingPreview(false);
+      goToSeries(previewSeries, setSeriesList, navigate);
+      props.close();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [importQueue, loadingPreview]);
 
   useEffect(() => {
     const mousedownListener = (e: MouseEvent) => {
@@ -83,6 +109,9 @@ const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
           </Menu.Item>
           <Menu.Item icon={<IconBookUpload size={14} />} onClick={importFunc}>
             Add to library
+          </Menu.Item>
+          <Menu.Item icon={<IconPlayerPlay size={14} />} onClick={previewFunc}>
+            Preview
           </Menu.Item>
         </Menu.Dropdown>
       </Menu>

@@ -9,7 +9,7 @@ import { openModal } from '@mantine/modals';
 import AddSeriesModal from './AddSeriesModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
-import { seriesListState } from '../../state/libraryStates';
+import { activeSeriesListState, seriesListState } from '../../state/libraryStates';
 import {
   addModalEditableState,
   addModalSeriesState,
@@ -35,7 +35,7 @@ const Search: React.FC<Props> = (_props: Props) => {
   const [filterValuesMap, setFilterValuesMap] = useRecoilState(filterValuesMapState);
   const [nextSourcePage, setNextSourcePage] = useRecoilState(nextSourcePageState);
   const [searchResult, setSearchResult] = useRecoilState(searchResultState);
-  const seriesList = useRecoilValue(seriesListState);
+  const activeSeriesList = useRecoilValue(activeSeriesListState);
   const searchExtension = useRecoilValue(searchExtensionState);
   const [addModalSeries, setAddModalSeries] = useRecoilState(addModalSeriesState);
   const [addModalEditable, setAddModalEditable] = useRecoilState(addModalEditableState);
@@ -44,7 +44,7 @@ const Search: React.FC<Props> = (_props: Props) => {
 
   const inLibrary = (series: Series): boolean => {
     return (
-      seriesList.find(
+      activeSeriesList.find(
         (_series: Series) =>
           (series.extensionId === _series.extensionId && series.sourceId === _series.sourceId) ||
           series.title === _series.title

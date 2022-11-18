@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button, Center, Group, Loader, Modal, Stack, Text } from '@mantine/core';
+import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
 import ipcChannels from '../../constants/ipcChannels.json';
 import SeriesEditControls from '../general/SeriesEditControls';
-import { importQueueState } from '../../state/libraryStates';
+import { importingState, importQueueState, seriesListState } from '../../state/libraryStates';
+import { goToSeries } from '../../features/library/utils';
 
 type Props = {
   series: Series | undefined;
@@ -16,9 +19,14 @@ type Props = {
 };
 
 const AddSeriesModal: React.FC<Props> = (props: Props) => {
+  const navigate = useNavigate();
   const [customSeries, setCustomSeries] = useState<Series>();
   const [loadingDetails, setLoadingDetails] = useState(true);
+  const [loadingPreview, setLoadingPreview] = useState(false);
+  const [previewSeries, setPreviewSeries] = useState<Series>();
   const [importQueue, setImportQueue] = useRecoilState(importQueueState);
+  const importing = useRecoilValue(importingState);
+  const setSeriesList = useSetRecoilState(seriesListState);
 
   useEffect(() => {
     setLoadingDetails(true);
@@ -45,10 +53,28 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
     }
   }, [props.series]);
 
+  useEffect(() => {
+    if (loadingPreview && previewSeries && !importing) {
+      setLoadingPreview(false);
+      goToSeries(previewSeries, setSeriesList, navigate);
+      props.close();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [importQueue, loadingPreview]);
+
   const handleAdd = async () => {
     if (customSeries !== undefined) {
       setImportQueue([...importQueue, { series: customSeries, getFirst: false }]);
       props.close();
+    }
+  };
+
+  const handlePreview = async () => {
+    if (customSeries !== undefined) {
+      const tempPreviewSeries = { ...customSeries, id: uuidv4(), preview: true };
+      setPreviewSeries(tempPreviewSeries);
+      setImportQueue([...importQueue, { series: tempPreviewSeries, getFirst: false }]);
+      setLoadingPreview(true);
     }
   };
 
@@ -75,6 +101,9 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
         <Group position="right" mt="sm">
           <Button variant="default" onClick={props.close}>
             Cancel
+          </Button>
+          <Button variant="default" onClick={handlePreview} loading={loadingPreview}>
+            Preview
           </Button>
           <Button onClick={handleAdd}>Add Series</Button>
         </Group>

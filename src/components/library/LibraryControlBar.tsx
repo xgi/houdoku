@@ -18,6 +18,7 @@ import {
 import { reloadSeriesList } from '../../features/library/utils';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import {
+  activeSeriesListState,
   categoryListState,
   filterCategoryState,
   filterState,
@@ -46,7 +47,8 @@ const SORT_ICONS = {
 };
 
 const LibraryControlBar: React.FC<Props> = (props: Props) => {
-  const [seriesList, setSeriesList] = useRecoilState(seriesListState);
+  const setSeriesList = useSetRecoilState(seriesListState);
+  const activeSeriesList = useRecoilValue(activeSeriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const availableCategories = useRecoilValue(categoryListState);
   const setFilter = useSetRecoilState(filterState);
@@ -65,7 +67,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const refreshHandler = () => {
     if (!reloadingSeriesList) {
       reloadSeriesList(
-        seriesList,
+        activeSeriesList,
         setSeriesList,
         setReloadingSeriesList,
         chapterLanguages,
