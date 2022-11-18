@@ -139,7 +139,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   return (
     <>
       {renderHeader()}
-      {seriesList.length === 0 ? (
+      {seriesList.length === 0 || Object.keys(chapterLists).length === 0 ? (
         <Text>
           You don&apos;t have any downloaded chapters. You can download chapters from the series
           page in your{' '}
@@ -165,7 +165,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
         })}
       >
         {seriesList.map((series) => {
-          if (!series.id) return '';
+          if (!series.id || !chapterLists[series.id]) return '';
 
           const numChapters = chapterLists[series.id].length;
           const numSelected = chapterLists[series.id].filter(
