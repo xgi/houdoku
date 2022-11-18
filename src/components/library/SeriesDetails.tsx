@@ -15,12 +15,13 @@ import {
   Grid,
   Group,
   Image,
+  Menu,
   ScrollArea,
   Stack,
   Text,
   Title,
 } from '@mantine/core';
-import { IconArrowLeft, IconHeart } from '@tabler/icons';
+import { IconArrowLeft, IconHeart, IconMenu2, IconTrash } from '@tabler/icons';
 import ChapterTable from './ChapterTable';
 import blankCover from '../../img/blank_cover.png';
 import { getBannerImageUrl } from '../../services/mediasource';
@@ -40,12 +41,18 @@ import {
   seriesBannerUrlState,
   seriesListState,
   seriesState,
+  sortedFilteredChapterListState,
 } from '../../state/libraryStates';
-import { chapterLanguagesState } from '../../state/settingStates';
+import { chapterLanguagesState, customDownloadsDirState } from '../../state/settingStates';
 import RemoveSeriesModal from './RemoveSeriesModal';
 import { reloadSeriesList } from '../../features/library/utils';
 import routes from '../../constants/routes.json';
 import { FS_METADATA } from '../../services/extensions/filesystem';
+import DownloadModal from './DownloadModal';
+import { downloadAll, downloadNextX } from '../../features/library/chapterDownloadUtils';
+import { queueState } from '../../state/downloaderStates';
+
+const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -62,15 +69,19 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const [showingTrackerModal, setShowingTrackerModal] = useState(false);
   const [showingRemoveModal, setShowingRemoveModal] = useState(false);
   const [showingEditModal, setShowingEditModal] = useState(false);
+  const [showingDownloadModal, setShowingDownloadModal] = useState(false);
   const [series, setSeries] = useRecoilState(seriesState);
   const [seriesList, setSeriesList] = useRecoilState(seriesListState);
   const setChapterList = useSetRecoilState(chapterListState);
+  const sortedFilteredChapterList = useRecoilValue(sortedFilteredChapterListState);
   const [seriesBannerUrl, setSeriesBannerUrl] = useRecoilState(seriesBannerUrlState);
   const setChapterFilterTitle = useSetRecoilState(chapterFilterTitleState);
   const setChapterFilterGroup = useSetRecoilState(chapterFilterGroupState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
+  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const categoryList = useRecoilValue(categoryListState);
+  const downloadQueue = useRecoilValue(queueState);
 
   const loadContent = async () => {
     log.info(`Series page is loading details from database for series ${id}`);
@@ -173,6 +184,11 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
           setSeries(newSeries);
         }}
       />
+      <DownloadModal
+        series={series}
+        visible={showingDownloadModal}
+        close={() => setShowingDownloadModal(false)}
+      />
       <RemoveSeriesModal
         series={series}
         showing={showingRemoveModal}
@@ -245,15 +261,76 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
             src={seriesBannerUrl || ''}
             style={{ objectFit: 'cover', height: '100%', width: '100%' }}
           >
-            <Stack align="flex-end" justify="flex-end" style={{ height: '100%' }}>
+            <Stack align="flex-end" justify="space-between" style={{ height: '100%' }}>
+              {series.preview ? (
+                ''
+              ) : (
+                <Group mx="sm" my={4} spacing="xs">
+                  <Menu position="bottom-end" shadow="md" width={200}>
+                    <Menu.Target>
+                      <Button size="sm" leftIcon={<IconMenu2 size={16} />} variant="default">
+                        More
+                      </Button>
+                    </Menu.Target>
+
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        onClick={() =>
+                          downloadNextX(
+                            sortedFilteredChapterList,
+                            series,
+                            customDownloadsDir || defaultDownloadsDir,
+                            downloadQueue,
+                            1
+                          )
+                        }
+                      >
+                        Download next
+                      </Menu.Item>
+                      <Menu.Item onClick={() => setShowingDownloadModal(true)}>
+                        Download next X
+                      </Menu.Item>
+                      <Menu.Item
+                        onClick={() =>
+                          downloadAll(
+                            sortedFilteredChapterList,
+                            series,
+                            customDownloadsDir || defaultDownloadsDir,
+                            true
+                          )
+                        }
+                      >
+                        Download unread
+                      </Menu.Item>
+                      <Menu.Item
+                        onClick={() =>
+                          downloadAll(
+                            sortedFilteredChapterList,
+                            series,
+                            customDownloadsDir || defaultDownloadsDir
+                          )
+                        }
+                      >
+                        Download all
+                      </Menu.Item>
+
+                      <Menu.Divider />
+                      <Menu.Item
+                        color="red"
+                        icon={<IconTrash size={16} />}
+                        onClick={() => setShowingRemoveModal(true)}
+                      >
+                        Remove series
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                </Group>
+              )}
               <Group mx="sm" my={4} spacing="xs">
                 {series.preview ? (
                   ''
                 ) : (
                   <>
-                    <Button size="sm" variant="default" onClick={() => setShowingRemoveModal(true)}>
-                      Remove
-                    </Button>
                     <Button
                       size="sm"
                       variant="default"
