@@ -1,18 +1,15 @@
-import { Chapter, Series, TriState } from 'houdoku-extension-lib';
+import { Chapter, Series } from 'houdoku-extension-lib';
 import { atom, selector } from 'recoil';
-import { Category, ImportTask } from '../models/types';
+import { Category, ImportTask, TableColumnSortOrder } from '../models/types';
+import {
+  chapterLanguagesState,
+  chapterListChOrderState,
+  chapterListVolOrderState,
+} from './settingStates';
 
 export const seriesListState = atom<Series[]>({
   key: 'librarySeriesList',
   default: [] as Series[],
-});
-
-export const activeSeriesListState = selector({
-  key: 'activeLibrarySeriesList',
-  get: ({ get }) => {
-    const seriesList = get(seriesListState);
-    return seriesList.filter((series) => !series.preview);
-  },
 });
 
 export const seriesState = atom({
@@ -78,4 +75,51 @@ export const filterCategoryState = atom({
 export const showingLibraryCtxMenuState = atom({
   key: 'libraryShowingCtxMenuState',
   default: false,
+});
+
+export const activeSeriesListState = selector({
+  key: 'activeLibrarySeriesList',
+  get: ({ get }) => {
+    const seriesList = get(seriesListState);
+    return seriesList.filter((series) => !series.preview);
+  },
+});
+
+export const sortedFilteredChapterListState = selector<Chapter[]>({
+  key: 'sortedFilteredChapterListState',
+  get: ({ get }) => {
+    const chapterList = get(chapterListState);
+    const chapterLanguages = get(chapterLanguagesState);
+    const chapterFilterTitle = get(chapterFilterTitleState);
+    const chapterFilterGroup = get(chapterFilterGroupState);
+    const chapterListVolOrder = get(chapterListVolOrderState);
+    const chapterListChOrder = get(chapterListChOrderState);
+
+    return chapterList
+      .filter(
+        (chapter: Chapter) =>
+          (chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0) &&
+          chapter.title !== null &&
+          chapter.title.toLowerCase().includes(chapterFilterTitle) &&
+          chapter.groupName !== null &&
+          chapter.groupName.toLowerCase().includes(chapterFilterGroup)
+      )
+      .sort((a, b) => {
+        const volumeComp = {
+          [TableColumnSortOrder.Ascending]: parseFloat(a.volumeNumber) - parseFloat(b.volumeNumber),
+          [TableColumnSortOrder.Descending]:
+            parseFloat(b.volumeNumber) - parseFloat(a.volumeNumber),
+          [TableColumnSortOrder.None]: 0,
+        }[chapterListVolOrder];
+        const chapterComp = {
+          [TableColumnSortOrder.Ascending]:
+            parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber),
+          [TableColumnSortOrder.Descending]:
+            parseFloat(b.chapterNumber) - parseFloat(a.chapterNumber),
+          [TableColumnSortOrder.None]: 0,
+        }[chapterListChOrder];
+
+        return volumeComp || chapterComp;
+      });
+  },
 });
