@@ -43,9 +43,13 @@ import {
   seriesState,
   sortedFilteredChapterListState,
 } from '../../state/libraryStates';
-import { chapterLanguagesState, customDownloadsDirState } from '../../state/settingStates';
+import {
+  chapterLanguagesState,
+  confirmRemoveSeriesState,
+  customDownloadsDirState,
+} from '../../state/settingStates';
 import RemoveSeriesModal from './RemoveSeriesModal';
-import { reloadSeriesList } from '../../features/library/utils';
+import { reloadSeriesList, removeSeries } from '../../features/library/utils';
 import routes from '../../constants/routes.json';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import DownloadModal from './DownloadModal';
@@ -82,6 +86,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const categoryList = useRecoilValue(categoryListState);
   const downloadQueue = useRecoilValue(queueState);
+  const confirmRemoveSeries = useRecoilValue(confirmRemoveSeriesState);
 
   const loadContent = async () => {
     log.info(`Series page is loading details from database for series ${id}`);
@@ -318,7 +323,16 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                       <Menu.Item
                         color="red"
                         icon={<IconTrash size={16} />}
-                        onClick={() => setShowingRemoveModal(true)}
+                        onClick={() =>
+                          confirmRemoveSeries
+                            ? setShowingRemoveModal(true)
+                            : removeSeries(
+                                series,
+                                setSeriesList,
+                                false,
+                                customDownloadsDir || defaultDownloadsDir
+                              )
+                        }
                       >
                         Remove series
                       </Menu.Item>

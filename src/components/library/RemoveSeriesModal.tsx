@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from 'houdoku-extension-lib';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ipcRenderer } from 'electron';
 import { Button, Checkbox, Group, Modal, Text } from '@mantine/core';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -23,7 +23,7 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
   const [deleteDownloads, setDeleteDownloads] = useState(false);
   const [dontAskAgain, setDontAskAgain] = useState(false);
   const setSeriesList = useSetRecoilState(seriesListState);
-  const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
+  const setConfirmRemoveSeries = useSetRecoilState(confirmRemoveSeriesState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const removeFunc = () => {
@@ -44,10 +44,6 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     setDeleteDownloads(false);
     setDontAskAgain(false);
-
-    if (props.showing && !confirmRemoveSeries) {
-      removeFunc();
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.showing]);
 
