@@ -193,6 +193,12 @@ export default function App() {
       // field 'tags'.
       migrateSeriesTags();
 
+      // Remove any preview series.
+      library
+        .fetchSeriesList()
+        .filter((series) => series.preview)
+        .forEach((series) => (series.id ? library.removeSeries(series.id, false) : undefined));
+
       // If AutoCheckForUpdates setting is enabled, check for client updates now
       if (autoCheckForUpdates) {
         ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
