@@ -9,12 +9,11 @@ import {
   Group,
   Code,
   Alert,
-  Grid,
-  Switch,
   Input,
   Loader,
   Box,
   Timeline,
+  Checkbox,
 } from '@mantine/core';
 import { IconExternalLink, IconInfoCircle } from '@tabler/icons';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -116,18 +115,14 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
         series page to link it with an entry on your list.
       </Alert>
 
-      <Grid pt="sm">
-        <Grid.Col span={5}>Update progress automatically</Grid.Col>
-        <Grid.Col span={7}>
-          <Switch
-            size="md"
-            checked={trackerAutoUpdate}
-            onChange={(e) =>
-              updateTrackerSetting(TrackerSetting.TrackerAutoUpdate, e.target.checked)
-            }
-          />
-        </Grid.Col>
-      </Grid>
+      <Checkbox
+        pt="sm"
+        ml="xs"
+        label="Update progress automatically"
+        size="md"
+        checked={trackerAutoUpdate}
+        onChange={(e) => updateTrackerSetting(TrackerSetting.TrackerAutoUpdate, e.target.checked)}
+      />
 
       <Accordion chevronPosition="left" mx="auto" pt="sm">
         {[AniListTrackerMetadata, MALTrackerMetadata].map((trackerMetadata) => (

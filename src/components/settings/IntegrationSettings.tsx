@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { Grid, Switch, Text } from '@mantine/core';
+import { Checkbox, Grid, Switch, Text } from '@mantine/core';
 import { IntegrationSetting } from '../../models/types';
 import { discordPresenceEnabledState } from '../../state/settingStates';
 
@@ -23,24 +23,20 @@ const IntegrationSettings: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Grid>
-      <Grid.Col span={5}>Use Discord Rich Presence</Grid.Col>
-      <Grid.Col span={7}>
-        <Switch
-          size="md"
-          checked={discordPresenceEnabled}
-          onChange={(e) =>
-            updateIntegrationSetting(IntegrationSetting.DiscordPresenceEnabled, e.target.checked)
-          }
-        />
-      </Grid.Col>
-      <Grid.Col span={12}>
-        <Text color="dimmed">
-          To use Discord Rich Presence, make sure &quot;Display current activity as a status
-          message&quot; is enabled in your Discord settings (under the Activity Status tab).
-        </Text>
-      </Grid.Col>
-    </Grid>
+    <>
+      <Checkbox
+        label="Use Discord Rich Presence"
+        size="md"
+        checked={discordPresenceEnabled}
+        onChange={(e) =>
+          updateIntegrationSetting(IntegrationSetting.DiscordPresenceEnabled, e.target.checked)
+        }
+      />
+      <Text color="dimmed" ml="sm">
+        To use Discord Rich Presence, make sure &quot;Display current activity as a status
+        message&quot; is enabled in your Discord settings (under the Activity Status tab).
+      </Text>
+    </>
   );
 };
 
