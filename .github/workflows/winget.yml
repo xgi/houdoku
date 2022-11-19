@@ -1,0 +1,16 @@
+name: Publish to winget
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  publish:
+    # Action can only be run on windows
+    runs-on: windows-latest
+    steps:
+      - uses: vedantmgoyal2009/winget-releaser@v1
+        with:
+          identifier: xgi.houdoku
+          installers-regex: 'Houdoku-Setup-[\d.]+\.exe$'
+          token: ${{ secrets.WINGET_TOKEN }}
