@@ -88,6 +88,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         alt={`Page ${num}`}
         style={showing ? {} : { display: 'none' }}
         loadingDisplay="spinner"
+        allowRetry
         onLoad={props.updatePageGroupList}
         className={`
       ${styles.pageImage}

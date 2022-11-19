@@ -2,7 +2,7 @@ import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { Series } from 'houdoku-extension-lib';
 import log from 'electron-log';
-import { Loader } from '@mantine/core';
+import { Button, Loader } from '@mantine/core';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../constants/ipcChannels.json';
 
@@ -15,14 +15,16 @@ type Props = {
   width?: string | number;
   height?: string | number;
   loadingDisplay?: 'cover' | 'spinner';
+  allowRetry?: boolean;
   'data-num'?: number;
   onLoad?: React.ReactEventHandler<HTMLImageElement>;
 };
 
 const ExtensionImage: React.FC<Props> = (props: Props) => {
   const [resolvedUrl, setResolvedUrl] = useState<string | undefined>();
+  const [isError, setIsError] = useState(false);
 
-  useEffect(() => {
+  const loadImage = () => {
     if (props.url) {
       if (props.url.startsWith('http')) {
         ipcRenderer
@@ -39,14 +41,20 @@ const ExtensionImage: React.FC<Props> = (props: Props) => {
               setResolvedUrl(URL.createObjectURL(new Blob([data])));
             }
           })
-          .catch((e) => log.error(e));
+          .finally(() => setIsError(false))
+          .catch((e) => {
+            log.error(e);
+            setIsError(true);
+          });
       } else {
         setResolvedUrl(props.url);
       }
     }
-  }, [props.url, props.series]);
+  };
 
-  if (!resolvedUrl && props.loadingDisplay === 'spinner')
+  useEffect(loadImage, [props.url, props.series]);
+
+  if (!resolvedUrl && props.loadingDisplay === 'spinner') {
     return (
       <div
         className={props.className}
@@ -55,6 +63,18 @@ const ExtensionImage: React.FC<Props> = (props: Props) => {
         <Loader />
       </div>
     );
+  }
+
+  if (isError && props.allowRetry) {
+    return (
+      <div
+        className={props.className}
+        style={{ ...props.style, width: props.width, height: props.height }}
+      >
+        <Button onClick={loadImage}>Retry</Button>
+      </div>
+    );
+  }
 
   return (
     <img
@@ -66,6 +86,7 @@ const ExtensionImage: React.FC<Props> = (props: Props) => {
       height={props.height}
       data-num={props['data-num']}
       onLoad={props.onLoad}
+      onError={() => setIsError(true)}
     />
   );
 };
