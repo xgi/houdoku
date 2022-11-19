@@ -67,11 +67,6 @@ export const categoryListState = atom<Category[]>({
   default: [],
 });
 
-export const filterCategoryState = atom({
-  key: 'libraryFilterCategoryState',
-  default: '',
-});
-
 export const showingLibraryCtxMenuState = atom({
   key: 'libraryShowingCtxMenuState',
   default: false,

@@ -4,17 +4,13 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ScrollArea, Text } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
-import {
-  activeSeriesListState,
-  filterCategoryState,
-  filterState,
-  seriesListState,
-} from '../../state/libraryStates';
+import { activeSeriesListState, filterState, seriesListState } from '../../state/libraryStates';
 import {
   libraryFilterStatusState,
   libraryFilterProgressState,
   librarySortState,
   libraryViewsState,
+  libraryFilterCategoryState,
 } from '../../state/settingStates';
 import LibraryGrid from './LibraryGrid';
 import RemoveSeriesModal from './RemoveSeriesModal';
@@ -33,7 +29,7 @@ const Library: React.FC<Props> = (_props: Props) => {
   const setSeriesList = useSetRecoilState(seriesListState);
   const activeSeriesList = useRecoilValue(activeSeriesListState);
   const filter = useRecoilValue(filterState);
-  const filterCategory = useRecoilValue(filterCategoryState);
+  const libraryFilterCategory = useRecoilValue(libraryFilterCategoryState);
   const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
   const libraryFilterProgress = useRecoilValue(libraryFilterProgressState);
   const libraryView = useRecoilValue(libraryViewsState);
@@ -60,8 +56,8 @@ const Library: React.FC<Props> = (_props: Props) => {
         return false;
       }
 
-      if (filterCategory) {
-        if (!series.categories || !series.categories.includes(filterCategory)) return false;
+      if (libraryFilterCategory) {
+        if (!series.categories || !series.categories.includes(libraryFilterCategory)) return false;
       }
 
       return true;

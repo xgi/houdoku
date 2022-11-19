@@ -20,7 +20,6 @@ import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
 import {
   activeSeriesListState,
   categoryListState,
-  filterCategoryState,
   filterState,
   reloadingSeriesListState,
   seriesListState,
@@ -33,6 +32,7 @@ import {
   libraryViewsState,
   librarySortState,
   chapterLanguagesState,
+  libraryFilterCategoryState,
 } from '../../state/settingStates';
 
 type Props = {
@@ -52,7 +52,9 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const availableCategories = useRecoilValue(categoryListState);
   const setFilter = useSetRecoilState(filterState);
-  const [filterCategory, setFilterCategory] = useRecoilState(filterCategoryState);
+  const [libraryFilterCategory, setLibraryFilterCategory] = useRecoilState(
+    libraryFilterCategoryState
+  );
   const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(libraryFilterStatusState);
   const [libraryFilterProgress, setLibraryFilterProgress] = useRecoilState(
     libraryFilterProgressState
@@ -209,7 +211,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           <Menu.Target>
             <Button
               variant="default"
-              onContextMenu={() => setFilterCategory('')}
+              onContextMenu={() => setLibraryFilterCategory('')}
               onMouseEnter={() => setShowingContextMenu(false)}
             >
               Category
@@ -224,11 +226,14 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
                     pr="lg"
                     key={availableCategory.id}
                     onClick={() => {
-                      if (availableCategory.id === filterCategory) setFilterCategory('');
-                      else setFilterCategory(availableCategory.id);
+                      if (availableCategory.id === libraryFilterCategory)
+                        setLibraryFilterCategory('');
+                      else setLibraryFilterCategory(availableCategory.id);
                     }}
                     rightSection={
-                      availableCategory.id === filterCategory ? <IconCheck size={14} /> : undefined
+                      availableCategory.id === libraryFilterCategory ? (
+                        <IconCheck size={14} />
+                      ) : undefined
                     }
                   >
                     {availableCategory.label}

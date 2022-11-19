@@ -65,6 +65,7 @@ export const libraryViewsState = atomFromSetting<LibraryView>(GeneralSetting.Lib
 export const librarySortState = atomFromSetting<LibrarySort>(GeneralSetting.LibrarySort);
 export const libraryFilterStatusState = atomFromSetting<SeriesStatus | null>(GeneralSetting.LibraryFilterStatus);
 export const libraryFilterProgressState = atomFromSetting<ProgressFilter>(GeneralSetting.LibraryFilterProgress);
+export const libraryFilterCategoryState = atomFromSetting<string>(GeneralSetting.LibraryFilterCategory);
 export const chapterListVolOrderState = atomFromSetting<TableColumnSortOrder>(GeneralSetting.ChapterListVolOrder);
 export const chapterListChOrderState = atomFromSetting<TableColumnSortOrder>(GeneralSetting.ChapterListChOrder);
 export const chapterListPageSizeState = atomFromSetting<number>(GeneralSetting.ChapterListPageSize);

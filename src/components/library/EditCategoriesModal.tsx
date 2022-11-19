@@ -3,9 +3,10 @@ import { useRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import { ActionIcon, Group, Modal, Stack, TextInput, Tooltip } from '@mantine/core';
 import { IconAlertCircle, IconCheck, IconRefresh, IconRefreshOff, IconTrash } from '@tabler/icons';
-import { categoryListState, filterCategoryState } from '../../state/libraryStates';
+import { categoryListState } from '../../state/libraryStates';
 import library from '../../services/library';
 import { Category } from '../../models/types';
+import { libraryFilterCategoryState } from '../../state/settingStates';
 
 type Props = {
   showing: boolean;
@@ -16,7 +17,9 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
   const [categoryList, setCategoryList] = useRecoilState(categoryListState);
   const [tempCategoryList, setTempCategoryList] = useState<Category[]>([]);
   const [newCategoryLabel, setNewCategoryLabel] = useState('');
-  const [filterCategory, setFilterCategory] = useRecoilState(filterCategoryState);
+  const [libraryFilterCategory, setLibraryFilterCategory] = useRecoilState(
+    libraryFilterCategoryState
+  );
   const [promptRemoveCategoryIds, setPromptRemoveCategoryIds] = useState<string[]>([]);
   const newCategoryInputRef = useRef<HTMLInputElement>(null);
 
@@ -46,7 +49,7 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
 
   const removeCategory = (categoryId: string) => {
     setTempCategoryList(tempCategoryList.filter((cat) => cat.id !== categoryId));
-    if (filterCategory === categoryId) setFilterCategory('');
+    if (libraryFilterCategory === categoryId) setLibraryFilterCategory('');
   };
 
   const addCategory = () => {
