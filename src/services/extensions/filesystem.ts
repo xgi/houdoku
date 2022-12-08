@@ -53,7 +53,7 @@ const parseChapterMetadata = (
   const matchChapterNum: RegExpMatchArray | null = text.match(/c(\d)+(\.(\d)+)?/g);
   const matchVolumeNum: RegExpMatchArray | null = text.match(/v(\d)+/g);
   const matchGroup: RegExpMatchArray | null = text.match(/\[.*\]/g);
-  const matchAnyNum: RegExpMatchArray | null = text.match(/(\d)+/g);
+  const matchAnyNum: RegExpMatchArray | null = text.match(/(\d)+(\.(\d)+)?/g);
 
   let chapterNum = '';
   if (matchChapterNum === null) {
