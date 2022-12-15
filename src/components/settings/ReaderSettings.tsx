@@ -44,7 +44,7 @@ import {
   keyToggleShowingSettingsModalState,
   pageStyleState,
   readingDirectionState,
-  longStripMarginState,
+  pageGapState,
   offsetPagesState,
   optimizeContrastState,
   keyToggleOffsetDoubleSpreadsState,
@@ -83,7 +83,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [keyToggleFullscreen, setKeyToggleFullscreen] = useRecoilState(keyToggleFullscreenState);
   const [keyExit, setKeyExit] = useRecoilState(keyExitState);
   const [keyCloseOrBack, setKeyCloseOrBack] = useRecoilState(keyCloseOrBackState);
-  const [longStripMargin, setLongStripMargin] = useRecoilState(longStripMarginState);
+  const [pageGap, setPageGap] = useRecoilState(pageGapState);
   const [offsetPages, setOffsetPages] = useRecoilState(offsetPagesState);
   const [optimizeContrast, setOptimizeContrast] = useRecoilState(optimizeContrastState);
 
@@ -146,8 +146,8 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.KeyCloseOrBack:
         setKeyCloseOrBack(value);
         break;
-      case ReaderSetting.LongStripMargin:
-        setLongStripMargin(value);
+      case ReaderSetting.PageGap:
+        setPageGap(value);
         break;
       case ReaderSetting.OffsetPages:
         setOffsetPages(value);
@@ -222,11 +222,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       />
 
       <Checkbox
-        label="Long strip margin"
+        label="Spacing between pages"
         ml="sm"
-        disabled={pageStyle !== PageStyle.LongStrip}
-        checked={longStripMargin}
-        onChange={(e) => updateReaderSetting(ReaderSetting.LongStripMargin, e.target.checked)}
+        disabled={pageStyle === PageStyle.Single}
+        checked={pageGap}
+        onChange={(e) => updateReaderSetting(ReaderSetting.PageGap, e.target.checked)}
       />
       <Radio.Group
         ml="sm"

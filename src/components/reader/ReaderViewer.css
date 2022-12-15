@@ -56,13 +56,21 @@ img {
 }
 
 .pageImage.left {
-  margin-right: 0;
+  margin-right: 0px;
 }
 
 .pageImage.right {
-  margin-left: 0;
+  margin-left: 0px;
 }
 
-.pageImage.margin {
+.pageImage.left.gap {
+  margin-right: 5px;
+}
+
+.pageImage.right.gap {
+  margin-left: 5px;
+}
+
+.pageImage.gap:not(.left):not(.right) {
   padding-bottom: 10px;
 }

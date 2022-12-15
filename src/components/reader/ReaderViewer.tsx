@@ -17,7 +17,7 @@ import {
   pageStyleState,
   readingDirectionState,
   hideScrollbarState,
-  longStripMarginState,
+  pageGapState,
   optimizeContrastState,
 } from '../../state/settingStates';
 import ExtensionImage from '../general/ExtensionImage';
@@ -43,7 +43,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const pageStyle = useRecoilValue(pageStyleState);
   const readingDirection = useRecoilValue(readingDirectionState);
   const hideScrollbar = useRecoilValue(hideScrollbarState);
-  const longStripMargin = useRecoilValue(longStripMarginState);
+  const pageGap = useRecoilValue(pageGapState);
   const optimizeContrast = useRecoilValue(optimizeContrastState);
 
   const viewerContainerClickHandler = (e: React.MouseEvent) => {
@@ -98,7 +98,11 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       ${fitContainToWidth ? styles.containWidth : ''}
       ${fitContainToHeight ? styles.containHeight : ''}
       ${fitStretch && (fitContainToWidth || fitContainToHeight) ? styles.grow : ''}
-      ${pageStyle === PageStyle.LongStrip && longStripMargin ? styles.margin : ''}
+      ${
+        (pageStyle === PageStyle.Double || pageStyle === PageStyle.LongStrip) && pageGap
+          ? styles.gap
+          : ''
+      }
     `}
       />
     );

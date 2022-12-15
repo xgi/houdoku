@@ -93,7 +93,7 @@ export const keyToggleFullscreenState = atomFromSetting<string>(ReaderSetting.Ke
 export const keyToggleOffsetDoubleSpreadsState = atomFromSetting<string>(ReaderSetting.KeyToggleOffsetDoubleSpreads);
 export const keyExitState = atomFromSetting<string>(ReaderSetting.KeyExit);
 export const keyCloseOrBackState = atomFromSetting<string>(ReaderSetting.KeyCloseOrBack);
-export const longStripMarginState = atomFromSetting<boolean>(ReaderSetting.LongStripMargin);
+export const pageGapState = atomFromSetting<boolean>(ReaderSetting.PageGap);
 export const offsetPagesState = atomFromSetting<OffsetPages>(ReaderSetting.OffsetPages);
 export const optimizeContrastState = atomFromSetting<boolean>(ReaderSetting.OptimizeContrast);
 
