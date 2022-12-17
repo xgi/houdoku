@@ -37,7 +37,7 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
     const newTempCategoryList = [...tempCategoryList];
     newTempCategoryList[categoryIdx] = {
       ...newTempCategoryList[categoryIdx],
-      label: opts.label || tempCategoryList[categoryIdx].label,
+      label: opts.label === undefined ? tempCategoryList[categoryIdx].label : opts.label,
       refreshEnabled: opts.refreshEnabled,
     };
     setTempCategoryList(newTempCategoryList);
@@ -76,6 +76,7 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
             <Group noWrap key={category.id} spacing={0}>
               <TextInput
                 value={category.label}
+                placeholder="Category name..."
                 radius={0}
                 mr={4}
                 style={{ width: '100%' }}
