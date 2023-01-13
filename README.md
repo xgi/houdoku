@@ -2,7 +2,7 @@
 
 [![houdoku.org](https://img.shields.io/badge/website-houdoku.org-7048E8?style=flat-square)](https://houdoku.org)
 [![GitHub release](https://img.shields.io/github/v/release/xgi/houdoku?style=flat-square)](https://github.com/xgi/houdoku/releases)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/xgi/houdoku/CI?style=flat-square)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/xgi/houdoku/publish.yml?branch=master&style=flat-square)
 
 Houdoku is a free and open source manga reader for the desktop.
 
