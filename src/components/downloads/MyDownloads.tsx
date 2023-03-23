@@ -24,7 +24,9 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadDownloads = async () => {
-    const downloadedChapterIds = getAllDownloadedChapterIds(customDownloadsDir || defaultDownloadsDir);
+    const downloadedChapterIds = getAllDownloadedChapterIds(
+      customDownloadsDir || defaultDownloadsDir
+    );
     const downloaded = getFromChapterIds(downloadedChapterIds);
 
     setSeriesList(downloaded.seriesList);
@@ -135,6 +137,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     loadDownloads();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
