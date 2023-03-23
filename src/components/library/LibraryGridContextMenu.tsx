@@ -3,11 +3,16 @@ import { Series } from 'houdoku-extension-lib';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal, ScrollArea } from '@mantine/core';
-import { IconTrash, IconEye, IconSquareCheck, IconSquare } from '@tabler/icons';
-import { goToSeries, removeSeries } from '../../features/library/utils';
-import { categoryListState, seriesListState } from '../../state/libraryStates';
+import { IconTrash, IconEye, IconSquareCheck, IconSquare, IconChecks } from '@tabler/icons';
+import { goToSeries, markChapters, removeSeries } from '../../features/library/utils';
+import {
+  categoryListState,
+  chapterListState,
+  seriesListState,
+  seriesState,
+} from '../../state/libraryStates';
 import library from '../../services/library';
-import { confirmRemoveSeriesState } from '../../state/settingStates';
+import { chapterLanguagesState, confirmRemoveSeriesState } from '../../state/settingStates';
 
 const ELEMENT_ID = 'LibraryGridContextMenu';
 const WIDTH = 200;
@@ -23,18 +28,30 @@ type Props = {
 
 const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
+  const setSeries = useSetRecoilState(seriesState);
+  const setChapterList = useSetRecoilState(chapterListState);
   const setSeriesList = useSetRecoilState(seriesListState);
   const [menuHeight, setMenuHeight] = useState(MAX_HEIGHT);
   const availableCategories = useRecoilValue(categoryListState);
   const [categories, setCategories] = useState<string[]>([]);
   const [sanitizedPos, setSanitizedPos] = useState<{ x: number; y: number }>(props.position);
   const confirmRemoveSeries = useRecoilValue(confirmRemoveSeriesState);
+  const chapterLanguages = useRecoilValue(chapterLanguagesState);
 
   const viewFunc = () => {
     if (props.series) {
       goToSeries(props.series, setSeriesList, navigate);
       props.close();
     }
+  };
+
+  const markAllReadFunc = () => {
+    if (props.series && props.series.id) {
+      const chapters = library.fetchChapters(props.series.id);
+      markChapters(chapters, props.series, true, setChapterList, setSeries, chapterLanguages);
+      setSeriesList(library.fetchSeriesList());
+    }
+    props.close();
   };
 
   const removeFunc = () => {
@@ -122,6 +139,9 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
           <ScrollArea.Autosize maxHeight={MAX_HEIGHT - 10}>
             <Menu.Item icon={<IconEye size={14} />} onClick={viewFunc}>
               View
+            </Menu.Item>
+            <Menu.Item icon={<IconChecks size={14} />} onClick={markAllReadFunc}>
+              Mark all read
             </Menu.Item>
             <Menu.Item icon={<IconTrash size={14} />} onClick={removeFunc}>
               Remove
