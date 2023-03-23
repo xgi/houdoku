@@ -149,7 +149,7 @@
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
     "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^9.1.2",
     "babel-plugin-dev-expression": "^0.2.3",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "browserslist-config-erb": "^0.0.3",
@@ -227,7 +227,7 @@
     "uuid": "^8.3.2"
   },
   "devEngines": {
-    "node": ">=10.x",
+    "node": ">=14.x",
     "npm": ">=6.x",
     "yarn": ">=1.21.3"
   },
@@ -246,13 +246,5 @@
       }
     ],
     "singleQuote": true
-  },
-  "renovate": {
-    "extends": [
-      "bliss"
-    ],
-    "baseBranches": [
-      "next"
-    ]
   }
 }
