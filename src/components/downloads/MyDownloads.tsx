@@ -6,11 +6,11 @@ import { useRecoilValue } from 'recoil';
 import { Accordion, Badge, Button, Checkbox, Group, Stack, Text, Title } from '@mantine/core';
 import { IconTrash } from '@tabler/icons';
 import { openConfirmModal } from '@mantine/modals';
-import { getDownloadedList } from '../../features/downloader/utils';
-import { deleteDownloadedChapter } from '../../util/filesystem';
+import { deleteDownloadedChapter, getAllDownloadedChapterIds } from '../../util/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import library from '../../services/library';
 import { customDownloadsDirState } from '../../state/settingStates';
+import { getFromChapterIds } from '../../features/library/utils';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -24,9 +24,11 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadDownloads = async () => {
-    const downloadedList = getDownloadedList(customDownloadsDir || defaultDownloadsDir);
-    setSeriesList(downloadedList.seriesList);
-    setChapterLists(downloadedList.chapterLists);
+    const downloadedChapterIds = getAllDownloadedChapterIds(customDownloadsDir || defaultDownloadsDir);
+    const downloaded = getFromChapterIds(downloadedChapterIds);
+
+    setSeriesList(downloaded.seriesList);
+    setChapterLists(downloaded.chapterLists);
   };
 
   const deleteChecked = async () => {
@@ -133,7 +135,6 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     loadDownloads();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

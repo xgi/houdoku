@@ -274,7 +274,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                   <Menu position="bottom-end" shadow="md" width={200}>
                     <Menu.Target>
                       <Button size="sm" leftIcon={<IconMenu2 size={16} />} variant="default">
-                        More
+                        Options
                       </Button>
                     </Menu.Target>
 

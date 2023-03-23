@@ -39,12 +39,17 @@ export function getDirectories(directory: string): string[] {
   const files = fs.readdirSync(directory);
   files.forEach((file) => {
     const curPath = path.join(directory, file);
+
     if (fs.statSync(curPath).isDirectory()) {
       fileList = [...fileList, curPath, ...getDirectories(curPath)];
     }
   });
 
   return fileList;
+}
+
+export function sanitizeFilename(name: string): string {
+  return name.replace(/[/\\?%*:|"<>]/g, '-');
 }
 
 /**
@@ -74,36 +79,67 @@ export function getChapterDownloadPath(
   chapter: Chapter,
   downloadsDir: string
 ): string {
-  return path.join(downloadsDir, `${series.id}`, `${chapter.id}`);
-}
+  if (!chapter.id) return '';
 
-export function getChapterDownloaded(
-  series: Series,
-  chapter: Chapter,
-  downloadsDir: string
-): boolean {
-  const chapterPath = getChapterDownloadPath(series, chapter, downloadsDir);
-  return fs.existsSync(chapterPath) ? fs.readdirSync(chapterPath).length > 0 : false;
-}
-
-export function getAllDownloadedChapterPaths(downloadsDir: string): string[] {
-  if (!fs.existsSync(downloadsDir)) {
-    return [];
-  }
-
-  const chapterPaths: Set<string> = new Set();
-
-  fs.readdirSync(downloadsDir).forEach((seriesDirName: string) => {
-    const seriesPath = path.join(downloadsDir, seriesDirName);
-    if (fs.statSync(seriesPath).isDirectory()) {
-      fs.readdirSync(seriesPath).forEach((chapterDirName: string) => {
-        const chapterPath = path.join(seriesPath, chapterDirName);
-        chapterPaths.add(chapterPath);
-      });
-    }
+  const directories = getDirectories(downloadsDir);
+  const matching = directories.find((fullpath) => {
+    if (!chapter.id) return false;
+    return path.basename(fullpath).includes(chapter.id);
   });
 
-  return Array.from(chapterPaths);
+  if (matching) return matching;
+  return path.join(
+    downloadsDir,
+    sanitizeFilename(series.title),
+    `Chapter ${chapter.chapterNumber} - ${chapter.id}`
+  );
+}
+
+/**
+ * Get the downloaded status for a list of chapters.
+ * @param chapter list of Chapters
+ * @param downloadsDir
+ * @returns an object with keys `Chapter.id` and boolean values
+ */
+export function getChaptersDownloaded(
+  chapters: Chapter[],
+  downloadsDir: string
+): { [key: string]: boolean } {
+  const directoryNames = getDirectories(downloadsDir).map((fullpath) => path.basename(fullpath));
+
+  const result: { [key: string]: boolean } = {};
+  directoryNames.forEach((name) => {
+    const matching = chapters.find((c) => {
+      if (!c.id) return false;
+      return name.includes(c.id);
+    });
+
+    if (matching && matching.id) result[matching.id] = true;
+  });
+  return result;
+}
+
+/**
+ * Get the downloaded status for a chapter.
+ * @param chapter
+ * @param downloadsDir
+ * @returns boolean downloaded status
+ */
+export function getChapterDownloaded(chapter: Chapter, downloadsDir: string): boolean {
+  if (chapter.id === undefined) return false;
+  return getChaptersDownloaded([chapter], downloadsDir)[chapter.id];
+}
+
+export function getAllDownloadedChapterIds(downloadsDir: string): string[] {
+  const directoryNames = getDirectories(downloadsDir).map((fullpath) => path.basename(fullpath));
+  const result: string[] = [];
+
+  directoryNames.forEach((name) => {
+    const regex = /(?:[a-f\d]{8}-[a-f\d]{4}-4[a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12})/i;
+    const match = name.match(regex);
+    if (match) result.push(match[0]);
+  });
+  return result;
 }
 
 export async function deleteDownloadedChapter(

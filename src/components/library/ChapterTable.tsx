@@ -30,7 +30,7 @@ import { useForceUpdate } from '@mantine/hooks';
 import routes from '../../constants/routes.json';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
 import ChapterTableContextMenu from './ChapterTableContextMenu';
-import { getChapterDownloaded } from '../../util/filesystem';
+import { getChaptersDownloaded } from '../../util/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { markChapters } from '../../features/library/utils';
 import flags from '../../img/flags.png';
@@ -67,7 +67,7 @@ type Props = {
 
 const ChapterTable: React.FC<Props> = (props: Props) => {
   const setSeries = useSetRecoilState(seriesState);
-  const [chapterList, setChapterList] = useRecoilState(chapterListState);
+  const setChapterList = useSetRecoilState(chapterListState);
   const [chapterFilterTitle, setChapterFilterTitle] = useRecoilState(chapterFilterTitleState);
   const [chapterFilterGroup, setChapterFilterGroup] = useRecoilState(chapterFilterGroupState);
   const [chapterListVolOrder, setChapterListVolOrder] = useRecoilState(chapterListVolOrderState);
@@ -117,93 +117,99 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
 
   const renderRows = () => {
     const startIndex = (currentPage - 1) * chapterListPageSize;
-    return sortedFilteredChapterList
-      .slice(startIndex, startIndex + chapterListPageSize)
-      .map((chapter) => {
-        return (
-          <tr
-            key={chapter.id}
-            onContextMenu={(event) => {
-              setContextMenuPosition({ x: event.clientX, y: event.clientY });
-              setContextMenuChapter(chapter);
-              setShowingContextMenu(true);
-            }}
-          >
-            <td>
-              <ActionIcon
-                variant="default"
-                onClick={() => {
-                  markChapters(
-                    [chapter],
-                    props.series,
-                    !chapter.read,
-                    setChapterList,
-                    setSeries,
-                    chapterLanguages
-                  );
-                  if (!chapter.read && trackerAutoUpdate) {
-                    sendProgressToTrackers(chapter, props.series);
-                  }
-                }}
-              >
-                {chapter.read ? <IconEye size={16} /> : ''}
-              </ActionIcon>
-            </td>
-            <td>
-              {Languages[chapter.languageKey] === undefined ? (
-                <></>
-              ) : (
-                <div className="flag-container">
-                  <img
-                    src={flags}
-                    title={Languages[chapter.languageKey].name}
-                    alt={Languages[chapter.languageKey].name}
-                    className={`flag flag-${Languages[chapter.languageKey].flagCode}`}
-                  />
-                </div>
-              )}
-            </td>
-            <td>{chapter.title}</td>
-            <td>
-              <Text lineClamp={1}>{chapter.groupName}</Text>
-            </td>
-            <td>
-              <Center>{chapter.volumeNumber}</Center>
-            </td>
-            <td>
-              <Center>{chapter.chapterNumber}</Center>
-            </td>
-            <td>
-              <Group position="right" spacing="xs" noWrap>
-                <Link to={`${routes.READER}/${props.series.id}/${chapter.id}`}>
-                  <Button variant="default" size="xs">
-                    Read
-                  </Button>
-                </Link>
+    const curChapterList = sortedFilteredChapterList.slice(
+      startIndex,
+      startIndex + chapterListPageSize
+    );
 
-                {getChapterDownloaded(
+    const downloadStatuses = getChaptersDownloaded(
+      curChapterList,
+      customDownloadsDir || defaultDownloadsDir
+    );
+
+    return curChapterList.map((chapter) => {
+      if (!chapter.id) return '';
+
+      return (
+        <tr
+          key={chapter.id}
+          onContextMenu={(event) => {
+            setContextMenuPosition({ x: event.clientX, y: event.clientY });
+            setContextMenuChapter(chapter);
+            setShowingContextMenu(true);
+          }}
+        >
+          <td>
+            <ActionIcon
+              variant="default"
+              onClick={() => {
+                markChapters(
+                  [chapter],
                   props.series,
-                  chapter,
-                  customDownloadsDir || defaultDownloadsDir
-                ) ? (
-                  <ActionIcon disabled>
-                    <IconFileCheck size={16} />
-                  </ActionIcon>
-                ) : (
-                  <ActionIcon
-                    variant="default"
-                    onClick={() => {
-                      handleDownload(chapter);
-                    }}
-                  >
-                    <IconDownload size={16} />
-                  </ActionIcon>
-                )}
-              </Group>
-            </td>
-          </tr>
-        );
-      });
+                  !chapter.read,
+                  setChapterList,
+                  setSeries,
+                  chapterLanguages
+                );
+                if (!chapter.read && trackerAutoUpdate) {
+                  sendProgressToTrackers(chapter, props.series);
+                }
+              }}
+            >
+              {chapter.read ? <IconEye size={16} /> : ''}
+            </ActionIcon>
+          </td>
+          <td>
+            {Languages[chapter.languageKey] === undefined ? (
+              <></>
+            ) : (
+              <div className="flag-container">
+                <img
+                  src={flags}
+                  title={Languages[chapter.languageKey].name}
+                  alt={Languages[chapter.languageKey].name}
+                  className={`flag flag-${Languages[chapter.languageKey].flagCode}`}
+                />
+              </div>
+            )}
+          </td>
+          <td>{chapter.title}</td>
+          <td>
+            <Text lineClamp={1}>{chapter.groupName}</Text>
+          </td>
+          <td>
+            <Center>{chapter.volumeNumber}</Center>
+          </td>
+          <td>
+            <Center>{chapter.chapterNumber}</Center>
+          </td>
+          <td>
+            <Group position="right" spacing="xs" noWrap>
+              <Link to={`${routes.READER}/${props.series.id}/${chapter.id}`}>
+                <Button variant="default" size="xs">
+                  Read
+                </Button>
+              </Link>
+
+              {downloadStatuses[chapter.id] ? (
+                <ActionIcon disabled>
+                  <IconFileCheck size={16} />
+                </ActionIcon>
+              ) : (
+                <ActionIcon
+                  variant="default"
+                  onClick={() => {
+                    handleDownload(chapter);
+                  }}
+                >
+                  <IconDownload size={16} />
+                </ActionIcon>
+              )}
+            </Group>
+          </td>
+        </tr>
+      );
+    });
   };
 
   return (

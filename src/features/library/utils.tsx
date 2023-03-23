@@ -339,6 +339,44 @@ export function updateSeriesTrackerKeys(
   library.upsertSeries({ ...series, trackerKeys });
 }
 
+/**
+ * Get a list of Series and associated Chapters from a list of chapterIds.
+ * @param chapterIds list of Chapter UUIDs
+ * @returns An object with two properties:
+ *  - seriesList: Series[]
+ *  - chapterLists: object with keys as `seriesId`s and values as Chapter[]
+ */
+export function getFromChapterIds(chapterIds: string[]): {
+  seriesList: Series[];
+  chapterLists: { [seriesId: string]: Chapter[] };
+} {
+  const seriesSet = new Set<Series>();
+  const chapterLists: { [seriesId: string]: Chapter[] } = {};
+
+  library.fetchSeriesList().forEach((series) => {
+    if (!series.id) return;
+
+    library
+      .fetchChapters(series.id)
+      .filter((c) => c.id && chapterIds.includes(c.id))
+      .forEach((chapter) => {
+        if (!series.id) return;
+
+        seriesSet.add(series);
+        if (series.id in chapterLists) {
+          chapterLists[series.id] = [...chapterLists[series.id], chapter];
+        } else {
+          chapterLists[series.id] = [chapter];
+        }
+      });
+  });
+
+  return {
+    seriesList: Array.from(seriesSet),
+    chapterLists,
+  };
+}
+
 export function migrateSeriesTags() {
   const seriesList: Series[] = library.fetchSeriesList();
   seriesList.forEach((series) => {

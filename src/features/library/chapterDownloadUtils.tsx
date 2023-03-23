@@ -21,7 +21,7 @@ export function downloadNextX(
     const chapter = sortedChapterList[curIndex];
     if (
       chapter &&
-      !getChapterDownloaded(series, chapter, downloadsDir) &&
+      !getChapterDownloaded(chapter, downloadsDir) &&
       !downloadQueue.some((existingTask) => existingTask.chapter.id === chapter.id)
     ) {
       queue.push(chapter);
@@ -52,7 +52,7 @@ export function downloadAll(
     ? chapterList.filter((chapter) => !chapter.read)
     : chapterList;
   const queue = filteredChapterList
-    .filter((chapter) => !getChapterDownloaded(series, chapter, downloadsDir))
+    .filter((chapter) => !getChapterDownloaded(chapter, downloadsDir))
     .sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber));
 
   downloaderClient.add(

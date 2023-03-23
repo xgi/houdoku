@@ -190,7 +190,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       ipcRenderer.invoke(ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY, series, chapter);
     }
 
-    if (getChapterDownloaded(series, chapter, customDownloadsDir || defaultDownloadsDir)) {
+    if (getChapterDownloaded(chapter, customDownloadsDir || defaultDownloadsDir)) {
       loadDownloadedChapterData(series, chapter, desiredPage);
       return;
     }
