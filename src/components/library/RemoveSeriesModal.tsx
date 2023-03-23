@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from 'houdoku-extension-lib';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { ipcRenderer } from 'electron';
+import { useSetRecoilState } from 'recoil';
 import { Button, Checkbox, Group, Modal, Text } from '@mantine/core';
-import ipcChannels from '../../constants/ipcChannels.json';
 import routes from '../../constants/routes.json';
 import { removeSeries } from '../../features/library/utils';
 import { seriesListState } from '../../state/libraryStates';
-import { confirmRemoveSeriesState, customDownloadsDirState } from '../../state/settingStates';
-
-const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
+import { confirmRemoveSeriesState } from '../../state/settingStates';
 
 type Props = {
   series: Series | null;
@@ -20,20 +16,13 @@ type Props = {
 
 const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
-  const [deleteDownloads, setDeleteDownloads] = useState(false);
   const [dontAskAgain, setDontAskAgain] = useState(false);
   const setSeriesList = useSetRecoilState(seriesListState);
   const setConfirmRemoveSeries = useSetRecoilState(confirmRemoveSeriesState);
-  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const removeFunc = () => {
     if (props.series !== null) {
-      removeSeries(
-        props.series,
-        setSeriesList,
-        deleteDownloads,
-        customDownloadsDir || defaultDownloadsDir
-      );
+      removeSeries(props.series, setSeriesList);
 
       if (dontAskAgain) setConfirmRemoveSeries(false);
       navigate(routes.LIBRARY);
@@ -42,7 +31,6 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
   };
 
   useEffect(() => {
-    setDeleteDownloads(false);
     setDontAskAgain(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.showing]);
@@ -61,11 +49,6 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
         </Text>{' '}
         from your library?
       </Text>
-      <Checkbox
-        label="Also delete downloaded chapters"
-        checked={deleteDownloads}
-        onChange={(e) => setDeleteDownloads(e.target.checked)}
-      />
       <Checkbox
         mt="xs"
         label="Don't ask again"

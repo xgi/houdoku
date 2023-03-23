@@ -326,12 +326,7 @@ const SeriesDetails: React.FC<Props> = (props: Props) => {
                         onClick={() =>
                           confirmRemoveSeries
                             ? setShowingRemoveModal(true)
-                            : removeSeries(
-                                series,
-                                setSeriesList,
-                                false,
-                                customDownloadsDir || defaultDownloadsDir
-                              )
+                            : removeSeries(series, setSeriesList)
                         }
                       >
                         Remove series

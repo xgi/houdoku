@@ -4,18 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal, ScrollArea } from '@mantine/core';
 import { IconTrash, IconEye, IconSquareCheck, IconSquare } from '@tabler/icons';
-import { ipcRenderer } from 'electron';
 import { goToSeries, removeSeries } from '../../features/library/utils';
 import { categoryListState, seriesListState } from '../../state/libraryStates';
 import library from '../../services/library';
-import ipcChannels from '../../constants/ipcChannels.json';
-import { confirmRemoveSeriesState, customDownloadsDirState } from '../../state/settingStates';
+import { confirmRemoveSeriesState } from '../../state/settingStates';
 
 const ELEMENT_ID = 'LibraryGridContextMenu';
 const WIDTH = 200;
 const MAX_HEIGHT = 220;
-
-const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 type Props = {
   visible: boolean;
@@ -32,7 +28,6 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
   const availableCategories = useRecoilValue(categoryListState);
   const [categories, setCategories] = useState<string[]>([]);
   const [sanitizedPos, setSanitizedPos] = useState<{ x: number; y: number }>(props.position);
-  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const confirmRemoveSeries = useRecoilValue(confirmRemoveSeriesState);
 
   const viewFunc = () => {
@@ -47,7 +42,7 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
       if (confirmRemoveSeries) {
         props.showRemoveModal(props.series);
       } else {
-        removeSeries(props.series, setSeriesList, false, customDownloadsDir || defaultDownloadsDir);
+        removeSeries(props.series, setSeriesList);
       }
       props.close();
     }

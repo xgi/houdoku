@@ -9,11 +9,7 @@ import { Button, Group, List, Text } from '@mantine/core';
 import { v4 as uuidv4 } from 'uuid';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import { IconAlertTriangle, IconCheck, IconX } from '@tabler/icons';
-import {
-  deleteAllDownloadedChapters,
-  deleteThumbnail,
-  getThumbnailPath,
-} from '../../util/filesystem';
+import { deleteThumbnail, getThumbnailPath } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -52,19 +48,11 @@ export function loadChapterList(
   setChapterList(chapters);
 }
 
-export function removeSeries(
-  series: Series,
-  setSeriesList: (seriesList: Series[]) => void,
-  deleteDownloadedChapters = false,
-  downloadsDir = ''
-) {
+export function removeSeries(series: Series, setSeriesList: (seriesList: Series[]) => void) {
   if (series.id === undefined) return;
 
   library.removeSeries(series.id);
   deleteThumbnail(series);
-  if (deleteDownloadedChapters) {
-    deleteAllDownloadedChapters(series, downloadsDir);
-  }
   setSeriesList(library.fetchSeriesList());
 }
 
@@ -373,7 +361,7 @@ export function migrateSeriesTags() {
 export async function goToSeries(
   series: Series,
   setSeriesList: SetterOrUpdater<Series[]>,
-  navigate: any
+  navigate: (location: string) => void
 ) {
   if (series.id !== undefined) {
     if (

@@ -29,6 +29,25 @@ export function walk(directory: string): string[] {
 }
 
 /**
+ * Get a list of all directories within a directory (recursively).
+ * @param directory the directory to start from
+ * @returns list of all subdirectories
+ */
+export function getDirectories(directory: string): string[] {
+  let fileList: string[] = [];
+
+  const files = fs.readdirSync(directory);
+  files.forEach((file) => {
+    const curPath = path.join(directory, file);
+    if (fs.statSync(curPath).isDirectory()) {
+      fileList = [...fileList, curPath, ...getDirectories(curPath)];
+    }
+  });
+
+  return fileList;
+}
+
+/**
  * Get the expected path for a saved series thumbnail.
  * The thumbnail does not necessarily exist; this just provides the filename that it would/should
  * exist at.
@@ -104,24 +123,6 @@ export async function deleteDownloadedChapter(
         if (fs.existsSync(seriesDir) && fs.readdirSync(seriesDir).length === 0) {
           fs.rmdirSync(seriesDir);
         }
-        resolve();
-      })
-    );
-  }
-  return new Promise((resolve) => resolve());
-}
-
-export async function deleteAllDownloadedChapters(
-  series: Series,
-  downloadsDir: string
-): Promise<void> {
-  log.debug(`Deleting from disk all chapters for series ${series.id}`);
-  if (series.id === undefined) return new Promise((resolve) => resolve());
-
-  const seriesDownloadPath = path.join(downloadsDir, `${series.id}`);
-  if (fs.existsSync(seriesDownloadPath)) {
-    return new Promise((resolve) =>
-      rimraf(seriesDownloadPath, () => {
         resolve();
       })
     );
