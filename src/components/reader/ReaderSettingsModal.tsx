@@ -14,6 +14,7 @@ const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
     <Modal
       opened={showingSettingsModal}
       // centered
+      size="md"
       title="Reader Settings"
       onClose={() => setShowingSettingsModal(!showingSettingsModal)}
     >

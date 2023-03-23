@@ -34,8 +34,12 @@ img {
 }
 
 .pageImage.containWidth {
-  max-width: 100%;
+  max-width: var(--USER-MAX-PAGE-WIDTH);
   min-width: 0;
+}
+
+.pageImage.left.containWidth, .pageImage.right.containWidth {
+  max-width: calc(var(--USER-MAX-PAGE-WIDTH) / 2);
 }
 
 .pageImage.containHeight {

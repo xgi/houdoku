@@ -11,6 +11,7 @@ import {
   Collapse,
   Group,
   Radio,
+  Slider,
 } from '@mantine/core';
 import {
   IconArrowBigLeft,
@@ -46,6 +47,7 @@ import {
   readingDirectionState,
   pageGapState,
   offsetPagesState,
+  maxPageWidthState,
   optimizeContrastState,
   keyToggleOffsetDoubleSpreadsState,
   keyToggleFullscreenState,
@@ -85,6 +87,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [keyCloseOrBack, setKeyCloseOrBack] = useRecoilState(keyCloseOrBackState);
   const [pageGap, setPageGap] = useRecoilState(pageGapState);
   const [offsetPages, setOffsetPages] = useRecoilState(offsetPagesState);
+  const [maxPageWidth, setMaxPageWidth] = useRecoilState(maxPageWidthState);
   const [optimizeContrast, setOptimizeContrast] = useRecoilState(optimizeContrastState);
 
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
@@ -152,6 +155,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       case ReaderSetting.OffsetPages:
         setOffsetPages(value);
         break;
+      case ReaderSetting.MaxPageWidth:
+        setMaxPageWidth(value);
+        break;
       case ReaderSetting.OptimizeContrast:
         setOptimizeContrast(value);
         break;
@@ -185,7 +191,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Text>Page Style</Text>
+      <Text pb="xs">Page Style</Text>
       <SegmentedControl
         mb="xs"
         data={[
@@ -251,7 +257,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         />
       </Radio.Group>
 
-      <Text>Reading Direction</Text>
+      <Text pb="xs">Reading Direction</Text>
       <SegmentedControl
         mb="sm"
         data={[
@@ -282,27 +288,44 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
       <Checkbox
         label="Contain to width"
         ml="sm"
-        pb="xs"
+        // pb="xs"
         checked={fitContainToWidth}
         onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToWidth, e.target.checked)}
       />
       <Checkbox
         label="Contain to height"
         ml="sm"
-        pb="xs"
+        // pb="xs"
         checked={fitContainToHeight}
         onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToHeight, e.target.checked)}
       />
       <Checkbox
         label="Stretch small pages"
         ml="sm"
-        pb="sm"
         disabled={!(fitContainToHeight || fitContainToWidth)}
         checked={fitStretch}
         onChange={(e) => updateReaderSetting(ReaderSetting.FitStretch, e.target.checked)}
       />
+      <Text size="sm" ml="sm">
+        Max page width
+      </Text>
+      <Slider
+        label={`${maxPageWidth}%`}
+        mx="sm"
+        min={10}
+        max={100}
+        step={10}
+        marks={Array.from({ length: 10 }, (_v, k) => (k + 1) * 10).map((i: number) => ({
+          value: i,
+        }))}
+        styles={{ markLabel: { display: 'none' } }}
+        maw={400}
+        disabled={!fitContainToWidth}
+        defaultValue={maxPageWidth}
+        onChange={(value) => updateReaderSetting(ReaderSetting.MaxPageWidth, value)}
+      />
 
-      <Text pb="xs">Rendering</Text>
+      <Text py="xs">Rendering</Text>
       <Checkbox
         label="Optimize image contrast"
         ml="sm"

@@ -19,6 +19,7 @@ import {
   hideScrollbarState,
   pageGapState,
   optimizeContrastState,
+  maxPageWidthState,
 } from '../../state/settingStates';
 import ExtensionImage from '../general/ExtensionImage';
 
@@ -44,6 +45,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const readingDirection = useRecoilValue(readingDirectionState);
   const hideScrollbar = useRecoilValue(hideScrollbarState);
   const pageGap = useRecoilValue(pageGapState);
+  const maxPageWidth = useRecoilValue(maxPageWidthState);
   const optimizeContrast = useRecoilValue(optimizeContrastState);
 
   const viewerContainerClickHandler = (e: React.MouseEvent) => {
@@ -261,6 +263,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         className={`
           ${styles.container}
           ${hideScrollbar ? styles.noScrollbar : ''}`}
+        style={{ ['--USER-MAX-PAGE-WIDTH' as string]: `${maxPageWidth}%` }}
         onClick={(e) => viewerContainerClickHandler(e)}
       >
         {pageStyle === PageStyle.LongStrip ? getSeparatePageContainers() : getSinglePageContainer()}
