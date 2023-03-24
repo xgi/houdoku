@@ -218,6 +218,9 @@ ipcMain.handle(ipcChannels.APP.READ_ENTIRE_FILE, (_event, filepath: string) => {
   return fs.readFileSync(filepath).toString();
 });
 
+app.commandLine.appendSwitch('high-dpi-support', '1');
+app.commandLine.appendSwitch('force-device-scale-factor', '1');
+
 // create ipc handlers for specific extension functionality
 const webviewFn: WebviewFunc = (url, options) => loadInWebView(spoofWindow, url, options);
 createExtensionIpcHandlers(ipcMain, pluginsDir, extractDir, webviewFn);
