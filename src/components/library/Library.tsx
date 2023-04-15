@@ -4,7 +4,13 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ScrollArea, Text } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
 import { LibrarySort, LibraryView, ProgressFilter } from '../../models/types';
-import { activeSeriesListState, filterState, seriesListState } from '../../state/libraryStates';
+import {
+  activeSeriesListState,
+  chapterListState,
+  filterState,
+  seriesListState,
+  seriesState,
+} from '../../state/libraryStates';
 import {
   libraryFilterStatusState,
   libraryFilterProgressState,
@@ -18,15 +24,12 @@ import LibraryList from './LibraryList';
 import library from '../../services/library';
 import EditCategoriesModal from './EditCategoriesModal';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+type Props = unknown;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Library: React.FC<Props> = (_props: Props) => {
+const Library: React.FC<Props> = () => {
   const [removeModalShowing, setRemoveModalShowing] = useState(false);
   const [removeModalSeries, setRemoveModalSeries] = useState<Series | null>(null);
   const [editCategoriesModalShowing, setEditCategoriesModalShowing] = useState(false);
-  const setSeriesList = useSetRecoilState(seriesListState);
   const activeSeriesList = useRecoilValue(activeSeriesListState);
   const filter = useRecoilValue(filterState);
   const libraryFilterCategory = useRecoilValue(libraryFilterCategoryState);
@@ -34,6 +37,15 @@ const Library: React.FC<Props> = (_props: Props) => {
   const libraryFilterProgress = useRecoilValue(libraryFilterProgressState);
   const libraryView = useRecoilValue(libraryViewsState);
   const librarySort = useRecoilValue(librarySortState);
+  const setSeries = useSetRecoilState(seriesState);
+  const setSeriesList = useSetRecoilState(seriesListState);
+  const setChapterList = useSetRecoilState(chapterListState);
+
+  useEffect(() => {
+    setSeries(undefined);
+    setChapterList([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   /**
    * Get a filtered (and sorted) list of series after applying the specified filters.

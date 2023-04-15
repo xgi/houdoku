@@ -1,4 +1,4 @@
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, ExtensionMetadata, Series } from 'houdoku-extension-lib';
 import { atom, selector } from 'recoil';
 import { Category, ImportTask, TableColumnSortOrder } from '../models/types';
 import {
@@ -20,6 +20,11 @@ export const seriesState = atom({
 export const chapterListState = atom({
   key: 'chapterListState',
   default: [] as Chapter[],
+});
+
+export const currentExtensionMetadataState = atom<ExtensionMetadata | undefined>({
+  key: `currentExtensionMetadataState`,
+  default: undefined,
 });
 
 export const reloadingSeriesListState = atom({
@@ -50,6 +55,11 @@ export const seriesBannerUrlState = atom({
 export const completedStartReloadState = atom({
   key: 'completedStartReloadState',
   default: false,
+});
+
+export const chapterDownloadStatusesState = atom<{ [key: string]: boolean }>({
+  key: `chapterDownloadStatusesState`,
+  default: {},
 });
 
 export const chapterFilterTitleState = atom({
