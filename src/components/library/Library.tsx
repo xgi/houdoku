@@ -15,7 +15,7 @@ import {
   libraryFilterStatusState,
   libraryFilterProgressState,
   librarySortState,
-  libraryViewsState,
+  libraryViewState,
   libraryFilterCategoryState,
 } from '../../state/settingStates';
 import LibraryGrid from './LibraryGrid';
@@ -35,7 +35,7 @@ const Library: React.FC<Props> = () => {
   const libraryFilterCategory = useRecoilValue(libraryFilterCategoryState);
   const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
   const libraryFilterProgress = useRecoilValue(libraryFilterProgressState);
-  const libraryView = useRecoilValue(libraryViewsState);
+  const libraryView = useRecoilValue(libraryViewState);
   const librarySort = useRecoilValue(librarySortState);
   const setSeries = useSetRecoilState(seriesState);
   const setSeriesList = useSetRecoilState(seriesListState);
@@ -102,8 +102,8 @@ const Library: React.FC<Props> = () => {
           close={() => setEditCategoriesModalShowing(false)}
         />
 
-        {libraryView === LibraryView.Grid ? (
-          <LibraryGrid
+        {libraryView === LibraryView.List ? (
+          <LibraryList
             getFilteredList={getFilteredList}
             showRemoveModal={(series) => {
               setRemoveModalSeries(series);
@@ -111,7 +111,7 @@ const Library: React.FC<Props> = () => {
             }}
           />
         ) : (
-          <LibraryList
+          <LibraryGrid
             getFilteredList={getFilteredList}
             showRemoveModal={(series) => {
               setRemoveModalSeries(series);

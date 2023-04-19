@@ -77,7 +77,7 @@ export enum GeneralSetting {
   ConfirmRemoveSeries = 'ConfirmRemoveSeries',
   CustomDownloadsDir = 'CustomDownloadsDir',
   LibraryColumns = 'LibraryColumns',
-  LibraryViews = 'LibraryViews',
+  LibraryView = 'LibraryView',
   LibrarySort = 'LibrarySort',
   LibraryFilterStatus = 'LibraryFilterStatus',
   LibraryFilterProgress = 'LibraryFilterProgress',
@@ -101,7 +101,9 @@ export enum LibrarySort {
 }
 
 export enum LibraryView {
-  Grid = 'GRID',
+  GridCompact = 'GRID_COMPACT',
+  GridCoversOnly = 'GRID_COVERS_ONLY',
+  GridComfortable = 'GRID_COMFORTABLE',
   List = 'LIST',
 }
 
@@ -178,7 +180,7 @@ export const SettingTypes = {
   [GeneralSetting.ConfirmRemoveSeries]: SettingType.BOOLEAN,
   [GeneralSetting.CustomDownloadsDir]: SettingType.STRING,
   [GeneralSetting.LibraryColumns]: SettingType.NUMBER,
-  [GeneralSetting.LibraryViews]: SettingType.STRING,
+  [GeneralSetting.LibraryView]: SettingType.STRING,
   [GeneralSetting.LibrarySort]: SettingType.STRING,
   [GeneralSetting.LibraryFilterStatus]: SettingType.STRING,
   [GeneralSetting.LibraryFilterProgress]: SettingType.STRING,
@@ -228,7 +230,7 @@ export const DefaultSettings = {
   [GeneralSetting.ConfirmRemoveSeries]: true,
   [GeneralSetting.CustomDownloadsDir]: '',
   [GeneralSetting.LibraryColumns]: 4,
-  [GeneralSetting.LibraryViews]: LibraryView.Grid,
+  [GeneralSetting.LibraryView]: LibraryView.GridCompact,
   [GeneralSetting.LibrarySort]: LibrarySort.TitleAsc,
   [GeneralSetting.LibraryFilterStatus]: null,
   [GeneralSetting.LibraryFilterProgress]: ProgressFilter.All,

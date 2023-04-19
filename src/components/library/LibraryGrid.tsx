@@ -12,9 +12,10 @@ import constants from '../../constants/constants.json';
 import LibraryGridContextMenu from './LibraryGridContextMenu';
 import styles from './LibraryGrid.css';
 import { seriesListState, showingLibraryCtxMenuState } from '../../state/libraryStates';
-import { libraryColumnsState } from '../../state/settingStates';
+import { libraryColumnsState, libraryViewState } from '../../state/settingStates';
 import { goToSeries } from '../../features/library/utils';
 import ExtensionImage from '../general/ExtensionImage';
+import { LibraryView } from '../../models/types';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -29,6 +30,7 @@ type Props = {
 const LibraryGrid: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
   const setSeriesList = useSetRecoilState(seriesListState);
+  const libraryView = useRecoilValue(libraryViewState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
   const [showingContextMenu, setShowingContextMenu] = useRecoilState(showingLibraryCtxMenuState);
   const [contextMenuSeries, setContextMenuSeries] = useState<Series | null>(null);
@@ -99,41 +101,56 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
           const coverSource = getImageSource(series).replaceAll('\\', '/');
 
           return (
-            <div
-              key={`${series.id}-${series.title}`}
-              className={styles.coverContainer}
-              onClick={() => viewFunc(series)}
-              onContextMenu={(e) => {
-                setContextMenuPosition({ x: e.clientX, y: e.clientY });
-                setContextMenuSeries(series);
-                setShowingContextMenu(true);
-              }}
-              style={{
-                height: `calc(105vw / ${libraryColumns})`,
-              }}
-            >
-              <Overlay
-                gradient="linear-gradient(0deg, #000000cc, #00000000 40%, #00000000)"
-                zIndex={5}
-              />
-              <ExtensionImage
-                url={coverSource}
-                series={series}
-                alt={series.title}
-                width="100%"
-                height="100%"
-                style={{ objectFit: 'cover' }}
-              />
-              {renderUnreadBadge(series)}
-              <Title
-                className={styles.seriesTitle}
-                order={5}
-                lineClamp={3}
-                p={4}
-                style={{ zIndex: 10 }}
+            <div>
+              <div
+                key={`${series.id}-${series.title}`}
+                className={styles.coverContainer}
+                onClick={() => viewFunc(series)}
+                onContextMenu={(e) => {
+                  setContextMenuPosition({ x: e.clientX, y: e.clientY });
+                  setContextMenuSeries(series);
+                  setShowingContextMenu(true);
+                }}
+                style={{
+                  height: `calc(105vw / ${libraryColumns})`,
+                }}
               >
-                {series.title}
-              </Title>
+                <ExtensionImage
+                  url={coverSource}
+                  series={series}
+                  alt={series.title}
+                  width="100%"
+                  height="100%"
+                  style={{ objectFit: 'cover' }}
+                />
+                {renderUnreadBadge(series)}
+                {libraryView === LibraryView.GridCompact ? (
+                  <>
+                    <Title
+                      className={styles.seriesTitle}
+                      order={5}
+                      lineClamp={3}
+                      p={4}
+                      style={{ zIndex: 10 }}
+                    >
+                      {series.title}
+                    </Title>
+                    <Overlay
+                      gradient="linear-gradient(0deg, #000000cc, #00000000 40%, #00000000)"
+                      zIndex={5}
+                    />
+                  </>
+                ) : (
+                  ''
+                )}
+              </div>
+              {libraryView === LibraryView.GridComfortable ? (
+                <Title order={5} lineClamp={3} p={4}>
+                  {series.title}
+                </Title>
+              ) : (
+                ''
+              )}
             </div>
           );
         })}
