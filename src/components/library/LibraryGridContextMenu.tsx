@@ -98,7 +98,7 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
   }, [categories]);
 
   useEffect(() => {
-    const totalItemHeight = (2 + availableCategories.length) * 40;
+    const totalItemHeight = (3 + availableCategories.length) * 40;
     setMenuHeight(Math.min(MAX_HEIGHT, totalItemHeight));
 
     setCategories(props.series?.categories || []);
