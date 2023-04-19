@@ -50,18 +50,14 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     if (refreshOnStart && !completedStartReload && activeSeriesList.length > 0) {
+      setCompletedStartReload(true);
       reloadSeriesList(
         library.fetchSeriesList(),
         setSeriesList,
         setReloadingSeriesList,
         chapterLanguages,
         categoryList
-      )
-        // eslint-disable-next-line promise/always-return
-        .then(() => {
-          setCompletedStartReload(true);
-        })
-        .catch((e) => log.error(e));
+      ).catch((e) => log.error(e));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSeriesList]);
