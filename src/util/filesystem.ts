@@ -39,7 +39,8 @@ export function getDirectories(directory: string): string[] {
   const result: string[] = [];
   const files = fs.readdirSync(directory);
   files.forEach((file) => {
-    if (fs.statSync(path.join(directory, file))) result.push(file);
+    const fullpath = path.join(directory, file);
+    if (fs.statSync(fullpath)) result.push(fullpath);
   });
 
   return result;
@@ -143,10 +144,14 @@ export async function getChapterDownloaded(
 }
 
 export function getAllDownloadedChapterIds(downloadsDir: string): string[] {
-  const directoryNames = getDirectories(downloadsDir).map((fullpath) => path.basename(fullpath));
-  const result: string[] = [];
+  const seriesDirs = getDirectories(downloadsDir);
+  const chapterDirs: string[] = [];
+  seriesDirs.forEach((seriesDir) => {
+    chapterDirs.push(...getDirectories(seriesDir));
+  });
 
-  directoryNames.forEach((name) => {
+  const result: string[] = [];
+  chapterDirs.forEach((name) => {
     const regex = /(?:[a-f\d]{8}-[a-f\d]{4}-4[a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12})/i;
     const match = name.match(regex);
     if (match) result.push(match[0]);
