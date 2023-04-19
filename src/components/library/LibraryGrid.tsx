@@ -101,9 +101,8 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
           const coverSource = getImageSource(series).replaceAll('\\', '/');
 
           return (
-            <div>
+            <div key={`${series.id}-${series.title}`}>
               <div
-                key={`${series.id}-${series.title}`}
                 className={styles.coverContainer}
                 onClick={() => viewFunc(series)}
                 onContextMenu={(e) => {
