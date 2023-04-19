@@ -50,10 +50,10 @@ const parseChapterMetadata = (
   volumeNum: string;
   group: string;
 } => {
-  const matchChapterNum: RegExpMatchArray | null = text.match(/c(\d)+(\.(\d)+)?/g);
+  const matchChapterNum: RegExpMatchArray | null = text.match(/c\d*\.?\d+/g);
   const matchVolumeNum: RegExpMatchArray | null = text.match(/v(\d)+/g);
   const matchGroup: RegExpMatchArray | null = text.match(/\[.*\]/g);
-  const matchAnyNum: RegExpMatchArray | null = text.match(/(\d)+(\.(\d)+)?/g);
+  const matchAnyNum: RegExpMatchArray | null = text.match(/\d*\.?\d+/g);
 
   let chapterNum = '';
   if (matchChapterNum === null) {
@@ -61,7 +61,7 @@ const parseChapterMetadata = (
       chapterNum = parseFloat(matchAnyNum[0]).toString();
     }
   } else {
-    const matchNumber = matchChapterNum[0].match(/(\d)+/g);
+    const matchNumber = matchChapterNum[0].match(/\d*\.?\d+/g);
     chapterNum = matchNumber ? parseFloat(matchNumber[0]).toString() : '';
   }
 
