@@ -23,6 +23,7 @@ import { AniListTrackerMetadata } from '../../services/trackers/anilist';
 import { TrackerSetting } from '../../models/types';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
 import { trackerAutoUpdateState } from '../../state/settingStates';
+import { MUTrackerMetadata } from '../../services/trackers/mangaupdate';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
@@ -35,6 +36,9 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
   }>({});
   const [authUrls, setAuthUrls] = useState<{ [trackerId: string]: string }>({});
   const [usernames, setUsernames] = useState<{
+    [trackerId: string]: string | null;
+  }>({});
+  const [passwords, setPasswords] = useState<{
     [trackerId: string]: string | null;
   }>({});
 
@@ -64,6 +68,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
     setUsernames({
       [AniListTrackerMetadata.id]: await getUsername(AniListTrackerMetadata.id),
       [MALTrackerMetadata.id]: await getUsername(MALTrackerMetadata.id),
+      [MUTrackerMetadata.id]: await getUsername(MUTrackerMetadata.id),
     });
 
     setLoading(false);
@@ -189,6 +194,84 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
                     ml="sm"
                     onClick={() =>
                       submitAccessCode(trackerMetadata.id, accessCodes[trackerMetadata.id])
+                    }
+                  >
+                    Submit
+                  </Button>
+                </Timeline.Item>
+              </Timeline>
+            </Accordion.Panel>
+          </Accordion.Item>
+        ))}
+
+        {[MUTrackerMetadata].map((trackerMetadata) => (
+          <Accordion.Item value={trackerMetadata.id} key={trackerMetadata.id}>
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Accordion.Control>
+                <Group position="apart">
+                  <Text>{trackerMetadata.name}</Text>
+                  {usernames[trackerMetadata.id] ? (
+                    <Group position="right">
+                      <Text>
+                        Logged in as <Code>{usernames[trackerMetadata.id]}</Code>
+                      </Text>
+                    </Group>
+                  ) : (
+                    <Text>Not logged in.</Text>
+                  )}
+                </Group>
+              </Accordion.Control>
+              {usernames[trackerMetadata.id] ? (
+                <Button
+                  ml="xs"
+                  compact
+                  color="red"
+                  radius={0}
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    saveAccessToken(trackerMetadata.id, '');
+                  }}
+                >
+                  Unlink
+                </Button>
+              ) : undefined}
+            </Box>
+
+            <Accordion.Panel>
+              <Timeline active={-1} bulletSize={36} lineWidth={2} mt="sm">
+                <Timeline.Item bullet={1}>
+                <Text>Username:</Text>
+                <Input
+                    ml="sm"
+                    style={{ maxWidth: 280 }}
+                    placeholder="Username"
+                    value={usernames[trackerMetadata.id] || ''}
+                    onChange={(e: any) =>
+                      setUsernames({
+                        ...usernames,
+                        [trackerMetadata.id]: e.target.value,
+                      })
+                    }
+                  />
+                  <Text>Password:</Text>
+                  <Input
+                    ml="sm"
+                    style={{ maxWidth: 280 }}
+                    type="password"
+                    value={passwords[trackerMetadata.id] || ''}
+                    onChange={(e: any) =>
+                      setPasswords({
+                        ...passwords,
+                        [trackerMetadata.id]: e.target.value,
+                      })
+                    }
+                  />
+                </Timeline.Item>
+                <Timeline.Item bullet={2}>
+                  <Button
+                    ml="sm"
+                    onClick={() =>
+                      submitAccessCode(trackerMetadata.id, JSON.stringify({'username': usernames[trackerMetadata.id], 'password': passwords[trackerMetadata.id]}))
                     }
                   >
                     Submit

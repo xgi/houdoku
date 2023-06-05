@@ -28,6 +28,7 @@ export type TrackerSeries = {
 export enum TrackScoreFormat {
   POINT_100 = 'POINT_100',
   POINT_10_DECIMAL = 'POINT_10_DECIMAL',
+  POINT_10_DECIMAL_ONE_DIGIT = 'POINT_10_SINGLE_DECIMAL',
   POINT_10 = 'POINT_10',
   POINT_5 = 'POINT_5',
   POINT_3 = 'POINT_3',
@@ -45,12 +46,15 @@ export type TrackEntry = {
   id?: string;
   seriesId: string;
   title?: string;
+  url?: string;
   description?: string;
   coverUrl?: string;
   score?: number;
   scoreFormat?: TrackScoreFormat;
   progress?: number;
   status?: TrackStatus;
+  listId?: string;
+  listName?: string;
 };
 
 export type SearchResult = {
