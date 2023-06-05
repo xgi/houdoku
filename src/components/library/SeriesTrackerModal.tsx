@@ -32,8 +32,9 @@ import {
 } from '../../models/types';
 import { updateSeriesTrackerKeys } from '../../features/library/utils';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
+import { MUTrackerMetadata, MU_DEFAULT_LIST_MAP } from '../../services/trackers/mangaupdate';
 
-const TRACKER_METADATAS = [AniListTrackerMetadata, MALTrackerMetadata];
+const TRACKER_METADATAS = [AniListTrackerMetadata, MALTrackerMetadata, MUTrackerMetadata];
 
 const SCORE_FORMAT_OPTIONS: {
   [key in TrackScoreFormat]: number[];
@@ -41,6 +42,9 @@ const SCORE_FORMAT_OPTIONS: {
   [TrackScoreFormat.POINT_10]: [...Array(11).keys()],
   [TrackScoreFormat.POINT_100]: [...Array(101).keys()],
   [TrackScoreFormat.POINT_10_DECIMAL]: [...Array(101).keys()],
+  [TrackScoreFormat.POINT_10_DECIMAL_ONE_DIGIT]: [...Array(100).keys()].map(
+    (num) => Math.floor(num / 10) + (num % 10) / 10 + 1).filter(
+    (num) => num <= 10),
   [TrackScoreFormat.POINT_5]: [...Array(6).keys()],
   [TrackScoreFormat.POINT_3]: [...Array(4).keys()],
 };
@@ -206,24 +210,52 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
             <Text>Status</Text>
           </Grid.Col>
           <Grid.Col span={9}>
+            {trackerMetadata.name === "MangaUpdates" ? (
+              <Group noWrap spacing="xs">
+                <Select
+                  value={trackEntry.listId}
+                  data ={ MU_DEFAULT_LIST_MAP.map(entry => ({
+                    value: entry.id,
+                    label: entry.name,
+                  })).concat(
+                    (trackEntry.listId && trackEntry.listName && !MU_DEFAULT_LIST_MAP.some(item => item.id === trackEntry.listId && item.name === trackEntry.listName))
+                      ? [{
+                          value: trackEntry.listId,
+                          label: trackEntry.listName,
+                        }]
+                      : []
+                  )}
+                  onChange={(value: string) =>
+                    sendTrackEntry(trackerMetadata.id, {
+                      ...trackEntry,
+                      listId: value,
+                      listName: MU_DEFAULT_LIST_MAP.find(item => item.id === value)?.name || trackEntry.listName,
+                      status: MU_DEFAULT_LIST_MAP.find(item => item.id === value)?.status || trackEntry.status
+                    })
+                  }
+                />
+                <Text>{trackEntry.status}</Text>
+              </Group>
+            ) : (
             <Group noWrap spacing="xs">
-              <Select
-                value={trackEntry?.status}
-                data={[
-                  TrackStatus.Completed,
-                  TrackStatus.Dropped,
-                  TrackStatus.Paused,
-                  TrackStatus.Planning,
-                  TrackStatus.Reading,
-                ]}
-                onChange={(value: string) =>
-                  sendTrackEntry(trackerMetadata.id, {
-                    ...trackEntry,
-                    status: value as TrackStatus,
-                  })
-                }
-              />
-            </Group>
+            <Select
+              value={trackEntry?.status}
+              data={[
+                TrackStatus.Completed,
+                TrackStatus.Dropped,
+                TrackStatus.Paused,
+                TrackStatus.Planning,
+                TrackStatus.Reading,
+              ]}
+              onChange={(value: string) =>
+                sendTrackEntry(trackerMetadata.id, {
+                  ...trackEntry,
+                  status: value as TrackStatus,
+                })
+              }
+            />
+          </Group>
+        )}
           </Grid.Col>
 
           <Grid.Col span={3}>
@@ -263,7 +295,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               onChange={(value: string) =>
                 sendTrackEntry(trackerMetadata.id, {
                   ...trackEntry,
-                  score: parseInt(value, 10),
+                  score: trackEntry.scoreFormat === TrackScoreFormat.POINT_10_DECIMAL_ONE_DIGIT
+                  ? parseFloat(value)
+                  : parseInt(value, 10),
                 })
               }
             />
@@ -282,7 +316,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
             variant="default"
             leftIcon={<IconExternalLink />}
             onClick={() =>
-              shell.openExternal(`${trackerMetadata.url}/manga/${trackEntry.seriesId}`)
+              shell.openExternal(`${
+                trackEntry.url ? trackEntry.url : 
+                trackerMetadata.url+"/manga/"+trackEntry.seriesId}`)
             }
           >
             View on {trackerMetadata.name}

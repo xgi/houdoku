@@ -5,10 +5,12 @@ import { AniListTrackerClient, AniListTrackerMetadata } from './trackers/anilist
 import { MALTrackerClient, MALTrackerMetadata } from './trackers/myanimelist';
 import ipcChannels from '../constants/ipcChannels.json';
 import { TrackEntry, TrackerSeries, TrackStatus } from '../models/types';
+import { MUTrackerClient, MUTrackerMetadata } from './trackers/mangaupdate';
 
 const TRACKER_CLIENTS: { [key: string]: TrackerClientInterface } = {
   [AniListTrackerMetadata.id]: new AniListTrackerClient(),
   [MALTrackerMetadata.id]: new MALTrackerClient(),
+  [MUTrackerMetadata.id]: new MUTrackerClient(),
 };
 
 function getAuthUrls(): { [trackerId: string]: string } {
