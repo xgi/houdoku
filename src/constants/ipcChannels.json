@@ -58,7 +58,8 @@
     "GET_LIBRARY_ENTRY": "tracker-getLibraryEntry",
     "ADD_LIBRARY_ENTRY": "tracker-addLibraryEntry",
     "UPDATE_LIBRARY_ENTRY": "tracker-updateLibraryEntry",
-    "SET_ACCESS_TOKEN": "tracker-setAccessToken"
+    "SET_ACCESS_TOKEN": "tracker-setAccessToken",
+    "GET_LIST_ENTRIES": "tracker-getListEntries"
   },
   "INTEGRATION": {
     "DISCORD_SET_ACTIVITY": "integration-discordSetActivity"

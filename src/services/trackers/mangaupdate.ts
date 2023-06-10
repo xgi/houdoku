@@ -9,6 +9,7 @@ import {
   AddLibraryEntryFunc,
   UpdateLibraryEntryFunc,
   GetTokenFunc,
+  GetListEntriesFunc,
 } from '../../models/interface';
 import {
   TrackEntry,
@@ -16,6 +17,7 @@ import {
   TrackerSeries,
   TrackScoreFormat,
   TrackStatus,
+  TrackerListEntry,
 } from '../../models/types';
 
 const BASE_URL = 'https://api.mangaupdates.com/v1';
@@ -28,7 +30,7 @@ const STATUS_MAP_NAME: { [key: string]: TrackStatus } = {
   hold: TrackStatus.Paused,
 };
 
-export const MU_DEFAULT_LIST_MAP: MUListEntry[] = [
+const MU_DEFAULT_LIST_MAP: TrackerListEntry[] = [
   {
     id: "0",
     name: "Reading List",
@@ -155,7 +157,7 @@ type ListMetadataResponseData = {
   description: string;
   type: string;
   icon: string;
-  custom: true;
+  custom: boolean;
   options: {
     public: boolean;
     sort: string;
@@ -214,7 +216,6 @@ type SeriesMetadataResponseData = {
   }[];
 };
 
-
 type AddLibraryResponseData = {
   status: string;
   reason: string;
@@ -246,12 +247,6 @@ type UpdateMangaResponseData = {
       }
     ]
   }
-};
-
-type MUListEntry = {
-  id: string;
-  name: string;
-  status: TrackStatus;
 };
 
 export const MUTrackerMetadata: TrackerMetadata = {
@@ -322,7 +317,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return response.json();
       })
       .then((data: UserResponseData | null) => {
-        return data ? `${data.user_id}` : null;
+        return data ? data.username : null;
       })
       .catch((e: Error) => {
         log.error(e);
@@ -397,11 +392,10 @@ export class MUTrackerClient extends TrackerClientAbstract {
           return null;
         }
 
-        const listEntry: MUListEntry | null = (data.list_id >= 0 && data.list_id <= 4)
+        const listEntry: TrackerListEntry | null = (data.list_id >= 0 && data.list_id <= 4)
           ? MU_DEFAULT_LIST_MAP[data.list_id]
           : await this.GetListStatusEntryFunc(data.list_id);
         const rating: number | null = await this.GetLibraryRatingEntryFunc(data.series.id);
-
         const metadata: TrackEntry | null = await this.GetSeriesMetadataEntryFunc(data.series.id)
 
         if (listEntry === null || rating === null || metadata === null) {
@@ -421,127 +415,6 @@ export class MUTrackerClient extends TrackerClientAbstract {
           listId: `${listEntry.id}`,
           listName: listEntry.name
         } as TrackEntry;
-      })
-      .catch((e: Error) => {
-        log.error(e);
-        return null;
-      });
-  };
-
-  GetListStatusEntryFunc = async (listId: number): Promise<MUListEntry | null> => {
-    if (this.accessToken === '') return new Promise((resolve) => resolve(null));
-
-    if (listId < 0 || (listId > 4 && listId < 101)) {
-      log.error(
-        `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: listid out of range`
-      );
-      return null;
-    }
-
-    const url = `${BASE_URL}/lists/${listId}`;
-    const options = {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        Accept: 'application/json',
-      },
-    };
-
-    return fetch(url, options)
-      .then((response) => {
-        if (response.status === 404) {
-          log.error(
-            `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: List not found`
-          );
-          return null;
-        }
-        else if (response.status === 401) {
-          log.error(
-            `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
-          );
-          return null;
-        }
-        return response.json();
-      })
-      .then((data: ListMetadataResponseData | null) => {
-        if (data === null) {
-          return null;
-        }
-
-        return {
-          id: `${data.list_id}`,
-          name: data.title,
-          status: STATUS_MAP_NAME[data.type]
-        } as MUListEntry;
-      })
-      .catch((e: Error) => {
-        log.error(e);
-        return null;
-      });
-  };
-
-  GetLibraryRatingEntryFunc = async (seriesId: number): Promise<number | null> => {
-    if (this.accessToken === '') return new Promise((resolve) => resolve(null));
-
-    const url = `${BASE_URL}/series/${seriesId}/rating`;
-    const options = {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${this.accessToken}`,
-        Accept: 'application/json',
-      },
-    };
-
-    return fetch(url, options)
-      .then((response) => {
-        if (response.status === 404) {
-          log.error(
-            `Error getting score for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series without a score`
-          );
-          return null;
-        }
-        else if (response.status === 401) {
-          log.error(
-            `Error getting score for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
-          );
-          return null;
-        }
-        return response.json();
-      })
-      .then((data: MangaRatingResponseData | null) => {
-        return data ? data.rating : null;
-      })
-      .catch((e: Error) => {
-        log.error(e);
-        return null;
-      });
-  };
-
-  GetSeriesMetadataEntryFunc = async (seriesId: number): Promise<TrackEntry | null> => {
-    const url = `${BASE_URL}/series/${seriesId}`;
-    const options = {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    };
-
-    return fetch(url, options)
-      .then((response) => {
-        if (response.status === 404) {
-          log.error(
-            `Error getting metadata for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`
-          );
-          return null;
-        }
-        return response.json();
-      })
-      .then((data: SeriesMetadataResponseData | null) => {
-        return data ? {
-          url: data.url,
-          description: data.description,
-          coverUrl: data.image.url.original,
-        } as TrackEntry : null;
       })
       .catch((e: Error) => {
         log.error(e);
@@ -620,7 +493,167 @@ export class MUTrackerClient extends TrackerClientAbstract {
     }
   };
 
-  updateLibraryProgressEntry: UpdateLibraryEntryFunc = async (trackEntry: TrackEntry) => {
+  getListEntries: GetListEntriesFunc = () => {
+    if (this.accessToken === '') return new Promise((resolve) => resolve([]));
+
+    const url = `${BASE_URL}/lists/`;
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        Accept: 'application/json',
+      },
+    };
+
+    return fetch(url, options)
+      .then((response) => {
+        if (response.status === 401) {
+          log.error(
+            `Error getting status from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          );
+          return [];
+        }
+        return response.json();
+      })
+      .then((data: ListMetadataResponseData[]) => {
+        if (data.length === 0) {
+          return [];
+        }
+
+        return data.map((item: ListMetadataResponseData) => ({
+          id: `${item.list_id}`,
+          name: item.title,
+          status: STATUS_MAP_NAME[item.type]
+        })) as TrackerListEntry[];
+      })
+      .catch((e: Error) => {
+        log.error(e);
+        return [];
+      });
+  };
+
+  GetListStatusEntryFunc = async (listId: number): Promise<TrackerListEntry | null> => {
+    if (this.accessToken === '') return new Promise((resolve) => resolve(null));
+
+    if (listId < 0 || (listId > 4 && listId < 101)) {
+      log.error(
+        `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: listid out of range`
+      );
+      return null;
+    }
+
+    const url = `${BASE_URL}/lists/${listId}`;
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        Accept: 'application/json',
+      },
+    };
+
+    return fetch(url, options)
+      .then((response) => {
+        if (response.status === 404) {
+          log.error(
+            `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: List not found`
+          );
+          return null;
+        }
+        else if (response.status === 401) {
+          log.error(
+            `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          );
+          return null;
+        }
+        return response.json();
+      })
+      .then((data: ListMetadataResponseData | null) => {
+        if (data === null) {
+          return null;
+        }
+
+        return {
+          id: `${data.list_id}`,
+          name: data.title,
+          status: STATUS_MAP_NAME[data.type]
+        } as TrackerListEntry;
+      })
+      .catch((e: Error) => {
+        log.error(e);
+        return null;
+      });
+  };
+
+  GetLibraryRatingEntryFunc = async (seriesId: number): Promise<number | null> => {
+    if (this.accessToken === '') return new Promise((resolve) => resolve(null));
+
+    const url = `${BASE_URL}/series/${seriesId}/rating`;
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        Accept: 'application/json',
+      },
+    };
+
+    return fetch(url, options)
+      .then((response) => {
+        if (response.status === 404) {
+          log.warn(
+            `Warn getting score for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series without a score`
+          );
+          return { rating: 0 };
+        }
+        else if (response.status === 401) {
+          log.error(
+            `Error getting score for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          );
+          return null;
+        }
+        return response.json();
+      })
+      .then((data: MangaRatingResponseData | null) => {
+        return data ? data.rating : null;
+      })
+      .catch((e: Error) => {
+        log.error(e);
+        return null;
+      });
+  };
+
+  GetSeriesMetadataEntryFunc = async (seriesId: number): Promise<TrackEntry | null> => {
+    const url = `${BASE_URL}/series/${seriesId}`;
+    const options = {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+      },
+    };
+
+    return fetch(url, options)
+      .then((response) => {
+        if (response.status === 404) {
+          log.error(
+            `Error getting metadata for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`
+          );
+          return null;
+        }
+        return response.json();
+      })
+      .then((data: SeriesMetadataResponseData | null) => {
+        return data ? {
+          url: data.url,
+          description: data.description,
+          coverUrl: data.image.url.original,
+        } as TrackEntry : null;
+      })
+      .catch((e: Error) => {
+        log.error(e);
+        return null;
+      });
+  };
+
+  updateLibraryProgressEntry = async (trackEntry: TrackEntry): Promise<TrackEntry | null> => {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
     const url = `${BASE_URL}/lists/series/update`;
@@ -671,7 +704,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
       });
   };
 
-  updateLibraryRatingEntry: UpdateLibraryEntryFunc = async (trackEntry: TrackEntry) => {
+  updateLibraryRatingEntry = async (trackEntry: TrackEntry): Promise<TrackEntry | null> => {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
     const url = `${BASE_URL}/series/${trackEntry.seriesId}/rating`;
@@ -703,6 +736,17 @@ export class MUTrackerClient extends TrackerClientAbstract {
           );
           return null;
         }
+        else if (response.status === 400) {
+          if (trackEntry.score === 0) {
+            return this.deleteLibraryRatingEntry(Number(trackEntry.seriesId));
+          }
+          else {
+            log.error(
+              `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: rating must be between 1.0 and 10.0`
+            );
+            return null
+          }
+        }
         return this.getLibraryEntry(trackEntry.seriesId);
       })
       .catch((e: Error) => {
@@ -710,4 +754,40 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return null;
       });
   };
+
+  deleteLibraryRatingEntry = async (seriesId: number): Promise<TrackEntry | null> => {
+    if (this.accessToken === '') return new Promise((resolve) => resolve(null));
+
+    const url = `${BASE_URL}/series/${seriesId}/rating`;
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${this.accessToken}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    };
+
+    return fetch(url, options)
+      .then((response) => {
+        if (response.status === 401) {
+          log.error(
+            `Error updating library rating entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          );
+          return null;
+        }
+        else if (response.status === 404) {
+          log.error(
+            `Error updating library rating entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`
+          );
+          return null;
+        }
+        return this.getLibraryEntry(`${seriesId}`);
+      })
+      .catch((e: Error) => {
+        log.error(e);
+        return null;
+      });
+  };
+
 }
