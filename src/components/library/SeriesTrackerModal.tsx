@@ -29,10 +29,11 @@ import {
   TrackStatus,
   TrackScoreFormat,
   TrackerMetadata,
+  TrackerListEntry,
 } from '../../models/types';
 import { updateSeriesTrackerKeys } from '../../features/library/utils';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
-import { MUTrackerMetadata, MU_DEFAULT_LIST_MAP } from '../../services/trackers/mangaupdate';
+import { MUTrackerMetadata } from '../../services/trackers/mangaupdate';
 
 const TRACKER_METADATAS = [AniListTrackerMetadata, MALTrackerMetadata, MUTrackerMetadata];
 
@@ -42,9 +43,10 @@ const SCORE_FORMAT_OPTIONS: {
   [TrackScoreFormat.POINT_10]: [...Array(11).keys()],
   [TrackScoreFormat.POINT_100]: [...Array(101).keys()],
   [TrackScoreFormat.POINT_10_DECIMAL]: [...Array(101).keys()],
-  [TrackScoreFormat.POINT_10_DECIMAL_ONE_DIGIT]: [...Array(100).keys()].map(
-    (num) => Math.floor(num / 10) + (num % 10) / 10 + 1).filter(
-    (num) => num <= 10),
+  [TrackScoreFormat.POINT_10_DECIMAL_ONE_DIGIT]: ((sequence) => {
+    sequence.splice(1, 9);
+    return [...sequence];
+  })([...Array(101).keys()].map((num) => num / 10)),
   [TrackScoreFormat.POINT_5]: [...Array(6).keys()],
   [TrackScoreFormat.POINT_3]: [...Array(4).keys()],
 };
@@ -68,6 +70,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   const [trackEntries, setTrackEntries] = useState<{
     [trackerId: string]: TrackEntry;
   }>({});
+  const [trackerListEntries, setTrackerListEntries] = useState<{
+    [trackerId: string]: TrackerListEntry[];
+  }>({});
 
   const loadTrackerData = async () => {
     setLoading(true);
@@ -82,10 +87,15 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
       ipcRenderer
         .invoke(ipcChannels.TRACKER.SEARCH, trackerId, searchText)
         .catch((e) => log.error(e));
-
+    const _getListEntries = (trackerId: string): Promise<TrackerListEntry[]> =>
+      ipcRenderer
+        .invoke(ipcChannels.TRACKER.GET_LIST_ENTRIES, trackerId)
+        .catch((e) => log.error(e));
+    
     const _usernames: { [trackerId: string]: string | null } = {};
     const _trackEntries: { [trackerId: string]: TrackEntry } = {};
     const _trackerSeriesLists: { [trackerId: string]: TrackerSeries[] } = {};
+    const _trackerListEntries: { [trackerId: string]: TrackerListEntry[] } = {};
 
     await Promise.all(
       TRACKER_METADATAS.map(async (trackerMetadata) => {
@@ -108,12 +118,16 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
           const seriesList = await _getSeriesList(trackerMetadata.id);
           _trackerSeriesLists[trackerMetadata.id] = seriesList.slice(0, 5);
         }
+
+        const listEntries = await _getListEntries(trackerMetadata.id);
+        _trackerListEntries[trackerMetadata.id] = listEntries;
       })
     );
 
     setUsernames(_usernames);
     setTrackEntries(_trackEntries);
     setTrackerSeriesLists(_trackerSeriesLists);
+    setTrackerListEntries(_trackerListEntries);
     setLoading(false);
   };
 
@@ -214,23 +228,19 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               <Group noWrap spacing="xs">
                 <Select
                   value={trackEntry.listId}
-                  data ={ MU_DEFAULT_LIST_MAP.map(entry => ({
-                    value: entry.id,
-                    label: entry.name,
-                  })).concat(
-                    (trackEntry.listId && trackEntry.listName && !MU_DEFAULT_LIST_MAP.some(item => item.id === trackEntry.listId && item.name === trackEntry.listName))
-                      ? [{
-                          value: trackEntry.listId,
-                          label: trackEntry.listName,
-                        }]
-                      : []
-                  )}
+                  data ={trackerListEntries[trackerMetadata.id].map(entry => ({
+                      value: entry.id,
+                      label: entry.name,
+                    }))
+                  }
                   onChange={(value: string) =>
                     sendTrackEntry(trackerMetadata.id, {
                       ...trackEntry,
                       listId: value,
-                      listName: MU_DEFAULT_LIST_MAP.find(item => item.id === value)?.name || trackEntry.listName,
-                      status: MU_DEFAULT_LIST_MAP.find(item => item.id === value)?.status || trackEntry.status
+                      listName: trackerListEntries[trackerMetadata.id].find(
+                        entry => entry.id === value)!.name,
+                      status: trackerListEntries[trackerMetadata.id].find(
+                        entry => entry.id === value)!.status
                     })
                   }
                 />

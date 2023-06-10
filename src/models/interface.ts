@@ -1,4 +1,4 @@
-import { TrackEntry, TrackerMetadata, TrackerSeries } from './types';
+import { TrackEntry, TrackerMetadata, TrackerSeries, TrackerListEntry } from './types';
 
 export interface GetAuthUrlFunc {
   (): string;
@@ -32,6 +32,10 @@ export interface SetAccessTokenFunc {
   (accessToken: string): void;
 }
 
+export interface GetListEntriesFunc {
+  (): Promise<TrackerListEntry[]>;
+}
+
 export interface TrackerClientInterface {
   accessToken: string;
 
@@ -44,6 +48,7 @@ export interface TrackerClientInterface {
   addLibraryEntry: AddLibraryEntryFunc;
   updateLibraryEntry: UpdateLibraryEntryFunc;
   setAccessToken: SetAccessTokenFunc;
+  getListEntries?: GetListEntriesFunc;
 }
 
 export abstract class TrackerClientAbstract implements TrackerClientInterface {
@@ -72,4 +77,6 @@ export abstract class TrackerClientAbstract implements TrackerClientInterface {
   setAccessToken: SetAccessTokenFunc = (accessToken: string) => {
     this.accessToken = accessToken;
   };
+
+  getListEntries?: GetListEntriesFunc;
 }

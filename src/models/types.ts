@@ -25,6 +25,12 @@ export type TrackerSeries = {
   coverUrl: string;
 };
 
+export type TrackerListEntry = {
+  id: string;
+  name: string;
+  status: TrackStatus;
+}
+
 export enum TrackScoreFormat {
   POINT_100 = 'POINT_100',
   POINT_10_DECIMAL = 'POINT_10_DECIMAL',

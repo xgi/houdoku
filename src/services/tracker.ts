@@ -4,7 +4,7 @@ import { TrackerClientInterface } from '../models/interface';
 import { AniListTrackerClient, AniListTrackerMetadata } from './trackers/anilist';
 import { MALTrackerClient, MALTrackerMetadata } from './trackers/myanimelist';
 import ipcChannels from '../constants/ipcChannels.json';
-import { TrackEntry, TrackerSeries, TrackStatus } from '../models/types';
+import { TrackEntry, TrackerSeries, TrackStatus, TrackerListEntry } from '../models/types';
 import { MUTrackerClient, MUTrackerMetadata } from './trackers/mangaupdate';
 
 const TRACKER_CLIENTS: { [key: string]: TrackerClientInterface } = {
@@ -71,6 +71,18 @@ function setAccessToken(trackerId: string, accessToken: string): void {
   return tracker.setAccessToken(accessToken);
 }
 
+function getListEntries(trackerId: string): Promise<TrackerListEntry[]> {
+  const tracker = TRACKER_CLIENTS[trackerId];
+
+  if(tracker.getListEntries === undefined) {
+    log.warn(`Getting list entries from tracker ${trackerId}: is not defined`);
+    return Promise.resolve([]);
+  }
+
+  log.info(`Getting list entries from tracker ${trackerId}`);
+  return tracker.getListEntries();
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export const createTrackerIpcHandlers = (ipcMain: IpcMain) => {
   log.debug('Creating tracker IPC handlers in main...');
@@ -115,6 +127,12 @@ export const createTrackerIpcHandlers = (ipcMain: IpcMain) => {
     ipcChannels.TRACKER.SET_ACCESS_TOKEN,
     (_event, trackerId: string, accessToken: string) => {
       return setAccessToken(trackerId, accessToken);
+    }
+  );
+  ipcMain.handle(
+    ipcChannels.TRACKER.GET_LIST_ENTRIES,
+    (_event, trackerId: string) => {
+      return getListEntries(trackerId);
     }
   );
 };
