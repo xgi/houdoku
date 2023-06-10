@@ -258,6 +258,7 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
                     ml="sm"
                     style={{ maxWidth: 280 }}
                     type="password"
+                    placeholder="Password"
                     value={passwords[trackerMetadata.id] || ''}
                     onChange={(e: any) =>
                       setPasswords({
