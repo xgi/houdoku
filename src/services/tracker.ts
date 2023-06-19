@@ -74,7 +74,7 @@ function setAccessToken(trackerId: string, accessToken: string): void {
 function getListEntries(trackerId: string): Promise<TrackerListEntry[]> {
   const tracker = TRACKER_CLIENTS[trackerId];
 
-  if(tracker.getListEntries === undefined) {
+  if (tracker.getListEntries === undefined) {
     log.warn(`Getting list entries from tracker ${trackerId}: is not defined`);
     return Promise.resolve([]);
   }
@@ -129,10 +129,7 @@ export const createTrackerIpcHandlers = (ipcMain: IpcMain) => {
       return setAccessToken(trackerId, accessToken);
     }
   );
-  ipcMain.handle(
-    ipcChannels.TRACKER.GET_LIST_ENTRIES,
-    (_event, trackerId: string) => {
-      return getListEntries(trackerId);
-    }
-  );
+  ipcMain.handle(ipcChannels.TRACKER.GET_LIST_ENTRIES, (_event, trackerId: string) => {
+    return getListEntries(trackerId);
+  });
 };

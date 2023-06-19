@@ -16,6 +16,7 @@ export type TrackerMetadata = {
   id: string;
   name: string;
   url: string;
+  hasCustomLists: boolean;
 };
 
 export type TrackerSeries = {
@@ -29,7 +30,7 @@ export type TrackerListEntry = {
   id: string;
   name: string;
   status: TrackStatus;
-}
+};
 
 export enum TrackScoreFormat {
   POINT_100 = 'POINT_100',

@@ -91,7 +91,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
       ipcRenderer
         .invoke(ipcChannels.TRACKER.GET_LIST_ENTRIES, trackerId)
         .catch((e) => log.error(e));
-    
+
     const _usernames: { [trackerId: string]: string | null } = {};
     const _trackEntries: { [trackerId: string]: TrackEntry } = {};
     const _trackerSeriesLists: { [trackerId: string]: TrackerSeries[] } = {};
@@ -224,48 +224,49 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
             <Text>Status</Text>
           </Grid.Col>
           <Grid.Col span={9}>
-            {trackerMetadata.name === "MangaUpdates" ? (
+            {trackerMetadata.hasCustomLists ? (
               <Group noWrap spacing="xs">
                 <Select
                   value={trackEntry.listId}
-                  data ={trackerListEntries[trackerMetadata.id].map(entry => ({
-                      value: entry.id,
-                      label: entry.name,
-                    }))
-                  }
+                  data={trackerListEntries[trackerMetadata.id].map((entry) => ({
+                    value: entry.id,
+                    label: entry.name,
+                  }))}
                   onChange={(value: string) =>
                     sendTrackEntry(trackerMetadata.id, {
                       ...trackEntry,
                       listId: value,
                       listName: trackerListEntries[trackerMetadata.id].find(
-                        entry => entry.id === value)!.name,
+                        (entry) => entry.id === value
+                      )!.name,
                       status: trackerListEntries[trackerMetadata.id].find(
-                        entry => entry.id === value)!.status
+                        (entry) => entry.id === value
+                      )!.status,
                     })
                   }
                 />
                 <Text>{trackEntry.status}</Text>
               </Group>
             ) : (
-            <Group noWrap spacing="xs">
-            <Select
-              value={trackEntry?.status}
-              data={[
-                TrackStatus.Completed,
-                TrackStatus.Dropped,
-                TrackStatus.Paused,
-                TrackStatus.Planning,
-                TrackStatus.Reading,
-              ]}
-              onChange={(value: string) =>
-                sendTrackEntry(trackerMetadata.id, {
-                  ...trackEntry,
-                  status: value as TrackStatus,
-                })
-              }
-            />
-          </Group>
-        )}
+              <Group noWrap spacing="xs">
+                <Select
+                  value={trackEntry?.status}
+                  data={[
+                    TrackStatus.Completed,
+                    TrackStatus.Dropped,
+                    TrackStatus.Paused,
+                    TrackStatus.Planning,
+                    TrackStatus.Reading,
+                  ]}
+                  onChange={(value: string) =>
+                    sendTrackEntry(trackerMetadata.id, {
+                      ...trackEntry,
+                      status: value as TrackStatus,
+                    })
+                  }
+                />
+              </Group>
+            )}
           </Grid.Col>
 
           <Grid.Col span={3}>
@@ -305,9 +306,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
               onChange={(value: string) =>
                 sendTrackEntry(trackerMetadata.id, {
                   ...trackEntry,
-                  score: trackEntry.scoreFormat === TrackScoreFormat.POINT_10_DECIMAL_ONE_DIGIT
-                  ? parseFloat(value)
-                  : parseInt(value, 10),
+                  score: parseFloat(value),
                 })
               }
             />
@@ -326,9 +325,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
             variant="default"
             leftIcon={<IconExternalLink />}
             onClick={() =>
-              shell.openExternal(`${
-                trackEntry.url ? trackEntry.url : 
-                trackerMetadata.url+"/manga/"+trackEntry.seriesId}`)
+              shell.openExternal(
+                trackEntry.url || `${trackerMetadata.url}/manga/${trackEntry.seriesId}`
+              )
             }
           >
             View on {trackerMetadata.name}

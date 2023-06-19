@@ -32,29 +32,29 @@ const STATUS_MAP_NAME: { [key: string]: TrackStatus } = {
 
 const MU_DEFAULT_LIST_MAP: TrackerListEntry[] = [
   {
-    id: "0",
-    name: "Reading List",
-    status: TrackStatus.Reading
+    id: '0',
+    name: 'Reading List',
+    status: TrackStatus.Reading,
   },
   {
-    id: "1",
-    name: "Wish List",
-    status: TrackStatus.Planning
+    id: '1',
+    name: 'Wish List',
+    status: TrackStatus.Planning,
   },
   {
-    id: "2",
-    name: "Complete List",
-    status: TrackStatus.Completed
+    id: '2',
+    name: 'Complete List',
+    status: TrackStatus.Completed,
   },
   {
-    id: "3",
-    name: "Unfinished List",
-    status: TrackStatus.Dropped
+    id: '3',
+    name: 'Unfinished List',
+    status: TrackStatus.Dropped,
   },
   {
-    id: "4",
-    name: "On Hold List",
-    status: TrackStatus.Paused
+    id: '4',
+    name: 'On Hold List',
+    status: TrackStatus.Paused,
   },
 ];
 
@@ -69,7 +69,7 @@ const STATUS_REVERSE_MAP: Record<TrackStatus, number> = {
 type TokenResponseData = {
   status: string;
   reason: string;
-  context?: { session_token: string, uid: number };
+  context?: { session_token: string; uid: number };
 };
 
 type UserResponseData = {
@@ -222,41 +222,43 @@ type AddLibraryResponseData = {
   context?: {
     errors: [
       {
-        series_id: number,
-        error: string,
+        series_id: number;
+        error: string;
       }
-    ]
-  }
+    ];
+  };
 };
 
 type UpdateMangaResponseData = {
   status: string;
   reason: string;
   context?: {
-    updates: [
-      {
-        series_id: number;
-        volume: number;
-        chapter: number;
-      }
-    ] | [];
+    updates:
+      | [
+          {
+            series_id: number;
+            volume: number;
+            chapter: number;
+          }
+        ]
+      | [];
     errors?: [
       {
-        series_id: number,
-        error: string,
+        series_id: number;
+        error: string;
       }
-    ]
-  }
+    ];
+  };
 };
 
 export const MUTrackerMetadata: TrackerMetadata = {
-  id: 'MU',
+  id: 'MangaUpdates',
   name: 'MangaUpdates',
   url: 'https://mangaupdates.com',
+  hasCustomLists: true,
 };
 
 export class MUTrackerClient extends TrackerClientAbstract {
-
   getMetadata: () => TrackerMetadata = () => {
     return MUTrackerMetadata;
   };
@@ -378,7 +380,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
           );
           return null;
         }
-        else if (response.status === 401) {
+        if (response.status === 401) {
           log.error(
             `Error getting library entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
           );
@@ -392,11 +394,12 @@ export class MUTrackerClient extends TrackerClientAbstract {
           return null;
         }
 
-        const listEntry: TrackerListEntry | null = (data.list_id >= 0 && data.list_id <= 4)
-          ? MU_DEFAULT_LIST_MAP[data.list_id]
-          : await this.GetListStatusEntryFunc(data.list_id);
+        const listEntry: TrackerListEntry | null =
+          data.list_id >= 0 && data.list_id <= 4
+            ? MU_DEFAULT_LIST_MAP[data.list_id]
+            : await this.GetListStatusEntryFunc(data.list_id);
         const rating: number | null = await this.GetLibraryRatingEntryFunc(data.series.id);
-        const metadata: TrackEntry | null = await this.GetSeriesMetadataEntryFunc(data.series.id)
+        const metadata: TrackEntry | null = await this.GetSeriesMetadataEntryFunc(data.series.id);
 
         if (listEntry === null || rating === null || metadata === null) {
           return null;
@@ -413,7 +416,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
           progress: data.status.chapter,
           status: listEntry.status,
           listId: `${listEntry.id}`,
-          listName: listEntry.name
+          listName: listEntry.name,
         } as TrackEntry;
       })
       .catch((e: Error) => {
@@ -422,7 +425,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
       });
   };
 
-  //function called only by updateLibraryEntry if the series is not in any list
+  // function called only by updateLibraryEntry if the series is not in any list
   addLibraryEntry: AddLibraryEntryFunc = async (trackEntry: TrackEntry) => {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
@@ -437,13 +440,13 @@ export class MUTrackerClient extends TrackerClientAbstract {
       body: JSON.stringify([
         {
           series: {
-            id: Number(trackEntry.seriesId)
+            id: Number(trackEntry.seriesId),
           },
           list_id: trackEntry.status !== undefined ? STATUS_REVERSE_MAP[trackEntry.status] : 0,
           status: {
-            chapter: trackEntry.progress
-          }
-        }
+            chapter: trackEntry.progress,
+          },
+        },
       ]),
     };
     return fetch(url, options)
@@ -457,11 +460,14 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return response.json();
       })
       .then((data: AddLibraryResponseData | null) => {
-        if (data?.status === "exception") {
+        if (data?.status === 'exception') {
           log.error(
-            `Error add library entry for [${data.context!.errors.map((error) =>
-              `Series ID: ${error.series_id}, Error: ${error.error}`).join('; ')
-            }] from tracker ${MUTrackerMetadata.id}`);
+            `Error add library entry for [${data
+              .context!.errors.map(
+                (error) => `Series ID: ${error.series_id}, Error: ${error.error}`
+              )
+              .join('; ')}] from tracker ${MUTrackerMetadata.id}`
+          );
           return null;
         }
 
@@ -478,19 +484,21 @@ export class MUTrackerClient extends TrackerClientAbstract {
 
     const prevEntry = await this.getLibraryEntry(trackEntry.seriesId);
     if (prevEntry === null) {
-      return this.addLibraryEntry(trackEntry)
+      return this.addLibraryEntry(trackEntry);
     }
-    else {
-      let newEntry = null;
-      if (prevEntry.progress !== trackEntry.progress ||
-        prevEntry.listId !== trackEntry.listId) {
-        newEntry = this.updateLibraryProgressEntry(trackEntry);
-      }
-      if (trackEntry.score !== prevEntry.score) {
-        newEntry = this.updateLibraryRatingEntry(trackEntry);
-      }
-      return newEntry;
+
+    if (trackEntry.listId === undefined) {
+      trackEntry.listId = prevEntry.listId;
     }
+
+    let newEntry = null;
+    if (prevEntry.progress !== trackEntry.progress || prevEntry.listId !== trackEntry.listId) {
+      newEntry = this.updateLibraryProgressEntry(trackEntry);
+    }
+    if (trackEntry.score !== prevEntry.score) {
+      newEntry = this.updateLibraryRatingEntry(trackEntry);
+    }
+    return newEntry;
   };
 
   getListEntries: GetListEntriesFunc = () => {
@@ -523,7 +531,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return data.map((item: ListMetadataResponseData) => ({
           id: `${item.list_id}`,
           name: item.title,
-          status: STATUS_MAP_NAME[item.type]
+          status: STATUS_MAP_NAME[item.type],
         })) as TrackerListEntry[];
       })
       .catch((e: Error) => {
@@ -559,7 +567,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
           );
           return null;
         }
-        else if (response.status === 401) {
+        if (response.status === 401) {
           log.error(
             `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
           );
@@ -575,7 +583,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return {
           id: `${data.list_id}`,
           name: data.title,
-          status: STATUS_MAP_NAME[data.type]
+          status: STATUS_MAP_NAME[data.type],
         } as TrackerListEntry;
       })
       .catch((e: Error) => {
@@ -604,7 +612,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
           );
           return { rating: 0 };
         }
-        else if (response.status === 401) {
+        if (response.status === 401) {
           log.error(
             `Error getting score for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
           );
@@ -641,11 +649,13 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return response.json();
       })
       .then((data: SeriesMetadataResponseData | null) => {
-        return data ? {
-          url: data.url,
-          description: data.description,
-          coverUrl: data.image.url.original,
-        } as TrackEntry : null;
+        return data
+          ? ({
+              url: data.url,
+              description: data.description,
+              coverUrl: data.image.url.original,
+            } as TrackEntry)
+          : null;
       })
       .catch((e: Error) => {
         log.error(e);
@@ -667,13 +677,13 @@ export class MUTrackerClient extends TrackerClientAbstract {
       body: JSON.stringify([
         {
           series: {
-            id: Number(trackEntry.seriesId)
+            id: Number(trackEntry.seriesId),
           },
           list_id: Number(trackEntry.listId),
           status: {
-            chapter: trackEntry.progress
-          }
-        }
+            chapter: trackEntry.progress,
+          },
+        },
       ]),
     };
 
@@ -688,11 +698,14 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return response.json();
       })
       .then((data: UpdateMangaResponseData | null) => {
-        if (data?.status === "exception") {
+        if (data?.status === 'exception') {
           log.error(
-            `Error updating library entry for [${data.context!.errors!.map((error) =>
-              `Series ID: ${error.series_id}, Error: ${error.error}`).join('; ')
-            }] from tracker ${MUTrackerMetadata.id}`);
+            `Error updating library entry for [${data
+              .context!.errors!.map(
+                (error) => `Series ID: ${error.series_id}, Error: ${error.error}`
+              )
+              .join('; ')}] from tracker ${MUTrackerMetadata.id}`
+          );
           return null;
         }
 
@@ -707,6 +720,14 @@ export class MUTrackerClient extends TrackerClientAbstract {
   updateLibraryRatingEntry = async (trackEntry: TrackEntry): Promise<TrackEntry | null> => {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
+    if (trackEntry.score === undefined) {
+      return trackEntry;
+    }
+
+    if (trackEntry.score === 0) {
+      return this.deleteLibraryRatingEntry(Number(trackEntry.seriesId));
+    }
+
     const url = `${BASE_URL}/series/${trackEntry.seriesId}/rating`;
     const options = {
       method: 'PUT',
@@ -715,11 +736,9 @@ export class MUTrackerClient extends TrackerClientAbstract {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify(
-        {
-          rating: trackEntry.score
-        }
-      ),
+      body: JSON.stringify({
+        rating: trackEntry.score,
+      }),
     };
 
     return fetch(url, options)
@@ -730,22 +749,17 @@ export class MUTrackerClient extends TrackerClientAbstract {
           );
           return null;
         }
-        else if (response.status === 404) {
+        if (response.status === 404) {
           log.error(
             `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`
           );
           return null;
         }
-        else if (response.status === 400) {
-          if (trackEntry.score === 0) {
-            return this.deleteLibraryRatingEntry(Number(trackEntry.seriesId));
-          }
-          else {
-            log.error(
-              `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: rating must be between 1.0 and 10.0`
-            );
-            return null
-          }
+        if (response.status === 400) {
+          log.error(
+            `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: rating must be between 1.0 and 10.0`
+          );
+          return null;
         }
         return this.getLibraryEntry(trackEntry.seriesId);
       })
@@ -776,7 +790,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
           );
           return null;
         }
-        else if (response.status === 404) {
+        if (response.status === 404) {
           log.error(
             `Error updating library rating entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`
           );
@@ -789,5 +803,4 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return null;
       });
   };
-
 }

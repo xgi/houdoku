@@ -125,6 +125,7 @@ export const MALTrackerMetadata: TrackerMetadata = {
   id: '051ced8a-97e1-496a-841b-3214ed1884bb',
   name: 'MyAnimeList',
   url: 'https://myanimelist.net',
+  hasCustomLists: false,
 };
 
 export class MALTrackerClient extends TrackerClientAbstract {
