@@ -35,6 +35,7 @@ export const AniListTrackerMetadata: TrackerMetadata = {
   id: 'ea5b9ee9-a60b-461f-99c3-8082bb773e0c',
   name: 'AniList',
   url: 'https://anilist.co',
+  hasCustomLists: false,
 };
 
 export class AniListTrackerClient extends TrackerClientAbstract {

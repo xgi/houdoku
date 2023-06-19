@@ -240,8 +240,8 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
             <Accordion.Panel>
               <Timeline active={-1} bulletSize={36} lineWidth={2} mt="sm">
                 <Timeline.Item bullet={1}>
-                <Text>Username:</Text>
-                <Input
+                  <Text>Username:</Text>
+                  <Input
                     ml="sm"
                     style={{ maxWidth: 280 }}
                     placeholder="Username"
@@ -272,7 +272,13 @@ const TrackerSettings: React.FC<Props> = (props: Props) => {
                   <Button
                     ml="sm"
                     onClick={() =>
-                      submitAccessCode(trackerMetadata.id, JSON.stringify({'username': usernames[trackerMetadata.id], 'password': passwords[trackerMetadata.id]}))
+                      submitAccessCode(
+                        trackerMetadata.id,
+                        JSON.stringify({
+                          username: usernames[trackerMetadata.id],
+                          password: passwords[trackerMetadata.id],
+                        })
+                      )
                     }
                   >
                     Submit
