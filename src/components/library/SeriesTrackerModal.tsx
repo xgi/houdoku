@@ -31,9 +31,12 @@ import {
   TrackerMetadata,
   TrackerListEntry,
 } from '../../models/types';
-import { updateSeriesTrackerKeys } from '../../features/library/utils';
+import { markChapters, updateSeriesTrackerKeys } from '../../features/library/utils';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
 import { MUTrackerMetadata } from '../../services/trackers/mangaupdate';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { chapterListState, seriesState } from '../../state/libraryStates';
+import { chapterLanguagesState } from '../../state/settingStates';
 
 const TRACKER_METADATAS = [AniListTrackerMetadata, MALTrackerMetadata, MUTrackerMetadata];
 
@@ -73,6 +76,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   const [trackerListEntries, setTrackerListEntries] = useState<{
     [trackerId: string]: TrackerListEntry[];
   }>({});
+  const [chapterList, setChapterList] = useRecoilState(chapterListState);
+  const [series, setSeries] = useRecoilState(seriesState);
+  const chapterLanguages = useRecoilValue(chapterLanguagesState);
 
   const loadTrackerData = async () => {
     setLoading(true);
@@ -130,6 +136,29 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
     setTrackerListEntries(_trackerListEntries);
     setLoading(false);
   };
+
+  const markChaptersAsRead = (trackerEntry: TrackEntry) => {
+    let progress = trackerEntry.progress;
+    if (progress === undefined || series === undefined) {
+      return;
+    }
+    let chaptersToMark = chapterList.filter((chapter) => {
+      let chapterNumber = parseInt(chapter.chapterNumber);
+      if (isNaN(chapterNumber)) {
+        return false;
+      }
+      return chapterNumber <= progress;
+    });
+
+    markChapters(
+      chaptersToMark,
+      series,
+      true,
+      setChapterList,
+      setSeries,
+      chapterLanguages
+    );
+  }
 
   const sendTrackEntry = (trackerId: string, trackEntry: TrackEntry) => {
     setTrackEntries({ ...trackEntries, [trackerId]: trackEntry });
@@ -332,6 +361,7 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
           >
             View on {trackerMetadata.name}
           </Button>
+          <Button variant="default" onClick={()=> markChaptersAsRead(trackEntry)}>Copy progress</Button>
           <Button onClick={() => props.toggleVisible()}>Save</Button>
         </Group>
       </>
