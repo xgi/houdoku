@@ -21,6 +21,7 @@ import {
   Skeleton,
 } from '@mantine/core';
 import { IconCheck, IconExternalLink, IconSearch } from '@tabler/icons';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { AniListTrackerMetadata } from '../../services/trackers/anilist';
 import {
@@ -34,7 +35,6 @@ import {
 import { markChapters, updateSeriesTrackerKeys } from '../../features/library/utils';
 import { MALTrackerMetadata } from '../../services/trackers/myanimelist';
 import { MUTrackerMetadata } from '../../services/trackers/mangaupdate';
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { chapterListState, seriesState } from '../../state/libraryStates';
 import { chapterLanguagesState } from '../../state/settingStates';
 
@@ -138,27 +138,20 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   };
 
   const markChaptersAsRead = (trackerEntry: TrackEntry) => {
-    let progress = trackerEntry.progress;
+    const { progress } = trackerEntry;
     if (progress === undefined || series === undefined) {
       return;
     }
-    let chaptersToMark = chapterList.filter((chapter) => {
-      let chapterNumber = parseInt(chapter.chapterNumber);
-      if (isNaN(chapterNumber)) {
+    const chaptersToMark = chapterList.filter((chapter) => {
+      const chapterNumber = parseInt(chapter.chapterNumber, 10);
+      if (Number.isNaN(chapterNumber)) {
         return false;
       }
       return chapterNumber <= progress;
     });
 
-    markChapters(
-      chaptersToMark,
-      series,
-      true,
-      setChapterList,
-      setSeries,
-      chapterLanguages
-    );
-  }
+    markChapters(chaptersToMark, series, true, setChapterList, setSeries, chapterLanguages);
+  };
 
   const sendTrackEntry = (trackerId: string, trackEntry: TrackEntry) => {
     setTrackEntries({ ...trackEntries, [trackerId]: trackEntry });
@@ -267,10 +260,10 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
                       listId: value,
                       listName: trackerListEntries[trackerMetadata.id].find(
                         (entry) => entry.id === value
-                      )!.name,
+                      )?.name,
                       status: trackerListEntries[trackerMetadata.id].find(
                         (entry) => entry.id === value
-                      )!.status,
+                      )?.status,
                     })
                   }
                 />
@@ -361,7 +354,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
           >
             View on {trackerMetadata.name}
           </Button>
-          <Button variant="default" onClick={()=> markChaptersAsRead(trackEntry)}>Copy progress</Button>
+          <Button variant="default" onClick={() => markChaptersAsRead(trackEntry)}>
+            Copy progress
+          </Button>
           <Button onClick={() => props.toggleVisible()}>Save</Button>
         </Group>
       </>
