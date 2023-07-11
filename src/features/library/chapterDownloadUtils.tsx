@@ -2,7 +2,7 @@ import { Chapter, Series } from 'houdoku-extension-lib';
 import { downloaderClient, DownloadTask } from '../../services/downloader';
 import { getChapterDownloaded } from '../../util/filesystem';
 
-export function downloadNextX(
+export async function downloadNextX(
   chapterList: Chapter[],
   series: Series,
   downloadsDir: string,
@@ -19,9 +19,10 @@ export function downloadNextX(
   let curIndex = startIndex - 1;
   while (queue.length < amount && curIndex >= 0) {
     const chapter = sortedChapterList[curIndex];
+    /* eslint-disable no-await-in-loop */
     if (
       chapter &&
-      !getChapterDownloaded(chapter, downloadsDir) &&
+      !(await getChapterDownloaded(series, chapter, downloadsDir)) &&
       !downloadQueue.some((existingTask) => existingTask.chapter.id === chapter.id)
     ) {
       queue.push(chapter);
@@ -42,7 +43,7 @@ export function downloadNextX(
   downloaderClient.start();
 }
 
-export function downloadAll(
+export async function downloadAll(
   chapterList: Chapter[],
   series: Series,
   downloadsDir: string,
@@ -51,12 +52,22 @@ export function downloadAll(
   const filteredChapterList = unreadOnly
     ? chapterList.filter((chapter) => !chapter.read)
     : chapterList;
-  const queue = filteredChapterList
-    .filter((chapter) => !getChapterDownloaded(chapter, downloadsDir))
-    .sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber));
+  const queue = await Promise.all(
+    filteredChapterList.map(async (chapter) => {
+      if (!(await getChapterDownloaded(series, chapter, downloadsDir))) {
+        return chapter;
+      }
+      return undefined;
+    })
+  );
+  const chaptersToDownload = queue.filter((chapter) => chapter !== undefined);
+  const sortedQueue = chaptersToDownload.sort(
+    // @ts-expect-error undefined filterd out ^
+    (a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
+  ) as Chapter[];
 
   downloaderClient.add(
-    queue.map(
+    sortedQueue.map(
       (chapter: Chapter) =>
         ({
           chapter,
