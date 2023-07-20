@@ -4,6 +4,7 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { Center, Loader, Stack, Text } from '@mantine/core';
 import ChapterTable from './ChapterTable';
 import { getBannerImageUrl } from '../../services/mediasource';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -46,13 +47,16 @@ const SeriesDetails: React.FC<Props> = () => {
   const setSeriesBannerUrl = useSetRecoilState(seriesBannerUrlState);
   const setChapterFilterTitle = useSetRecoilState(chapterFilterTitleState);
   const setChapterFilterGroup = useSetRecoilState(chapterFilterGroupState);
-
   const loadContent = async () => {
     log.info(`Series page is loading details from database for series ${id}`);
 
     series = library.fetchSeries(id!)!;
     setSeries(series);
     setChapterList(library.fetchChapters(id!));
+
+    if (!series) {
+      return;
+    }
 
     ipcRenderer
       .invoke(ipcChannels.EXTENSION_MANAGER.GET, series.extensionId)
@@ -76,50 +80,61 @@ const SeriesDetails: React.FC<Props> = () => {
 
   return (
     <>
-      <SeriesTrackerModal
-        loadSeriesContent={() => loadContent()}
-        series={series}
-        visible={showingTrackerModal}
-        toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
-      />
-      <EditSeriesModal
-        series={series}
-        visible={showingEditModal}
-        close={() => setShowingEditModal(false)}
-        saveCallback={(newSeries) => {
-          if (newSeries.remoteCoverUrl !== series?.remoteCoverUrl) {
-            log.debug(`Updating cover for series ${series?.id}`);
-            deleteThumbnail(newSeries);
-            downloadCover(newSeries);
-          }
-          setSeries(newSeries);
-        }}
-      />
-      <DownloadModal
-        series={series}
-        visible={showingDownloadModal}
-        close={() => setShowingDownloadModal(false)}
-      />
-      <RemoveSeriesModal
-        series={series}
-        showing={showingRemoveModal}
-        close={() => setShowingRemoveModal(false)}
-      />
+      {series ? (
+        <>
+          <SeriesTrackerModal
+            loadSeriesContent={() => loadContent()}
+            series={series}
+            visible={showingTrackerModal}
+            toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
+          />
+          <EditSeriesModal
+            series={series}
+            visible={showingEditModal}
+            close={() => setShowingEditModal(false)}
+            saveCallback={(newSeries) => {
+              if (newSeries.remoteCoverUrl !== series?.remoteCoverUrl) {
+                log.debug(`Updating cover for series ${series?.id}`);
+                deleteThumbnail(newSeries);
+                downloadCover(newSeries);
+              }
+              setSeries(newSeries);
+            }}
+          />
+          <DownloadModal
+            series={series}
+            visible={showingDownloadModal}
+            close={() => setShowingDownloadModal(false)}
+          />
+          <RemoveSeriesModal
+            series={series}
+            showing={showingRemoveModal}
+            close={() => setShowingRemoveModal(false)}
+          />
 
-      <SeriesDetailsFloatingHeader series={series} />
+          <SeriesDetailsFloatingHeader series={series} />
 
-      <SeriesDetailsBanner
-        series={series}
-        showDownloadModal={() => setShowingDownloadModal(true)}
-        showEditModal={() => setShowingEditModal(true)}
-        showTrackerModal={() => setShowingTrackerModal(true)}
-      />
+          <SeriesDetailsBanner
+            series={series}
+            showDownloadModal={() => setShowingDownloadModal(true)}
+            showEditModal={() => setShowingEditModal(true)}
+            showTrackerModal={() => setShowingTrackerModal(true)}
+          />
 
-      <SeriesDetailsIntro series={series} />
+          <SeriesDetailsIntro series={series} />
 
-      <SeriesDetailsInfoGrid series={series} />
+          <SeriesDetailsInfoGrid series={series} />
 
-      <ChapterTable series={series} />
+          <ChapterTable series={series} />
+        </>
+      ) : (
+        <Center h="100%" mx="auto">
+          <Stack align="center">
+            <Loader />
+            <Text>Loading series details...</Text>
+          </Stack>
+        </Center>
+      )}
     </>
   );
 };
