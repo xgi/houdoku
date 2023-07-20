@@ -6667,6 +6667,11 @@ node-releases@^2.0.6:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.6.tgz#8a7088c63a55e493845683ebf3c828d8c51c5503"
   integrity sha512-PiVXnNuFm5+iYkLBNeq5211hvO38y63T0i2KKh2KnUs3RpzJ+JtODFjkD8yjLwnDkTYF1eKXheUwdssR+NRZdg==
 
+node-unrar-js@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/node-unrar-js/-/node-unrar-js-2.0.0.tgz#b4b70a8c881aedb5ffe30b4e4603b5390ef8426f"
+  integrity sha512-jYAAdR/+aUHGyBIKdSnhbsO4juwPPlKk5FPnd/RAVL7SlF+6PippzDihJa4CU4w3Q4nosg99XcGuVWE/Qorxpg==
+
 nopt@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-5.0.0.tgz#530942bb58a512fccafe53fe210f13a25355dc88"

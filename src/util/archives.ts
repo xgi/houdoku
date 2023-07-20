@@ -3,16 +3,13 @@ import JSZip from 'jszip';
 import path from 'path';
 import log from 'electron-log';
 import { v4 as uuidv4 } from 'uuid';
-import { walk } from './filesystem';
-import constants from '../constants/constants.json';
+import { createExtractorFromData } from 'node-unrar-js';
 
-/**
- * Get a list of all files within an archive.
- * @param archive the path of the archive to read from
- * @returns promise for a list of all file paths within the archive
- */
-export async function getArchiveFiles(archive: string): Promise<string[]> {
-  return new JSZip.external.Promise((resolve, reject) => {
+const ZIP_EXTENSIONS = ['.zip', '.cbz'];
+const RAR_EXTENSIONS = ['.rar', '.cbr'];
+
+async function extractZip(archive: string, archiveOutputPath: string): Promise<string[]> {
+  const zip = await new JSZip.external.Promise<Buffer>((resolve, reject) => {
     fs.readFile(archive, (err, data) => {
       if (err) {
         reject(err);
@@ -20,84 +17,85 @@ export async function getArchiveFiles(archive: string): Promise<string[]> {
         resolve(data);
       }
     });
-  })
-    .then((data: any) => {
-      return JSZip.loadAsync(data);
+  }).then((data: Buffer) => {
+    return JSZip.loadAsync(data);
+  });
+
+  return Promise.all(
+    Object.keys(zip.files).map((internalFilename) => {
+      return new Promise<string>((resolve) => {
+        const outputPath = path.join(archiveOutputPath, path.basename(internalFilename));
+        zip.files[internalFilename]
+          .nodeStream()
+          .pipe(fs.createWriteStream(outputPath))
+          .on('finish', () => resolve(outputPath));
+      });
     })
-    .then((zip: any) =>
-      Object.values(zip.files)
-        .filter((file: any) => !file.dir)
-        .map((file: any) => file.name)
-    );
+  );
 }
 
-export async function extract(
-  archive: string,
-  internalFilenames: string[],
-  baseOutputPath: string
-): Promise<string[]> {
-  log.info(`Extracting ${internalFilenames.length} files from ${archive} to ${baseOutputPath}`);
+async function extractRar(archive: string, archiveOutputPath: string): Promise<string[]> {
+  const buf = Uint8Array.from(fs.readFileSync(archive)).buffer;
+  const extractor = await createExtractorFromData({ data: buf });
+
+  const { files: rarFiles } = extractor.extract({
+    files: ({ flags }) => !flags.encrypted,
+  });
+
+  const extractedPaths: string[] = [];
+  // eslint-disable-next-line no-restricted-syntax
+  for (const { extraction, fileHeader } of rarFiles) {
+    if (!fileHeader.flags.directory) {
+      const outputPath = path.join(archiveOutputPath, path.basename(fileHeader.name));
+      const outputBuf: Uint8Array = extraction as unknown as Uint8Array;
+      fs.writeFileSync(outputPath, outputBuf);
+      extractedPaths.push(outputPath);
+    }
+  }
+
+  return extractedPaths;
+}
+
+/**
+ * Extract an archive to the filesystem.
+ * Files are extracted to a temporary location and previous data is cleared at the start
+ * of this function before new files are extracted.
+ * @param archive path of archive file
+ * @param baseOutputPath temporary location to save extracted files
+ * @returns list of extracted file paths
+ */
+// eslint-disable-next-line import/prefer-default-export
+export async function extract(archive: string, baseOutputPath: string): Promise<string[]> {
+  log.info(`Extracting files from ${archive} to ${baseOutputPath}`);
 
   if (!fs.existsSync(baseOutputPath)) {
     fs.mkdirSync(baseOutputPath, { recursive: true });
   }
-
-  // remove existing image files
-  const existingFilenames = walk(baseOutputPath).filter((file) =>
-    constants.IMAGE_EXTENSIONS.some((ext) => file.endsWith(`.${ext}`))
-  );
-  existingFilenames.forEach((existingFilename) => fs.unlinkSync(existingFilename));
 
   // remove existing directories
   fs.readdirSync(baseOutputPath, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
     .forEach((dirent) => {
       try {
-        fs.rmdirSync(path.join(baseOutputPath, dirent.name));
+        fs.rmSync(path.join(baseOutputPath, dirent.name), { recursive: true });
       } catch (e) {
         log.error(`Could not remove directory in extracted location: ${dirent.name}`, e);
       }
     });
 
-  // load archive file
-  const zip = await new JSZip.external.Promise((resolve, reject) => {
-    fs.readFile(archive, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  }).then((data: any) => {
-    return JSZip.loadAsync(data);
-  });
-
-  // Extract each file from the zip (that is included in internalFilenames) and return
-  // the extracted paths. We wait until the extraction is completed before returning
-  // so that the client doesn't try to load the images before they are fully extracted.
-  // Files are extracted to a subdirectory with an arbitrary UUID to prevent the rare possibility
-  // of this function being run concurrently.
+  // Extract each file from the zip and return the extracted paths. We wait until the extraction is
+  // completed before returning so that the client doesn't try to load the images before they are
+  // fully extracted. Files are extracted to a subdirectory with an arbitrary UUID to prevent the
+  // rare possibility of this function being run concurrently.
   const subdirectory = uuidv4();
-  fs.mkdirSync(path.join(baseOutputPath, subdirectory), { recursive: true });
+  const archiveOutputPath = path.join(baseOutputPath, subdirectory);
+  fs.mkdirSync(archiveOutputPath, { recursive: true });
 
-  return Promise.all(
-    internalFilenames.map(async (internalFilename) => {
-      return new Promise((resolve, reject) => {
-        const outputPath = path.join(baseOutputPath, subdirectory, path.basename(internalFilename));
-
-        const file = zip.file(internalFilename);
-        if (file) {
-          file
-            .nodeStream()
-            .pipe(fs.createWriteStream(outputPath))
-            .on('finish', function () {
-              resolve(outputPath);
-            });
-        } else {
-          log.error(`File not in archive: ${internalFilename}`);
-          reject();
-        }
-      });
-    })
-  );
+  if (ZIP_EXTENSIONS.some((ext) => archive.endsWith(ext))) {
+    return extractZip(archive, archiveOutputPath);
+  }
+  if (RAR_EXTENSIONS.some((ext) => archive.endsWith(ext))) {
+    return extractRar(archive, archiveOutputPath);
+  }
+  throw Error(`Tried to extract unsupported archive: ${archive}`);
 }

@@ -20,7 +20,7 @@ import {
   SeriesListResponse,
   GetFilterOptionsFunc,
 } from 'houdoku-extension-lib';
-import { extract, getArchiveFiles } from '../../util/archives';
+import { extract } from '../../util/archives';
 import { walk } from '../../util/filesystem';
 import constants from '../../constants/constants.json';
 
@@ -39,6 +39,42 @@ export const FS_METADATA: ExtensionMetadata = {
 const isSupportedArchivePath = (str: string) => {
   return ['zip', 'rar', 'cbz', 'cbr'].some((ext) => {
     return str.endsWith(`.${ext}`);
+  });
+};
+
+const filterImageFiles = (fileList: string[]) => {
+  const collator = new Intl.Collator([], { numeric: true });
+  return fileList
+    .filter((file) => constants.IMAGE_EXTENSIONS.some((ext) => file.endsWith(`.${ext}`)))
+    .sort((a, b) => collator.compare(path.basename(a), path.basename(b)));
+};
+
+const getPageRequesterDataFromArchive = async (
+  archivePath: string,
+  extractPath: string
+): Promise<PageRequesterData> => {
+  const extractedFilenames = await extract(archivePath, extractPath);
+  const imageFilenames = filterImageFiles(extractedFilenames);
+
+  return {
+    server: '',
+    hash: '',
+    numPages: imageFilenames.length,
+    pageFilenames: imageFilenames,
+  };
+};
+
+const getPageRequesterDataFromDirectory = async (dirPath: string): Promise<PageRequesterData> => {
+  const fileList = walk(dirPath);
+  const imageFileList = filterImageFiles(fileList);
+
+  return new Promise((resolve) => {
+    resolve({
+      server: '',
+      hash: '',
+      numPages: imageFileList.length,
+      pageFilenames: imageFileList,
+    });
   });
 };
 
@@ -152,38 +188,10 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     chapterSourceId: string
   ) => {
     const isArchive = isSupportedArchivePath(chapterSourceId);
-
-    let fileListPromise;
-    if (isArchive) {
-      fileListPromise = getArchiveFiles(chapterSourceId);
-    } else {
-      fileListPromise = new Promise<string[]>((resolve) => resolve(walk(chapterSourceId)));
-    }
-
-    return fileListPromise.then(async (fileList: string[]) => {
-      const collator = new Intl.Collator([], { numeric: true });
-      const imageFileList = fileList
-        .filter((file) => constants.IMAGE_EXTENSIONS.some((ext) => file.endsWith(`.${ext}`)))
-        .sort((a, b) => collator.compare(path.basename(a), path.basename(b)));
-
-      if (isArchive && this.extractPath) {
-        const extractedFilenames = await extract(chapterSourceId, imageFileList, this.extractPath);
-        return {
-          server: '',
-          hash: '',
-          numPages: extractedFilenames.length,
-          pageFilenames: extractedFilenames,
-        };
-      }
-      return new Promise((resolve) => {
-        resolve({
-          server: '',
-          hash: '',
-          numPages: imageFileList.length,
-          pageFilenames: imageFileList,
-        });
-      });
-    });
+    return isArchive
+      ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        getPageRequesterDataFromArchive(chapterSourceId, this.extractPath!)
+      : getPageRequesterDataFromDirectory(chapterSourceId);
   };
 
   getPageUrls: GetPageUrlsFunc = (pageRequesterData: PageRequesterData) => {
