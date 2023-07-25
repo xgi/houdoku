@@ -196,7 +196,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
       <Text>Automation</Text>
       <Stack py="xs" ml="md" spacing={4}>
         <Checkbox
-          label="Download unread chapters upon startup"
+          label='Download unread chapters upon startup and on series detail page'
           size="md"
           checked={OnStartUpDownloadUnread}
           onChange={(e) =>
