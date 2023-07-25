@@ -30,9 +30,12 @@ import {
   seriesListState,
 } from '../../state/libraryStates';
 import library from '../../services/library';
-import { chapterLanguagesState, refreshOnStartState } from '../../state/settingStates';
+import { OnStartDownloadUnreadCountState, OnStartUpDeleteReadState, OnStartUpDownloadUnreadState, chapterLanguagesState, customDownloadsDirState, refreshOnStartState } from '../../state/settingStates';
 import DashboardSidebarLink from './DashboardSidebarLink';
 import { downloadCover } from '../../util/download';
+import { DeleteReadChapters, DownloadUnreadChapters } from '../../features/library/chapterDownloadUtils';
+import { getDefaultDownloadDir } from '../settings/GeneralSettings';
+
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
@@ -48,6 +51,11 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const [importing, setImporting] = useRecoilState(importingState);
   const categoryList = useRecoilValue(categoryListState);
 
+  const OnStartUpDownloadUnread = useRecoilValue(OnStartUpDownloadUnreadState);
+  const OnStartUpDownloadUnreadCount = useRecoilValue(OnStartDownloadUnreadCountState);
+  const OnStartUpDeleteRead = useRecoilValue(OnStartUpDeleteReadState);
+  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
+
   useEffect(() => {
     if (refreshOnStart && !completedStartReload && activeSeriesList.length > 0) {
       setCompletedStartReload(true);
@@ -57,7 +65,14 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         setReloadingSeriesList,
         chapterLanguages,
         categoryList
-      ).catch((e) => log.error(e));
+      ).then(() => {
+        if(OnStartUpDeleteRead){
+          DeleteReadChapters(library.fetchSeriesList(), customDownloadsDir || String(getDefaultDownloadDir()));
+        }
+        if(OnStartUpDownloadUnread){
+          DownloadUnreadChapters(library.fetchSeriesList(), customDownloadsDir || String(getDefaultDownloadDir()), OnStartUpDownloadUnreadCount);
+        }
+      }).catch((e) => log.error(e));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSeriesList]);

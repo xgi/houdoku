@@ -2,12 +2,15 @@ import React from 'react';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useRecoilState } from 'recoil';
-import { Button, Checkbox, Flex, Group, Input, MultiSelect, Stack, Text } from '@mantine/core';
+import { Button, Checkbox, Flex, Group, Input, MultiSelect, NumberInput, Stack, Text } from '@mantine/core';
 import { IconArrowBack } from '@tabler/icons';
 import { GeneralSetting } from '../../models/types';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { createBackup, restoreBackup } from '../../util/backup';
 import {
+  OnStartDownloadUnreadCountState,
+  OnStartUpDeleteReadState,
+  OnStartUpDownloadUnreadState,
   autoCheckForExtensionUpdatesState,
   autoCheckForUpdatesState,
   chapterLanguagesState,
@@ -34,6 +37,9 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
   );
   const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
   const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(customDownloadsDirState);
+  const [OnStartUpDownloadUnread, setOnStartUpDownloadUnread] = useRecoilState(OnStartUpDownloadUnreadState);
+  const [OnStartUpDeleteRead, setOnStartUpDeleteRead] = useRecoilState(OnStartUpDeleteReadState);
+  const [OnStartDownloadUnreadCount, setOnStartDownloadUnreadCount] = useRecoilState(OnStartDownloadUnreadCountState);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
@@ -55,6 +61,15 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         break;
       case GeneralSetting.CustomDownloadsDir:
         setCustomDownloadsDir(value);
+        break;
+        case GeneralSetting.OnStartUpDownloadUnread:
+          setOnStartUpDownloadUnread(value);
+        break;
+        case GeneralSetting.OnStartUpDeleteRead:
+          setOnStartUpDeleteRead(value);
+        break;
+        case GeneralSetting.OnStartUpDownloadUnreadCount:
+          setOnStartDownloadUnreadCount(value);
         break;
       default:
         break;
@@ -177,8 +192,42 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
           </Group>
         </Flex>
       </Stack>
+
+      <Text>Automation</Text>
+      <Stack py="xs" ml="md" spacing={4}>
+        <Checkbox
+          label="Download unread chapters upon startup"
+          size="md"
+          checked={OnStartUpDownloadUnread}
+          onChange={(e) =>
+            updateGeneralSetting(GeneralSetting.OnStartUpDownloadUnread, e.target.checked)
+          }
+        />
+          <Text>how many unread chapters to download on startup</Text>
+          <NumberInput
+                  disabled={!OnStartUpDownloadUnread}
+                  min={1}
+                  value={OnStartDownloadUnreadCount}
+                  onChange={(value) =>
+                    updateGeneralSetting(GeneralSetting.OnStartUpDownloadUnreadCount, value)
+                  }
+          />
+          <br/>
+      <Checkbox
+          label="Delete read chapters upon startup"
+          size="md"
+          checked={OnStartUpDeleteRead}
+          onChange={(e) =>
+            updateGeneralSetting(GeneralSetting.OnStartUpDeleteRead, e.target.checked)
+          }
+        />
+      </Stack>
     </>
   );
 };
 
 export default GeneralSettings;
+
+export async function getDefaultDownloadDir(): Promise<any> {
+  return await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
+}

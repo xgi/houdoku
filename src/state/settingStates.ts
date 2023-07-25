@@ -69,6 +69,9 @@ export const libraryFilterCategoryState = atomFromSetting<string>(GeneralSetting
 export const chapterListVolOrderState = atomFromSetting<TableColumnSortOrder>(GeneralSetting.ChapterListVolOrder);
 export const chapterListChOrderState = atomFromSetting<TableColumnSortOrder>(GeneralSetting.ChapterListChOrder);
 export const chapterListPageSizeState = atomFromSetting<number>(GeneralSetting.ChapterListPageSize);
+export const OnStartUpDownloadUnreadState = atomFromSetting<boolean>(GeneralSetting.OnStartUpDownloadUnread);
+export const OnStartUpDeleteReadState = atomFromSetting<boolean>(GeneralSetting.OnStartUpDeleteRead);
+export const OnStartDownloadUnreadCountState = atomFromSetting<number>(GeneralSetting.OnStartUpDownloadUnreadCount);
 
 export const fitContainToWidthState = atomFromSetting<boolean>(ReaderSetting.FitContainToWidth);
 export const fitContainToHeightState = atomFromSetting<boolean>(ReaderSetting.FitContainToHeight);

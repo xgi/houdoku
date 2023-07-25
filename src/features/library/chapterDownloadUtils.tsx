@@ -1,6 +1,7 @@
 import { Chapter, Series } from 'houdoku-extension-lib';
 import { downloaderClient, DownloadTask } from '../../services/downloader';
-import { getChapterDownloaded } from '../../util/filesystem';
+import { deleteDownloadedChapter, getChapterDownloaded, getChaptersDownloaded } from '../../util/filesystem';
+import library from '../../services/library';
 
 export async function downloadNextX(
   chapterList: Chapter[],
@@ -77,4 +78,63 @@ export async function downloadAll(
     )
   );
   downloaderClient.start();
+}
+
+export async function DownloadUnreadChapters(
+  seriesList: Series[],
+  downloadsDir: string,
+  count: number = 1,
+  serieChapters: Chapter[] = []
+){
+  for (const series of seriesList) {
+    
+    if(series.numberUnread <= 0 || !series.id) continue;
+    
+    serieChapters = library.fetchChapters(series.id);
+    serieChapters = serieChapters.filter(x => !x.read);
+    serieChapters.sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber));
+    serieChapters = serieChapters.slice(0,count);
+
+    var nonDownloadedChapters: Chapter[] = [];
+
+
+    for(const x of serieChapters){
+      const result = await getChapterDownloaded(series, x, downloadsDir); // CHECK THIS 400-500 ms delay just on 10 pages
+
+      if(result !== true){
+        nonDownloadedChapters.push(x)
+      }
+    }
+
+    downloaderClient.add(
+      nonDownloadedChapters.map(
+        (chapter: Chapter) =>
+          ({
+            chapter,
+            series,
+            downloadsDir,
+          } as DownloadTask))
+    );
+    downloaderClient.start();
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  };
+}
+
+export async function DeleteReadChapters(
+  seriesList: Series[],
+  downloadsDir: string,
+  serieChapters?: Chapter[]
+){
+  for(const series of seriesList){
+    if(!series.id) return;
+    serieChapters = library.fetchChapters(series.id);
+    serieChapters = serieChapters.filter(x => x.read && getChaptersDownloaded(series, serieChapters!, downloadsDir));
+
+    const filteredChapterList = serieChapters.filter((chapter) => chapter.read)
+
+
+    for(const x of filteredChapterList){
+      deleteDownloadedChapter(series, x, downloadsDir)
+    }
+  }
 }
