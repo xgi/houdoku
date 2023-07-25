@@ -28,12 +28,16 @@ import SeriesDetailsFloatingHeader from './series/SeriesDetailsFloatingHeader';
 import SeriesDetailsBanner from './series/SeriesDetailsBanner';
 import SeriesDetailsIntro from './series/SeriesDetailsIntro';
 import SeriesDetailsInfoGrid from './series/SeriesDetailsInfoGrid';
+import { OnStartDownloadUnreadCountState, OnStartUpDeleteReadState, OnStartUpDownloadUnreadState, customDownloadsDirState } from '../../state/settingStates';
+import { DeleteReadChapters, DownloadUnreadChapters } from '../../features/library/chapterDownloadUtils';
+import { getDefaultDownloadDir } from '../settings/GeneralSettings';
 
 type Props = unknown;
 
 const SeriesDetails: React.FC<Props> = () => {
   const { id } = useParams<{ id: string }>();
   let series: Series = library.fetchSeries(id!)!;
+  let seriesArr: Series[] = new Array(1);
 
   const location = useLocation();
   const setExtensionMetadata = useSetRecoilState(currentExtensionMetadataState);
@@ -47,6 +51,10 @@ const SeriesDetails: React.FC<Props> = () => {
   const setSeriesBannerUrl = useSetRecoilState(seriesBannerUrlState);
   const setChapterFilterTitle = useSetRecoilState(chapterFilterTitleState);
   const setChapterFilterGroup = useSetRecoilState(chapterFilterGroupState);
+  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
+  const OnStartUpDeleteRead = useRecoilValue(OnStartUpDeleteReadState);
+  const OnStartUpDownloadUnread = useRecoilValue(OnStartUpDownloadUnreadState);
+  const OnStartUpDownloadUnreadCount = useRecoilValue(OnStartDownloadUnreadCountState);
   const loadContent = async () => {
     log.info(`Series page is loading details from database for series ${id}`);
 
@@ -70,6 +78,13 @@ const SeriesDetails: React.FC<Props> = () => {
 
   useEffect(() => {
     loadContent();
+    seriesArr[0] = series;
+    if(OnStartUpDeleteRead){
+      DeleteReadChapters(seriesArr, customDownloadsDir || String(getDefaultDownloadDir()));
+    }
+    if(OnStartUpDownloadUnread){
+      DownloadUnreadChapters(seriesArr, customDownloadsDir || String(getDefaultDownloadDir()), OnStartUpDownloadUnreadCount);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, seriesList]);
 
