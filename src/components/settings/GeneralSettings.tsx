@@ -239,7 +239,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
             updateGeneralSetting(GeneralSetting.OnScrollingChaptersDownloadUnread, e.target.checked)
           }
         />
-          <Text>how many unread chapters to download on startup</Text>
+          <Text>how many unread chapters to keep downloaded</Text>
           <NumberInput
                   disabled={!OnStartUpDownloadUnread}
                   min={1}
