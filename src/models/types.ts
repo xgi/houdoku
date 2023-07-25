@@ -97,8 +97,11 @@ export enum GeneralSetting {
   ChapterListChOrder = 'ChapterListChOrder',
   ChapterListPageSize = 'ChapterListPageSize',
   OnStartUpDownloadUnread = 'OnStartUpDownloadUnread',
+  OnSeriesDetailsDownloadUnread = 'OnSeriesDetailsDownloadUnread',
   OnStartUpDeleteRead = 'OnStartUpDeleteRead',
   OnStartUpDownloadUnreadCount = 'OnStartUpDownloadUnreadCount',
+  OnSeriesDetailsDeleteRead = 'OnSeriesDetailsDeleteRead',
+  OnScrollingChaptersDownloadUnread = 'OnScrollingChaptersDownloadUnread',
 }
 
 export enum ProgressFilter {
@@ -204,6 +207,9 @@ export const SettingTypes = {
   [GeneralSetting.ChapterListPageSize]: SettingType.NUMBER,
   [GeneralSetting.OnStartUpDeleteRead]: SettingType.BOOLEAN,
   [GeneralSetting.OnStartUpDownloadUnread]: SettingType.BOOLEAN,
+  [GeneralSetting.OnSeriesDetailsDownloadUnread]: SettingType.BOOLEAN,
+  [GeneralSetting.OnScrollingChaptersDownloadUnread]: SettingType.BOOLEAN,
+  [GeneralSetting.OnSeriesDetailsDeleteRead]: SettingType.BOOLEAN,
   [GeneralSetting.OnStartUpDownloadUnreadCount]: SettingType.NUMBER,
 
   [ReaderSetting.FitContainToWidth]: SettingType.BOOLEAN,
