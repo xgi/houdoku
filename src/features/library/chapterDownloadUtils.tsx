@@ -87,25 +87,18 @@ export async function DownloadUnreadChapters(
   serieChapters: Chapter[] = []
 ){
   for (const series of seriesList) {
-    
     if(series.numberUnread <= 0 || !series.id) continue;
-    
     serieChapters = library.fetchChapters(series.id);
     serieChapters = serieChapters.filter(x => !x.read);
     serieChapters.sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber));
     serieChapters = serieChapters.slice(0,count);
-
     var nonDownloadedChapters: Chapter[] = [];
-
-
     for(const x of serieChapters){
       const result = await getChapterDownloaded(series, x, downloadsDir); // CHECK THIS 400-500 ms delay just on 10 pages
-
       if(result !== true){
         nonDownloadedChapters.push(x)
       }
     }
-
     downloaderClient.add(
       nonDownloadedChapters.map(
         (chapter: Chapter) =>
@@ -128,12 +121,15 @@ export async function DeleteReadChapters(
   for(const series of seriesList){
     if(!series.id) return;
     serieChapters = library.fetchChapters(series.id);
-    serieChapters = serieChapters.filter(x => x.read && getChaptersDownloaded(series, serieChapters!, downloadsDir));
-
-    const filteredChapterList = serieChapters.filter((chapter) => chapter.read)
-
-
-    for(const x of filteredChapterList){
+    serieChapters = serieChapters.filter(x => x.read);
+    var DownloadedChapters: Chapter[] = [];
+    for(const x of serieChapters){
+      const result = await getChapterDownloaded(series, x, downloadsDir);
+      if(result == true){
+        DownloadedChapters.push(x)
+      }
+    }
+    for(const x of DownloadedChapters){
       deleteDownloadedChapter(series, x, downloadsDir)
     }
   }

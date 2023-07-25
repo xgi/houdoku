@@ -67,7 +67,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         categoryList
       ).then(() => {
         if(OnStartUpDeleteRead){
-          DeleteReadChapters(library.fetchSeriesList(), customDownloadsDir || String(getDefaultDownloadDir()));
+          DeleteReadChapters(library.fetchSeriesList(), customDownloadsDir || String(getDefaultDownloadDir())).then(()=>{})
         }
         if(OnStartUpDownloadUnread){
           DownloadUnreadChapters(library.fetchSeriesList(), customDownloadsDir || String(getDefaultDownloadDir()), OnStartUpDownloadUnreadCount);
