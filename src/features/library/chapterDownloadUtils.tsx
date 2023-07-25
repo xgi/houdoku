@@ -108,7 +108,7 @@ export async function DownloadUnreadChapters(
             downloadsDir,
           } as DownloadTask))
     );
-    downloaderClient.start();
+    downloaderClient.start(false);
     await new Promise((resolve) => setTimeout(resolve, 1000));
   };
 }
