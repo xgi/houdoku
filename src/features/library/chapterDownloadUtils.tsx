@@ -94,7 +94,7 @@ export async function DownloadUnreadChapters(
     serieChapters = serieChapters.slice(0,count);
     var nonDownloadedChapters: Chapter[] = [];
     for(const x of serieChapters){
-      const result = await getChapterDownloaded(series, x, downloadsDir); // CHECK THIS 400-500 ms delay just on 10 pages
+      const result = await getChapterDownloaded(series, x, downloadsDir);
       if(result !== true){
         nonDownloadedChapters.push(x)
       }
