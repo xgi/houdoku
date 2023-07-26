@@ -241,7 +241,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         />
           <Text>how many unread chapters to keep downloaded</Text>
           <NumberInput
-                  disabled={!OnStartUpDownloadUnread}
+                  disabled={(!OnStartUpDownloadUnread && !OnSeriesDetailsDownloadUnread && !OnScrollingChaptersDownloadUnread)}
                   min={1}
                   value={OnStartDownloadUnreadCount}
                   onChange={(value) =>
