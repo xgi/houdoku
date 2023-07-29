@@ -8,7 +8,7 @@ import { Center, Loader, Stack, Text } from '@mantine/core';
 import ChapterTable from './ChapterTable';
 import { getBannerImageUrl } from '../../services/mediasource';
 import ipcChannels from '../../constants/ipcChannels.json';
-import SeriesTrackerModal from './SeriesTrackerModal';
+import SeriesTrackerModal from './tracker/SeriesTrackerModal';
 import EditSeriesModal from './EditSeriesModal';
 import { deleteThumbnail } from '../../util/filesystem';
 import { downloadCover } from '../../util/download';
@@ -83,7 +83,6 @@ const SeriesDetails: React.FC<Props> = () => {
       {series ? (
         <>
           <SeriesTrackerModal
-            loadSeriesContent={() => loadContent()}
             series={series}
             visible={showingTrackerModal}
             toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}

@@ -336,7 +336,7 @@ export function updateSeriesTrackerKeys(
   series: Series,
   trackerKeys: { [trackerId: string]: string } | undefined
 ) {
-  library.upsertSeries({ ...series, trackerKeys });
+  return library.upsertSeries({ ...series, trackerKeys });
 }
 
 /**
