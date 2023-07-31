@@ -126,7 +126,6 @@ export async function DeleteReadChapters(
     const downloadedChapters = await getChaptersDownloaded(series, serieChapters, downloadsDir);
     for(const key in downloadedChapters){
       if(downloadedChapters.hasOwnProperty(key)){
-        const value = downloadedChapters[key];
         var foundChapter = serieChapters.find((chapter) => chapter.id === key);
         if(foundChapter){
           DownloadedChapters.push(foundChapter);
