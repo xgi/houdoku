@@ -123,14 +123,18 @@ export async function DeleteReadChapters(
     serieChapters = library.fetchChapters(series.id);
     serieChapters = serieChapters.filter(x => x.read);
     var DownloadedChapters: Chapter[] = [];
-    for(const x of serieChapters){
-      const result = await getChapterDownloaded(series, x, downloadsDir);
-      if(result == true){
-        DownloadedChapters.push(x)
+    const downloadedChapters = await getChaptersDownloaded(series, serieChapters, downloadsDir);
+    for(const key in downloadedChapters){
+      if(downloadedChapters.hasOwnProperty(key)){
+        const value = downloadedChapters[key];
+        var foundChapter = serieChapters.find((chapter) => chapter.id === key);
+        if(foundChapter){
+          DownloadedChapters.push(foundChapter);
+        }
       }
     }
     for(const x of DownloadedChapters){
-      deleteDownloadedChapter(series, x, downloadsDir)
+      await deleteDownloadedChapter(series, x, downloadsDir)
     }
   }
 }
