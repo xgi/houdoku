@@ -118,6 +118,7 @@ const SeriesDetails: React.FC<Props> = () => {
             showDownloadModal={() => setShowingDownloadModal(true)}
             showEditModal={() => setShowingEditModal(true)}
             showTrackerModal={() => setShowingTrackerModal(true)}
+            showRemoveModal={() => setShowingRemoveModal(true)}
           />
 
           <SeriesDetailsIntro series={series} />

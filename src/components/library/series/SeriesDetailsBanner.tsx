@@ -5,6 +5,7 @@ import { BackgroundImage, Box, Button, Group, Menu, Stack } from '@mantine/core'
 import { IconMenu2, IconTrash } from '@tabler/icons';
 import log from 'electron-log';
 import { Series } from 'houdoku-extension-lib';
+import { useNavigate } from 'react-router-dom';
 import ipcChannels from '../../../constants/ipcChannels.json';
 import {
   categoryListState,
@@ -23,6 +24,7 @@ import {
   customDownloadsDirState,
 } from '../../../state/settingStates';
 import { queueState } from '../../../state/downloaderStates';
+import routes from '../../../constants/routes.json';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -31,9 +33,11 @@ type Props = {
   showDownloadModal: () => void;
   showEditModal: () => void;
   showTrackerModal: () => void;
+  showRemoveModal: () => void;
 };
 
 const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
+  const navigate = useNavigate();
   const series = useRecoilValue(seriesState);
   const setSeriesList = useSetRecoilState(seriesListState);
   const seriesBannerUrl = useRecoilValue(seriesBannerUrlState);
@@ -53,6 +57,11 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
       downloadQueue,
       1
     );
+  };
+
+  const removeFunc = () => {
+    removeSeries(props.series, setSeriesList);
+    navigate(`${routes.LIBRARY}`);
   };
 
   const handleDownloadUnread = () => {
@@ -127,11 +136,7 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
                     <Menu.Item
                       color="red"
                       icon={<IconTrash size={16} />}
-                      onClick={() =>
-                        confirmRemoveSeries
-                          ? props.showDownloadModal()
-                          : removeSeries(props.series, setSeriesList)
-                      }
+                      onClick={() => (confirmRemoveSeries ? props.showRemoveModal() : removeFunc())}
                     >
                       Remove series
                     </Menu.Item>
