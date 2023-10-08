@@ -67,7 +67,7 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
             setShowingContextMenu(true);
           }}
           style={{
-            height: `calc(105vw / ${libraryColumns})`,
+            // height: `calc(105vw / ${libraryColumns})`,
             cursor: inLibrary ? 'not-allowed' : 'pointer',
           }}
         >
@@ -79,9 +79,15 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
             url={series.remoteCoverUrl}
             series={series}
             alt={series.title}
-            width="100%"
-            height="100%"
-            style={{ objectFit: 'cover' }}
+            // width="100%"
+			// height="100%"
+             style={{
+				objectFit: 'cover',
+				width: '100%',
+				height: '100%'
+				// maxWidth: '100%',
+				// maxHeight: '100%'						  
+			}}
           />
           {inLibrary ? <Overlay opacity={0.5} color="#2B8A3E" /> : ''}
           <Title className={styles.seriesTitle} order={5} lineClamp={3} p={4}>
