@@ -187,17 +187,23 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                   <div
                     className={styles.coverContainer}
                     onClick={() => viewFunc(series)}
-                    style={{
-                      height: `calc(105vw / ${libraryColumns})`,
-                    }}
+                    // style={{
+                      // height: `calc(105vw / ${libraryColumns})`,
+                    // }}
                   >
                     <ExtensionImage
                       url={coverSource}
                       series={series}
                       alt={series.title}
-                      width="100%"
-                      height="100%"
-                      style={{ objectFit: 'cover' }}
+                      // width="100%"
+                      // height="100%"
+                      style={{
+						  objectFit: 'cover',
+						  width: '100%',
+						  height: '100%'
+						  // maxWidth: '100%',
+						  // maxHeight: '100%'						  
+					    }}
                     />
                     {renderUnreadBadge(series)}
                     {libraryView === LibraryView.GridCompact ? (
