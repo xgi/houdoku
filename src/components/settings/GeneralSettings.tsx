@@ -13,6 +13,7 @@ import {
   chapterLanguagesState,
   confirmRemoveSeriesState,
   customDownloadsDirState,
+  libraryCropCoversState,
   refreshOnStartState,
 } from '../../state/settingStates';
 
@@ -25,7 +26,7 @@ const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAUL
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const GeneralSettings: React.FC<Props> = (props: Props) => {
+const GeneralSettings: React.FC<Props> = () => {
   const [chapterLanguages, setChapterLanguages] = useRecoilState(chapterLanguagesState);
   const [refreshOnStart, setRefreshOnStart] = useRecoilState(refreshOnStartState);
   const [autoCheckForUpdates, setAutoCheckForUpdates] = useRecoilState(autoCheckForUpdatesState);
@@ -33,6 +34,7 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
     autoCheckForExtensionUpdatesState
   );
   const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
+  const [libraryCropCovers, setLibraryCropCovers] = useRecoilState(libraryCropCoversState);
   const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(customDownloadsDirState);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -52,6 +54,9 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         break;
       case GeneralSetting.ConfirmRemoveSeries:
         setConfirmRemoveSeries(value);
+        break;
+      case GeneralSetting.LibraryCropCovers:
+        setLibraryCropCovers(value);
         break;
       case GeneralSetting.CustomDownloadsDir:
         setCustomDownloadsDir(value);
@@ -98,6 +103,12 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
           onChange={(e) =>
             updateGeneralSetting(GeneralSetting.ConfirmRemoveSeries, e.target.checked)
           }
+        />
+        <Checkbox
+          label="Crop cover images to library grid"
+          size="md"
+          checked={libraryCropCovers}
+          onChange={(e) => updateGeneralSetting(GeneralSetting.LibraryCropCovers, e.target.checked)}
         />
         <MultiSelect
           label="Chapter languages"

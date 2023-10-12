@@ -22,6 +22,7 @@ import {
   chapterLanguagesState,
   confirmRemoveSeriesState,
   libraryColumnsState,
+  libraryCropCoversState,
   libraryViewState,
 } from '../../state/settingStates';
 import { goToSeries, markChapters, removeSeries } from '../../features/library/utils';
@@ -91,6 +92,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
   const libraryView = useRecoilValue(libraryViewState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
+  const libraryCropCovers = useRecoilValue(libraryCropCoversState);
   const confirmRemoveSeries = useRecoilValue(confirmRemoveSeriesState);
   const [categoriesSubMenuOpen, setCategoriesSubMenuOpen] = useState(false);
 
@@ -187,23 +189,19 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                   <div
                     className={styles.coverContainer}
                     onClick={() => viewFunc(series)}
-                    // style={{
-                      // height: `calc(105vw / ${libraryColumns})`,
-                    // }}
+                    style={{
+                      height: libraryCropCovers ? `calc(105vw / ${libraryColumns})` : '100%',
+                    }}
                   >
                     <ExtensionImage
                       url={coverSource}
                       series={series}
                       alt={series.title}
-                      // width="100%"
-                      // height="100%"
                       style={{
-						  objectFit: 'cover',
-						  width: '100%',
-						  height: '100%'
-						  // maxWidth: '100%',
-						  // maxHeight: '100%'						  
-					    }}
+                        objectFit: 'cover',
+                        width: '100%',
+                        height: '100%',
+                      }}
                     />
                     {renderUnreadBadge(series)}
                     {libraryView === LibraryView.GridCompact ? (
