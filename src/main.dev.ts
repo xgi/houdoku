@@ -109,10 +109,9 @@ const createWindows = async () => {
     spoofWindow = null;
   });
 
-  // Open urls in the user's browser
-  mainWindow.webContents.on('new-window', (event, url) => {
-    event.preventDefault();
-    shell.openExternal(url);
+  mainWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url);
+    return { action: 'deny' };
   });
 
   mainWindow.on('enter-full-screen', () => {
