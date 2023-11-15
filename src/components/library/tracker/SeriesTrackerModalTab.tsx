@@ -128,7 +128,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
         {trackerSeriesList && trackerSeriesList.length > 0 ? (
           <Stack spacing="xs">
             {trackerSeriesList.map((trackerSeries) => (
-              <Grid gutter="xs" align="center">
+              <Grid key={trackerSeries.id} gutter="xs" align="center">
                 <Grid.Col span={2}>
                   <Image
                     src={trackerSeries.coverUrl}

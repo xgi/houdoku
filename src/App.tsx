@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
@@ -141,7 +141,20 @@ ipcRenderer.on(ipcChannels.APP.SHOW_PERFORM_UPDATE_DIALOG, (_event, updateInfo: 
           })}
           p="xs"
         >
-          <Text size="sm">{parse(updateInfo.releaseNotes as string)}</Text>
+          <Text size="sm">
+            {parse(updateInfo.releaseNotes as string, {
+              // eslint-disable-next-line react/no-unstable-nested-components
+              transform(reactNode) {
+                if (React.isValidElement(reactNode) && reactNode.type === 'a') {
+                  const newElement = { ...reactNode };
+                  newElement.props = { ...newElement.props, target: '_blank' };
+                  return newElement;
+                }
+
+                return reactNode as ReactElement;
+              },
+            })}
+          </Text>
         </Box>
       </>
     ),

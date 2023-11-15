@@ -1,13 +1,13 @@
 import React from 'react';
 import { ipcRenderer } from 'electron';
-import { Title, Text, Button, Mark } from '@mantine/core';
+import { Title, Text, Button } from '@mantine/core';
 import packageJson from '../../../package.json';
 import ipcChannels from '../../constants/ipcChannels.json';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const About: React.FC<Props> = (props: Props) => {
+const About: React.FC<Props> = () => {
   const handleUpdateCheck = () => {
     ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
   };
