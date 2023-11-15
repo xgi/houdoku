@@ -81,6 +81,7 @@ type MangaListResponseData = {
       synopsis: string | null | undefined;
       mean: number | null | undefined;
       rank: number | null | undefined;
+      media_type: string | undefined;
       popularity: number | null | undefined;
       num_list_users: number | null | undefined;
       num_scoring_users: number | null | undefined;
@@ -206,7 +207,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
   search: SearchFunc = async (text: string) => {
     if (this.accessToken === '') return new Promise((resolve) => resolve([]));
 
-    const url = `${BASE_URL}/manga?q=${text}&nsfw=true&fields=id,title,synopsis,main_picture`;
+    const url = `${BASE_URL}/manga?q=${text}&nsfw=true&fields=id,title,synopsis,main_picture,media_type`;
     const options = {
       method: 'GET',
       headers: {
@@ -218,15 +219,17 @@ export class MALTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => response.json())
       .then((data: MangaListResponseData) => {
-        return data.data.map((item) => {
-          const { node } = item;
-          return {
-            id: node.id.toString(),
-            title: node.title,
-            description: node.synopsis,
-            coverUrl: node.main_picture?.large,
-          } as TrackerSeries;
-        });
+        return data.data
+          .filter((item) => item.node.media_type !== 'light_novel')
+          .map((item) => {
+            const { node } = item;
+            return {
+              id: node.id.toString(),
+              title: node.title,
+              description: node.synopsis,
+              coverUrl: node.main_picture?.large,
+            } as TrackerSeries;
+          });
       })
       .catch((e: Error) => {
         log.error(e);
