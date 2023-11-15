@@ -6,7 +6,7 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { PageRequesterData, Chapter, Series } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Text } from '@mantine/core';
+import { Text, Button } from '@mantine/core';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
 import { ReadingDirection, PageStyle, OffsetPages } from '../../models/types';
@@ -41,7 +41,7 @@ type ParamTypes = {
   chapter_id: string;
 };
 
-const ReaderPage: React.FC<Props> = (props: Props) => {
+const ReaderPage: React.FC<Props> = () => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { series_id, chapter_id } = useParams<ParamTypes>();
   const navigate = useNavigate();
@@ -249,6 +249,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setPageUrls([]);
     setLastPageNumber(0);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     loadChapterData(id, series_id!, desiredPage);
   };
 
@@ -511,6 +512,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       const changed = changeChapter('next', true);
       if (!changed) {
         setShowingNoNextChapter(true);
+        setPageNumber(lastPageNumber);
       }
     } else if (pageNumber <= 0) {
       changeChapter('previous', true);
@@ -538,6 +540,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     addRootStyles();
     addKeybindings();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     loadChapterData(chapter_id!, series_id!);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
