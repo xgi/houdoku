@@ -12,6 +12,7 @@ import {
   Group,
   Radio,
   Slider,
+  Menu,
 } from '@mantine/core';
 import {
   IconArrowBigLeft,
@@ -48,6 +49,7 @@ import {
   pageGapState,
   offsetPagesState,
   maxPageWidthState,
+  pageWidthMetricState,
   optimizeContrastState,
   keyToggleOffsetDoubleSpreadsState,
   keyToggleFullscreenState,
@@ -88,7 +90,26 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [pageGap, setPageGap] = useRecoilState(pageGapState);
   const [offsetPages, setOffsetPages] = useRecoilState(offsetPagesState);
   const [maxPageWidth, setMaxPageWidth] = useRecoilState(maxPageWidthState);
+  const [pageWidthMetric, setPageWidthMetric] = useRecoilState(pageWidthMetricState);
   const [optimizeContrast, setOptimizeContrast] = useRecoilState(optimizeContrastState);
+
+  const buttonStyles = (theme: MantineTheme) => ({
+    root: {
+      height: 24,
+      fontSize: 12,
+      color: theme.colors.gray[4],
+      backgroundColor: theme.colors.dark[7],
+      '&:hover': {
+        backgroundColor: theme.colors.dark[4],
+      },
+    },
+    leftIcon: {
+      marginRight: 4,
+    },
+    rightIcon: {
+      marginLeft: 0,
+    },
+  });
 
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
@@ -157,6 +178,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         break;
       case ReaderSetting.MaxPageWidth:
         setMaxPageWidth(value);
+        break;
+      case ReaderSetting.PageWidthMetric:
+        setPageWidthMetric(value);
         break;
       case ReaderSetting.OptimizeContrast:
         setOptimizeContrast(value);
@@ -306,24 +330,44 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         checked={fitStretch}
         onChange={(e) => updateReaderSetting(ReaderSetting.FitStretch, e.target.checked)}
       />
-      <Text size="sm" ml="sm">
-        Max page width
-      </Text>
+ 
+      <Group position="left" align="left" spacing="xs" noWrap>
+        <Text size="sm" ml="sm">
+                Max page width
+        </Text>
+        <Menu shadow="md" width={50} trigger="hover">
+              <Menu.Target>
+                <Button compact styles={buttonStyles} radius={0} px={4} pb={2}>
+                  {pageWidthMetric}
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item  onClick={() => {updateReaderSetting(ReaderSetting.PageWidthMetric, '%')}}>
+                  %
+                </Menu.Item>
+                <Menu.Item  onClick={() => {updateReaderSetting(ReaderSetting.PageWidthMetric, 'px')}}>
+                  px
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+      </Group>
+
       <Slider
-        label={`${maxPageWidth}%`}
-        mx="sm"
-        min={10}
-        max={100}
-        step={10}
-        marks={Array.from({ length: 10 }, (_v, k) => (k + 1) * 10).map((i: number) => ({
-          value: i,
-        }))}
-        styles={{ markLabel: { display: 'none' } }}
-        maw={400}
-        disabled={!fitContainToWidth}
-        defaultValue={maxPageWidth}
-        onChange={(value) => updateReaderSetting(ReaderSetting.MaxPageWidth, value)}
-      />
+              label={`${maxPageWidth}${pageWidthMetric}`}
+              mx="sm"
+              min={10}
+              max={pageWidthMetric === '%' ? 100 : window.innerWidth}
+              step={10}
+              styles={{ markLabel: { display: 'none' } }}
+              maw={400}
+              marks={pageWidthMetric === '%' ? Array.from({ length: 10 }, (_v, k) => (k + 1) * 10).map((i: number) => ({
+                value: i,
+              })) : []}
+              disabled={!fitContainToWidth}
+              defaultValue={maxPageWidth}
+              onChange={(value) => updateReaderSetting(ReaderSetting.MaxPageWidth, value)}
+            />
+
 
       <Text py="xs">Rendering</Text>
       <Checkbox

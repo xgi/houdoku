@@ -96,6 +96,7 @@ export const keyExitState = atomFromSetting<string>(ReaderSetting.KeyExit);
 export const keyCloseOrBackState = atomFromSetting<string>(ReaderSetting.KeyCloseOrBack);
 export const pageGapState = atomFromSetting<boolean>(ReaderSetting.PageGap);
 export const maxPageWidthState = atomFromSetting<number>(ReaderSetting.MaxPageWidth);
+export const pageWidthMetricState = atomFromSetting<string>(ReaderSetting.PageWidthMetric);
 export const offsetPagesState = atomFromSetting<OffsetPages>(ReaderSetting.OffsetPages);
 export const optimizeContrastState = atomFromSetting<boolean>(ReaderSetting.OptimizeContrast);
 
