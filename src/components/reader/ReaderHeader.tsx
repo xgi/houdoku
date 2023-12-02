@@ -22,7 +22,7 @@ import {
   IconSpacingVertical,
   IconX,
 } from '@tabler/icons';
-import { Box, Button, Center, Group, MantineTheme, Menu, ScrollArea } from '@mantine/core';
+import { Box, Button, Center, ColorScheme, Group, MantineTheme, Menu, ScrollArea } from '@mantine/core';
 import styles from './ReaderHeader.css';
 import { ReadingDirection, PageStyle, OffsetPages } from '../../models/types';
 import {
@@ -87,6 +87,7 @@ type Props = {
   changeChapter: (direction: 'left' | 'right' | 'next' | 'previous') => void;
   getAdjacentChapterId: (previous: boolean) => string | null;
   exitPage: () => void;
+  colorScheme: ColorScheme;
 };
 
 const ReaderHeader: React.FC<Props> = (props: Props) => {
@@ -107,11 +108,15 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
     root: {
       height: 24,
       fontSize: 12,
-      color: theme.colors.gray[4],
-      backgroundColor: theme.colors.dark[7],
+      color: props.colorScheme === 'dark' ? theme.colors.gray[4] : theme.colors.dark[7],
+      backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3],
       '&:hover': {
-        backgroundColor: theme.colors.dark[4],
+        backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[4],
       },
+      '&:disabled': {
+        color: props.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[6],
+        backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[5],
+      }
     },
     leftIcon: {
       marginRight: 4,
@@ -182,7 +187,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
     <Box
       className={styles.container}
       sx={(theme) => ({
-        backgroundColor: theme.colors.dark[6],
+        backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[6],
       })}
     >
       <Center>
