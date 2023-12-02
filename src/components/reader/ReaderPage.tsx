@@ -6,7 +6,7 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { PageRequesterData, Chapter, Series } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Text, Button } from '@mantine/core';
+import { Text, Button, ColorScheme } from '@mantine/core';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
 import { ReadingDirection, PageStyle, OffsetPages } from '../../models/types';
@@ -31,17 +31,24 @@ import {
   nextReadingDirection,
 } from '../../features/settings/utils';
 
+import ToggleThemeSwitch from '../general/ToggleThemeSwitch';
+
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+type Props = {
+  colorScheme: ColorScheme;
+  toggleColorScheme: (value?: ColorScheme) => void;
+};
 
 type ParamTypes = {
   series_id: string;
   chapter_id: string;
 };
 
-const ReaderPage: React.FC<Props> = () => {
+const ReaderPage: React.FC<Props> = (props: Props) => {
+  const { colorScheme, toggleColorScheme } = props;
+
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { series_id, chapter_id } = useParams<ParamTypes>();
   const navigate = useNavigate();
@@ -555,6 +562,7 @@ const ReaderPage: React.FC<Props> = () => {
           changeChapter={changeChapter}
           getAdjacentChapterId={getAdjacentChapterId}
           exitPage={exitPage}
+          colorScheme={colorScheme}
         />
       ) : (
         <></>
@@ -573,6 +581,7 @@ const ReaderPage: React.FC<Props> = () => {
           )}
         </>
       )}
+      <ToggleThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}/>
     </div>
   );
 };
