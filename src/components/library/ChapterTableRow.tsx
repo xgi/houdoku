@@ -52,17 +52,27 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
     downloaderClient.start();
   };
 
+  const [isHovered, setIsHovered] = React.useState(false);
+
   const navigate = useNavigate();
   const handleTableRowClicked = (rowPath: string) => {
-    console.log(rowPath);
     navigate(rowPath);
   };
+  const hoverEnter = () =>{
+    setIsHovered(true);
+  }
+  const hoverExit = () =>{
+    setIsHovered(false);
+  }
+
 
   return (
     <tr
       key={chapter.id}
       onContextMenu={props.handleContextMenu}
       onClick={() => handleTableRowClicked(`${routes.READER}/${series.id}/${chapter.id}`)}
+      onMouseEnter={()=> hoverEnter()}
+      onMouseLeave={()=> hoverExit()}
     >
       <td>
         <ActionIcon
@@ -98,7 +108,7 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
           </div>
         )}
       </td>
-      <td>{chapter.title}</td>
+      <td>{isHovered? <u> {chapter.title} </u> : chapter.title}</td>
       <td>
         <Text lineClamp={1}>{chapter.groupName}</Text>
       </td>
@@ -110,12 +120,6 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
       </td>
       <td>
         <Group position="right" spacing="xs" noWrap>
-          {/* <Link to={`${routes.READER}/${series.id}/${chapter.id}`}>
-            <Button variant="default" size="xs">
-              Read Me
-            </Button>
-          </Link> */}
-
           {chapterDownloadStatuses[chapter.id!] ? (
             <ActionIcon disabled>
               <IconFileCheck size={16} />
