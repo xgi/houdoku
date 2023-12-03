@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Chapter, Series, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -52,8 +52,18 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
     downloaderClient.start();
   };
 
+  const navigate = useNavigate();
+  const handleTableRowClicked = (rowPath: string) => {
+    console.log(rowPath);
+    navigate(rowPath);
+  };
+
   return (
-    <tr key={chapter.id} onContextMenu={props.handleContextMenu}>
+    <tr
+      key={chapter.id}
+      onContextMenu={props.handleContextMenu}
+      onClick={() => handleTableRowClicked(`${routes.READER}/${series.id}/${chapter.id}`)}
+    >
       <td>
         <ActionIcon
           variant="default"
@@ -100,11 +110,11 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
       </td>
       <td>
         <Group position="right" spacing="xs" noWrap>
-          <Link to={`${routes.READER}/${series.id}/${chapter.id}`}>
+          {/* <Link to={`${routes.READER}/${series.id}/${chapter.id}`}>
             <Button variant="default" size="xs">
-              Read
+              Read Me
             </Button>
-          </Link>
+          </Link> */}
 
           {chapterDownloadStatuses[chapter.id!] ? (
             <ActionIcon disabled>
