@@ -80,7 +80,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         close={() => setShowingContextMenu(false)}
       />
 
-      <Table>
+      <Table highlightOnHover sx={{ cursor: 'pointer' }}>
         <thead>
           <ChapterTableHeading series={props.series} />
         </thead>

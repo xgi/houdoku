@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chapter, Series, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { ActionIcon, Button, Center, Group, Text } from '@mantine/core';
+import { ActionIcon, Center, Group, Text } from '@mantine/core';
 import { IconDownload, IconEye, IconFileCheck } from '@tabler/icons';
 import routes from '../../constants/routes.json';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
@@ -41,7 +41,23 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const chapterDownloadStatuses = useRecoilValue(chapterDownloadStatusesState);
 
-  const handleDownload = () => {
+  const handleMarkReadButton = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    markChapters(
+      [chapter],
+      props.series,
+      !chapter.read,
+      setChapterList,
+      setSeries,
+      chapterLanguages
+    );
+    if (!chapter.read && trackerAutoUpdate) {
+      sendProgressToTrackers(chapter, props.series);
+    }
+  };
+
+  const handleDownloadButton = (event: React.MouseEvent) => {
+    event.stopPropagation();
     downloaderClient.add([
       {
         chapter,
@@ -52,45 +68,19 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
     downloaderClient.start();
   };
 
-  const [isHovered, setIsHovered] = React.useState(false);
-
   const navigate = useNavigate();
   const handleTableRowClicked = (rowPath: string) => {
     navigate(rowPath);
   };
-  const hoverEnter = () =>{
-    setIsHovered(true);
-  }
-  const hoverExit = () =>{
-    setIsHovered(false);
-  }
-
 
   return (
     <tr
       key={chapter.id}
       onContextMenu={props.handleContextMenu}
       onClick={() => handleTableRowClicked(`${routes.READER}/${series.id}/${chapter.id}`)}
-      onMouseEnter={()=> hoverEnter()}
-      onMouseLeave={()=> hoverExit()}
     >
       <td>
-        <ActionIcon
-          variant="default"
-          onClick={() => {
-            markChapters(
-              [chapter],
-              props.series,
-              !chapter.read,
-              setChapterList,
-              setSeries,
-              chapterLanguages
-            );
-            if (!chapter.read && trackerAutoUpdate) {
-              sendProgressToTrackers(chapter, props.series);
-            }
-          }}
-        >
+        <ActionIcon variant="default" onClick={handleMarkReadButton}>
           {chapter.read ? <IconEye size={16} /> : ''}
         </ActionIcon>
       </td>
@@ -108,7 +98,7 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
           </div>
         )}
       </td>
-      <td>{isHovered? <u> {chapter.title} </u> : chapter.title}</td>
+      <td>{chapter.title}</td>
       <td>
         <Text lineClamp={1}>{chapter.groupName}</Text>
       </td>
@@ -125,7 +115,7 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
               <IconFileCheck size={16} />
             </ActionIcon>
           ) : (
-            <ActionIcon variant="default" onClick={handleDownload}>
+            <ActionIcon variant="default" onClick={handleDownloadButton}>
               <IconDownload size={16} />
             </ActionIcon>
           )}
