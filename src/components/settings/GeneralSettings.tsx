@@ -2,13 +2,15 @@ import React from 'react';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useRecoilState } from 'recoil';
-import { Button, Checkbox, Flex, Group, Input, MultiSelect, Stack, Text } from '@mantine/core';
+import { Button, Checkbox, Flex, Group, Input, MultiSelect, NumberInput, Stack, Text, Tooltip } from '@mantine/core';
 import { IconArrowBack } from '@tabler/icons';
 import { GeneralSetting } from '../../models/types';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { createBackup, restoreBackup } from '../../util/backup';
 import {
   autoCheckForExtensionUpdatesState,
+  autoBackupState,
+  autoBackupCountState,
   autoCheckForUpdatesState,
   chapterLanguagesState,
   confirmRemoveSeriesState,
@@ -30,9 +32,9 @@ const GeneralSettings: React.FC<Props> = () => {
   const [chapterLanguages, setChapterLanguages] = useRecoilState(chapterLanguagesState);
   const [refreshOnStart, setRefreshOnStart] = useRecoilState(refreshOnStartState);
   const [autoCheckForUpdates, setAutoCheckForUpdates] = useRecoilState(autoCheckForUpdatesState);
-  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(
-    autoCheckForExtensionUpdatesState
-  );
+  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(autoCheckForExtensionUpdatesState);
+  const [autoBackup, setAutoBackup] = useRecoilState(autoBackupState);
+  const [autoBackupCount, setAutoBackupCount] = useRecoilState(autoBackupCountState);
   const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
   const [libraryCropCovers, setLibraryCropCovers] = useRecoilState(libraryCropCoversState);
   const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(customDownloadsDirState);
@@ -60,6 +62,12 @@ const GeneralSettings: React.FC<Props> = () => {
         break;
       case GeneralSetting.CustomDownloadsDir:
         setCustomDownloadsDir(value);
+        break;
+      case GeneralSetting.autoBackup:
+        setAutoBackup(value);
+        break;
+      case GeneralSetting.autoBackupCount:
+        setAutoBackupCount(value);
         break;
       default:
         break;
@@ -185,6 +193,17 @@ const GeneralSettings: React.FC<Props> = () => {
             >
               Restore Backup
             </Button>
+            <Tooltip label={`Makes backup every day (stores ${autoBackupCount} backups)`}>            
+              <Checkbox
+                label="Auto backup"
+                size="md"
+                checked={autoBackup}
+                onChange={(e) => updateGeneralSetting(GeneralSetting.autoBackup, e.target.checked)}
+              ></Checkbox>
+            </Tooltip>
+            <NumberInput disabled={!autoBackup} min={1} value={autoBackupCount} onChange={(value) =>
+              updateGeneralSetting(GeneralSetting.autoBackupCount, value)
+            }></NumberInput>
           </Group>
         </Flex>
       </Stack>

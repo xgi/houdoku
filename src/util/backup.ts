@@ -2,6 +2,8 @@ import { Chapter, Series } from 'houdoku-extension-lib';
 import storeKeys from '../constants/storeKeys.json';
 import { updateSeries } from '../features/library/utils';
 import library from '../services/library';
+import fs from 'fs-extra';
+import path from 'path';
 
 export const createBackup = async () => {
   const blob = new Blob([JSON.stringify(localStorage)], {
@@ -16,6 +18,24 @@ export const createBackup = async () => {
   link.click();
   document.body.removeChild(link);
 };
+
+export const createAutoBackup = async (Count = 1) => {
+  if (!fs.existsSync("backups")) {
+    fs.mkdir("backups");
+  }
+  var fileName = `houdoku_backup_${new Date().toJSON().slice(0, 10)}.json`
+  if (!fs.existsSync(`backups/${fileName}`)) {
+    var jsondata = JSON.stringify(localStorage);
+    jsondata = JSON.parse(jsondata);
+    await fs.writeJson(`backups/${fileName}`, jsondata);
+  }
+  fs.readdir("backups", function (err, files) {
+    if (err) { return console.log('Unable to scan directory: ' + err); }
+    if (files.length > Count) {
+      fs.unlinkSync(path.join('backups', files[0]))
+    }
+  })
+}
 
 export const restoreBackup = (backupFileContent: string) => {
   const data: { [key: string]: string } = JSON.parse(backupFileContent);
