@@ -30,9 +30,10 @@ import {
   seriesListState,
 } from '../../state/libraryStates';
 import library from '../../services/library';
-import { chapterLanguagesState, refreshOnStartState } from '../../state/settingStates';
+import { autoBackupCountState, autoBackupState, chapterLanguagesState, refreshOnStartState } from '../../state/settingStates';
 import DashboardSidebarLink from './DashboardSidebarLink';
 import { downloadCover } from '../../util/download';
+import { createAutoBackup } from '../../util/backup';
 
 import ToggleThemeSwitch from './ToggleThemeSwitch';
 
@@ -50,12 +51,17 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const [, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const [completedStartReload, setCompletedStartReload] = useRecoilState(completedStartReloadState);
   const refreshOnStart = useRecoilValue(refreshOnStartState);
+  const autoBackup = useRecoilValue(autoBackupState);
+  const autoBackupCount = useRecoilValue(autoBackupCountState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const [importQueue, setImportQueue] = useRecoilState(importQueueState);
   const [importing, setImporting] = useRecoilState(importingState);
   const categoryList = useRecoilValue(categoryListState);
 
   useEffect(() => {
+      if(autoBackup){
+        createAutoBackup(autoBackupCount);
+      }
     if (refreshOnStart && !completedStartReload && activeSeriesList.length > 0) {
       setCompletedStartReload(true);
       reloadSeriesList(
