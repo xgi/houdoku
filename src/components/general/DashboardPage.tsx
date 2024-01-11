@@ -10,7 +10,7 @@ import {
   IconSettings,
   IconSquarePlus,
 } from '@tabler/icons';
-import { AppShell, Navbar } from '@mantine/core';
+import { AppShell, Navbar, ColorScheme } from '@mantine/core';
 import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
 import routes from '../../constants/routes.json';
@@ -30,22 +30,31 @@ import {
   seriesListState,
 } from '../../state/libraryStates';
 import library from '../../services/library';
-import { OnStartDownloadUnreadCountState, OnStartUpDeleteReadState, OnStartUpDownloadUnreadState, chapterLanguagesState, customDownloadsDirState, refreshOnStartState } from '../../state/settingStates';
+import { OnStartDownloadUnreadCountState, OnStartUpDeleteReadState, OnStartUpDownloadUnreadState, customDownloadsDirState, autoBackupCountState, autoBackupState, chapterLanguagesState, refreshOnStartState } from '../../state/settingStates';
 import DashboardSidebarLink from './DashboardSidebarLink';
 import { downloadCover } from '../../util/download';
+import { createAutoBackup } from '../../util/backup';
 import { DeleteReadChapters, DownloadUnreadChapters } from '../../features/library/chapterDownloadUtils';
 import { getDefaultDownloadDir } from '../settings/GeneralSettings';
 
+import ToggleThemeSwitch from './ToggleThemeSwitch';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props {}
+interface Props {
+  colorScheme: ColorScheme;
+  toggleColorScheme: (value?: ColorScheme) => void;
+}
 
 const DashboardPage: React.FC<Props> = (props: Props) => {
+  const { colorScheme, toggleColorScheme } = props;
+
   const setSeriesList = useSetRecoilState(seriesListState);
   const activeSeriesList = useRecoilValue(activeSeriesListState);
   const [, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const [completedStartReload, setCompletedStartReload] = useRecoilState(completedStartReloadState);
   const refreshOnStart = useRecoilValue(refreshOnStartState);
+  const autoBackup = useRecoilValue(autoBackupState);
+  const autoBackupCount = useRecoilValue(autoBackupCountState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const [importQueue, setImportQueue] = useRecoilState(importQueueState);
   const [importing, setImporting] = useRecoilState(importingState);
@@ -57,6 +66,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   useEffect(() => {
+      if(autoBackup){
+        createAutoBackup(autoBackupCount);
+      }
     if (refreshOnStart && !completedStartReload && activeSeriesList.length > 0) {
       setCompletedStartReload(true);
       reloadSeriesList(
@@ -137,6 +149,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               route={routes.ABOUT}
             />
           </Navbar.Section>
+          <ToggleThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}/>
         </Navbar>
       }
       styles={(theme) => ({

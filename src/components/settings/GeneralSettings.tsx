@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useRecoilState } from 'recoil';
-import { Accordion, Button, Checkbox, Flex, Group, Input, MultiSelect, NumberInput, Stack, Text } from '@mantine/core';
+import { Accordion, Button, Checkbox, Flex, Group, Input, MultiSelect, NumberInput, Stack, Text, Tooltip } from '@mantine/core';
 import { IconArrowBack } from '@tabler/icons';
 import { GeneralSetting } from '../../models/types';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -15,10 +15,13 @@ import {
   OnStartUpDeleteReadState,
   OnStartUpDownloadUnreadState,
   autoCheckForExtensionUpdatesState,
+  autoBackupState,
+  autoBackupCountState,
   autoCheckForUpdatesState,
   chapterLanguagesState,
   confirmRemoveSeriesState,
   customDownloadsDirState,
+  libraryCropCoversState,
   refreshOnStartState,
 } from '../../state/settingStates';
 
@@ -31,14 +34,15 @@ const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAUL
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const GeneralSettings: React.FC<Props> = (props: Props) => {
+const GeneralSettings: React.FC<Props> = () => {
   const [chapterLanguages, setChapterLanguages] = useRecoilState(chapterLanguagesState);
   const [refreshOnStart, setRefreshOnStart] = useRecoilState(refreshOnStartState);
   const [autoCheckForUpdates, setAutoCheckForUpdates] = useRecoilState(autoCheckForUpdatesState);
-  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(
-    autoCheckForExtensionUpdatesState
-  );
+  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(autoCheckForExtensionUpdatesState);
+  const [autoBackup, setAutoBackup] = useRecoilState(autoBackupState);
+  const [autoBackupCount, setAutoBackupCount] = useRecoilState(autoBackupCountState);
   const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
+  const [libraryCropCovers, setLibraryCropCovers] = useRecoilState(libraryCropCoversState);
   const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(customDownloadsDirState);
   const [OnStartUpDownloadUnread, setOnStartUpDownloadUnread] = useRecoilState(OnStartUpDownloadUnreadState);
   const [OnSeriesDetailsDownloadUnread, setOnSeriesDetailsDownloadUnread] = useRecoilState(OnSeriesDetailsDownloadUnreadState);
@@ -66,6 +70,9 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
       case GeneralSetting.ConfirmRemoveSeries:
         setConfirmRemoveSeries(value);
         break;
+      case GeneralSetting.LibraryCropCovers:
+        setLibraryCropCovers(value);
+        break;
       case GeneralSetting.CustomDownloadsDir:
         setCustomDownloadsDir(value);
         break;
@@ -86,6 +93,12 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
         break;
         case GeneralSetting.OnScrollingChaptersDownloadUnread:
           setOnScrollingChaptersDownloadUnread(value);
+        break;
+        case GeneralSetting.autoBackup:
+          setAutoBackup(value);
+        break;
+        case GeneralSetting.autoBackupCount:
+          setAutoBackupCount(value);
         break;
       default:
         break;
@@ -129,6 +142,12 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
           onChange={(e) =>
             updateGeneralSetting(GeneralSetting.ConfirmRemoveSeries, e.target.checked)
           }
+        />
+        <Checkbox
+          label="Crop cover images to library grid"
+          size="md"
+          checked={libraryCropCovers}
+          onChange={(e) => updateGeneralSetting(GeneralSetting.LibraryCropCovers, e.target.checked)}
         />
         <MultiSelect
           label="Chapter languages"
@@ -205,6 +224,17 @@ const GeneralSettings: React.FC<Props> = (props: Props) => {
             >
               Restore Backup
             </Button>
+            <Tooltip label={`Makes backup every day (stores ${autoBackupCount} backups)`}>            
+              <Checkbox
+                label="Auto backup"
+                size="md"
+                checked={autoBackup}
+                onChange={(e) => updateGeneralSetting(GeneralSetting.autoBackup, e.target.checked)}
+              ></Checkbox>
+            </Tooltip>
+            <NumberInput disabled={!autoBackup} min={1} value={autoBackupCount} onChange={(value) =>
+              updateGeneralSetting(GeneralSetting.autoBackupCount, value)
+            }></NumberInput>
           </Group>
         </Flex>
       </Stack>

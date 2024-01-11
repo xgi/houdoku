@@ -109,10 +109,9 @@ const createWindows = async () => {
     spoofWindow = null;
   });
 
-  // Open urls in the user's browser
-  mainWindow.webContents.on('new-window', (event, url) => {
-    event.preventDefault();
-    shell.openExternal(url);
+  mainWindow.webContents.setWindowOpenHandler((details) => {
+    shell.openExternal(details.url);
+    return { action: 'deny' };
   });
 
   mainWindow.on('enter-full-screen', () => {
@@ -218,8 +217,10 @@ ipcMain.handle(ipcChannels.APP.READ_ENTIRE_FILE, (_event, filepath: string) => {
   return fs.readFileSync(filepath).toString();
 });
 
-app.commandLine.appendSwitch('high-dpi-support', '1');
-app.commandLine.appendSwitch('force-device-scale-factor', '1');
+if (process.platform === 'win32') {
+  app.commandLine.appendSwitch('high-dpi-support', '1');
+  app.commandLine.appendSwitch('force-device-scale-factor', '1');
+}
 
 // create ipc handlers for specific extension functionality
 const webviewFn: WebviewFunc = (url, options) => loadInWebView(spoofWindow, url, options);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
@@ -13,7 +13,10 @@ import {
   List,
   MantineProvider,
   Text,
+  Switch,
+  useMantineTheme
 } from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import { closeAllModals, ModalsProvider, openConfirmModal, openModal } from '@mantine/modals';
 import {
   NotificationProps,
@@ -21,7 +24,7 @@ import {
   showNotification,
   updateNotification,
 } from '@mantine/notifications';
-import { IconCheck, IconX } from '@tabler/icons';
+import { IconCheck, IconX, IconSun, IconMoonStars } from '@tabler/icons';
 import { UpdateInfo } from 'electron-updater';
 import parse from 'html-react-parser';
 import persistantStore from './util/persistantStore';
@@ -141,7 +144,20 @@ ipcRenderer.on(ipcChannels.APP.SHOW_PERFORM_UPDATE_DIALOG, (_event, updateInfo: 
           })}
           p="xs"
         >
-          <Text size="sm">{parse(updateInfo.releaseNotes as string)}</Text>
+          <Text size="sm">
+            {parse(updateInfo.releaseNotes as string, {
+              // eslint-disable-next-line react/no-unstable-nested-components
+              transform(reactNode) {
+                if (React.isValidElement(reactNode) && reactNode.type === 'a') {
+                  const newElement = { ...reactNode };
+                  newElement.props = { ...newElement.props, target: '_blank' };
+                  return newElement;
+                }
+
+                return reactNode as ReactElement;
+              },
+            })}
+          </Text>
         </Box>
       </>
     ),
@@ -172,9 +188,23 @@ export default function App() {
   const autoCheckForUpdates = useRecoilValue(autoCheckForUpdatesState);
   const autoCheckForExtensionUpdates = useRecoilValue(autoCheckForExtensionUpdatesState);
 
-  const [colorScheme, setColorScheme] = useState<ColorScheme>('dark');
+  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({ key: 'color-scheme', defaultValue: 'dark' });
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
+  
+  const theme = useMantineTheme()
+  const toggleThemeSwitch = () => (
+    <Switch size="sm"
+      color={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}
+      onLabel={<IconSun size="0.7rem" stroke={2.5} color={theme.colors.yellow[4]}/>}
+      offLabel={<IconMoonStars size="0.7rem" stroke={2.5} color={theme.colors.blue[6]}/>}
+      checked={colorScheme === 'dark' ? false : true}
+      onChange={() => toggleColorScheme()}
+      styles={{
+        root: { position: 'fixed', left: '0.5rem', bottom: '0.5rem', zIndex: 1000 }
+      }}
+    />
+  )
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -270,9 +300,9 @@ export default function App() {
                   <Routes>
                     <Route
                       path={`${routes.READER}/:series_id/:chapter_id`}
-                      element={<ReaderPage />}
+                      element={<ReaderPage colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}/>}
                     />
-                    <Route path="*" element={<DashboardPage />} />
+                    <Route path="*" element={<DashboardPage colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}/>} />
                   </Routes>
                 </Router>
               )}

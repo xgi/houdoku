@@ -1,10 +1,10 @@
 /* eslint-disable react/display-name */
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Chapter, Series, Languages } from 'houdoku-extension-lib';
 import { ipcRenderer } from 'electron';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { ActionIcon, Button, Center, Group, Text } from '@mantine/core';
+import { ActionIcon, Center, Group, Text } from '@mantine/core';
 import { IconDownload, IconEye, IconFileCheck } from '@tabler/icons';
 import routes from '../../constants/routes.json';
 import { sendProgressToTrackers } from '../../features/tracker/utils';
@@ -41,7 +41,23 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const chapterDownloadStatuses = useRecoilValue(chapterDownloadStatusesState);
 
-  const handleDownload = () => {
+  const handleMarkReadButton = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    markChapters(
+      [chapter],
+      props.series,
+      !chapter.read,
+      setChapterList,
+      setSeries,
+      chapterLanguages
+    );
+    if (!chapter.read && trackerAutoUpdate) {
+      sendProgressToTrackers(chapter, props.series);
+    }
+  };
+
+  const handleDownloadButton = (event: React.MouseEvent) => {
+    event.stopPropagation();
     downloaderClient.add([
       {
         chapter,
@@ -52,25 +68,19 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
     downloaderClient.start();
   };
 
+  const navigate = useNavigate();
+  const handleTableRowClicked = (rowPath: string) => {
+    navigate(rowPath);
+  };
+
   return (
-    <tr key={chapter.id} onContextMenu={props.handleContextMenu}>
+    <tr
+      key={chapter.id}
+      onContextMenu={props.handleContextMenu}
+      onClick={() => handleTableRowClicked(`${routes.READER}/${series.id}/${chapter.id}`)}
+    >
       <td>
-        <ActionIcon
-          variant="default"
-          onClick={() => {
-            markChapters(
-              [chapter],
-              props.series,
-              !chapter.read,
-              setChapterList,
-              setSeries,
-              chapterLanguages
-            );
-            if (!chapter.read && trackerAutoUpdate) {
-              sendProgressToTrackers(chapter, props.series);
-            }
-          }}
-        >
+        <ActionIcon variant="default" onClick={handleMarkReadButton}>
           {chapter.read ? <IconEye size={16} /> : ''}
         </ActionIcon>
       </td>
@@ -100,18 +110,12 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
       </td>
       <td>
         <Group position="right" spacing="xs" noWrap>
-          <Link to={`${routes.READER}/${series.id}/${chapter.id}`}>
-            <Button variant="default" size="xs">
-              Read
-            </Button>
-          </Link>
-
           {chapterDownloadStatuses[chapter.id!] ? (
             <ActionIcon disabled>
               <IconFileCheck size={16} />
             </ActionIcon>
           ) : (
-            <ActionIcon variant="default" onClick={handleDownload}>
+            <ActionIcon variant="default" onClick={handleDownloadButton}>
               <IconDownload size={16} />
             </ActionIcon>
           )}

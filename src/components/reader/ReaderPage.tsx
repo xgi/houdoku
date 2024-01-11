@@ -6,7 +6,7 @@ import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { PageRequesterData, Chapter, Series } from 'houdoku-extension-lib';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Text } from '@mantine/core';
+import { Text, Button, ColorScheme } from '@mantine/core';
 import styles from './ReaderPage.css';
 import routes from '../../constants/routes.json';
 import { ReadingDirection, PageStyle, OffsetPages } from '../../models/types';
@@ -34,10 +34,15 @@ import { DownloadUnreadChapters } from '../../features/library/chapterDownloadUt
 import { getDefaultDownloadDir } from '../settings/GeneralSettings';
 import { OnScrollingChaptersDownloadUnreadState, OnStartDownloadUnreadCountState } from '../../state/settingStates';
 
+import ToggleThemeSwitch from '../general/ToggleThemeSwitch';
+
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+type Props = {
+  colorScheme: ColorScheme;
+  toggleColorScheme: (value?: ColorScheme) => void;
+};
 
 type ParamTypes = {
   series_id: string;
@@ -45,6 +50,8 @@ type ParamTypes = {
 };
 
 const ReaderPage: React.FC<Props> = (props: Props) => {
+  const { colorScheme, toggleColorScheme } = props;
+
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { series_id, chapter_id } = useParams<ParamTypes>();
   const navigate = useNavigate();
@@ -255,6 +262,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setPageUrls([]);
     setLastPageNumber(0);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     loadChapterData(id, series_id!, desiredPage);
   };
 
@@ -521,6 +529,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       const changed = changeChapter('next', true);
       if (!changed) {
         setShowingNoNextChapter(true);
+        setPageNumber(lastPageNumber);
       }
     } else if (pageNumber <= 0) {
       changeChapter('previous', true);
@@ -548,6 +557,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     addRootStyles();
     addKeybindings();
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     loadChapterData(chapter_id!, series_id!);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
@@ -562,6 +572,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           changeChapter={changeChapter}
           getAdjacentChapterId={getAdjacentChapterId}
           exitPage={exitPage}
+          colorScheme={colorScheme}
         />
       ) : (
         <></>
@@ -580,6 +591,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           )}
         </>
       )}
+      <ToggleThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}/>
     </div>
   );
 };

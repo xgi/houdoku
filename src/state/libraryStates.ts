@@ -105,9 +105,9 @@ export const sortedFilteredChapterListState = selector<Chapter[]>({
         (chapter: Chapter) =>
           (chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0) &&
           chapter.title !== null &&
-          chapter.title.toLowerCase().includes(chapterFilterTitle) &&
+          chapter.title.toLowerCase().includes(chapterFilterTitle.toLowerCase()) &&
           chapter.groupName !== null &&
-          chapter.groupName.toLowerCase().includes(chapterFilterGroup)
+          chapter.groupName.toLowerCase().includes(chapterFilterGroup.toLowerCase())
       )
       .sort((a, b) => {
         const volumeComp = {

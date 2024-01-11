@@ -6,7 +6,7 @@ import { Overlay, SimpleGrid, Skeleton, Title, ScrollArea } from '@mantine/core'
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ipcChannels from '../../constants/ipcChannels.json';
 import styles from './SearchGrid.css';
-import { libraryColumnsState } from '../../state/settingStates';
+import { libraryColumnsState, libraryCropCoversState } from '../../state/settingStates';
 import {
   searchResultState,
   addModalEditableState,
@@ -34,6 +34,7 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const searchResult = useRecoilValue(searchResultState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
+  const libraryCropCovers = useRecoilValue(libraryCropCoversState);
   const searchExtension = useRecoilValue(searchExtensionState);
   const setAddModalSeries = useSetRecoilState(addModalSeriesState);
   const setAddModalEditable = useSetRecoilState(addModalEditableState);
@@ -67,7 +68,7 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
             setShowingContextMenu(true);
           }}
           style={{
-            height: `calc(105vw / ${libraryColumns})`,
+            height: libraryCropCovers ? `calc(105vw / ${libraryColumns})` : '100%',
             cursor: inLibrary ? 'not-allowed' : 'pointer',
           }}
         >
@@ -79,9 +80,11 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
             url={series.remoteCoverUrl}
             series={series}
             alt={series.title}
-            width="100%"
-            height="100%"
-            style={{ objectFit: 'cover' }}
+            style={{
+              objectFit: 'cover',
+              width: '100%',
+              height: '100%',
+            }}
           />
           {inLibrary ? <Overlay opacity={0.5} color="#2B8A3E" /> : ''}
           <Title className={styles.seriesTitle} order={5} lineClamp={3} p={4}>

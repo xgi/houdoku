@@ -20,6 +20,7 @@ import {
   pageGapState,
   optimizeContrastState,
   maxPageWidthState,
+  pageWidthMetricState,
 } from '../../state/settingStates';
 import ExtensionImage from '../general/ExtensionImage';
 
@@ -45,7 +46,8 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const readingDirection = useRecoilValue(readingDirectionState);
   const hideScrollbar = useRecoilValue(hideScrollbarState);
   const pageGap = useRecoilValue(pageGapState);
-  const maxPageWidth = useRecoilValue(maxPageWidthState);
+  const [maxPageWidth, setmaxPageWidth] = useRecoilState(maxPageWidthState);
+  const pageWidthMetric = useRecoilValue(pageWidthMetricState);
   const optimizeContrast = useRecoilValue(optimizeContrastState);
 
   const viewerContainerClickHandler = (e: React.MouseEvent) => {
@@ -255,6 +257,24 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageStyle, pageNumber, lastPageNumber]);
 
+  const handleScroll = (e) => {
+    if (e.ctrlKey) {
+      setmaxPageWidth((maxPageWidth) => {
+        const newWidth = e.deltaY < 0 ? maxPageWidth + 10 : maxPageWidth - 10;
+        const clampedDown = Math.max(newWidth,10);
+        const clampedUp = pageWidthMetric == '%' ? Math.min(clampedDown,100) : clampedDown;
+        return clampedUp;
+      });
+    }
+  };
+  
+  useEffect(()=>{
+  window.addEventListener('wheel', handleScroll);
+  return () => {
+    window.removeEventListener('wheel', handleScroll);
+  };
+  }, [pageWidthMetric]);
+
   return (
     <>
       {/* {props.overlayPageNumber ? renderPageNumberOverlay() : <></>} */}
@@ -263,7 +283,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         className={`
           ${styles.container}
           ${hideScrollbar ? styles.noScrollbar : ''}`}
-        style={{ ['--USER-MAX-PAGE-WIDTH' as string]: `${maxPageWidth}%` }}
+        style={{ ['--USER-MAX-PAGE-WIDTH' as string]: `${maxPageWidth}${pageWidthMetric}` }}
         onClick={(e) => viewerContainerClickHandler(e)}
       >
         {pageStyle === PageStyle.LongStrip ? getSeparatePageContainers() : getSinglePageContainer()}
