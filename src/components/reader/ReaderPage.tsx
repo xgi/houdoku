@@ -65,6 +65,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const [relevantChapterList, setRelevantChapterList] = useRecoilState(
     readerStates.relevantChapterListState
   );
+  const [languageChapterList, setLanguageChapterList] = useRecoilState(
+    readerStates.languageChapterListState
+  );
   const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(
     readerStates.showingSettingsModalState
   );
@@ -139,6 +142,42 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setRelevantChapterList(newRelevantChapterList);
   };
 
+  const createLanguageChapterList = (series: Series, chapter: Chapter) => {
+    if (series.id === undefined) return;
+
+    const newLanguageChapterList: Chapter[] = [];
+    const chapters: Chapter[] = library.fetchChapters(series.id);
+
+    const chapterLangsSet: Set<string> = new Set();
+    chapters.forEach((c: Chapter) => {
+      if (chapter.chapterNumber === c.chapterNumber) {
+        chapterLangsSet.add(c.chapterNumber);
+      }
+    });
+
+    chapterLangsSet.forEach((chapterNumber: string) => {
+      const curChapters: Chapter[] = chapters.filter(
+        (c: Chapter) =>
+          c.chapterNumber === chapterNumber &&
+          (c.volumeNumber !== '' && chapter.volumeNumber !== ''
+            ? c.volumeNumber === chapter.volumeNumber
+            : true) &&
+          (!chapterLanguages.length || chapterLanguages.includes(c.languageKey))
+      );
+
+      curChapters.forEach((c) => newLanguageChapterList.push(c));
+    });
+
+    setLanguageChapterList(
+      newLanguageChapterList.sort((a, b) => {
+        if (a.languageKey && b.languageKey) {
+          return a.languageKey.localeCompare(b.languageKey);
+        }
+        return 0;
+      })
+    );
+  };
+
   const loadDownloadedChapterData = async (
     series: Series,
     chapter: Chapter,
@@ -182,9 +221,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     const series: Series | null = library.fetchSeries(seriesId);
     if (chapter === null || series === null) return;
 
-    if (relevantChapterList.length === 0) {
-      createRelevantChapterList(series, chapter);
-    }
+    createLanguageChapterList(series, chapter);
+    createRelevantChapterList(series, chapter);
 
     setReaderSeries(series);
     setReaderChapter(chapter);
@@ -333,6 +371,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     setPageUrls([]);
     setLastPageNumber(0);
     setRelevantChapterList([]);
+    setLanguageChapterList([]);
     setShowingNoNextChapter(false);
     removeRootStyles();
     removeKeybindings();
