@@ -159,9 +159,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       const curChapters: Chapter[] = chapters.filter(
         (c: Chapter) =>
           c.chapterNumber === chapterNumber &&
-          (c.volumeNumber !== '' && chapter.volumeNumber !== ''
-            ? c.volumeNumber === chapter.volumeNumber
-            : true) &&
           (!chapterLanguages.length || chapterLanguages.includes(c.languageKey))
       );
 
