@@ -22,13 +22,21 @@ import { createTrackerIpcHandlers } from './services/tracker';
 import { createDiscordIpcHandlers } from './services/discord';
 import { createUpdaterIpcHandlers } from './services/updater';
 
-log.info(`Starting Houdoku main process (client version ${packageJson.version})`);
+if (process.platform === 'win32') {
+  app.setPath('userData', path.join(path.dirname(app.getPath('exe')), 'data'));
+}
 
 const thumbnailsDir = path.join(app.getPath('userData'), 'thumbnails');
 const pluginsDir = path.join(app.getPath('userData'), 'plugins');
 const downloadsDir = path.join(app.getPath('userData'), 'downloads');
 const logsDir = path.join(app.getPath('userData'), 'logs');
 const extractDir = path.join(app.getPath('userData'), 'extracted');
+
+log.transports.file.resolvePath = () => path.join(logsDir, 'main.log');
+
+log.info(
+  `Starting Houdoku main process (client version ${packageJson.version})`
+);
 
 let mainWindow: BrowserWindow | null = null;
 let spoofWindow: BrowserWindow | null = null;
