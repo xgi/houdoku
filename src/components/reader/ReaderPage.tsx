@@ -533,14 +533,15 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     if (
       readerSeries !== undefined &&
       readerChapter !== undefined &&
+      languageChapterList.every(chapter => readerChapter.chapterNumber === chapter.chapterNumber) &&
       !readerChapter.read &&
       lastPageNumber > 0
     ) {
       if (pageNumber >= Math.floor(0.8 * lastPageNumber)) {
         markChapters(
-          [readerChapter],
+          [readerChapter, ...languageChapterList],
           readerSeries,
-          !readerChapter.read,
+          true,
           setChapterList,
           setLibrarySeries,
           chapterLanguages
