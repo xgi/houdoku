@@ -179,7 +179,7 @@
     "eslint-plugin-react-hooks": "^4.3.0",
     "file-loader": "^6.0.0",
     "formdata-node": "^4.3.1",
-    "houdoku-extension-lib": "^2.0.0",
+    "@tiyo/common": "1.0.0",
     "identity-obj-proxy": "^3.0.0",
     "mini-css-extract-plugin": "^2.4.5",
     "opencollective-postinstall": "^2.0.3",

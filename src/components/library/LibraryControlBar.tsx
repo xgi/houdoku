@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 import React from 'react';
-import { SeriesStatus } from 'houdoku-extension-lib';
+import { SeriesStatus } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button, Group, Input, Menu, ScrollArea } from '@mantine/core';
 import {

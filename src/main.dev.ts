@@ -14,10 +14,8 @@ import fs from 'fs';
 import path from 'path';
 import { app, BrowserWindow, shell, ipcMain, dialog, OpenDialogReturnValue } from 'electron';
 import log from 'electron-log';
-import { WebviewFunc } from 'houdoku-extension-lib';
 import { walk } from './util/filesystem';
-import { createExtensionIpcHandlers, loadExtensions } from './services/extension';
-import { loadInWebView } from './util/webview';
+import { createExtensionIpcHandlers, loadPlugins } from './services/extension';
 import ipcChannels from './constants/ipcChannels.json';
 import packageJson from '../package.json';
 import { createTrackerIpcHandlers } from './services/tracker';
@@ -130,7 +128,16 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(createWindows).catch(log.error);
+app
+  .whenReady()
+  .then(async () => {
+    await createWindows();
+
+    // create ipc handlers for specific extension functionality
+    createExtensionIpcHandlers(ipcMain, pluginsDir, extractDir, spoofWindow!);
+    loadPlugins(pluginsDir, extractDir, spoofWindow!);
+  })
+  .catch(log.error);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
@@ -221,11 +228,6 @@ if (process.platform === 'win32') {
   app.commandLine.appendSwitch('high-dpi-support', '1');
   app.commandLine.appendSwitch('force-device-scale-factor', '1');
 }
-
-// create ipc handlers for specific extension functionality
-const webviewFn: WebviewFunc = (url, options) => loadInWebView(spoofWindow, url, options);
-createExtensionIpcHandlers(ipcMain, pluginsDir, extractDir, webviewFn);
-loadExtensions(pluginsDir, extractDir, webviewFn);
 
 createTrackerIpcHandlers(ipcMain);
 createDiscordIpcHandlers(ipcMain);

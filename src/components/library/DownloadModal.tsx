@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { useRecoilValue } from 'recoil';
 import { ipcRenderer } from 'electron';
 import { ActionIcon, Button, Group, Modal, NumberInput, Text } from '@mantine/core';

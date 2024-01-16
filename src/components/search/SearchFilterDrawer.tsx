@@ -26,7 +26,7 @@ import {
   FilterTriStateCheckbox,
   MultiToggleValues,
   TriState,
-} from 'houdoku-extension-lib';
+} from '@tiyo/common';
 import {
   filterValuesMapState,
   searchExtensionState,

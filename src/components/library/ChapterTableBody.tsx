@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React from 'react';
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from '@tiyo/common';
 import { useRecoilValue } from 'recoil';
 import { sortedFilteredChapterListState } from '../../state/libraryStates';
 import { chapterListPageSizeState } from '../../state/settingStates';

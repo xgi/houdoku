@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button, Center, Group, Loader, Modal, Stack, Text } from '@mantine/core';
 import { v4 as uuidv4 } from 'uuid';

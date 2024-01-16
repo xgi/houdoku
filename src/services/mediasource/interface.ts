@@ -1,4 +1,4 @@
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 
 /**
  * Request a banner image URL from the media source.

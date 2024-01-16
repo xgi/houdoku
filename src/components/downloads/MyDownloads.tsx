@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import log from 'electron-log';
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from '@tiyo/common';
 import { ipcRenderer } from 'electron';
 import { useRecoilValue } from 'recoil';
 import { Accordion, Badge, Button, Checkbox, Group, Stack, Text, Title } from '@mantine/core';

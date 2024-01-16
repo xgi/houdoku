@@ -1,8 +1,19 @@
 import React from 'react';
-import { Language, LanguageKey, Languages } from 'houdoku-extension-lib';
+import { Language, LanguageKey, Languages } from '@tiyo/common';
 import { ipcRenderer } from 'electron';
 import { useRecoilState } from 'recoil';
-import { Button, Checkbox, Flex, Group, Input, MultiSelect, NumberInput, Stack, Text, Tooltip } from '@mantine/core';
+import {
+  Button,
+  Checkbox,
+  Flex,
+  Group,
+  Input,
+  MultiSelect,
+  NumberInput,
+  Stack,
+  Text,
+  Tooltip,
+} from '@mantine/core';
 import { IconArrowBack } from '@tabler/icons';
 import { GeneralSetting } from '../../models/types';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -32,7 +43,9 @@ const GeneralSettings: React.FC<Props> = () => {
   const [chapterLanguages, setChapterLanguages] = useRecoilState(chapterLanguagesState);
   const [refreshOnStart, setRefreshOnStart] = useRecoilState(refreshOnStartState);
   const [autoCheckForUpdates, setAutoCheckForUpdates] = useRecoilState(autoCheckForUpdatesState);
-  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(autoCheckForExtensionUpdatesState);
+  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(
+    autoCheckForExtensionUpdatesState
+  );
   const [autoBackup, setAutoBackup] = useRecoilState(autoBackupState);
   const [autoBackupCount, setAutoBackupCount] = useRecoilState(autoBackupCountState);
   const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
@@ -193,17 +206,20 @@ const GeneralSettings: React.FC<Props> = () => {
             >
               Restore Backup
             </Button>
-            <Tooltip label={`Makes backup every day (stores ${autoBackupCount} backups)`}>            
+            <Tooltip label={`Makes backup every day (stores ${autoBackupCount} backups)`}>
               <Checkbox
                 label="Auto backup"
                 size="md"
                 checked={autoBackup}
                 onChange={(e) => updateGeneralSetting(GeneralSetting.autoBackup, e.target.checked)}
-              ></Checkbox>
+              />
             </Tooltip>
-            <NumberInput disabled={!autoBackup} min={1} value={autoBackupCount} onChange={(value) =>
-              updateGeneralSetting(GeneralSetting.autoBackupCount, value)
-            }></NumberInput>
+            <NumberInput
+              disabled={!autoBackup}
+              min={1}
+              value={autoBackupCount}
+              onChange={(value) => updateGeneralSetting(GeneralSetting.autoBackupCount, value)}
+            />
           </Group>
         </Flex>
       </Stack>

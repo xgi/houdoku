@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ipcRenderer, shell } from 'electron';
 import log from 'electron-log';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import {
   Button,
   Group,

@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { ActionIcon, Button, CloseButton, Group, Input, Text } from '@mantine/core';
 import { IconArrowsSort, IconSearch, IconSortAscending, IconSortDescending } from '@tabler/icons';

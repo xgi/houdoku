@@ -1,4 +1,4 @@
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from '@tiyo/common';
 import { downloaderClient, DownloadTask } from '../../services/downloader';
 import { getChapterDownloaded } from '../../util/filesystem';
 

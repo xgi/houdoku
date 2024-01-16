@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { Affix, Button } from '@mantine/core';
 import { IconArrowLeft, IconHeart } from '@tabler/icons';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { downloadCover } from '../../../util/download';
 import library from '../../../services/library';
 import { seriesListState } from '../../../state/libraryStates';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ScrollArea, Text } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
@@ -128,7 +128,7 @@ const Library: React.FC<Props> = () => {
       <Text align="center" style={{ paddingTop: '30vh' }}>
         Your library is empty. Install{' '}
         <Text component="span" color="violet" weight={700}>
-          Extensions
+          Plugins
         </Text>{' '}
         from the tab on the left,
         <br />

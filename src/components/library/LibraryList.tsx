@@ -1,5 +1,5 @@
 import React from 'react';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { ActionIcon, Badge, Button, Group, Table, Text } from '@mantine/core';

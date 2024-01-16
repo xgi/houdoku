@@ -1,4 +1,4 @@
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from '@tiyo/common';
 import { atom } from 'recoil';
 
 export const pageNumberState = atom({

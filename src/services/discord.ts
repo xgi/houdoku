@@ -1,7 +1,7 @@
 import { IpcMain } from 'electron';
 import log from 'electron-log';
 import DiscordRPC from 'discord-rpc';
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from '@tiyo/common';
 import ipcChannels from '../constants/ipcChannels.json';
 import packageJson from '../../package.json';
 

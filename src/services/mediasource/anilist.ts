@@ -1,4 +1,4 @@
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { FetchBannerImageUrlFunc, ParseBannerImageUrlFunc } from './interface';
 
 const fetchBannerImageUrl: FetchBannerImageUrlFunc = (series: Series) => {

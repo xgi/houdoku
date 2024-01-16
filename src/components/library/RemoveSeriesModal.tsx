@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { Button, Checkbox, Group, Modal, Text } from '@mantine/core';

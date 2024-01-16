@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, ActionIcon, Group } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
-import { TriState } from 'houdoku-extension-lib';
+import { TriState } from '@tiyo/common';
 
 type Props = {
   label: string;

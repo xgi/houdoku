@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, ScrollArea, Button } from '@mantine/core';
 import { IconArrowDown, IconArrowUp } from '@tabler/icons';
-import { FilterSortValue, SortDirection } from 'houdoku-extension-lib';
+import { FilterSortValue, SortDirection } from '@tiyo/common';
 
 const ICON_MAP = {
   [SortDirection.ASCENDING]: <IconArrowUp size={13} />,

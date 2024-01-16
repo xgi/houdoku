@@ -1,4 +1,4 @@
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import anilist from './mediasource/anilist';
 
 /**

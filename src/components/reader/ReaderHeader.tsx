@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 import React from 'react';
-import { Chapter } from 'houdoku-extension-lib';
+import { Chapter } from '@tiyo/common';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   IconArrowAutofitHeight,
@@ -22,7 +22,16 @@ import {
   IconSpacingVertical,
   IconX,
 } from '@tabler/icons';
-import { Box, Button, Center, ColorScheme, Group, MantineTheme, Menu, ScrollArea } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Center,
+  ColorScheme,
+  Group,
+  MantineTheme,
+  Menu,
+  ScrollArea,
+} from '@mantine/core';
 import styles from './ReaderHeader.css';
 import { ReadingDirection, PageStyle, OffsetPages } from '../../models/types';
 import {
@@ -116,7 +125,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       '&:disabled': {
         color: props.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[6],
         backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[5],
-      }
+      },
     },
     leftIcon: {
       marginRight: 4,

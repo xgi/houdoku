@@ -23,16 +23,12 @@ const About: React.FC<Props> = () => {
         <Text component="span" color="teal" weight={700}>
           Add Series
         </Text>{' '}
-        tab on the left panel and search for the series from a supported content source.
-      </Text>
-      <Text pb="xs">
-        This app does not host manga, it retrieves them from public websites (&quot;content
-        sources&quot;). Support for content sources is provided through various extensions, which
-        can be installed/updated from the{' '}
+        tab on the left panel and search for the series from a supported content source. To add more
+        content sources, install a{' '}
         <Text component="span" color="violet" weight={700}>
-          Extensions
-        </Text>{' '}
-        tab.
+          Plugin
+        </Text>
+        .
       </Text>
       <Text pb="xs">
         Houdoku is open source. Please report issues or request features on GitHub.

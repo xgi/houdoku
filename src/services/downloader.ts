@@ -3,7 +3,7 @@
 import React from 'react';
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
-import { Chapter, PageRequesterData, Series } from 'houdoku-extension-lib';
+import { Chapter, PageRequesterData, Series } from '@tiyo/common';
 import log from 'electron-log';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';

@@ -1,4 +1,4 @@
-import { LanguageKey, Series, SettingType } from 'houdoku-extension-lib';
+import { LanguageKey, Series, SettingType } from '@tiyo/common';
 
 export type ExtensionTableRow = {
   pkgName: string;
@@ -85,8 +85,8 @@ export enum GeneralSetting {
   RefreshOnStart = 'RefreshOnStart',
   AutoCheckForUpdates = 'AutoCheckForUpdates',
   AutoCheckForExtensionUpdates = 'AutoCheckForExtensionUpdates',
-  autoBackup = "autoBackup",
-  autoBackupCount = "autoBackupCount",
+  autoBackup = 'autoBackup',
+  autoBackupCount = 'autoBackupCount',
   ConfirmRemoveSeries = 'ConfirmRemoveSeries',
   CustomDownloadsDir = 'CustomDownloadsDir',
   LibraryColumns = 'LibraryColumns',

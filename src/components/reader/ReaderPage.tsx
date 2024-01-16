@@ -4,7 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import Mousetrap from 'mousetrap';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { PageRequesterData, Chapter, Series } from 'houdoku-extension-lib';
+import { PageRequesterData, Chapter, Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Text, Button, ColorScheme } from '@mantine/core';
 import styles from './ReaderPage.css';
@@ -581,7 +581,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           )}
         </>
       )}
-      <ToggleThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}/>
+      <ToggleThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme} />
     </div>
   );
 };
