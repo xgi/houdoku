@@ -259,10 +259,16 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
 
   const handleScroll = (e: WheelEvent) => {
     if (e.ctrlKey) {
-      const newWidth = e.deltaY < 0 ? maxPageWidth + 10 : maxPageWidth - 10;
-      const clampedDown = Math.max(newWidth, 10);
-      const clampedUp = pageWidthMetric === '%' ? Math.min(clampedDown, 100) : clampedDown;
-      setMaxPageWidth(clampedUp);
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      setMaxPageWidth((maxPageWidth) => {
+        const newWidth = e.deltaY < 0 ? maxPageWidth + 10 : maxPageWidth - 10;
+        const clampedDown = Math.max(newWidth, 10);
+        const clampedUp =
+          pageWidthMetric === '%'
+            ? Math.min(clampedDown, 100)
+            : Math.min(clampedDown, window.innerWidth);
+        return clampedUp;
+      });
     }
   };
 

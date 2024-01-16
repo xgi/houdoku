@@ -31,8 +31,6 @@ import {
   nextReadingDirection,
 } from '../../features/settings/utils';
 
-import ToggleThemeSwitch from '../general/ToggleThemeSwitch';
-
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -581,7 +579,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           )}
         </>
       )}
-      <ToggleThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme} />
     </div>
   );
 };
