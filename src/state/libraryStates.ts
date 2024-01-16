@@ -100,6 +100,17 @@ export const sortedFilteredChapterListState = selector<Chapter[]>({
     const chapterListVolOrder = get(chapterListVolOrderState);
     const chapterListChOrder = get(chapterListChOrderState);
 
+    const uniqueChapters = new Map();
+
+    if (chapterLanguages.length > 0) {
+      chapterLanguages.forEach((lang) => {
+        chapterList.filter((chapter: Chapter) =>
+          chapter.languageKey === lang &&
+          !uniqueChapters.has(chapter.chapterNumber) &&
+          uniqueChapters.set(chapter.chapterNumber, chapter))
+      })
+    }
+
     return chapterList
       .filter(
         (chapter: Chapter) =>
@@ -107,7 +118,10 @@ export const sortedFilteredChapterListState = selector<Chapter[]>({
           chapter.title !== null &&
           chapter.title.toLowerCase().includes(chapterFilterTitle.toLowerCase()) &&
           chapter.groupName !== null &&
-          chapter.groupName.toLowerCase().includes(chapterFilterGroup.toLowerCase())
+          chapter.groupName.toLowerCase().includes(chapterFilterGroup.toLowerCase()) &&
+          ((uniqueChapters.has(chapter.chapterNumber) &&
+            uniqueChapters.get(chapter.chapterNumber) === chapter) ||
+            chapterLanguages.length === 0)
       )
       .sort((a, b) => {
         const volumeComp = {
