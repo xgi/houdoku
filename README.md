@@ -62,21 +62,15 @@ non-shared behavior.
 **Storage**: Library data and settings are saved with `localStorage`. Thumbnails are stored in
 the user-data path.
 
-**Plugins/Extensions**: See the [houdoku-extensions](https://github.com/xgi/houdoku-extensions) repo. Dynamic loading is handled by [aki-plugin-manager](https://github.com/xgi/aki-plugin-manager).
+**Plugins/Extensions**: See the [Tiyo](https://github.com/xgi/tiyo) repo. Dynamic loading is handled by [aki-plugin-manager](https://github.com/xgi/aki-plugin-manager).
 
-## Extensions
+## Content Sources
 
-Houdoku does not host any material; it retrieves media from public websites
-("content sources"). Support for content sources is provided through
-various extensions which can be installed/updated from the Extensions tab
-within the client. Houdoku is not affiliated with any content source.
+Houdoku allows users to import manga from their filesystem (e.g. as zip files
+or folders of images). To read manga from 3rd-party "content sources", the
+Tiyo plugin can be installed from the Plugins tab in the client.
 
-There are no "recommended extensions", but you should feel free to
-try several and mix-and-match according to which ones work well for you.
-
-If you would like to request support for a website or report an issue with
-an existing extension, please go to the
-[houdoku-extensions](https://github.com/xgi/houdoku-extensions) repo.
+To learn about Tiyo or request a new content source, please go to https://github.com/xgi/tiyo
 
 ## License
 

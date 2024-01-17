@@ -57,7 +57,6 @@ function atomFromSetting<T>(
 export const chapterLanguagesState = atomFromSetting<LanguageKey[]>(GeneralSetting.ChapterLanguages);
 export const autoCheckForUpdatesState = atomFromSetting<boolean>(GeneralSetting.AutoCheckForUpdates);
 export const refreshOnStartState = atomFromSetting<boolean>(GeneralSetting.RefreshOnStart);
-export const autoCheckForExtensionUpdatesState = atomFromSetting<boolean>(GeneralSetting.AutoCheckForExtensionUpdates);
 export const autoBackupState = atomFromSetting<boolean>(GeneralSetting.autoBackup);
 export const autoBackupCountState = atomFromSetting<number>(GeneralSetting.autoBackupCount);
 export const confirmRemoveSeriesState = atomFromSetting<boolean>(GeneralSetting.ConfirmRemoveSeries);

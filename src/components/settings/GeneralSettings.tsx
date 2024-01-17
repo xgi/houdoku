@@ -19,7 +19,6 @@ import { GeneralSetting } from '../../models/types';
 import ipcChannels from '../../constants/ipcChannels.json';
 import { createBackup, restoreBackup } from '../../util/backup';
 import {
-  autoCheckForExtensionUpdatesState,
   autoBackupState,
   autoBackupCountState,
   autoCheckForUpdatesState,
@@ -43,9 +42,6 @@ const GeneralSettings: React.FC<Props> = () => {
   const [chapterLanguages, setChapterLanguages] = useRecoilState(chapterLanguagesState);
   const [refreshOnStart, setRefreshOnStart] = useRecoilState(refreshOnStartState);
   const [autoCheckForUpdates, setAutoCheckForUpdates] = useRecoilState(autoCheckForUpdatesState);
-  const [autoCheckForExtensionUpdates, setAutoCheckForExtensionUpdates] = useRecoilState(
-    autoCheckForExtensionUpdatesState
-  );
   const [autoBackup, setAutoBackup] = useRecoilState(autoBackupState);
   const [autoBackupCount, setAutoBackupCount] = useRecoilState(autoBackupCountState);
   const [confirmRemoveSeries, setConfirmRemoveSeries] = useRecoilState(confirmRemoveSeriesState);
@@ -63,9 +59,6 @@ const GeneralSettings: React.FC<Props> = () => {
         break;
       case GeneralSetting.AutoCheckForUpdates:
         setAutoCheckForUpdates(value);
-        break;
-      case GeneralSetting.AutoCheckForExtensionUpdates:
-        setAutoCheckForExtensionUpdates(value);
         break;
       case GeneralSetting.ConfirmRemoveSeries:
         setConfirmRemoveSeries(value);
@@ -97,14 +90,6 @@ const GeneralSettings: React.FC<Props> = () => {
           checked={autoCheckForUpdates}
           onChange={(e) =>
             updateGeneralSetting(GeneralSetting.AutoCheckForUpdates, e.target.checked)
-          }
-        />
-        <Checkbox
-          label="Check for extension updates automatically"
-          size="md"
-          checked={autoCheckForExtensionUpdates}
-          onChange={(e) =>
-            updateGeneralSetting(GeneralSetting.AutoCheckForExtensionUpdates, e.target.checked)
           }
         />
       </Stack>

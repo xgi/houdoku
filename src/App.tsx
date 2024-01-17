@@ -41,7 +41,7 @@ import {
   queueState,
   runningState,
 } from './state/downloaderStates';
-import { autoCheckForExtensionUpdatesState, autoCheckForUpdatesState } from './state/settingStates';
+import { autoCheckForUpdatesState } from './state/settingStates';
 import { ErrorBoundary } from './components/general/ErrorBoundary';
 import library from './services/library';
 

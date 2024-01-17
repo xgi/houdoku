@@ -407,16 +407,16 @@ export async function goToSeries(
       undefined
     ) {
       openConfirmModal({
-        title: 'Extension not found',
+        title: 'Content source not found',
         centered: true,
         children: (
           <>
             <Text>
-              The extension for this series is not loaded. To view the series, please reinstall the
-              extension. Or, you may remove the series from your library.
+              The content source for this series was not found. To view the series, please install
+              or update the Tiyo plugin. Or, you may remove the series from your library.
             </Text>
             <Text color="dimmed" mt="xs">
-              (extension: {series.extensionId})
+              (id: {series.extensionId})
             </Text>
           </>
         ),
