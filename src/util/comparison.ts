@@ -1,5 +1,5 @@
 /* eslint-disable no-lonely-if */
-import { Chapter } from 'houdoku-extension-lib';
+import { Chapter } from '@tiyo/common';
 
 /**
  * Find a similar chapter from a list.

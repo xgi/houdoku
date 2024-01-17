@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal, ScrollArea } from '@mantine/core';

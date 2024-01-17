@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from '@tiyo/common';
 import { ipcRenderer } from 'electron';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';

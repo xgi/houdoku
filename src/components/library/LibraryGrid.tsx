@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import React, { useState } from 'react';
 import { ipcRenderer } from 'electron';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { Overlay, SimpleGrid, Title, createStyles } from '@mantine/core';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { useRecoilValue, useSetRecoilState } from 'recoil';

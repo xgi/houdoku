@@ -2,22 +2,19 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import log from 'electron-log';
 import { ipcRenderer } from 'electron';
-import { ExtensionMetadata } from 'houdoku-extension-lib';
+import { ExtensionMetadata } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   Box,
-  Button,
   ColorScheme,
   ColorSchemeProvider,
-  Group,
-  List,
   MantineProvider,
   Text,
   Switch,
-  useMantineTheme
+  useMantineTheme,
 } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
-import { closeAllModals, ModalsProvider, openConfirmModal, openModal } from '@mantine/modals';
+import { ModalsProvider, openConfirmModal } from '@mantine/modals';
 import {
   NotificationProps,
   NotificationsProvider,
@@ -186,25 +183,28 @@ export default function App() {
   const setCurrentTask = useSetRecoilState(currentTaskState);
   const setDownloadErrors = useSetRecoilState(downloadErrorsState);
   const autoCheckForUpdates = useRecoilValue(autoCheckForUpdatesState);
-  const autoCheckForExtensionUpdates = useRecoilValue(autoCheckForExtensionUpdatesState);
 
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({ key: 'color-scheme', defaultValue: 'dark' });
+  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
+    key: 'color-scheme',
+    defaultValue: 'dark',
+  });
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-  
-  const theme = useMantineTheme()
+
+  const theme = useMantineTheme();
   const toggleThemeSwitch = () => (
-    <Switch size="sm"
+    <Switch
+      size="sm"
       color={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}
-      onLabel={<IconSun size="0.7rem" stroke={2.5} color={theme.colors.yellow[4]}/>}
-      offLabel={<IconMoonStars size="0.7rem" stroke={2.5} color={theme.colors.blue[6]}/>}
-      checked={colorScheme === 'dark' ? false : true}
+      onLabel={<IconSun size="0.7rem" stroke={2.5} color={theme.colors.yellow[4]} />}
+      offLabel={<IconMoonStars size="0.7rem" stroke={2.5} color={theme.colors.blue[6]} />}
+      checked={colorScheme !== 'dark'}
       onChange={() => toggleColorScheme()}
       styles={{
-        root: { position: 'fixed', left: '0.5rem', bottom: '0.5rem', zIndex: 1000 }
+        root: { position: 'fixed', left: '0.5rem', bottom: '0.5rem', zIndex: 1000 },
       }}
     />
-  )
+  );
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -236,50 +236,6 @@ export default function App() {
         log.debug('Skipping update check, autoCheckForUpdates is disabled');
       }
 
-      // If AutoCheckForExtensionUpdates setting is enabled, check for extension updates now
-      if (autoCheckForExtensionUpdates) {
-        ipcRenderer
-          .invoke(ipcChannels.EXTENSION_MANAGER.CHECK_FOR_UPDATESS)
-          .then(
-            (updates: {
-              [key: string]: {
-                metadata: ExtensionMetadata;
-                newVersion: string;
-              };
-            }) => {
-              // eslint-disable-next-line promise/always-return
-              if (Object.values(updates).length > 0) {
-                openModal({
-                  title: 'Extension Updates Available',
-                  children: (
-                    <>
-                      <List pb="sm">
-                        {Object.values(updates).map((update) => (
-                          <List.Item key={update.metadata.id}>
-                            {update.metadata.name} ({update.metadata.version}→{update.newVersion})
-                          </List.Item>
-                        ))}
-                      </List>
-                      <Text>
-                        Please go to the Extensions tab to update. You can disable this message in
-                        the settings.
-                      </Text>
-                      <Group position="right">
-                        <Button variant="default" onClick={() => closeAllModals()} mt="md">
-                          Okay
-                        </Button>
-                      </Group>
-                    </>
-                  ),
-                });
-              }
-            }
-          )
-          .catch((err: Error) => log.error(err));
-      } else {
-        log.debug('Skipping extension update check, autoCheckForExtensionUpdates is disabled');
-      }
-
       setSeriesList(library.fetchSeriesList());
       setCategoryList(library.fetchCategoryList());
       setLoading(false);
@@ -300,9 +256,14 @@ export default function App() {
                   <Routes>
                     <Route
                       path={`${routes.READER}/:series_id/:chapter_id`}
-                      element={<ReaderPage colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}/>}
+                      element={
+                        <ReaderPage
+                          colorScheme={colorScheme}
+                          toggleColorScheme={toggleColorScheme}
+                        />
+                      }
                     />
-                    <Route path="*" element={<DashboardPage colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}/>} />
+                    <Route path="*" element={<DashboardPage />} />
                   </Routes>
                 </Router>
               )}

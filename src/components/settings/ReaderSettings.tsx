@@ -13,6 +13,7 @@ import {
   Radio,
   Slider,
   Menu,
+  MantineTheme,
 } from '@mantine/core';
 import {
   IconArrowBigLeft,
@@ -330,44 +331,55 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         checked={fitStretch}
         onChange={(e) => updateReaderSetting(ReaderSetting.FitStretch, e.target.checked)}
       />
- 
+
       <Group position="left" align="left" spacing="xs" noWrap>
         <Text size="sm" ml="sm">
-                Max page width
+          Max page width
         </Text>
         <Menu shadow="md" width={50} trigger="hover">
-              <Menu.Target>
-                <Button compact styles={buttonStyles} radius={0} px={4} pb={2}>
-                  {pageWidthMetric}
-                </Button>
-              </Menu.Target>
-              <Menu.Dropdown>
-                <Menu.Item  onClick={() => {updateReaderSetting(ReaderSetting.PageWidthMetric, '%')}}>
-                  %
-                </Menu.Item>
-                <Menu.Item  onClick={() => {updateReaderSetting(ReaderSetting.PageWidthMetric, 'px')}}>
-                  px
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
+          <Menu.Target>
+            <Button compact styles={buttonStyles} radius={0} px={4} pb={2}>
+              {pageWidthMetric}
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Item
+              onClick={() => {
+                updateReaderSetting(ReaderSetting.PageWidthMetric, '%');
+              }}
+            >
+              %
+            </Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                updateReaderSetting(ReaderSetting.PageWidthMetric, 'px');
+              }}
+            >
+              px
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
       </Group>
 
       <Slider
-              label={`${maxPageWidth}${pageWidthMetric}`}
-              mx="sm"
-              min={10}
-              max={pageWidthMetric === '%' ? 100 : window.innerWidth}
-              step={10}
-              styles={{ markLabel: { display: 'none' } }}
-              maw={400}
-              marks={pageWidthMetric === '%' ? Array.from({ length: 10 }, (_v, k) => (k + 1) * 10).map((i: number) => ({
+        label={`${maxPageWidth}${pageWidthMetric}`}
+        mx="sm"
+        min={10}
+        max={pageWidthMetric === '%' ? 100 : window.innerWidth}
+        step={10}
+        styles={{ markLabel: { display: 'none' } }}
+        maw={400}
+        marks={
+          pageWidthMetric === '%'
+            ? Array.from({ length: 10 }, (_v, k) => (k + 1) * 10).map((i: number) => ({
                 value: i,
-              })) : []}
-              disabled={!fitContainToWidth}
-              defaultValue={maxPageWidth}
-              onChange={(value) => updateReaderSetting(ReaderSetting.MaxPageWidth, value)}
-            />
-
+              }))
+            : []
+        }
+        disabled={!fitContainToWidth}
+        defaultValue={maxPageWidth}
+        onChange={(value) => updateReaderSetting(ReaderSetting.MaxPageWidth, value)}
+      />
 
       <Text py="xs">Rendering</Text>
       <Checkbox

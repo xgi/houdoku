@@ -46,7 +46,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
   const readingDirection = useRecoilValue(readingDirectionState);
   const hideScrollbar = useRecoilValue(hideScrollbarState);
   const pageGap = useRecoilValue(pageGapState);
-  const [maxPageWidth, setmaxPageWidth] = useRecoilState(maxPageWidthState);
+  const [maxPageWidth, setMaxPageWidth] = useRecoilState(maxPageWidthState);
   const pageWidthMetric = useRecoilValue(pageWidthMetricState);
   const optimizeContrast = useRecoilValue(optimizeContrastState);
 
@@ -257,22 +257,27 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageStyle, pageNumber, lastPageNumber]);
 
-  const handleScroll = (e) => {
+  const handleScroll = (e: WheelEvent) => {
     if (e.ctrlKey) {
-      setmaxPageWidth((maxPageWidth) => {
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      setMaxPageWidth((maxPageWidth) => {
         const newWidth = e.deltaY < 0 ? maxPageWidth + 10 : maxPageWidth - 10;
-        const clampedDown = Math.max(newWidth,10);
-        const clampedUp = pageWidthMetric == '%' ? Math.min(clampedDown,100) : clampedDown;
+        const clampedDown = Math.max(newWidth, 10);
+        const clampedUp =
+          pageWidthMetric === '%'
+            ? Math.min(clampedDown, 100)
+            : Math.min(clampedDown, window.innerWidth);
         return clampedUp;
       });
     }
   };
-  
-  useEffect(()=>{
-  window.addEventListener('wheel', handleScroll);
-  return () => {
-    window.removeEventListener('wheel', handleScroll);
-  };
+
+  useEffect(() => {
+    window.addEventListener('wheel', handleScroll);
+    return () => {
+      window.removeEventListener('wheel', handleScroll);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageWidthMetric]);
 
   return (

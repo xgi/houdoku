@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { ExtensionMetadata, FilterOption, Series, SeriesListResponse } from 'houdoku-extension-lib';
+import { ExtensionMetadata, FilterOption, Series, SeriesListResponse } from '@tiyo/common';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Alert, Text } from '@mantine/core';
-import { IconInfoCircle } from '@tabler/icons';
+import { Text } from '@mantine/core';
 import { openModal } from '@mantine/modals';
 import AddSeriesModal from './AddSeriesModal';
 import { FS_METADATA } from '../../services/extensions/filesystem';
 import ipcChannels from '../../constants/ipcChannels.json';
-import { activeSeriesListState, seriesListState } from '../../state/libraryStates';
+import { activeSeriesListState } from '../../state/libraryStates';
 import {
   addModalEditableState,
   addModalSeriesState,
@@ -116,33 +115,33 @@ const Search: React.FC<Props> = (_props: Props) => {
       .catch((e) => log.error(e));
   };
 
-  const renderAlert = () => {
-    const metadata = extensionList.find((item: ExtensionMetadata) => item.id === searchExtension);
-    if (metadata && metadata.notice.length > 0) {
-      return (
-        <Alert icon={<IconInfoCircle size={16} />} title="Extension information" color="indigo">
-          <Text>{metadata.notice}</Text>
-          {metadata.noticeUrl ? (
-            <Text>
-              For more information, see here:{' '}
-              <Text
-                variant="link"
-                component="a"
-                href={metadata.noticeUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {metadata.noticeUrl}
-              </Text>
-            </Text>
-          ) : (
-            ''
-          )}
-        </Alert>
-      );
-    }
-    return <></>;
-  };
+  // const renderAlert = () => {
+  //   const metadata = extensionList.find((item: ExtensionMetadata) => item.id === searchExtension);
+  //   if (metadata && metadata.notice.length > 0) {
+  //     return (
+  //       <Alert icon={<IconInfoCircle size={16} />} title="Extension information" color="indigo">
+  //         <Text>{metadata.notice}</Text>
+  //         {metadata.noticeUrl ? (
+  //           <Text>
+  //             For more information, see here:{' '}
+  //             <Text
+  //               variant="link"
+  //               component="a"
+  //               href={metadata.noticeUrl}
+  //               target="_blank"
+  //               rel="noreferrer"
+  //             >
+  //               {metadata.noticeUrl}
+  //             </Text>
+  //           </Text>
+  //         ) : (
+  //           ''
+  //         )}
+  //       </Alert>
+  //     );
+  //   }
+  //   return <></>;
+  // };
 
   useEffect(() => {
     ipcRenderer
@@ -190,7 +189,7 @@ const Search: React.FC<Props> = (_props: Props) => {
         handleSearchFilesystem={handleSearchFilesystem}
       />
 
-      {!loading && searchResult.seriesList.length === 0 ? renderAlert() : ''}
+      {/* {!loading && searchResult.seriesList.length === 0 ? renderAlert() : ''} */}
       <SearchGrid loading={loading} inLibrary={inLibrary} handleSearch={handleSearch} />
     </>
   );

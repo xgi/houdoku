@@ -1,6 +1,6 @@
 import fs from 'fs';
 import log from 'electron-log';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { ipcRenderer } from 'electron';
 import { getThumbnailPath } from './filesystem';
 import ipcChannels from '../constants/ipcChannels.json';

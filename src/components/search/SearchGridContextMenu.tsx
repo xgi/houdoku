@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal } from '@mantine/core';
 import { IconEye, IconBookUpload, IconPlayerPlay } from '@tabler/icons';

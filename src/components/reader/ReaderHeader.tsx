@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 import React from 'react';
-import { Chapter, Languages } from 'houdoku-extension-lib';
+import { Chapter, Languages } from '@tiyo/common';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import flags from '../../img/flags.png';
 import {
@@ -23,7 +23,16 @@ import {
   IconSpacingVertical,
   IconX,
 } from '@tabler/icons';
-import { Box, Button, Center, ColorScheme, Group, MantineTheme, Menu, ScrollArea } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Center,
+  ColorScheme,
+  Group,
+  MantineTheme,
+  Menu,
+  ScrollArea,
+} from '@mantine/core';
 import styles from './ReaderHeader.css';
 import { ReadingDirection, PageStyle, OffsetPages } from '../../models/types';
 import {
@@ -119,7 +128,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
       '&:disabled': {
         color: props.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[6],
         backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[5],
-      }
+      },
     },
     leftIcon: {
       marginRight: 4,
@@ -394,9 +403,8 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                         src={flags}
                         title={Languages[chapter.languageKey].name}
                         alt={Languages[chapter.languageKey].name}
-                        className={`flag flag-${
-                          Languages[chapter.languageKey].flagCode
-                        }`}
+                        className={`flag flag-${Languages[chapter.languageKey].flagCode
+                          }`}
                       />
                     </div>
                   ) : (
@@ -437,16 +445,14 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                             src={flags}
                             title={Languages[languageChapter.languageKey].name}
                             alt={Languages[languageChapter.languageKey].name}
-                            className={`flag flag-${
-                              Languages[languageChapter.languageKey].flagCode
-                            }`}
+                            className={`flag flag-${Languages[languageChapter.languageKey].flagCode
+                              }`}
                           />
                         </div>
-                        {`${Languages[languageChapter.languageKey].name} ${
-                          languageChapter.volumeNumber
+                        {`${Languages[languageChapter.languageKey].name} ${languageChapter.volumeNumber
                             ? 'Vol. ' + languageChapter.volumeNumber
                             : ''
-                        } by ${languageChapter.groupName}`}
+                          } by ${languageChapter.groupName}`}
                       </div>
                     )}
                   </Menu.Item>

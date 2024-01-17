@@ -1,7 +1,7 @@
 import fs from 'fs';
 import React, { useEffect, useRef, useState } from 'react';
 import { ipcRenderer } from 'electron';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { Overlay, SimpleGrid, Skeleton, Title, ScrollArea } from '@mantine/core';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ipcChannels from '../../constants/ipcChannels.json';

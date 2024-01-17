@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-boolean-value */
 import React from 'react';
-import { ExtensionMetadata } from 'houdoku-extension-lib';
+import { ExtensionMetadata } from '@tiyo/common';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Button, Group, Input, Select } from '@mantine/core';
 import { ipcRenderer } from 'electron';

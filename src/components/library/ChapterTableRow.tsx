@@ -1,7 +1,7 @@
 /* eslint-disable react/display-name */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Chapter, Series, Languages } from 'houdoku-extension-lib';
+import { Chapter, Series, Languages } from '@tiyo/common';
 import { ipcRenderer } from 'electron';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ActionIcon, Center, Group, Text } from '@mantine/core';

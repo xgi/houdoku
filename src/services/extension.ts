@@ -2,55 +2,38 @@ import {
   PageRequesterData,
   Chapter,
   Series,
-  WebviewFunc,
   ExtensionClientInterface,
   SettingType,
-  ExtensionMetadata,
   SeriesListResponse,
   FilterValues,
   FilterOption,
-} from 'houdoku-extension-lib';
-import aki, { RegistrySearchPackage, RegistrySearchResults } from 'aki-plugin-manager';
-import { IpcMain } from 'electron';
-import fetch, { RequestInfo, RequestInit, Response } from 'node-fetch';
+  TiyoClientInterface,
+} from '@tiyo/common';
+import aki from 'aki-plugin-manager';
+import { BrowserWindow, IpcMain } from 'electron';
 import log from 'electron-log';
-import { gt } from 'semver';
-import { JSDOM } from 'jsdom';
-import { UtilFunctions } from 'houdoku-extension-lib/dist/interface';
 import { FSExtensionClient, FS_METADATA } from './extensions/filesystem';
 import ipcChannels from '../constants/ipcChannels.json';
 
-const EXTENSION_CLIENTS: { [key: string]: ExtensionClientInterface } = {};
+let TIYO_CLIENT: TiyoClientInterface | null = null;
+let FILESYSTEM_EXTENSION: FSExtensionClient | null = null;
 
-export async function loadExtensions(
+export async function loadPlugins(
   pluginsDir: string,
   extractDir: string,
-  webviewFn: WebviewFunc
+  spoofWindow: BrowserWindow
 ) {
-  log.info('Loading extensions...');
+  if (TIYO_CLIENT !== null) {
+    TIYO_CLIENT = null;
+  }
+  if (FILESYSTEM_EXTENSION !== null) {
+    FILESYSTEM_EXTENSION = null;
+  }
 
-  Object.keys(EXTENSION_CLIENTS).forEach((extensionId: string) => {
-    const extMetadata = EXTENSION_CLIENTS[extensionId].getMetadata();
-    if (extMetadata.id !== FS_METADATA.id) {
-      aki.unload(
-        pluginsDir,
-        `@houdoku/extension-${extMetadata.name.toLowerCase().replaceAll(' ', '')}`,
-        // eslint-disable-next-line no-eval
-        eval('require') as NodeRequire
-      );
-    }
-    delete EXTENSION_CLIENTS[extensionId];
-    log.info(`Unloaded extension ${extMetadata.name} (ID ${extensionId})`);
-  });
-
-  const docFn = (html?: string | Buffer) => new JSDOM(html).window.document;
-  const fsExtensionClient = new FSExtensionClient(new UtilFunctions(fetch, webviewFn, docFn));
-  fsExtensionClient.setExtractPath(extractDir);
-  EXTENSION_CLIENTS[fsExtensionClient.getMetadata().id] = fsExtensionClient;
-
+  log.info('Checking for Tiyo plugin...');
   aki.list(pluginsDir).forEach((pluginDetails: [string, string]) => {
     const pluginName = pluginDetails[0];
-    if (pluginName.startsWith('@houdoku/extension-')) {
+    if (pluginName === '@tiyo/core') {
       const mod = aki.load(
         pluginsDir,
         pluginName,
@@ -58,26 +41,26 @@ export async function loadExtensions(
         eval('require') as NodeRequire
       );
 
-      const fetchWrappedFn = (
-        url: RequestInfo,
-        init?: RequestInit | undefined
-      ): Promise<Response> => {
-        try {
-          return fetch(url, init);
-        } catch (e) {
-          log.error(`Non-promise error when calling fetch`, e, url, init);
-          return new Promise(() => {
-            throw Error('fetch threw a non-promise error');
-          });
-        }
-      };
-
-      const client = new mod.ExtensionClient(new UtilFunctions(fetchWrappedFn, webviewFn, docFn));
-
-      log.info(`Loaded extension "${pluginName}" version ${pluginDetails[1]}`);
-      EXTENSION_CLIENTS[client.getMetadata().id] = client;
+      TIYO_CLIENT = new mod.TiyoClient(spoofWindow);
+      log.info(
+        `Loaded Tiyo plugin v${TIYO_CLIENT!.getVersion()}; it has ${
+          Object.keys(TIYO_CLIENT!.getExtensions()).length
+        } extensions`
+      );
+    } else {
+      log.warn(`Ignoring unsupported plugin: ${pluginName}`);
     }
   });
+
+  log.info('Initializing filesystem extension...');
+  FILESYSTEM_EXTENSION = new FSExtensionClient(() => new Promise((_resolve, reject) => reject()));
+  FILESYSTEM_EXTENSION.extractPath = extractDir;
+}
+
+function getExtensionClient(extensionId: string) {
+  if (extensionId === FS_METADATA.id) return FILESYSTEM_EXTENSION as ExtensionClientInterface;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return TIYO_CLIENT!.getExtensions()[extensionId].client;
 }
 
 /**
@@ -92,12 +75,8 @@ export async function loadExtensions(
  * @returns promise for the matching series
  */
 function getSeries(extensionId: string, seriesId: string): Promise<Series | undefined> {
-  const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(
-    `Getting series ${seriesId} from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
-  );
+  const extension = getExtensionClient(extensionId);
+  log.info(`Getting series ${seriesId} from extension ${extensionId}`);
 
   return extension.getSeries(seriesId).catch((err: Error) => {
     log.error(err);
@@ -117,12 +96,8 @@ function getSeries(extensionId: string, seriesId: string): Promise<Series | unde
  * @returns promise for a list of chapters
  */
 function getChapters(extensionId: string, seriesId: string): Promise<Chapter[]> {
-  const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(
-    `Getting chapters for series ${seriesId} from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
-  );
+  const extension = getExtensionClient(extensionId);
+  log.info(`Getting chapters for series ${seriesId} from extension ${extensionId}`);
 
   return extension.getChapters(seriesId).catch((err: Error) => {
     log.error(err);
@@ -146,11 +121,9 @@ function getPageRequesterData(
   seriesSourceId: string,
   chapterSourceId: string
 ): Promise<PageRequesterData> {
-  const extension = EXTENSION_CLIENTS[extensionId];
+  const extension = getExtensionClient(extensionId);
   log.info(
-    `Getting page requester data for series ${seriesSourceId} chapter ${chapterSourceId} from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
+    `Getting page requester data for series ${seriesSourceId} chapter ${chapterSourceId} from extension ${extensionId}`
   );
 
   return extension.getPageRequesterData(seriesSourceId, chapterSourceId).catch((err: Error) => {
@@ -171,7 +144,8 @@ function getPageRequesterData(
  */
 function getPageUrls(extensionId: string, pageRequesterData: PageRequesterData): string[] {
   try {
-    const pageUrls = EXTENSION_CLIENTS[extensionId].getPageUrls(pageRequesterData);
+    const extension = getExtensionClient(extensionId);
+    const pageUrls = extension.getPageUrls(pageRequesterData);
     return pageUrls;
   } catch (err) {
     return [];
@@ -193,7 +167,8 @@ async function getImage(
   series: Series,
   url: string
 ): Promise<string | ArrayBuffer> {
-  return EXTENSION_CLIENTS[extensionId].getImage(series, url).catch((err: Error) => {
+  const extension = getExtensionClient(extensionId);
+  return extension.getImage(series, url).catch((err: Error) => {
     log.error(err);
     return '';
   });
@@ -213,12 +188,8 @@ function search(
   page: number,
   filterValues: FilterValues
 ): Promise<SeriesListResponse> {
-  const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(
-    `Searching for "${text}" page=${page} from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
-  );
+  const extension = getExtensionClient(extensionId);
+  log.info(`Searching for "${text}" page=${page} from extension ${extensionId}`);
 
   return extension.getSearch(text, page, filterValues).catch((err: Error) => {
     log.error(err);
@@ -237,12 +208,8 @@ function directory(
   page: number,
   filterValues: FilterValues
 ): Promise<SeriesListResponse> {
-  const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(
-    `Getting directory page=${page} from extension ${extensionId} (v=${
-      extension.getMetadata().version
-    })`
-  );
+  const extension = getExtensionClient(extensionId);
+  log.info(`Getting directory page=${page} from extension ${extensionId}`);
 
   return extension.getDirectory(page, filterValues).catch((err: Error) => {
     log.error(err);
@@ -257,10 +224,8 @@ function directory(
  * @returns map of settings from the extension to their SettingType
  */
 function getSettingTypes(extensionId: string): { [key: string]: SettingType } {
-  const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(
-    `Getting setting types from extension ${extensionId} (v=${extension.getMetadata().version})`
-  );
+  const extension = getExtensionClient(extensionId);
+  log.info(`Getting setting types from extension ${extensionId}`);
 
   try {
     return extension.getSettingTypes();
@@ -277,8 +242,8 @@ function getSettingTypes(extensionId: string): { [key: string]: SettingType } {
  * @returns map of settings from the extension, with default/initial values set
  */
 function getSettings(extensionId: string): { [key: string]: unknown } {
-  const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(`Getting settings from extension ${extensionId} (v=${extension.getMetadata().version})`);
+  const extension = getExtensionClient(extensionId);
+  log.info(`Getting settings from extension ${extensionId}`);
 
   try {
     return extension.getSettings();
@@ -295,8 +260,8 @@ function getSettings(extensionId: string): { [key: string]: unknown } {
  * @param settings a map of settings for the extension
  */
 function setSettings(extensionId: string, settings: { [key: string]: unknown }): void {
-  const extension = EXTENSION_CLIENTS[extensionId];
-  log.info(`Setting settings from extension ${extensionId} (v=${extension.getMetadata().version})`);
+  const extension = getExtensionClient(extensionId);
+  log.info(`Setting settings from extension ${extensionId}`);
 
   try {
     extension.setSettings(settings);
@@ -311,10 +276,8 @@ function setSettings(extensionId: string, settings: { [key: string]: unknown }):
  * @returns List[FilterOption]
  */
 function getFilterOptions(extensionId: string): FilterOption[] {
-  const extension = EXTENSION_CLIENTS[extensionId];
-  // log.info(
-  //   `Getting filter options from extension ${extensionId} (v=${extension.getMetadata().version})`
-  // );
+  const extension = getExtensionClient(extensionId);
+  log.info(`Getting filter options from extension ${extensionId}`);
 
   try {
     return extension.getFilterOptions();
@@ -328,12 +291,12 @@ export const createExtensionIpcHandlers = (
   ipcMain: IpcMain,
   pluginsDir: string,
   extractDir: string,
-  webviewFn: WebviewFunc
+  spoofWindow: BrowserWindow
 ) => {
   log.debug('Creating extension IPC handlers in main...');
 
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, async (event) => {
-    await loadExtensions(pluginsDir, extractDir, webviewFn);
+    await loadPlugins(pluginsDir, extractDir, spoofWindow);
     return event.sender.send(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS);
   });
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.INSTALL, (_event, name: string, version: string) => {
@@ -354,40 +317,27 @@ export const createExtensionIpcHandlers = (
     return aki.list(pluginsDir);
   });
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET, async (_event, extensionId: string) => {
-    return extensionId in EXTENSION_CLIENTS
-      ? EXTENSION_CLIENTS[extensionId].getMetadata()
-      : undefined;
+    if (extensionId === FS_METADATA.id) {
+      return FS_METADATA;
+    }
+    if (TIYO_CLIENT && Object.keys(TIYO_CLIENT.getExtensions()).includes(extensionId)) {
+      return TIYO_CLIENT.getExtensions()[extensionId].metadata;
+    }
+    return undefined;
   });
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET_ALL, () => {
-    return Object.values(EXTENSION_CLIENTS).map((client: ExtensionClientInterface) =>
-      client.getMetadata()
-    );
+    const result = [FS_METADATA];
+    if (TIYO_CLIENT) {
+      result.push(...Object.values(TIYO_CLIENT.getExtensions()).map((e) => e.metadata));
+    }
+    return result;
   });
-  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.CHECK_FOR_UPDATESS, async () => {
-    if (Object.values(EXTENSION_CLIENTS).length <= 1) return {};
-    log.debug('Checking for extension updates...');
-
-    const availableUpdates: {
-      [key: string]: { metadata: ExtensionMetadata; newVersion: string };
-    } = {};
-    const registryResults: RegistrySearchResults = await aki.search('extension', 'houdoku', 100);
-    registryResults.objects.forEach((registryResult) => {
-      const pkg: RegistrySearchPackage = registryResult.package;
-      const description = JSON.parse(pkg.description);
-
-      if (description.id in EXTENSION_CLIENTS) {
-        const metadata = EXTENSION_CLIENTS[description.id].getMetadata();
-        if (gt(pkg.version, metadata.version)) {
-          availableUpdates[metadata.id] = {
-            metadata,
-            newVersion: pkg.version,
-          };
-        }
-      }
-    });
-
-    log.debug(`Found ${Object.values(availableUpdates).length} available extension updates`);
-    return availableUpdates;
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.GET_TIYO_VERSION, () => {
+    return TIYO_CLIENT ? TIYO_CLIENT.getVersion() : undefined;
+  });
+  ipcMain.handle(ipcChannels.EXTENSION_MANAGER.CHECK_FOR_UPDATES, async () => {
+    // TODO: check registry
+    return {};
   });
 
   ipcMain.handle(

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Menu, ScrollArea, Button, Text, Grid } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
-import { MultiToggleValues, TriState } from 'houdoku-extension-lib';
+import { MultiToggleValues, TriState } from '@tiyo/common';
 
 type Props = {
   label: string;

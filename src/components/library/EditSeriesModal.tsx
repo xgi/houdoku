@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import log from 'electron-log';
-import { Series } from 'houdoku-extension-lib';
-import { Button, Group, Modal, Text } from '@mantine/core';
+import { Series } from '@tiyo/common';
+import { Button, Group, Modal } from '@mantine/core';
 import { updateSeries } from '../../features/library/utils';
 import SeriesEditControls from '../general/SeriesEditControls';
 

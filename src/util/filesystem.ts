@@ -3,7 +3,7 @@ import fs from 'fs';
 import rimraf from 'rimraf';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Chapter, Series } from 'houdoku-extension-lib';
+import { Chapter, Series } from '@tiyo/common';
 import ipcChannels from '../constants/ipcChannels.json';
 
 /**

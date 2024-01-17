@@ -2,7 +2,7 @@ import fs from 'fs';
 import React from 'react';
 import { ipcRenderer } from 'electron';
 import { Box, Grid, Group, Text, Badge } from '@mantine/core';
-import { Languages, Series } from 'houdoku-extension-lib';
+import { Languages, Series } from '@tiyo/common';
 import ipcChannels from '../../../constants/ipcChannels.json';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);

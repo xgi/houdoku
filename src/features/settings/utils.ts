@@ -1,5 +1,5 @@
 import log from 'electron-log';
-import { SettingType } from 'houdoku-extension-lib';
+import { SettingType } from '@tiyo/common';
 import {
   GeneralSetting,
   IntegrationSetting,

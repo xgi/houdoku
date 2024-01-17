@@ -32,7 +32,8 @@
     "LIST": "extension-manager-list",
     "GET": "extension-manager-get",
     "GET_ALL": "extension-manager-get-all",
-    "CHECK_FOR_UPDATESS": "extension-manager-check-for-updates"
+    "CHECK_FOR_UPDATES": "extension-manager-check-for-updates",
+    "GET_TIYO_VERSION": "extension-manager-get-tiyo-version"
   },
   "EXTENSION": {
     "GET_SERIES": "extension-getSeries",

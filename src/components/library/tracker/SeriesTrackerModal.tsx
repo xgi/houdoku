@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { Modal, Tabs } from '@mantine/core';
 import { AniListTrackerMetadata } from '../../../services/trackers/anilist';
 import { MALTrackerMetadata } from '../../../services/trackers/myanimelist';

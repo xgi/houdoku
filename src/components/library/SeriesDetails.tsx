@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Center, Loader, Stack, Text } from '@mantine/core';
 import ChapterTable from './ChapterTable';

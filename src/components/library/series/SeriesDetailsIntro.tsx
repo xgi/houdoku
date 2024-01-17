@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron';
 import { useRecoilValue } from 'recoil';
 import { Grid, Group, Text, Image, Title, ScrollArea } from '@mantine/core';
 import path from 'path';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import blankCover from '../../../img/blank_cover.png';
 import ipcChannels from '../../../constants/ipcChannels.json';
 import { currentExtensionMetadataState } from '../../../state/libraryStates';

@@ -1,4 +1,4 @@
-import { Series, FilterValues } from 'houdoku-extension-lib';
+import { Series, FilterValues } from '@tiyo/common';
 import { atom } from 'recoil';
 import { SearchResult } from '../models/types';
 import { FS_METADATA } from '../services/extensions/filesystem';

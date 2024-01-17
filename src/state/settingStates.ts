@@ -1,4 +1,4 @@
-import { LanguageKey, SeriesStatus } from 'houdoku-extension-lib';
+import { LanguageKey, SeriesStatus } from '@tiyo/common';
 import { atom, AtomEffect, RecoilState } from 'recoil';
 import {
   getAllStoredSettings,

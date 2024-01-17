@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { ipcRenderer } from 'electron';
 import log from 'electron-log';
-import { Chapter, LanguageKey, Series } from 'houdoku-extension-lib';
+import { Chapter, LanguageKey, Series } from '@tiyo/common';
 import React from 'react';
 import { SetterOrUpdater } from 'recoil';
 import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';

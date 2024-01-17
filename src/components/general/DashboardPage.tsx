@@ -10,7 +10,7 @@ import {
   IconSettings,
   IconSquarePlus,
 } from '@tabler/icons';
-import { AppShell, Navbar, ColorScheme } from '@mantine/core';
+import { AppShell, Navbar } from '@mantine/core';
 import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
 import routes from '../../constants/routes.json';
@@ -18,7 +18,7 @@ import { importSeries, reloadSeriesList } from '../../features/library/utils';
 import Settings from '../settings/Settings';
 import About from '../about/About';
 import Library from '../library/Library';
-import Extensions from '../extensions/Extensions';
+import Plugins from '../plugins/Plugins';
 import Downloads from '../downloads/Downloads';
 import {
   activeSeriesListState,
@@ -30,22 +30,20 @@ import {
   seriesListState,
 } from '../../state/libraryStates';
 import library from '../../services/library';
-import { autoBackupCountState, autoBackupState, chapterLanguagesState, refreshOnStartState } from '../../state/settingStates';
+import {
+  autoBackupCountState,
+  autoBackupState,
+  chapterLanguagesState,
+  refreshOnStartState,
+} from '../../state/settingStates';
 import DashboardSidebarLink from './DashboardSidebarLink';
 import { downloadCover } from '../../util/download';
 import { createAutoBackup } from '../../util/backup';
 
-import ToggleThemeSwitch from './ToggleThemeSwitch';
-
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props {
-  colorScheme: ColorScheme;
-  toggleColorScheme: (value?: ColorScheme) => void;
-}
+interface Props {}
 
-const DashboardPage: React.FC<Props> = (props: Props) => {
-  const { colorScheme, toggleColorScheme } = props;
-
+const DashboardPage: React.FC<Props> = () => {
   const setSeriesList = useSetRecoilState(seriesListState);
   const activeSeriesList = useRecoilValue(activeSeriesListState);
   const [, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
@@ -59,9 +57,9 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
   const categoryList = useRecoilValue(categoryListState);
 
   useEffect(() => {
-      if(autoBackup){
-        createAutoBackup(autoBackupCount);
-      }
+    if (autoBackup) {
+      createAutoBackup(autoBackupCount);
+    }
     if (refreshOnStart && !completedStartReload && activeSeriesList.length > 0) {
       setCompletedStartReload(true);
       reloadSeriesList(
@@ -113,8 +111,8 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
             <DashboardSidebarLink
               icon={<IconPuzzle size={16} />}
               color="grape"
-              label="Extensions"
-              route={routes.EXTENSIONS}
+              label="Plugins"
+              route={routes.PLUGINS}
             />
             <DashboardSidebarLink
               icon={<IconDownload size={16} />}
@@ -135,7 +133,6 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
               route={routes.ABOUT}
             />
           </Navbar.Section>
-          <ToggleThemeSwitch colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}/>
         </Navbar>
       }
       styles={(theme) => ({
@@ -150,7 +147,7 @@ const DashboardPage: React.FC<Props> = (props: Props) => {
         <Route path={`${routes.SETTINGS}/*`} element={<Settings />} />
         <Route path={`${routes.ABOUT}/*`} element={<About />} />
         <Route path={`${routes.SEARCH}/*`} element={<Search />} />
-        <Route path={`${routes.EXTENSIONS}/*`} element={<Extensions />} />
+        <Route path={`${routes.PLUGINS}/*`} element={<Plugins />} />
         <Route path={`${routes.DOWNLOADS}/*`} element={<Downloads />} />
         <Route path="*" element={<Library />} />
       </Routes>

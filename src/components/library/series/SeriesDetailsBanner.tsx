@@ -4,7 +4,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { BackgroundImage, Box, Button, Group, Menu, Stack } from '@mantine/core';
 import { IconMenu2, IconTrash } from '@tabler/icons';
 import log from 'electron-log';
-import { Series } from 'houdoku-extension-lib';
+import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
 import ipcChannels from '../../../constants/ipcChannels.json';
 import {

@@ -19,7 +19,7 @@ import {
   GetSettingTypesFunc,
   SeriesListResponse,
   GetFilterOptionsFunc,
-} from 'houdoku-extension-lib';
+} from '@tiyo/common';
 import { extract } from '../../util/archives';
 import { walk } from '../../util/filesystem';
 import constants from '../../constants/constants.json';
@@ -28,12 +28,7 @@ export const FS_METADATA: ExtensionMetadata = {
   id: '9ef3242e-b5a0-4f56-bf2f-5e0c9f6f50ab',
   name: 'filesystem',
   url: '',
-  version: '1.0.0',
   translatedLanguage: undefined,
-  hasSettings: false,
-  notice: 'To import a series from the filesystem, select the series directory.',
-  noticeUrl: 'https://houdoku.org/docs/adding-manga/adding-from-filesystem',
-  pageLoadMessage: '',
 };
 
 const isSupportedArchivePath = (str: string) => {
@@ -120,15 +115,7 @@ const parseChapterMetadata = (
 export class FSExtensionClient extends ExtensionClientAbstract {
   extractPath?: string = undefined;
 
-  setExtractPath = (extractPath: string) => {
-    this.extractPath = extractPath;
-  };
-
-  getMetadata: () => ExtensionMetadata = () => {
-    return FS_METADATA;
-  };
-
-  getSeries: GetSeriesFunc = (id: string) => {
+  override getSeries: GetSeriesFunc = (id: string) => {
     const dirName = path.basename(id);
     const series: Series = {
       id: undefined,
@@ -152,7 +139,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     });
   };
 
-  getChapters: GetChaptersFunc = (id: string) => {
+  override getChapters: GetChaptersFunc = (id: string) => {
     const fileList = walk(id);
     const chapterPaths: Set<string> = new Set();
     fileList.forEach((file: string) => {
@@ -183,7 +170,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
     });
   };
 
-  getPageRequesterData: GetPageRequesterDataFunc = (
+  override getPageRequesterData: GetPageRequesterDataFunc = (
     _seriesSourceId: string,
     chapterSourceId: string
   ) => {
@@ -194,37 +181,37 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       : getPageRequesterDataFromDirectory(chapterSourceId);
   };
 
-  getPageUrls: GetPageUrlsFunc = (pageRequesterData: PageRequesterData) => {
+  override getPageUrls: GetPageUrlsFunc = (pageRequesterData: PageRequesterData) => {
     return pageRequesterData.pageFilenames;
   };
 
-  getImage: GetImageFunc = (_series: Series, url: string) => {
+  override getImage: GetImageFunc = (_series: Series, url: string) => {
     return new Promise((resolve) => {
       resolve(url);
     });
   };
 
-  getSearch: GetSearchFunc = () => {
+  override getSearch: GetSearchFunc = () => {
     return new Promise<SeriesListResponse>((resolve) =>
       resolve({ seriesList: [], hasMore: false })
     );
   };
 
-  getDirectory: GetDirectoryFunc = () => {
+  override getDirectory: GetDirectoryFunc = () => {
     return new Promise<SeriesListResponse>((resolve) =>
       resolve({ seriesList: [], hasMore: false })
     );
   };
 
-  getSettingTypes: GetSettingTypesFunc = () => {
+  override getSettingTypes: GetSettingTypesFunc = () => {
     return {};
   };
 
-  getSettings: GetSettingsFunc = () => {
+  override getSettings: GetSettingsFunc = () => {
     return {};
   };
 
-  setSettings: SetSettingsFunc = () => {};
+  override setSettings: SetSettingsFunc = () => {};
 
-  getFilterOptions: GetFilterOptionsFunc = () => [];
+  override getFilterOptions: GetFilterOptionsFunc = () => [];
 }

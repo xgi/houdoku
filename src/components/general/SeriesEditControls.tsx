@@ -1,5 +1,5 @@
 import React from 'react';
-import { Language, Series, SeriesStatus, Languages, LanguageKey } from 'houdoku-extension-lib';
+import { Language, Series, SeriesStatus, Languages, LanguageKey } from '@tiyo/common';
 import { ipcRenderer } from 'electron';
 import { ActionIcon, Grid, Group, Input, MultiSelect, Select, Stack, Text } from '@mantine/core';
 import { IconUpload } from '@tabler/icons';
