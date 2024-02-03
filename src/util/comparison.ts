@@ -49,23 +49,10 @@ export function selectMostSimilarChapter(original: Chapter, options: Chapter[]):
 /**
  * Get the number of unread chapters from a list.
  * This function calculates a value using the Chapter.chapterNumber field and read status of each
- * chapter. It is not necessarily correlated with the number of chapter objects in the list.
+ * chapter.
  * @param chapterList the list of chapters to calculate from (usually all of a series' chapters)
  * @returns the number of unread chapters (by chapter number)
  */
 export function getNumberUnreadChapters(chapterList: Chapter[]): number {
-  let highestRead = 0;
-  let highestReleased = 0;
-
-  chapterList.forEach((chapter: Chapter) => {
-    const chapterNumber = parseFloat(chapter.chapterNumber);
-    if (chapter.read && chapterNumber > highestRead) {
-      highestRead = chapterNumber;
-    }
-    if (chapterNumber > highestReleased) {
-      highestReleased = chapterNumber;
-    }
-  });
-
-  return Math.ceil(highestReleased - highestRead);
+  return chapterList.filter((chapter: Chapter) => !chapter.read).length
 }
