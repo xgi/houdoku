@@ -104,4 +104,11 @@ export const optimizeContrastState = atomFromSetting<boolean>(ReaderSetting.Opti
 export const trackerAutoUpdateState = atomFromSetting<boolean>(TrackerSetting.TrackerAutoUpdate);
 
 export const discordPresenceEnabledState = atomFromSetting<boolean>(IntegrationSetting.DiscordPresenceEnabled);
+
+export const OnStartUpDownloadUnreadState = atomFromSetting<boolean>(GeneralSetting.OnStartUpDownloadUnread);
+export const OnSeriesDetailsDownloadUnreadState = atomFromSetting<boolean>(GeneralSetting.OnSeriesDetailsDownloadUnread);
+export const OnScrollingChaptersDownloadUnreadState = atomFromSetting<boolean>(GeneralSetting.OnScrollingChaptersDownloadUnread);
+export const OnStartDownloadUnreadCountState = atomFromSetting<number>(GeneralSetting.OnStartUpDownloadUnreadCount);
+export const OnStartUpDeleteReadState = atomFromSetting<boolean>(GeneralSetting.OnStartUpDeleteRead);
+export const OnSeriesDetailsDeleteReadState = atomFromSetting<boolean>(GeneralSetting.OnSeriesDetailsDeleteRead);
 /* eslint-enable */

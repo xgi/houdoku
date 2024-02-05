@@ -1,6 +1,8 @@
 import { Chapter, Series } from '@tiyo/common';
 import { downloaderClient, DownloadTask } from '../../services/downloader';
-import { getChapterDownloaded } from '../../util/filesystem';
+import { deleteDownloadedChapter, getChapterDownloaded, getChaptersDownloaded } from '../../util/filesystem';
+import library from '../../services/library';
+
 
 export async function downloadNextX(
   chapterList: Chapter[],
@@ -77,4 +79,91 @@ export async function downloadAll(
     )
   );
   downloaderClient.start();
+}
+
+
+/**
+ * The function `DownloadUnreadChapters` downloads a specified number of unread chapters from a list of
+ * series, filtering out already downloaded chapters.
+ * @param {Series[]} seriesList - An array of objects representing a list of series. Each series object
+ * should have properties like `sourceId`, `numberUnread`, and `id`.
+ * @param {string} downloadsDir - The `downloadsDir` parameter is a string that represents the
+ * directory where the downloaded chapters will be saved.
+ * @param {number} [count=1] - The `count` parameter specifies the number of unread chapters to
+ * download for each series. By default, it is set to 1, meaning it will download the latest unread
+ * chapter. However, you can provide a different value to download a specific number of unread
+ * chapters.
+ * @param {Chapter[]} serieChapters - An array of Chapter objects representing the chapters of a
+ * series.
+ * @returns The function does not have a return statement.
+ */
+export async function DownloadUnreadChapters(
+  seriesList: Series[],
+  downloadsDir: string,
+  count: number = 1,
+  serieChapters: Chapter[] = []
+){
+  for (const series of seriesList) {
+    if(!library.validURL(series.sourceId)){return;}
+
+    if(series.numberUnread <= 0 || !series.id) continue;
+    serieChapters = library.fetchChapters(series.id);
+    serieChapters = serieChapters.filter(x => !x.read);
+    serieChapters.sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber));
+    serieChapters = serieChapters.slice(0,count);
+    var nonDownloadedChapters: Chapter[] = [];
+    for(const x of serieChapters){
+      const result = await getChapterDownloaded(series, x, downloadsDir);
+      if(result !== true){
+        nonDownloadedChapters.push(x)
+      }
+    }
+    downloaderClient.add(
+      nonDownloadedChapters.map(
+        (chapter: Chapter) =>
+          ({
+            chapter,
+            series,
+            downloadsDir,
+          } as DownloadTask))
+    );
+    downloaderClient.start();
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  };
+}
+
+/**
+ * The function `DeleteReadChapters` deletes downloaded chapters for a list of series that have been
+ * marked as read.
+ * @param {Series[]} seriesList - An array of objects representing a list of series. Each object in the
+ * array should have an "id" property.
+ * @param {string} downloadsDir - The `downloadsDir` parameter is a string that represents the
+ * directory where the downloaded chapters are stored.
+ * @param {Chapter[]} [serieChapters] - An optional array of Chapter objects representing the chapters
+ * of a series.
+ * @returns The function does not have a return statement.
+ */
+export async function DeleteReadChapters(
+  seriesList: Series[],
+  downloadsDir: string,
+  serieChapters?: Chapter[]
+){
+  for(const series of seriesList){
+    if(!series.id) return;
+    serieChapters = library.fetchChapters(series.id);
+    serieChapters = serieChapters.filter(x => x.read);
+    var DownloadedChapters: Chapter[] = [];
+    const downloadedChapters = await getChaptersDownloaded(series, serieChapters, downloadsDir);
+    for(const key in downloadedChapters){
+      if(downloadedChapters.hasOwnProperty(key)){
+        var foundChapter = serieChapters.find((chapter) => chapter.id === key);
+        if(foundChapter){
+          DownloadedChapters.push(foundChapter);
+        }
+      }
+    }
+    for(const x of DownloadedChapters){
+      await deleteDownloadedChapter(series, x, downloadsDir)
+    }
+  }
 }
