@@ -33,8 +33,7 @@ import {
   OnSeriesDetailsDeleteReadState,
   OnSeriesDetailsDownloadUnreadState,
   OnStartDownloadUnreadCountState,
-  OnStartUpDeleteReadState,
-  OnStartUpDownloadUnreadState,
+  chapterLanguagesState,
   customDownloadsDirState,
 } from '../../state/settingStates';
 import {
@@ -67,6 +66,7 @@ const SeriesDetails: React.FC<Props> = () => {
   const OnStartUpDownloadUnreadCount = useRecoilValue(OnStartDownloadUnreadCountState);
   const OnSeriesDetailsDownloadUnread = useRecoilValue(OnSeriesDetailsDownloadUnreadState);
   const OnSeriesDetailsDeleteRead = useRecoilValue(OnSeriesDetailsDeleteReadState);
+  const chapterLanguages = useRecoilValue(chapterLanguagesState);
 
   const loadContent = async () => {
     log.info(`Series page is loading details from database for series ${id}`);
@@ -99,7 +99,8 @@ const SeriesDetails: React.FC<Props> = () => {
       DownloadUnreadChapters(
         seriesArr,
         customDownloadsDir || String(getDefaultDownloadDir()),
-        OnStartUpDownloadUnreadCount
+        OnStartUpDownloadUnreadCount,
+        chapterLanguages
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
