@@ -103,7 +103,7 @@ export async function DownloadUnreadChapters(
   seriesList: Series[],
   downloadsDir: string,
   count = 1,
-  notification: boolean = true
+  notification = true
 ) {
   seriesList
     .filter((series) => library.validURL(series.sourceId))

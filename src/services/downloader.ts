@@ -99,7 +99,7 @@ class DownloaderClient {
     this.setDownloadErrors([...this.downloadErrors, downloadError]);
   };
 
-  start = async (notification: boolean = true) => {
+  start = async (notification = true) => {
     if (this.running) return;
 
     if (this.queue.length === 0) {
