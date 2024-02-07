@@ -29,8 +29,18 @@ import SeriesDetailsBanner from './series/SeriesDetailsBanner';
 import SeriesDetailsIntro from './series/SeriesDetailsIntro';
 import SeriesDetailsInfoGrid from './series/SeriesDetailsInfoGrid';
 
-import { OnSeriesDetailsDeleteReadState, OnSeriesDetailsDownloadUnreadState, OnStartDownloadUnreadCountState, OnStartUpDeleteReadState, OnStartUpDownloadUnreadState, customDownloadsDirState } from '../../state/settingStates';
-import { DeleteReadChapters, DownloadUnreadChapters } from '../../features/library/chapterDownloadUtils';
+import {
+  OnSeriesDetailsDeleteReadState,
+  OnSeriesDetailsDownloadUnreadState,
+  OnStartDownloadUnreadCountState,
+  OnStartUpDeleteReadState,
+  OnStartUpDownloadUnreadState,
+  customDownloadsDirState,
+} from '../../state/settingStates';
+import {
+  DeleteReadChapters,
+  DownloadUnreadChapters,
+} from '../../features/library/chapterDownloadUtils';
 import { getDefaultDownloadDir } from '../settings/GeneralSettings';
 
 type Props = unknown;
@@ -38,7 +48,7 @@ type Props = unknown;
 const SeriesDetails: React.FC<Props> = () => {
   const { id } = useParams<{ id: string }>();
   let series: Series = library.fetchSeries(id!)!;
-  let seriesArr: Series[] = new Array(1);
+  const seriesArr: Series[] = new Array(1);
 
   const location = useLocation();
   const setExtensionMetadata = useSetRecoilState(currentExtensionMetadataState);
@@ -82,11 +92,15 @@ const SeriesDetails: React.FC<Props> = () => {
   useEffect(() => {
     loadContent();
     seriesArr[0] = series;
-    if(OnSeriesDetailsDeleteRead){
+    if (OnSeriesDetailsDeleteRead) {
       DeleteReadChapters(seriesArr, customDownloadsDir || String(getDefaultDownloadDir()));
     }
-    if(OnSeriesDetailsDownloadUnread){
-      DownloadUnreadChapters(seriesArr, customDownloadsDir || String(getDefaultDownloadDir()), OnStartUpDownloadUnreadCount);
+    if (OnSeriesDetailsDownloadUnread) {
+      DownloadUnreadChapters(
+        seriesArr,
+        customDownloadsDir || String(getDefaultDownloadDir()),
+        OnStartUpDownloadUnreadCount
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, seriesList]);

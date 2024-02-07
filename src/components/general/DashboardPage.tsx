@@ -43,7 +43,10 @@ import {
 import DashboardSidebarLink from './DashboardSidebarLink';
 import { downloadCover } from '../../util/download';
 import { createAutoBackup } from '../../util/backup';
-import { DeleteReadChapters, DownloadUnreadChapters } from '../../features/library/chapterDownloadUtils';
+import {
+  DeleteReadChapters,
+  DownloadUnreadChapters,
+} from '../../features/library/chapterDownloadUtils';
 import { getDefaultDownloadDir } from '../settings/GeneralSettings';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -79,14 +82,23 @@ const DashboardPage: React.FC<Props> = () => {
         setReloadingSeriesList,
         chapterLanguages,
         categoryList
-      ).then(() => {
-        if(OnStartUpDeleteRead){
-          DeleteReadChapters(library.fetchSeriesList(), customDownloadsDir || String(getDefaultDownloadDir()));
-        }
-        if(OnStartUpDownloadUnread){
-          DownloadUnreadChapters(library.fetchSeriesList(), customDownloadsDir || String(getDefaultDownloadDir()), OnStartUpDownloadUnreadCount);
-        }
-      }).catch((e) => log.error(e));
+      )
+        .then(() => {
+          if (OnStartUpDeleteRead) {
+            DeleteReadChapters(
+              library.fetchSeriesList(),
+              customDownloadsDir || String(getDefaultDownloadDir())
+            );
+          }
+          if (OnStartUpDownloadUnread) {
+            DownloadUnreadChapters(
+              library.fetchSeriesList(),
+              customDownloadsDir || String(getDefaultDownloadDir()),
+              OnStartUpDownloadUnreadCount
+            );
+          }
+        })
+        .catch((e) => log.error(e));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSeriesList]);

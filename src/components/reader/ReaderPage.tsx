@@ -33,7 +33,6 @@ import {
   nextReadingDirection,
 } from '../../features/settings/utils';
 
-
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -102,10 +101,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   const keyToggleFullscreen = useRecoilValue(settingStates.keyToggleFullscreenState);
   const keyExit = useRecoilValue(settingStates.keyExitState);
   const keyCloseOrBack = useRecoilValue(settingStates.keyCloseOrBackState);
-  const OnStartUpDownloadUnreadCount = useRecoilValue(settingStates.OnStartDownloadUnreadCountState);
-  const OnScrollingChaptersDownloadUnread = useRecoilValue(settingStates.OnScrollingChaptersDownloadUnreadState);
+  const OnStartUpDownloadUnreadCount = useRecoilValue(
+    settingStates.OnStartDownloadUnreadCountState
+  );
+  const OnScrollingChaptersDownloadUnread = useRecoilValue(
+    settingStates.OnScrollingChaptersDownloadUnreadState
+  );
 
-  let seriesArr: Series[] = new Array(1);
+  const seriesArr: Series[] = new Array(1);
 
   /**
    * Populate the relevantChapterList prop.
@@ -289,8 +292,12 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     const desiredPage = fromPageMovement && previous ? Infinity : 1;
     setChapter(newChapterId, desiredPage);
     seriesArr[0] != library.fetchSeries(series_id!);
-    if(OnScrollingChaptersDownloadUnread){
-    DownloadUnreadChapters(seriesArr, customDownloadsDir || String(getDefaultDownloadDir()), OnStartUpDownloadUnreadCount);
+    if (OnScrollingChaptersDownloadUnread) {
+      DownloadUnreadChapters(
+        seriesArr,
+        customDownloadsDir || String(getDefaultDownloadDir()),
+        OnStartUpDownloadUnreadCount
+      );
     }
     return true;
   };

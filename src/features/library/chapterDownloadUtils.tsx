@@ -1,8 +1,11 @@
 import { Chapter, Series } from '@tiyo/common';
 import { downloaderClient, DownloadTask } from '../../services/downloader';
-import { deleteDownloadedChapter, getChapterDownloaded, getChaptersDownloaded } from '../../util/filesystem';
+import {
+  deleteDownloadedChapter,
+  getChapterDownloaded,
+  getChaptersDownloaded,
+} from '../../util/filesystem';
 import library from '../../services/library';
-
 
 export async function downloadNextX(
   chapterList: Chapter[],
@@ -81,7 +84,6 @@ export async function downloadAll(
   downloaderClient.start();
 }
 
-
 /**
  * The function `DownloadUnreadChapters` downloads a specified number of unread chapters from a list of
  * series, filtering out already downloaded chapters.
@@ -100,22 +102,24 @@ export async function downloadAll(
 export async function DownloadUnreadChapters(
   seriesList: Series[],
   downloadsDir: string,
-  count: number = 1,
+  count = 1,
   serieChapters: Chapter[] = []
-){
+) {
   for (const series of seriesList) {
-    if(!library.validURL(series.sourceId)){return;}
+    if (!library.validURL(series.sourceId)) {
+      return;
+    }
 
-    if(series.numberUnread <= 0 || !series.id) continue;
+    if (series.numberUnread <= 0 || !series.id) continue;
     serieChapters = library.fetchChapters(series.id);
-    serieChapters = serieChapters.filter(x => !x.read);
+    serieChapters = serieChapters.filter((x) => !x.read);
     serieChapters.sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber));
-    serieChapters = serieChapters.slice(0,count);
-    var nonDownloadedChapters: Chapter[] = [];
-    for(const x of serieChapters){
+    serieChapters = serieChapters.slice(0, count);
+    const nonDownloadedChapters: Chapter[] = [];
+    for (const x of serieChapters) {
       const result = await getChapterDownloaded(series, x, downloadsDir);
-      if(result !== true){
-        nonDownloadedChapters.push(x)
+      if (result !== true) {
+        nonDownloadedChapters.push(x);
       }
     }
     downloaderClient.add(
@@ -125,11 +129,12 @@ export async function DownloadUnreadChapters(
             chapter,
             series,
             downloadsDir,
-          } as DownloadTask))
+          } as DownloadTask)
+      )
     );
     downloaderClient.start();
     await new Promise((resolve) => setTimeout(resolve, 1000));
-  };
+  }
 }
 
 /**
@@ -147,23 +152,23 @@ export async function DeleteReadChapters(
   seriesList: Series[],
   downloadsDir: string,
   serieChapters?: Chapter[]
-){
-  for(const series of seriesList){
-    if(!series.id) return;
+) {
+  for (const series of seriesList) {
+    if (!series.id) return;
     serieChapters = library.fetchChapters(series.id);
-    serieChapters = serieChapters.filter(x => x.read);
-    var DownloadedChapters: Chapter[] = [];
+    serieChapters = serieChapters.filter((x) => x.read);
+    const DownloadedChapters: Chapter[] = [];
     const downloadedChapters = await getChaptersDownloaded(series, serieChapters, downloadsDir);
-    for(const key in downloadedChapters){
-      if(downloadedChapters.hasOwnProperty(key)){
-        var foundChapter = serieChapters.find((chapter) => chapter.id === key);
-        if(foundChapter){
+    for (const key in downloadedChapters) {
+      if (downloadedChapters.hasOwnProperty(key)) {
+        const foundChapter = serieChapters.find((chapter) => chapter.id === key);
+        if (foundChapter) {
           DownloadedChapters.push(foundChapter);
         }
       }
     }
-    for(const x of DownloadedChapters){
-      await deleteDownloadedChapter(series, x, downloadsDir)
+    for (const x of DownloadedChapters) {
+      await deleteDownloadedChapter(series, x, downloadsDir);
     }
   }
 }

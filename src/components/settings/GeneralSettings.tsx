@@ -28,7 +28,6 @@ import {
   customDownloadsDirState,
   libraryCropCoversState,
   refreshOnStartState,
-
   OnScrollingChaptersDownloadUnreadState,
   OnSeriesDetailsDeleteReadState,
   OnSeriesDetailsDownloadUnreadState,
@@ -56,12 +55,22 @@ const GeneralSettings: React.FC<Props> = () => {
   const [libraryCropCovers, setLibraryCropCovers] = useRecoilState(libraryCropCoversState);
   const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(customDownloadsDirState);
 
-  const [OnStartUpDownloadUnread, setOnStartUpDownloadUnread] = useRecoilState(OnStartUpDownloadUnreadState);
-  const [OnSeriesDetailsDownloadUnread, setOnSeriesDetailsDownloadUnread] = useRecoilState(OnSeriesDetailsDownloadUnreadState);
-  const [OnScrollingChaptersDownloadUnread, setOnScrollingChaptersDownloadUnread] = useRecoilState(OnScrollingChaptersDownloadUnreadState);
-  const [OnSeriesDetailsDeleteRead, setOnSeriesDetailsDeleteRead] = useRecoilState(OnSeriesDetailsDeleteReadState);
+  const [OnStartUpDownloadUnread, setOnStartUpDownloadUnread] = useRecoilState(
+    OnStartUpDownloadUnreadState
+  );
+  const [OnSeriesDetailsDownloadUnread, setOnSeriesDetailsDownloadUnread] = useRecoilState(
+    OnSeriesDetailsDownloadUnreadState
+  );
+  const [OnScrollingChaptersDownloadUnread, setOnScrollingChaptersDownloadUnread] = useRecoilState(
+    OnScrollingChaptersDownloadUnreadState
+  );
+  const [OnSeriesDetailsDeleteRead, setOnSeriesDetailsDeleteRead] = useRecoilState(
+    OnSeriesDetailsDeleteReadState
+  );
   const [OnStartUpDeleteRead, setOnStartUpDeleteRead] = useRecoilState(OnStartUpDeleteReadState);
-  const [OnStartDownloadUnreadCount, setOnStartDownloadUnreadCount] = useRecoilState(OnStartDownloadUnreadCountState);
+  const [OnStartDownloadUnreadCount, setOnStartDownloadUnreadCount] = useRecoilState(
+    OnStartDownloadUnreadCountState
+  );
   const [automation, setautomation] = useState<string[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -94,26 +103,26 @@ const GeneralSettings: React.FC<Props> = () => {
       case GeneralSetting.OnStartUpDownloadUnread:
         setOnStartUpDownloadUnread(value);
         break;
-        case GeneralSetting.OnStartUpDeleteRead:
-          setOnStartUpDeleteRead(value);
+      case GeneralSetting.OnStartUpDeleteRead:
+        setOnStartUpDeleteRead(value);
         break;
-        case GeneralSetting.OnStartUpDownloadUnreadCount:
-          setOnStartDownloadUnreadCount(value);
+      case GeneralSetting.OnStartUpDownloadUnreadCount:
+        setOnStartDownloadUnreadCount(value);
         break;
-        case GeneralSetting.OnSeriesDetailsDownloadUnread:
-          setOnSeriesDetailsDownloadUnread(value);
+      case GeneralSetting.OnSeriesDetailsDownloadUnread:
+        setOnSeriesDetailsDownloadUnread(value);
         break;
-        case GeneralSetting.OnSeriesDetailsDeleteRead:
-          setOnSeriesDetailsDeleteRead(value);
+      case GeneralSetting.OnSeriesDetailsDeleteRead:
+        setOnSeriesDetailsDeleteRead(value);
         break;
-        case GeneralSetting.OnScrollingChaptersDownloadUnread:
-          setOnScrollingChaptersDownloadUnread(value);
+      case GeneralSetting.OnScrollingChaptersDownloadUnread:
+        setOnScrollingChaptersDownloadUnread(value);
         break;
-        case GeneralSetting.autoBackup:
-          setAutoBackup(value);
+      case GeneralSetting.autoBackup:
+        setAutoBackup(value);
         break;
-        case GeneralSetting.autoBackupCount:
-          setAutoBackupCount(value);
+      case GeneralSetting.autoBackupCount:
+        setAutoBackupCount(value);
         break;
       default:
         break;
@@ -251,70 +260,80 @@ const GeneralSettings: React.FC<Props> = () => {
 
       <Text>Automation</Text>
       <Accordion multiple value={automation} onChange={setautomation}>
-      <Accordion.Item value="download"> 
-      <Accordion.Control>Auto Download</Accordion.Control>
-      <Accordion.Panel>
-      <Stack py="xs" ml="md" spacing={4}>
-        <Checkbox
-          label='Download unread chapters upon startup'
-          size="md"
-          checked={OnStartUpDownloadUnread}
-          onChange={(e) =>
-            updateGeneralSetting(GeneralSetting.OnStartUpDownloadUnread, e.target.checked)
-          }
-        />
-        <Checkbox
-          label='Download unread chapters upon loading specific manga details page'
-          size="md"
-          checked={OnSeriesDetailsDownloadUnread}
-          onChange={(e) =>
-            updateGeneralSetting(GeneralSetting.OnSeriesDetailsDownloadUnread, e.target.checked)
-          }
-        />
-                <Checkbox
-          label='Download unread chapters upon scrolling between chapters'
-          size="md"
-          checked={OnScrollingChaptersDownloadUnread}
-          onChange={(e) =>
-            updateGeneralSetting(GeneralSetting.OnScrollingChaptersDownloadUnread, e.target.checked)
-          }
-        />
-          <Text>how many unread chapters to keep downloaded</Text>
-          <NumberInput
-                  disabled={(!OnStartUpDownloadUnread && !OnSeriesDetailsDownloadUnread && !OnScrollingChaptersDownloadUnread)}
-                  min={1}
-                  value={OnStartDownloadUnreadCount}
-                  onChange={(value) =>
-                    updateGeneralSetting(GeneralSetting.OnStartUpDownloadUnreadCount, value)
-                  }
-          />
-          <br/>
-      </Stack>
-      </Accordion.Panel>
-      </Accordion.Item>
-      <Accordion.Item value="delete">
-      <Accordion.Control>Auto Delete</Accordion.Control>
-      <Accordion.Panel>
-      <Stack py="xs" ml="md" spacing={4}>
-      <Checkbox
-          label="Delete read chapters upon startup"
-          size="md"
-          checked={OnStartUpDeleteRead}
-          onChange={(e) =>
-            updateGeneralSetting(GeneralSetting.OnStartUpDeleteRead, e.target.checked)
-          }
-        />
+        <Accordion.Item value="download">
+          <Accordion.Control>Auto Download</Accordion.Control>
+          <Accordion.Panel>
+            <Stack py="xs" ml="md" spacing={4}>
               <Checkbox
-          label="Delete read chapters upon loading specific manga details page"
-          size="md"
-          checked={OnSeriesDetailsDeleteRead}
-          onChange={(e) =>
-            updateGeneralSetting(GeneralSetting.OnSeriesDetailsDeleteRead, e.target.checked)
-          }
-        />
-        </Stack>
-      </Accordion.Panel>
-      </Accordion.Item>
+                label="Download unread chapters upon startup"
+                size="md"
+                checked={OnStartUpDownloadUnread}
+                onChange={(e) =>
+                  updateGeneralSetting(GeneralSetting.OnStartUpDownloadUnread, e.target.checked)
+                }
+              />
+              <Checkbox
+                label="Download unread chapters upon loading specific manga details page"
+                size="md"
+                checked={OnSeriesDetailsDownloadUnread}
+                onChange={(e) =>
+                  updateGeneralSetting(
+                    GeneralSetting.OnSeriesDetailsDownloadUnread,
+                    e.target.checked
+                  )
+                }
+              />
+              <Checkbox
+                label="Download unread chapters upon scrolling between chapters"
+                size="md"
+                checked={OnScrollingChaptersDownloadUnread}
+                onChange={(e) =>
+                  updateGeneralSetting(
+                    GeneralSetting.OnScrollingChaptersDownloadUnread,
+                    e.target.checked
+                  )
+                }
+              />
+              <Text>how many unread chapters to keep downloaded</Text>
+              <NumberInput
+                disabled={
+                  !OnStartUpDownloadUnread &&
+                  !OnSeriesDetailsDownloadUnread &&
+                  !OnScrollingChaptersDownloadUnread
+                }
+                min={1}
+                value={OnStartDownloadUnreadCount}
+                onChange={(value) =>
+                  updateGeneralSetting(GeneralSetting.OnStartUpDownloadUnreadCount, value)
+                }
+              />
+              <br />
+            </Stack>
+          </Accordion.Panel>
+        </Accordion.Item>
+        <Accordion.Item value="delete">
+          <Accordion.Control>Auto Delete</Accordion.Control>
+          <Accordion.Panel>
+            <Stack py="xs" ml="md" spacing={4}>
+              <Checkbox
+                label="Delete read chapters upon startup"
+                size="md"
+                checked={OnStartUpDeleteRead}
+                onChange={(e) =>
+                  updateGeneralSetting(GeneralSetting.OnStartUpDeleteRead, e.target.checked)
+                }
+              />
+              <Checkbox
+                label="Delete read chapters upon loading specific manga details page"
+                size="md"
+                checked={OnSeriesDetailsDeleteRead}
+                onChange={(e) =>
+                  updateGeneralSetting(GeneralSetting.OnSeriesDetailsDeleteRead, e.target.checked)
+                }
+              />
+            </Stack>
+          </Accordion.Panel>
+        </Accordion.Item>
       </Accordion>
     </>
   );
@@ -323,5 +342,5 @@ const GeneralSettings: React.FC<Props> = () => {
 export default GeneralSettings;
 
 export async function getDefaultDownloadDir(): Promise<any> {
-  return await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
+  return ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 }
