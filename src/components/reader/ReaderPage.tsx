@@ -291,7 +291,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     if (newChapterId === null) return false;
     const desiredPage = fromPageMovement && previous ? Infinity : 1;
     setChapter(newChapterId, desiredPage);
-    seriesArr[0] != library.fetchSeries(series_id!);
+    seriesArr[0] = library.fetchSeries(series_id!)!;
     if (OnScrollingChaptersDownloadUnread) {
       DownloadUnreadChapters(
         seriesArr,

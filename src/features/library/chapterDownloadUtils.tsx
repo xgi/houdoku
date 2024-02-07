@@ -102,41 +102,40 @@ export async function downloadAll(
 export async function DownloadUnreadChapters(
   seriesList: Series[],
   downloadsDir: string,
-  count = 1,
-  serieChapters: Chapter[] = []
+  count = 1
 ) {
-  for (const series of seriesList) {
-    if (!library.validURL(series.sourceId)) {
-      return;
-    }
+  seriesList
+    .filter((series) => library.validURL(series.sourceId))
+    .filter((series) => series.numberUnread > 0 && series.id)
+    .forEach(async (series) => {
+      const serieChapters = library
+        .fetchChapters(series.id!)
+        .filter((x) => !x.read)
+        .sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber))
+        .slice(0, count);
 
-    if (series.numberUnread <= 0 || !series.id) continue;
-    serieChapters = library
-      .fetchChapters(series.id)
-      .filter((x) => !x.read)
-      .sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber))
-      .slice(0, count);
+      const nonDownloadedChapters = await Promise.all(
+        serieChapters.map(async (x) => {
+          const result = await getChapterDownloaded(series, x, downloadsDir);
+          return result !== true ? x : null;
+        })
+      );
 
-    const nonDownloadedChapters: Chapter[] = [];
-    for (const x of serieChapters) {
-      const result = await getChapterDownloaded(series, x, downloadsDir);
-      if (result !== true) {
-        nonDownloadedChapters.push(x);
-      }
-    }
-    downloaderClient.add(
-      nonDownloadedChapters.map(
-        (chapter: Chapter) =>
-          ({
-            chapter,
-            series,
-            downloadsDir,
-          } as DownloadTask)
-      )
-    );
-    downloaderClient.start();
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-  }
+      const filteredNonDownloadedChapters = nonDownloadedChapters.filter(Boolean);
+
+      downloaderClient.add(
+        filteredNonDownloadedChapters.map(
+          (chapter) =>
+            ({
+              chapter,
+              series,
+              downloadsDir,
+            } as DownloadTask)
+        )
+      );
+      downloaderClient.start();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    });
 }
 
 /**
@@ -150,27 +149,18 @@ export async function DownloadUnreadChapters(
  * of a series.
  * @returns The function does not have a return statement.
  */
-export async function DeleteReadChapters(
-  seriesList: Series[],
-  downloadsDir: string,
-  serieChapters?: Chapter[]
-) {
-  for (const series of seriesList) {
-    if (!series.id) return;
-    serieChapters = library.fetchChapters(series.id)
-      .filter((x) => x.read);
-    const DownloadedChapters: Chapter[] = [];
-    const downloadedChapters = await getChaptersDownloaded(series, serieChapters, downloadsDir);
-    for (const key in downloadedChapters) {
-      if (downloadedChapters.hasOwnProperty(key)) {
-        const foundChapter = serieChapters.find((chapter) => chapter.id === key);
-        if (foundChapter) {
-          DownloadedChapters.push(foundChapter);
-        }
-      }
-    }
-    for (const x of DownloadedChapters) {
-      await deleteDownloadedChapter(series, x, downloadsDir);
-    }
-  }
+export async function DeleteReadChapters(seriesList: Series[], downloadsDir: string) {
+  seriesList
+    .filter((series) => series.id)
+    .forEach(async (series) => {
+      const serieChapters = library.fetchChapters(series.id!).filter((x) => x.read);
+
+      const downloadedChapters = await getChaptersDownloaded(series, serieChapters, downloadsDir);
+
+      const DownloadedChapters = serieChapters.filter((chapter) => downloadedChapters[chapter.id!]);
+
+      DownloadedChapters.forEach((x) => {
+        deleteDownloadedChapter(series, x, downloadsDir);
+      });
+    });
 }
