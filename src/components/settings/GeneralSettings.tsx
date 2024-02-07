@@ -118,12 +118,6 @@ const GeneralSettings: React.FC<Props> = () => {
       case GeneralSetting.OnScrollingChaptersDownloadUnread:
         setOnScrollingChaptersDownloadUnread(value);
         break;
-      case GeneralSetting.autoBackup:
-        setAutoBackup(value);
-        break;
-      case GeneralSetting.autoBackupCount:
-        setAutoBackupCount(value);
-        break;
       default:
         break;
     }
