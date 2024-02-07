@@ -111,10 +111,12 @@ export async function DownloadUnreadChapters(
     }
 
     if (series.numberUnread <= 0 || !series.id) continue;
-    serieChapters = library.fetchChapters(series.id);
-    serieChapters = serieChapters.filter((x) => !x.read);
-    serieChapters.sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber));
-    serieChapters = serieChapters.slice(0, count);
+    serieChapters = library
+      .fetchChapters(series.id)
+      .filter((x) => !x.read)
+      .sort((a, b) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber))
+      .slice(0, count);
+
     const nonDownloadedChapters: Chapter[] = [];
     for (const x of serieChapters) {
       const result = await getChapterDownloaded(series, x, downloadsDir);
@@ -155,8 +157,8 @@ export async function DeleteReadChapters(
 ) {
   for (const series of seriesList) {
     if (!series.id) return;
-    serieChapters = library.fetchChapters(series.id);
-    serieChapters = serieChapters.filter((x) => x.read);
+    serieChapters = library.fetchChapters(series.id)
+      .filter((x) => x.read);
     const DownloadedChapters: Chapter[] = [];
     const downloadedChapters = await getChaptersDownloaded(series, serieChapters, downloadsDir);
     for (const key in downloadedChapters) {
