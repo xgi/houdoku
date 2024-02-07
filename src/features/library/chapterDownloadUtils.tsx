@@ -102,7 +102,8 @@ export async function downloadAll(
 export async function DownloadUnreadChapters(
   seriesList: Series[],
   downloadsDir: string,
-  count = 1
+  count = 1,
+  notification: boolean = true
 ) {
   seriesList
     .filter((series) => library.validURL(series.sourceId))
@@ -133,7 +134,7 @@ export async function DownloadUnreadChapters(
             } as DownloadTask)
         )
       );
-      downloaderClient.start();
+      downloaderClient.start(notification);
       await new Promise((resolve) => setTimeout(resolve, 1000));
     });
 }
