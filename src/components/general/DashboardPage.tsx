@@ -96,7 +96,7 @@ const DashboardPage: React.FC<Props> = () => {
               customDownloadsDir || String(getDefaultDownloadDir()),
               chapterLanguages,
               false,
-              OnStartUpDownloadUnreadCount,
+              OnStartUpDownloadUnreadCount
             );
           }
         })

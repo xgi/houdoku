@@ -101,7 +101,7 @@ const SeriesDetails: React.FC<Props> = () => {
         customDownloadsDir || String(getDefaultDownloadDir()),
         chapterLanguages,
         false,
-        OnStartUpDownloadUnreadCount,
+        OnStartUpDownloadUnreadCount
       );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -298,7 +298,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
         customDownloadsDir || String(getDefaultDownloadDir()),
         chapterLanguages,
         false,
-        OnStartUpDownloadUnreadCount,
+        OnStartUpDownloadUnreadCount
       );
     }
     return true;
