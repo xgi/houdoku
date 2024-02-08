@@ -296,8 +296,9 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       DownloadUnreadChapters(
         seriesArr,
         customDownloadsDir || String(getDefaultDownloadDir()),
+        chapterLanguages,
+        false,
         OnStartUpDownloadUnreadCount,
-        false
       );
     }
     return true;
