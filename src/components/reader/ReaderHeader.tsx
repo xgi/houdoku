@@ -1,7 +1,8 @@
 /* eslint-disable react/button-has-type */
 import React from 'react';
-import { Chapter } from '@tiyo/common';
+import { Chapter, Languages } from '@tiyo/common';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import flags from '../../img/flags.png';
 import {
   IconArrowAutofitHeight,
   IconArrowAutofitWidth,
@@ -41,6 +42,7 @@ import {
   relevantChapterListState,
   showingSettingsModalState,
   pageGroupListState,
+  languageChapterListState,
 } from '../../state/readerStates';
 import {
   fitContainToHeightState,
@@ -92,7 +94,7 @@ const ICONS_OFFSET_PAGES = {
 
 type Props = {
   changePage: (left: boolean, toBound?: boolean) => void;
-  setChapter: (id: string) => void;
+  setChapter: (id: string, page?: number) => void;
   changeChapter: (direction: 'left' | 'right' | 'next' | 'previous') => void;
   getAdjacentChapterId: (previous: boolean) => string | null;
   exitPage: () => void;
@@ -106,6 +108,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const pageGroupList = useRecoilValue(pageGroupListState);
   const chapter = useRecoilValue(chapterState);
   const relevantChapterList = useRecoilValue(relevantChapterListState);
+  const languageChapterList = useRecoilValue(languageChapterListState);
   const [pageStyle, setPageStyle] = useRecoilState(pageStyleState);
   const [fitContainToWidth, setFitContainToWidth] = useRecoilState(fitContainToWidthState);
   const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
@@ -389,6 +392,74 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           >
             {TEXT_READING_DIRECTION[readingDirection]}
           </Button>
+
+          <Menu shadow="md" width={320} trigger="hover">
+            <Menu.Target>
+              <Button
+                leftIcon={
+                  chapter && chapter.languageKey ? (
+                    <div className="flag-container">
+                      <img
+                        src={flags}
+                        title={Languages[chapter.languageKey].name}
+                        alt={Languages[chapter.languageKey].name}
+                        className={`flag flag-${Languages[chapter.languageKey].flagCode
+                          }`}
+                      />
+                    </div>
+                  ) : (
+                    <></>
+                  )
+                }
+                compact
+                styles={buttonStyles}
+                radius={0}
+              >
+                <div>
+                  {chapter && chapter.languageKey
+                    ? `${Languages[chapter.languageKey].name}`
+                    : 'Unknown Language'}
+                </div>
+              </Button>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <ScrollArea.Autosize maxHeight={220} style={{ width: 310 }}>
+                {languageChapterList.map((languageChapter: Chapter) => (
+                  <Menu.Item
+                    key={languageChapter.id}
+                    onClick={() => {
+                      if (languageChapter.id)
+                        props.setChapter(languageChapter.id, pageNumber);
+                    }}
+                  >
+                    {Languages[languageChapter.languageKey] === undefined ? (
+                      <></>
+                    ) : (
+                      <div style={{ display: 'flex' }}>
+                        <div
+                          style={{ marginRight: '5px' }}
+                          className="flag-container"
+                        >
+                          <img
+                            src={flags}
+                            title={Languages[languageChapter.languageKey].name}
+                            alt={Languages[languageChapter.languageKey].name}
+                            className={`flag flag-${Languages[languageChapter.languageKey].flagCode
+                              }`}
+                          />
+                        </div>
+                        {`${Languages[languageChapter.languageKey].name} ${languageChapter.volumeNumber
+                            ? 'Vol. ' + languageChapter.volumeNumber
+                            : ''
+                          } by ${languageChapter.groupName}`}
+                      </div>
+                    )}
+                  </Menu.Item>
+                ))}
+              </ScrollArea.Autosize>
+            </Menu.Dropdown>
+          </Menu>
 
           <Button
             compact

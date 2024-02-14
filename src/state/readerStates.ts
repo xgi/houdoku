@@ -36,6 +36,11 @@ export const relevantChapterListState = atom({
   default: [] as Chapter[],
 });
 
+export const languageChapterListState = atom({
+  key: 'languageChapterListState',
+  default: [] as Chapter[],
+});
+
 export const showingSettingsModalState = atom({
   key: 'readerShowingSettingsModalState',
   default: false,
