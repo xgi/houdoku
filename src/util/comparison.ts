@@ -46,6 +46,35 @@ export function selectMostSimilarChapter(original: Chapter, options: Chapter[]):
   return null;
 }
 
+function consolidateAndSortChapters(chapterList: Chapter[]): Chapter[] {
+  const grouped: { [index: string]: Chapter[] } = {};
+  chapterList.forEach((chapter: Chapter) => {
+    const key = chapter.chapterNumber === '' ? chapter.title : chapter.chapterNumber;
+
+    if (grouped[key] === undefined) {
+      grouped[key] = [];
+    }
+
+    grouped[key].push(chapter);
+  });
+
+  const chapters: Chapter[] = [];
+  Object.keys(grouped).forEach((key) => {
+    const groupedChapters = grouped[key];
+
+    let chapter = groupedChapters.find((chap) => chap.read);
+    if (chapter === undefined) {
+      [chapter] = groupedChapters;
+    }
+
+    chapters.push(chapter);
+  });
+
+  return chapters.sort(
+    (a: Chapter, b: Chapter) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
+  );
+}
+
 /**
  * Get the number of unread chapters from a list.
  * This function calculates a value using the Chapter.chapterNumber field and read status of each
@@ -70,31 +99,4 @@ export function getNumberUnreadChapters(chapterList: Chapter[]): number {
   });
 
   return Math.ceil(highestReleased - highestRead);
-}
-
-function consolidateAndSortChapters(chapterList: Chapter[]): Chapter[] {
-  var grouped: {[index: string]:Chapter[]} = {};
-  chapterList.forEach((chapter: Chapter) => {
-    const key = chapter.chapterNumber === '' ? chapter.title : chapter.chapterNumber;
-
-    if (grouped[key] === undefined) {
-      grouped[key] = [];
-    }
-
-    grouped[key].push(chapter);
-  })
-
-  var chapters: Chapter[] = [];
-  Object.keys(grouped).forEach((key) => {
-    const groupedChapters = grouped[key];
-
-    let chapter = groupedChapters.find((chap) => chap.read);
-    if (chapter === undefined) {
-      chapter = groupedChapters[0];
-    }
-
-    chapters.push(chapter);
-  })
-
-  return chapters.sort((a: Chapter, b: Chapter) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber));
 }
