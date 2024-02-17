@@ -49,7 +49,7 @@ export function selectMostSimilarChapter(original: Chapter, options: Chapter[]):
 function consolidateAndSortChapters(chapterList: Chapter[]): Chapter[] {
   const grouped: { [index: string]: Chapter[] } = {};
   chapterList.forEach((chapter: Chapter) => {
-    const key = chapter.chapterNumber === '' ? chapter.title : chapter.chapterNumber;
+    const key = chapter.chapterNumber === '' ? chapter.sourceId : chapter.chapterNumber;
 
     if (grouped[key] === undefined) {
       grouped[key] = [];
@@ -86,15 +86,15 @@ export function getNumberUnreadChapters(chapterList: Chapter[]): number {
   let highestRead = 0;
   let highestReleased = 0;
   let previousChapNumber = 0;
-  let cumulativeGaps = 1
+  let cumulativeGaps = 1;
 
   const chapters = consolidateAndSortChapters(chapterList);
 
   chapters.forEach((chapter: Chapter, index: number) => {
     let absoluteNumber = cumulativeGaps + index;
-    const chapterNumber = parseFloat(chapter.chapterNumber)
+    const chapterNumber = parseFloat(chapter.chapterNumber);
 
-    const gap = Math.ceil(chapterNumber - previousChapNumber) - 1
+    const gap = Math.ceil(chapterNumber - previousChapNumber) - 1;
     if (gap > 1) {
       // A gap between chapters was found. Account for this in the absolute numbers
       absoluteNumber += gap;
