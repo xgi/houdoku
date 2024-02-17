@@ -85,17 +85,30 @@ function consolidateAndSortChapters(chapterList: Chapter[]): Chapter[] {
 export function getNumberUnreadChapters(chapterList: Chapter[]): number {
   let highestRead = 0;
   let highestReleased = 0;
+  let previousChapNumber = 0;
+  let cumulativeGaps = 1
 
   const chapters = consolidateAndSortChapters(chapterList);
 
   chapters.forEach((chapter: Chapter, index: number) => {
-    const absoluteNumber = index + 1;
+    let absoluteNumber = cumulativeGaps + index;
+    const chapterNumber = parseFloat(chapter.chapterNumber)
+
+    const gap = Math.ceil(chapterNumber - previousChapNumber) - 1
+    if (gap > 1) {
+      // A gap between chapters was found. Account for this in the absolute numbers
+      absoluteNumber += gap;
+      cumulativeGaps += gap;
+    }
+
     if (chapter.read && absoluteNumber > highestRead) {
       highestRead = absoluteNumber;
     }
     if (absoluteNumber > highestReleased) {
       highestReleased = absoluteNumber;
     }
+
+    previousChapNumber = chapterNumber;
   });
 
   return Math.ceil(highestReleased - highestRead);
