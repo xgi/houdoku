@@ -46,6 +46,35 @@ export function selectMostSimilarChapter(original: Chapter, options: Chapter[]):
   return null;
 }
 
+function consolidateAndSortChapters(chapterList: Chapter[]): Chapter[] {
+  const grouped: { [index: string]: Chapter[] } = {};
+  chapterList.forEach((chapter: Chapter) => {
+    const key = chapter.chapterNumber === '' ? chapter.sourceId : chapter.chapterNumber;
+
+    if (grouped[key] === undefined) {
+      grouped[key] = [];
+    }
+
+    grouped[key].push(chapter);
+  });
+
+  const chapters: Chapter[] = [];
+  Object.keys(grouped).forEach((key) => {
+    const groupedChapters = grouped[key];
+
+    let chapter = groupedChapters.find((chap) => chap.read);
+    if (chapter === undefined) {
+      [chapter] = groupedChapters;
+    }
+
+    chapters.push(chapter);
+  });
+
+  return chapters.sort(
+    (a: Chapter, b: Chapter) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
+  );
+}
+
 /**
  * Get the number of unread chapters from a list.
  * This function calculates a value using the Chapter.chapterNumber field and read status of each
@@ -56,15 +85,30 @@ export function selectMostSimilarChapter(original: Chapter, options: Chapter[]):
 export function getNumberUnreadChapters(chapterList: Chapter[]): number {
   let highestRead = 0;
   let highestReleased = 0;
+  let previousChapNumber = 0;
+  let cumulativeGaps = 1;
 
-  chapterList.forEach((chapter: Chapter) => {
+  const chapters = consolidateAndSortChapters(chapterList);
+
+  chapters.forEach((chapter: Chapter, index: number) => {
+    let absoluteNumber = cumulativeGaps + index;
     const chapterNumber = parseFloat(chapter.chapterNumber);
-    if (chapter.read && chapterNumber > highestRead) {
-      highestRead = chapterNumber;
+
+    const gap = Math.ceil(chapterNumber - previousChapNumber) - 1;
+    if (gap > 1) {
+      // A gap between chapters was found. Account for this in the absolute numbers
+      absoluteNumber += gap;
+      cumulativeGaps += gap;
     }
-    if (chapterNumber > highestReleased) {
-      highestReleased = chapterNumber;
+
+    if (chapter.read && absoluteNumber > highestRead) {
+      highestRead = absoluteNumber;
     }
+    if (absoluteNumber > highestReleased) {
+      highestReleased = absoluteNumber;
+    }
+
+    previousChapNumber = chapterNumber;
   });
 
   return Math.ceil(highestReleased - highestRead);
