@@ -1,5 +1,6 @@
 import { Chapter, Series } from '@tiyo/common';
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 import persistantStore from '../util/persistantStore';
 import storeKeys from '../constants/storeKeys.json';
 import { Category } from '../models/types';
@@ -105,6 +106,31 @@ const removeCategory = (categoryId: string): void => {
   );
 };
 
+const validURL = (str: string): boolean => {
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)?' + // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+      '(\\#[-a-z\\d_]*)?$',
+    'i'
+  ); // fragment locator
+  return !!pattern.test(str);
+};
+
+const validFilePath = async (str: string): Promise<boolean> => {
+  return new Promise((resolve) => {
+    fs.access(str, fs.constants.F_OK, (err) => {
+      if (err) {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    });
+  });
+};
+
 export default {
   fetchSeriesList,
   fetchSeries,
@@ -117,4 +143,6 @@ export default {
   fetchCategoryList,
   upsertCategory,
   removeCategory,
+  validURL,
+  validFilePath,
 };
