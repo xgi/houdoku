@@ -290,6 +290,21 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           ${hideScrollbar ? styles.noScrollbar : ''}`}
         style={{ ['--USER-MAX-PAGE-WIDTH' as string]: `${maxPageWidth}${pageWidthMetric}` }}
         onClick={(e) => viewerContainerClickHandler(e)}
+        onWheel={ event => {
+          if(event.nativeEvent.wheelDelta > 10){
+            if(readingDirection === ReadingDirection.RightToLeft){
+              props.changePage(false);
+            } else {
+              props.changePage(true);
+            }
+          } else if(event.nativeEvent.wheelDelta < -10){
+            if(readingDirection === ReadingDirection.RightToLeft){
+              props.changePage(true);
+            } else {
+              props.changePage(false);
+            }
+          }
+        }}
       >
         {pageStyle === PageStyle.LongStrip ? getSeparatePageContainers() : getSinglePageContainer()}
       </div>
