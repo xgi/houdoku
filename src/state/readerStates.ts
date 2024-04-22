@@ -56,8 +56,8 @@ export const showingHeaderState = atom({
   default: true,
 });
 
-export const showingScrollBarState = atom({
-  key: 'readerShowingScrollBarState',
+export const showingScrollbarState = atom({
+  key: 'readerShowingScrollbarState',
   default: true,
 });
 

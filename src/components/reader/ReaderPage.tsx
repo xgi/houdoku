@@ -71,8 +71,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   );
   const [showingSidebar, setShowingSidebar] = useRecoilState(readerStates.showingSidebarState);
   const [showingHeader, setShowingHeader] = useRecoilState(readerStates.showingHeaderState);
-  const [showingScrollBar, setShowingScrollBar] = useRecoilState(
-    readerStates.showingScrollBarState
+  const [showingScrollbar, setShowingScrollbar] = useRecoilState(
+    readerStates.showingScrollbarState
   );
   const [showingNoNextChapter, setShowingNoNextChapter] = useRecoilState(
     readerStates.showingNoNextChapterState
@@ -102,7 +102,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   );
   const keyToggleShowingSidebar = useRecoilValue(settingStates.keyToggleShowingSidebarState);
   const keyToggleShowingHeader = useRecoilValue(settingStates.keyToggleShowingHeaderState);
-  const keyToggleShowingScrollBar = useRecoilValue(settingStates.keyToggleShowingScrollBarState);
+  const keyToggleShowingScrollbar = useRecoilValue(settingStates.keyToggleShowingScrollbarState);
   const keyToggleFullscreen = useRecoilValue(settingStates.keyToggleFullscreenState);
   const keyExit = useRecoilValue(settingStates.keyExitState);
   const keyCloseOrBack = useRecoilValue(settingStates.keyCloseOrBackState);
@@ -336,7 +336,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     if (!showingHeader) {
       stylesToAdd.push(styles.headerless);
     }
-    if (!showingScrollBar) {
+    if (!showingScrollbar) {
       stylesToAdd.push(styles.scrollbarless);
     }
     document.getElementById('root')?.classList.add(...stylesToAdd);
@@ -518,7 +518,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     );
     Mousetrap.bind(keyToggleShowingSidebar, () => setShowingSidebar(showingSidebar));
     Mousetrap.bind(keyToggleShowingHeader, () => setShowingHeader(!showingHeader));
-    Mousetrap.bind(keyToggleShowingScrollBar, () => setShowingScrollBar(!showingScrollBar));
+    Mousetrap.bind(keyToggleShowingScrollbar, () => setShowingScrollbar(!showingScrollbar));
     Mousetrap.bind(keyToggleFullscreen, () =>
       ipcRenderer.invoke(ipcChannels.WINDOW.TOGGLE_FULLSCREEN)
     );
@@ -529,7 +529,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     addRootStyles();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showingHeader, showingScrollBar]);
+  }, [showingHeader, showingScrollbar]);
 
   useEffect(() => {
     updatePageGroupList();
@@ -582,7 +582,7 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     showingNoNextChapter,
     showingSettingsModal,
     showingHeader,
-    showingScrollBar,
+    showingScrollbar,
     readingDirection,
     pageStyle,
     readerChapter,
