@@ -1,7 +1,17 @@
 import React from 'react';
 import { Language, Series, SeriesStatus, Languages, LanguageKey } from '@tiyo/common';
 import { ipcRenderer } from 'electron';
-import { ActionIcon, Grid, Group, Input, MultiSelect, Select, Stack, Text } from '@mantine/core';
+import {
+  ActionIcon,
+  Grid,
+  Group,
+  Input,
+  MultiSelect,
+  Select,
+  Stack,
+  Text,
+  Textarea,
+} from '@mantine/core';
 import { IconUpload } from '@tabler/icons';
 import styles from './SeriesEditControls.css';
 import ipcChannels from '../../constants/ipcChannels.json';
@@ -91,17 +101,18 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
           <Text align="right">Description</Text>
         </Grid.Col>
         <Grid.Col span={8}>
-          <Input
+          <Textarea
             disabled={!props.editable}
             value={props.series.description}
             title={props.series.description}
             placeholder="Description..."
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
               props.setSeries({
                 ...props.series,
                 description: e.target.value,
               })
             }
+            autosize
           />
         </Grid.Col>
 

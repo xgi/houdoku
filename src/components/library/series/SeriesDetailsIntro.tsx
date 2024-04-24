@@ -43,7 +43,9 @@ const SeriesDetailsIntro: React.FC<Props> = (props: Props) => {
           </Title>
           <Text>{currentExtensionMetadata?.name}</Text>
         </Group>
-        <ScrollArea style={{ height: 100 }}>{props.series.description}</ScrollArea>
+        <ScrollArea style={{ height: 100, whiteSpace: 'pre-wrap' }}>
+          {props.series.description}
+        </ScrollArea>
       </Grid.Col>
     </Grid>
   );
