@@ -45,6 +45,7 @@ import {
   keyToggleReadingDirectionState,
   keyToggleShowingHeaderState,
   keyToggleShowingSettingsModalState,
+  keyToggleShowingScrollbarState,
   pageStyleState,
   readingDirectionState,
   pageGapState,
@@ -81,6 +82,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   );
   const [keyToggleShowingSettingsModal, setKeyToggleShowingSettingsModal] = useRecoilState(
     keyToggleShowingSettingsModalState
+  );
+  const [keyToggleShowingScrollbar, setKeyToggleShowingScrollbar] = useRecoilState(
+    keyToggleShowingScrollbarState
   );
   const [keyToggleShowingHeader, setKeyToggleShowingHeader] = useRecoilState(
     keyToggleShowingHeaderState
@@ -158,6 +162,9 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
         break;
       case ReaderSetting.KeyToggleShowingSettingsModal:
         setKeyToggleShowingSettingsModal(value);
+        break;
+      case ReaderSetting.KeyToggleShowingScrollbar:
+        setKeyToggleShowingScrollbar(value);
         break;
       case ReaderSetting.KeyToggleShowingHeader:
         setKeyToggleShowingHeader(value);
@@ -464,6 +471,11 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
                 name: 'Show Settings Menu',
                 value: keyToggleShowingSettingsModal,
                 setting: ReaderSetting.KeyToggleShowingSettingsModal,
+              },
+              {
+                name: 'Toggle Scrollbar',
+                value: keyToggleShowingScrollbar,
+                setting: ReaderSetting.KeyToggleShowingScrollbar,
               },
               {
                 name: 'Toggle Menu Bar',

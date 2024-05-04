@@ -16,6 +16,10 @@
   --reader-header-height: 0px;
 }
 
+.scrollbarless::-webkit-scrollbar {
+  display: none;
+}
+
 .finalChapterContainer {
   height: calc(100vh - var(--reader-header-height) - var(--titlebar-height));
   display: flex;
