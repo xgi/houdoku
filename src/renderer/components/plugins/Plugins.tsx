@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import aki, { RegistrySearchResults } from 'aki-plugin-manager';
-import log from 'electron-log';
+const aki = require('aki-plugin-manager');
 import { useLocation } from 'react-router-dom';
 import { Button, Group, Mark, Table, Text } from '@mantine/core';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { gt } from 'semver';
 import { useListState } from '@mantine/hooks';
 import ipcChannels from '../../../common/constants/ipcChannels.json';
@@ -30,41 +29,41 @@ const Plugins: React.FC<Props> = () => {
 
     await aki
       .search('core', 'tiyo', 1)
-      .then((results: RegistrySearchResults) => {
+      .then((results: any) => {
         if (results.objects.length > 0) {
           setAvailableTiyoVersion(results.objects[0].package.version);
         }
       })
-      .catch((e) => log.error(e));
+      .catch((e) => console.error(e));
     setRefreshing(false);
   };
 
   const handleInstall = (pkgName: string, version: string) => {
-    log.info(`Installing plugin ${pkgName}@${version}`);
+    console.info(`Installing plugin ${pkgName}@${version}`);
     installingPluginsHandlers.append(pkgName);
 
     ipcRenderer
       .invoke(ipcChannels.EXTENSION_MANAGER.INSTALL, pkgName, version)
       .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.RELOAD))
       .then(() => refreshMetadata())
-      .catch((e) => log.error(e))
+      .catch((e) => console.error(e))
       .finally(() => installingPluginsHandlers.filter((item) => item !== pkgName))
-      .catch((e) => log.error(e));
+      .catch((e) => console.error(e));
   };
 
   const handleRemove = (pkgName: string) => {
-    log.info(`Removing plugin ${pkgName}...`);
+    console.info(`Removing plugin ${pkgName}...`);
 
     ipcRenderer
       .invoke(ipcChannels.EXTENSION_MANAGER.UNINSTALL, pkgName)
       .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.RELOAD))
       .then(() => refreshMetadata())
-      .catch((e) => log.error(e));
+      .catch((e) => console.error(e));
   };
 
   const reloadPlugins = async () => {
     setReloading(true);
-    await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.RELOAD).catch((e) => log.error(e));
+    await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.RELOAD).catch((e) => console.error(e));
     setReloading(false);
     refreshMetadata();
   };

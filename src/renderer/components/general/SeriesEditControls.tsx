@@ -1,6 +1,6 @@
 import React from 'react';
 import { Language, Series, SeriesStatus, Languages, LanguageKey } from '@tiyo/common';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import {
   ActionIcon,
   Grid,
@@ -13,7 +13,7 @@ import {
   Textarea,
 } from '@mantine/core';
 import { IconUpload } from '@tabler/icons';
-import styles from './SeriesEditControls.css';
+import styles from './SeriesEditControls.module.css';
 import ipcChannels from '../../../common/constants/ipcChannels.json';
 import constants from '../../../common/constants/constants.json';
 import ExtensionImage from './ExtensionImage';
@@ -60,7 +60,7 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
                           extensions: constants.IMAGE_EXTENSIONS,
                         },
                       ],
-                      'Select Series Cover'
+                      'Select Series Cover',
                     )
                     .then((fileList: string) => {
                       // eslint-disable-next-line promise/always-return

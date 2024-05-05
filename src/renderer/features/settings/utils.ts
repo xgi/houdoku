@@ -1,4 +1,3 @@
-import log from 'electron-log';
 import { SettingType } from '@tiyo/common';
 import {
   GeneralSetting,
@@ -67,28 +66,28 @@ export const getAllStoredSettings = () => {
     ...parseStoreValues(getStoreValues(storeKeys.SETTINGS.INTEGRATION_PREFIX, IntegrationSetting)),
   };
 
-  log.info(`Using settings: ${JSON.stringify(settings)}`);
+  console.info(`Using settings: ${JSON.stringify(settings)}`);
   return settings;
 };
 
 export function saveGeneralSetting(key: GeneralSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.GENERAL_PREFIX}${key}`, value);
-  log.info(`Set GeneralSetting ${key} to ${value}`);
+  console.info(`Set GeneralSetting ${key} to ${value}`);
 }
 
 export function saveReaderSetting(key: ReaderSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.READER_PREFIX}${key}`, value);
-  log.info(`Set ReaderSetting ${key} to ${value}`);
+  console.info(`Set ReaderSetting ${key} to ${value}`);
 }
 
 export function saveTrackerSetting(key: TrackerSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.TRACKER_PREFIX}${key}`, value);
-  log.info(`Set TrackerSetting ${key} to ${value}`);
+  console.info(`Set TrackerSetting ${key} to ${value}`);
 }
 
 export function saveIntegrationSetting(key: IntegrationSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.INTEGRATION_PREFIX}${key}`, value);
-  log.info(`Set IntegrationSetting ${key} to ${value}`);
+  console.info(`Set IntegrationSetting ${key} to ${value}`);
 }
 
 export function nextReadingDirection(readingDirection: ReadingDirection): ReadingDirection {

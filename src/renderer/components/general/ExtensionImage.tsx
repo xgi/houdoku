@@ -1,7 +1,6 @@
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
-import log from 'electron-log';
 import { Button, Loader } from '@mantine/core';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../../common/constants/ipcChannels.json';
@@ -32,7 +31,7 @@ const ExtensionImage: React.FC<Props> = (props: Props) => {
             ipcChannels.EXTENSION.GET_IMAGE,
             props.series.extensionId,
             props.series,
-            props.url
+            props.url,
           )
           .then((data) => {
             if (typeof data === 'string') {
@@ -43,7 +42,7 @@ const ExtensionImage: React.FC<Props> = (props: Props) => {
           })
           .finally(() => setIsError(false))
           .catch((e) => {
-            log.error(e);
+            console.error(e);
             setIsError(true);
           });
       } else {

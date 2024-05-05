@@ -1,6 +1,6 @@
 import React from 'react';
 import { Title, Text, Image } from '@mantine/core';
-import styles from './AppLoading.css';
+import styles from './AppLoading.module.css';
 import { AppLoadStep } from '../../../common/models/types';
 import logo from '../../img/logo.svg';
 

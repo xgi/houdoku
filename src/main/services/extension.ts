@@ -9,9 +9,8 @@ import {
   FilterOption,
   TiyoClientInterface,
 } from '@tiyo/common';
-import aki from 'aki-plugin-manager';
+const aki = require('aki-plugin-manager');
 import { BrowserWindow, IpcMain } from 'electron';
-import log from 'electron-log';
 import { FS_METADATA } from '../../common/temp_fs_metadata';
 import { FSExtensionClient } from './extensions/filesystem';
 import ipcChannels from '../../common/constants/ipcChannels.json';
@@ -22,7 +21,7 @@ let FILESYSTEM_EXTENSION: FSExtensionClient | null = null;
 export async function loadPlugins(
   pluginsDir: string,
   extractDir: string,
-  spoofWindow: BrowserWindow
+  spoofWindow: BrowserWindow,
 ) {
   if (TIYO_CLIENT !== null) {
     TIYO_CLIENT = null;
@@ -31,7 +30,7 @@ export async function loadPlugins(
     FILESYSTEM_EXTENSION = null;
   }
 
-  log.info('Checking for Tiyo plugin...');
+  console.info('Checking for Tiyo plugin...');
   aki.list(pluginsDir).forEach((pluginDetails: [string, string]) => {
     const pluginName = pluginDetails[0];
     if (pluginName === '@tiyo/core') {
@@ -39,21 +38,21 @@ export async function loadPlugins(
         pluginsDir,
         pluginName,
         // eslint-disable-next-line no-eval
-        eval('require') as NodeRequire
+        eval('require') as NodeRequire,
       );
 
       TIYO_CLIENT = new mod.TiyoClient(spoofWindow);
-      log.info(
+      console.info(
         `Loaded Tiyo plugin v${TIYO_CLIENT!.getVersion()}; it has ${
           Object.keys(TIYO_CLIENT!.getExtensions()).length
-        } extensions`
+        } extensions`,
       );
     } else {
-      log.warn(`Ignoring unsupported plugin: ${pluginName}`);
+      console.warn(`Ignoring unsupported plugin: ${pluginName}`);
     }
   });
 
-  log.info('Initializing filesystem extension...');
+  console.info('Initializing filesystem extension...');
   FILESYSTEM_EXTENSION = new FSExtensionClient(() => new Promise((_resolve, reject) => reject()));
   FILESYSTEM_EXTENSION.extractPath = extractDir;
 }
@@ -77,10 +76,10 @@ function getExtensionClient(extensionId: string) {
  */
 function getSeries(extensionId: string, seriesId: string): Promise<Series | undefined> {
   const extension = getExtensionClient(extensionId);
-  log.info(`Getting series ${seriesId} from extension ${extensionId}`);
+  console.info(`Getting series ${seriesId} from extension ${extensionId}`);
 
   return extension.getSeries(seriesId).catch((err: Error) => {
-    log.error(err);
+    console.error(err);
     return undefined;
   });
 }
@@ -98,10 +97,10 @@ function getSeries(extensionId: string, seriesId: string): Promise<Series | unde
  */
 function getChapters(extensionId: string, seriesId: string): Promise<Chapter[]> {
   const extension = getExtensionClient(extensionId);
-  log.info(`Getting chapters for series ${seriesId} from extension ${extensionId}`);
+  console.info(`Getting chapters for series ${seriesId} from extension ${extensionId}`);
 
   return extension.getChapters(seriesId).catch((err: Error) => {
-    log.error(err);
+    console.error(err);
     return [];
   });
 }
@@ -120,15 +119,15 @@ function getChapters(extensionId: string, seriesId: string): Promise<Chapter[]> 
 function getPageRequesterData(
   extensionId: string,
   seriesSourceId: string,
-  chapterSourceId: string
+  chapterSourceId: string,
 ): Promise<PageRequesterData> {
   const extension = getExtensionClient(extensionId);
-  log.info(
-    `Getting page requester data for series ${seriesSourceId} chapter ${chapterSourceId} from extension ${extensionId}`
+  console.info(
+    `Getting page requester data for series ${seriesSourceId} chapter ${chapterSourceId} from extension ${extensionId}`,
   );
 
   return extension.getPageRequesterData(seriesSourceId, chapterSourceId).catch((err: Error) => {
-    log.error(err);
+    console.error(err);
     return { server: '', hash: '', numPages: 0, pageFilenames: [] };
   });
 }
@@ -166,11 +165,11 @@ function getPageUrls(extensionId: string, pageRequesterData: PageRequesterData):
 async function getImage(
   extensionId: string,
   series: Series,
-  url: string
+  url: string,
 ): Promise<string | ArrayBuffer> {
   const extension = getExtensionClient(extensionId);
   return extension.getImage(series, url).catch((err: Error) => {
-    log.error(err);
+    console.error(err);
     return '';
   });
 }
@@ -187,13 +186,13 @@ function search(
   extensionId: string,
   text: string,
   page: number,
-  filterValues: FilterValues
+  filterValues: FilterValues,
 ): Promise<SeriesListResponse> {
   const extension = getExtensionClient(extensionId);
-  log.info(`Searching for "${text}" page=${page} from extension ${extensionId}`);
+  console.info(`Searching for "${text}" page=${page} from extension ${extensionId}`);
 
   return extension.getSearch(text, page, filterValues).catch((err: Error) => {
-    log.error(err);
+    console.error(err);
     return { seriesList: [], hasMore: false };
   });
 }
@@ -207,13 +206,13 @@ function search(
 function directory(
   extensionId: string,
   page: number,
-  filterValues: FilterValues
+  filterValues: FilterValues,
 ): Promise<SeriesListResponse> {
   const extension = getExtensionClient(extensionId);
-  log.info(`Getting directory page=${page} from extension ${extensionId}`);
+  console.info(`Getting directory page=${page} from extension ${extensionId}`);
 
   return extension.getDirectory(page, filterValues).catch((err: Error) => {
-    log.error(err);
+    console.error(err);
     return { seriesList: [], hasMore: false };
   });
 }
@@ -226,12 +225,12 @@ function directory(
  */
 function getSettingTypes(extensionId: string): { [key: string]: SettingType } {
   const extension = getExtensionClient(extensionId);
-  log.info(`Getting setting types from extension ${extensionId}`);
+  console.info(`Getting setting types from extension ${extensionId}`);
 
   try {
     return extension.getSettingTypes();
   } catch (err) {
-    log.error(err);
+    console.error(err);
     return {};
   }
 }
@@ -244,12 +243,12 @@ function getSettingTypes(extensionId: string): { [key: string]: SettingType } {
  */
 function getSettings(extensionId: string): { [key: string]: unknown } {
   const extension = getExtensionClient(extensionId);
-  log.info(`Getting settings from extension ${extensionId}`);
+  console.info(`Getting settings from extension ${extensionId}`);
 
   try {
     return extension.getSettings();
   } catch (err) {
-    log.error(err);
+    console.error(err);
     return {};
   }
 }
@@ -262,12 +261,12 @@ function getSettings(extensionId: string): { [key: string]: unknown } {
  */
 function setSettings(extensionId: string, settings: { [key: string]: unknown }): void {
   const extension = getExtensionClient(extensionId);
-  log.info(`Setting settings from extension ${extensionId}`);
+  console.info(`Setting settings from extension ${extensionId}`);
 
   try {
     extension.setSettings(settings);
   } catch (err) {
-    log.error(err);
+    console.error(err);
   }
 }
 
@@ -278,12 +277,12 @@ function setSettings(extensionId: string, settings: { [key: string]: unknown }):
  */
 function getFilterOptions(extensionId: string): FilterOption[] {
   const extension = getExtensionClient(extensionId);
-  log.info(`Getting filter options from extension ${extensionId}`);
+  console.info(`Getting filter options from extension ${extensionId}`);
 
   try {
     return extension.getFilterOptions();
   } catch (err) {
-    log.error(err);
+    console.error(err);
     return [];
   }
 }
@@ -292,9 +291,9 @@ export const createExtensionIpcHandlers = (
   ipcMain: IpcMain,
   pluginsDir: string,
   extractDir: string,
-  spoofWindow: BrowserWindow
+  spoofWindow: BrowserWindow,
 ) => {
-  log.debug('Creating extension IPC handlers in main...');
+  console.debug('Creating extension IPC handlers in main...');
 
   ipcMain.handle(ipcChannels.EXTENSION_MANAGER.RELOAD, async (event) => {
     await loadPlugins(pluginsDir, extractDir, spoofWindow);
@@ -345,43 +344,43 @@ export const createExtensionIpcHandlers = (
     ipcChannels.EXTENSION.GET_SERIES,
     (_event, extensionId: string, seriesId: string) => {
       return getSeries(extensionId, seriesId);
-    }
+    },
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_CHAPTERS,
     (_event, extensionId: string, seriesId: string) => {
       return getChapters(extensionId, seriesId);
-    }
+    },
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
     (_event, extensionId: string, seriesSourceId: string, chapterSourceId: string) => {
       return getPageRequesterData(extensionId, seriesSourceId, chapterSourceId);
-    }
+    },
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_PAGE_URLS,
     (_event, extensionId: string, pageRequesterData: PageRequesterData) => {
       return getPageUrls(extensionId, pageRequesterData);
-    }
+    },
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.GET_IMAGE,
     (_event, extensionId: string, series: Series, url: string) => {
       return getImage(extensionId, series, url);
-    }
+    },
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.SEARCH,
     (_event, extensionId: string, text: string, page: number, filterValues: FilterValues) => {
       return search(extensionId, text, page, filterValues);
-    }
+    },
   );
   ipcMain.handle(
     ipcChannels.EXTENSION.DIRECTORY,
     (_event, extensionId: string, page: number, filterValues: FilterValues) => {
       return directory(extensionId, page, filterValues);
-    }
+    },
   );
   ipcMain.handle(ipcChannels.EXTENSION.GET_SETTING_TYPES, (_event, extensionId: string) => {
     return getSettingTypes(extensionId);
@@ -393,7 +392,7 @@ export const createExtensionIpcHandlers = (
     ipcChannels.EXTENSION.SET_SETTINGS,
     (_event, extensionId: string, settings: { [key: string]: unknown }) => {
       return setSettings(extensionId, settings);
-    }
+    },
   );
   ipcMain.handle(ipcChannels.EXTENSION.GET_FILTER_OPTIONS, (_event, extensionId: string) => {
     return getFilterOptions(extensionId);

@@ -1,4 +1,3 @@
-/* eslint-disable react/button-has-type */
 import React from 'react';
 import { Chapter, Languages } from '@tiyo/common';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -33,7 +32,7 @@ import {
   ScrollArea,
 } from '@mantine/core';
 import flags from '../../img/flags.png';
-import styles from './ReaderHeader.css';
+import styles from './ReaderHeader.module.css';
 import { ReadingDirection, PageStyle, OffsetPages } from '../../../common/models/types';
 import {
   chapterState,

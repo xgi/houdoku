@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chapter, Series, Languages } from '@tiyo/common';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ActionIcon, Center, Group, Text } from '@mantine/core';
 import { IconDownload, IconEye, IconFileCheck } from '@tabler/icons';

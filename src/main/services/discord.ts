@@ -1,5 +1,4 @@
 import { IpcMain } from 'electron';
-import log from 'electron-log';
 import DiscordRPC from 'discord-rpc';
 import { Chapter, Series } from '@tiyo/common';
 import ipcChannels from '../../common/constants/ipcChannels.json';
@@ -8,7 +7,7 @@ import packageJson from '../../../package.json';
 function getActivity(
   startTime: Date,
   series?: Series,
-  chapter?: Chapter
+  chapter?: Chapter,
 ): DiscordRPC.Presence | undefined {
   if (series === undefined || chapter === undefined) return undefined;
 
@@ -26,7 +25,7 @@ function getActivity(
 
 // eslint-disable-next-line import/prefer-default-export
 export const createDiscordIpcHandlers = (ipcMain: IpcMain) => {
-  log.debug('Creating Discord IPC handlers in main...');
+  console.debug('Creating Discord IPC handlers in main...');
 
   const startTime = new Date();
   let client: DiscordRPC.Client | null = null;
@@ -37,7 +36,7 @@ export const createDiscordIpcHandlers = (ipcMain: IpcMain) => {
       const activity = getActivity(startTime, series, chapter);
 
       if (client === null) {
-        log.debug("Request to set Discord activity, but client isn't set; connecting...");
+        console.debug("Request to set Discord activity, but client isn't set; connecting...");
         const clientId = '856668322672934932';
         client = new DiscordRPC.Client({ transport: 'ipc' });
 
@@ -48,13 +47,13 @@ export const createDiscordIpcHandlers = (ipcMain: IpcMain) => {
         });
         client.login({ clientId });
       } else {
-        log.debug(
+        console.debug(
           `Setting Discord activity for ${
             chapter === undefined ? 'no chapter' : `chapter ${chapter.id}`
-          }`
+          }`,
         );
         client.setActivity(activity);
       }
-    }
+    },
   );
 };

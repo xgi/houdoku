@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ipcRenderer, shell } from 'electron';
-import log from 'electron-log';
+const { ipcRenderer, shell } = require('electron');
 import { Series } from '@tiyo/common';
 import {
   Button,
@@ -72,13 +71,13 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
     setUsername(
       await ipcRenderer
         .invoke(ipcChannels.TRACKER.GET_USERNAME, props.trackerMetadata.id)
-        .catch((e) => log.error(e))
+        .catch((e) => console.error(e)),
     );
 
     if (props.trackerKey) {
       const sourceTrackEntry = await ipcRenderer
         .invoke(ipcChannels.TRACKER.GET_LIBRARY_ENTRY, props.trackerMetadata.id, props.trackerKey)
-        .catch((e) => log.error(e));
+        .catch((e) => console.error(e));
 
       setTrackEntry(
         sourceTrackEntry === null
@@ -87,20 +86,20 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
               progress: 0,
               status: TrackStatus.Reading,
             }
-          : sourceTrackEntry
+          : sourceTrackEntry,
       );
       setTrackerSeriesList([]);
     } else {
       const seriesList = await ipcRenderer
         .invoke(ipcChannels.TRACKER.SEARCH, props.trackerMetadata.id, searchText)
-        .catch((e) => log.error(e));
+        .catch((e) => console.error(e));
       setTrackerSeriesList(seriesList.slice(0, 5));
       setTrackEntry(null);
     }
 
     const listEntries = await ipcRenderer
       .invoke(ipcChannels.TRACKER.GET_LIST_ENTRIES, props.trackerMetadata.id)
-      .catch((e) => log.error(e));
+      .catch((e) => console.error(e));
     setTrackerListEntries(listEntries);
 
     setLoading(false);
@@ -268,7 +267,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
             <Select
               value={trackEntry?.score !== undefined ? `${trackEntry.score}` : undefined}
               data={SCORE_FORMAT_OPTIONS[trackEntry.scoreFormat || TrackScoreFormat.POINT_10].map(
-                (x) => x.toString()
+                (x) => x.toString(),
               )}
               onChange={(value: string) =>
                 setTrackEntry({
@@ -293,7 +292,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
             leftIcon={<IconExternalLink />}
             onClick={() =>
               shell.openExternal(
-                trackEntry.url || `${trackerMetadata.url}/manga/${trackEntry.seriesId}`
+                trackEntry.url || `${trackerMetadata.url}/manga/${trackEntry.seriesId}`,
               )
             }
           >
@@ -324,7 +323,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
     if (trackEntry !== null) {
       ipcRenderer
         .invoke(ipcChannels.TRACKER.UPDATE_LIBRARY_ENTRY, props.trackerMetadata.id, trackEntry)
-        .catch((e) => log.error(e));
+        .catch((e) => console.error(e));
     }
   }, [props.trackerMetadata.id, trackEntry]);
 

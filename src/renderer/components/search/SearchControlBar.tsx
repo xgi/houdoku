@@ -3,7 +3,7 @@ import React from 'react';
 import { ExtensionMetadata } from '@tiyo/common';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { Button, Group, Input, Select } from '@mantine/core';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import {
   searchExtensionState,
   searchTextState,

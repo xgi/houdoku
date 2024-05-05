@@ -1,8 +1,7 @@
-import path from 'path';
-import fs from 'fs';
+const path = require('path');
+const fs = require('fs');
 import rimraf from 'rimraf';
-import { ipcRenderer } from 'electron';
-import log from 'electron-log';
+const { ipcRenderer } = require('electron');
 import { Chapter, Series } from '@tiyo/common';
 import ipcChannels from '../constants/ipcChannels.json';
 
@@ -38,7 +37,7 @@ export function getDirectories(directory: string): string[] {
 
   const result: string[] = [];
   const files = fs.readdirSync(directory);
-  files.forEach((file) => {
+  files.forEach((file: File) => {
     const fullpath = path.join(directory, file);
     if (fs.statSync(fullpath)) result.push(fullpath);
   });
@@ -75,7 +74,7 @@ export async function getThumbnailPath(series: Series): Promise<string | null> {
 export function getChapterDownloadPath(
   series: Series,
   chapter: Chapter,
-  downloadsDir: string
+  downloadsDir: string,
 ): string {
   if (!chapter.id) return '';
 
@@ -105,7 +104,7 @@ export function getChapterDownloadPath(
 export async function getChaptersDownloaded(
   series: Series,
   chapters: Chapter[],
-  downloadsDir: string
+  downloadsDir: string,
 ): Promise<{ [key: string]: boolean }> {
   const seriesDir1 = sanitizeFilename(series.title);
   const seriesDir2 = series.id || '';
@@ -136,10 +135,10 @@ export async function getChaptersDownloaded(
 export async function getChapterDownloaded(
   series: Series,
   chapter: Chapter,
-  downloadsDir: string
+  downloadsDir: string,
 ): Promise<boolean> {
   return getChaptersDownloaded(series, [chapter], downloadsDir).then((statuses) =>
-    chapter.id ? statuses[chapter.id] : false
+    chapter.id ? statuses[chapter.id] : false,
   );
 }
 
@@ -162,9 +161,9 @@ export function getAllDownloadedChapterIds(downloadsDir: string): string[] {
 export async function deleteDownloadedChapter(
   series: Series,
   chapter: Chapter,
-  downloadsDir: string
+  downloadsDir: string,
 ): Promise<void> {
-  log.debug(`Deleting from disk chapter ${chapter.id} from series ${series.id}`);
+  console.debug(`Deleting from disk chapter ${chapter.id} from series ${series.id}`);
   if (series.id === undefined || chapter.id === undefined)
     return new Promise((resolve) => resolve());
 
@@ -177,7 +176,7 @@ export async function deleteDownloadedChapter(
           fs.rmdirSync(seriesDir);
         }
         resolve();
-      })
+      }),
     );
   }
   return new Promise((resolve) => resolve());
@@ -198,12 +197,27 @@ export async function deleteThumbnail(series: Series) {
   for (const file of files) {
     if (file.startsWith(`${series.id}.`)) {
       const curPath = path.join(thumbnailsDir, file);
-      log.debug(`Deleting thumbnail at ${curPath}`);
-      fs.unlink(curPath, (err) => {
+      console.debug(`Deleting thumbnail at ${curPath}`);
+      fs.unlink(curPath, (err: Error) => {
         if (err) {
-          log.error(err);
+          console.error(err);
         }
       });
     }
   }
+}
+
+export async function downloadCover(thumbnailPath: string, data: any) {
+  const url = typeof data === 'string' ? data : URL.createObjectURL(new Blob([data]));
+
+  fetch(url)
+    .then((response) => response.arrayBuffer())
+    .then((buffer) => {
+      fs.writeFile(thumbnailPath, Buffer.from(buffer), (err: Error) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+    })
+    .catch((e: Error) => console.error(e));
 }

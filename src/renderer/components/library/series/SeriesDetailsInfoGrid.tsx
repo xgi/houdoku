@@ -1,6 +1,6 @@
-import fs from 'fs';
+const fs = require('fs');
 import React from 'react';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { Box, Grid, Group, Text, Badge } from '@mantine/core';
 import { Languages, Series } from '@tiyo/common';
 import ipcChannels from '../../../../common/constants/ipcChannels.json';

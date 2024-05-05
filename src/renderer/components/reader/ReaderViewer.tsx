@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { flushSync } from 'react-dom';
-import styles from './ReaderViewer.css';
+import styles from './ReaderViewer.module.css';
 import { ReadingDirection, PageStyle } from '../../../common/models/types';
 import {
   lastPageNumberState,
@@ -174,7 +174,7 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
           `}
         >
           {getPageImage(i, true)}
-        </div>
+        </div>,
       );
     }
     return pageContainers;
@@ -222,7 +222,6 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         root.onscroll = () => true;
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageStyle, lastPageNumber, pageNumber]);
 
   /**
@@ -254,7 +253,6 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       const root = document.getElementById(ROOT_ID);
       if (root) root.scrollTop = 0;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageStyle, pageNumber, lastPageNumber]);
 
   const handleScroll = (e: WheelEvent) => {
@@ -277,7 +275,6 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
     return () => {
       window.removeEventListener('wheel', handleScroll);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageWidthMetric]);
 
   return (

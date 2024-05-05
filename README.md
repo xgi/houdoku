@@ -47,7 +47,7 @@ yarn
 Start the app in the dev environment:
 
 ```
-yarn start
+yarn dev
 ```
 
 ## Stack

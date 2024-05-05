@@ -1,6 +1,6 @@
-import fs from 'fs';
+const fs = require('fs');
 import React from 'react';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { useRecoilValue } from 'recoil';
 import { Grid, Group, Text, Image, Title, ScrollArea } from '@mantine/core';
 import path from 'path';
@@ -26,7 +26,7 @@ const SeriesDetailsIntro: React.FC<Props> = (props: Props) => {
     const fileExtensions = constants.IMAGE_EXTENSIONS;
     for (let i = 0; i < fileExtensions.length; i += 1) {
       const thumbnailPath = path.join(thumbnailsDir, `${props.series.id}.${fileExtensions[i]}`);
-      if (fs.existsSync(thumbnailPath)) return thumbnailPath;
+      if (fs.existsSync(thumbnailPath)) return `atom://${thumbnailPath}`;
     }
     return props.series.remoteCoverUrl || blankCover;
   };

@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import log from 'electron-log';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { ExtensionMetadata } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import {
@@ -46,7 +45,7 @@ import { ErrorBoundary } from './components/general/ErrorBoundary';
 import library from './services/library';
 
 const loadStoredExtensionSettings = () => {
-  log.info('Loading stored extension settings...');
+  console.info('Loading stored extension settings...');
   return (
     ipcRenderer
       .invoke(ipcChannels.EXTENSION_MANAGER.GET_ALL)
@@ -54,24 +53,24 @@ const loadStoredExtensionSettings = () => {
       .then((metadataList: ExtensionMetadata[]) => {
         metadataList.forEach((metadata: ExtensionMetadata) => {
           const extSettings: string | null = persistantStore.read(
-            `${storeKeys.EXTENSION_SETTINGS_PREFIX}${metadata.id}`
+            `${storeKeys.EXTENSION_SETTINGS_PREFIX}${metadata.id}`,
           );
           if (extSettings !== null) {
-            log.debug(`Found stored settings for extension ${metadata.id}`);
+            console.debug(`Found stored settings for extension ${metadata.id}`);
             ipcRenderer.invoke(
               ipcChannels.EXTENSION.SET_SETTINGS,
               metadata.id,
-              JSON.parse(extSettings)
+              JSON.parse(extSettings),
             );
           }
         });
       })
-      .catch((e: Error) => log.error(e))
+      .catch((e: Error) => console.error(e))
   );
 };
 
 const loadStoredTrackerTokens = () => {
-  log.info('Loading stored tracker tokens...');
+  console.info('Loading stored tracker tokens...');
   return (
     ipcRenderer
       .invoke(ipcChannels.TRACKER_MANAGER.GET_ALL)
@@ -79,22 +78,22 @@ const loadStoredTrackerTokens = () => {
       .then((metadataList: TrackerMetadata[]) => {
         metadataList.forEach((metadata: TrackerMetadata) => {
           const token: string | null = persistantStore.read(
-            `${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${metadata.id}`
+            `${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${metadata.id}`,
           );
           if (token !== null) {
-            log.debug(`Found stored token for tracker ${metadata.id}`);
+            console.debug(`Found stored token for tracker ${metadata.id}`);
             ipcRenderer.invoke(ipcChannels.TRACKER.SET_ACCESS_TOKEN, metadata.id, token);
           }
         });
       })
-      .catch((e: Error) => log.error(e))
+      .catch((e: Error) => console.error(e))
   );
 };
 
 loadStoredExtensionSettings();
 loadStoredTrackerTokens();
 
-log.debug('Adding app-wide renderer IPC handlers');
+console.debug('Adding app-wide renderer IPC handlers');
 ipcRenderer.on(ipcChannels.APP.LOAD_STORED_EXTENSION_SETTINGS, () => {
   loadStoredExtensionSettings();
 });
@@ -108,7 +107,7 @@ ipcRenderer.on(ipcChannels.WINDOW.SET_FULLSCREEN, (_event, fullscreen) => {
 ipcRenderer.on(
   ipcChannels.APP.SEND_NOTIFICATION,
   (_event, props: NotificationProps, isUpdate = false, iconName?: 'check' | 'x') => {
-    log.info(`Sending notification: ${props}`);
+    console.info(`Sending notification: ${props}`);
     const iconNode =
       iconName !== undefined
         ? { check: <IconCheck size={16} />, x: <IconX size={16} /> }[iconName]
@@ -122,7 +121,7 @@ ipcRenderer.on(
         icon: iconNode,
       });
     }
-  }
+  },
 );
 
 ipcRenderer.on(ipcChannels.APP.SHOW_PERFORM_UPDATE_DIALOG, (_event, updateInfo: UpdateInfo) => {
@@ -159,7 +158,7 @@ ipcRenderer.on(ipcChannels.APP.SHOW_PERFORM_UPDATE_DIALOG, (_event, updateInfo: 
       </>
     ),
     labels: { confirm: 'Download Update', cancel: 'Not now' },
-    onCancel: () => log.info('User opted not to perform update'),
+    onCancel: () => console.info('User opted not to perform update'),
     onConfirm: () => ipcRenderer.invoke(ipcChannels.APP.PERFORM_UPDATE),
   });
 });
@@ -169,7 +168,7 @@ ipcRenderer.on(ipcChannels.APP.SHOW_RESTART_UPDATE_DIALOG, () => {
     title: 'Restart Required',
     children: <Text>Houdoku needs to restart to finish installing updates. Restart now?</Text>,
     labels: { confirm: 'Restart Now', cancel: 'Later' },
-    onCancel: () => log.info('User opted not to restart to update'),
+    onCancel: () => console.info('User opted not to restart to update'),
     onConfirm: () => ipcRenderer.invoke(ipcChannels.APP.UPDATE_AND_RESTART),
   });
 });
@@ -206,10 +205,9 @@ export default function App() {
     />
   );
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (loading) {
-      log.debug('Performing initial app load steps');
+      console.debug('Performing initial app load steps');
 
       /**
        * Add any additional preload steps here (e.g. data migration, verifications, etc)
@@ -233,14 +231,13 @@ export default function App() {
       if (autoCheckForUpdates) {
         ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
       } else {
-        log.debug('Skipping update check, autoCheckForUpdates is disabled');
+        console.debug('Skipping update check, autoCheckForUpdates is disabled');
       }
 
       setSeriesList(library.fetchSeriesList());
       setCategoryList(library.fetchCategoryList());
       setLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   return (

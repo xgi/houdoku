@@ -1,7 +1,6 @@
 import { Chapter, Series } from '@tiyo/common';
-import fs from 'fs-extra';
-import path from 'path';
-import log from 'electron-log';
+const fs = require('fs');
+const path = require('path');
 import storeKeys from '../../common/constants/storeKeys.json';
 import { updateSeries } from '../features/library/utils';
 import library from '../services/library';
@@ -32,7 +31,7 @@ export const createAutoBackup = async (Count = 1) => {
   }
   fs.readdir('backups', (err, files) => {
     if (err) {
-      log.error(`Unable to scan directory: ${err}`);
+      console.error(`Unable to scan directory: ${err}`);
     }
     if (files.length > Count) {
       fs.unlinkSync(path.join('backups', files[0]));

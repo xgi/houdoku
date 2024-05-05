@@ -1,6 +1,6 @@
 import React from 'react';
 import { Language, LanguageKey, Languages } from '@tiyo/common';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { useRecoilState } from 'recoil';
 import {
   Button,

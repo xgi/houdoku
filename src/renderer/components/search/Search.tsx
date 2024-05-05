@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ExtensionMetadata, FilterOption, Series, SeriesListResponse } from '@tiyo/common';
-import { ipcRenderer } from 'electron';
-import log from 'electron-log';
+const { ipcRenderer } = require('electron');
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Text } from '@mantine/core';
 import { openModal } from '@mantine/modals';
@@ -46,7 +45,7 @@ const Search: React.FC<Props> = (_props: Props) => {
       activeSeriesList.find(
         (_series: Series) =>
           (series.extensionId === _series.extensionId && series.sourceId === _series.sourceId) ||
-          series.title === _series.title
+          series.title === _series.title,
       ) !== undefined
     );
   };
@@ -65,14 +64,14 @@ const Search: React.FC<Props> = (_props: Props) => {
               ipcChannels.EXTENSION.DIRECTORY,
               searchExtension,
               page,
-              filterValuesMap[searchExtension] || {}
+              filterValuesMap[searchExtension] || {},
             )
           : ipcRenderer.invoke(
               ipcChannels.EXTENSION.SEARCH,
               searchExtension,
               searchText,
               page,
-              filterValuesMap[searchExtension] || {}
+              filterValuesMap[searchExtension] || {},
             );
 
       await respPromise
@@ -84,7 +83,7 @@ const Search: React.FC<Props> = (_props: Props) => {
           setNextSourcePage(page + 1);
         })
         .finally(() => setLoading(false))
-        .catch((e) => log.error(e));
+        .catch((e) => console.error(e));
     }
   };
 
@@ -112,7 +111,7 @@ const Search: React.FC<Props> = (_props: Props) => {
           setShowingAddModal(!showingAddModal);
         }
       })
-      .catch((e) => log.error(e));
+      .catch((e) => console.error(e));
   };
 
   // const renderAlert = () => {
@@ -159,7 +158,7 @@ const Search: React.FC<Props> = (_props: Props) => {
         setFilterOptions(opts);
       })
       .then(() => handleSearch(true))
-      .catch((err: Error) => log.error(err));
+      .catch((err: Error) => console.error(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchExtension]);
 

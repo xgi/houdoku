@@ -1,5 +1,4 @@
 import { IpcMain } from 'electron';
-import log from 'electron-log';
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { v4 as uuidv4 } from 'uuid';
 import ipcChannels from '../../common/constants/ipcChannels.json';
@@ -7,12 +6,12 @@ import packageJson from '../../../package.json';
 
 // eslint-disable-next-line import/prefer-default-export
 export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
-  log.debug('Creating updater IPC handlers in main...');
+  console.debug('Creating updater IPC handlers in main...');
 
   ipcMain.handle(ipcChannels.APP.CHECK_FOR_UPDATES, (event) => {
-    log.debug('Handling check for updates request...');
+    console.debug('Handling check for updates request...');
     if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
-      log.info('Skipping update check because we are in dev environment');
+      console.info('Skipping update check because we are in dev environment');
       return;
     }
 
@@ -24,7 +23,7 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
       .then((result: UpdateCheckResult) => {
         // eslint-disable-next-line promise/always-return
         if (result.updateInfo.version === packageJson.version) {
-          log.info(`Already up-to-date at version ${packageJson.version}`);
+          console.info(`Already up-to-date at version ${packageJson.version}`);
           event.sender.send(
             ipcChannels.APP.SEND_NOTIFICATION,
             {
@@ -32,17 +31,17 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
               color: 'teal',
             },
             false,
-            'check'
+            'check',
           );
           return;
         }
 
-        log.info(
-          `Found update to version ${result.updateInfo.version} (from ${packageJson.version})`
+        console.info(
+          `Found update to version ${result.updateInfo.version} (from ${packageJson.version})`,
         );
         event.sender.send(ipcChannels.APP.SHOW_PERFORM_UPDATE_DIALOG, result.updateInfo);
       })
-      .catch((e) => log.error(e));
+      .catch((e) => console.error(e));
   });
 
   ipcMain.handle(ipcChannels.APP.PERFORM_UPDATE, (event) => {
@@ -59,13 +58,13 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
           id: notificationId,
         },
         true,
-        'check'
+        'check',
       );
       event.sender.send(ipcChannels.APP.SHOW_RESTART_UPDATE_DIALOG);
     });
 
     autoUpdater.on('error', (err: Error) => {
-      log.error(`Updater encountered error: ${err}`);
+      console.error(`Updater encountered error: ${err}`);
       event.sender.send(
         ipcChannels.APP.SEND_NOTIFICATION,
         {
@@ -75,7 +74,7 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
           id: notificationId,
         },
         true,
-        'x'
+        'x',
       );
     });
 
@@ -95,7 +94,7 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
           autoUpdater.downloadUpdate();
         }
       })
-      .catch((e) => log.error(e));
+      .catch((e) => console.error(e));
   });
 
   ipcMain.handle(ipcChannels.APP.UPDATE_AND_RESTART, () => {

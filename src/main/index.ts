@@ -11,10 +11,19 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import fs from 'fs';
-import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, dialog, OpenDialogReturnValue } from 'electron';
+import path, { join } from 'path';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  net,
+  protocol,
+  ipcMain,
+  dialog,
+  OpenDialogReturnValue,
+} from 'electron';
 import log from 'electron-log';
-import { walk } from '../common/util/filesystem';
+import { walk, downloadCover } from '../common/util/filesystem';
 import { createExtensionIpcHandlers, loadPlugins } from './services/extension';
 import ipcChannels from '../common/constants/ipcChannels.json';
 import packageJson from '../../package.json';
@@ -34,7 +43,7 @@ const extractDir = path.join(app.getPath('userData'), 'extracted');
 
 log.transports.file.resolvePath = () => path.join(logsDir, 'main.log');
 
-log.info(`Starting Houdoku main process (client version ${packageJson.version})`);
+console.info(`Starting Houdoku main process (client version ${packageJson.version})`);
 
 let mainWindow: BrowserWindow | null = null;
 let spoofWindow: BrowserWindow | null = null;
@@ -54,7 +63,7 @@ const installExtensions = async () => {
   const extensions = ['REACT_DEVELOPER_TOOLS'];
 
   return Promise.all(
-    extensions.map((name) => installer.default(installer[name], forceDownload))
+    extensions.map((name) => installer.default(installer[name], forceDownload)),
   ).catch((err) => console.log(err));
 };
 
@@ -83,7 +92,12 @@ const createWindows = async () => {
       contextIsolation: false,
     },
   });
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  // mainWindow.loadURL(`file://${__dirname}/index.html`);
+  if (process.env['ELECTRON_RENDERER_URL']) {
+    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
+  } else {
+    mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
+  }
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -142,8 +156,17 @@ app
     // create ipc handlers for specific extension functionality
     createExtensionIpcHandlers(ipcMain, pluginsDir, extractDir, spoofWindow!);
     loadPlugins(pluginsDir, extractDir, spoofWindow!);
+
+    protocol.handle('atom', (req) => {
+      const { pathname } = new URL(req.url);
+      return net.fetch(`file://${pathname}`, {
+        method: req.method,
+        headers: req.headers,
+        body: req.body,
+      });
+    });
   })
-  .catch(log.error);
+  .catch(console.error);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
@@ -193,6 +216,10 @@ ipcMain.handle(ipcChannels.GET_ALL_FILES, (_event, rootPath: string) => {
   return walk(rootPath);
 });
 
+ipcMain.handle(ipcChannels.DOWNLOAD_THUMBNAIL, (_event, thumbnailPath: string, data: any) => {
+  return downloadCover(thumbnailPath, data);
+});
+
 ipcMain.handle(
   ipcChannels.APP.SHOW_OPEN_DIALOG,
   (
@@ -201,12 +228,12 @@ ipcMain.handle(
     directory = false,
     // eslint-disable-next-line @typescript-eslint/default-param-last
     filters: { name: string; extensions: string[] }[] = [],
-    title: string
+    title: string,
   ) => {
-    log.info(`Showing open dialog directory=${directory} filters=${filters.join(';')}`);
+    console.info(`Showing open dialog directory=${directory} filters=${filters.join(';')}`);
 
     if (mainWindow === null) {
-      log.error('Aborting open dialog, mainWindow is null');
+      console.error('Aborting open dialog, mainWindow is null');
       return [];
     }
 
@@ -220,12 +247,12 @@ ipcMain.handle(
         if (value.canceled) return [];
         return value.filePaths;
       })
-      .catch((e) => log.error(e));
-  }
+      .catch((e) => console.error(e));
+  },
 );
 
 ipcMain.handle(ipcChannels.APP.READ_ENTIRE_FILE, (_event, filepath: string) => {
-  log.info(`Reading entire file: ${filepath}`);
+  console.info(`Reading entire file: ${filepath}`);
 
   return fs.readFileSync(filepath).toString();
 });

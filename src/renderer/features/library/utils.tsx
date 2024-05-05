@@ -1,6 +1,5 @@
-import fs from 'fs';
-import { ipcRenderer } from 'electron';
-import log from 'electron-log';
+const fs = require('fs');
+const { ipcRenderer } = require('electron');
 import { Chapter, LanguageKey, Series } from '@tiyo/common';
 import React from 'react';
 import { SetterOrUpdater } from 'recoil';
@@ -26,8 +25,8 @@ const updateSeriesNumberUnread = (series: Series, chapterLanguages: LanguageKey[
       numberUnread: getNumberUnreadChapters(
         chapters.filter(
           (chapter) =>
-            chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0
-        )
+            chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0,
+        ),
       ),
     });
   }
@@ -42,7 +41,7 @@ export function loadSeries(seriesId: string, setSeries: (series: Series) => void
 
 export function loadChapterList(
   seriesId: string,
-  setChapterList: (chapterList: Chapter[]) => void
+  setChapterList: (chapterList: Chapter[]) => void,
 ) {
   const chapters: Chapter[] = library.fetchChapters(seriesId);
   setChapterList(chapters);
@@ -59,9 +58,9 @@ export function removeSeries(series: Series, setSeriesList: (seriesList: Series[
 export async function importSeries(
   series: Series,
   chapterLanguages: LanguageKey[],
-  getFirst = false
+  getFirst = false,
 ): Promise<Series> {
-  log.debug(`Importing series ${series.sourceId} from extension ${series.extensionId}`);
+  console.debug(`Importing series ${series.sourceId} from extension ${series.extensionId}`);
 
   const notificationId = uuidv4();
   if (!series.preview) {
@@ -86,14 +85,14 @@ export async function importSeries(
     seriesToAdd = await ipcRenderer.invoke(
       ipcChannels.EXTENSION.GET_SERIES,
       series.extensionId,
-      series.sourceId
+      series.sourceId,
     );
   }
 
   const chapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
     seriesToAdd.extensionId,
-    seriesToAdd.sourceId
+    seriesToAdd.sourceId,
   );
 
   const addedSeries = library.upsertSeries({
@@ -103,7 +102,7 @@ export async function importSeries(
   library.upsertChapters(chapters, addedSeries);
   updateSeriesNumberUnread(addedSeries, chapterLanguages);
 
-  log.debug(`Imported series ${addedSeries.sourceId} with database ID ${addedSeries.id}`);
+  console.debug(`Imported series ${addedSeries.sourceId} with database ID ${addedSeries.id}`);
   if (!series.preview) {
     updateNotification({
       id: notificationId,
@@ -129,7 +128,7 @@ export function markChapters(
   read: boolean,
   setChapterList: (chapterList: Chapter[]) => void,
   setSeries: (series: Series) => void,
-  chapterLanguages: LanguageKey[]
+  chapterLanguages: LanguageKey[],
 ) {
   if (series.id !== undefined) {
     const newChapters = chapters.map((chapter) => ({ ...chapter, read }));
@@ -143,9 +142,9 @@ export function markChapters(
 // eslint-disable-next-line consistent-return
 async function reloadSeries(
   series: Series,
-  chapterLanguages: LanguageKey[]
+  chapterLanguages: LanguageKey[],
 ): Promise<Error | void> {
-  log.info(`Reloading series ${series.id} - ${series.title}`);
+  console.info(`Reloading series ${series.id} - ${series.title}`);
   if (series.id === undefined) {
     return new Promise((resolve) => resolve(Error('Series does not have database ID')));
   }
@@ -159,7 +158,7 @@ async function reloadSeries(
   let newSeries: Series | undefined = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_SERIES,
     series.extensionId,
-    series.sourceId
+    series.sourceId,
   );
   if (newSeries === undefined)
     return new Promise((resolve) => resolve(Error('Could not get series from extension')));
@@ -167,7 +166,7 @@ async function reloadSeries(
   const newChapters: Chapter[] = await ipcRenderer.invoke(
     ipcChannels.EXTENSION.GET_CHAPTERS,
     series.extensionId,
-    series.sourceId
+    series.sourceId,
   );
 
   if (series.extensionId === FS_METADATA.id) {
@@ -183,7 +182,7 @@ async function reloadSeries(
 
   const chapters: Chapter[] = newChapters.map((chapter: Chapter) => {
     const matchingChapter: Chapter | undefined = oldChapters.find(
-      (c: Chapter) => c.sourceId === chapter.sourceId
+      (c: Chapter) => c.sourceId === chapter.sourceId,
     );
     if (matchingChapter !== undefined && matchingChapter.id !== undefined) {
       chapter.id = matchingChapter.id;
@@ -207,7 +206,7 @@ async function reloadSeries(
   const thumbnailPath = await getThumbnailPath(series);
   if (thumbnailPath !== null) {
     if (newSeries.remoteCoverUrl !== series.remoteCoverUrl || !fs.existsSync(thumbnailPath)) {
-      log.debug(`Updating cover for series ${newSeries.id}`);
+      console.debug(`Updating cover for series ${newSeries.id}`);
       deleteThumbnail(series);
       downloadCover(newSeries);
     }
@@ -219,16 +218,16 @@ export async function reloadSeriesList(
   setSeriesList: (seriesList: Series[]) => void,
   setReloadingSeriesList: (reloadingSeriesList: boolean) => void,
   chapterLanguages: LanguageKey[],
-  categoryList: Category[]
+  categoryList: Category[],
 ) {
-  log.debug(`Reloading series list...`);
+  console.debug(`Reloading series list...`);
   setReloadingSeriesList(true);
 
   const notificationId = uuidv4();
   showNotification({ id: notificationId, message: 'Refreshing library...', loading: true });
 
   const sortedSeriesList = [...seriesList].sort((a: Series, b: Series) =>
-    a.title.localeCompare(b.title)
+    a.title.localeCompare(b.title),
   );
 
   const categoryIdsToSkip = categoryList
@@ -240,7 +239,7 @@ export async function reloadSeriesList(
       : sortedSeriesList.filter(
           (series) =>
             !series.categories ||
-            !series.categories.some((category) => categoryIdsToSkip.includes(category))
+            !series.categories.some((category) => categoryIdsToSkip.includes(category)),
         );
 
   let cur = 0;
@@ -259,7 +258,7 @@ export async function reloadSeriesList(
     // eslint-disable-next-line no-await-in-loop
     const ret = await reloadSeries(series, chapterLanguages);
     if (ret instanceof Error) {
-      log.error(ret);
+      console.error(ret);
       failedToUpdate.push(series);
     }
     cur += 1;
@@ -334,7 +333,7 @@ export function updateSeries(series: Series) {
 
 export function updateSeriesTrackerKeys(
   series: Series,
-  trackerKeys: { [trackerId: string]: string } | undefined
+  trackerKeys: { [trackerId: string]: string } | undefined,
 ) {
   return library.upsertSeries({ ...series, trackerKeys });
 }
@@ -391,7 +390,7 @@ export function migrateSeriesTags() {
 
           library.upsertSeries({ ...series, tags });
         }
-      }
+      },
     );
   });
 }
@@ -399,7 +398,7 @@ export function migrateSeriesTags() {
 export async function goToSeries(
   series: Series,
   setSeriesList: SetterOrUpdater<Series[]>,
-  navigate: (location: string) => void
+  navigate: (location: string) => void,
 ) {
   if (series.id !== undefined) {
     if (

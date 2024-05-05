@@ -1,7 +1,7 @@
-import fs from 'fs';
+const fs = require('fs');
 import path from 'path';
 import React, { useState } from 'react';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { Overlay, SimpleGrid, Title, createStyles } from '@mantine/core';
 import * as ContextMenu from '@radix-ui/react-context-menu';
@@ -11,7 +11,7 @@ import { IconCheck, IconChevronRight } from '@tabler/icons';
 import blankCover from '../../img/blank_cover.png';
 import ipcChannels from '../../../common/constants/ipcChannels.json';
 import constants from '../../../common/constants/constants.json';
-import styles from './LibraryGrid.css';
+import styles from './LibraryGrid.module.css';
 import {
   categoryListState,
   chapterListState,
@@ -142,7 +142,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
       const fileExtensions = constants.IMAGE_EXTENSIONS;
       for (let i = 0; i < fileExtensions.length; i += 1) {
         const thumbnailPath = path.join(thumbnailsDir, `${series.id}.${fileExtensions[i]}`);
-        if (fs.existsSync(thumbnailPath)) return thumbnailPath;
+        if (fs.existsSync(thumbnailPath)) return `atom://${thumbnailPath}`;
       }
       return blankCover;
     }

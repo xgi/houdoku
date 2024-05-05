@@ -1,6 +1,5 @@
 /* eslint-disable react/prefer-stateless-function */
-import log from 'electron-log';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import React, { ReactNode, Component, ErrorInfo } from 'react';
 import { Accordion, Box, Center, Code, Container, Kbd, Text, Title } from '@mantine/core';
 import packageJson from '../../../../package.json';
@@ -27,8 +26,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     this.setState({ error });
-    log.debug('Caught error in ErrorBoundary, relaying details below...');
-    log.error(error, errorInfo);
+    console.debug('Caught error in ErrorBoundary, relaying details below...');
+    console.error(error, errorInfo);
   }
 
   public static getDerivedStateFromError(error: Error): State {

@@ -1,11 +1,11 @@
-import fs from 'fs';
+const fs = require('fs');
 import React, { useEffect, useRef, useState } from 'react';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { Overlay, SimpleGrid, Skeleton, Title, ScrollArea } from '@mantine/core';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ipcChannels from '../../../common/constants/ipcChannels.json';
-import styles from './SearchGrid.css';
+import styles from './SearchGrid.module.css';
 import { libraryColumnsState, libraryCropCoversState } from '../../state/settingStates';
 import {
   searchResultState,

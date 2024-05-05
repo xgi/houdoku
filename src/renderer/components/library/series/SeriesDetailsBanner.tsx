@@ -1,9 +1,8 @@
 import React from 'react';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { BackgroundImage, Box, Button, Group, Menu, Stack } from '@mantine/core';
 import { IconMenu2, IconTrash } from '@tabler/icons';
-import log from 'electron-log';
 import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
 import ipcChannels from '../../../../common/constants/ipcChannels.json';
@@ -55,7 +54,7 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
       props.series,
       customDownloadsDir || defaultDownloadsDir,
       downloadQueue,
-      1
+      1,
     );
   };
 
@@ -69,7 +68,7 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
       sortedFilteredChapterList,
       props.series,
       customDownloadsDir || defaultDownloadsDir,
-      true
+      true,
     );
   };
 
@@ -84,8 +83,8 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
         setSeriesList,
         setReloadingSeriesList,
         chapterLanguages,
-        categoryList
-      ).catch((e) => log.error(e));
+        categoryList,
+      ).catch((e) => console.error(e));
   };
 
   return (

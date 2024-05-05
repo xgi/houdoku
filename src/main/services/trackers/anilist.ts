@@ -1,4 +1,3 @@
-import log from 'electron-log';
 import fetch, { Response } from 'node-fetch';
 import {
   GetUsernameFunc,
@@ -89,10 +88,10 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((response: Response) => response.json())
       .then((data: any) => {
         if ('errors' in data) {
-          log.error(
+          console.error(
             `Error getting username from tracker ${AniListTrackerMetadata.id}: ${data.errors
               .map((error: any) => error.message)
-              .join('; ')}`
+              .join('; ')}`,
           );
           return null;
         }
@@ -100,7 +99,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
         this.userScoreFormat = SCORE_FORMAT_MAP[data.data.Viewer.mediaListOptions.scoreFormat];
         return data.data.Viewer.name;
       })
-      .catch((e: Error) => log.error(e));
+      .catch((e: Error) => console.error(e));
   };
 
   search: SearchFunc = (text: string) => {
@@ -137,10 +136,10 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((response: Response) => response.json())
       .then((data: any) => {
         if ('errors' in data) {
-          log.error(
+          console.error(
             `Error searching from tracker ${AniListTrackerMetadata.id}: ${data.errors
               .map((error: any) => error.message)
-              .join('; ')}`
+              .join('; ')}`,
           );
           return null;
         }
@@ -152,7 +151,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
         }));
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return [];
       });
   };
@@ -201,10 +200,10 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((response: Response) => response.json())
       .then((data: any) => {
         if ('errors' in data) {
-          log.warn(
+          console.warn(
             `Error getting library entry for series ${seriesId} from tracker from tracker ${
               AniListTrackerMetadata.id
-            }: ${data.errors.map((error: any) => error.message).join('; ')}`
+            }: ${data.errors.map((error: any) => error.message).join('; ')}`,
           );
           return null;
         }
@@ -221,7 +220,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
         } as TrackEntry;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -254,7 +253,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
           mangaId: trackEntry.seriesId,
           progress: trackEntry.progress,
           status: Object.keys(STATUS_MAP).find(
-            (key: string) => STATUS_MAP[key] === trackEntry.status
+            (key: string) => STATUS_MAP[key] === trackEntry.status,
           ),
         },
       }),
@@ -264,17 +263,17 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((response: Response) => response.json())
       .then((data: any) => {
         if ('errors' in data) {
-          log.error(
+          console.error(
             `Error adding library entry for series ${trackEntry.seriesId} from tracker ${
               AniListTrackerMetadata.id
-            }: ${data.errors.map((error: any) => error.message).join('; ')}`
+            }: ${data.errors.map((error: any) => error.message).join('; ')}`,
           );
           return null;
         }
         return this.getLibraryEntry(trackEntry.seriesId);
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -327,7 +326,7 @@ export class AniListTrackerClient extends TrackerClientAbstract {
           listId: trackEntry.id,
           progress: trackEntry.progress,
           status: Object.keys(STATUS_MAP).find(
-            (key: string) => STATUS_MAP[key] === trackEntry.status
+            (key: string) => STATUS_MAP[key] === trackEntry.status,
           ),
           score: trackEntry.score === undefined ? 0 : trackEntry.score,
         },
@@ -338,17 +337,17 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       .then((response: Response) => response.json())
       .then((data: any) => {
         if ('errors' in data) {
-          log.error(
+          console.error(
             `Error updating library entry for series ${trackEntry.seriesId} from tracker ${
               AniListTrackerMetadata.id
-            }: ${data.errors.map((error: any) => error.message).join('; ')}`
+            }: ${data.errors.map((error: any) => error.message).join('; ')}`,
           );
           return null;
         }
         return this.getLibraryEntry(trackEntry.seriesId);
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };

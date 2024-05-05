@@ -1,5 +1,4 @@
-import { ipcRenderer } from 'electron';
-import log from 'electron-log';
+const { ipcRenderer } = require('electron');
 import { Chapter, Series } from '@tiyo/common';
 import ipcChannels from '../../../common/constants/ipcChannels.json';
 import { TrackEntry } from '../../../common/models/types';
@@ -14,7 +13,7 @@ export function sendProgressToTrackers(chapter: Chapter, series: Series) {
         const curTrackEntry: TrackEntry | null = await ipcRenderer.invoke(
           ipcChannels.TRACKER.GET_LIBRARY_ENTRY,
           trackerId,
-          series.trackerKeys[trackerId]
+          series.trackerKeys[trackerId],
         );
 
         if (
@@ -22,14 +21,14 @@ export function sendProgressToTrackers(chapter: Chapter, series: Series) {
           curTrackEntry.progress &&
           curTrackEntry.progress >= roundChapterNum
         ) {
-          log.debug(
-            `Skipping progress update on tracker ${trackerId} for series ${series.title} because it is already ahead`
+          console.debug(
+            `Skipping progress update on tracker ${trackerId} for series ${series.title} because it is already ahead`,
           );
           return;
         }
 
-        log.debug(
-          `Update on tracker ${trackerId} for series ${series.title} to ${roundChapterNum}`
+        console.debug(
+          `Update on tracker ${trackerId} for series ${series.title} to ${roundChapterNum}`,
         );
         await ipcRenderer.invoke(ipcChannels.TRACKER.UPDATE_LIBRARY_ENTRY, trackerId, {
           seriesId: series.trackerKeys[trackerId],

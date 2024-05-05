@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import log from 'electron-log';
 import { Chapter, Series } from '@tiyo/common';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { useRecoilValue } from 'recoil';
 import { Accordion, Badge, Button, Checkbox, Group, Stack, Text, Title } from '@mantine/core';
 import { IconTrash } from '@tabler/icons';
@@ -28,7 +27,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   const loadDownloads = async () => {
     const downloadedChapterIds = getAllDownloadedChapterIds(
-      customDownloadsDir || defaultDownloadsDir
+      customDownloadsDir || defaultDownloadsDir,
     );
     const downloaded = getFromChapterIds(downloadedChapterIds);
 
@@ -38,7 +37,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   const deleteChecked = async () => {
     const toDelete = new Set(checkedChapters);
-    log.debug(`Deleting ${toDelete.size} downloaded chapters`);
+    console.debug(`Deleting ${toDelete.size} downloaded chapters`);
 
     Promise.all(
       [...toDelete].map(async (chapterId: string) => {
@@ -55,14 +54,14 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
         if (series === null || chapter === null) return;
 
         await deleteDownloadedChapter(series, chapter, customDownloadsDir || defaultDownloadsDir);
-      })
+      }),
     )
       // eslint-disable-next-line promise/always-return
       .then(() => {
         setCheckedChapters([]);
         loadDownloads();
       })
-      .catch((err) => log.error(err));
+      .catch((err) => console.error(err));
   };
 
   const promptDeleteChecked = async () => {
@@ -176,7 +175,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
           const numChapters = chapterLists[series.id].length;
           const numSelected = chapterLists[series.id].filter(
-            (chapter) => chapter.id && checkedChapters.includes(chapter.id)
+            (chapter) => chapter.id && checkedChapters.includes(chapter.id),
           ).length;
 
           let badgeColor: string | undefined;
@@ -209,7 +208,7 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
                       (a, b) =>
                         parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber) ||
                         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        a.id!.localeCompare(b.id!)
+                        a.id!.localeCompare(b.id!),
                     )
                     .reverse()
                     .map((chapter) => {

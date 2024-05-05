@@ -1,5 +1,4 @@
 import { IpcMain } from 'electron';
-import log from 'electron-log';
 import { TrackerClientInterface } from '../../common/models/interface';
 import { AniListTrackerClient } from './trackers/anilist';
 import { MALTrackerClient } from './trackers/myanimelist';
@@ -24,7 +23,7 @@ const TRACKER_CLIENTS: { [key: string]: TrackerClientInterface } = {
 };
 
 function getAuthUrls(): { [trackerId: string]: string } {
-  log.info(`Getting auth urls from trackers`);
+  console.info(`Getting auth urls from trackers`);
   const authUrls: { [trackerId: string]: string } = {};
   Object.entries(TRACKER_CLIENTS).forEach(([trackerId, trackerClient]) => {
     authUrls[trackerId] = trackerClient.getAuthUrl();
@@ -34,31 +33,31 @@ function getAuthUrls(): { [trackerId: string]: string } {
 
 function getToken(trackerId: string, accessCode: string): Promise<string | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(`Getting access token for tracker ${trackerId}`);
+  console.info(`Getting access token for tracker ${trackerId}`);
   return tracker.getToken(accessCode);
 }
 
 function getUsername(trackerId: string): Promise<string | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(`Getting username from tracker ${trackerId}`);
+  console.info(`Getting username from tracker ${trackerId}`);
   return tracker.getUsername();
 }
 
 function search(trackerId: string, query: string): Promise<TrackerSeries[]> {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(`Searching for '${query}' from tracker ${trackerId}`);
+  console.info(`Searching for '${query}' from tracker ${trackerId}`);
   return tracker.search(query);
 }
 
 function getLibraryEntry(trackerId: string, seriesId: string): Promise<TrackEntry | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(`Getting library entry for ${seriesId} from tracker ${trackerId}`);
+  console.info(`Getting library entry for ${seriesId} from tracker ${trackerId}`);
   return tracker.getLibraryEntry(seriesId);
 }
 
 function addLibraryEntry(trackerId: string, trackEntry: TrackEntry): Promise<TrackEntry | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(`Adding library entry for ${trackEntry.seriesId} from tracker ${trackerId}`);
+  console.info(`Adding library entry for ${trackEntry.seriesId} from tracker ${trackerId}`);
 
   const validatedTrackEntry = {
     ...trackEntry,
@@ -71,13 +70,13 @@ function addLibraryEntry(trackerId: string, trackEntry: TrackEntry): Promise<Tra
 
 function updateLibraryEntry(trackerId: string, trackEntry: TrackEntry): Promise<TrackEntry | null> {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(`Updating library entry for ${trackEntry.seriesId} from tracker ${trackerId}`);
+  console.info(`Updating library entry for ${trackEntry.seriesId} from tracker ${trackerId}`);
   return tracker.updateLibraryEntry(trackEntry);
 }
 
 function setAccessToken(trackerId: string, accessToken: string): void {
   const tracker = TRACKER_CLIENTS[trackerId];
-  log.info(`Setting access token for tracker ${trackerId}`);
+  console.info(`Setting access token for tracker ${trackerId}`);
   return tracker.setAccessToken(accessToken);
 }
 
@@ -85,21 +84,21 @@ function getListEntries(trackerId: string): Promise<TrackerListEntry[]> {
   const tracker = TRACKER_CLIENTS[trackerId];
 
   if (tracker.getListEntries === undefined) {
-    log.warn(`Getting list entries from tracker ${trackerId}: is not defined`);
+    console.warn(`Getting list entries from tracker ${trackerId}: is not defined`);
     return Promise.resolve([]);
   }
 
-  log.info(`Getting list entries from tracker ${trackerId}`);
+  console.info(`Getting list entries from tracker ${trackerId}`);
   return tracker.getListEntries();
 }
 
 // eslint-disable-next-line import/prefer-default-export
 export const createTrackerIpcHandlers = (ipcMain: IpcMain) => {
-  log.debug('Creating tracker IPC handlers in main...');
+  console.debug('Creating tracker IPC handlers in main...');
 
   ipcMain.handle(ipcChannels.TRACKER_MANAGER.GET_ALL, async () => {
     return Object.values(TRACKER_CLIENTS).map((client: TrackerClientInterface) =>
-      client.getMetadata()
+      client.getMetadata(),
     );
   });
 
@@ -119,25 +118,25 @@ export const createTrackerIpcHandlers = (ipcMain: IpcMain) => {
     ipcChannels.TRACKER.GET_LIBRARY_ENTRY,
     (_event, trackerId: string, seriesId: string) => {
       return getLibraryEntry(trackerId, seriesId);
-    }
+    },
   );
   ipcMain.handle(
     ipcChannels.TRACKER.ADD_LIBRARY_ENTRY,
     (_event, trackerId: string, trackEntry: TrackEntry) => {
       return addLibraryEntry(trackerId, trackEntry);
-    }
+    },
   );
   ipcMain.handle(
     ipcChannels.TRACKER.UPDATE_LIBRARY_ENTRY,
     (_event, trackerId: string, trackEntry: TrackEntry) => {
       return updateLibraryEntry(trackerId, trackEntry);
-    }
+    },
   );
   ipcMain.handle(
     ipcChannels.TRACKER.SET_ACCESS_TOKEN,
     (_event, trackerId: string, accessToken: string) => {
       return setAccessToken(trackerId, accessToken);
-    }
+    },
   );
   ipcMain.handle(ipcChannels.TRACKER.GET_LIST_ENTRIES, (_event, trackerId: string) => {
     return getListEntries(trackerId);

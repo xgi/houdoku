@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ipcRenderer, shell } from 'electron';
-import log from 'electron-log';
+const { ipcRenderer, shell } = require('electron');
 import { Accordion, Text, Button, Group, Code, Input, Loader, Box, Timeline } from '@mantine/core';
 import { IconExternalLink } from '@tabler/icons';
 import ipcChannels from '../../../common/constants/ipcChannels.json';
@@ -22,12 +21,12 @@ const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
     setLoading(true);
 
     setAuthUrls(
-      await ipcRenderer.invoke(ipcChannels.TRACKER.GET_AUTH_URLS).catch((e) => log.error(e))
+      await ipcRenderer.invoke(ipcChannels.TRACKER.GET_AUTH_URLS).catch((e) => console.error(e)),
     );
     setUsername(
       await ipcRenderer
         .invoke(ipcChannels.TRACKER.GET_USERNAME, props.trackerMetadata.id)
-        .catch((e) => log.error(e))
+        .catch((e) => console.error(e)),
     );
 
     setLoading(false);
@@ -38,11 +37,11 @@ const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
 
     persistantStore.write(
       `${storeKeys.TRACKER_ACCESS_TOKEN_PREFIX}${props.trackerMetadata.id}`,
-      accessToken
+      accessToken,
     );
     await ipcRenderer
       .invoke(ipcChannels.TRACKER.SET_ACCESS_TOKEN, props.trackerMetadata.id, accessToken)
-      .catch((e) => log.error(e));
+      .catch((e) => console.error(e));
 
     loadTrackerDetails();
   };
@@ -53,7 +52,7 @@ const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
     await ipcRenderer
       .invoke(ipcChannels.TRACKER.GET_TOKEN, props.trackerMetadata.id, accessCode)
       .then((token: string | null) => saveAccessToken(token || ''))
-      .catch((e) => log.error(e));
+      .catch((e) => console.error(e));
   };
 
   useEffect(() => {

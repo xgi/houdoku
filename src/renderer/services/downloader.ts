@@ -1,10 +1,9 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
-import fs from 'fs';
-import { ipcRenderer } from 'electron';
+const fs = require('fs');
+const { ipcRenderer } = require('electron');
 import { Chapter, PageRequesterData, Series } from '@tiyo/common';
-import log from 'electron-log';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { showNotification, updateNotification } from '@mantine/notifications';
@@ -29,7 +28,7 @@ export type DownloadError = {
 const showDownloadNotification = (
   notificationId: string,
   task: DownloadTask | null,
-  queueSize?: number
+  queueSize?: number,
 ) => {
   if (!task) return;
 
@@ -64,7 +63,7 @@ class DownloaderClient {
     setRunningState: (running: boolean) => void,
     setQueueState: (queue: DownloadTask[]) => void,
     setCurrentTaskState: (currentTask: DownloadTask | null) => void,
-    setDownloadErrorsState: (downloadErrors: DownloadError[]) => void
+    setDownloadErrorsState: (downloadErrors: DownloadError[]) => void,
   ) => {
     this.setRunningState = setRunningState;
     this.setQueueState = setQueueState;
@@ -93,7 +92,7 @@ class DownloaderClient {
   };
 
   _handleDownloadError = (downloadError: DownloadError) => {
-    log.error(downloadError.errorStr);
+    console.error(downloadError.errorStr);
     this.setRunning(false);
     this.setCurrentTask(null);
     this.setDownloadErrors([...this.downloadErrors, downloadError]);
@@ -127,7 +126,7 @@ class DownloaderClient {
       const chapterPath = await getChapterDownloadPath(
         task.series,
         task.chapter,
-        task.downloadsDir
+        task.downloadsDir,
       );
       if (!fs.existsSync(chapterPath)) {
         fs.mkdirSync(chapterPath, { recursive: true });
@@ -139,19 +138,19 @@ class DownloaderClient {
           ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
           task.series.extensionId,
           task.series.sourceId,
-          task.chapter.sourceId
+          task.chapter.sourceId,
         )
         .then((pageRequesterData: PageRequesterData) =>
           ipcRenderer.invoke(
             ipcChannels.EXTENSION.GET_PAGE_URLS,
             task.series.extensionId,
-            pageRequesterData
-          )
+            pageRequesterData,
+          ),
         );
 
       if (
         !pageUrls.every(
-          (pageUrl: string) => pageUrl.startsWith('http://') || pageUrl.startsWith('https://')
+          (pageUrl: string) => pageUrl.startsWith('http://') || pageUrl.startsWith('https://'),
         )
       ) {
         this._handleDownloadError({
@@ -162,10 +161,10 @@ class DownloaderClient {
         break;
       }
 
-      log.debug(`Downloading pages for chapter ${task.chapter.id} of series ${task.series.id}`);
+      console.debug(`Downloading pages for chapter ${task.chapter.id} of series ${task.series.id}`);
 
       const startPage = task.page === undefined ? 1 : task.page;
-      log.debug(`Starting download at page ${startPage}`);
+      console.debug(`Starting download at page ${startPage}`);
 
       let i = startPage;
       for (i; i <= pageUrls.length && this.running; i += 1) {
@@ -232,7 +231,7 @@ class DownloaderClient {
 
   add = (tasks: DownloadTask[]) => {
     const filteredTasks = tasks.filter(
-      (task) => !this.queue.some((existingTask) => existingTask.chapter.id === task.chapter.id)
+      (task) => !this.queue.some((existingTask) => existingTask.chapter.id === task.chapter.id),
     );
 
     this.setQueue([...this.queue, ...filteredTasks]);

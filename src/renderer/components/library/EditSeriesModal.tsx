@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import log from 'electron-log';
 import { Series } from '@tiyo/common';
 import { Button, Group, Modal } from '@mantine/core';
 import { updateSeries } from '../../features/library/utils';
@@ -23,7 +22,7 @@ const EditSeriesModal: React.FC<Props> = (props: Props) => {
     if (customSeries !== undefined) {
       updateSeries(customSeries)
         .then(() => props.saveCallback(customSeries))
-        .catch((err) => log.error(err));
+        .catch((err) => console.error(err));
     }
     props.close();
   };

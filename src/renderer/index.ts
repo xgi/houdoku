@@ -1,16 +1,12 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { RecoilRoot } from 'recoil';
-import App from './App';
 import './App.global.css';
 import { createWindowControlListeners } from './util/titlebar';
+import { RecoilRoot } from 'recoil';
+import App from './App';
 
 createWindowControlListeners();
 const container = document.getElementById('root');
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const root = createRoot(container!);
-root.render(
-  <RecoilRoot>
-    <App />
-  </RecoilRoot>
-);
+
+root.render(React.createElement(RecoilRoot, null, React.createElement(App)));

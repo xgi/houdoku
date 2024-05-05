@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import log from 'electron-log';
 import {
   IconBooks,
   IconInfoCircle,
@@ -67,8 +66,8 @@ const DashboardPage: React.FC<Props> = () => {
         setSeriesList,
         setReloadingSeriesList,
         chapterLanguages,
-        categoryList
-      ).catch((e) => log.error(e));
+        categoryList,
+      ).catch((e) => console.error(e));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSeriesList]);
@@ -85,7 +84,7 @@ const DashboardPage: React.FC<Props> = () => {
           setImporting(false);
           if (!task.series.preview) downloadCover(addedSeries);
         })
-        .catch((e) => log.error(e));
+        .catch((e) => console.error(e));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importQueue, importing]);

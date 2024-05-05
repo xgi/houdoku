@@ -1,10 +1,9 @@
 /* eslint-disable react/display-name */
 import React, { useEffect, useState } from 'react';
 import { Chapter, Series } from '@tiyo/common';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Divider, Group, Pagination, Select, Table } from '@mantine/core';
-import log from 'electron-log';
 import ChapterTableContextMenu from './ChapterTableContextMenu';
 import { getChaptersDownloaded } from '../../../common/util/filesystem';
 import ipcChannels from '../../../common/constants/ipcChannels.json';
@@ -54,7 +53,7 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const updateDownloadStatuses = () => {
     getChaptersDownloaded(props.series, chapterList, customDownloadsDir || defaultDownloadsDir)
       .then((statuses) => setChapterDownloadStatuses(statuses))
-      .catch((err) => log.error(err));
+      .catch((err) => console.error(err));
   };
 
   useEffect(() => setCurrentPage(1), [chapterFilterGroup, chapterFilterTitle, chapterLanguages]);

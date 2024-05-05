@@ -25,6 +25,7 @@
     "LOGS_DIR": "get-logs-dir"
   },
   "GET_ALL_FILES": "get-all-files",
+  "DOWNLOAD_THUMBNAIL": "download-thumbnail",
   "EXTENSION_MANAGER": {
     "RELOAD": "extension-manager-reload",
     "INSTALL": "extension-manager-install",

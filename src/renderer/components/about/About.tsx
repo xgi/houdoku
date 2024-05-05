@@ -1,5 +1,5 @@
 import React from 'react';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { Title, Text, Button } from '@mantine/core';
 import packageJson from '../../../../package.json';
 import ipcChannels from '../../../common/constants/ipcChannels.json';

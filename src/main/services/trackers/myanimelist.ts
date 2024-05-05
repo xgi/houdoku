@@ -1,4 +1,3 @@
-import log from 'electron-log';
 import fetch from 'node-fetch';
 import pkceChallenge from 'pkce-challenge';
 import {
@@ -170,7 +169,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
         return data.access_token;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -194,7 +193,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
         return data.name;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -227,7 +226,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
           });
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return [];
       });
   };
@@ -266,7 +265,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
         } as TrackEntry;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -309,8 +308,8 @@ export class MALTrackerClient extends TrackerClientAbstract {
       .then((response) => response.json())
       .then((data: UpdateMangaResponseData) => {
         if ('error' in data) {
-          log.error(
-            `Error updating library entry for series ${trackEntry.seriesId} from tracker ${MALTrackerMetadata.id}: ${data.error}`
+          console.error(
+            `Error updating library entry for series ${trackEntry.seriesId} from tracker ${MALTrackerMetadata.id}: ${data.error}`,
           );
           return null;
         }
@@ -318,7 +317,7 @@ export class MALTrackerClient extends TrackerClientAbstract {
         return this.getLibraryEntry(trackEntry.seriesId);
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };

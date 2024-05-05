@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ipcRenderer } from 'electron';
-import log from 'electron-log';
+const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button, Center, Group, Loader, Modal, Stack, Text } from '@mantine/core';
@@ -36,20 +35,20 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
       // they are not usually included in the search results) so we explicitly retrieve
       // all of the series data here
 
-      log.debug(
-        `AddSeriesModal is retrieving details for series ${props.series.sourceId} from extension ${props.series.extensionId}`
+      console.debug(
+        `AddSeriesModal is retrieving details for series ${props.series.sourceId} from extension ${props.series.extensionId}`,
       );
       ipcRenderer
         .invoke(ipcChannels.EXTENSION.GET_SERIES, props.series.extensionId, props.series.sourceId)
         .then((series?: Series) => {
           if (series !== undefined) {
-            log.debug(`AddSeriesModal found matching series ${series?.sourceId}`);
+            console.debug(`AddSeriesModal found matching series ${series?.sourceId}`);
             setCustomSeries(series);
           }
           return series;
         })
         .finally(() => setLoadingDetails(false))
-        .catch((e) => log.error(e));
+        .catch((e) => console.error(e));
     }
   }, [props.series]);
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Series } from '@tiyo/common';
 import { useRecoilValue } from 'recoil';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import { ActionIcon, Button, Group, Modal, NumberInput, Text } from '@mantine/core';
 import { IconMinus, IconPlus } from '@tabler/icons';
 import ipcChannels from '../../../common/constants/ipcChannels.json';

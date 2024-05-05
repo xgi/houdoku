@@ -1,4 +1,3 @@
-import log from 'electron-log';
 import fetch from 'node-fetch';
 import {
   GetUsernameFunc,
@@ -225,7 +224,7 @@ type AddLibraryResponseData = {
       {
         series_id: number;
         error: string;
-      }
+      },
     ];
   };
 };
@@ -240,14 +239,14 @@ type UpdateMangaResponseData = {
             series_id: number;
             volume: number;
             chapter: number;
-          }
+          },
         ]
       | [];
     errors?: [
       {
         series_id: number;
         error: string;
-      }
+      },
     ];
   };
 };
@@ -277,16 +276,16 @@ export class MUTrackerClient extends TrackerClientAbstract {
       .then((response) => response.json())
       .then((data: TokenResponseData) => {
         if (data.status === 'exception') {
-          log.error(
+          console.error(
             `Error getting token from tracker ${MUTrackerMetadata.id}: 
-              ${data.reason}`
+              ${data.reason}`,
           );
           return null;
         }
         return data.context!.session_token;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -306,8 +305,8 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 401) {
-          log.error(
-            `Error getting username from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          console.error(
+            `Error getting username from tracker ${MUTrackerMetadata.id}: Unauthorized access`,
           );
           return null;
         }
@@ -317,7 +316,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return data ? data.username : null;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -350,7 +349,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         });
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return [];
       });
   };
@@ -370,14 +369,14 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 404) {
-          log.error(
-            `Error getting library entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`
+          console.error(
+            `Error getting library entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`,
           );
           return null;
         }
         if (response.status === 401) {
-          log.error(
-            `Error getting library entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          console.error(
+            `Error getting library entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`,
           );
           return null;
         }
@@ -415,7 +414,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         } as TrackEntry;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -447,8 +446,8 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 401) {
-          log.error(
-            `Error adding library entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          console.error(
+            `Error adding library entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`,
           );
           return null;
         }
@@ -456,12 +455,12 @@ export class MUTrackerClient extends TrackerClientAbstract {
       })
       .then((data: AddLibraryResponseData | null) => {
         if (data?.status === 'exception') {
-          log.error(
+          console.error(
             `Error add library entry for [${data
               .context!.errors.map(
-                (error) => `Series ID: ${error.series_id}, Error: ${error.error}`
+                (error) => `Series ID: ${error.series_id}, Error: ${error.error}`,
               )
-              .join('; ')}] from tracker ${MUTrackerMetadata.id}`
+              .join('; ')}] from tracker ${MUTrackerMetadata.id}`,
           );
           return null;
         }
@@ -469,7 +468,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return this.getLibraryEntry(trackEntry.seriesId);
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -511,8 +510,8 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 401) {
-          log.error(
-            `Error getting status from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          console.error(
+            `Error getting status from tracker ${MUTrackerMetadata.id}: Unauthorized access`,
           );
           return [];
         }
@@ -530,7 +529,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         })) as TrackerListEntry[];
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return [];
       });
   };
@@ -539,8 +538,8 @@ export class MUTrackerClient extends TrackerClientAbstract {
     if (this.accessToken === '') return new Promise((resolve) => resolve(null));
 
     if (listId < 0 || (listId > 4 && listId < 101)) {
-      log.error(
-        `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: listid out of range`
+      console.error(
+        `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: listid out of range`,
       );
       return null;
     }
@@ -557,14 +556,14 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 404) {
-          log.error(
-            `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: List not found`
+          console.error(
+            `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: List not found`,
           );
           return null;
         }
         if (response.status === 401) {
-          log.error(
-            `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          console.error(
+            `Error getting status for list ${listId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`,
           );
           return null;
         }
@@ -582,7 +581,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         } as TrackerListEntry;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -602,14 +601,14 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 404) {
-          log.warn(
-            `Warn getting score for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series without a score`
+          console.warn(
+            `Warn getting score for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series without a score`,
           );
           return { rating: 0 };
         }
         if (response.status === 401) {
-          log.error(
-            `Error getting score for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          console.error(
+            `Error getting score for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`,
           );
           return null;
         }
@@ -619,7 +618,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return data ? data.rating : null;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -636,8 +635,8 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 404) {
-          log.error(
-            `Error getting metadata for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`
+          console.error(
+            `Error getting metadata for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`,
           );
           return null;
         }
@@ -653,7 +652,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
           : null;
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -685,8 +684,8 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 401) {
-          log.error(
-            `Error updating library entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          console.error(
+            `Error updating library entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`,
           );
           return null;
         }
@@ -694,12 +693,12 @@ export class MUTrackerClient extends TrackerClientAbstract {
       })
       .then((data: UpdateMangaResponseData | null) => {
         if (data?.status === 'exception') {
-          log.error(
+          console.error(
             `Error updating library entry for [${data
               .context!.errors!.map(
-                (error) => `Series ID: ${error.series_id}, Error: ${error.error}`
+                (error) => `Series ID: ${error.series_id}, Error: ${error.error}`,
               )
-              .join('; ')}] from tracker ${MUTrackerMetadata.id}`
+              .join('; ')}] from tracker ${MUTrackerMetadata.id}`,
           );
           return null;
         }
@@ -707,7 +706,7 @@ export class MUTrackerClient extends TrackerClientAbstract {
         return this.getLibraryEntry(trackEntry.seriesId);
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -739,27 +738,27 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 401) {
-          log.error(
-            `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          console.error(
+            `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`,
           );
           return null;
         }
         if (response.status === 404) {
-          log.error(
-            `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`
+          console.error(
+            `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`,
           );
           return null;
         }
         if (response.status === 400) {
-          log.error(
-            `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: rating must be between 1.0 and 10.0`
+          console.error(
+            `Error updating library rating entry for series ${trackEntry.seriesId} from tracker ${MUTrackerMetadata.id}: rating must be between 1.0 and 10.0`,
           );
           return null;
         }
         return this.getLibraryEntry(trackEntry.seriesId);
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };
@@ -780,21 +779,21 @@ export class MUTrackerClient extends TrackerClientAbstract {
     return fetch(url, options)
       .then((response) => {
         if (response.status === 401) {
-          log.error(
-            `Error updating library rating entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`
+          console.error(
+            `Error updating library rating entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Unauthorized access`,
           );
           return null;
         }
         if (response.status === 404) {
-          log.error(
-            `Error updating library rating entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`
+          console.error(
+            `Error updating library rating entry for series ${seriesId} from tracker ${MUTrackerMetadata.id}: Series not found`,
           );
           return null;
         }
         return this.getLibraryEntry(`${seriesId}`);
       })
       .catch((e: Error) => {
-        log.error(e);
+        console.error(e);
         return null;
       });
   };

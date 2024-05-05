@@ -1,7 +1,6 @@
 import fs from 'fs';
 import JSZip from 'jszip';
 import path from 'path';
-import log from 'electron-log';
 import { v4 as uuidv4 } from 'uuid';
 import { createExtractorFromData } from 'node-unrar-js';
 
@@ -30,7 +29,7 @@ async function extractZip(archive: string, archiveOutputPath: string): Promise<s
           .pipe(fs.createWriteStream(outputPath))
           .on('finish', () => resolve(outputPath));
       });
-    })
+    }),
   );
 }
 
@@ -66,7 +65,7 @@ async function extractRar(archive: string, archiveOutputPath: string): Promise<s
  */
 // eslint-disable-next-line import/prefer-default-export
 export async function extract(archive: string, baseOutputPath: string): Promise<string[]> {
-  log.info(`Extracting files from ${archive} to ${baseOutputPath}`);
+  console.info(`Extracting files from ${archive} to ${baseOutputPath}`);
 
   if (!fs.existsSync(baseOutputPath)) {
     fs.mkdirSync(baseOutputPath, { recursive: true });
@@ -79,7 +78,7 @@ export async function extract(archive: string, baseOutputPath: string): Promise<
       try {
         fs.rmSync(path.join(baseOutputPath, dirent.name), { recursive: true });
       } catch (e) {
-        log.error(`Could not remove directory in extracted location: ${dirent.name}`, e);
+        console.error(`Could not remove directory in extracted location: ${dirent.name}`, e);
       }
     });
 

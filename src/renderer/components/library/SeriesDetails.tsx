@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { ipcRenderer } from 'electron';
-import log from 'electron-log';
+const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Center, Loader, Stack, Text } from '@mantine/core';
@@ -48,7 +47,7 @@ const SeriesDetails: React.FC<Props> = () => {
   const setChapterFilterTitle = useSetRecoilState(chapterFilterTitleState);
   const setChapterFilterGroup = useSetRecoilState(chapterFilterGroupState);
   const loadContent = async () => {
-    log.info(`Series page is loading details from database for series ${id}`);
+    console.info(`Series page is loading details from database for series ${id}`);
 
     series = library.fetchSeries(id!)!;
     setSeries(series);
@@ -61,11 +60,11 @@ const SeriesDetails: React.FC<Props> = () => {
     ipcRenderer
       .invoke(ipcChannels.EXTENSION_MANAGER.GET, series.extensionId)
       .then((metadata) => setExtensionMetadata(metadata))
-      .catch((err: Error) => log.error(err));
+      .catch((err: Error) => console.error(err));
 
     getBannerImageUrl(series)
       .then((url: string | null) => setSeriesBannerUrl(url))
-      .catch((err: Error) => log.error(err));
+      .catch((err: Error) => console.error(err));
   };
 
   useEffect(() => {
@@ -93,7 +92,7 @@ const SeriesDetails: React.FC<Props> = () => {
             close={() => setShowingEditModal(false)}
             saveCallback={(newSeries) => {
               if (newSeries.remoteCoverUrl !== series?.remoteCoverUrl) {
-                log.debug(`Updating cover for series ${series?.id}`);
+                console.debug(`Updating cover for series ${series?.id}`);
                 deleteThumbnail(newSeries);
                 downloadCover(newSeries);
               }

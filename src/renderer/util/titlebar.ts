@@ -1,5 +1,4 @@
-import { ipcRenderer } from 'electron';
-import log from 'electron-log';
+const { ipcRenderer } = require('electron');
 import ipcChannels from '../../common/constants/ipcChannels.json';
 import packageJson from '../../package.json';
 
@@ -9,7 +8,7 @@ import packageJson from '../../package.json';
  * See main.dev.ts for the actual functions of these buttons.
  */
 export async function createWindowControlListeners() {
-  log.debug(`Creating window control listeners...`);
+  console.debug(`Creating window control listeners...`);
   const minButton = document.getElementById('min-button');
   const maxRestoreButton = document.getElementById('max-restore-button');
   const closeButton = document.getElementById('close-button');
@@ -39,8 +38,8 @@ export const updateTitlebarText = (text?: string) => {
     titleElement.innerHTML = text
       ? `${packageJson.productName} - ${text}`
       : packageJson.productName;
-    log.debug(`Updated titlebar with '${text}'`);
+    console.debug(`Updated titlebar with '${text}'`);
   } else {
-    log.debug("Tried to update titlebar text, but couldn't find element");
+    console.debug("Tried to update titlebar text, but couldn't find element");
   }
 };
