@@ -1,11 +1,9 @@
-/* eslint-disable react/display-name */
 import React, { useEffect, useState } from 'react';
 import { Chapter, Series } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Divider, Group, Pagination, Select, Table } from '@mantine/core';
 import ChapterTableContextMenu from './ChapterTableContextMenu';
-import { getChaptersDownloaded } from '@/common/util/filesystem';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import {
   chapterDownloadStatusesState,
@@ -51,7 +49,13 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
   const setChapterDownloadStatuses = useSetRecoilState(chapterDownloadStatusesState);
 
   const updateDownloadStatuses = () => {
-    getChaptersDownloaded(props.series, chapterList, customDownloadsDir || defaultDownloadsDir)
+    ipcRenderer
+      .invoke(
+        ipcChannels.FILESYSTEM.GET_CHAPTERS_DOWNLOADED,
+        props.series,
+        chapterList,
+        customDownloadsDir || defaultDownloadsDir,
+      )
       .then((statuses) => setChapterDownloadStatuses(statuses))
       .catch((err) => console.error(err));
   };
@@ -60,12 +64,10 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     if (downloaderCurrentTask?.page === 2) updateDownloadStatuses();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [downloaderCurrentTask]);
 
   useEffect(() => {
     if (chapterList.length > 0) updateDownloadStatuses();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chapterList]);
 
   return (

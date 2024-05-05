@@ -71,7 +71,7 @@ function consolidateAndSortChapters(chapterList: Chapter[]): Chapter[] {
   });
 
   return chapters.sort(
-    (a: Chapter, b: Chapter) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber)
+    (a: Chapter, b: Chapter) => parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber),
   );
 }
 

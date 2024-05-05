@@ -20,7 +20,7 @@ import {
   GetFilterOptionsFunc,
 } from '@tiyo/common';
 import { extract } from '@/main/util/archives';
-import { walk } from '@/common/util/filesystem';
+import { walk } from '@/main/util/filesystem';
 import constants from '@/common/constants/constants.json';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 
@@ -39,7 +39,7 @@ const filterImageFiles = (fileList: string[]) => {
 
 const getPageRequesterDataFromArchive = async (
   archivePath: string,
-  extractPath: string
+  extractPath: string,
 ): Promise<PageRequesterData> => {
   const extractedFilenames = await extract(archivePath, extractPath);
   const imageFilenames = filterImageFiles(extractedFilenames);
@@ -67,7 +67,7 @@ const getPageRequesterDataFromDirectory = async (dirPath: string): Promise<PageR
 };
 
 const parseChapterMetadata = (
-  text: string
+  text: string,
 ): {
   title: string;
   chapterNum: string;
@@ -166,7 +166,7 @@ export class FSExtensionClient extends ExtensionClientAbstract {
 
   override getPageRequesterData: GetPageRequesterDataFunc = (
     _seriesSourceId: string,
-    chapterSourceId: string
+    chapterSourceId: string,
   ) => {
     const isArchive = isSupportedArchivePath(chapterSourceId);
     return isArchive
@@ -187,13 +187,13 @@ export class FSExtensionClient extends ExtensionClientAbstract {
 
   override getSearch: GetSearchFunc = () => {
     return new Promise<SeriesListResponse>((resolve) =>
-      resolve({ seriesList: [], hasMore: false })
+      resolve({ seriesList: [], hasMore: false }),
     );
   };
 
   override getDirectory: GetDirectoryFunc = () => {
     return new Promise<SeriesListResponse>((resolve) =>
-      resolve({ seriesList: [], hasMore: false })
+      resolve({ seriesList: [], hasMore: false }),
     );
   };
 

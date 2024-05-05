@@ -17,7 +17,6 @@ import ReaderLoader from './ReaderLoader';
 import { sendProgressToTrackers } from '@/renderer/features/tracker/utils';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
-import { getChapterDownloaded, getChapterDownloadPath } from '@/common/util/filesystem';
 import library from '@/renderer/services/library';
 import { updateTitlebarText } from '@/renderer/util/titlebar';
 import * as libraryStates from '@/renderer/state/libraryStates';
@@ -182,7 +181,8 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
   ) => {
     console.debug(`Reader is loading downloaded chapter data for chapter ${chapter.id}`);
 
-    const chapterDownloadPath: string = getChapterDownloadPath(
+    const chapterDownloadPath: string = await ipcRenderer.invoke(
+      ipcChannels.FILESYSTEM.GET_CHAPTER_DOWNLOAD_PATH,
       series,
       chapter,
       customDownloadsDir || defaultDownloadsDir,
@@ -232,7 +232,14 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
       ipcRenderer.invoke(ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY, series, chapter);
     }
 
-    if (await getChapterDownloaded(series, chapter, customDownloadsDir || defaultDownloadsDir)) {
+    if (
+      await ipcRenderer.invoke(
+        ipcChannels.FILESYSTEM.GET_CHAPTER_DOWNLOADED,
+        series,
+        chapter,
+        customDownloadsDir || defaultDownloadsDir,
+      )
+    ) {
       loadDownloadedChapterData(series, chapter, desiredPage);
       return;
     }
@@ -526,12 +533,10 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     addRootStyles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showingHeader, showingScrollbar]);
 
   useEffect(() => {
     updatePageGroupList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offsetPages]);
 
   useEffect(() => {
@@ -569,13 +574,11 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     } else if (pageNumber <= 0) {
       changeChapter('previous', true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber]);
 
   useEffect(() => {
     removeKeybindings();
     addKeybindings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     showingNoNextChapter,
     showingSettingsModal,
@@ -595,7 +598,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
     addKeybindings();
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     loadChapterData(chapter_id!, series_id!);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   return (

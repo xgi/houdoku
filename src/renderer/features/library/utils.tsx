@@ -8,7 +8,6 @@ import { Button, Group, List, Text } from '@mantine/core';
 import { v4 as uuidv4 } from 'uuid';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import { IconAlertTriangle, IconCheck, IconX } from '@tabler/icons';
-import { deleteThumbnail, getThumbnailPath } from '@/common/util/filesystem';
 import { downloadCover } from '@/renderer/util/download';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import ipcChannels from '@/common/constants/ipcChannels.json';
@@ -51,7 +50,7 @@ export function removeSeries(series: Series, setSeriesList: (seriesList: Series[
   if (series.id === undefined) return;
 
   library.removeSeries(series.id);
-  deleteThumbnail(series);
+  ipcRenderer.invoke(ipcChannels.FILESYSTEM.DELETE_THUMBNAIL, series);
   setSeriesList(library.fetchSeriesList());
 }
 
@@ -203,11 +202,11 @@ async function reloadSeries(
 
   // download the cover as a thumbnail if the remote URL has changed or
   // there is no existing thumbnail
-  const thumbnailPath = await getThumbnailPath(series);
+  const thumbnailPath = await ipcRenderer.invoke(ipcChannels.FILESYSTEM.GET_THUMBNAIL_PATH, series);
   if (thumbnailPath !== null) {
     if (newSeries.remoteCoverUrl !== series.remoteCoverUrl || !fs.existsSync(thumbnailPath)) {
       console.debug(`Updating cover for series ${newSeries.id}`);
-      deleteThumbnail(series);
+      ipcRenderer.invoke(ipcChannels.FILESYSTEM.DELETE_THUMBNAIL, series);
       downloadCover(newSeries);
     }
   }

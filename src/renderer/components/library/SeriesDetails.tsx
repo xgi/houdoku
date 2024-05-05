@@ -9,7 +9,6 @@ import { getBannerImageUrl } from '@/renderer/services/mediasource';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import SeriesTrackerModal from './tracker/SeriesTrackerModal';
 import EditSeriesModal from './EditSeriesModal';
-import { deleteThumbnail } from '@/common/util/filesystem';
 import { downloadCover } from '@/renderer/util/download';
 import library from '@/renderer/services/library';
 import {
@@ -69,7 +68,6 @@ const SeriesDetails: React.FC<Props> = () => {
 
   useEffect(() => {
     loadContent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, seriesList]);
 
   useEffect(() => {
@@ -93,8 +91,10 @@ const SeriesDetails: React.FC<Props> = () => {
             saveCallback={(newSeries) => {
               if (newSeries.remoteCoverUrl !== series?.remoteCoverUrl) {
                 console.debug(`Updating cover for series ${series?.id}`);
-                deleteThumbnail(newSeries);
-                downloadCover(newSeries);
+                ipcRenderer
+                  .invoke(ipcChannels.FILESYSTEM.DELETE_THUMBNAIL, newSeries)
+                  .then(() => downloadCover(newSeries))
+                  .catch(console.error);
               }
               setSeries(newSeries);
             }}

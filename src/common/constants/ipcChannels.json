@@ -25,7 +25,6 @@
     "LOGS_DIR": "get-logs-dir"
   },
   "GET_ALL_FILES": "get-all-files",
-  "DOWNLOAD_THUMBNAIL": "download-thumbnail",
   "EXTENSION_MANAGER": {
     "RELOAD": "extension-manager-reload",
     "INSTALL": "extension-manager-install",
@@ -48,6 +47,16 @@
     "GET_SETTINGS": "extension-getSettings",
     "SET_SETTINGS": "extension-setSettings",
     "GET_FILTER_OPTIONS": "extension-getFilterOptions"
+  },
+  "FILESYSTEM": {
+    "GET_CHAPTER_DOWNLOAD_PATH": "filesystem-get-chapter-download-path",
+    "GET_CHAPTERS_DOWNLOADED": "filesystem-get-chapters-downloaded",
+    "GET_CHAPTER_DOWNLOADED": "filesystem-get-chapter-downloaded",
+    "DELETE_DOWNLOADED_CHAPTER": "filesystem-delete-downloaded-chapter",
+    "GET_ALL_DOWNLOADED_CHAPTER_IDS": "filesystem-get-all-downloaded-chapter-ids",
+    "GET_THUMBNAIL_PATH": "filesystem-get-thumbnail-path",
+    "DOWNLOAD_THUMBNAIL": "filesystem-download-thumbnail",
+    "DELETE_THUMBNAIL": "filesystem-delete-thumbnail"
   },
   "TRACKER_MANAGER": {
     "GET_ALL": "tracker-manager-get-alls"

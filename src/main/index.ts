@@ -23,13 +23,24 @@ import {
   OpenDialogReturnValue,
 } from 'electron';
 import log from 'electron-log';
-import { walk, downloadCover } from '@/common/util/filesystem';
+import {
+  walk,
+  getChapterDownloadPath,
+  deleteDownloadedChapter,
+  getAllDownloadedChapterIds,
+  downloadThumbnail,
+  getThumbnailPath,
+  deleteThumbnail,
+  getChaptersDownloaded,
+  getChapterDownloaded,
+} from '@/main/util/filesystem';
 import { createExtensionIpcHandlers, loadPlugins } from './services/extension';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import packageJson from '../../package.json';
 import { createTrackerIpcHandlers } from './services/tracker';
 import { createDiscordIpcHandlers } from './services/discord';
 import { createUpdaterIpcHandlers } from './services/updater';
+import { Series, Chapter } from '@tiyo/common';
 
 if (process.platform === 'win32') {
   app.setPath('userData', path.join(path.dirname(app.getPath('exe')), 'data'));
@@ -216,8 +227,54 @@ ipcMain.handle(ipcChannels.GET_ALL_FILES, (_event, rootPath: string) => {
   return walk(rootPath);
 });
 
-ipcMain.handle(ipcChannels.DOWNLOAD_THUMBNAIL, (_event, thumbnailPath: string, data: any) => {
-  return downloadCover(thumbnailPath, data);
+ipcMain.handle(
+  ipcChannels.FILESYSTEM.GET_CHAPTER_DOWNLOAD_PATH,
+  (_event, series: Series, chapter: Chapter, downloadsDir: string) => {
+    return getChapterDownloadPath(series, chapter, downloadsDir);
+  },
+);
+
+ipcMain.handle(
+  ipcChannels.FILESYSTEM.GET_CHAPTERS_DOWNLOADED,
+  (_event, series: Series, chapters: Chapter[], downloadsDir: string) => {
+    return getChaptersDownloaded(series, chapters, downloadsDir);
+  },
+);
+
+ipcMain.handle(
+  ipcChannels.FILESYSTEM.GET_CHAPTER_DOWNLOADED,
+  (_event, series: Series, chapter: Chapter, downloadsDir: string) => {
+    return getChapterDownloaded(series, chapter, downloadsDir);
+  },
+);
+
+ipcMain.handle(
+  ipcChannels.FILESYSTEM.DELETE_DOWNLOADED_CHAPTER,
+  (_event, series: Series, chapter: Chapter, downloadsDir: string) => {
+    return deleteDownloadedChapter(series, chapter, downloadsDir);
+  },
+);
+
+ipcMain.handle(
+  ipcChannels.FILESYSTEM.GET_ALL_DOWNLOADED_CHAPTER_IDS,
+  (_event, downloadsDir: string) => {
+    return getAllDownloadedChapterIds(downloadsDir);
+  },
+);
+
+ipcMain.handle(ipcChannels.FILESYSTEM.GET_THUMBNAIL_PATH, (_event, series: Series) => {
+  return getThumbnailPath(series, thumbnailsDir);
+});
+
+ipcMain.handle(
+  ipcChannels.FILESYSTEM.DOWNLOAD_THUMBNAIL,
+  (_event, thumbnailPath: string, data: string | BlobPart) => {
+    return downloadThumbnail(thumbnailPath, data);
+  },
+);
+
+ipcMain.handle(ipcChannels.FILESYSTEM.DELETE_THUMBNAIL, (_event, series: Series) => {
+  return deleteThumbnail(series, thumbnailsDir);
 });
 
 ipcMain.handle(

@@ -5,10 +5,6 @@ import { useRecoilValue } from 'recoil';
 import { Accordion, Badge, Button, Checkbox, Group, Stack, Text, Title } from '@mantine/core';
 import { IconTrash } from '@tabler/icons';
 import { openConfirmModal } from '@mantine/modals';
-import {
-  deleteDownloadedChapter,
-  getAllDownloadedChapterIds,
-} from '@/common/util/filesystem';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import library from '@/renderer/services/library';
 import { customDownloadsDirState } from '@/renderer/state/settingStates';
@@ -19,14 +15,15 @@ const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAUL
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const MyDownloads: React.FC<Props> = (props: Props) => {
+const MyDownloads: React.FC<Props> = () => {
   const [seriesList, setSeriesList] = useState<Series[]>([]);
   const [chapterLists, setChapterLists] = useState<{ [key: string]: Chapter[] }>({});
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadDownloads = async () => {
-    const downloadedChapterIds = getAllDownloadedChapterIds(
+    const downloadedChapterIds = await ipcRenderer.invoke(
+      ipcChannels.FILESYSTEM.GET_ALL_DOWNLOADED_CHAPTER_IDS,
       customDownloadsDir || defaultDownloadsDir,
     );
     const downloaded = getFromChapterIds(downloadedChapterIds);
@@ -53,7 +50,12 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
         const chapter = library.fetchChapter(seriesId, chapterId);
         if (series === null || chapter === null) return;
 
-        await deleteDownloadedChapter(series, chapter, customDownloadsDir || defaultDownloadsDir);
+        await ipcRenderer.invoke(
+          ipcChannels.FILESYSTEM.DELETE_DOWNLOADED_CHAPTER,
+          series,
+          chapter,
+          customDownloadsDir || defaultDownloadsDir,
+        );
       }),
     )
       // eslint-disable-next-line promise/always-return
@@ -139,7 +141,6 @@ const MyDownloads: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     loadDownloads();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

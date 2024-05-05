@@ -1,9 +1,7 @@
-const path = require('path');
-const fs = require('fs');
+import fs from 'fs';
+import path from 'path';
 import rimraf from 'rimraf';
-const { ipcRenderer } = require('electron');
 import { Chapter, Series } from '@tiyo/common';
-import ipcChannels from '../constants/ipcChannels.json';
 
 /**
  * Get a list of all file paths within a directory (recursively).
@@ -37,7 +35,7 @@ export function getDirectories(directory: string): string[] {
 
   const result: string[] = [];
   const files = fs.readdirSync(directory);
-  files.forEach((file: File) => {
+  files.forEach((file: string) => {
     const fullpath = path.join(directory, file);
     if (fs.statSync(fullpath)) result.push(fullpath);
   });
@@ -47,28 +45,6 @@ export function getDirectories(directory: string): string[] {
 
 export function sanitizeFilename(name: string): string {
   return name.replace(/[/\\?%*:|"<>]/g, '-');
-}
-
-/**
- * Get the expected path for a saved series thumbnail.
- * The thumbnail does not necessarily exist; this just provides the filename that it would/should
- * exist at.
- * When a series has an empty remoteCoverUrl value, it does not have a relevant thumbnail path. Thus
- * we return null in that case.
- * @param series the series to get the expected path for
- * @returns a promise for the expected thumbnail path if the series has a remoteCoverUrl, else null
- */
-export async function getThumbnailPath(series: Series): Promise<string | null> {
-  if (series.remoteCoverUrl === '') return null;
-
-  const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
-  if (!fs.existsSync(thumbnailsDir)) {
-    fs.mkdirSync(thumbnailsDir);
-  }
-
-  const extMatch = series.remoteCoverUrl.match(/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i);
-  const ext = extMatch ? extMatch[1] : 'jpg';
-  return path.join(thumbnailsDir, `${series.id}.${ext}`);
 }
 
 export function getChapterDownloadPath(
@@ -92,6 +68,22 @@ export function getChapterDownloadPath(
 
   if (matching) return matching;
   return path.join(downloadsDir, seriesDir1, `Chapter ${chapter.chapterNumber} - ${chapter.id}`);
+}
+
+export function getAllDownloadedChapterIds(downloadsDir: string): string[] {
+  const seriesDirs = getDirectories(downloadsDir);
+  const chapterDirs: string[] = [];
+  seriesDirs.forEach((seriesDir) => {
+    chapterDirs.push(...getDirectories(seriesDir));
+  });
+
+  const result: string[] = [];
+  chapterDirs.forEach((name) => {
+    const regex = /(?:[a-f\d]{8}-[a-f\d]{4}-4[a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12})/i;
+    const match = name.match(regex);
+    if (match) result.push(match[0]);
+  });
+  return result;
 }
 
 /**
@@ -142,22 +134,6 @@ export async function getChapterDownloaded(
   );
 }
 
-export function getAllDownloadedChapterIds(downloadsDir: string): string[] {
-  const seriesDirs = getDirectories(downloadsDir);
-  const chapterDirs: string[] = [];
-  seriesDirs.forEach((seriesDir) => {
-    chapterDirs.push(...getDirectories(seriesDir));
-  });
-
-  const result: string[] = [];
-  chapterDirs.forEach((name) => {
-    const regex = /(?:[a-f\d]{8}-[a-f\d]{4}-4[a-f\d]{3}-[89ab][a-f\d]{3}-[a-f\d]{12})/i;
-    const match = name.match(regex);
-    if (match) result.push(match[0]);
-  });
-  return result;
-}
-
 export async function deleteDownloadedChapter(
   series: Series,
   chapter: Chapter,
@@ -183,13 +159,52 @@ export async function deleteDownloadedChapter(
 }
 
 /**
+ * Get the expected path for a saved series thumbnail.
+ * The thumbnail does not necessarily exist; this just provides the filename that it would/should
+ * exist at.
+ * When a series has an empty remoteCoverUrl value, it does not have a relevant thumbnail path. Thus
+ * we return null in that case.
+ * @param series
+ * @param thumbnailsDir the base thumbnail directory
+ * @returns a promise for the expected thumbnail path if the series has a remoteCoverUrl, else null
+ */
+export async function getThumbnailPath(
+  series: Series,
+  thumbnailsDir: string,
+): Promise<string | null> {
+  if (series.remoteCoverUrl === '') return null;
+
+  if (!fs.existsSync(thumbnailsDir)) {
+    fs.mkdirSync(thumbnailsDir);
+  }
+
+  const extMatch = series.remoteCoverUrl.match(/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i);
+  const ext = extMatch ? extMatch[1] : 'jpg';
+  return path.join(thumbnailsDir, `${series.id}.${ext}`);
+}
+
+export async function downloadThumbnail(thumbnailPath: string, data: string | BlobPart) {
+  const url = typeof data === 'string' ? data : URL.createObjectURL(new Blob([data]));
+
+  fetch(url)
+    .then((response) => response.arrayBuffer())
+    .then((buffer) => {
+      fs.writeFile(thumbnailPath, Buffer.from(buffer), (err: Error | null) => {
+        if (err) {
+          console.error(err);
+        }
+      });
+    })
+    .catch((e: Error) => console.error(e));
+}
+
+/**
  * Delete a series thumbnail from the filesystem.
  * This does not necessarily require the thumbnail to exist; therefore this function can be simply
  * used to ensure that a thumbnail does not exist.
  * @param series the series to delete the thumbnail for
  */
-export async function deleteThumbnail(series: Series) {
-  const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
+export async function deleteThumbnail(series: Series, thumbnailsDir: string) {
   if (!fs.existsSync(thumbnailsDir)) return;
 
   const files = fs.readdirSync(thumbnailsDir);
@@ -198,26 +213,11 @@ export async function deleteThumbnail(series: Series) {
     if (file.startsWith(`${series.id}.`)) {
       const curPath = path.join(thumbnailsDir, file);
       console.debug(`Deleting thumbnail at ${curPath}`);
-      fs.unlink(curPath, (err: Error) => {
+      fs.unlink(curPath, (err: Error | null) => {
         if (err) {
           console.error(err);
         }
       });
     }
   }
-}
-
-export async function downloadCover(thumbnailPath: string, data: any) {
-  const url = typeof data === 'string' ? data : URL.createObjectURL(new Blob([data]));
-
-  fetch(url)
-    .then((response) => response.arrayBuffer())
-    .then((buffer) => {
-      fs.writeFile(thumbnailPath, Buffer.from(buffer), (err: Error) => {
-        if (err) {
-          console.error(err);
-        }
-      });
-    })
-    .catch((e: Error) => console.error(e));
 }

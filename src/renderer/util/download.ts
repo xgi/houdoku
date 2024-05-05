@@ -1,6 +1,5 @@
 import { Series } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
-import { getThumbnailPath } from '@/common/util/filesystem';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 
 /**
@@ -8,9 +7,8 @@ import ipcChannels from '@/common/constants/ipcChannels.json';
  * The cover is saved in the internal thumbnail directory; see getThumbnailPath.
  * @param series the series to download cover for
  */
-// eslint-disable-next-line import/prefer-default-export
 export async function downloadCover(series: Series) {
-  const thumbnailPath = await getThumbnailPath(series);
+  const thumbnailPath = await ipcRenderer.invoke(ipcChannels.FILESYSTEM.GET_THUMBNAIL_PATH, series);
   if (thumbnailPath === null) return;
 
   const data = await ipcRenderer.invoke(
@@ -20,5 +18,5 @@ export async function downloadCover(series: Series) {
     series.remoteCoverUrl,
   );
 
-  await ipcRenderer.invoke(ipcChannels.DOWNLOAD_THUMBNAIL, thumbnailPath, data);
+  await ipcRenderer.invoke(ipcChannels.FILESYSTEM.DOWNLOAD_THUMBNAIL, thumbnailPath, data);
 }
