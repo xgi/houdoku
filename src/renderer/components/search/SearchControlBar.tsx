@@ -8,9 +8,9 @@ import {
   searchExtensionState,
   searchTextState,
   showingFilterDrawerState,
-} from '../../state/searchStates';
-import { FS_METADATA } from '../../../common/temp_fs_metadata';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
+} from '@/renderer/state/searchStates';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 
 interface Props {
   extensionList: ExtensionMetadata[];

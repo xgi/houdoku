@@ -5,9 +5,9 @@ import {
   MUTrackerMetadata,
   AniListTrackerMetadata,
   MALTrackerMetadata,
-} from '../../../../common/temp_tracker_metadata';
+} from '@/common/temp_tracker_metadata';
 import SeriesTrackerModalTab from './SeriesTrackerModalTab';
-import { updateSeriesTrackerKeys } from '../../../features/library/utils';
+import { updateSeriesTrackerKeys } from '@/renderer/features/library/utils';
 
 const TRACKER_METADATAS = [AniListTrackerMetadata, MALTrackerMetadata, MUTrackerMetadata];
 

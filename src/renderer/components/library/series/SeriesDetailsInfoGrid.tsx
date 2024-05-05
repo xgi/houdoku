@@ -3,7 +3,7 @@ import React from 'react';
 const { ipcRenderer } = require('electron');
 import { Box, Grid, Group, Text, Badge } from '@mantine/core';
 import { Languages, Series } from '@tiyo/common';
-import ipcChannels from '../../../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {

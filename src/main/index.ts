@@ -23,9 +23,9 @@ import {
   OpenDialogReturnValue,
 } from 'electron';
 import log from 'electron-log';
-import { walk, downloadCover } from '../common/util/filesystem';
+import { walk, downloadCover } from '@/common/util/filesystem';
 import { createExtensionIpcHandlers, loadPlugins } from './services/extension';
-import ipcChannels from '../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import packageJson from '../../package.json';
 import { createTrackerIpcHandlers } from './services/tracker';
 import { createDiscordIpcHandlers } from './services/discord';

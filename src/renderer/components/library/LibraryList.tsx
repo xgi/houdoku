@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { ActionIcon, Badge, Button, Group, Table, Text } from '@mantine/core';
 import { IconTrash } from '@tabler/icons';
-import { goToSeries } from '../../features/library/utils';
-import { seriesListState } from '../../state/libraryStates';
+import { goToSeries } from '@/renderer/features/library/utils';
+import { seriesListState } from '@/renderer/state/libraryStates';
 
 type Props = {
   getFilteredList: () => Series[];

@@ -12,8 +12,8 @@ import {
 import { AppShell, Navbar } from '@mantine/core';
 import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
-import routes from '../../../common/constants/routes.json';
-import { importSeries, reloadSeriesList } from '../../features/library/utils';
+import routes from '@/common/constants/routes.json';
+import { importSeries, reloadSeriesList } from '@/renderer/features/library/utils';
 import Settings from '../settings/Settings';
 import About from '../about/About';
 import Library from '../library/Library';
@@ -27,17 +27,17 @@ import {
   importQueueState,
   reloadingSeriesListState,
   seriesListState,
-} from '../../state/libraryStates';
-import library from '../../services/library';
+} from '@/renderer/state/libraryStates';
+import library from '@/renderer/services/library';
 import {
   autoBackupCountState,
   autoBackupState,
   chapterLanguagesState,
   refreshOnStartState,
-} from '../../state/settingStates';
+} from '@/renderer/state/settingStates';
 import DashboardSidebarLink from './DashboardSidebarLink';
-import { downloadCover } from '../../util/download';
-import { createAutoBackup } from '../../util/backup';
+import { downloadCover } from '@/renderer/util/download';
+import { createAutoBackup } from '@/renderer/util/backup';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}

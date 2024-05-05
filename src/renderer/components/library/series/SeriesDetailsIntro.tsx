@@ -5,10 +5,10 @@ import { useRecoilValue } from 'recoil';
 import { Grid, Group, Text, Image, Title, ScrollArea } from '@mantine/core';
 import path from 'path';
 import { Series } from '@tiyo/common';
-import blankCover from '../../../img/blank_cover.png';
-import ipcChannels from '../../../../common/constants/ipcChannels.json';
-import { currentExtensionMetadataState } from '../../../state/libraryStates';
-import constants from '../../../../common/constants/constants.json';
+import blankCover from '@/renderer/img/blank_cover.png';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import { currentExtensionMetadataState } from '@/renderer/state/libraryStates';
+import constants from '@/common/constants/constants.json';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {

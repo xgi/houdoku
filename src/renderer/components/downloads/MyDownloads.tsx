@@ -8,11 +8,11 @@ import { openConfirmModal } from '@mantine/modals';
 import {
   deleteDownloadedChapter,
   getAllDownloadedChapterIds,
-} from '../../../common/util/filesystem';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import library from '../../services/library';
-import { customDownloadsDirState } from '../../state/settingStates';
-import { getFromChapterIds } from '../../features/library/utils';
+} from '@/common/util/filesystem';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import library from '@/renderer/services/library';
+import { customDownloadsDirState } from '@/renderer/state/settingStates';
+import { getFromChapterIds } from '@/renderer/features/library/utils';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 

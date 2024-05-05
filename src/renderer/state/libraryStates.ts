@@ -1,6 +1,6 @@
 import { Chapter, ExtensionMetadata, Series } from '@tiyo/common';
 import { atom, selector } from 'recoil';
-import { Category, ImportTask, TableColumnSortOrder } from '../../common/models/types';
+import { Category, ImportTask, TableColumnSortOrder } from '@/common/models/types';
 import {
   chapterLanguagesState,
   chapterListChOrderState,

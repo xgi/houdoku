@@ -8,27 +8,27 @@ import * as ContextMenu from '@radix-ui/react-context-menu';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { IconCheck, IconChevronRight } from '@tabler/icons';
-import blankCover from '../../img/blank_cover.png';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import constants from '../../../common/constants/constants.json';
+import blankCover from '@/renderer/img/blank_cover.png';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import constants from '@/common/constants/constants.json';
 import styles from './LibraryGrid.module.css';
 import {
   categoryListState,
   chapterListState,
   seriesListState,
   seriesState,
-} from '../../state/libraryStates';
+} from '@/renderer/state/libraryStates';
 import {
   chapterLanguagesState,
   confirmRemoveSeriesState,
   libraryColumnsState,
   libraryCropCoversState,
   libraryViewState,
-} from '../../state/settingStates';
-import { goToSeries, markChapters, removeSeries } from '../../features/library/utils';
+} from '@/renderer/state/settingStates';
+import { goToSeries, markChapters, removeSeries } from '@/renderer/features/library/utils';
 import ExtensionImage from '../general/ExtensionImage';
-import { LibraryView } from '../../../common/models/types';
-import library from '../../services/library';
+import { LibraryView } from '@/common/models/types';
+import library from '@/renderer/services/library';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {

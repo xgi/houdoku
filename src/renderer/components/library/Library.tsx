@@ -3,25 +3,25 @@ import { Series } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ScrollArea, Text } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
-import { LibrarySort, LibraryView, ProgressFilter } from '../../../common/models/types';
+import { LibrarySort, LibraryView, ProgressFilter } from '@/common/models/types';
 import {
   activeSeriesListState,
   chapterListState,
   filterState,
   seriesListState,
   seriesState,
-} from '../../state/libraryStates';
+} from '@/renderer/state/libraryStates';
 import {
   libraryFilterStatusState,
   libraryFilterProgressState,
   librarySortState,
   libraryViewState,
   libraryFilterCategoryState,
-} from '../../state/settingStates';
+} from '@/renderer/state/settingStates';
 import LibraryGrid from './LibraryGrid';
 import RemoveSeriesModal from './RemoveSeriesModal';
 import LibraryList from './LibraryList';
-import library from '../../services/library';
+import library from '@/renderer/services/library';
 import EditCategoriesModal from './EditCategoriesModal';
 
 type Props = unknown;

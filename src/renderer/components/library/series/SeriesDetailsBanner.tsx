@@ -5,7 +5,7 @@ import { BackgroundImage, Box, Button, Group, Menu, Stack } from '@mantine/core'
 import { IconMenu2, IconTrash } from '@tabler/icons';
 import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
-import ipcChannels from '../../../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import {
   categoryListState,
   reloadingSeriesListState,
@@ -13,17 +13,17 @@ import {
   seriesListState,
   seriesState,
   sortedFilteredChapterListState,
-} from '../../../state/libraryStates';
-import { downloadNextX, downloadAll } from '../../../features/library/chapterDownloadUtils';
-import { removeSeries, reloadSeriesList } from '../../../features/library/utils';
-import { FS_METADATA } from '../../../../common/temp_fs_metadata';
+} from '@/renderer/state/libraryStates';
+import { downloadNextX, downloadAll } from '@/renderer/features/library/chapterDownloadUtils';
+import { removeSeries, reloadSeriesList } from '@/renderer/features/library/utils';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 import {
   chapterLanguagesState,
   confirmRemoveSeriesState,
   customDownloadsDirState,
-} from '../../../state/settingStates';
-import { queueState } from '../../../state/downloaderStates';
-import routes from '../../../../common/constants/routes.json';
+} from '@/renderer/state/settingStates';
+import { queueState } from '@/renderer/state/downloaderStates';
+import routes from '@/common/constants/routes.json';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 

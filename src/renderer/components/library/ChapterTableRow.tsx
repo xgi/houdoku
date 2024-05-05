@@ -6,22 +6,22 @@ const { ipcRenderer } = require('electron');
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ActionIcon, Center, Group, Text } from '@mantine/core';
 import { IconDownload, IconEye, IconFileCheck } from '@tabler/icons';
-import routes from '../../../common/constants/routes.json';
-import { sendProgressToTrackers } from '../../features/tracker/utils';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import { markChapters } from '../../features/library/utils';
-import flags from '../../img/flags.png';
+import routes from '@/common/constants/routes.json';
+import { sendProgressToTrackers } from '@/renderer/features/tracker/utils';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import { markChapters } from '@/renderer/features/library/utils';
+import flags from '@/renderer/img/flags.png';
 import {
   chapterDownloadStatusesState,
   chapterListState,
   seriesState,
-} from '../../state/libraryStates';
+} from '@/renderer/state/libraryStates';
 import {
   chapterLanguagesState,
   trackerAutoUpdateState,
   customDownloadsDirState,
-} from '../../state/settingStates';
-import { downloaderClient, DownloadTask } from '../../services/downloader';
+} from '@/renderer/state/settingStates';
+import { downloaderClient, DownloadTask } from '@/renderer/services/downloader';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import { Modal } from '@mantine/core';
 import ReaderSettings from '../settings/ReaderSettings';
-import { showingSettingsModalState } from '../../state/readerStates';
+import { showingSettingsModalState } from '@/renderer/state/readerStates';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};

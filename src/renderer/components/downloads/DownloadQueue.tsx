@@ -12,8 +12,8 @@ import {
   Center,
 } from '@mantine/core';
 import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons';
-import { downloaderClient, DownloadTask } from '../../services/downloader';
-import { currentTaskState, queueState } from '../../state/downloaderStates';
+import { downloaderClient, DownloadTask } from '@/renderer/services/downloader';
+import { currentTaskState, queueState } from '@/renderer/state/downloaderStates';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};

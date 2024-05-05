@@ -1,6 +1,6 @@
 import { Chapter, Series } from '@tiyo/common';
-import { downloaderClient, DownloadTask } from '../../services/downloader';
-import { getChapterDownloaded } from '../../../common/util/filesystem';
+import { downloaderClient, DownloadTask } from '@/renderer/services/downloader';
+import { getChapterDownloaded } from '@/common/util/filesystem';
 
 export async function downloadNextX(
   chapterList: Chapter[],

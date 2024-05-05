@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 const { ipcRenderer } = require('electron');
 import { Accordion, Text, Button, Group, Code, Input, Loader, Box, Timeline } from '@mantine/core';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import storeKeys from '../../../common/constants/storeKeys.json';
-import persistantStore from '../../util/persistantStore';
-import { TrackerMetadata } from '../../../common/models/types';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import storeKeys from '@/common/constants/storeKeys.json';
+import persistantStore from '@/renderer/util/persistantStore';
+import { TrackerMetadata } from '@/common/models/types';
 
 type Props = {
   trackerMetadata: TrackerMetadata;

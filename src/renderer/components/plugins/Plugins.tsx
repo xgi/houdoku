@@ -5,7 +5,7 @@ import { Button, Group, Mark, Table, Text } from '@mantine/core';
 const { ipcRenderer } = require('electron');
 import { gt } from 'semver';
 import { useListState } from '@mantine/hooks';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};

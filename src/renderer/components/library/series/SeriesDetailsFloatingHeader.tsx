@@ -4,10 +4,10 @@ import { useSetRecoilState } from 'recoil';
 import { Affix, Button } from '@mantine/core';
 import { IconArrowLeft, IconHeart } from '@tabler/icons';
 import { Series } from '@tiyo/common';
-import { downloadCover } from '../../../util/download';
-import library from '../../../services/library';
-import { seriesListState } from '../../../state/libraryStates';
-import routes from '../../../../common/constants/routes.json';
+import { downloadCover } from '@/renderer/util/download';
+import library from '@/renderer/services/library';
+import { seriesListState } from '@/renderer/state/libraryStates';
+import routes from '@/common/constants/routes.json';
 
 type Props = {
   series: Series;

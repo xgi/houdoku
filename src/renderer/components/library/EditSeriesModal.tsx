@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
 import { Button, Group, Modal } from '@mantine/core';
-import { updateSeries } from '../../features/library/utils';
+import { updateSeries } from '@/renderer/features/library/utils';
 import SeriesEditControls from '../general/SeriesEditControls';
 
 type Props = {

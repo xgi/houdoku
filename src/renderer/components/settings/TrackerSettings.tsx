@@ -2,13 +2,13 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import { Accordion, Alert, Checkbox } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons';
-import { TrackerSetting } from '../../../common/models/types';
-import { trackerAutoUpdateState } from '../../state/settingStates';
+import { TrackerSetting } from '@/common/models/types';
+import { trackerAutoUpdateState } from '@/renderer/state/settingStates';
 import {
   MUTrackerMetadata,
   AniListTrackerMetadata,
   MALTrackerMetadata,
-} from '../../../common/temp_tracker_metadata';
+} from '@/common/temp_tracker_metadata';
 import TrackerAuthOAuth from './TrackerAuthOAuth';
 import TrackerAuthUserPass from './TrackerAuthUserPass';
 

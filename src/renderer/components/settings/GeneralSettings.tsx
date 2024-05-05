@@ -15,9 +15,9 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconArrowBack } from '@tabler/icons';
-import { GeneralSetting } from '../../../common/models/types';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import { createBackup, restoreBackup } from '../../util/backup';
+import { GeneralSetting } from '@/common/models/types';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import { createBackup, restoreBackup } from '@/renderer/util/backup';
 import {
   autoBackupState,
   autoBackupCountState,
@@ -27,7 +27,7 @@ import {
   customDownloadsDirState,
   libraryCropCoversState,
   refreshOnStartState,
-} from '../../state/settingStates';
+} from '@/renderer/state/settingStates';
 
 const languageOptions = Object.values(Languages)
   .filter((language) => language.key !== LanguageKey.MULTI)

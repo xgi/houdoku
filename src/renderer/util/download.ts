@@ -1,7 +1,7 @@
 import { Series } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
-import { getThumbnailPath } from '../../common/util/filesystem';
-import ipcChannels from '../../common/constants/ipcChannels.json';
+import { getThumbnailPath } from '@/common/util/filesystem';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 
 /**
  * Download a series' cover to the filesystem.

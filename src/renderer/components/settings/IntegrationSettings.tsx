@@ -1,8 +1,8 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import { Checkbox, Text } from '@mantine/core';
-import { IntegrationSetting } from '../../../common/models/types';
-import { discordPresenceEnabledState } from '../../state/settingStates';
+import { IntegrationSetting } from '@/common/models/types';
+import { discordPresenceEnabledState } from '@/renderer/state/settingStates';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};

@@ -8,8 +8,8 @@ import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import { IconCheck, IconPlayerPause } from '@tabler/icons';
-import { getChapterDownloadPath } from '../../common/util/filesystem';
-import ipcChannels from '../../common/constants/ipcChannels.json';
+import { getChapterDownloadPath } from '@/common/util/filesystem';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 
 export type DownloadTask = {
   chapter: Chapter;

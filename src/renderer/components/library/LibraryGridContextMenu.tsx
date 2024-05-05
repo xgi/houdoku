@@ -4,15 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Menu, Portal, ScrollArea } from '@mantine/core';
 import { IconTrash, IconEye, IconSquareCheck, IconSquare, IconChecks } from '@tabler/icons';
-import { goToSeries, markChapters, removeSeries } from '../../features/library/utils';
+import { goToSeries, markChapters, removeSeries } from '@/renderer/features/library/utils';
 import {
   categoryListState,
   chapterListState,
   seriesListState,
   seriesState,
-} from '../../state/libraryStates';
-import library from '../../services/library';
-import { chapterLanguagesState, confirmRemoveSeriesState } from '../../state/settingStates';
+} from '@/renderer/state/libraryStates';
+import library from '@/renderer/services/library';
+import { chapterLanguagesState, confirmRemoveSeriesState } from '@/renderer/state/settingStates';
 
 const ELEMENT_ID = 'LibraryGridContextMenu';
 const WIDTH = 200;

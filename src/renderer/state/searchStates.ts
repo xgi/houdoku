@@ -1,7 +1,7 @@
 import { Series, FilterValues } from '@tiyo/common';
 import { atom } from 'recoil';
-import { SearchResult } from '../../common/models/types';
-import { FS_METADATA } from '../../common/temp_fs_metadata';
+import { SearchResult } from '@/common/models/types';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 
 export const searchExtensionState = atom({
   key: 'searchSearchExtensionState',

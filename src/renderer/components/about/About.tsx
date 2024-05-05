@@ -2,7 +2,7 @@ import React from 'react';
 const { ipcRenderer } = require('electron');
 import { Title, Text, Button } from '@mantine/core';
 import packageJson from '../../../../package.json';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};

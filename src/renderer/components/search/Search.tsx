@@ -5,9 +5,9 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { Text } from '@mantine/core';
 import { openModal } from '@mantine/modals';
 import AddSeriesModal from './AddSeriesModal';
-import { FS_METADATA } from '../../../common/temp_fs_metadata';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import { activeSeriesListState } from '../../state/libraryStates';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import { activeSeriesListState } from '@/renderer/state/libraryStates';
 import {
   addModalEditableState,
   addModalSeriesState,
@@ -17,7 +17,7 @@ import {
   searchTextState,
   searchResultState,
   showingAddModalState,
-} from '../../state/searchStates';
+} from '@/renderer/state/searchStates';
 import SearchGrid from './SearchGrid';
 import SearchControlBar from './SearchControlBar';
 import SearchFilterDrawer from './SearchFilterDrawer';

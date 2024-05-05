@@ -2,8 +2,8 @@ const { ipcRenderer } = require('electron');
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
 import { Button, Loader } from '@mantine/core';
-import blankCover from '../../img/blank_cover.png';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
+import blankCover from '@/renderer/img/blank_cover.png';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 
 type Props = {
   series: Series;

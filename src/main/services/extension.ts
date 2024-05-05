@@ -11,9 +11,9 @@ import {
 } from '@tiyo/common';
 const aki = require('aki-plugin-manager');
 import { BrowserWindow, IpcMain } from 'electron';
-import { FS_METADATA } from '../../common/temp_fs_metadata';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 import { FSExtensionClient } from './extensions/filesystem';
-import ipcChannels from '../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 
 let TIYO_CLIENT: TiyoClientInterface | null = null;
 let FILESYSTEM_EXTENSION: FSExtensionClient | null = null;

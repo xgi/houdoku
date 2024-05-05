@@ -14,8 +14,8 @@ import {
 } from '@mantine/core';
 import { IconUpload } from '@tabler/icons';
 import styles from './SeriesEditControls.module.css';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import constants from '../../../common/constants/constants.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import constants from '@/common/constants/constants.json';
 import ExtensionImage from './ExtensionImage';
 
 type Props = {

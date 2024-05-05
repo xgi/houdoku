@@ -20,7 +20,7 @@ import {
   ReadingDirection,
   TableColumnSortOrder,
   TrackerSetting,
-} from '../../common/models/types';
+} from '@/common/models/types';
 
 const storedSettings = getAllStoredSettings();
 

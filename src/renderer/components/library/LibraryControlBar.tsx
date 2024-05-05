@@ -17,8 +17,8 @@ import {
   IconPhoto,
   IconSearch,
 } from '@tabler/icons';
-import { reloadSeriesList } from '../../features/library/utils';
-import { LibrarySort, LibraryView, ProgressFilter } from '../../../common/models/types';
+import { reloadSeriesList } from '@/renderer/features/library/utils';
+import { LibrarySort, LibraryView, ProgressFilter } from '@/common/models/types';
 import {
   activeSeriesListState,
   categoryListState,
@@ -26,7 +26,7 @@ import {
   reloadingSeriesListState,
   seriesListState,
   showingLibraryCtxMenuState,
-} from '../../state/libraryStates';
+} from '@/renderer/state/libraryStates';
 import {
   libraryFilterStatusState,
   libraryFilterProgressState,
@@ -35,7 +35,7 @@ import {
   librarySortState,
   chapterLanguagesState,
   libraryFilterCategoryState,
-} from '../../state/settingStates';
+} from '@/renderer/state/settingStates';
 
 type Props = {
   showEditCategoriesModal: () => void;

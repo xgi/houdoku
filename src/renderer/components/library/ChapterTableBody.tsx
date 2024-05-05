@@ -2,8 +2,8 @@
 import React from 'react';
 import { Chapter, Series } from '@tiyo/common';
 import { useRecoilValue } from 'recoil';
-import { sortedFilteredChapterListState } from '../../state/libraryStates';
-import { chapterListPageSizeState } from '../../state/settingStates';
+import { sortedFilteredChapterListState } from '@/renderer/state/libraryStates';
+import { chapterListPageSizeState } from '@/renderer/state/settingStates';
 import ChapterTableRow from './ChapterTableRow';
 
 type Props = {

@@ -3,10 +3,10 @@ import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import { Button, Checkbox, Group, Modal, Text } from '@mantine/core';
-import routes from '../../../common/constants/routes.json';
-import { removeSeries } from '../../features/library/utils';
-import { seriesListState } from '../../state/libraryStates';
-import { confirmRemoveSeriesState } from '../../state/settingStates';
+import routes from '@/common/constants/routes.json';
+import { removeSeries } from '@/renderer/features/library/utils';
+import { seriesListState } from '@/renderer/state/libraryStates';
+import { confirmRemoveSeriesState } from '@/renderer/state/settingStates';
 
 type Props = {
   series: Series | null;

@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 import React, { ReactNode, Component, ErrorInfo } from 'react';
 import { Accordion, Box, Center, Code, Container, Kbd, Text, Title } from '@mantine/core';
 import packageJson from '../../../../package.json';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 
 const LOGS_DIR = await ipcRenderer.invoke(ipcChannels.GET_PATH.LOGS_DIR);
 

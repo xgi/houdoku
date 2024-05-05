@@ -8,14 +8,14 @@ import { Button, Group, List, Text } from '@mantine/core';
 import { v4 as uuidv4 } from 'uuid';
 import { showNotification, updateNotification } from '@mantine/notifications';
 import { IconAlertTriangle, IconCheck, IconX } from '@tabler/icons';
-import { deleteThumbnail, getThumbnailPath } from '../../../common/util/filesystem';
-import { downloadCover } from '../../util/download';
-import { FS_METADATA } from '../../../common/temp_fs_metadata';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import library from '../../services/library';
-import { getNumberUnreadChapters } from '../../util/comparison';
-import routes from '../../../common/constants/routes.json';
-import { Category } from '../../../common/models/types';
+import { deleteThumbnail, getThumbnailPath } from '@/common/util/filesystem';
+import { downloadCover } from '@/renderer/util/download';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import library from '@/renderer/services/library';
+import { getNumberUnreadChapters } from '@/renderer/util/comparison';
+import routes from '@/common/constants/routes.json';
+import { Category } from '@/common/models/types';
 
 const updateSeriesNumberUnread = (series: Series, chapterLanguages: LanguageKey[]) => {
   if (series.id !== undefined) {

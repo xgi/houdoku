@@ -18,7 +18,7 @@ import {
 } from '@mantine/core';
 import { IconCopy, IconExternalLink, IconSearch } from '@tabler/icons';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import ipcChannels from '../../../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import {
   TrackEntry,
   TrackerSeries,
@@ -26,10 +26,10 @@ import {
   TrackScoreFormat,
   TrackerMetadata,
   TrackerListEntry,
-} from '../../../../common/models/types';
-import { markChapters } from '../../../features/library/utils';
-import { chapterListState, seriesState } from '../../../state/libraryStates';
-import { chapterLanguagesState } from '../../../state/settingStates';
+} from '@/common/models/types';
+import { markChapters } from '@/renderer/features/library/utils';
+import { chapterListState, seriesState } from '@/renderer/state/libraryStates';
+import { chapterLanguagesState } from '@/renderer/state/settingStates';
 
 const SCORE_FORMAT_OPTIONS: {
   [key in TrackScoreFormat]: number[];

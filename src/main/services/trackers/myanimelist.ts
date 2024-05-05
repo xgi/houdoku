@@ -9,16 +9,16 @@ import {
   AddLibraryEntryFunc,
   UpdateLibraryEntryFunc,
   GetTokenFunc,
-} from '../../../common/models/interface';
+} from '@/common/models/interface';
 import {
   TrackEntry,
   TrackerMetadata,
   TrackerSeries,
   TrackScoreFormat,
   TrackStatus,
-} from '../../../common/models/types';
-import { formDataFromObject } from '../../util/net';
-import { MALTrackerMetadata } from '../../../common/temp_tracker_metadata';
+} from '@/common/models/types';
+import { formDataFromObject } from '@/main/util/net';
+import { MALTrackerMetadata } from '@/common/temp_tracker_metadata';
 
 const CLIENT_ID = '217d11dc032b71dd35c60c7204b07a65';
 const BASE_URL = 'https://api.myanimelist.net/v2';

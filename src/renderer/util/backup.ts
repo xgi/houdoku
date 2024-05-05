@@ -1,7 +1,7 @@
 import { Chapter, Series } from '@tiyo/common';
 const fs = require('fs');
 const path = require('path');
-import storeKeys from '../../common/constants/storeKeys.json';
+import storeKeys from '@/common/constants/storeKeys.json';
 import { updateSeries } from '../features/library/utils';
 import library from '../services/library';
 

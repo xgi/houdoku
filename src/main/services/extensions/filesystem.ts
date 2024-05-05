@@ -19,10 +19,10 @@ import {
   SeriesListResponse,
   GetFilterOptionsFunc,
 } from '@tiyo/common';
-import { extract } from '../../util/archives';
-import { walk } from '../../../common/util/filesystem';
-import constants from '../../../common/constants/constants.json';
-import { FS_METADATA } from '../../../common/temp_fs_metadata';
+import { extract } from '@/main/util/archives';
+import { walk } from '@/common/util/filesystem';
+import constants from '@/common/constants/constants.json';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 
 const isSupportedArchivePath = (str: string) => {
   return ['zip', 'rar', 'cbz', 'cbr'].some((ext) => {

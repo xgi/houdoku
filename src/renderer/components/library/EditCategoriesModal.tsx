@@ -3,10 +3,10 @@ import { useRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import { ActionIcon, Group, Modal, Stack, TextInput, Tooltip } from '@mantine/core';
 import { IconAlertCircle, IconCheck, IconRefresh, IconRefreshOff, IconTrash } from '@tabler/icons';
-import { categoryListState } from '../../state/libraryStates';
-import library from '../../services/library';
-import { Category } from '../../../common/models/types';
-import { libraryFilterCategoryState } from '../../state/settingStates';
+import { categoryListState } from '@/renderer/state/libraryStates';
+import library from '@/renderer/services/library';
+import { Category } from '@/common/models/types';
+import { libraryFilterCategoryState } from '@/renderer/state/settingStates';
 
 type Props = {
   showing: boolean;

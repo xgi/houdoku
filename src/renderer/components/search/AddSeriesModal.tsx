@@ -5,10 +5,10 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Button, Center, Group, Loader, Modal, Stack, Text } from '@mantine/core';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import SeriesEditControls from '../general/SeriesEditControls';
-import { importingState, importQueueState, seriesListState } from '../../state/libraryStates';
-import { goToSeries } from '../../features/library/utils';
+import { importingState, importQueueState, seriesListState } from '@/renderer/state/libraryStates';
+import { goToSeries } from '@/renderer/features/library/utils';
 
 type Props = {
   series: Series | undefined;

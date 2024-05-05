@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { flushSync } from 'react-dom';
 import styles from './ReaderViewer.module.css';
-import { ReadingDirection, PageStyle } from '../../../common/models/types';
+import { ReadingDirection, PageStyle } from '@/common/models/types';
 import {
   lastPageNumberState,
   pageGroupListState,
   pageNumberState,
   pageUrlsState,
   seriesState,
-} from '../../state/readerStates';
+} from '@/renderer/state/readerStates';
 import {
   fitContainToWidthState,
   fitContainToHeightState,
@@ -21,7 +21,7 @@ import {
   optimizeContrastState,
   maxPageWidthState,
   pageWidthMetricState,
-} from '../../state/settingStates';
+} from '@/renderer/state/settingStates';
 import ExtensionImage from '../general/ExtensionImage';
 
 const ROOT_ID = 'root';

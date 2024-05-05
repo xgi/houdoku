@@ -5,21 +5,21 @@ const { ipcRenderer } = require('electron');
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Divider, Group, Pagination, Select, Table } from '@mantine/core';
 import ChapterTableContextMenu from './ChapterTableContextMenu';
-import { getChaptersDownloaded } from '../../../common/util/filesystem';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
+import { getChaptersDownloaded } from '@/common/util/filesystem';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import {
   chapterDownloadStatusesState,
   chapterFilterGroupState,
   chapterFilterTitleState,
   chapterListState,
   sortedFilteredChapterListState,
-} from '../../state/libraryStates';
+} from '@/renderer/state/libraryStates';
 import {
   chapterLanguagesState,
   customDownloadsDirState,
   chapterListPageSizeState,
-} from '../../state/settingStates';
-import { currentTaskState } from '../../state/downloaderStates';
+} from '@/renderer/state/settingStates';
+import { currentTaskState } from '@/renderer/state/downloaderStates';
 import ChapterTableHeading from './ChapterTableHeading';
 import ChapterTableBody from './ChapterTableBody';
 

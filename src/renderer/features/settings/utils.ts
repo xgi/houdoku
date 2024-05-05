@@ -8,9 +8,9 @@ import {
   ReadingDirection,
   PageStyle,
   OffsetPages,
-} from '../../../common/models/types';
-import persistantStore from '../../util/persistantStore';
-import storeKeys from '../../../common/constants/storeKeys.json';
+} from '@/common/models/types';
+import persistantStore from '@/renderer/util/persistantStore';
+import storeKeys from '@/common/constants/storeKeys.json';
 
 type StoreValues = {
   [key in GeneralSetting | ReaderSetting | TrackerSetting | IntegrationSetting]?: string | null;

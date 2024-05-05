@@ -4,11 +4,11 @@ import { useRecoilValue } from 'recoil';
 const { ipcRenderer } = require('electron');
 import { ActionIcon, Button, Group, Modal, NumberInput, Text } from '@mantine/core';
 import { IconMinus, IconPlus } from '@tabler/icons';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import { customDownloadsDirState } from '../../state/settingStates';
-import { sortedFilteredChapterListState } from '../../state/libraryStates';
-import { downloadNextX } from '../../features/library/chapterDownloadUtils';
-import { queueState } from '../../state/downloaderStates';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import { customDownloadsDirState } from '@/renderer/state/settingStates';
+import { sortedFilteredChapterListState } from '@/renderer/state/libraryStates';
+import { downloadNextX } from '@/renderer/features/library/chapterDownloadUtils';
+import { queueState } from '@/renderer/state/downloaderStates';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 

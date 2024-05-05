@@ -31,9 +31,9 @@ import {
   Menu,
   ScrollArea,
 } from '@mantine/core';
-import flags from '../../img/flags.png';
+import flags from '@/renderer/img/flags.png';
 import styles from './ReaderHeader.module.css';
-import { ReadingDirection, PageStyle, OffsetPages } from '../../../common/models/types';
+import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types';
 import {
   chapterState,
   lastPageNumberState,
@@ -42,7 +42,7 @@ import {
   showingSettingsModalState,
   pageGroupListState,
   languageChapterListState,
-} from '../../state/readerStates';
+} from '@/renderer/state/readerStates';
 import {
   fitContainToHeightState,
   fitContainToWidthState,
@@ -50,12 +50,12 @@ import {
   offsetPagesState,
   pageStyleState,
   readingDirectionState,
-} from '../../state/settingStates';
+} from '@/renderer/state/settingStates';
 import {
   nextOffsetPages,
   nextPageStyle,
   nextReadingDirection,
-} from '../../features/settings/utils';
+} from '@/renderer/features/settings/utils';
 
 const TEXT_PAGE_STYLE = {
   [PageStyle.Single]: 'Single Page',

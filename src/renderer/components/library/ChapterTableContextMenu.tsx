@@ -12,12 +12,12 @@ import {
   IconPlayerPlay,
   IconX,
 } from '@tabler/icons';
-import { downloaderClient, DownloadTask } from '../../services/downloader';
-import { markChapters } from '../../features/library/utils';
-import routes from '../../../common/constants/routes.json';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import { chapterListState, seriesState } from '../../state/libraryStates';
-import { chapterLanguagesState, customDownloadsDirState } from '../../state/settingStates';
+import { downloaderClient, DownloadTask } from '@/renderer/services/downloader';
+import { markChapters } from '@/renderer/features/library/utils';
+import routes from '@/common/constants/routes.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import { chapterListState, seriesState } from '@/renderer/state/libraryStates';
+import { chapterLanguagesState, customDownloadsDirState } from '@/renderer/state/settingStates';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 

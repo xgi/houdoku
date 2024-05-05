@@ -28,7 +28,7 @@ import {
   ReaderSetting,
   DefaultSettings,
   OffsetPages,
-} from '../../../common/models/types';
+} from '@/common/models/types';
 import {
   fitContainToHeightState,
   fitContainToWidthState,
@@ -55,7 +55,7 @@ import {
   optimizeContrastState,
   keyToggleOffsetDoubleSpreadsState,
   keyToggleFullscreenState,
-} from '../../state/settingStates';
+} from '@/renderer/state/settingStates';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};

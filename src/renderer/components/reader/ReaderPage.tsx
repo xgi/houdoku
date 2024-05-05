@@ -6,28 +6,28 @@ import { PageRequesterData, Chapter, Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Text, ColorScheme } from '@mantine/core';
 import styles from './ReaderPage.module.css';
-import routes from '../../../common/constants/routes.json';
-import { ReadingDirection, PageStyle, OffsetPages } from '../../../common/models/types';
-import { selectMostSimilarChapter } from '../../util/comparison';
+import routes from '@/common/constants/routes.json';
+import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types';
+import { selectMostSimilarChapter } from '@/renderer/util/comparison';
 import ReaderSettingsModal from './ReaderSettingsModal';
-import { markChapters } from '../../features/library/utils';
+import { markChapters } from '@/renderer/features/library/utils';
 import ReaderViewer from './ReaderViewer';
 import ReaderHeader from './ReaderHeader';
 import ReaderLoader from './ReaderLoader';
-import { sendProgressToTrackers } from '../../features/tracker/utils';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
-import { FS_METADATA } from '../../../common/temp_fs_metadata';
-import { getChapterDownloaded, getChapterDownloadPath } from '../../../common/util/filesystem';
-import library from '../../services/library';
-import { updateTitlebarText } from '../../util/titlebar';
-import * as libraryStates from '../../state/libraryStates';
-import * as readerStates from '../../state/readerStates';
-import * as settingStates from '../../state/settingStates';
+import { sendProgressToTrackers } from '@/renderer/features/tracker/utils';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
+import { getChapterDownloaded, getChapterDownloadPath } from '@/common/util/filesystem';
+import library from '@/renderer/services/library';
+import { updateTitlebarText } from '@/renderer/util/titlebar';
+import * as libraryStates from '@/renderer/state/libraryStates';
+import * as readerStates from '@/renderer/state/readerStates';
+import * as settingStates from '@/renderer/state/settingStates';
 import {
   nextOffsetPages,
   nextPageStyle,
   nextReadingDirection,
-} from '../../features/settings/utils';
+} from '@/renderer/features/settings/utils';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 

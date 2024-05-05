@@ -5,13 +5,13 @@ import { Series } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Center, Loader, Stack, Text } from '@mantine/core';
 import ChapterTable from './ChapterTable';
-import { getBannerImageUrl } from '../../services/mediasource';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
+import { getBannerImageUrl } from '@/renderer/services/mediasource';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import SeriesTrackerModal from './tracker/SeriesTrackerModal';
 import EditSeriesModal from './EditSeriesModal';
-import { deleteThumbnail } from '../../../common/util/filesystem';
-import { downloadCover } from '../../util/download';
-import library from '../../services/library';
+import { deleteThumbnail } from '@/common/util/filesystem';
+import { downloadCover } from '@/renderer/util/download';
+import library from '@/renderer/services/library';
 import {
   chapterFilterGroupState,
   chapterFilterTitleState,
@@ -20,7 +20,7 @@ import {
   seriesBannerUrlState,
   seriesListState,
   seriesState,
-} from '../../state/libraryStates';
+} from '@/renderer/state/libraryStates';
 import RemoveSeriesModal from './RemoveSeriesModal';
 import DownloadModal from './DownloadModal';
 import SeriesDetailsFloatingHeader from './series/SeriesDetailsFloatingHeader';

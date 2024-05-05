@@ -1,7 +1,7 @@
 import { IpcMain } from 'electron';
 import DiscordRPC from 'discord-rpc';
 import { Chapter, Series } from '@tiyo/common';
-import ipcChannels from '../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import packageJson from '../../../package.json';
 
 function getActivity(

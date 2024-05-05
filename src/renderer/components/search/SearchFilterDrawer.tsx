@@ -31,7 +31,7 @@ import {
   filterValuesMapState,
   searchExtensionState,
   showingFilterDrawerState,
-} from '../../state/searchStates';
+} from '@/renderer/state/searchStates';
 import SearchFilterMultiToggle from './filter/SearchFilterMultiToggle';
 import SearchFilterSort from './filter/SearchFilterSort';
 import SearchFilterTriCheckbox from './filter/SearchFilterTriCheckbox';

@@ -1,7 +1,7 @@
 import { IpcMain } from 'electron';
 import { autoUpdater, UpdateCheckResult } from 'electron-updater';
 import { v4 as uuidv4 } from 'uuid';
-import ipcChannels from '../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import packageJson from '../../../package.json';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -15,7 +15,7 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
       return;
     }
 
-    autoUpdater.logger = log;
+    autoUpdater.logger = console;
     autoUpdater.autoDownload = false;
 
     autoUpdater

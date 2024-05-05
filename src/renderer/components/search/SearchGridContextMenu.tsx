@@ -5,8 +5,8 @@ import { Menu, Portal } from '@mantine/core';
 import { IconEye, IconBookUpload, IconPlayerPlay } from '@tabler/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
-import { importingState, importQueueState, seriesListState } from '../../state/libraryStates';
-import { goToSeries } from '../../features/library/utils';
+import { importingState, importQueueState, seriesListState } from '@/renderer/state/libraryStates';
+import { goToSeries } from '@/renderer/features/library/utils';
 
 const ELEMENT_ID = 'SearchGridContextMenu';
 const WIDTH = 200;

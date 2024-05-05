@@ -5,14 +5,14 @@ import { Chapter, Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { ActionIcon, Button, CloseButton, Group, Input, Text } from '@mantine/core';
 import { IconArrowsSort, IconSearch, IconSortAscending, IconSortDescending } from '@tabler/icons';
-import routes from '../../../common/constants/routes.json';
+import routes from '@/common/constants/routes.json';
 import {
   chapterFilterGroupState,
   chapterFilterTitleState,
   sortedFilteredChapterListState,
-} from '../../state/libraryStates';
-import { chapterListVolOrderState, chapterListChOrderState } from '../../state/settingStates';
-import { TableColumnSortOrder } from '../../../common/models/types';
+} from '@/renderer/state/libraryStates';
+import { chapterListVolOrderState, chapterListChOrderState } from '@/renderer/state/settingStates';
+import { TableColumnSortOrder } from '@/common/models/types';
 
 const columnOrderMap = {
   [TableColumnSortOrder.Ascending]: <IconSortAscending size={16} />,

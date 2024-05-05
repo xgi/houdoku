@@ -8,14 +8,14 @@ import {
   AddLibraryEntryFunc,
   UpdateLibraryEntryFunc,
   GetTokenFunc,
-} from '../../../common/models/interface';
+} from '@/common/models/interface';
 import {
   TrackEntry,
   TrackerMetadata,
   TrackScoreFormat,
   TrackStatus,
-} from '../../../common/models/types';
-import { AniListTrackerMetadata } from '../../../common/temp_tracker_metadata';
+} from '@/common/models/types';
+import { AniListTrackerMetadata } from '@/common/temp_tracker_metadata';
 
 const clientId = '5631';
 

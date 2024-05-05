@@ -9,7 +9,7 @@ import {
   UpdateLibraryEntryFunc,
   GetTokenFunc,
   GetListEntriesFunc,
-} from '../../../common/models/interface';
+} from '@/common/models/interface';
 import {
   TrackEntry,
   TrackerMetadata,
@@ -17,8 +17,8 @@ import {
   TrackScoreFormat,
   TrackStatus,
   TrackerListEntry,
-} from '../../../common/models/types';
-import { MUTrackerMetadata } from '../../../common/temp_tracker_metadata';
+} from '@/common/models/types';
+import { MUTrackerMetadata } from '@/common/temp_tracker_metadata';
 
 const BASE_URL = 'https://api.mangaupdates.com/v1';
 

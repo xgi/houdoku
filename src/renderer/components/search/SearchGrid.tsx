@@ -4,17 +4,17 @@ const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { Overlay, SimpleGrid, Skeleton, Title, ScrollArea } from '@mantine/core';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import ipcChannels from '../../../common/constants/ipcChannels.json';
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import styles from './SearchGrid.module.css';
-import { libraryColumnsState, libraryCropCoversState } from '../../state/settingStates';
+import { libraryColumnsState, libraryCropCoversState } from '@/renderer/state/settingStates';
 import {
   searchResultState,
   addModalEditableState,
   addModalSeriesState,
   showingAddModalState,
   searchExtensionState,
-} from '../../state/searchStates';
-import { FS_METADATA } from '../../../common/temp_fs_metadata';
+} from '@/renderer/state/searchStates';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 import ExtensionImage from '../general/ExtensionImage';
 import SearchGridContextMenu from './SearchGridContextMenu';
 
