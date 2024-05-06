@@ -30,14 +30,14 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
       props.series,
       customDownloadsDir || defaultDownloadsDir,
       downloadQueue,
-      amount
+      amount,
     );
     props.close();
   };
 
   return (
     <Modal opened={props.visible} centered title="Download chapters" onClose={props.close}>
-      <Group spacing={5}>
+      <Group gap={5}>
         <Text size="sm" mr="xs">
           Download next
         </Text>
@@ -49,7 +49,7 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
           hideControls
           value={amount}
           min={0}
-          onChange={(value: number) => setAmount(value)}
+          onChange={(value) => (typeof value === 'number' ? setAmount(value) : setAmount(0))}
           size="xs"
           styles={{ input: { width: 54, textAlign: 'center' } }}
         />
@@ -61,7 +61,7 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
           chapters.
         </Text>
       </Group>
-      <Group position="right" mt="md">
+      <Group justify="flex-end" mt="md">
         <Button variant="default" onClick={props.close}>
           Cancel
         </Button>

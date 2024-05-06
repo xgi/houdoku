@@ -4,7 +4,6 @@ import { Series } from '@tiyo/common';
 import {
   Button,
   Group,
-  Input,
   Loader,
   Stack,
   Text,
@@ -15,6 +14,7 @@ import {
   ActionIcon,
   Skeleton,
   Tooltip,
+  TextInput,
 } from '@mantine/core';
 import { IconCopy, IconExternalLink, IconSearch } from '@tabler/icons';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -125,7 +125,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
     return (
       <>
         {trackerSeriesList && trackerSeriesList.length > 0 ? (
-          <Stack spacing="xs">
+          <Stack gap="xs">
             {trackerSeriesList.map((trackerSeries) => (
               <Grid key={trackerSeries.id} gutter="xs" align="center">
                 <Grid.Col span={2}>
@@ -136,7 +136,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
                   />
                 </Grid.Col>
                 <Grid.Col span={8}>
-                  <Text weight={700} lineClamp={2}>
+                  <Text fw={700} lineClamp={2}>
                     {trackerSeries.title}
                   </Text>
                   <Text lineClamp={2}>{trackerSeries.description}</Text>
@@ -162,20 +162,20 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
   const renderTrackerSearch = () => {
     return (
       <>
-        <Input
+        <TextInput
           autoFocus
           placeholder="Search for series..."
           defaultValue={searchText}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
-          onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === 'Enter') loadTrackerData();
           }}
-          icon={<IconSearch size={16} />}
+          leftSection={<IconSearch size={16} />}
           my="xs"
         />
 
         {loading ? (
-          <Stack spacing="xs" mt="xs">
+          <Stack gap="xs" mt="xs">
             {[0, 1, 2, 3, 4].map(() => (
               <Skeleton height={85} />
             ))}
@@ -198,25 +198,27 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
           </Grid.Col>
           <Grid.Col span={9}>
             {trackerMetadata.hasCustomLists ? (
-              <Group noWrap spacing="xs">
+              <Group wrap="nowrap" gap="xs">
                 <Select
                   value={trackEntry.listId}
                   data={trackerListEntries.map((entry) => ({
                     value: entry.id,
                     label: entry.name,
                   }))}
-                  onChange={(value: string) =>
-                    setTrackEntry({
-                      ...trackEntry,
-                      listId: value,
-                      listName: trackerListEntries.find((entry) => entry.id === value)?.name,
-                      status: trackerListEntries.find((entry) => entry.id === value)?.status,
-                    })
+                  onChange={(value) =>
+                    value
+                      ? setTrackEntry({
+                          ...trackEntry,
+                          listId: value,
+                          listName: trackerListEntries.find((entry) => entry.id === value)?.name,
+                          status: trackerListEntries.find((entry) => entry.id === value)?.status,
+                        })
+                      : undefined
                   }
                 />
               </Group>
             ) : (
-              <Group noWrap spacing="xs">
+              <Group wrap="nowrap" gap="xs">
                 <Select
                   value={trackEntry?.status}
                   data={[
@@ -226,7 +228,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
                     TrackStatus.Planning,
                     TrackStatus.Reading,
                   ]}
-                  onChange={(value: string) =>
+                  onChange={(value) =>
                     setTrackEntry({
                       ...trackEntry,
                       status: value as TrackStatus,
@@ -241,15 +243,17 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
             <Text>Progress</Text>
           </Grid.Col>
           <Grid.Col span={9}>
-            <Group noWrap spacing="xs">
+            <Group wrap="nowrap" gap="xs">
               <NumberInput
                 min={0}
                 value={trackEntry.progress}
                 onChange={(value) =>
-                  setTrackEntry({
-                    ...trackEntry,
-                    progress: value,
-                  })
+                  typeof value === 'number'
+                    ? setTrackEntry({
+                        ...trackEntry,
+                        progress: value,
+                      })
+                    : undefined
                 }
               />
               <Tooltip.Floating label="Copy progress to chapter list">
@@ -269,16 +273,18 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
               data={SCORE_FORMAT_OPTIONS[trackEntry.scoreFormat || TrackScoreFormat.POINT_10].map(
                 (x) => x.toString(),
               )}
-              onChange={(value: string) =>
-                setTrackEntry({
-                  ...trackEntry,
-                  score: parseFloat(value),
-                })
+              onChange={(value) =>
+                value !== null
+                  ? setTrackEntry({
+                      ...trackEntry,
+                      score: parseFloat(value),
+                    })
+                  : undefined
               }
             />
           </Grid.Col>
         </Grid>
-        <Group position="right" mt="md" mb={0} spacing="xs">
+        <Group justify="flex-end" mt="md" mb={0} gap="xs">
           <Button
             variant="default"
             onClick={() => {
@@ -289,7 +295,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
           </Button>
           <Button
             variant="default"
-            leftIcon={<IconExternalLink />}
+            leftSection={<IconExternalLink />}
             onClick={() =>
               shell.openExternal(
                 trackEntry.url || `${trackerMetadata.url}/manga/${trackEntry.seriesId}`,
@@ -308,7 +314,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
       return (
         <Text mt="xs">
           In order to track this series, please link your {trackerMetadata.name} account through the{' '}
-          <Text component="span" color="blue" weight={700}>
+          <Text component="span" c="blue" fw={700}>
             Settings
           </Text>{' '}
           tab.
@@ -330,13 +336,12 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     setSearchText(props.series.title);
     loadTrackerData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.series, props.trackerKey]);
 
   return (
     <>
       {loading ? (
-        <Group mt="sm" position="center">
+        <Group mt="sm" justify="center">
           <Loader />
           <Text>Loading from {props.trackerMetadata.name}...</Text>
         </Group>

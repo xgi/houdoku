@@ -5,6 +5,9 @@ import { createWindowControlListeners } from './util/titlebar';
 import { RecoilRoot } from 'recoil';
 import App from './App';
 
+import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
+
 createWindowControlListeners();
 const container = document.getElementById('root');
 const root = createRoot(container!);

@@ -69,7 +69,6 @@ const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
       goToSeries(previewSeries, setSeriesList, navigate);
       props.close();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importQueue, loadingPreview]);
 
   useEffect(() => {
@@ -104,13 +103,13 @@ const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
     <Portal>
       <Menu shadow="md" width={WIDTH} opened>
         <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }}>
-          <Menu.Item icon={<IconEye size={14} />} onClick={viewDetailsFunc}>
+          <Menu.Item leftSection={<IconEye size={14} />} onClick={viewDetailsFunc}>
             View details
           </Menu.Item>
-          <Menu.Item icon={<IconBookUpload size={14} />} onClick={importFunc}>
+          <Menu.Item leftSection={<IconBookUpload size={14} />} onClick={importFunc}>
             Add to library
           </Menu.Item>
-          <Menu.Item icon={<IconPlayerPlay size={14} />} onClick={previewFunc}>
+          <Menu.Item leftSection={<IconPlayerPlay size={14} />} onClick={previewFunc}>
             Preview
           </Menu.Item>
         </Menu.Dropdown>

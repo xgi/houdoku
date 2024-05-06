@@ -89,25 +89,20 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
 
   return (
     <Box
-      sx={(theme) => ({
-        textAlign: 'center',
-        marginLeft: -theme.spacing.md,
-        marginRight: -theme.spacing.md,
-        marginTop: -theme.spacing.md,
-        overflow: 'hidden',
-      })}
+      ta={'center'}
+      ml={'calc(-1 * var(--mantine-spacing-md))'}
+      mr={'calc(-1 * var(--mantine-spacing-md))'}
+      style={{ overflow: 'hidden' }}
     >
       <Box
-        sx={(theme) => ({
-          height: 180,
-          background:
-            `linear-gradient(135deg, ${theme.colors.dark[8]} 25%, transparent 25%) -50px 0,` +
-            `linear-gradient(225deg, ${theme.colors.dark[8]} 25%, transparent 25%) -50px 0,` +
-            `linear-gradient(315deg, ${theme.colors.dark[8]} 25%, transparent 25%),` +
-            `linear-gradient(45deg, ${theme.colors.dark[8]} 25%, transparent 25%)`,
-          backgroundSize: '100px 100px',
-          backgroundColor: theme.colors.dark[6],
-        })}
+        h={180}
+        bg={
+          `linear-gradient(135deg, var(--mantine-color-dark-8) 25%, transparent 25%) -50px 0,` +
+          `linear-gradient(225deg, var(--mantine-color-dark-8) 25%, transparent 25%) -50px 0,` +
+          `linear-gradient(315deg, var(--mantine-color-dark-8) 25%, transparent 25%),` +
+          `linear-gradient(045deg, var(--mantine-color-dark-8) 25%, transparent 25%)`
+        }
+        bgsz={'100px 100px'}
       >
         <BackgroundImage
           src={seriesBannerUrl || ''}
@@ -117,10 +112,10 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
             {props.series.preview ? (
               ''
             ) : (
-              <Group mx="sm" my={4} spacing="xs">
+              <Group mx="sm" my={4} gap="xs">
                 <Menu position="bottom-end" shadow="md" width={200}>
                   <Menu.Target>
-                    <Button size="sm" leftIcon={<IconMenu2 size={16} />} variant="default">
+                    <Button size="sm" leftSection={<IconMenu2 size={16} />} variant="default">
                       Options
                     </Button>
                   </Menu.Target>
@@ -134,7 +129,7 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
                     <Menu.Divider />
                     <Menu.Item
                       color="red"
-                      icon={<IconTrash size={16} />}
+                      leftSection={<IconTrash size={16} />}
                       onClick={() => (confirmRemoveSeries ? props.showRemoveModal() : removeFunc())}
                     >
                       Remove series
@@ -143,7 +138,7 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
                 </Menu>
               </Group>
             )}
-            <Group mx="sm" my={4} spacing="xs">
+            <Group mx="sm" my={4} gap="xs">
               {props.series.preview ? (
                 ''
               ) : (

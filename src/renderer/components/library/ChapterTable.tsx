@@ -81,11 +81,15 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         close={() => setShowingContextMenu(false)}
       />
 
-      <Table highlightOnHover sx={{ cursor: 'pointer' }}>
-        <thead>
+      <Table
+        highlightOnHover
+        style={{ cursor: 'pointer', tableLayout: 'fixed' }}
+        verticalSpacing={4}
+      >
+        <Table.Thead>
           <ChapterTableHeading series={props.series} />
-        </thead>
-        <tbody>
+        </Table.Thead>
+        <Table.Tbody>
           <ChapterTableBody
             series={props.series}
             page={currentPage}
@@ -95,24 +99,24 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
               setShowingContextMenu(true);
             }}
           />
-        </tbody>
+        </Table.Tbody>
       </Table>
 
       <Divider mb="sm" />
 
-      <Group position="right" spacing="md" mb="xl">
+      <Group justify="flex-end" gap="md" mb="xl">
         <Pagination
           size="sm"
-          page={currentPage}
+          value={currentPage}
           onChange={setCurrentPage}
           total={Math.ceil(sortedFilteredChapterList.length / chapterListPageSize)}
         />
         <Select
+          w={100}
           size="xs"
           value={`${chapterListPageSize}`}
           data={[10, 20, 50, 100].map((x) => ({ value: `${x}`, label: `${x}/page` }))}
-          onChange={(value: string) => setChapterListPageSize(parseInt(value, 10))}
-          style={{ width: 90 }}
+          onChange={(value) => setChapterListPageSize(parseInt(value || '', 10))}
         />
       </Group>
     </>

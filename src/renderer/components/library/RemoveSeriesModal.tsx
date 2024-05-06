@@ -32,7 +32,6 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     setDontAskAgain(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.showing]);
 
   return (
@@ -44,7 +43,7 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
     >
       <Text size="sm" mb="sm">
         Are you sure you want to remove{' '}
-        <Text color="teal" inherit component="span" italic>
+        <Text c="teal" inherit component="span" fs="italic">
           {props.series?.title}
         </Text>{' '}
         from your library?
@@ -55,7 +54,7 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
         checked={dontAskAgain}
         onChange={(e) => setDontAskAgain(e.target.checked)}
       />
-      <Group position="right" mt="sm">
+      <Group justify="flex-end" mt="sm">
         <Button variant="default" onClick={props.close}>
           Cancel
         </Button>

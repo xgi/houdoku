@@ -16,12 +16,12 @@ const SearchFilterTriCheckbox: React.FC<Props> = (props: Props) => {
         [TriState.IGNORE]: TriState.INCLUDE,
         [TriState.INCLUDE]: TriState.EXCLUDE,
         [TriState.EXCLUDE]: TriState.IGNORE,
-      }[props.value]
+      }[props.value],
     );
   };
 
   return (
-    <Group spacing="sm" onClick={toggleValue}>
+    <Group gap="sm" onClick={toggleValue}>
       <ActionIcon
         variant={props.value === TriState.IGNORE ? 'default' : 'filled'}
         color="blue"

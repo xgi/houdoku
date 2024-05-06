@@ -3,24 +3,15 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 const { ipcRenderer } = require('electron');
 import { ExtensionMetadata } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-  Box,
-  ColorScheme,
-  ColorSchemeProvider,
-  MantineProvider,
-  Text,
-  Switch,
-  useMantineTheme,
-} from '@mantine/core';
-import { useLocalStorage } from '@mantine/hooks';
+import { Box, MantineProvider, Text } from '@mantine/core';
 import { ModalsProvider, openConfirmModal } from '@mantine/modals';
 import {
-  NotificationProps,
-  NotificationsProvider,
+  NotificationData,
+  Notifications,
   showNotification,
   updateNotification,
 } from '@mantine/notifications';
-import { IconCheck, IconX, IconSun, IconMoonStars } from '@tabler/icons';
+import { IconCheck, IconX } from '@tabler/icons';
 import { UpdateInfo } from 'electron-updater';
 import parse from 'html-react-parser';
 import persistantStore from './util/persistantStore';
@@ -106,7 +97,7 @@ ipcRenderer.on(ipcChannels.WINDOW.SET_FULLSCREEN, (_event, fullscreen) => {
 });
 ipcRenderer.on(
   ipcChannels.APP.SEND_NOTIFICATION,
-  (_event, props: NotificationProps, isUpdate = false, iconName?: 'check' | 'x') => {
+  (_event, props: NotificationData, isUpdate = false, iconName?: 'check' | 'x') => {
     console.info(`Sending notification: ${props}`);
     const iconNode =
       iconName !== undefined
@@ -134,15 +125,14 @@ ipcRenderer.on(ipcChannels.APP.SHOW_PERFORM_UPDATE_DIALOG, (_event, updateInfo: 
           {new Date(updateInfo.releaseDate).toLocaleDateString()}.
         </Text>
         <Box
-          sx={(theme) => ({
-            backgroundColor:
-              theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-          })}
+          // sx={(theme) => ({
+          //   backgroundColor:
+          //     theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
+          // })}
           p="xs"
         >
           <Text size="sm">
             {parse(updateInfo.releaseNotes as string, {
-              // eslint-disable-next-line react/no-unstable-nested-components
               transform(reactNode) {
                 if (React.isValidElement(reactNode) && reactNode.type === 'a') {
                   const newElement = { ...reactNode };
@@ -183,28 +173,6 @@ export default function App() {
   const setDownloadErrors = useSetRecoilState(downloadErrorsState);
   const autoCheckForUpdates = useRecoilValue(autoCheckForUpdatesState);
 
-  const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-    key: 'color-scheme',
-    defaultValue: 'dark',
-  });
-  const toggleColorScheme = (value?: ColorScheme) =>
-    setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-
-  const theme = useMantineTheme();
-  const toggleThemeSwitch = () => (
-    <Switch
-      size="sm"
-      color={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}
-      onLabel={<IconSun size="0.7rem" stroke={2.5} color={theme.colors.yellow[4]} />}
-      offLabel={<IconMoonStars size="0.7rem" stroke={2.5} color={theme.colors.blue[6]} />}
-      checked={colorScheme !== 'dark'}
-      onChange={() => toggleColorScheme()}
-      styles={{
-        root: { position: 'fixed', left: '0.5rem', bottom: '0.5rem', zIndex: 1000 },
-      }}
-    />
-  );
-
   useEffect(() => {
     if (loading) {
       console.debug('Performing initial app load steps');
@@ -241,33 +209,22 @@ export default function App() {
   }, [loading]);
 
   return (
-    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-      <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-        <ErrorBoundary>
-          <ModalsProvider>
-            <NotificationsProvider>
-              {loading ? (
-                <AppLoading />
-              ) : (
-                <Router>
-                  <Routes>
-                    <Route
-                      path={`${routes.READER}/:series_id/:chapter_id`}
-                      element={
-                        <ReaderPage
-                          colorScheme={colorScheme}
-                          toggleColorScheme={toggleColorScheme}
-                        />
-                      }
-                    />
-                    <Route path="*" element={<DashboardPage />} />
-                  </Routes>
-                </Router>
-              )}
-            </NotificationsProvider>
-          </ModalsProvider>
-        </ErrorBoundary>
-      </MantineProvider>
-    </ColorSchemeProvider>
+    <MantineProvider forceColorScheme="dark">
+      <ErrorBoundary>
+        <Notifications />
+        <ModalsProvider>
+          {loading ? (
+            <AppLoading />
+          ) : (
+            <Router>
+              <Routes>
+                <Route path={`${routes.READER}/:series_id/:chapter_id`} element={<ReaderPage />} />
+                <Route path="*" element={<DashboardPage />} />
+              </Routes>
+            </Router>
+          )}
+        </ModalsProvider>
+      </ErrorBoundary>
+    </MantineProvider>
   );
 }

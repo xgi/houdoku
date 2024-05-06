@@ -21,7 +21,7 @@ const SeriesDetailsFloatingHeader: React.FC<Props> = (props: Props) => {
       <Affix position={{ top: 29, left: 205 }} zIndex={0}>
         {props.series.preview ? (
           <Link to={routes.SEARCH}>
-            <Button size="sm" leftIcon={<IconArrowLeft size={16} />} variant="default">
+            <Button size="sm" leftSection={<IconArrowLeft size={16} />} variant="default">
               Back to search
             </Button>
           </Link>
@@ -29,7 +29,7 @@ const SeriesDetailsFloatingHeader: React.FC<Props> = (props: Props) => {
           <Link to={routes.LIBRARY}>
             <Button
               size="sm"
-              leftIcon={<IconArrowLeft size={16} />}
+              leftSection={<IconArrowLeft size={16} />}
               variant="default"
               onClick={() => setSeriesList(library.fetchSeriesList())}
             >
@@ -44,7 +44,7 @@ const SeriesDetailsFloatingHeader: React.FC<Props> = (props: Props) => {
           <Button
             size="sm"
             color="teal"
-            leftIcon={<IconHeart size={16} />}
+            leftSection={<IconHeart size={16} />}
             variant="filled"
             onClick={() => {
               downloadCover(props.series);

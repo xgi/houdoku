@@ -1,17 +1,18 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { Checkbox, Text } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 import { IntegrationSetting } from '@/common/models/types';
 import { discordPresenceEnabledState } from '@/renderer/state/settingStates';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const IntegrationSettings: React.FC<Props> = (props: Props) => {
+const IntegrationSettings: React.FC<Props> = () => {
   const [discordPresenceEnabled, setDiscordPresenceEnabled] = useRecoilState(
-    discordPresenceEnabledState
+    discordPresenceEnabledState,
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateIntegrationSetting = (integrationSetting: IntegrationSetting, value: any) => {
     switch (integrationSetting) {
       case IntegrationSetting.DiscordPresenceEnabled:
@@ -31,11 +32,8 @@ const IntegrationSettings: React.FC<Props> = (props: Props) => {
         onChange={(e) =>
           updateIntegrationSetting(IntegrationSetting.DiscordPresenceEnabled, e.target.checked)
         }
+        description='To use Discord Rich Presence, make sure "Display current activity as a status message" is enabled in your Discord settings (under the Activity Status tab).'
       />
-      <Text color="dimmed" ml="sm">
-        To use Discord Rich Presence, make sure &quot;Display current activity as a status
-        message&quot; is enabled in your Discord settings (under the Activity Status tab).
-      </Text>
     </>
   );
 };

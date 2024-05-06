@@ -5,7 +5,6 @@ import { useRecoilState } from 'recoil';
 import {
   Button,
   Checkbox,
-  Flex,
   Group,
   Input,
   MultiSelect,
@@ -80,10 +79,35 @@ const GeneralSettings: React.FC<Props> = () => {
     }
   };
 
+  const handleRestoreBackup = () => {
+    ipcRenderer
+      .invoke(
+        ipcChannels.APP.SHOW_OPEN_DIALOG,
+        false,
+        [
+          {
+            name: 'Houdoku Backup',
+            extensions: ['json'],
+          },
+        ],
+        'Select backup file',
+      )
+      .then((fileList: string) => {
+        if (fileList.length > 0) {
+          return ipcRenderer.invoke(ipcChannels.APP.READ_ENTIRE_FILE, fileList[0]);
+        }
+        return false;
+      })
+      .then((fileContent: string) => {
+        if (fileContent) restoreBackup(fileContent);
+      })
+      .catch(console.error);
+  };
+
   return (
     <>
       <Text>Application</Text>
-      <Stack py="xs" ml="md" spacing={4}>
+      <Stack py="xs" ml="md" gap={4}>
         <Checkbox
           label="Check for Houdoku updates automatically"
           size="md"
@@ -95,7 +119,7 @@ const GeneralSettings: React.FC<Props> = () => {
       </Stack>
 
       <Text>Library</Text>
-      <Stack py="xs" ml="md" spacing={4}>
+      <Stack py="xs" ml="md" gap={4}>
         <Checkbox
           label="Refresh library on startup"
           size="md"
@@ -125,7 +149,6 @@ const GeneralSettings: React.FC<Props> = () => {
           value={chapterLanguages}
           onChange={(value) => updateGeneralSetting(GeneralSetting.ChapterLanguages, value)}
         />
-
         <Input.Wrapper label="Custom download location">
           <Input
             component="button"
@@ -149,64 +172,36 @@ const GeneralSettings: React.FC<Props> = () => {
             {customDownloadsDir || defaultDownloadsDir}
           </Input>
         </Input.Wrapper>
-
-        <Flex
-          mt="xs"
-          gap="sm"
-          justify="flex-start"
-          align="flex-start"
-          direction="row"
-          wrap="nowrap"
-        >
-          <Text mt={5}>Backup library</Text>
-          <Group spacing="sm">
-            <Button variant="default" onClick={createBackup}>
-              Create Backup
-            </Button>
-            <Button
-              variant="default"
-              onClick={() =>
-                ipcRenderer
-                  .invoke(
-                    ipcChannels.APP.SHOW_OPEN_DIALOG,
-                    false,
-                    [
-                      {
-                        name: 'Houdoku Backup',
-                        extensions: ['json'],
-                      },
-                    ],
-                    'Select backup file'
-                  )
-                  .then((fileList: string) => {
-                    if (fileList.length > 0) {
-                      return ipcRenderer.invoke(ipcChannels.APP.READ_ENTIRE_FILE, fileList[0]);
-                    }
-                    return false;
-                  })
-                  .then((fileContent: string) => {
-                    if (fileContent) restoreBackup(fileContent);
-                  })
-              }
-            >
-              Restore Backup
-            </Button>
-            <Tooltip label={`Makes backup every day (stores ${autoBackupCount} backups)`}>
-              <Checkbox
-                label="Auto backup"
-                size="md"
-                checked={autoBackup}
-                onChange={(e) => updateGeneralSetting(GeneralSetting.autoBackup, e.target.checked)}
-              />
-            </Tooltip>
-            <NumberInput
-              disabled={!autoBackup}
-              min={1}
-              value={autoBackupCount}
-              onChange={(value) => updateGeneralSetting(GeneralSetting.autoBackupCount, value)}
+      </Stack>
+      <Text>Backup</Text>
+      <Stack py="xs" ml="md" gap={4}>
+        <Group gap="sm">
+          <Button variant="default" onClick={createBackup}>
+            Create Backup
+          </Button>
+          <Button variant="default" onClick={handleRestoreBackup}>
+            Restore Backup
+          </Button>
+        </Group>
+        <Group gap="sm" mt="xs">
+          <Tooltip label={`Makes backup every day (stores ${autoBackupCount} backups)`}>
+            <Checkbox
+              label="Automatically backup library"
+              description={`Create up to ${autoBackupCount} daily backups`}
+              size="md"
+              checked={autoBackup}
+              onChange={(e) => updateGeneralSetting(GeneralSetting.autoBackup, e.target.checked)}
             />
-          </Group>
-        </Flex>
+          </Tooltip>
+          <NumberInput
+            w={100}
+            ml={'xs'}
+            value={autoBackupCount}
+            min={1}
+            disabled={!autoBackup}
+            onChange={(value) => updateGeneralSetting(GeneralSetting.autoBackupCount, value)}
+          />
+        </Group>
       </Stack>
     </>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 const { ipcRenderer, shell } = require('electron');
-import { Accordion, Text, Button, Group, Code, Input, Loader, Box, Timeline } from '@mantine/core';
+import { Accordion, Text, Button, Group, Code, Loader, Timeline, TextInput } from '@mantine/core';
 import { IconExternalLink } from '@tabler/icons';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import storeKeys from '@/common/constants/storeKeys.json';
@@ -57,12 +57,11 @@ const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     loadTrackerDetails();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {
     return (
-      <Group position="center">
+      <Group justify="center">
         <Loader />
         <Text>Reloading tracker details...</Text>
       </Group>
@@ -71,36 +70,34 @@ const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Accordion.Control>
-          <Group position="apart">
-            <Text>{props.trackerMetadata.name}</Text>
-            {username ? (
-              <Group position="right">
-                <Text>
-                  Logged in as <Code>{username}</Code>
-                </Text>
-              </Group>
-            ) : (
-              <Text>Not logged in.</Text>
-            )}
-          </Group>
-        </Accordion.Control>
-        {username ? (
-          <Button
-            ml="xs"
-            compact
-            color="red"
-            radius={0}
-            onClick={(e) => {
-              e.stopPropagation();
-              saveAccessToken('');
-            }}
-          >
-            Unlink
-          </Button>
-        ) : undefined}
-      </Box>
+      <Accordion.Control>
+        <Group justify="space-between">
+          <Text>{props.trackerMetadata.name}</Text>
+          {username ? (
+            <Group justify="flex-end">
+              <Text>
+                Logged in as <Code>{username}</Code>
+              </Text>
+              {username ? (
+                <Button
+                  ml="xs"
+                  size="xs"
+                  color="red"
+                  radius={0}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    saveAccessToken('');
+                  }}
+                >
+                  Unlink
+                </Button>
+              ) : undefined}
+            </Group>
+          ) : (
+            <Text>Not logged in.</Text>
+          )}
+        </Group>
+      </Accordion.Control>
 
       <Accordion.Panel>
         <Timeline active={-1} bulletSize={36} lineWidth={2} mt="sm">
@@ -108,14 +105,14 @@ const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
             <Button
               ml="sm"
               variant="default"
-              leftIcon={<IconExternalLink />}
+              leftSection={<IconExternalLink />}
               onClick={() => shell.openExternal(authUrls[props.trackerMetadata.id])}
             >
               Authenticate on {props.trackerMetadata.name}
             </Button>
           </Timeline.Item>
           <Timeline.Item bullet={2}>
-            <Input
+            <TextInput
               ml="sm"
               style={{ maxWidth: 280 }}
               placeholder="Paste access code..."

@@ -43,7 +43,7 @@ const SearchFilterSort: React.FC<Props> = (props: Props) => {
       </Menu.Target>
 
       <Menu.Dropdown>
-        <ScrollArea.Autosize maxHeight={260} style={{ width: 262 }}>
+        <ScrollArea.Autosize mah={260} style={{ width: 262 }}>
           {props.fields.map((field) => {
             const icon =
               field.key === props.value.key ? ICON_MAP[props.value.direction] : undefined;

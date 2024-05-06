@@ -1,6 +1,7 @@
 import React from 'react';
 import { Group, ThemeIcon, UnstyledButton, Text } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import styles from './DashboardSidebarLink.module.css';
 
 interface Props {
   icon: React.ReactNode;
@@ -14,18 +15,10 @@ const DashboardSidebarLink: React.FC<Props> = (props: Props) => {
 
   return (
     <UnstyledButton
-      sx={(theme) => ({
-        display: 'block',
-        width: '100%',
-        padding: theme.spacing.xs,
-        borderRadius: theme.radius.sm,
-        color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
-
-        '&:hover': {
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-        },
-      })}
+      display={'block'}
+      w="100%"
+      p={'xs'}
+      className={styles.button}
       onClick={() => navigate(props.route)}
     >
       <Group>

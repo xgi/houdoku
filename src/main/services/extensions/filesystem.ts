@@ -209,4 +209,3 @@ export class FSExtensionClient extends ExtensionClientAbstract {
 
   override getFilterOptions: GetFilterOptionsFunc = () => [];
 }
-export { FS_METADATA };

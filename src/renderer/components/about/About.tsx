@@ -1,8 +1,9 @@
 import React from 'react';
 const { ipcRenderer } = require('electron');
-import { Title, Text, Button } from '@mantine/core';
+import { Title, Text, Button, Group } from '@mantine/core';
 import packageJson from '../../../../package.json';
 import ipcChannels from '@/common/constants/ipcChannels.json';
+import { IconGitFork, IconHome, IconNotebook, IconScale } from '@tabler/icons';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
@@ -14,18 +15,23 @@ const About: React.FC<Props> = () => {
 
   return (
     <>
-      <Title order={2} pb="xs">
-        {packageJson.productName} v{packageJson.version}
-      </Title>
-      <Button onClick={handleUpdateCheck}>Check for Updates</Button>
-      <Text pb="xs" pt="xs">
+      <Group justify="space-between">
+        <Title order={2} pb="xs">
+          {packageJson.productName} v{packageJson.version}
+        </Title>
+        <Button size="xs" onClick={handleUpdateCheck}>
+          Check for Updates
+        </Button>
+      </Group>
+
+      <Text pb="xs" pt="md">
         Houdoku is a desktop manga reader. To add a series to your library, click the{' '}
-        <Text component="span" color="teal" weight={700}>
+        <Text component="span" c="teal" fw={700}>
           Add Series
         </Text>{' '}
         tab on the left panel and search for the series from a supported content source. To add more
         content sources, install a{' '}
-        <Text component="span" color="violet" weight={700}>
+        <Text component="span" c="violet" fw={700}>
           Plugin
         </Text>
         .
@@ -33,55 +39,48 @@ const About: React.FC<Props> = () => {
       <Text pb="xs">
         Houdoku is open source. Please report issues or request features on GitHub.
       </Text>
-      <Text>
-        Website:{' '}
-        <Text
-          variant="link"
+      <Group gap="xs" pt="md">
+        <Button
+          color="teal"
+          leftSection={<IconHome size={18} />}
           component="a"
           href={packageJson.homepage}
           target="_blank"
           rel="noreferrer"
         >
-          {packageJson.homepage}
-        </Text>
-      </Text>
-      <Text>
-        Documentation:{' '}
-        <Text
-          variant="link"
+          Official Website
+        </Button>
+        <Button
+          color="blue"
+          leftSection={<IconNotebook size={18} />}
           component="a"
           href={`${packageJson.homepage}/docs`}
           target="_blank"
           rel="noreferrer"
         >
-          {packageJson.homepage}/docs
-        </Text>
-      </Text>
-      <Text>
-        Repository:{' '}
-        <Text
-          variant="link"
+          Documentation
+        </Button>
+        <Button
+          color="grape"
+          leftSection={<IconGitFork size={18} />}
           component="a"
           href={packageJson.repository.url}
           target="_blank"
           rel="noreferrer"
         >
-          {packageJson.repository.url}
-        </Text>
-      </Text>
-      <Text>
-        License: MIT (
-        <Text
-          variant="link"
+          Repository
+        </Button>
+        <Button
+          color="gray"
+          leftSection={<IconScale size={18} />}
           component="a"
           href={`${packageJson.repository.url}/blob/master/LICENSE.txt`}
           target="_blank"
           rel="noreferrer"
         >
-          view text
-        </Text>
-        )
-      </Text>
+          License
+        </Button>
+      </Group>
     </>
   );
 };

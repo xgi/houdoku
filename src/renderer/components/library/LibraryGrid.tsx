@@ -3,7 +3,7 @@ import path from 'path';
 import React, { useState } from 'react';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
-import { Overlay, SimpleGrid, Title, createStyles } from '@mantine/core';
+import { Overlay, SimpleGrid, Title } from '@mantine/core';
 import * as ContextMenu from '@radix-ui/react-context-menu';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
@@ -35,55 +35,12 @@ if (!fs.existsSync(thumbnailsDir)) {
   fs.mkdirSync(thumbnailsDir);
 }
 
-const useStyles = createStyles((theme) => ({
-  ctxMenuContent: {
-    width: 220,
-    backgroundColor: theme.colors.dark[6],
-    borderRadius: 6,
-    overflow: 'hidden',
-    padding: 5,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: theme.colors.dark[4],
-  },
-  ctxSubMenuContent: {
-    width: 240,
-  },
-  ctxMenuItem: {
-    backgroundColor: theme.colors.dark[6],
-    '&:hover, &[data-highlighted]': {
-      backgroundColor: theme.colors.dark[7],
-    },
-    cursor: 'pointer',
-    borderRadius: 3,
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    height: 25,
-    overflowY: 'hidden',
-    position: 'relative',
-    paddingLeft: 25,
-    paddingRight: 5,
-    userSelect: 'none',
-    outline: 'none',
-  },
-  ctxMenuItemIndicator: {
-    position: 'absolute',
-    left: 0,
-    width: 25,
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-}));
-
 type Props = {
   getFilteredList: () => Series[];
   showRemoveModal: (series: Series) => void;
 };
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
-  const { classes } = useStyles();
   const navigate = useNavigate();
   const setSeriesList = useSetRecoilState(seriesListState);
   const setSeries = useSetRecoilState(seriesState);
@@ -165,7 +122,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
         <Title
           order={5}
           className={styles.seriesUnreadBadge}
-          sx={(theme) => ({ backgroundColor: theme.colors.red[7] })}
+          bg="red.7"
           px={4}
           style={{ zIndex: 10 }}
         >
@@ -211,11 +168,13 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                           order={5}
                           lineClamp={3}
                           p={4}
+                          pb={8}
                           style={{ zIndex: 10 }}
                         >
                           {series.title}
                         </Title>
                         <Overlay
+                          h={'calc(100% - 7px)'}
                           gradient="linear-gradient(0deg, #000000cc, #00000000 40%, #00000000)"
                           zIndex={5}
                         />
@@ -234,65 +193,69 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                 </div>
               </ContextMenu.Trigger>
               <ContextMenu.Portal>
-                <ContextMenu.Content className={classes.ctxMenuContent}>
-                  <ContextMenu.Item
-                    className={classes.ctxMenuItem}
-                    onClick={() => viewFunc(series)}
-                  >
+                <ContextMenu.Content className={styles.ctxMenuContent} style={{ width: 220 }}>
+                  <ContextMenu.Item className={styles.ctxMenuItem} onClick={() => viewFunc(series)}>
                     View
                   </ContextMenu.Item>
                   <ContextMenu.Item
-                    className={classes.ctxMenuItem}
+                    style={{ paddingLeft: 25 }}
+                    className={styles.ctxMenuItem}
                     onClick={() => markAllReadFunc(series)}
                   >
                     Mark all Read
                   </ContextMenu.Item>
                   <ContextMenu.Item
-                    className={classes.ctxMenuItem}
+                    className={styles.ctxMenuItem}
                     onClick={() => removeFunc(series)}
                   >
                     Remove
                   </ContextMenu.Item>
-                  <ContextMenu.Sub open={categoriesSubMenuOpen}>
-                    <ContextMenu.SubTrigger
-                      className={classes.ctxMenuItem}
-                      onPointerEnter={() => setCategoriesSubMenuOpen(true)}
-                      onPointerLeave={() => setCategoriesSubMenuOpen(false)}
-                    >
-                      Categories
-                      <div style={{ marginLeft: 'auto' }}>
-                        <IconChevronRight />
-                      </div>
-                    </ContextMenu.SubTrigger>
-                    <ContextMenu.Portal>
-                      <ContextMenu.SubContent
-                        className={`${classes.ctxMenuContent} ${classes.ctxSubMenuContent}`}
-                        sideOffset={2}
-                        alignOffset={-5}
+                  {availableCategories.length > 0 ? (
+                    <ContextMenu.Sub open={categoriesSubMenuOpen}>
+                      <ContextMenu.SubTrigger
+                        className={styles.ctxMenuItem}
                         onPointerEnter={() => setCategoriesSubMenuOpen(true)}
                         onPointerLeave={() => setCategoriesSubMenuOpen(false)}
                       >
-                        {availableCategories.map((category) => {
-                          return (
-                            <ContextMenu.CheckboxItem
-                              key={category.id}
-                              className={classes.ctxMenuItem}
-                              checked={series.categories && series.categories.includes(category.id)}
-                              onCheckedChange={() => {
-                                handleToggleCategory(series, category.id);
-                                setCategoriesSubMenuOpen(false);
-                              }}
-                            >
-                              <ContextMenu.ItemIndicator className={classes.ctxMenuItemIndicator}>
-                                <IconCheck width={18} height={18} />
-                              </ContextMenu.ItemIndicator>
-                              {category.label}
-                            </ContextMenu.CheckboxItem>
-                          );
-                        })}
-                      </ContextMenu.SubContent>
-                    </ContextMenu.Portal>
-                  </ContextMenu.Sub>
+                        Categories
+                        <div style={{ marginLeft: 'auto' }}>
+                          <IconChevronRight />
+                        </div>
+                      </ContextMenu.SubTrigger>
+                      <ContextMenu.Portal>
+                        <ContextMenu.SubContent
+                          className={`${styles.ctxMenuContent} ${styles.ctxSubMenuContent}`}
+                          sideOffset={2}
+                          alignOffset={-5}
+                          onPointerEnter={() => setCategoriesSubMenuOpen(true)}
+                          onPointerLeave={() => setCategoriesSubMenuOpen(false)}
+                        >
+                          {availableCategories.map((category) => {
+                            return (
+                              <ContextMenu.CheckboxItem
+                                key={category.id}
+                                className={styles.ctxMenuItem}
+                                checked={
+                                  series.categories && series.categories.includes(category.id)
+                                }
+                                onCheckedChange={() => {
+                                  handleToggleCategory(series, category.id);
+                                  setCategoriesSubMenuOpen(false);
+                                }}
+                              >
+                                <ContextMenu.ItemIndicator className={styles.ctxMenuItemIndicator}>
+                                  <IconCheck width={18} height={18} />
+                                </ContextMenu.ItemIndicator>
+                                {category.label}
+                              </ContextMenu.CheckboxItem>
+                            );
+                          })}
+                        </ContextMenu.SubContent>
+                      </ContextMenu.Portal>
+                    </ContextMenu.Sub>
+                  ) : (
+                    ''
+                  )}
                 </ContextMenu.Content>
               </ContextMenu.Portal>
             </ContextMenu.Root>

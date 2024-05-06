@@ -27,7 +27,7 @@ const SearchFilterMultiToggle: React.FC<Props> = (props: Props) => {
 
   const numNonIgnored = Object.entries(props.values).reduce(
     (sum, [, value]) => sum + (value === TriState.IGNORE ? 0 : 1),
-    0
+    0,
   );
 
   return (
@@ -53,17 +53,17 @@ const SearchFilterMultiToggle: React.FC<Props> = (props: Props) => {
           <Grid style={{ width: 500 }}>
             <Grid.Col span={2} />
             <Grid.Col span={8}>
-              <Text align="center">{props.label}</Text>
+              <Text ta="center">{props.label}</Text>
             </Grid.Col>
             <Grid.Col span={2}>
-              <Text align="right">{numNonIgnored || undefined}</Text>
+              <Text ta="right">{numNonIgnored || undefined}</Text>
             </Grid.Col>
           </Grid>
         </Button>
       </Menu.Target>
 
       <Menu.Dropdown>
-        <ScrollArea.Autosize maxHeight={260} style={{ width: 262 }}>
+        <ScrollArea.Autosize mah={260} style={{ width: 262 }}>
           {props.fields.map((field) => {
             const value = Object.keys(props.values).includes(field.key)
               ? props.values[field.key]

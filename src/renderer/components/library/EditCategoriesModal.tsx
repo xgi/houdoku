@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import { ActionIcon, Group, Modal, Stack, TextInput, Tooltip } from '@mantine/core';
-import { IconAlertCircle, IconCheck, IconRefresh, IconRefreshOff, IconTrash } from '@tabler/icons';
+import { IconAlertCircle, IconPlus, IconRefresh, IconRefreshOff, IconTrash } from '@tabler/icons';
 import { categoryListState } from '@/renderer/state/libraryStates';
 import library from '@/renderer/services/library';
 import { Category } from '@/common/models/types';
@@ -18,7 +18,7 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
   const [tempCategoryList, setTempCategoryList] = useState<Category[]>([]);
   const [newCategoryLabel, setNewCategoryLabel] = useState('');
   const [libraryFilterCategory, setLibraryFilterCategory] = useRecoilState(
-    libraryFilterCategoryState
+    libraryFilterCategoryState,
   );
   const [promptRemoveCategoryIds, setPromptRemoveCategoryIds] = useState<string[]>([]);
   const newCategoryInputRef = useRef<HTMLInputElement>(null);
@@ -26,12 +26,11 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     setPromptRemoveCategoryIds([]);
     if (props.showing) setTempCategoryList(categoryList);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.showing]);
 
   const updateCategory = (
     categoryId: string,
-    opts: { label?: string; refreshEnabled?: boolean }
+    opts: { label?: string; refreshEnabled?: boolean },
   ) => {
     const categoryIdx = tempCategoryList.findIndex((cat) => cat.id === categoryId);
     const newTempCategoryList = [...tempCategoryList];
@@ -70,10 +69,10 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
 
   return (
     <Modal opened={props.showing} title="Edit Categories" onClose={handleClose} size="xs">
-      <Stack spacing={4} pr="sm">
+      <Stack gap={4} pr="sm">
         {tempCategoryList.map((category) => {
           return (
-            <Group noWrap key={category.id} spacing={0}>
+            <Group wrap="nowrap" key={category.id} gap={0}>
               <TextInput
                 value={category.label}
                 placeholder="Category name..."
@@ -85,35 +84,25 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
                 }
               />
 
-              <Tooltip.Floating
-                label="Enable Refreshing"
-                sx={(theme) => ({
-                  backgroundColor: theme.colors.dark[8],
-                  marginLeft: theme.spacing.xs,
-                })}
-              >
-                <ActionIcon mx={4}>
-                  {category.refreshEnabled || category.refreshEnabled === undefined ? (
+              <Tooltip.Floating label="Allow Refreshing" ml="xs">
+                {category.refreshEnabled || category.refreshEnabled === undefined ? (
+                  <ActionIcon mx={4}>
                     <IconRefresh
                       size={18}
                       onClick={() => updateCategory(category.id, { refreshEnabled: false })}
                     />
-                  ) : (
+                  </ActionIcon>
+                ) : (
+                  <ActionIcon mx={4} bg="gray.8">
                     <IconRefreshOff
                       size={18}
                       onClick={() => updateCategory(category.id, { refreshEnabled: true })}
                     />
-                  )}
-                </ActionIcon>
+                  </ActionIcon>
+                )}
               </Tooltip.Floating>
 
-              <Tooltip.Floating
-                label="Delete Category"
-                sx={(theme) => ({
-                  backgroundColor: theme.colors.dark[8],
-                  marginLeft: theme.spacing.xs,
-                })}
-              >
+              <Tooltip.Floating label="Delete Category" ml="xs">
                 <ActionIcon color="red">
                   {promptRemoveCategoryIds.includes(category.id) ? (
                     <IconAlertCircle size={18} onClick={() => removeCategory(category.id)} />
@@ -126,7 +115,7 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
           );
         })}
 
-        <Group noWrap spacing="xs">
+        <Group wrap="nowrap" gap="xs">
           <TextInput
             ref={newCategoryInputRef}
             data-autofocus
@@ -137,13 +126,15 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setNewCategoryLabel(e.target.value)
             }
-            onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
               if (e.key === 'Enter') addCategory();
             }}
           />
-          <ActionIcon color="teal" mx={0} px={0}>
-            <IconCheck size={18} onClick={() => addCategory()} />
-          </ActionIcon>
+          <Tooltip.Floating label="Create Category" ml="xs">
+            <ActionIcon color="teal" mx={0} px={0}>
+              <IconPlus size={18} onClick={() => addCategory()} />
+            </ActionIcon>
+          </Tooltip.Floating>
         </Group>
       </Stack>
     </Modal>

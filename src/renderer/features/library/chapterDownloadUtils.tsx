@@ -1,6 +1,6 @@
 import { Chapter, Series } from '@tiyo/common';
 import { downloaderClient, DownloadTask } from '@/renderer/services/downloader';
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = require('electron');
 import ipcChannels from '@/common/constants/ipcChannels.json';
 
 export async function downloadNextX(
@@ -20,7 +20,6 @@ export async function downloadNextX(
   let curIndex = startIndex - 1;
   while (queue.length < amount && curIndex >= 0) {
     const chapter = sortedChapterList[curIndex];
-    /* eslint-disable no-await-in-loop */
     if (
       chapter &&
       !(await ipcRenderer.invoke(

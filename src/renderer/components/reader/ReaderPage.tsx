@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 const { ipcRenderer } = require('electron');
 import { PageRequesterData, Chapter, Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Text, ColorScheme } from '@mantine/core';
+import { Text } from '@mantine/core';
 import styles from './ReaderPage.module.css';
 import routes from '@/common/constants/routes.json';
 import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types';
@@ -31,19 +31,14 @@ import {
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {
-  colorScheme: ColorScheme;
-  toggleColorScheme: (value?: ColorScheme) => void;
-};
+type Props = {};
 
 type ParamTypes = {
   series_id: string;
   chapter_id: string;
 };
 
-const ReaderPage: React.FC<Props> = (props: Props) => {
-  const { colorScheme, toggleColorScheme } = props;
-
+const ReaderPage: React.FC<Props> = () => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { series_id, chapter_id } = useParams<ParamTypes>();
   const navigate = useNavigate();
@@ -610,7 +605,6 @@ const ReaderPage: React.FC<Props> = (props: Props) => {
           changeChapter={changeChapter}
           getAdjacentChapterId={getAdjacentChapterId}
           exitPage={exitPage}
-          colorScheme={colorScheme}
         />
       ) : (
         <></>

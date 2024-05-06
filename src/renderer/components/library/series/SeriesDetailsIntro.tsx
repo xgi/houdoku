@@ -37,13 +37,13 @@ const SeriesDetailsIntro: React.FC<Props> = (props: Props) => {
         <Image src={getThumbnailPath()} alt={props.series.title} width="100%" mt="-50%" />
       </Grid.Col>
       <Grid.Col span={19}>
-        <Group position="apart" mt="xs" mb="xs" align="center" noWrap>
+        <Group justify="space-between" mt="xs" mb="xs" align="center" wrap="nowrap">
           <Title order={4} lineClamp={1}>
             {props.series.title}
           </Title>
           <Text>{currentExtensionMetadata?.name}</Text>
         </Group>
-        <ScrollArea style={{ height: 100, whiteSpace: 'pre-wrap' }}>
+        <ScrollArea h={100} style={{ whiteSpace: 'pre-wrap' }}>
           {props.series.description}
         </ScrollArea>
       </Grid.Col>

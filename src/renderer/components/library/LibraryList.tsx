@@ -35,7 +35,7 @@ const LibraryList: React.FC<Props> = (props: Props) => {
             ))}
           </td>
           <td>
-            <Group spacing="xs" position="right" noWrap>
+            <Group gap="xs" justify="flex-end" wrap="nowrap">
               <Button onClick={() => viewFunc(series)}>View</Button>
               <ActionIcon
                 variant="filled"

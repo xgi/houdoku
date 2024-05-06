@@ -75,7 +75,7 @@ const MyDownloads: React.FC<Props> = () => {
         children: (
           <Text size="sm">
             Are you sure you want to delete{' '}
-            <Text color="teal" component="span" weight={700}>
+            <Text c="teal" component="span" fw={700}>
               {count}
             </Text>{' '}
             downloaded chapters?
@@ -92,14 +92,14 @@ const MyDownloads: React.FC<Props> = () => {
 
   const renderHeader = () => {
     return (
-      <Group mb="xs" position="apart">
+      <Group mb="xs" justify={'space-between'}>
         <Title order={3}>My Downloads</Title>
-        <Group spacing="xs">
+        <Group gap="xs">
           <Button
             size="xs"
             color="red"
             disabled={checkedChapters.length === 0}
-            leftIcon={<IconTrash size={16} />}
+            leftSection={<IconTrash size={16} />}
             onClick={promptDeleteChecked}
           >
             Delete Selected
@@ -150,7 +150,7 @@ const MyDownloads: React.FC<Props> = () => {
         <Text>
           You don&apos;t have any downloaded chapters. You can download chapters from the series
           page in your{' '}
-          <Text component="span" color="orange" weight={700}>
+          <Text component="span" c="orange" fw={700}>
             Library
           </Text>
           .
@@ -158,19 +158,7 @@ const MyDownloads: React.FC<Props> = () => {
       ) : (
         ''
       )}
-      <Accordion
-        radius="xs"
-        chevronPosition="left"
-        multiple
-        styles={(theme) => ({
-          control: {
-            height: 0,
-            '&:hover': {
-              backgroundColor: theme.colors.dark[7],
-            },
-          },
-        })}
-      >
+      <Accordion radius="xs" chevronPosition="left" multiple>
         {seriesList.map((series) => {
           if (!series.id || !chapterLists[series.id]) return '';
 
@@ -186,7 +174,7 @@ const MyDownloads: React.FC<Props> = () => {
           return (
             <Accordion.Item value={series.id} key={series.id}>
               <Accordion.Control>
-                <Group position="apart">
+                <Group justify={'space-between'}>
                   <Group>
                     <Checkbox
                       checked={numSelected === numChapters}
@@ -203,7 +191,7 @@ const MyDownloads: React.FC<Props> = () => {
                 </Group>
               </Accordion.Control>
               <Accordion.Panel>
-                <Stack spacing={4}>
+                <Stack gap={'xs'}>
                   {chapterLists[series.id]
                     .sort(
                       (a, b) =>

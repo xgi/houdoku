@@ -1,9 +1,8 @@
-/* eslint-disable react/display-name */
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Chapter, Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { ActionIcon, Button, CloseButton, Group, Input, Text } from '@mantine/core';
+import { ActionIcon, Button, CloseButton, Group, Table, Text, TextInput } from '@mantine/core';
 import { IconArrowsSort, IconSearch, IconSortAscending, IconSortDescending } from '@tabler/icons';
 import routes from '@/common/constants/routes.json';
 import {
@@ -40,12 +39,12 @@ const ChapterTableHeading: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <tr>
-      <th> </th>
-      <th> </th>
+    <Table.Tr>
+      <Table.Th w={40}> </Table.Th>
+      <Table.Th w={30}> </Table.Th>
       {currentTextFilter ? (
-        <th colSpan={2}>
-          <Input
+        <Table.Th colSpan={2}>
+          <TextInput
             autoFocus
             placeholder={`Filter ${currentTextFilter}...`}
             size="xs"
@@ -63,42 +62,48 @@ const ChapterTableHeading: React.FC<Props> = (props: Props) => {
               if (currentTextFilter === 'group') setChapterFilterGroup(value.target.value);
             }}
           />
-        </th>
+        </Table.Th>
       ) : (
-        <th>
-          <Group position="center" spacing={5} noWrap>
-            <Text>Title</Text>
-            <ActionIcon
-              variant="transparent"
-              size={16}
-              onClick={() => setCurrentTextFilter('title')}
-            >
-              <IconSearch />
-            </ActionIcon>
-          </Group>
-        </th>
+        <>
+          <Table.Th>
+            <Group gap={5} wrap="nowrap">
+              <Text size="sm" fw={700}>
+                Title
+              </Text>
+              <ActionIcon
+                c="gray.3"
+                variant="transparent"
+                size={16}
+                onClick={() => setCurrentTextFilter('title')}
+              >
+                <IconSearch />
+              </ActionIcon>
+            </Group>
+          </Table.Th>
+          <Table.Th>
+            <Group gap={5} wrap="nowrap">
+              <Text size="sm" fw={700}>
+                Group
+              </Text>
+              <ActionIcon
+                c="gray.3"
+                variant="transparent"
+                size={16}
+                onClick={() => setCurrentTextFilter('group')}
+              >
+                <IconSearch />
+              </ActionIcon>
+            </Group>
+          </Table.Th>
+        </>
       )}
-      {currentTextFilter ? (
-        ''
-      ) : (
-        <th>
-          <Group position="center" spacing={5} noWrap>
-            <Text>Group</Text>
-            <ActionIcon
-              variant="transparent"
-              size={16}
-              onClick={() => setCurrentTextFilter('group')}
-            >
-              <IconSearch />
-            </ActionIcon>
-          </Group>
-        </th>
-      )}
-      <th>
-        <Group position="center" spacing={0} noWrap>
-          <Text>Vol</Text>
+      <Table.Th w={60}>
+        <Group justify="center" gap={0} wrap="nowrap">
+          <Text size="sm" fw={700}>
+            Vol
+          </Text>
           <ActionIcon
-            color={chapterListVolOrder === TableColumnSortOrder.None ? undefined : 'blue'}
+            c={chapterListVolOrder === TableColumnSortOrder.None ? 'gray.3' : 'blue'}
             variant="transparent"
             onClick={() => {
               switch (chapterListVolOrder) {
@@ -116,12 +121,14 @@ const ChapterTableHeading: React.FC<Props> = (props: Props) => {
             {columnOrderMap[chapterListVolOrder]}
           </ActionIcon>
         </Group>
-      </th>
-      <th>
-        <Group position="center" spacing={0} noWrap>
-          <Text>Ch</Text>
+      </Table.Th>
+      <Table.Th w={60}>
+        <Group justify="center" gap={0} wrap="nowrap">
+          <Text size="sm" fw={700}>
+            Ch
+          </Text>
           <ActionIcon
-            color={chapterListChOrder === TableColumnSortOrder.None ? undefined : 'blue'}
+            c={chapterListChOrder === TableColumnSortOrder.None ? 'gray.3' : 'blue'}
             variant="transparent"
             onClick={() => {
               switch (chapterListChOrder) {
@@ -139,19 +146,21 @@ const ChapterTableHeading: React.FC<Props> = (props: Props) => {
             {columnOrderMap[chapterListChOrder]}
           </ActionIcon>
         </Group>
-      </th>
-      <th>
-        <Group position="right">
+      </Table.Th>
+      <Table.Th w={100}>
+        <Group justify="flex-end">
           {getNextUnreadChapter() ? (
             <Link to={`${routes.READER}/${props.series.id}/${getNextUnreadChapter()?.id}`}>
-              <Button size="xs">Continue</Button>
+              <Button size="xs" fw={700}>
+                Continue
+              </Button>
             </Link>
           ) : (
             ''
           )}
         </Group>
-      </th>
-    </tr>
+      </Table.Th>
+    </Table.Tr>
   );
 };
 

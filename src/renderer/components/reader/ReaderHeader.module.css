@@ -19,3 +19,26 @@
   z-index: 300;
   user-select: none;
 }
+
+.button {
+  height: 24px !important;
+  font-size: 12px !important;
+  background-color: var(--mantine-color-dark-8) !important;
+}
+
+.button:hover {
+  background-color: var(--mantine-color-dark-5) !important;
+}
+
+.button:disabled {
+  color: var(--mantine-color-dark-3) !important;
+  background-color: var(--mantine-color-dark-4) !important;
+}
+
+.button span[data-position="left"] {
+  margin-right: 4px;
+}
+
+.button span[data-position="right"] {
+  margin-left: 0;
+}

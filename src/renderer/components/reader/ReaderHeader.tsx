@@ -21,16 +21,7 @@ import {
   IconSpacingVertical,
   IconX,
 } from '@tabler/icons';
-import {
-  Box,
-  Button,
-  Center,
-  ColorScheme,
-  Group,
-  MantineTheme,
-  Menu,
-  ScrollArea,
-} from '@mantine/core';
+import { Box, Button, Center, Group, Menu, ScrollArea } from '@mantine/core';
 import flags from '@/renderer/img/flags.png';
 import styles from './ReaderHeader.module.css';
 import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types';
@@ -97,7 +88,6 @@ type Props = {
   changeChapter: (direction: 'left' | 'right' | 'next' | 'previous') => void;
   getAdjacentChapterId: (previous: boolean) => string | null;
   exitPage: () => void;
-  colorScheme: ColorScheme;
 };
 
 const ReaderHeader: React.FC<Props> = (props: Props) => {
@@ -115,27 +105,27 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
   const [offsetPages, setOffsetPages] = useRecoilState(offsetPagesState);
 
-  const buttonStyles = (theme: MantineTheme) => ({
-    root: {
-      height: 24,
-      fontSize: 12,
-      color: props.colorScheme === 'dark' ? theme.colors.gray[4] : theme.colors.dark[7],
-      backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[3],
-      '&:hover': {
-        backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[4],
-      },
-      '&:disabled': {
-        color: props.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[6],
-        backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[4] : theme.colors.gray[5],
-      },
-    },
-    leftIcon: {
-      marginRight: 4,
-    },
-    rightIcon: {
-      marginLeft: 0,
-    },
-  });
+  // const buttonStyles = (theme: MantineTheme) => ({
+  //   root: {
+  //     height: 24,
+  //     fontSize: 12,
+  //     color: theme.colors.gray[4],
+  //     backgroundColor: theme.colors.dark[9],
+  //     '&:hover': {
+  //       backgroundColor: theme.colors.red[3],
+  //     },
+  //     '&:disabled': {
+  //       color: theme.colors.dark[6],
+  //       backgroundColor: theme.colors.dark[4],
+  //     },
+  //   },
+  //   leftIcon: {
+  //     marginRight: 4,
+  //   },
+  //   rightIcon: {
+  //     marginLeft: 0,
+  //   },
+  // });
 
   const getCurrentPageNumText = () => {
     let text = `${pageNumber}`;
@@ -188,7 +178,13 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
     }
 
     return (
-      <Button compact styles={buttonStyles} radius={0} leftIcon={opts.icon} onClick={opts.func}>
+      <Button
+        size="xs"
+        className={styles.button}
+        radius={0}
+        leftSection={opts.icon}
+        onClick={opts.func}
+      >
         {opts.text}
       </Button>
     );
@@ -197,29 +193,30 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   return (
     <Box
       className={styles.container}
-      sx={(theme) => ({
-        backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[6],
-      })}
+      bg="dark.6"
+      // sx={(theme) => ({
+      //   backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[6],
+      // })}
     >
       <Center>
-        <Group spacing={4} noWrap>
+        <Group gap={4} wrap="nowrap">
           <Button
-            compact
-            styles={buttonStyles}
+            size="xs"
+            className={styles.button}
             radius={0}
-            leftIcon={<IconArrowLeft size={14} />}
+            leftSection={<IconArrowLeft size={14} />}
             onClick={props.exitPage}
           >
             Go Back
           </Button>
 
-          <Group spacing={0} noWrap>
+          <Group gap={0} wrap="nowrap">
             <Button
               px={2}
-              compact
-              styles={buttonStyles}
+              size="xs"
+              className={styles.button}
               radius={0}
-              rightIcon={<IconChevronLeft size={16} />}
+              rightSection={<IconChevronLeft size={16} />}
               disabled={
                 (readingDirection === ReadingDirection.LeftToRight &&
                   props.getAdjacentChapterId(true) === null) ||
@@ -230,7 +227,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             />
             <Menu shadow="md" width={110} trigger="hover">
               <Menu.Target>
-                <Button compact styles={buttonStyles} radius={0} pb={2}>
+                <Button size="xs" className={styles.button} radius={0} pb={2}>
                   {chapter && chapter.chapterNumber
                     ? `Chapter ${chapter.chapterNumber}`
                     : 'Unknown Chapter'}
@@ -238,7 +235,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
               </Menu.Target>
 
               <Menu.Dropdown>
-                <ScrollArea.Autosize maxHeight={220} style={{ width: 100 }}>
+                <ScrollArea.Autosize mah={220} style={{ width: 100 }}>
                   {relevantChapterList.map((relevantChapter: Chapter) => (
                     <Menu.Item
                       key={relevantChapter.id}
@@ -254,10 +251,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             </Menu>
             <Button
               px={2}
-              compact
-              styles={buttonStyles}
+              size="xs"
+              className={styles.button}
               radius={0}
-              rightIcon={<IconChevronRight size={16} />}
+              rightSection={<IconChevronRight size={16} />}
               disabled={
                 (readingDirection === ReadingDirection.LeftToRight &&
                   props.getAdjacentChapterId(false) === null) ||
@@ -268,13 +265,13 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             />
           </Group>
 
-          <Group spacing={0} noWrap>
+          <Group gap={0} wrap="nowrap">
             <Button
               px={2}
-              compact
-              styles={buttonStyles}
+              size="xs"
+              className={styles.button}
               radius={0}
-              rightIcon={<IconChevronsLeft size={16} />}
+              rightSection={<IconChevronsLeft size={16} />}
               disabled={
                 (readingDirection === ReadingDirection.LeftToRight && pageNumber <= 1) ||
                 (readingDirection === ReadingDirection.RightToLeft && pageNumber >= lastPageNumber)
@@ -283,10 +280,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             />
             <Button
               px={2}
-              compact
-              styles={buttonStyles}
+              size="xs"
+              className={styles.button}
               radius={0}
-              rightIcon={<IconChevronLeft size={16} />}
+              rightSection={<IconChevronLeft size={16} />}
               disabled={
                 (readingDirection === ReadingDirection.RightToLeft &&
                   pageNumber === lastPageNumber &&
@@ -299,13 +296,13 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             />
             <Menu shadow="md" width={110} trigger="hover">
               <Menu.Target>
-                <Button compact styles={buttonStyles} radius={0} px={4} pb={2}>
+                <Button size="xs" className={styles.button} radius={0} px={4} pb={2}>
                   {getCurrentPageNumText()}
                 </Button>
               </Menu.Target>
 
               <Menu.Dropdown>
-                <ScrollArea.Autosize maxHeight={220} style={{ width: 100 }}>
+                <ScrollArea.Autosize mah={220} style={{ width: 100 }}>
                   {Array.from({ length: lastPageNumber }, (_v, k) => k + 1).map((i: number) => (
                     <Menu.Item key={i} onClick={() => setPageNumber(i)}>
                       Page {i}
@@ -316,10 +313,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             </Menu>
             <Button
               px={2}
-              compact
-              styles={buttonStyles}
+              size="xs"
+              className={styles.button}
               radius={0}
-              rightIcon={<IconChevronRight size={16} />}
+              rightSection={<IconChevronRight size={16} />}
               disabled={
                 (readingDirection === ReadingDirection.LeftToRight &&
                   pageNumber === lastPageNumber &&
@@ -332,10 +329,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             />
             <Button
               px={2}
-              compact
-              styles={buttonStyles}
+              size="xs"
+              className={styles.button}
               radius={0}
-              rightIcon={<IconChevronsRight size={16} />}
+              rightSection={<IconChevronsRight size={16} />}
               disabled={
                 (readingDirection === ReadingDirection.LeftToRight &&
                   pageNumber >= lastPageNumber) ||
@@ -346,10 +343,11 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           </Group>
 
           <Button
-            compact
-            styles={buttonStyles}
+            px={8}
+            size="xs"
+            className={styles.button}
             radius={0}
-            leftIcon={ICONS_PAGE_STYLE[pageStyle]}
+            leftSection={ICONS_PAGE_STYLE[pageStyle]}
             onClick={() => setPageStyle(nextPageStyle(pageStyle))}
           >
             {TEXT_PAGE_STYLE[pageStyle]}
@@ -357,10 +355,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
 
           {pageStyle === PageStyle.Double ? (
             <Button
-              compact
-              styles={buttonStyles}
+              size="xs"
+              className={styles.button}
               radius={0}
-              leftIcon={ICONS_OFFSET_PAGES[offsetPages]}
+              leftSection={ICONS_OFFSET_PAGES[offsetPages]}
               onClick={() => setOffsetPages(nextOffsetPages(offsetPages))}
             >
               {TEXT_OFFSET_PAGES[offsetPages]}
@@ -372,10 +370,10 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           {renderFitButton()}
 
           <Button
-            compact
-            styles={buttonStyles}
+            size="xs"
+            className={styles.button}
             radius={0}
-            leftIcon={fitStretch ? <IconCheck size={14} /> : <IconX size={14} />}
+            leftSection={fitStretch ? <IconCheck size={14} /> : <IconX size={14} />}
             disabled={!(fitContainToHeight || fitContainToWidth)}
             onClick={() => setFitStretch(!fitStretch)}
           >
@@ -383,83 +381,89 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           </Button>
 
           <Button
-            compact
-            styles={buttonStyles}
+            size="xs"
+            className={styles.button}
             radius={0}
-            leftIcon={ICONS_READING_DIRECTION[readingDirection]}
+            leftSection={ICONS_READING_DIRECTION[readingDirection]}
             onClick={() => setReadingDirection(nextReadingDirection(readingDirection))}
           >
             {TEXT_READING_DIRECTION[readingDirection]}
           </Button>
 
-          <Menu shadow="md" width={320} trigger="hover">
-            <Menu.Target>
-              <Button
-                leftIcon={
-                  chapter && chapter.languageKey ? (
-                    <div className="flag-container">
-                      <img
-                        src={flags}
-                        title={Languages[chapter.languageKey].name}
-                        alt={Languages[chapter.languageKey].name}
-                        className={`flag flag-${Languages[chapter.languageKey].flagCode}`}
-                      />
-                    </div>
-                  ) : (
-                    <></>
-                  )
-                }
-                compact
-                styles={buttonStyles}
-                radius={0}
-              >
-                <div>
-                  {chapter && chapter.languageKey
-                    ? `${Languages[chapter.languageKey].name}`
-                    : 'Unknown Language'}
-                </div>
-              </Button>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              <ScrollArea.Autosize maxHeight={220} style={{ width: 310 }}>
-                {languageChapterList.map((languageChapter: Chapter) => (
-                  <Menu.Item
-                    key={languageChapter.id}
-                    onClick={() => {
-                      if (languageChapter.id) props.setChapter(languageChapter.id, pageNumber);
-                    }}
-                  >
-                    {Languages[languageChapter.languageKey] === undefined ? (
-                      <></>
-                    ) : (
-                      <div style={{ display: 'flex' }}>
-                        <div style={{ marginRight: '5px' }} className="flag-container">
-                          <img
-                            src={flags}
-                            title={Languages[languageChapter.languageKey].name}
-                            alt={Languages[languageChapter.languageKey].name}
-                            className={`flag flag-${
-                              Languages[languageChapter.languageKey].flagCode
-                            }`}
-                          />
-                        </div>
-                        {`${Languages[languageChapter.languageKey].name} ${
-                          languageChapter.volumeNumber ? `Vol. ${languageChapter.volumeNumber}` : ''
-                        } by ${languageChapter.groupName}`}
+          {languageChapterList.length > 1 ? (
+            <Menu shadow="md" width={320} trigger="hover">
+              <Menu.Target>
+                <Button
+                  leftSection={
+                    chapter && chapter.languageKey ? (
+                      <div className="flag-container">
+                        <img
+                          src={flags}
+                          title={Languages[chapter.languageKey].name}
+                          alt={Languages[chapter.languageKey].name}
+                          className={`flag flag-${Languages[chapter.languageKey].flagCode}`}
+                        />
                       </div>
-                    )}
-                  </Menu.Item>
-                ))}
-              </ScrollArea.Autosize>
-            </Menu.Dropdown>
-          </Menu>
+                    ) : (
+                      <></>
+                    )
+                  }
+                  size="xs"
+                  className={styles.button}
+                  radius={0}
+                >
+                  <div>
+                    {chapter && chapter.languageKey
+                      ? `${Languages[chapter.languageKey].name}`
+                      : 'Unknown Language'}
+                  </div>
+                </Button>
+              </Menu.Target>
+
+              <Menu.Dropdown>
+                <ScrollArea.Autosize mah={220} style={{ width: 310 }}>
+                  {languageChapterList.map((languageChapter: Chapter) => (
+                    <Menu.Item
+                      key={languageChapter.id}
+                      onClick={() => {
+                        if (languageChapter.id) props.setChapter(languageChapter.id, pageNumber);
+                      }}
+                    >
+                      {Languages[languageChapter.languageKey] === undefined ? (
+                        <></>
+                      ) : (
+                        <div style={{ display: 'flex' }}>
+                          <div style={{ marginRight: '5px' }} className="flag-container">
+                            <img
+                              src={flags}
+                              title={Languages[languageChapter.languageKey].name}
+                              alt={Languages[languageChapter.languageKey].name}
+                              className={`flag flag-${
+                                Languages[languageChapter.languageKey].flagCode
+                              }`}
+                            />
+                          </div>
+                          {`${Languages[languageChapter.languageKey].name} ${
+                            languageChapter.volumeNumber
+                              ? `Vol. ${languageChapter.volumeNumber}`
+                              : ''
+                          } by ${languageChapter.groupName}`}
+                        </div>
+                      )}
+                    </Menu.Item>
+                  ))}
+                </ScrollArea.Autosize>
+              </Menu.Dropdown>
+            </Menu>
+          ) : (
+            ''
+          )}
 
           <Button
-            compact
-            styles={buttonStyles}
+            size="xs"
+            className={styles.button}
             radius={0}
-            leftIcon={<IconSettings size={14} />}
+            leftSection={<IconSettings size={14} />}
             onClick={() => setShowingSettingsModal(!showingSettingsModal)}
           >
             Settings

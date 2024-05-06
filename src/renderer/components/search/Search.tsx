@@ -98,7 +98,7 @@ const Search: React.FC<Props> = (_props: Props) => {
             children: (
               <Text size="sm" mb="sm">
                 The series{' '}
-                <Text color="teal" inherit component="span" italic>
+                <Text c="teal" inherit component="span" fs="italic">
                   {series.title}
                 </Text>{' '}
                 is already in your library.
@@ -113,34 +113,6 @@ const Search: React.FC<Props> = (_props: Props) => {
       })
       .catch((e) => console.error(e));
   };
-
-  // const renderAlert = () => {
-  //   const metadata = extensionList.find((item: ExtensionMetadata) => item.id === searchExtension);
-  //   if (metadata && metadata.notice.length > 0) {
-  //     return (
-  //       <Alert icon={<IconInfoCircle size={16} />} title="Extension information" color="indigo">
-  //         <Text>{metadata.notice}</Text>
-  //         {metadata.noticeUrl ? (
-  //           <Text>
-  //             For more information, see here:{' '}
-  //             <Text
-  //               variant="link"
-  //               component="a"
-  //               href={metadata.noticeUrl}
-  //               target="_blank"
-  //               rel="noreferrer"
-  //             >
-  //               {metadata.noticeUrl}
-  //             </Text>
-  //           </Text>
-  //         ) : (
-  //           ''
-  //         )}
-  //       </Alert>
-  //     );
-  //   }
-  //   return <></>;
-  // };
 
   useEffect(() => {
     ipcRenderer
@@ -159,7 +131,6 @@ const Search: React.FC<Props> = (_props: Props) => {
       })
       .then(() => handleSearch(true))
       .catch((err: Error) => console.error(err));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchExtension]);
 
   if (extensionList.length === 0) return <></>;
@@ -188,7 +159,6 @@ const Search: React.FC<Props> = (_props: Props) => {
         handleSearchFilesystem={handleSearchFilesystem}
       />
 
-      {/* {!loading && searchResult.seriesList.length === 0 ? renderAlert() : ''} */}
       <SearchGrid loading={loading} inLibrary={inLibrary} handleSearch={handleSearch} />
     </>
   );

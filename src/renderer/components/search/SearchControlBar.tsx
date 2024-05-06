@@ -1,8 +1,7 @@
-/* eslint-disable react/jsx-boolean-value */
 import React from 'react';
 import { ExtensionMetadata } from '@tiyo/common';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { Button, Group, Input, Select } from '@mantine/core';
+import { Button, Flex, Select, TextInput } from '@mantine/core';
 const { ipcRenderer } = require('electron');
 import {
   searchExtensionState,
@@ -46,11 +45,11 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
 
     return (
       <>
-        <Input
-          style={{ width: '100%' }}
+        <TextInput
+          flex={1}
           placeholder="Search for a series..."
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
-          onKeyPress={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === 'Enter') props.handleSearch(true);
           }}
         />
@@ -65,17 +64,17 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Group position="left" align="left" spacing="xs" mb="md" noWrap>
+    <Flex align="left" gap="xs" mb="md" wrap="nowrap">
       <Select
         value={searchExtension}
         data={props.extensionList.map((metadata: ExtensionMetadata) => ({
           value: metadata.id,
           label: metadata.name,
         }))}
-        onChange={(value: string) => setSearchExtension(value)}
+        onChange={(value) => setSearchExtension(value || searchExtension)}
       />
       {renderSearchControls()}
-    </Group>
+    </Flex>
   );
 };
 

@@ -14,6 +14,7 @@ import {
   Slider,
   Menu,
   MantineTheme,
+  Stack,
 } from '@mantine/core';
 import {
   IconArrowBigLeft,
@@ -60,7 +61,7 @@ import {
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const ReaderSettings: React.FC<Props> = (props: Props) => {
+const ReaderSettings: React.FC<Props> = () => {
   const [showingKeybinds, setShowingKeybinds] = useState(false);
   const [fitContainToWidth, setFitContainToWidth] = useRecoilState(fitContainToWidthState);
   const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
@@ -74,20 +75,20 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   const [keyChapterLeft, setKeyChapterLeft] = useRecoilState(keyChapterLeftState);
   const [keyChapterRight, setKeyChapterRight] = useRecoilState(keyChapterRightState);
   const [keyToggleReadingDirection, setKeyToggleReadingDirection] = useRecoilState(
-    keyToggleReadingDirectionState
+    keyToggleReadingDirectionState,
   );
   const [keyTogglePageStyle, setKeyTogglePageStyle] = useRecoilState(keyTogglePageStyleState);
   const [keyToggleOffsetDoubleSpreads, setKeyToggleOffsetDoubleSpreads] = useRecoilState(
-    keyToggleOffsetDoubleSpreadsState
+    keyToggleOffsetDoubleSpreadsState,
   );
   const [keyToggleShowingSettingsModal, setKeyToggleShowingSettingsModal] = useRecoilState(
-    keyToggleShowingSettingsModalState
+    keyToggleShowingSettingsModalState,
   );
   const [keyToggleShowingScrollbar, setKeyToggleShowingScrollbar] = useRecoilState(
-    keyToggleShowingScrollbarState
+    keyToggleShowingScrollbarState,
   );
   const [keyToggleShowingHeader, setKeyToggleShowingHeader] = useRecoilState(
-    keyToggleShowingHeaderState
+    keyToggleShowingHeaderState,
   );
   const [keyToggleFullscreen, setKeyToggleFullscreen] = useRecoilState(keyToggleFullscreenState);
   const [keyExit, setKeyExit] = useRecoilState(keyExitState);
@@ -116,12 +117,14 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
       case ReaderSetting.ReadingDirection:
         setReadingDirection(value);
         break;
       case ReaderSetting.FitContainToWidth:
+        console.log('updating');
         setFitContainToWidth(value);
         break;
       case ReaderSetting.FitContainToHeight:
@@ -224,128 +227,139 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
   return (
     <>
       <Text pb="xs">Page Style</Text>
-      <SegmentedControl
-        mb="xs"
-        data={[
-          {
-            value: PageStyle.Single,
-            label: (
-              <Center>
-                <IconFile size={16} />
-                <Box ml={10}>Single</Box>
-              </Center>
-            ),
-          },
-          {
-            value: PageStyle.Double,
-            label: (
-              <Center>
-                <IconBook size={16} />
-                <Box ml={10}>Double</Box>
-              </Center>
-            ),
-          },
-          {
-            value: PageStyle.LongStrip,
-            label: (
-              <Center>
-                <IconSpacingVertical size={16} />
-                <Box ml={10}>Long Strip</Box>
-              </Center>
-            ),
-          },
-        ]}
-        value={pageStyle}
-        onChange={(value) => updateReaderSetting(ReaderSetting.PageStyle, value)}
-      />
+      <Stack gap="xs">
+        <SegmentedControl
+          maw={400}
+          data={[
+            {
+              value: PageStyle.Single,
+              label: (
+                <Center>
+                  <IconFile size={16} />
+                  <Box ml={10}>Single</Box>
+                </Center>
+              ),
+            },
+            {
+              value: PageStyle.Double,
+              label: (
+                <Center>
+                  <IconBook size={16} />
+                  <Box ml={10}>Double</Box>
+                </Center>
+              ),
+            },
+            {
+              value: PageStyle.LongStrip,
+              label: (
+                <Center>
+                  <IconSpacingVertical size={16} />
+                  <Box ml={10}>Long Strip</Box>
+                </Center>
+              ),
+            },
+          ]}
+          value={pageStyle}
+          onChange={(value) => updateReaderSetting(ReaderSetting.PageStyle, value)}
+        />
 
-      <Checkbox
-        label="Spacing between pages"
-        ml="sm"
-        disabled={pageStyle === PageStyle.Single}
-        checked={pageGap}
-        onChange={(e) => updateReaderSetting(ReaderSetting.PageGap, e.target.checked)}
-      />
-      <Radio.Group
-        ml="sm"
-        pb="sm"
-        value={offsetPages}
-        onChange={(value: OffsetPages) => setOffsetPages(value)}
-      >
-        <Radio
-          value={OffsetPages.First}
-          label="Offset first page"
-          disabled={pageStyle !== PageStyle.Double}
+        <Checkbox
+          label="Spacing between pages"
+          ml="sm"
+          disabled={pageStyle === PageStyle.Single}
+          checked={pageGap}
+          onChange={(e) => updateReaderSetting(ReaderSetting.PageGap, e.target.checked)}
         />
-        <Radio
-          value={OffsetPages.All}
-          label="Offset all"
-          disabled={pageStyle !== PageStyle.Double}
-        />
-        <Radio
-          value={OffsetPages.None}
-          label="No offset"
-          disabled={pageStyle !== PageStyle.Double}
-        />
-      </Radio.Group>
+        <Radio.Group
+          ml="sm"
+          pb="sm"
+          value={offsetPages}
+          onChange={(value: string) => setOffsetPages(value as OffsetPages)}
+        >
+          <Group>
+            <Radio
+              pb={4}
+              value={OffsetPages.First}
+              label="Offset first page"
+              disabled={pageStyle !== PageStyle.Double}
+            />
+            <Radio
+              pb={4}
+              value={OffsetPages.All}
+              label="Offset all"
+              disabled={pageStyle !== PageStyle.Double}
+            />
+            <Radio
+              value={OffsetPages.None}
+              label="No offset"
+              disabled={pageStyle !== PageStyle.Double}
+            />
+          </Group>
+        </Radio.Group>
+      </Stack>
 
       <Text pb="xs">Reading Direction</Text>
-      <SegmentedControl
-        mb="sm"
-        data={[
-          {
-            value: ReadingDirection.LeftToRight,
-            label: (
-              <Center>
-                <IconArrowBigRight size={16} />
-                <Box ml={10}>Left-to-Right</Box>
-              </Center>
-            ),
-          },
-          {
-            value: ReadingDirection.RightToLeft,
-            label: (
-              <Center>
-                <IconArrowBigLeft size={16} />
-                <Box ml={10}>Right-to-Left</Box>
-              </Center>
-            ),
-          },
-        ]}
-        value={readingDirection}
-        onChange={(value) => updateReaderSetting(ReaderSetting.ReadingDirection, value)}
-      />
+      <Stack>
+        <SegmentedControl
+          mb="sm"
+          maw={400}
+          data={[
+            {
+              value: ReadingDirection.LeftToRight,
+              label: (
+                <Center>
+                  <IconArrowBigRight size={16} />
+                  <Box ml={10}>Left-to-Right</Box>
+                </Center>
+              ),
+            },
+            {
+              value: ReadingDirection.RightToLeft,
+              label: (
+                <Center>
+                  <IconArrowBigLeft size={16} />
+                  <Box ml={10}>Right-to-Left</Box>
+                </Center>
+              ),
+            },
+          ]}
+          value={readingDirection}
+          onChange={(value) => updateReaderSetting(ReaderSetting.ReadingDirection, value)}
+        />
+      </Stack>
 
       <Text pb="xs">Image Sizing</Text>
-      <Checkbox
-        label="Contain to width"
-        ml="sm"
-        // pb="xs"
-        checked={fitContainToWidth}
-        onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToWidth, e.target.checked)}
-      />
-      <Checkbox
-        label="Contain to height"
-        ml="sm"
-        // pb="xs"
-        checked={fitContainToHeight}
-        onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToHeight, e.target.checked)}
-      />
-      <Checkbox
-        label="Stretch small pages"
-        ml="sm"
-        disabled={!(fitContainToHeight || fitContainToWidth)}
-        checked={fitStretch}
-        onChange={(e) => updateReaderSetting(ReaderSetting.FitStretch, e.target.checked)}
-      />
+      <Stack gap={4} ml="sm" mb="xs">
+        <Checkbox
+          label="Contain to width"
+          // ml="sm"
+          // pb="xs"
+          value={fitContainToWidth ? 'on' : 'off'}
+          onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToWidth, e.target.checked)}
+        />
+        <Checkbox
+          label="Contain to height"
+          // ml="sm"
+          // pb="xs"
+          checked={fitContainToHeight}
+          onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToHeight, e.target.checked)}
+        />
+        <Checkbox
+          label="Stretch small pages"
+          // ml="sm"
+          disabled={!(fitContainToHeight || fitContainToWidth)}
+          checked={fitStretch}
+          onChange={(e) => updateReaderSetting(ReaderSetting.FitStretch, e.target.checked)}
+        />
+      </Stack>
 
-      <Group position="left" align="left" spacing="xs" noWrap>
+      <Group align="left" gap="xs" wrap="nowrap">
         <Text size="sm" ml="sm">
           Max page width
         </Text>
         <Menu shadow="md" width={50} trigger="hover">
           <Menu.Target>
-            <Button compact styles={buttonStyles} radius={0} px={4} pb={2}>
+            <Button size="xs" styles={buttonStyles} radius={0} px={4} pb={2}>
               {pageWidthMetric}
             </Button>
           </Menu.Target>
@@ -490,12 +504,7 @@ const ReaderSettings: React.FC<Props> = (props: Props) => {
                     variant="default"
                     size="xs"
                     fullWidth
-                    onKeyDownCapture={(e: any) => updateKeySetting(e, entry.setting)}
-                    sx={(theme) => ({
-                      '&:focus': {
-                        backgroundColor: theme.colors.dark[3],
-                      },
-                    })}
+                    onKeyDownCapture={(e) => updateKeySetting(e, entry.setting)}
                   >
                     {entry.value}
                   </Button>

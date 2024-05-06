@@ -121,7 +121,6 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
       )
         props.handleSearch();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.loading]);
 
   const handleScroll = (position: { x: number; y: number }) => {

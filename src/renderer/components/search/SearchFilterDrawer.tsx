@@ -105,7 +105,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
         label={option.label}
         value={getOptionValue(option) as string}
         data={option.options}
-        onChange={(value: string) => setOptionValue(option.id, value)}
+        onChange={(value) => setOptionValue(option.id, value || '')}
       />
     );
   };
@@ -192,7 +192,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
   }, [showingFilterDrawer]);
 
   return (
-    <Drawer
+    <Drawer.Root
       opened={showingFilterDrawer}
       onClose={() => {
         setShowingFilterDrawer(false);
@@ -200,19 +200,23 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
       }}
       position="right"
       padding="xl"
-      title="Search Options"
-      styles={(theme) => ({
-        header: {
-          paddingTop: theme.spacing.md,
-        },
-      })}
+      size={'xs'}
     >
-      <ScrollArea style={{ height: 'calc(100vh - 84px)' }} type="hover" offsetScrollbars mr={-24}>
-        <Stack spacing="xs" style={{ width: 272 }}>
-          {renderControls()}
-        </Stack>
-      </ScrollArea>
-    </Drawer>
+      <Drawer.Overlay />
+      <Drawer.Content style={{ overflow: 'hidden' }}>
+        <Drawer.Header>
+          <Drawer.Title>Search Options</Drawer.Title>
+          <Drawer.CloseButton />
+        </Drawer.Header>
+        <Drawer.Body>
+          <ScrollArea style={{ height: 'calc(100vh - 96px)' }} type="hover" offsetScrollbars>
+            <Stack gap="xs" style={{ width: 244 }}>
+              {renderControls()}
+            </Stack>
+          </ScrollArea>
+        </Drawer.Body>
+      </Drawer.Content>
+    </Drawer.Root>
   );
 };
 

@@ -1,6 +1,5 @@
-/* eslint-disable react/prefer-stateless-function */
 const { ipcRenderer } = require('electron');
-import React, { ReactNode, Component, ErrorInfo } from 'react';
+import { ReactNode, Component, ErrorInfo } from 'react';
 import { Accordion, Box, Center, Code, Container, Kbd, Text, Title } from '@mantine/core';
 import packageJson from '../../../../package.json';
 import ipcChannels from '@/common/constants/ipcChannels.json';
@@ -60,9 +59,8 @@ export class ErrorBoundary extends Component<Props, State> {
                 <Text>
                   -{' '}
                   <Text
-                    variant="link"
+                    c="blue"
                     component="a"
-                    style={{ cursor: 'pointer' }}
                     href={`${packageJson.repository.url}/issues`}
                     target="_blank"
                     rel="noreferrer"
@@ -80,7 +78,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 Additional logs in{' '}
                 <Code>
                   <Text
-                    variant="link"
+                    c="blue"
                     component="a"
                     href={`file:///${LOGS_DIR}`}
                     target="_blank"

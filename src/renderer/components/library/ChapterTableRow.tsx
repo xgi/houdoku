@@ -1,10 +1,9 @@
-/* eslint-disable react/display-name */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chapter, Series, Languages } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { ActionIcon, Center, Group, Text } from '@mantine/core';
+import { ActionIcon, Checkbox, Group, Table, Text } from '@mantine/core';
 import { IconDownload, IconEye, IconFileCheck } from '@tabler/icons';
 import routes from '@/common/constants/routes.json';
 import { sendProgressToTrackers } from '@/renderer/features/tracker/utils';
@@ -41,15 +40,14 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const chapterDownloadStatuses = useRecoilValue(chapterDownloadStatusesState);
 
-  const handleMarkReadButton = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const handleToggleRead = () => {
     markChapters(
       [chapter],
       props.series,
       !chapter.read,
       setChapterList,
       setSeries,
-      chapterLanguages
+      chapterLanguages,
     );
     if (!chapter.read && trackerAutoUpdate) {
       sendProgressToTrackers(chapter, props.series);
@@ -74,17 +72,21 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <tr
+    <Table.Tr
       key={chapter.id}
       onContextMenu={props.handleContextMenu}
       onClick={() => handleTableRowClicked(`${routes.READER}/${series.id}/${chapter.id}`)}
     >
-      <td>
-        <ActionIcon variant="default" onClick={handleMarkReadButton}>
-          {chapter.read ? <IconEye size={16} /> : ''}
-        </ActionIcon>
-      </td>
-      <td>
+      <Table.Td>
+        <Checkbox
+          size="md"
+          icon={({ ...others }) => <IconEye {...others} />}
+          checked={chapter.read}
+          onChange={handleToggleRead}
+          onClick={(event) => event.stopPropagation()}
+        />
+      </Table.Td>
+      <Table.Td>
         {Languages[chapter.languageKey] === undefined ? (
           <></>
         ) : (
@@ -97,19 +99,29 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
             />
           </div>
         )}
-      </td>
-      <td>{chapter.title}</td>
-      <td>
-        <Text lineClamp={1}>{chapter.groupName}</Text>
-      </td>
-      <td>
-        <Center>{chapter.volumeNumber}</Center>
-      </td>
-      <td>
-        <Center>{chapter.chapterNumber}</Center>
-      </td>
-      <td>
-        <Group position="right" spacing="xs" noWrap>
+      </Table.Td>
+      <Table.Td>
+        <Text lineClamp={1} size="sm">
+          {chapter.title}
+        </Text>
+      </Table.Td>
+      <Table.Td>
+        <Text lineClamp={1} size="sm">
+          {chapter.groupName}
+        </Text>
+      </Table.Td>
+      <Table.Td>
+        <Text lineClamp={1} size="sm" ta="center">
+          {chapter.volumeNumber}
+        </Text>
+      </Table.Td>
+      <Table.Td>
+        <Text lineClamp={1} size="sm" ta="center">
+          {chapter.chapterNumber}
+        </Text>
+      </Table.Td>
+      <Table.Td>
+        <Group justify="flex-end" gap="xs" wrap="nowrap">
           {chapterDownloadStatuses[chapter.id!] ? (
             <ActionIcon disabled>
               <IconFileCheck size={16} />
@@ -120,8 +132,8 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
             </ActionIcon>
           )}
         </Group>
-      </td>
-    </tr>
+      </Table.Td>
+    </Table.Tr>
   );
 };
 

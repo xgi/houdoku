@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React from 'react';
 import { Chapter, Series } from '@tiyo/common';
 import { useRecoilValue } from 'recoil';
@@ -11,7 +10,7 @@ type Props = {
   page: number;
   handleContextMenu: (
     event: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
-    chapter: Chapter
+    chapter: Chapter,
   ) => void;
 };
 
@@ -23,7 +22,7 @@ const ChapterTableBody: React.FC<Props> = (props: Props) => {
     const startIndex = (props.page - 1) * chapterListPageSize;
     const curChapterList = sortedFilteredChapterList.slice(
       startIndex,
-      startIndex + chapterListPageSize
+      startIndex + chapterListPageSize,
     );
 
     return curChapterList.map((chapter) => {

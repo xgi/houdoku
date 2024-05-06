@@ -1,8 +1,7 @@
-/* eslint-disable react/jsx-boolean-value */
 import React from 'react';
 import { SeriesStatus } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Button, Group, Input, Menu, ScrollArea } from '@mantine/core';
+import { Button, Group, Menu, ScrollArea, TextInput } from '@mantine/core';
 import {
   IconArrowDown,
   IconArrowUp,
@@ -55,11 +54,11 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const availableCategories = useRecoilValue(categoryListState);
   const setFilter = useSetRecoilState(filterState);
   const [libraryFilterCategory, setLibraryFilterCategory] = useRecoilState(
-    libraryFilterCategoryState
+    libraryFilterCategoryState,
   );
   const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(libraryFilterStatusState);
   const [libraryFilterProgress, setLibraryFilterProgress] = useRecoilState(
-    libraryFilterProgressState
+    libraryFilterProgressState,
   );
   const [libraryColumns, setLibraryColumns] = useRecoilState(libraryColumnsState);
   const [libraryView, setLibraryView] = useRecoilState(libraryViewState);
@@ -75,14 +74,14 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
         setSeriesList,
         setReloadingSeriesList,
         chapterLanguages,
-        categoryList
+        categoryList,
       );
     }
   };
 
   return (
-    <Group position="apart" mb="md" noWrap>
-      <Group position="left" align="left" spacing="xs" noWrap>
+    <Group justify="space-between" mb="md" wrap="nowrap">
+      <Group align="left" gap="xs" wrap="nowrap">
         <Button
           onClick={refreshHandler}
           loading={reloadingSeriesList}
@@ -100,77 +99,78 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           <Menu.Dropdown>
             <Menu.Label>View</Menu.Label>
             <Menu.Item
-              icon={<IconLayoutGrid size={14} />}
-              onClick={() => setLibraryView(LibraryView.GridCompact)}
+              leftSection={<IconLayoutGrid size={14} />}
               rightSection={libraryView === LibraryView.GridCompact ? <IconCheck size={14} /> : ''}
+              onClick={() => setLibraryView(LibraryView.GridCompact)}
             >
               Compact Grid
             </Menu.Item>
             <Menu.Item
-              icon={<IconLayoutBottombar size={14} />}
-              onClick={() => setLibraryView(LibraryView.GridComfortable)}
+              leftSection={<IconLayoutBottombar size={14} />}
               rightSection={
                 libraryView === LibraryView.GridComfortable ? <IconCheck size={14} /> : ''
               }
+              onClick={() => setLibraryView(LibraryView.GridComfortable)}
             >
               Comfortable Grid
             </Menu.Item>
             <Menu.Item
-              icon={<IconPhoto size={14} />}
-              onClick={() => setLibraryView(LibraryView.GridCoversOnly)}
+              leftSection={<IconPhoto size={14} />}
               rightSection={
                 libraryView === LibraryView.GridCoversOnly ? <IconCheck size={14} /> : ''
               }
+              onClick={() => setLibraryView(LibraryView.GridCoversOnly)}
             >
               Cover Grid
             </Menu.Item>
             <Menu.Item
-              icon={<IconLayoutList size={14} />}
-              onClick={() => setLibraryView(LibraryView.List)}
+              leftSection={<IconLayoutList size={14} />}
               rightSection={libraryView === LibraryView.List ? <IconCheck size={14} /> : ''}
+              onClick={() => setLibraryView(LibraryView.List)}
             >
               List
             </Menu.Item>
             <Menu.Divider />
             <Menu.Label>Sort</Menu.Label>
             <Menu.Item
-              icon={<IconLetterA size={14} />}
-              onClick={() =>
-                setLibrarySort(
-                  librarySort === LibrarySort.TitleAsc
-                    ? LibrarySort.TitleDesc
-                    : LibrarySort.TitleAsc
-                )
-              }
+              leftSection={<IconLetterA size={14} />}
               rightSection={
                 [LibrarySort.TitleAsc, LibrarySort.TitleDesc].includes(librarySort)
                   ? SORT_ICONS[librarySort]
                   : ''
               }
+              onClick={() =>
+                setLibrarySort(
+                  librarySort === LibrarySort.TitleAsc
+                    ? LibrarySort.TitleDesc
+                    : LibrarySort.TitleAsc,
+                )
+              }
             >
               Title
             </Menu.Item>
             <Menu.Item
-              icon={<IconHash size={14} />}
-              onClick={() =>
-                setLibrarySort(
-                  librarySort === LibrarySort.UnreadDesc
-                    ? LibrarySort.UnreadAsc
-                    : LibrarySort.UnreadDesc
-                )
-              }
+              leftSection={<IconHash size={14} />}
               rightSection={
                 [LibrarySort.UnreadAsc, LibrarySort.UnreadDesc].includes(librarySort)
                   ? SORT_ICONS[librarySort]
                   : ''
+              }
+              onClick={() =>
+                setLibrarySort(
+                  librarySort === LibrarySort.UnreadDesc
+                    ? LibrarySort.UnreadAsc
+                    : LibrarySort.UnreadDesc,
+                )
               }
             >
               Unread
             </Menu.Item>
             <Menu.Divider />
             <Menu.Item
-              icon={<IconColumns size={14} />}
               disabled={libraryView === LibraryView.List}
+              leftSection={<IconColumns size={14} />}
+              rightSection={libraryColumns}
               onClick={() =>
                 setLibraryColumns(
                   {
@@ -178,10 +178,9 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
                     4: 6,
                     6: 8,
                     8: 2,
-                  }[libraryColumns as 2 | 4 | 6 | 8]
+                  }[libraryColumns as 2 | 4 | 6 | 8],
                 )
               }
-              rightSection={libraryColumns}
             >
               Columns
             </Menu.Item>
@@ -239,7 +238,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <ScrollArea.Autosize maxHeight={320}>
+            <ScrollArea.Autosize mah={320}>
               {availableCategories.map((availableCategory) => {
                 return (
                   <Menu.Item
@@ -266,7 +265,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               ) : undefined}
 
               <Menu.Item
-                icon={<IconEdit size={14} />}
+                leftSection={<IconEdit size={14} />}
                 onClick={() => props.showEditCategoriesModal()}
               >
                 Edit categories
@@ -275,10 +274,10 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
           </Menu.Dropdown>
         </Menu>
       </Group>
-      <Group position="right" align="right" noWrap>
-        <Input
+      <Group justify="flex-end" align="right" wrap="nowrap">
+        <TextInput
           placeholder="Search library..."
-          icon={<IconSearch size={16} />}
+          leftSection={<IconSearch size={16} />}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}
         />
       </Group>

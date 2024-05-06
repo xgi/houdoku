@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
-import { Button, Group, Modal } from '@mantine/core';
+import { Button, Group, Modal, ScrollArea } from '@mantine/core';
 import { updateSeries } from '@/renderer/features/library/utils';
 import SeriesEditControls from '../general/SeriesEditControls';
 
@@ -37,7 +37,7 @@ const EditSeriesModal: React.FC<Props> = (props: Props) => {
             editable
           />
 
-          <Group position="right" mt="sm">
+          <Group justify="flex-end" mt="sm">
             <Button variant="default" onClick={props.close}>
               Cancel
             </Button>
@@ -50,9 +50,20 @@ const EditSeriesModal: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Modal title="Edit Series" opened={props.visible} onClose={props.close}>
-      {renderContent()}
-    </Modal>
+    <Modal.Root
+      opened={props.visible}
+      onClose={props.close}
+      scrollAreaComponent={ScrollArea.Autosize}
+    >
+      <Modal.Overlay />
+      <Modal.Content style={{ overflow: 'hidden' }}>
+        <Modal.Header>
+          <Modal.Title>Edit Series</Modal.Title>
+          <Modal.CloseButton />
+        </Modal.Header>
+        <Modal.Body>{renderContent()}</Modal.Body>
+      </Modal.Content>
+    </Modal.Root>
   );
 };
 

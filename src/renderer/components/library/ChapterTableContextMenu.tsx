@@ -73,7 +73,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
         !props.chapter.read,
         setChapterList,
         setSeries,
-        chapterLanguages
+        chapterLanguages,
       );
     }
   };
@@ -117,8 +117,8 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
       props.chapterList.filter(
         (chapter: Chapter) =>
           props.chapter !== undefined &&
-          parseFloat(chapter.chapterNumber) < parseFloat(props.chapter.chapterNumber)
-      )
+          parseFloat(chapter.chapterNumber) < parseFloat(props.chapter.chapterNumber),
+      ),
     );
   }, [props.chapter, props.chapterList]);
 
@@ -136,31 +136,34 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
     <Portal>
       <Menu shadow="md" width={WIDTH} opened>
         <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }}>
-          <Menu.Item icon={<IconPlayerPlay size={14} />} onClick={handleRead}>
+          <Menu.Item leftSection={<IconPlayerPlay size={14} />} onClick={handleRead}>
             Read chapter
           </Menu.Item>
 
           {props.chapter.read ? (
-            <Menu.Item icon={<IconEyeOff size={14} />} onClick={handleToggleRead}>
+            <Menu.Item leftSection={<IconEyeOff size={14} />} onClick={handleToggleRead}>
               Mark unread
             </Menu.Item>
           ) : (
-            <Menu.Item icon={<IconEye size={14} />} onClick={handleToggleRead}>
+            <Menu.Item leftSection={<IconEye size={14} />} onClick={handleToggleRead}>
               Mark read
             </Menu.Item>
           )}
 
           {previousChapters.every((chapter) => chapter.read) ? (
-            <Menu.Item icon={<IconX size={14} />} onClick={() => handleMarkPrevious(false)}>
+            <Menu.Item leftSection={<IconX size={14} />} onClick={() => handleMarkPrevious(false)}>
               Mark previous unread
             </Menu.Item>
           ) : (
-            <Menu.Item icon={<IconChecks size={14} />} onClick={() => handleMarkPrevious(true)}>
+            <Menu.Item
+              leftSection={<IconChecks size={14} />}
+              onClick={() => handleMarkPrevious(true)}
+            >
               Mark previous read
             </Menu.Item>
           )}
 
-          <Menu.Item icon={<IconDownload size={14} />} onClick={handleDownload}>
+          <Menu.Item leftSection={<IconDownload size={14} />} onClick={handleDownload}>
             Download
           </Menu.Item>
         </Menu.Dropdown>

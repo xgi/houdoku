@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Button, Center, Group, Loader, Modal, Stack, Text } from '@mantine/core';
+import { Button, Center, Group, Loader, Modal, ScrollArea, Stack, Text } from '@mantine/core';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import ipcChannels from '@/common/constants/ipcChannels.json';
@@ -58,7 +58,6 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
       goToSeries(previewSeries, setSeriesList, navigate);
       props.close();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importQueue, loadingPreview]);
 
   const handleAdd = async () => {
@@ -97,7 +96,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
           editable={props.editable === true}
         />
 
-        <Group position="right" mt="sm">
+        <Group justify="flex-end" mt="sm">
           <Button variant="default" onClick={props.close}>
             Cancel
           </Button>
@@ -111,9 +110,20 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Modal title="Add Series" opened={props.visible} onClose={props.close}>
-      {renderContent()}
-    </Modal>
+    <Modal.Root
+      opened={props.visible}
+      onClose={props.close}
+      scrollAreaComponent={ScrollArea.Autosize}
+    >
+      <Modal.Overlay />
+      <Modal.Content style={{ overflow: 'hidden' }}>
+        <Modal.Header>
+          <Modal.Title>Add Series</Modal.Title>
+          <Modal.CloseButton />
+        </Modal.Header>
+        <Modal.Body>{renderContent()}</Modal.Body>
+      </Modal.Content>
+    </Modal.Root>
   );
 };
 

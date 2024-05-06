@@ -31,13 +31,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #25262B; /* dark 6 */
+  /* dark 6 */
+  background: #25262B;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #868E96; /* gray 6 */
+  /* gray 6 */
+  background: #868E96;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #495057; /* gray 7 */
+  /* gray 7 */
+  background: #495057;
 }

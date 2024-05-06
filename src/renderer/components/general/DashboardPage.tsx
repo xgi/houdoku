@@ -9,7 +9,7 @@ import {
   IconSettings,
   IconSquarePlus,
 } from '@tabler/icons';
-import { AppShell, Navbar } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
 import routes from '@/common/constants/routes.json';
@@ -39,7 +39,6 @@ import DashboardSidebarLink from './DashboardSidebarLink';
 import { downloadCover } from '@/renderer/util/download';
 import { createAutoBackup } from '@/renderer/util/backup';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
 
 const DashboardPage: React.FC<Props> = () => {
@@ -69,7 +68,6 @@ const DashboardPage: React.FC<Props> = () => {
         categoryList,
       ).catch((e) => console.error(e));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSeriesList]);
 
   useEffect(() => {
@@ -86,70 +84,61 @@ const DashboardPage: React.FC<Props> = () => {
         })
         .catch((e) => console.error(e));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importQueue, importing]);
 
   return (
-    <AppShell
-      padding="md"
-      navbar={
-        <Navbar width={{ base: 200 }} pt={28} p="xs">
-          <Navbar.Section grow>
-            <DashboardSidebarLink
-              icon={<IconBooks size={16} />}
-              color="orange"
-              label="Library"
-              route={routes.LIBRARY}
-            />
-            <DashboardSidebarLink
-              icon={<IconSquarePlus size={16} />}
-              color="teal"
-              label="Add Series"
-              route={routes.SEARCH}
-            />
-            <DashboardSidebarLink
-              icon={<IconPuzzle size={16} />}
-              color="grape"
-              label="Plugins"
-              route={routes.PLUGINS}
-            />
-            <DashboardSidebarLink
-              icon={<IconDownload size={16} />}
-              color="red"
-              label="Downloads"
-              route={routes.DOWNLOADS}
-            />
-            <DashboardSidebarLink
-              icon={<IconSettings size={16} />}
-              color="blue"
-              label="Settings"
-              route={routes.SETTINGS}
-            />
-            <DashboardSidebarLink
-              icon={<IconInfoCircle size={16} />}
-              color="yellow"
-              label="About"
-              route={routes.ABOUT}
-            />
-          </Navbar.Section>
-        </Navbar>
-      }
-      styles={(theme) => ({
-        main: {
-          backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-        },
-      })}
-    >
-      <Routes>
-        <Route path={`${routes.SERIES}/:id`} element={<SeriesDetails />} />
-        <Route path={`${routes.SETTINGS}/*`} element={<Settings />} />
-        <Route path={`${routes.ABOUT}/*`} element={<About />} />
-        <Route path={`${routes.SEARCH}/*`} element={<Search />} />
-        <Route path={`${routes.PLUGINS}/*`} element={<Plugins />} />
-        <Route path={`${routes.DOWNLOADS}/*`} element={<Downloads />} />
-        <Route path="*" element={<Library />} />
-      </Routes>
+    <AppShell navbar={{ width: 200, breakpoint: 400 }} padding="md">
+      <AppShell.Navbar p="xs" pt={28} bg="dark.8">
+        <AppShell.Section grow>
+          <DashboardSidebarLink
+            icon={<IconBooks size={16} />}
+            color="orange"
+            label="Library"
+            route={routes.LIBRARY}
+          />
+          <DashboardSidebarLink
+            icon={<IconSquarePlus size={16} />}
+            color="teal"
+            label="Add Series"
+            route={routes.SEARCH}
+          />
+          <DashboardSidebarLink
+            icon={<IconPuzzle size={16} />}
+            color="grape"
+            label="Plugins"
+            route={routes.PLUGINS}
+          />
+          <DashboardSidebarLink
+            icon={<IconDownload size={16} />}
+            color="red"
+            label="Downloads"
+            route={routes.DOWNLOADS}
+          />
+          <DashboardSidebarLink
+            icon={<IconSettings size={16} />}
+            color="blue"
+            label="Settings"
+            route={routes.SETTINGS}
+          />
+          <DashboardSidebarLink
+            icon={<IconInfoCircle size={16} />}
+            color="yellow"
+            label="About"
+            route={routes.ABOUT}
+          />
+        </AppShell.Section>
+      </AppShell.Navbar>
+      <AppShell.Main bg="dark.9" pt={24}>
+        <Routes>
+          <Route path={`${routes.SERIES}/:id`} element={<SeriesDetails />} />
+          <Route path={`${routes.SETTINGS}/*`} element={<Settings />} />
+          <Route path={`${routes.ABOUT}/*`} element={<About />} />
+          <Route path={`${routes.SEARCH}/*`} element={<Search />} />
+          <Route path={`${routes.PLUGINS}/*`} element={<Plugins />} />
+          <Route path={`${routes.DOWNLOADS}/*`} element={<Downloads />} />
+          <Route path="*" element={<Library />} />
+        </Routes>
+      </AppShell.Main>
     </AppShell>
   );
 };

@@ -8,7 +8,7 @@ import GeneralSettings from './GeneralSettings';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
 
-const Settings: React.FC<Props> = (props: Props) => {
+const Settings: React.FC<Props> = () => {
   return (
     <Tabs defaultValue="general">
       <Tabs.List>

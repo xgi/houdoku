@@ -7,7 +7,7 @@ import { showingSettingsModalState } from '@/renderer/state/readerStates';
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-const ReaderSettingsModal: React.FC<Props> = (props: Props) => {
+const ReaderSettingsModal: React.FC<Props> = () => {
   const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(showingSettingsModalState);
 
   return (

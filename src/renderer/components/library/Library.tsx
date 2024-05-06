@@ -44,7 +44,6 @@ const Library: React.FC<Props> = () => {
   useEffect(() => {
     setSeries(undefined);
     setChapterList([]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -125,15 +124,15 @@ const Library: React.FC<Props> = () => {
 
   const renderEmptyMessage = () => {
     return (
-      <Text align="center" style={{ paddingTop: '30vh' }}>
+      <Text ta="center" style={{ paddingTop: '30vh' }}>
         Your library is empty. Install{' '}
-        <Text component="span" color="violet" weight={700}>
+        <Text component="span" c="violet" fw={700}>
           Plugins
         </Text>{' '}
         from the tab on the left,
         <br />
         and then go to{' '}
-        <Text component="span" color="teal" weight={700}>
+        <Text component="span" c="teal" fw={700}>
           Add Series
         </Text>{' '}
         to start building your library.

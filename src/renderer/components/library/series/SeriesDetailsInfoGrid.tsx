@@ -20,15 +20,10 @@ const SeriesDetailsInfoGrid: React.FC<Props> = (props: Props) => {
 
   const getCol = (heading: string, content: string) => (
     <Grid.Col span={3}>
-      <Text ml={4} color="dimmed" size="sm">
-        <b>{heading}</b>
+      <Text ml={4} c="dimmed" size="sm" fw={700}>
+        {heading}
       </Text>
-      <Box
-        sx={(theme) => ({
-          backgroundColor: theme.colors.dark[6],
-          padding: '6px 12px',
-        })}
-      >
+      <Box bg={'dark.6'} py={6} px={12}>
         <Text size="sm" lineClamp={1} title={content}>
           {content}
         </Text>
@@ -43,7 +38,7 @@ const SeriesDetailsInfoGrid: React.FC<Props> = (props: Props) => {
       {getCol('Status', props.series.status || 'Unknown')}
       {getCol('Language', languageStr)}
       <Grid.Col span={12}>
-        <Group spacing="xs">
+        <Group gap="xs">
           {props.series.tags.map((tag: string) => (
             <Badge key={tag} color="indigo">
               {tag}

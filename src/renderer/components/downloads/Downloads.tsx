@@ -6,7 +6,7 @@ import MyDownloads from './MyDownloads';
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {}
 
-const Downloads: React.FC<Props> = (props: Props) => {
+const Downloads: React.FC<Props> = () => {
   return (
     <>
       <DownloadQueue />

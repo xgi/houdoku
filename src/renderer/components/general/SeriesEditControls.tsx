@@ -5,11 +5,11 @@ import {
   ActionIcon,
   Grid,
   Group,
-  Input,
-  MultiSelect,
   Select,
   Stack,
+  TagsInput,
   Text,
+  TextInput,
   Textarea,
 } from '@mantine/core';
 import { IconUpload } from '@tabler/icons';
@@ -38,8 +38,8 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
         <Grid.Col span={8}>
           <Stack justify="end" style={{ height: '100%' }}>
-            <Group noWrap>
-              <Input
+            <Group wrap="nowrap">
+              <TextInput
                 value={props.series.remoteCoverUrl}
                 title={props.series.remoteCoverUrl}
                 placeholder="Cover URL..."
@@ -80,10 +80,10 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text align="right">Title</Text>
+          <Text ta="right">Title</Text>
         </Grid.Col>
         <Grid.Col span={8}>
-          <Input
+          <TextInput
             value={props.series.title}
             title={props.series.title}
             placeholder="Title..."
@@ -98,7 +98,7 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text align="right">Description</Text>
+          <Text ta="right">Description</Text>
         </Grid.Col>
         <Grid.Col span={8}>
           <Textarea
@@ -117,91 +117,55 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text align="right">Author(s)</Text>
+          <Text ta="right">Author(s)</Text>
         </Grid.Col>
         <Grid.Col span={8}>
-          <MultiSelect
-            data={props.series.authors.map((author) => ({ value: author, label: author }))}
+          <TagsInput
             placeholder="Authors..."
-            disabled={!props.editable}
-            creatable
-            searchable
             value={props.series.authors}
-            onChange={(value) =>
+            onChange={(value) => {
               props.setSeries({
                 ...props.series,
                 authors: value,
-              })
-            }
-            getCreateLabel={(value) => `+ ${value}`}
-            onCreate={(value) => {
-              props.setSeries({
-                ...props.series,
-                authors: [...props.series.authors, value],
               });
-              return { value, label: value };
             }}
           />
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text align="right">Artist(s)</Text>
+          <Text ta="right">Artist(s)</Text>
         </Grid.Col>
         <Grid.Col span={8}>
-          <MultiSelect
-            data={props.series.artists.map((artist) => ({ value: artist, label: artist }))}
+          <TagsInput
             placeholder="Artists..."
-            disabled={!props.editable}
-            creatable
-            searchable
             value={props.series.artists}
-            onChange={(value) =>
+            onChange={(value) => {
               props.setSeries({
                 ...props.series,
                 artists: value,
-              })
-            }
-            getCreateLabel={(value) => `+ ${value}`}
-            onCreate={(value) => {
-              props.setSeries({
-                ...props.series,
-                artists: [...props.series.artists, value],
               });
-              return { value, label: value };
             }}
           />
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text align="right">Tags</Text>
+          <Text ta="right">Tags</Text>
         </Grid.Col>
         <Grid.Col span={8}>
-          <MultiSelect
-            data={props.series.tags.map((tag) => ({ value: tag, label: tag }))}
+          <TagsInput
             placeholder="Tags..."
-            disabled={!props.editable}
-            creatable
-            searchable
             value={props.series.tags}
-            onChange={(value) =>
+            onChange={(value) => {
               props.setSeries({
                 ...props.series,
                 tags: value,
-              })
-            }
-            getCreateLabel={(value) => `+ ${value}`}
-            onCreate={(value) => {
-              props.setSeries({
-                ...props.series,
-                tags: [...props.series.tags, value],
               });
-              return { value, label: value };
             }}
           />
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text align="right">Language</Text>
+          <Text ta="right">Language</Text>
         </Grid.Col>
         <Grid.Col span={8}>
           <Select
@@ -211,17 +175,17 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
               value: language.key,
               label: language.name,
             }))}
-            onChange={(value: LanguageKey) =>
+            onChange={(value) =>
               props.setSeries({
                 ...props.series,
-                originalLanguageKey: value,
+                originalLanguageKey: value as LanguageKey,
               })
             }
           />
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text align="right">Release Status</Text>
+          <Text ta="right">Release Status</Text>
         </Grid.Col>
         <Grid.Col span={8}>
           <Select
@@ -238,10 +202,10 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
               },
               { value: SeriesStatus.CANCELLED, label: SeriesStatus.CANCELLED },
             ]}
-            onChange={(value: SeriesStatus) =>
+            onChange={(value) =>
               props.setSeries({
                 ...props.series,
-                status: value,
+                status: value as SeriesStatus,
               })
             }
           />

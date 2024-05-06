@@ -29,12 +29,13 @@ const Plugins: React.FC<Props> = () => {
 
     await aki
       .search('core', 'tiyo', 1)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((results: any) => {
         if (results.objects.length > 0) {
           setAvailableTiyoVersion(results.objects[0].package.version);
         }
       })
-      .catch((e) => console.error(e));
+      .catch(console.error);
     setRefreshing(false);
   };
 
@@ -70,7 +71,6 @@ const Plugins: React.FC<Props> = () => {
 
   useEffect(() => {
     refreshMetadata();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   const tiyoCanUpdate =
@@ -78,7 +78,7 @@ const Plugins: React.FC<Props> = () => {
 
   return (
     <>
-      <Group position="left" align="left" mb="md" spacing="sm" noWrap>
+      <Group align="left" mb="md" gap="sm" wrap="nowrap">
         <Button loading={refreshing} onClick={() => refreshMetadata()}>
           Check for Updates
         </Button>
@@ -98,7 +98,7 @@ const Plugins: React.FC<Props> = () => {
             <th>Name</th>
             <th>Description</th>
             <th>
-              <Text align="center">Version</Text>
+              <Text ta="center">Version</Text>
             </th>
             <th> </th>
           </tr>
@@ -114,18 +114,18 @@ const Plugins: React.FC<Props> = () => {
               </Text>
             </td>
             <td>
-              <Text size="md" align="center">
+              <Text size="md" ta="center">
                 {availableTiyoVersion === currentTiyoVersion || !currentTiyoVersion ? (
                   availableTiyoVersion
                 ) : (
-                  <Text>
+                  <>
                     {currentTiyoVersion}→<Mark color="teal">{availableTiyoVersion}</Mark>
-                  </Text>
+                  </>
                 )}
               </Text>
             </td>
             <td>
-              <Group spacing="xs" position="right">
+              <Group gap="xs">
                 {tiyoCanUpdate ? (
                   <Button onClick={() => handleInstall('@tiyo/core', availableTiyoVersion)}>
                     Update
