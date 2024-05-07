@@ -179,7 +179,7 @@ class DownloaderClient {
           .then(async (data) => {
             if (typeof data === 'string') {
               // eslint-disable-next-line promise/no-nesting
-              return fetch(pageUrl).then((response) => response.arrayBuffer());
+              return fetch(pageUrl, { mode: 'no-cors' }).then((response) => response.arrayBuffer());
             }
             return data;
           });
