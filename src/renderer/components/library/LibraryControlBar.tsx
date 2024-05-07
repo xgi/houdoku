@@ -80,7 +80,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Group justify="space-between" mb="md" wrap="nowrap">
+    <Group justify="space-between" pt="sm" mb="md" wrap="nowrap">
       <Group align="left" gap="xs" wrap="nowrap">
         <Button
           onClick={refreshHandler}

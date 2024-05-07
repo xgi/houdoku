@@ -18,5 +18,6 @@ export interface FetchBannerImageUrlFunc {
  * @returns the banner image URL, if found, else null
  */
 export interface ParseBannerImageUrlFunc {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (json: any): string | null;
 }

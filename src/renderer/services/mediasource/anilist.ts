@@ -22,6 +22,7 @@ const fetchBannerImageUrl: FetchBannerImageUrlFunc = (series: Series) => {
   });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const parseBannerImageUrl: ParseBannerImageUrlFunc = (json: any) => {
   const { data } = json;
 

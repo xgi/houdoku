@@ -3,12 +3,7 @@ import { TrackerClientInterface } from '@/common/models/interface';
 import { AniListTrackerClient } from './trackers/anilist';
 import { MALTrackerClient } from './trackers/myanimelist';
 import ipcChannels from '@/common/constants/ipcChannels.json';
-import {
-  TrackEntry,
-  TrackerSeries,
-  TrackStatus,
-  TrackerListEntry,
-} from '@/common/models/types';
+import { TrackEntry, TrackerSeries, TrackStatus, TrackerListEntry } from '@/common/models/types';
 import { MUTrackerClient } from './trackers/mangaupdate';
 import {
   AniListTrackerMetadata,

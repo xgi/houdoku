@@ -9,12 +9,7 @@ import {
   UpdateLibraryEntryFunc,
   GetTokenFunc,
 } from '@/common/models/interface';
-import {
-  TrackEntry,
-  TrackerMetadata,
-  TrackScoreFormat,
-  TrackStatus,
-} from '@/common/models/types';
+import { TrackEntry, TrackerMetadata, TrackScoreFormat, TrackStatus } from '@/common/models/types';
 import { AniListTrackerMetadata } from '@/common/temp_tracker_metadata';
 
 const clientId = '5631';
@@ -84,22 +79,26 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       body: JSON.stringify({ query }),
     };
 
-    return fetch(url, options)
-      .then((response: Response) => response.json())
-      .then((data: any) => {
-        if ('errors' in data) {
-          console.error(
-            `Error getting username from tracker ${AniListTrackerMetadata.id}: ${data.errors
-              .map((error: any) => error.message)
-              .join('; ')}`,
-          );
-          return null;
-        }
-        this.userId = data.data.Viewer.id;
-        this.userScoreFormat = SCORE_FORMAT_MAP[data.data.Viewer.mediaListOptions.scoreFormat];
-        return data.data.Viewer.name;
-      })
-      .catch((e: Error) => console.error(e));
+    return (
+      fetch(url, options)
+        .then((response: Response) => response.json())
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((data: any) => {
+          if ('errors' in data) {
+            console.error(
+              `Error getting username from tracker ${AniListTrackerMetadata.id}: ${data.errors
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map((error: any) => error.message)
+                .join('; ')}`,
+            );
+            return null;
+          }
+          this.userId = data.data.Viewer.id;
+          this.userScoreFormat = SCORE_FORMAT_MAP[data.data.Viewer.mediaListOptions.scoreFormat];
+          return data.data.Viewer.name;
+        })
+        .catch((e: Error) => console.error(e))
+    );
   };
 
   search: SearchFunc = (text: string) => {
@@ -132,28 +131,33 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       body: JSON.stringify({ query, variables: { query: text } }),
     };
 
-    return fetch(url, options)
-      .then((response: Response) => response.json())
-      .then((data: any) => {
-        if ('errors' in data) {
-          console.error(
-            `Error searching from tracker ${AniListTrackerMetadata.id}: ${data.errors
-              .map((error: any) => error.message)
-              .join('; ')}`,
-          );
-          return null;
-        }
-        return data.data.Page.media.map((media: any) => ({
-          id: media.id,
-          title: media.title.romaji,
-          description: media.description === null ? '' : media.description,
-          coverUrl: media.coverImage.large,
-        }));
-      })
-      .catch((e: Error) => {
-        console.error(e);
-        return [];
-      });
+    return (
+      fetch(url, options)
+        .then((response: Response) => response.json())
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((data: any) => {
+          if ('errors' in data) {
+            console.error(
+              `Error searching from tracker ${AniListTrackerMetadata.id}: ${data.errors
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .map((error: any) => error.message)
+                .join('; ')}`,
+            );
+            return null;
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          return data.data.Page.media.map((media: any) => ({
+            id: media.id,
+            title: media.title.romaji,
+            description: media.description === null ? '' : media.description,
+            coverUrl: media.coverImage.large,
+          }));
+        })
+        .catch((e: Error) => {
+          console.error(e);
+          return [];
+        })
+    );
   };
 
   getLibraryEntry: GetLibraryEntryFunc = async (seriesId: string) => {
@@ -196,33 +200,37 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       }),
     };
 
-    return fetch(url, options)
-      .then((response: Response) => response.json())
-      .then((data: any) => {
-        if ('errors' in data) {
-          console.warn(
-            `Error getting library entry for series ${seriesId} from tracker from tracker ${
-              AniListTrackerMetadata.id
-            }: ${data.errors.map((error: any) => error.message).join('; ')}`,
-          );
+    return (
+      fetch(url, options)
+        .then((response: Response) => response.json())
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((data: any) => {
+          if ('errors' in data) {
+            console.warn(
+              `Error getting library entry for series ${seriesId} from tracker from tracker ${
+                AniListTrackerMetadata.id
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              }: ${data.errors.map((error: any) => error.message).join('; ')}`,
+            );
+            return null;
+          }
+          return {
+            id: data.data.MediaList.id,
+            seriesId: data.data.MediaList.media.id,
+            title: data.data.MediaList.media.title.romaji,
+            description: data.data.MediaList.media.description,
+            coverUrl: data.data.MediaList.media.coverImage.large,
+            score: data.data.MediaList.score,
+            scoreFormat: this.userScoreFormat,
+            progress: data.data.MediaList.progress,
+            status: STATUS_MAP[data.data.MediaList.status],
+          } as TrackEntry;
+        })
+        .catch((e: Error) => {
+          console.error(e);
           return null;
-        }
-        return {
-          id: data.data.MediaList.id,
-          seriesId: data.data.MediaList.media.id,
-          title: data.data.MediaList.media.title.romaji,
-          description: data.data.MediaList.media.description,
-          coverUrl: data.data.MediaList.media.coverImage.large,
-          score: data.data.MediaList.score,
-          scoreFormat: this.userScoreFormat,
-          progress: data.data.MediaList.progress,
-          status: STATUS_MAP[data.data.MediaList.status],
-        } as TrackEntry;
-      })
-      .catch((e: Error) => {
-        console.error(e);
-        return null;
-      });
+        })
+    );
   };
 
   addLibraryEntry: AddLibraryEntryFunc = async (trackEntry: TrackEntry) => {
@@ -259,23 +267,27 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       }),
     };
 
-    return fetch(url, options)
-      .then((response: Response) => response.json())
-      .then((data: any) => {
-        if ('errors' in data) {
-          console.error(
-            `Error adding library entry for series ${trackEntry.seriesId} from tracker ${
-              AniListTrackerMetadata.id
-            }: ${data.errors.map((error: any) => error.message).join('; ')}`,
-          );
+    return (
+      fetch(url, options)
+        .then((response: Response) => response.json())
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((data: any) => {
+          if ('errors' in data) {
+            console.error(
+              `Error adding library entry for series ${trackEntry.seriesId} from tracker ${
+                AniListTrackerMetadata.id
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              }: ${data.errors.map((error: any) => error.message).join('; ')}`,
+            );
+            return null;
+          }
+          return this.getLibraryEntry(trackEntry.seriesId);
+        })
+        .catch((e: Error) => {
+          console.error(e);
           return null;
-        }
-        return this.getLibraryEntry(trackEntry.seriesId);
-      })
-      .catch((e: Error) => {
-        console.error(e);
-        return null;
-      });
+        })
+    );
   };
 
   updateLibraryEntry: UpdateLibraryEntryFunc = async (trackEntry: TrackEntry) => {
@@ -333,22 +345,26 @@ export class AniListTrackerClient extends TrackerClientAbstract {
       }),
     };
 
-    return fetch(url, options)
-      .then((response: Response) => response.json())
-      .then((data: any) => {
-        if ('errors' in data) {
-          console.error(
-            `Error updating library entry for series ${trackEntry.seriesId} from tracker ${
-              AniListTrackerMetadata.id
-            }: ${data.errors.map((error: any) => error.message).join('; ')}`,
-          );
+    return (
+      fetch(url, options)
+        .then((response: Response) => response.json())
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then((data: any) => {
+          if ('errors' in data) {
+            console.error(
+              `Error updating library entry for series ${trackEntry.seriesId} from tracker ${
+                AniListTrackerMetadata.id
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              }: ${data.errors.map((error: any) => error.message).join('; ')}`,
+            );
+            return null;
+          }
+          return this.getLibraryEntry(trackEntry.seriesId);
+        })
+        .catch((e: Error) => {
+          console.error(e);
           return null;
-        }
-        return this.getLibraryEntry(trackEntry.seriesId);
-      })
-      .catch((e: Error) => {
-        console.error(e);
-        return null;
-      });
+        })
+    );
   };
 }

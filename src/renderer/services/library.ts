@@ -32,7 +32,7 @@ const upsertSeries = (series: Series): Series => {
 
   persistantStore.write(
     `${storeKeys.LIBRARY.SERIES_LIST}`,
-    JSON.stringify([...existingList, newSeries])
+    JSON.stringify([...existingList, newSeries]),
   );
   return newSeries;
 };
@@ -47,7 +47,7 @@ const upsertChapters = (chapters: Chapter[], series: Series): void => {
       map[c.id] = c;
       return map;
     },
-    {}
+    {},
   );
 
   // add/replace chapters in this map from param
@@ -58,14 +58,14 @@ const upsertChapters = (chapters: Chapter[], series: Series): void => {
 
   persistantStore.write(
     `${storeKeys.LIBRARY.CHAPTER_LIST_PREFIX}${series.id}`,
-    JSON.stringify(Object.values(chapterMap))
+    JSON.stringify(Object.values(chapterMap)),
   );
 };
 
 const removeSeries = (seriesId: string, preserveChapters = false): void => {
   persistantStore.write(
     `${storeKeys.LIBRARY.SERIES_LIST}`,
-    JSON.stringify(fetchSeriesList().filter((s: Series) => s.id !== seriesId))
+    JSON.stringify(fetchSeriesList().filter((s: Series) => s.id !== seriesId)),
   );
 
   if (!preserveChapters) {
@@ -76,12 +76,12 @@ const removeSeries = (seriesId: string, preserveChapters = false): void => {
 const removeChapters = (chapterIds: string[], seriesId: string): void => {
   const chapters = fetchChapters(seriesId);
   const filteredChapters: Chapter[] = chapters.filter(
-    (chapter: Chapter) => chapter.id !== undefined && !chapterIds.includes(chapter.id)
+    (chapter: Chapter) => chapter.id !== undefined && !chapterIds.includes(chapter.id),
   );
 
   persistantStore.write(
     `${storeKeys.LIBRARY.CHAPTER_LIST_PREFIX}${seriesId}`,
-    JSON.stringify(Object.values(filteredChapters))
+    JSON.stringify(Object.values(filteredChapters)),
   );
 };
 
@@ -94,14 +94,14 @@ const upsertCategory = (category: Category) => {
   const existingList = fetchCategoryList().filter((cat: Category) => cat.id !== category.id);
   persistantStore.write(
     `${storeKeys.LIBRARY.CATEGORY_LIST}`,
-    JSON.stringify([...existingList, category])
+    JSON.stringify([...existingList, category]),
   );
 };
 
 const removeCategory = (categoryId: string): void => {
   persistantStore.write(
     `${storeKeys.LIBRARY.CATEGORY_LIST}`,
-    JSON.stringify(fetchCategoryList().filter((cat: Category) => cat.id !== categoryId))
+    JSON.stringify(fetchCategoryList().filter((cat: Category) => cat.id !== categoryId)),
   );
 };
 

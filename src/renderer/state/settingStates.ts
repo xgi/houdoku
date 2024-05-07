@@ -25,7 +25,7 @@ import {
 const storedSettings = getAllStoredSettings();
 
 function atomFromSetting<T>(
-  setting: GeneralSetting | ReaderSetting | TrackerSetting | IntegrationSetting
+  setting: GeneralSetting | ReaderSetting | TrackerSetting | IntegrationSetting,
 ): RecoilState<T> {
   const atomKey = `setting${setting}`;
   const defaultValue: T =

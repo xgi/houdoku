@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: yarn install
-      - run: yarn postinstall && yarn build && yarn electron-builder --publish onTagOrDraft --win --mac --linux
+      - run: yarn build && yarn package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # APPLE_ID: ${{ secrets.APPLE_ID }}

@@ -64,7 +64,7 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Flex align="left" gap="xs" mb="md" wrap="nowrap">
+    <Flex align="left" gap="xs" pt="sm" mb="md" wrap="nowrap">
       <Select
         value={searchExtension}
         data={props.extensionList.map((metadata: ExtensionMetadata) => ({

@@ -108,7 +108,7 @@ export const sortedFilteredChapterListState = selector<Chapter[]>({
           (chapter: Chapter) =>
             chapter.languageKey === lang &&
             !uniqueChapters.has(chapter.chapterNumber) &&
-            uniqueChapters.set(chapter.chapterNumber, chapter)
+            uniqueChapters.set(chapter.chapterNumber, chapter),
         );
       });
     }
@@ -123,7 +123,7 @@ export const sortedFilteredChapterListState = selector<Chapter[]>({
           chapter.groupName.toLowerCase().includes(chapterFilterGroup.toLowerCase()) &&
           ((uniqueChapters.has(chapter.chapterNumber) &&
             uniqueChapters.get(chapter.chapterNumber) === chapter) ||
-            chapterLanguages.length === 0)
+            chapterLanguages.length === 0),
       )
       .sort((a, b) => {
         const volumeComp = {

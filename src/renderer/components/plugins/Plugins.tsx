@@ -85,7 +85,7 @@ const Plugins: React.FC<Props> = () => {
         toggleVisible={() => setShowingSettingsModal(!showingSettingsModal)}
       />
 
-      <Group align="left" mb="md" gap="sm" wrap="nowrap">
+      <Group align="left" pt="sm" mb="md" gap="sm" wrap="nowrap">
         <Button loading={refreshing} onClick={() => refreshMetadata()}>
           Check for Updates
         </Button>

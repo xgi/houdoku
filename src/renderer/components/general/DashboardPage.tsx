@@ -128,7 +128,7 @@ const DashboardPage: React.FC<Props> = () => {
           />
         </AppShell.Section>
       </AppShell.Navbar>
-      <AppShell.Main bg="dark.9" pt={24}>
+      <AppShell.Main bg="dark.9" pt={0}>
         <Routes>
           <Route path={`${routes.SERIES}/:id`} element={<SeriesDetails />} />
           <Route path={`${routes.SETTINGS}/*`} element={<Settings />} />

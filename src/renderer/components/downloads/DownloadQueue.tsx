@@ -24,7 +24,7 @@ const DownloadQueue: React.FC<Props> = () => {
 
   const renderHeader = () => {
     return (
-      <Group mb="xs" justify={'space-between'}>
+      <Group pt="sm" mb="xs" justify={'space-between'}>
         <Title order={3}>Download Queue</Title>
         {currentTask || queue.length > 0 ? (
           <Group gap="xs">

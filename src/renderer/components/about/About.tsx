@@ -21,7 +21,7 @@ const About: React.FC<Props> = () => {
 
   return (
     <>
-      <Group justify="space-between">
+      <Group pt="sm" justify="space-between">
         <Title order={2} pb="xs">
           {packageJson.productName} v{packageJson.version}
         </Title>

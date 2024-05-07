@@ -9,15 +9,6 @@
       <div id="drag-region">
         <div id="window-title">
           <span id="window-title-text">Houdoku</span>
-          <script>
-            (() => {
-              const link = document.createElement('link');
-              link.rel = 'stylesheet';
-              link.href = './dist/style.css';
-              // HACK: Writing the script path should be done with webpack
-              document.getElementsByTagName('head')[0].appendChild(link);
-            })();
-          </script>
         </div>
         <div id="window-controls">
           <div class="button" id="min-button">
