@@ -15,6 +15,8 @@ import { FS_METADATA } from '@/common/temp_fs_metadata';
 import { FSExtensionClient } from './extensions/filesystem';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 
+const TIYO_PACKAGE_NAME = '@tiyo/core';
+
 let TIYO_CLIENT: TiyoClientInterface | null = null;
 let FILESYSTEM_EXTENSION: FSExtensionClient | null = null;
 
@@ -25,6 +27,12 @@ export async function loadPlugins(
 ) {
   if (TIYO_CLIENT !== null) {
     TIYO_CLIENT = null;
+
+    Object.keys(require.cache).forEach((name) => {
+      if (name.includes(`/${TIYO_PACKAGE_NAME}/`)) {
+        delete require.cache[name];
+      }
+    });
   }
   if (FILESYSTEM_EXTENSION !== null) {
     FILESYSTEM_EXTENSION = null;
@@ -33,11 +41,14 @@ export async function loadPlugins(
   console.info('Checking for Tiyo plugin...');
   aki.list(pluginsDir).forEach((pluginDetails: [string, string]) => {
     const pluginName = pluginDetails[0];
-    if (pluginName === '@tiyo/core') {
+    if (pluginName === TIYO_PACKAGE_NAME) {
       const mod = aki.load(
         pluginsDir,
         pluginName,
-        // eslint-disable-next-line no-eval
+        /**
+         *  TODO can maybe remove this eval now. It was done here to avoid being
+         *  overwritten by webpack, which doesn't seem to happen with vite
+         */
         eval('require') as NodeRequire,
       );
 
