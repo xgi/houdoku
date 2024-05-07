@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import packageJson from '../../../package.json';
 
-// eslint-disable-next-line import/prefer-default-export
 export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
   console.debug('Creating updater IPC handlers in main...');
 
@@ -18,10 +17,9 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
     autoUpdater.logger = console;
     autoUpdater.autoDownload = false;
 
-    autoUpdater
+    return autoUpdater
       .checkForUpdates()
       .then((result: UpdateCheckResult) => {
-        // eslint-disable-next-line promise/always-return
         if (result.updateInfo.version === packageJson.version) {
           console.info(`Already up-to-date at version ${packageJson.version}`);
           event.sender.send(
@@ -40,6 +38,7 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
           `Found update to version ${result.updateInfo.version} (from ${packageJson.version})`,
         );
         event.sender.send(ipcChannels.APP.SHOW_PERFORM_UPDATE_DIALOG, result.updateInfo);
+        return 4;
       })
       .catch((e) => console.error(e));
   });
@@ -56,6 +55,9 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
           message: `Restart to finish installing update`,
           color: 'teal',
           id: notificationId,
+          loading: false,
+          autoClose: true,
+          disallowClose: false,
         },
         true,
         'check',
@@ -72,6 +74,9 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
           message: `${err.name}: ${err.message}`,
           color: 'red',
           id: notificationId,
+          loading: false,
+          autoClose: true,
+          disallowClose: false,
         },
         true,
         'x',
@@ -81,15 +86,14 @@ export const createUpdaterIpcHandlers = (ipcMain: IpcMain) => {
     autoUpdater
       .checkForUpdates()
       .then((result) => {
-        // eslint-disable-next-line promise/always-return
         if (result.updateInfo.version !== packageJson.version) {
           event.sender.send(ipcChannels.APP.SEND_NOTIFICATION, {
             title: 'Downloading update',
             message: `Downloading update for v${result.updateInfo.version}`,
             id: notificationId,
             loading: true,
-            disallowClose: true,
             autoClose: false,
+            disallowClose: true,
           });
           autoUpdater.downloadUpdate();
         }

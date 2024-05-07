@@ -69,7 +69,7 @@ export async function importSeries(
       message: (
         <Text>
           Adding{' '}
-          <Text color="teal" component="span" italic>
+          <Text c="teal" component="span" fs="italic">
             {series.title}
           </Text>
         </Text>
@@ -109,13 +109,15 @@ export async function importSeries(
       message: (
         <Text>
           Added{' '}
-          <Text color="teal" component="span" italic>
+          <Text c="teal" component="span" fs="italic">
             {addedSeries.title}
           </Text>
         </Text>
       ),
       color: 'teal',
       icon: React.createElement(IconCheck, { size: 16 }),
+      autoClose: true,
+      loading: false,
     });
   }
   return addedSeries;
@@ -293,7 +295,7 @@ export async function reloadSeriesList(
                         <List.Item key={series?.id}>{series.title}</List.Item>
                       ))}
                     </List>
-                    <Group position="right">
+                    <Group justify="flex-end">
                       <Button variant="default" onClick={() => closeAllModals()} mt="md">
                         Okay
                       </Button>

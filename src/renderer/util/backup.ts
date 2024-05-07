@@ -29,7 +29,7 @@ export const createAutoBackup = async (Count = 1) => {
     jsondata = JSON.parse(jsondata);
     await fs.writeJson(`backups/${fileName}`, jsondata);
   }
-  fs.readdir('backups', (err, files) => {
+  fs.readdir('backups', (err: Error, files: string[]) => {
     if (err) {
       console.error(`Unable to scan directory: ${err}`);
     }

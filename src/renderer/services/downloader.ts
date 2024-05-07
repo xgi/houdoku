@@ -210,6 +210,8 @@ class DownloaderClient {
         message: startingQueueSize > 1 ? `Downloaded ${tasksCompleted} chapters` : '',
         color: 'teal',
         icon: React.createElement(IconCheck, { size: 16 }),
+        loading: false,
+        autoClose: true,
       });
     } else {
       updateNotification({
@@ -218,6 +220,8 @@ class DownloaderClient {
         message: startingQueueSize > 1 ? `Finished ${tasksCompleted} downloads` : '',
         color: 'yellow',
         icon: React.createElement(IconPlayerPause, { size: 16 }),
+        loading: false,
+        autoClose: true,
       });
     }
 

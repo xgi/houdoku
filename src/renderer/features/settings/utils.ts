@@ -32,7 +32,9 @@ const getStoreValues = (storePrefix: string, settingEnum: SettingEnum): StoreVal
   return values;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const parseStoreValues = (storeValues: StoreValues): { [key in Setting]?: any } => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const settings: { [key in Setting]?: any } = {};
   Object.entries(storeValues)
     .filter(([, value]) => value !== null)
@@ -70,21 +72,25 @@ export const getAllStoredSettings = () => {
   return settings;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function saveGeneralSetting(key: GeneralSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.GENERAL_PREFIX}${key}`, value);
   console.info(`Set GeneralSetting ${key} to ${value}`);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function saveReaderSetting(key: ReaderSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.READER_PREFIX}${key}`, value);
   console.info(`Set ReaderSetting ${key} to ${value}`);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function saveTrackerSetting(key: TrackerSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.TRACKER_PREFIX}${key}`, value);
   console.info(`Set TrackerSetting ${key} to ${value}`);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function saveIntegrationSetting(key: IntegrationSetting, value: any) {
   persistantStore.write(`${storeKeys.SETTINGS.INTEGRATION_PREFIX}${key}`, value);
   console.info(`Set IntegrationSetting ${key} to ${value}`);

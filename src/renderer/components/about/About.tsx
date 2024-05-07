@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 const { ipcRenderer } = require('electron');
 import { Title, Text, Button, Group } from '@mantine/core';
 import packageJson from '../../../../package.json';
@@ -9,8 +9,14 @@ import { IconGitFork, IconHome, IconNotebook, IconScale } from '@tabler/icons';
 type Props = {};
 
 const About: React.FC<Props> = () => {
+  const [checkingForUpdate, setCheckingForUpdate] = useState(false);
+
   const handleUpdateCheck = () => {
-    ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
+    setCheckingForUpdate(true);
+    ipcRenderer
+      .invoke(ipcChannels.APP.CHECK_FOR_UPDATES)
+      .finally(() => setCheckingForUpdate(false))
+      .catch(console.error);
   };
 
   return (
@@ -19,7 +25,7 @@ const About: React.FC<Props> = () => {
         <Title order={2} pb="xs">
           {packageJson.productName} v{packageJson.version}
         </Title>
-        <Button size="xs" onClick={handleUpdateCheck}>
+        <Button size="xs" onClick={handleUpdateCheck} loading={checkingForUpdate}>
           Check for Updates
         </Button>
       </Group>
