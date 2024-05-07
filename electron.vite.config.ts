@@ -7,9 +7,16 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin(), bytecodePlugin()],
     resolve: {
       alias: {
-        "@/": path.join(__dirname, "src/"),
+        '@/': path.join(__dirname, 'src/'),
       },
-    }
+    },
+  },
+  preload: {
+    resolve: {
+      alias: {
+        '@/': path.join(__dirname, 'src/'),
+      },
+    },
   },
   renderer: {
     plugins: [
@@ -19,8 +26,8 @@ export default defineConfig({
     ],
     resolve: {
       alias: {
-        "@/": path.join(__dirname, "src/"),
+        '@/': path.join(__dirname, 'src/'),
       },
-    }
+    },
   },
 });

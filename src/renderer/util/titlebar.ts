@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 import ipcChannels from '@/common/constants/ipcChannels.json';
-import packageJson from '../../package.json';
+import packageJson from '../../../package.json';
 
 /**
  * Apply listeners to window-operation buttons.

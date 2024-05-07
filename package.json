@@ -81,8 +81,8 @@
     "url": "https://github.com/xgi/houdoku"
   },
   "author": {
-    "name": "Jake Robertson",
-    "email": "jake@faltro.com",
+    "name": "xgi",
+    "email": "xgi@faltro.com",
     "url": "https://faltro.com"
   },
   "license": "MIT",
@@ -155,7 +155,6 @@
     "yarn-deduplicate": "^3.1.0"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.4",
     "@mantine/core": "^7.9.0",
     "@mantine/hooks": "^7.9.0",
     "@mantine/modals": "^7.9.0",
