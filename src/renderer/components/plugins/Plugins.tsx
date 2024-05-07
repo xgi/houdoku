@@ -6,6 +6,7 @@ const { ipcRenderer } = require('electron');
 import { gt } from 'semver';
 import { useListState } from '@mantine/hooks';
 import ipcChannels from '@/common/constants/ipcChannels.json';
+import PluginSettingsModal from './PluginSettingsModal';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
@@ -13,6 +14,7 @@ type Props = {};
 const Plugins: React.FC<Props> = () => {
   const [currentTiyoVersion, setCurrentTiyoVersion] = useState<string | undefined>(undefined);
   const [availableTiyoVersion, setAvailableTiyoVersion] = useState<string | undefined>(undefined);
+  const [showingSettingsModal, setShowingSettingsModal] = useState(false);
 
   const [installingPlugins, installingPluginsHandlers] = useListState<string>([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -78,6 +80,11 @@ const Plugins: React.FC<Props> = () => {
 
   return (
     <>
+      <PluginSettingsModal
+        visible={showingSettingsModal}
+        toggleVisible={() => setShowingSettingsModal(!showingSettingsModal)}
+      />
+
       <Group align="left" mb="md" gap="sm" wrap="nowrap">
         <Button loading={refreshing} onClick={() => refreshMetadata()}>
           Check for Updates
@@ -93,27 +100,27 @@ const Plugins: React.FC<Props> = () => {
       </Group>
 
       <Table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>Name</Table.Th>
+            <Table.Th>Description</Table.Th>
+            <Table.Th>
               <Text ta="center">Version</Text>
-            </th>
-            <th> </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
+            </Table.Th>
+            <Table.Th> </Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>
+          <Table.Tr>
+            <Table.Td>
               <Text size="md">Tiyo Extension Manager</Text>
-            </td>
-            <td>
+            </Table.Td>
+            <Table.Td>
               <Text size="md">
                 Adds support for importing content from other sources, including 3rd-party websites.
               </Text>
-            </td>
-            <td>
+            </Table.Td>
+            <Table.Td>
               <Text size="md" ta="center">
                 {availableTiyoVersion === currentTiyoVersion || !currentTiyoVersion ? (
                   availableTiyoVersion
@@ -123,16 +130,20 @@ const Plugins: React.FC<Props> = () => {
                   </>
                 )}
               </Text>
-            </td>
-            <td>
-              <Group gap="xs">
+            </Table.Td>
+            <Table.Td>
+              <Group gap="xs" wrap="nowrap">
+                {currentTiyoVersion !== undefined ? (
+                  <Button variant="default" onClick={() => setShowingSettingsModal(true)}>
+                    Settings
+                  </Button>
+                ) : undefined}
+
                 {tiyoCanUpdate ? (
                   <Button onClick={() => handleInstall('@tiyo/core', availableTiyoVersion)}>
                     Update
                   </Button>
-                ) : (
-                  ''
-                )}
+                ) : undefined}
                 {currentTiyoVersion === undefined && availableTiyoVersion !== undefined ? (
                   <Button
                     loading={installingPlugins.includes('@tiyo/core')}
@@ -147,9 +158,9 @@ const Plugins: React.FC<Props> = () => {
                   </Button>
                 )}
               </Group>
-            </td>
-          </tr>
-        </tbody>
+            </Table.Td>
+          </Table.Tr>
+        </Table.Tbody>
       </Table>
     </>
   );
