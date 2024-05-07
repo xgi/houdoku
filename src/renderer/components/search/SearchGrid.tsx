@@ -25,7 +25,6 @@ if (!fs.existsSync(thumbnailsDir)) {
 
 type Props = {
   loading: boolean;
-  inLibrary: (series: Series) => boolean;
   handleSearch: (fresh?: boolean) => void;
 };
 
@@ -51,25 +50,21 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
 
   const renderSeriesGrid = () => {
     return searchResult.seriesList.map((series: Series) => {
-      const inLibrary = props.inLibrary(series);
-
       return (
         <div
           key={series.sourceId}
           className={styles.coverContainer}
           onClick={() => {
-            if (inLibrary) return;
             handleOpenAddModal(series);
           }}
           onContextMenu={(e) => {
-            if (inLibrary) return;
             setContextMenuPosition({ x: e.clientX, y: e.clientY });
             setContextMenuSeries(series);
             setShowingContextMenu(true);
           }}
           style={{
             height: libraryCropCovers ? `calc(105vw / ${libraryColumns})` : '100%',
-            cursor: inLibrary ? 'not-allowed' : 'pointer',
+            cursor: 'pointer',
           }}
         >
           <Overlay
@@ -86,7 +81,6 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
               height: '100%',
             }}
           />
-          {inLibrary ? <Overlay opacity={0.5} color="#2B8A3E" /> : ''}
           <Title className={styles.seriesTitle} order={5} lineClamp={3} p={4}>
             {series.title}
           </Title>

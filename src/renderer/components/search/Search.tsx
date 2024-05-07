@@ -2,12 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { ExtensionMetadata, FilterOption, Series, SeriesListResponse } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Text } from '@mantine/core';
-import { openModal } from '@mantine/modals';
 import AddSeriesModal from './AddSeriesModal';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import ipcChannels from '@/common/constants/ipcChannels.json';
-import { activeSeriesListState } from '@/renderer/state/libraryStates';
 import {
   addModalEditableState,
   addModalSeriesState,
@@ -25,30 +22,18 @@ import SearchFilterDrawer from './SearchFilterDrawer';
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Search: React.FC<Props> = (_props: Props) => {
+const Search: React.FC<Props> = () => {
   const [loading, setLoading] = useState(false);
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
   const searchText = useRecoilValue(searchTextState);
   const [filterValuesMap, setFilterValuesMap] = useRecoilState(filterValuesMapState);
   const [nextSourcePage, setNextSourcePage] = useRecoilState(nextSourcePageState);
   const [searchResult, setSearchResult] = useRecoilState(searchResultState);
-  const activeSeriesList = useRecoilValue(activeSeriesListState);
   const searchExtension = useRecoilValue(searchExtensionState);
   const [addModalSeries, setAddModalSeries] = useRecoilState(addModalSeriesState);
   const [addModalEditable, setAddModalEditable] = useRecoilState(addModalEditableState);
   const [showingAddModal, setShowingAddModal] = useRecoilState(showingAddModalState);
   const [filterOptions, setFilterOptions] = useState<FilterOption[]>([]);
-
-  const inLibrary = (series: Series): boolean => {
-    return (
-      activeSeriesList.find(
-        (_series: Series) =>
-          (series.extensionId === _series.extensionId && series.sourceId === _series.sourceId) ||
-          series.title === _series.title,
-      ) !== undefined
-    );
-  };
 
   const handleSearch = async (fresh = false) => {
     if (!loading) {
@@ -91,25 +76,9 @@ const Search: React.FC<Props> = (_props: Props) => {
     ipcRenderer
       .invoke(ipcChannels.EXTENSION.GET_SERIES, FS_METADATA.id, path)
       .then((series: Series) => {
-        // eslint-disable-next-line promise/always-return
-        if (inLibrary(series)) {
-          openModal({
-            title: 'Already in library',
-            children: (
-              <Text size="sm" mb="sm">
-                The series{' '}
-                <Text c="teal" inherit component="span" fs="italic">
-                  {series.title}
-                </Text>{' '}
-                is already in your library.
-              </Text>
-            ),
-          });
-        } else {
-          setAddModalSeries(series);
-          setAddModalEditable(searchExtension === FS_METADATA.id);
-          setShowingAddModal(!showingAddModal);
-        }
+        setAddModalSeries(series);
+        setAddModalEditable(searchExtension === FS_METADATA.id);
+        setShowingAddModal(!showingAddModal);
       })
       .catch((e) => console.error(e));
   };
@@ -159,7 +128,7 @@ const Search: React.FC<Props> = (_props: Props) => {
         handleSearchFilesystem={handleSearchFilesystem}
       />
 
-      <SearchGrid loading={loading} inLibrary={inLibrary} handleSearch={handleSearch} />
+      <SearchGrid loading={loading} handleSearch={handleSearch} />
     </>
   );
 };
