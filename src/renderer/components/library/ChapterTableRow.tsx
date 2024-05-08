@@ -21,6 +21,7 @@ import {
   customDownloadsDirState,
 } from '@/renderer/state/settingStates';
 import { downloaderClient, DownloadTask } from '@/renderer/services/downloader';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -39,6 +40,7 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
   const trackerAutoUpdate = useRecoilValue(trackerAutoUpdateState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
   const chapterDownloadStatuses = useRecoilValue(chapterDownloadStatusesState);
+  const navigate = useNavigate();
 
   const handleToggleRead = () => {
     markChapters(
@@ -66,9 +68,27 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
     downloaderClient.start();
   };
 
-  const navigate = useNavigate();
   const handleTableRowClicked = (rowPath: string) => {
     navigate(rowPath);
+  };
+
+  const renderDownloadIcon = () => {
+    const isDownloaded =
+      chapterDownloadStatuses[chapter.id!] || series.extensionId === FS_METADATA.id;
+
+    return (
+      <Group justify="flex-end" gap="xs" wrap="nowrap">
+        {isDownloaded ? (
+          <ActionIcon disabled>
+            <IconFileCheck size={16} />
+          </ActionIcon>
+        ) : (
+          <ActionIcon variant="default" onClick={handleDownloadButton}>
+            <IconDownload size={16} />
+          </ActionIcon>
+        )}
+      </Group>
+    );
   };
 
   return (
@@ -120,19 +140,7 @@ const ChapterTableRow: React.FC<Props> = (props: Props) => {
           {chapter.chapterNumber}
         </Text>
       </Table.Td>
-      <Table.Td>
-        <Group justify="flex-end" gap="xs" wrap="nowrap">
-          {chapterDownloadStatuses[chapter.id!] ? (
-            <ActionIcon disabled>
-              <IconFileCheck size={16} />
-            </ActionIcon>
-          ) : (
-            <ActionIcon variant="default" onClick={handleDownloadButton}>
-              <IconDownload size={16} />
-            </ActionIcon>
-          )}
-        </Group>
-      </Table.Td>
+      <Table.Td>{renderDownloadIcon()}</Table.Td>
     </Table.Tr>
   );
 };
