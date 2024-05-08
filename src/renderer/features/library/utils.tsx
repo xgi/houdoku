@@ -80,19 +80,32 @@ export async function importSeries(
   }
 
   let seriesToAdd = series;
-  if (getFirst) {
-    seriesToAdd = await ipcRenderer.invoke(
-      ipcChannels.EXTENSION.GET_SERIES,
-      series.extensionId,
-      series.sourceId,
+  let chapters: Chapter[] = [];
+  try {
+    if (getFirst) {
+      seriesToAdd = await ipcRenderer.invoke(
+        ipcChannels.EXTENSION.GET_SERIES,
+        series.extensionId,
+        series.sourceId,
+      );
+    }
+    chapters = await ipcRenderer.invoke(
+      ipcChannels.EXTENSION.GET_CHAPTERS,
+      seriesToAdd.extensionId,
+      seriesToAdd.sourceId,
     );
+  } catch (error) {
+    updateNotification({
+      id: notificationId,
+      title: `Failed to add series`,
+      message: <Text>An error occurred while adding the series to your library.</Text>,
+      color: 'red',
+      icon: React.createElement(IconX, { size: 16 }),
+      autoClose: true,
+      loading: false,
+    });
+    throw error;
   }
-
-  const chapters: Chapter[] = await ipcRenderer.invoke(
-    ipcChannels.EXTENSION.GET_CHAPTERS,
-    seriesToAdd.extensionId,
-    seriesToAdd.sourceId,
-  );
 
   const addedSeries = library.upsertSeries({
     ...seriesToAdd,

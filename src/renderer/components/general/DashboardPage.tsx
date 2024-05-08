@@ -82,7 +82,10 @@ const DashboardPage: React.FC<Props> = () => {
           setImporting(false);
           if (!task.series.preview) downloadCover(addedSeries);
         })
-        .catch((e) => console.error(e));
+        .catch((e) => {
+          console.error(e);
+          setImporting(false);
+        });
     }
   }, [importQueue, importing]);
 
