@@ -56,7 +56,8 @@
     "GET_ALL_DOWNLOADED_CHAPTER_IDS": "filesystem-get-all-downloaded-chapter-ids",
     "GET_THUMBNAIL_PATH": "filesystem-get-thumbnail-path",
     "DOWNLOAD_THUMBNAIL": "filesystem-download-thumbnail",
-    "DELETE_THUMBNAIL": "filesystem-delete-thumbnail"
+    "DELETE_THUMBNAIL": "filesystem-delete-thumbnail",
+    "LIST_DIRECTORY": "filesystem-list-directory"
   },
   "TRACKER_MANAGER": {
     "GET_ALL": "tracker-manager-get-alls"

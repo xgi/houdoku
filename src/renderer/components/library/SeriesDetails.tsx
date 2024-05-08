@@ -3,7 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { Center, Loader, Stack, Text } from '@mantine/core';
+import { Center, Loader } from '@mantine/core';
 import ChapterTable from './ChapterTable';
 import { getBannerImageUrl } from '@/renderer/services/mediasource';
 import ipcChannels from '@/common/constants/ipcChannels.json';
@@ -127,11 +127,8 @@ const SeriesDetails: React.FC<Props> = () => {
           <ChapterTable series={series} />
         </>
       ) : (
-        <Center h="100%" mx="auto">
-          <Stack align="center">
-            <Loader />
-            <Text>Loading series details...</Text>
-          </Stack>
+        <Center h="calc(100vh - 16px)" mx="auto">
+          <Loader />
         </Center>
       )}
     </>

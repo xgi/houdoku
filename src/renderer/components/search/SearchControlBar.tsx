@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ExtensionMetadata } from '@tiyo/common';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { Button, Flex, Select, TextInput } from '@mantine/core';
+import { Button, Checkbox, Flex, Group, Select, Text, TextInput, Tooltip } from '@mantine/core';
 const { ipcRenderer } = require('electron');
 import {
   searchExtensionState,
@@ -10,39 +10,66 @@ import {
 } from '@/renderer/state/searchStates';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import ipcChannels from '@/common/constants/ipcChannels.json';
+import { IconHelp } from '@tabler/icons';
 
 interface Props {
   extensionList: ExtensionMetadata[];
   hasFilterOptions: boolean;
   handleSearch: (fresh?: boolean) => void;
-  handleSearchFilesystem: (path: string) => void;
+  handleSearchFilesystem: (searchPaths: string[]) => void;
 }
 
 const SearchControlBar: React.FC<Props> = (props: Props) => {
   const [searchExtension, setSearchExtension] = useRecoilState(searchExtensionState);
   const setSearchText = useSetRecoilState(searchTextState);
   const setShowingFilterDrawer = useSetRecoilState(showingFilterDrawerState);
+  const [multiSeriesEnabled, setMultiSeriesEnabled] = useState(false);
 
-  const renderSearchControls = () => {
-    if (searchExtension === FS_METADATA.id) {
-      return (
-        <Button
-          onClick={() =>
-            ipcRenderer
-              .invoke(ipcChannels.APP.SHOW_OPEN_DIALOG, true, [], 'Select Series Directory')
-              .then((fileList: string) => {
-                // eslint-disable-next-line promise/always-return
-                if (fileList.length > 0) {
-                  props.handleSearchFilesystem(fileList[0]);
-                }
-              })
+  const handleSelectDirectory = async () => {
+    const fileList = await ipcRenderer.invoke(
+      ipcChannels.APP.SHOW_OPEN_DIALOG,
+      true,
+      [],
+      'Select Series Directory',
+    );
+    if (fileList.length <= 0) return;
+
+    const selectedPath = fileList[0];
+
+    const searchPaths = multiSeriesEnabled
+      ? await ipcRenderer.invoke(ipcChannels.FILESYSTEM.LIST_DIRECTORY, selectedPath)
+      : [selectedPath];
+
+    props.handleSearchFilesystem(searchPaths);
+  };
+
+  const renderFilesystemControls = () => {
+    return (
+      <Group>
+        <Button onClick={handleSelectDirectory}>Select Directory</Button>
+        <Tooltip
+          position="bottom"
+          label={
+            <>
+              <Text size="sm">When multi-series mode is enabled, each item in the selected</Text>
+              <Text size="sm">directory is treated as a separate series.</Text>
+            </>
           }
         >
-          Select Directory
-        </Button>
-      );
-    }
+          <Group gap={6} justify="center" align="center">
+            <Checkbox
+              label="Multi-series mode"
+              checked={multiSeriesEnabled}
+              onChange={() => setMultiSeriesEnabled(!multiSeriesEnabled)}
+            />
+            <IconHelp color={'var(--mantine-color-dark-2)'} size={16} />
+          </Group>
+        </Tooltip>
+      </Group>
+    );
+  };
 
+  const renderStandardControls = () => {
     return (
       <>
         <TextInput
@@ -73,7 +100,7 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
         }))}
         onChange={(value) => setSearchExtension(value || searchExtension)}
       />
-      {renderSearchControls()}
+      {searchExtension === FS_METADATA.id ? renderFilesystemControls() : renderStandardControls()}
     </Flex>
   );
 };

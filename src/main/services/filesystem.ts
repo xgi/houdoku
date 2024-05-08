@@ -9,6 +9,7 @@ import {
   deleteThumbnail,
   getChaptersDownloaded,
   getChapterDownloaded,
+  listDirectory,
 } from '@/main/util/filesystem';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { THUMBNAILS_DIR } from '../util/appdata';
@@ -65,4 +66,11 @@ export const createFilesystemIpcHandlers = (ipcMain: IpcMain) => {
   ipcMain.handle(ipcChannels.FILESYSTEM.DELETE_THUMBNAIL, (_event, series: Series) => {
     return deleteThumbnail(series, THUMBNAILS_DIR);
   });
+
+  ipcMain.handle(
+    ipcChannels.FILESYSTEM.LIST_DIRECTORY,
+    (_event, pathname: string, directoriesOnly: boolean = false) => {
+      return listDirectory(pathname, directoriesOnly);
+    },
+  );
 };

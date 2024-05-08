@@ -11,7 +11,6 @@ import {
   NumberInput,
   Stack,
   Text,
-  Tooltip,
 } from '@mantine/core';
 import { IconArrowBack } from '@tabler/icons';
 import { GeneralSetting } from '@/common/models/types';
@@ -184,15 +183,13 @@ const GeneralSettings: React.FC<Props> = () => {
           </Button>
         </Group>
         <Group gap="sm" mt="xs">
-          <Tooltip label={`Makes backup every day (stores ${autoBackupCount} backups)`}>
-            <Checkbox
-              label="Automatically backup library"
-              description={`Create up to ${autoBackupCount} daily backups`}
-              size="md"
-              checked={autoBackup}
-              onChange={(e) => updateGeneralSetting(GeneralSetting.autoBackup, e.target.checked)}
-            />
-          </Tooltip>
+          <Checkbox
+            label="Automatically backup library"
+            description={`Create up to ${autoBackupCount} daily backups`}
+            size="md"
+            checked={autoBackup}
+            onChange={(e) => updateGeneralSetting(GeneralSetting.autoBackup, e.target.checked)}
+          />
           <NumberInput
             w={100}
             ml={'xs'}

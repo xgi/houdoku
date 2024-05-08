@@ -72,15 +72,25 @@ const Search: React.FC<Props> = () => {
     }
   };
 
-  const handleSearchFilesystem = (path: string) => {
-    ipcRenderer
-      .invoke(ipcChannels.EXTENSION.GET_SERIES, FS_METADATA.id, path)
-      .then((series: Series) => {
-        setAddModalSeries(series);
-        setAddModalEditable(searchExtension === FS_METADATA.id);
-        setShowingAddModal(!showingAddModal);
-      })
-      .catch((e) => console.error(e));
+  const handleSearchFilesystem = async (searchPaths: string[]) => {
+    const seriesList: Series[] = [];
+
+    for (const searchPath of searchPaths) {
+      const series = await ipcRenderer.invoke(
+        ipcChannels.EXTENSION.GET_SERIES,
+        FS_METADATA.id,
+        searchPath,
+      );
+      if (series !== null) seriesList.push(series);
+    }
+
+    if (seriesList.length > 1) {
+      setSearchResult({ seriesList: seriesList, hasMore: false });
+    } else if (seriesList.length == 1) {
+      setAddModalSeries(seriesList[0]);
+      setAddModalEditable(searchExtension === FS_METADATA.id);
+      setShowingAddModal(!showingAddModal);
+    }
   };
 
   useEffect(() => {

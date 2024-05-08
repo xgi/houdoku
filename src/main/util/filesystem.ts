@@ -26,18 +26,21 @@ export function walk(directory: string): string[] {
 }
 
 /**
- * Get a list of all directories within a directory (non-recursive).
- * @param directory the parent directory
- * @returns list of subdirectories
+ * List contents of a directory (non-recursive, base level only).
+ * @param pathname the parent directory
+ * @param directoriesOnly (optional, default false) only include subdirectories
+ * @returns list of matching full paths
  */
-export function getDirectories(directory: string): string[] {
-  if (!fs.existsSync(directory)) return [];
+export function listDirectory(pathname: string, directoriesOnly: boolean = false): string[] {
+  if (!fs.existsSync(pathname)) return [];
 
   const result: string[] = [];
-  const files = fs.readdirSync(directory);
+  const files = fs.readdirSync(pathname);
   files.forEach((file: string) => {
-    const fullpath = path.join(directory, file);
-    if (fs.statSync(fullpath)) result.push(fullpath);
+    const fullpath = path.join(pathname, file);
+    if (!directoriesOnly || fs.statSync(fullpath).isDirectory()) {
+      result.push(fullpath);
+    }
   });
 
   return result;
@@ -57,8 +60,8 @@ export function getChapterDownloadPath(
   const seriesDir1 = sanitizeFilename(series.title);
   const seriesDir2 = series.id || '';
   const chapterDirectories = [
-    ...getDirectories(path.join(downloadsDir, seriesDir1)),
-    ...getDirectories(path.join(downloadsDir, seriesDir2)),
+    ...listDirectory(path.join(downloadsDir, seriesDir1)),
+    ...listDirectory(path.join(downloadsDir, seriesDir2)),
   ];
 
   const matching = chapterDirectories.find((fullpath) => {
@@ -71,10 +74,10 @@ export function getChapterDownloadPath(
 }
 
 export function getAllDownloadedChapterIds(downloadsDir: string): string[] {
-  const seriesDirs = getDirectories(downloadsDir);
+  const seriesDirs = listDirectory(downloadsDir);
   const chapterDirs: string[] = [];
   seriesDirs.forEach((seriesDir) => {
-    chapterDirs.push(...getDirectories(seriesDir));
+    chapterDirs.push(...listDirectory(seriesDir));
   });
 
   const result: string[] = [];
@@ -101,8 +104,8 @@ export async function getChaptersDownloaded(
   const seriesDir1 = sanitizeFilename(series.title);
   const seriesDir2 = series.id || '';
   const chapterDirectories = [
-    ...getDirectories(path.join(downloadsDir, seriesDir1)),
-    ...getDirectories(path.join(downloadsDir, seriesDir2)),
+    ...listDirectory(path.join(downloadsDir, seriesDir1)),
+    ...listDirectory(path.join(downloadsDir, seriesDir2)),
   ];
 
   const result: { [key: string]: boolean } = {};
