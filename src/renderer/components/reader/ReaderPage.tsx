@@ -183,7 +183,7 @@ const ReaderPage: React.FC<Props> = () => {
       customDownloadsDir || defaultDownloadsDir,
     );
 
-    const newPageUrls: string[] = await ipcRenderer
+    let newPageUrls: string[] = await ipcRenderer
       .invoke(
         ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
         FS_METADATA.id,
@@ -193,6 +193,8 @@ const ReaderPage: React.FC<Props> = () => {
       .then((pageRequesterData: PageRequesterData) =>
         ipcRenderer.invoke(ipcChannels.EXTENSION.GET_PAGE_URLS, FS_METADATA.id, pageRequesterData),
       );
+    newPageUrls = newPageUrls.map((pageUrl) => `atom://${pageUrl}`);
+
     setPageUrls(newPageUrls);
     setLastPageNumber(newPageUrls.length);
     if (desiredPage) setPageNumber(Math.min(newPageUrls.length, desiredPage));
@@ -239,7 +241,7 @@ const ReaderPage: React.FC<Props> = () => {
       return;
     }
 
-    const newPageUrls: string[] = await ipcRenderer
+    let newPageUrls: string[] = await ipcRenderer
       .invoke(
         ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
         series.extensionId,
@@ -253,6 +255,11 @@ const ReaderPage: React.FC<Props> = () => {
           pageRequesterData,
         ),
       );
+
+    if (series.extensionId === FS_METADATA.id) {
+      newPageUrls = newPageUrls.map((pageUrl) => `atom://${pageUrl}`);
+    }
+
     setPageUrls(newPageUrls);
     setLastPageNumber(newPageUrls.length);
     if (desiredPage) setPageNumber(Math.min(newPageUrls.length, desiredPage));
