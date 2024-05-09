@@ -286,6 +286,8 @@ export async function reloadSeriesList(
       message: `Error while reloading series "${seriesList[0].title}"`,
       color: 'red',
       icon: React.createElement(IconX, { size: 16 }),
+      loading: false,
+      autoClose: true,
     });
   } else if (failedToUpdate.length > 0) {
     updateNotification({
@@ -325,6 +327,7 @@ export async function reloadSeriesList(
       ),
       color: 'yellow',
       icon: React.createElement(IconAlertTriangle, { size: 16 }),
+      loading: false,
       autoClose: false,
     });
   } else {
@@ -334,6 +337,8 @@ export async function reloadSeriesList(
       message: `Reloaded ${cur} series`,
       color: 'teal',
       icon: React.createElement(IconCheck, { size: 16 }),
+      loading: false,
+      autoClose: true,
     });
   }
 
