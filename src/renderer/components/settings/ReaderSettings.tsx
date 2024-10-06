@@ -124,7 +124,6 @@ const ReaderSettings: React.FC<Props> = () => {
         setReadingDirection(value);
         break;
       case ReaderSetting.FitContainToWidth:
-        console.log('updating');
         setFitContainToWidth(value);
         break;
       case ReaderSetting.FitContainToHeight:

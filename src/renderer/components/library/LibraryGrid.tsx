@@ -25,6 +25,7 @@ import { goToSeries } from '@/renderer/features/library/utils';
 import ExtensionImage from '../general/ExtensionImage';
 import { LibraryView } from '@/common/models/types';
 import LibraryGridContextMenu from './LibraryGridContextMenu';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -64,16 +65,16 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
    * @returns the cover image for a series, which can be put in an <img> tag
    */
   const getImageSource = (series: Series) => {
-    if (series.id !== undefined) {
-      const fileExtensions = constants.IMAGE_EXTENSIONS;
-      for (let i = 0; i < fileExtensions.length; i += 1) {
-        const thumbnailPath = path.join(thumbnailsDir, `${series.id}.${fileExtensions[i]}`);
-        if (fs.existsSync(thumbnailPath)) return `atom://${thumbnailPath}`;
-      }
-      return blankCover;
+    const fileExtensions = constants.IMAGE_EXTENSIONS;
+    for (let i = 0; i < fileExtensions.length; i += 1) {
+      const thumbnailPath = path.join(thumbnailsDir, `${series.id}.${fileExtensions[i]}`);
+      if (fs.existsSync(thumbnailPath)) return `atom://${thumbnailPath}`;
     }
 
-    return series.remoteCoverUrl === '' ? blankCover : series.remoteCoverUrl;
+    if (series.extensionId === FS_METADATA.id) {
+      return `atom://${series.remoteCoverUrl}` || blankCover;
+    }
+    return series.remoteCoverUrl || blankCover;
   };
 
   /**

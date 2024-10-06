@@ -9,6 +9,7 @@ import blankCover from '@/renderer/img/blank_cover.png';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { currentExtensionMetadataState } from '@/renderer/state/libraryStates';
 import constants from '@/common/constants/constants.json';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -27,6 +28,10 @@ const SeriesDetailsIntro: React.FC<Props> = (props: Props) => {
     for (let i = 0; i < fileExtensions.length; i += 1) {
       const thumbnailPath = path.join(thumbnailsDir, `${props.series.id}.${fileExtensions[i]}`);
       if (fs.existsSync(thumbnailPath)) return `atom://${thumbnailPath}`;
+    }
+
+    if (props.series.extensionId === FS_METADATA.id) {
+      return `atom://${props.series.remoteCoverUrl}` || blankCover;
     }
     return props.series.remoteCoverUrl || blankCover;
   };

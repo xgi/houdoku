@@ -115,7 +115,7 @@
     "browserslist-config-erb": "^0.0.3",
     "core-js": "^3.20.0",
     "discord-rpc": "^4.0.1",
-    "electron": "^30.0.2",
+    "electron": "^32.1.2",
     "electron-builder": "^24.6.4",
     "electron-vite": "^2.2.0",
     "eslint": "^8.56.0",

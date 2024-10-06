@@ -17,6 +17,7 @@ import styles from './SeriesEditControls.module.css';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import constants from '@/common/constants/constants.json';
 import ExtensionImage from './ExtensionImage';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 
 type Props = {
   series: Series;
@@ -25,13 +26,20 @@ type Props = {
 };
 
 const SeriesEditControls: React.FC<Props> = (props: Props) => {
+  const getCoverSrcUrl = () => {
+    if (props.series.extensionId === FS_METADATA.id) {
+      return `atom://${props.series.remoteCoverUrl}`;
+    }
+    return props.series.remoteCoverUrl;
+  };
+
   return (
     <>
       <Grid gutter="xs">
         <Grid.Col span={4}>
           <ExtensionImage
             className={styles.coverImage}
-            url={props.series.remoteCoverUrl}
+            url={getCoverSrcUrl()}
             series={props.series}
             alt={props.series.title}
           />
