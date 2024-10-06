@@ -1,34 +1,30 @@
 const fs = require('fs');
 import path from 'path';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { Overlay, SimpleGrid, Title } from '@mantine/core';
-import * as ContextMenu from '@radix-ui/react-context-menu';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { IconCheck, IconChevronRight } from '@tabler/icons';
 import blankCover from '@/renderer/img/blank_cover.png';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import constants from '@/common/constants/constants.json';
 import styles from './LibraryGrid.module.css';
 import {
-  categoryListState,
-  chapterListState,
+  multiSelectEnabledState,
+  multiSelectSeriesListState,
   seriesListState,
-  seriesState,
+  showingLibraryCtxMenuState,
 } from '@/renderer/state/libraryStates';
 import {
-  chapterLanguagesState,
-  confirmRemoveSeriesState,
   libraryColumnsState,
   libraryCropCoversState,
   libraryViewState,
 } from '@/renderer/state/settingStates';
-import { goToSeries, markChapters, removeSeries } from '@/renderer/features/library/utils';
+import { goToSeries } from '@/renderer/features/library/utils';
 import ExtensionImage from '../general/ExtensionImage';
 import { LibraryView } from '@/common/models/types';
-import library from '@/renderer/services/library';
+import LibraryGridContextMenu from './LibraryGridContextMenu';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -43,48 +39,21 @@ type Props = {
 const LibraryGrid: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
   const setSeriesList = useSetRecoilState(seriesListState);
-  const setSeries = useSetRecoilState(seriesState);
-  const setChapterList = useSetRecoilState(chapterListState);
-  const availableCategories = useRecoilValue(categoryListState);
   const libraryView = useRecoilValue(libraryViewState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
-  const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const libraryCropCovers = useRecoilValue(libraryCropCoversState);
-  const confirmRemoveSeries = useRecoilValue(confirmRemoveSeriesState);
-  const [categoriesSubMenuOpen, setCategoriesSubMenuOpen] = useState(false);
+  const [multiSelectEnabled, setMultiSelectEnabled] = useRecoilState(multiSelectEnabledState);
+  const [multiSelectSeriesList, setMultiSelectSeriesList] = useRecoilState(
+    multiSelectSeriesListState,
+  );
+  const [showingLibraryCtxMenu, setShowingLibraryCtxMenu] = useRecoilState(
+    showingLibraryCtxMenuState,
+  );
+  const [contextMenuSeries, setContextMenuSeries] = useState<Series | null>(null);
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
   const viewFunc = (series: Series) => {
     goToSeries(series, setSeriesList, navigate);
-  };
-
-  const markAllReadFunc = (series: Series) => {
-    if (series.id) {
-      const chapters = library.fetchChapters(series.id);
-      markChapters(chapters, series, true, setChapterList, setSeries, chapterLanguages);
-      setSeriesList(library.fetchSeriesList());
-    }
-  };
-
-  const removeFunc = (series: Series) => {
-    if (confirmRemoveSeries) {
-      props.showRemoveModal(series);
-    } else {
-      removeSeries(series, setSeriesList);
-    }
-  };
-
-  const handleToggleCategory = (series: Series, categoryId: string) => {
-    const categories = series.categories || [];
-    let newCategories: string[] = [...categories, categoryId];
-    if (categories.includes(categoryId)) {
-      newCategories = categories.filter((cat) => cat !== categoryId);
-    }
-
-    library.upsertSeries({
-      ...series,
-      categories: newCategories,
-    });
-    setSeriesList(library.fetchSeriesList());
   };
 
   /**
@@ -133,132 +102,105 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     return <></>;
   };
 
+  useEffect(() => {
+    if (multiSelectSeriesList.length === 0) setMultiSelectEnabled(false);
+  }, [multiSelectSeriesList]);
+
   return (
     <>
+      <LibraryGridContextMenu
+        position={contextMenuPosition}
+        series={contextMenuSeries}
+        visible={showingLibraryCtxMenu}
+        close={() => setShowingLibraryCtxMenu(false)}
+        showRemoveModal={props.showRemoveModal}
+      />
       <SimpleGrid cols={libraryColumns} spacing="xs">
         {props.getFilteredList().map((series: Series) => {
           const coverSource = getImageSource(series).replaceAll('\\', '/');
+          const isMultiSelected = multiSelectSeriesList.includes(series);
 
           return (
-            <ContextMenu.Root key={`${series.id}-${series.title}`}>
-              <ContextMenu.Trigger className={styles.ContextMenuTrigger}>
-                <div>
-                  <div
-                    className={styles.coverContainer}
-                    onClick={() => viewFunc(series)}
+            <span key={`${series.id}-${series.title}`}>
+              <div>
+                <div
+                  className={styles.coverContainer}
+                  onClick={() => {
+                    if (multiSelectEnabled) {
+                      if (isMultiSelected) {
+                        setMultiSelectSeriesList(multiSelectSeriesList.filter((s) => s !== series));
+                      } else {
+                        setMultiSelectSeriesList([...multiSelectSeriesList, series]);
+                      }
+                    } else {
+                      viewFunc(series);
+                    }
+                  }}
+                  onContextMenu={(e) => {
+                    if (!multiSelectEnabled) {
+                      setContextMenuPosition({ x: e.clientX, y: e.clientY });
+                      setContextMenuSeries(series);
+                      setShowingLibraryCtxMenu(true);
+                    }
+                  }}
+                  style={{
+                    height: libraryCropCovers ? `calc(105vw / ${libraryColumns})` : 'calc(100%)',
+                  }}
+                >
+                  <ExtensionImage
+                    url={coverSource}
+                    series={series}
+                    alt={series.title}
                     style={{
-                      height: libraryCropCovers ? `calc(105vw / ${libraryColumns})` : '100%',
+                      objectFit: 'cover',
+                      width: '100%',
+                      height: '100%',
+                      border:
+                        multiSelectEnabled && isMultiSelected
+                          ? '3px solid var(--mantine-color-teal-1)'
+                          : undefined,
                     }}
-                  >
-                    <ExtensionImage
-                      url={coverSource}
-                      series={series}
-                      alt={series.title}
-                      style={{
-                        objectFit: 'cover',
-                        width: '100%',
-                        height: '100%',
-                      }}
-                    />
-                    {renderUnreadBadge(series)}
-                    {libraryView === LibraryView.GridCompact ? (
-                      <>
-                        <Title
-                          className={styles.seriesTitle}
-                          order={5}
-                          lineClamp={3}
-                          p={4}
-                          pb={8}
-                          style={{ zIndex: 10 }}
-                        >
-                          {series.title}
-                        </Title>
+                  />
+                  {renderUnreadBadge(series)}
+                  {libraryView === LibraryView.GridCompact ? (
+                    <>
+                      <Title
+                        className={styles.seriesTitle}
+                        order={5}
+                        lineClamp={3}
+                        p={4}
+                        pb={8}
+                        style={{ zIndex: 10 }}
+                      >
+                        {series.title}
+                      </Title>
+                      {/* TODO: hack to disable overlay during multi-select since the gradient
+                          affects the border. Should come up with a better way that preserves both */}
+                      {multiSelectEnabled ? undefined : (
                         <Overlay
-                          h={'calc(100% - 7px)'}
+                          h={
+                            libraryCropCovers
+                              ? `calc(105vw / ${libraryColumns})`
+                              : 'calc(100% - 7px)'
+                          }
                           gradient="linear-gradient(0deg, #000000cc, #00000000 40%, #00000000)"
                           zIndex={5}
                         />
-                      </>
-                    ) : (
-                      ''
-                    )}
-                  </div>
-                  {libraryView === LibraryView.GridComfortable ? (
-                    <Title order={5} lineClamp={3} p={4}>
-                      {series.title}
-                    </Title>
+                      )}
+                    </>
                   ) : (
                     ''
                   )}
                 </div>
-              </ContextMenu.Trigger>
-              <ContextMenu.Portal>
-                <ContextMenu.Content className={styles.ctxMenuContent} style={{ width: 220 }}>
-                  <ContextMenu.Item className={styles.ctxMenuItem} onClick={() => viewFunc(series)}>
-                    View
-                  </ContextMenu.Item>
-                  <ContextMenu.Item
-                    style={{ paddingLeft: 25 }}
-                    className={styles.ctxMenuItem}
-                    onClick={() => markAllReadFunc(series)}
-                  >
-                    Mark all Read
-                  </ContextMenu.Item>
-                  <ContextMenu.Item
-                    className={styles.ctxMenuItem}
-                    onClick={() => removeFunc(series)}
-                  >
-                    Remove
-                  </ContextMenu.Item>
-                  {availableCategories.length > 0 ? (
-                    <ContextMenu.Sub open={categoriesSubMenuOpen}>
-                      <ContextMenu.SubTrigger
-                        className={styles.ctxMenuItem}
-                        onPointerEnter={() => setCategoriesSubMenuOpen(true)}
-                        onPointerLeave={() => setCategoriesSubMenuOpen(false)}
-                      >
-                        Categories
-                        <div style={{ marginLeft: 'auto' }}>
-                          <IconChevronRight />
-                        </div>
-                      </ContextMenu.SubTrigger>
-                      <ContextMenu.Portal>
-                        <ContextMenu.SubContent
-                          className={`${styles.ctxMenuContent} ${styles.ctxSubMenuContent}`}
-                          sideOffset={2}
-                          alignOffset={-5}
-                          onPointerEnter={() => setCategoriesSubMenuOpen(true)}
-                          onPointerLeave={() => setCategoriesSubMenuOpen(false)}
-                        >
-                          {availableCategories.map((category) => {
-                            return (
-                              <ContextMenu.CheckboxItem
-                                key={category.id}
-                                className={styles.ctxMenuItem}
-                                checked={
-                                  series.categories && series.categories.includes(category.id)
-                                }
-                                onCheckedChange={() => {
-                                  handleToggleCategory(series, category.id);
-                                  setCategoriesSubMenuOpen(false);
-                                }}
-                              >
-                                <ContextMenu.ItemIndicator className={styles.ctxMenuItemIndicator}>
-                                  <IconCheck width={18} height={18} />
-                                </ContextMenu.ItemIndicator>
-                                {category.label}
-                              </ContextMenu.CheckboxItem>
-                            );
-                          })}
-                        </ContextMenu.SubContent>
-                      </ContextMenu.Portal>
-                    </ContextMenu.Sub>
-                  ) : (
-                    ''
-                  )}
-                </ContextMenu.Content>
-              </ContextMenu.Portal>
-            </ContextMenu.Root>
+                {libraryView === LibraryView.GridComfortable ? (
+                  <Title order={5} lineClamp={3} p={4}>
+                    {series.title}
+                  </Title>
+                ) : (
+                  ''
+                )}
+              </div>
+            </span>
           );
         })}
       </SimpleGrid>

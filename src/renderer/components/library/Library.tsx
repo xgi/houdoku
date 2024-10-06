@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { ScrollArea, Text } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
 import { LibrarySort, LibraryView, ProgressFilter } from '@/common/models/types';
@@ -8,6 +8,7 @@ import {
   activeSeriesListState,
   chapterListState,
   filterState,
+  multiSelectEnabledState,
   seriesListState,
   seriesState,
 } from '@/renderer/state/libraryStates';
@@ -23,6 +24,7 @@ import RemoveSeriesModal from './RemoveSeriesModal';
 import LibraryList from './LibraryList';
 import library from '@/renderer/services/library';
 import EditCategoriesModal from './EditCategoriesModal';
+import LibraryControlBarMultiSelect from './LibraryControlBarMultiSelect';
 
 type Props = unknown;
 
@@ -31,6 +33,7 @@ const Library: React.FC<Props> = () => {
   const [removeModalSeries, setRemoveModalSeries] = useState<Series | null>(null);
   const [editCategoriesModalShowing, setEditCategoriesModalShowing] = useState(false);
   const activeSeriesList = useRecoilValue(activeSeriesListState);
+  const [multiSelectEnabled, setMultiSelectEnabled] = useRecoilState(multiSelectEnabledState);
   const filter = useRecoilValue(filterState);
   const libraryFilterCategory = useRecoilValue(libraryFilterCategoryState);
   const libraryFilterStatus = useRecoilValue(libraryFilterStatusState);
@@ -44,6 +47,7 @@ const Library: React.FC<Props> = () => {
   useEffect(() => {
     setSeries(undefined);
     setChapterList([]);
+    setMultiSelectEnabled(false);
   }, []);
 
   /**
@@ -144,7 +148,13 @@ const Library: React.FC<Props> = () => {
 
   return (
     <>
-      <LibraryControlBar showEditCategoriesModal={() => setEditCategoriesModalShowing(true)} />
+      {multiSelectEnabled ? (
+        <LibraryControlBarMultiSelect
+          showAssignCategoriesModal={() => console.log('TODO placeholder')}
+        />
+      ) : (
+        <LibraryControlBar showEditCategoriesModal={() => setEditCategoriesModalShowing(true)} />
+      )}
       <ScrollArea style={{ height: 'calc(100vh - 24px - 72px)' }} pr="xl" mr={-16}>
         {activeSeriesList.length > 0 ? renderLibrary() : renderEmptyMessage()}
       </ScrollArea>

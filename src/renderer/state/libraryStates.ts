@@ -47,6 +47,16 @@ export const filterState = atom({
   default: '',
 });
 
+export const multiSelectEnabledState = atom<boolean>({
+  key: 'multiSelectEnabledState',
+  default: false,
+});
+
+export const multiSelectSeriesListState = atom<Series[]>({
+  key: 'multiSelectSeriesListState',
+  default: [],
+});
+
 export const seriesBannerUrlState = atom({
   key: 'seriesBannerUrlState',
   default: null as string | null,
