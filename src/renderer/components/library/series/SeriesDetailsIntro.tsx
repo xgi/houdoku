@@ -31,7 +31,7 @@ const SeriesDetailsIntro: React.FC<Props> = (props: Props) => {
     }
 
     if (props.series.extensionId === FS_METADATA.id) {
-      return `atom://${props.series.remoteCoverUrl}` || blankCover;
+      return props.series.remoteCoverUrl ? `atom://${props.series.remoteCoverUrl}` : blankCover;
     }
     return props.series.remoteCoverUrl || blankCover;
   };

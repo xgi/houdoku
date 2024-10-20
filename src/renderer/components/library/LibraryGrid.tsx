@@ -72,7 +72,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     }
 
     if (series.extensionId === FS_METADATA.id) {
-      return `atom://${series.remoteCoverUrl}` || blankCover;
+      return series.remoteCoverUrl ? `atom://${series.remoteCoverUrl}` : blankCover;
     }
     return series.remoteCoverUrl || blankCover;
   };

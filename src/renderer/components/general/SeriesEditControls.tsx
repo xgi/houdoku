@@ -18,6 +18,7 @@ import ipcChannels from '@/common/constants/ipcChannels.json';
 import constants from '@/common/constants/constants.json';
 import ExtensionImage from './ExtensionImage';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
+import blankCover from '@/renderer/img/blank_cover.png';
 
 type Props = {
   series: Series;
@@ -28,7 +29,7 @@ type Props = {
 const SeriesEditControls: React.FC<Props> = (props: Props) => {
   const getCoverSrcUrl = () => {
     if (props.series.extensionId === FS_METADATA.id) {
-      return `atom://${props.series.remoteCoverUrl}`;
+      return props.series.remoteCoverUrl ? `atom://${props.series.remoteCoverUrl}` : blankCover;
     }
     return props.series.remoteCoverUrl;
   };
