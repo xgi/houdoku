@@ -98,6 +98,7 @@ export enum GeneralSetting {
   ChapterListVolOrder = 'ChapterListVolOrder',
   ChapterListChOrder = 'ChapterListChOrder',
   ChapterListPageSize = 'ChapterListPageSize',
+  Theme = 'Theme',
 }
 
 export enum ProgressFilter {
@@ -160,6 +161,12 @@ export enum IntegrationSetting {
   DiscordPresenceEnabled = 'DiscordPresenceEnabled',
 }
 
+export enum Theme {
+  Light = 'light',
+  Dark = 'dark',
+  Black = 'black',
+}
+
 export enum ReadingDirection {
   LeftToRight = 'LeftToRight',
   RightToLeft = 'RightToLeft',
@@ -205,6 +212,7 @@ export const SettingTypes = {
   [GeneralSetting.ChapterListVolOrder]: SettingType.STRING,
   [GeneralSetting.ChapterListChOrder]: SettingType.STRING,
   [GeneralSetting.ChapterListPageSize]: SettingType.NUMBER,
+  [GeneralSetting.Theme]: SettingType.STRING,
 
   [ReaderSetting.FitContainToWidth]: SettingType.BOOLEAN,
   [ReaderSetting.FitContainToHeight]: SettingType.BOOLEAN,
@@ -259,6 +267,7 @@ export const DefaultSettings = {
   [GeneralSetting.ChapterListVolOrder]: TableColumnSortOrder.None,
   [GeneralSetting.ChapterListChOrder]: TableColumnSortOrder.Descending,
   [GeneralSetting.ChapterListPageSize]: 10,
+  [GeneralSetting.Theme]: 'dark',
 
   [ReaderSetting.ReadingDirection]: ReadingDirection.LeftToRight,
   [ReaderSetting.PageStyle]: PageStyle.Single,

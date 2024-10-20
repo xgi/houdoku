@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 const { ipcRenderer } = require('electron');
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { MantineProvider } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import routes from '@/common/constants/routes.json';
@@ -20,7 +19,6 @@ import {
   runningState,
 } from './state/downloaderStates';
 import { autoCheckForUpdatesState } from './state/settingStates';
-import { ErrorBoundary } from './components/general/ErrorBoundary';
 import library from './services/library';
 import {
   createRendererIpcHandlers,
@@ -78,22 +76,20 @@ export default function App() {
   }, [loading]);
 
   return (
-    <MantineProvider forceColorScheme="dark">
-      <ErrorBoundary>
-        <Notifications />
-        <ModalsProvider>
-          {loading ? (
-            <AppLoading />
-          ) : (
-            <Router>
-              <Routes>
-                <Route path={`${routes.READER}/:series_id/:chapter_id`} element={<ReaderPage />} />
-                <Route path="*" element={<DashboardPage />} />
-              </Routes>
-            </Router>
-          )}
-        </ModalsProvider>
-      </ErrorBoundary>
-    </MantineProvider>
+    <>
+      <Notifications />
+      <ModalsProvider>
+        {loading ? (
+          <AppLoading />
+        ) : (
+          <Router>
+            <Routes>
+              <Route path={`${routes.READER}/:series_id/:chapter_id`} element={<ReaderPage />} />
+              <Route path="*" element={<DashboardPage />} />
+            </Routes>
+          </Router>
+        )}
+      </ModalsProvider>
+    </>
   );
 }

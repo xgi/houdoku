@@ -19,6 +19,7 @@ import {
   ReaderSetting,
   ReadingDirection,
   TableColumnSortOrder,
+  Theme,
   TrackerSetting,
 } from '@/common/models/types';
 
@@ -71,6 +72,7 @@ export const libraryCropCoversState = atomFromSetting<boolean>(GeneralSetting.Li
 export const chapterListVolOrderState = atomFromSetting<TableColumnSortOrder>(GeneralSetting.ChapterListVolOrder);
 export const chapterListChOrderState = atomFromSetting<TableColumnSortOrder>(GeneralSetting.ChapterListChOrder);
 export const chapterListPageSizeState = atomFromSetting<number>(GeneralSetting.ChapterListPageSize);
+export const themeState = atomFromSetting<Theme>(GeneralSetting.Theme);
 
 export const fitContainToWidthState = atomFromSetting<boolean>(ReaderSetting.FitContainToWidth);
 export const fitContainToHeightState = atomFromSetting<boolean>(ReaderSetting.FitContainToHeight);

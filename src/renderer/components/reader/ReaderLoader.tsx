@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 import React, { useEffect } from 'react';
-import { Loader } from '@mantine/core';
+import { Center, Loader } from '@mantine/core';
 import styles from './ReaderLoader.module.css';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 
@@ -16,9 +16,9 @@ const ReaderLoader: React.FC<Props> = (props: Props) => {
   }, [props.extensionId]);
 
   return (
-    <div className={styles.container}>
+    <Center className={styles.container} bg="bg.0">
       <Loader />
-    </div>
+    </Center>
   );
 };
 

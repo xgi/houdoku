@@ -1,0 +1,91 @@
+import { Theme } from '@/common/models/types';
+import { createTheme, MantineThemeOverride } from '@mantine/core';
+
+export const THEMES: { [key in Theme]: MantineThemeOverride } = {
+  [Theme.Light]: createTheme({
+    colors: {
+      bg: [
+        '#c9c9c9',
+        '#b8b8b8',
+        '#828282',
+        '#696969',
+        '#424242',
+        '#3b3b3b',
+        '#2e2e2e',
+        '#242424',
+        '#1f1f1f',
+        '#141414',
+      ],
+      fg: [
+        '#141414',
+        '#1f1f1f',
+        '#242424',
+        '#2e2e2e',
+        '#3b3b3b',
+        '#424242',
+        '#696969',
+        '#828282',
+        '#b8b8b8',
+        '#c9c9c9',
+      ],
+    },
+  }),
+  [Theme.Dark]: createTheme({
+    colors: {
+      bg: [
+        '#141414',
+        '#1f1f1f',
+        '#242424',
+        '#2e2e2e',
+        '#3b3b3b',
+        '#424242',
+        '#696969',
+        '#828282',
+        '#b8b8b8',
+        '#c9c9c9',
+      ],
+      fg: [
+        '#c9c9c9',
+        '#b8b8b8',
+        '#828282',
+        '#696969',
+        '#424242',
+        '#3b3b3b',
+        '#2e2e2e',
+        '#242424',
+        '#1f1f1f',
+        '#141414',
+      ],
+    },
+  }),
+  [Theme.Black]: createTheme({
+    colors: {
+      bg: [
+        'black',
+        'black',
+        '#1f1f1f',
+        '#242424',
+        '#2e2e2e',
+        '#3b3b3b',
+        // '#424242',
+        '#696969',
+        '#828282',
+        '#b8b8b8',
+        '#c9c9c9',
+      ],
+      fg: [
+        '#c9c9c9',
+        '#b8b8b8',
+        '#828282',
+        '#696969',
+        // '#424242',
+        '#3b3b3b',
+        '#2e2e2e',
+        '#242424',
+        '#1f1f1f',
+        'black',
+        'black',
+      ],
+    },
+  }),
+};

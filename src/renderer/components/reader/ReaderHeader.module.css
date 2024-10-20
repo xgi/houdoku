@@ -23,16 +23,17 @@
 .button {
   height: 24px !important;
   font-size: 12px !important;
-  background-color: var(--mantine-color-dark-8) !important;
+  color: var(--mantine-color-fg-0) !important;
+  background-color: var(--mantine-color-bg-0) !important;
 }
 
 .button:hover {
-  background-color: var(--mantine-color-dark-5) !important;
+  background-color: var(--mantine-color-bg-5) !important;
 }
 
 .button:disabled {
-  color: var(--mantine-color-dark-3) !important;
-  background-color: var(--mantine-color-dark-4) !important;
+  color: var(--mantine-color-bg-3) !important;
+  background-color: var(--mantine-color-bg-4) !important;
 }
 
 .button span[data-position="left"] {

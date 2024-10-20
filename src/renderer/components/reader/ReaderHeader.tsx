@@ -191,13 +191,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Box
-      className={styles.container}
-      bg="dark.6"
-      // sx={(theme) => ({
-      //   backgroundColor: props.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[6],
-      // })}
-    >
+    <Box className={styles.container} bg="bg.2">
       <Center>
         <Group gap={4} wrap="nowrap">
           <Button

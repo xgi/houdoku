@@ -91,7 +91,7 @@ const DashboardPage: React.FC<Props> = () => {
 
   return (
     <AppShell navbar={{ width: 200, breakpoint: 400 }} padding="md">
-      <AppShell.Navbar p="xs" pt={28} bg="dark.8">
+      <AppShell.Navbar p="xs" pt={28} bg="bg.1">
         <AppShell.Section grow>
           <DashboardSidebarLink
             icon={<IconBooks size={16} />}
@@ -131,7 +131,7 @@ const DashboardPage: React.FC<Props> = () => {
           />
         </AppShell.Section>
       </AppShell.Navbar>
-      <AppShell.Main bg="dark.9" pt={0}>
+      <AppShell.Main bg="bg.0" pt={0}>
         <Routes>
           <Route path={`${routes.SERIES}/:id`} element={<SeriesDetails />} />
           <Route path={`${routes.SETTINGS}/*`} element={<Settings />} />

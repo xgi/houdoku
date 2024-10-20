@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 const { ipcRenderer } = require('electron');
 import { PageRequesterData, Chapter, Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Text } from '@mantine/core';
+import { Box, Text } from '@mantine/core';
 import styles from './ReaderPage.module.css';
 import routes from '@/common/constants/routes.json';
 import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types';
@@ -18,7 +18,6 @@ import { sendProgressToTrackers } from '@/renderer/features/tracker/utils';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import library from '@/renderer/services/library';
-import { updateTitlebarText } from '@/renderer/util/titlebar';
 import * as libraryStates from '@/renderer/state/libraryStates';
 import * as readerStates from '@/renderer/state/readerStates';
 import * as settingStates from '@/renderer/state/settingStates';
@@ -43,6 +42,7 @@ const ReaderPage: React.FC<Props> = () => {
   const { series_id, chapter_id } = useParams<ParamTypes>();
   const navigate = useNavigate();
   const location = useLocation();
+  const setTitlebarText = useSetRecoilState(libraryStates.titlebarTextState);
   const setChapterList = useSetRecoilState(libraryStates.chapterListState);
   const setLibrarySeries = useSetRecoilState(libraryStates.seriesState);
   const [readerSeries, setReaderSeries] = useRecoilState(readerStates.seriesState);
@@ -220,7 +220,7 @@ const ReaderPage: React.FC<Props> = () => {
 
     setReaderSeries(series);
     setReaderChapter(chapter);
-    updateTitlebarText(
+    setTitlebarText(
       `${series.title} - ${
         chapter.chapterNumber ? `Chapter ${chapter.chapterNumber}` : 'Unknown Chapter'
       }${chapter.title ? ` - ${chapter.title}` : ''}`,
@@ -387,7 +387,7 @@ const ReaderPage: React.FC<Props> = () => {
     removeRootStyles();
     removeKeybindings();
 
-    updateTitlebarText();
+    setTitlebarText(undefined);
 
     if (discordPresenceEnabled) {
       ipcRenderer.invoke(ipcChannels.INTEGRATION.DISCORD_SET_ACTIVITY);
@@ -603,7 +603,7 @@ const ReaderPage: React.FC<Props> = () => {
   }, [location]);
 
   return (
-    <div className={styles.content} tabIndex={0}>
+    <Box className={styles.content} tabIndex={0} bg="bg.0">
       <ReaderSettingsModal />
       {showingHeader ? (
         <ReaderHeader
@@ -630,7 +630,7 @@ const ReaderPage: React.FC<Props> = () => {
           )}
         </>
       )}
-    </div>
+    </Box>
   );
 };
 

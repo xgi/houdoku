@@ -3,17 +3,20 @@ import { Language, LanguageKey, Languages } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
 import { useRecoilState } from 'recoil';
 import {
+  Box,
   Button,
+  Center,
   Checkbox,
   Group,
   Input,
   MultiSelect,
   NumberInput,
+  SegmentedControl,
   Stack,
   Text,
 } from '@mantine/core';
-import { IconArrowBack } from '@tabler/icons';
-import { GeneralSetting } from '@/common/models/types';
+import { IconArrowBack, IconCloud, IconMoon, IconSun } from '@tabler/icons';
+import { GeneralSetting, Theme } from '@/common/models/types';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { createBackup, restoreBackup } from '@/renderer/util/backup';
 import {
@@ -25,6 +28,7 @@ import {
   customDownloadsDirState,
   libraryCropCoversState,
   refreshOnStartState,
+  themeState,
 } from '@/renderer/state/settingStates';
 
 const languageOptions = Object.values(Languages)
@@ -37,6 +41,7 @@ const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAUL
 type Props = {};
 
 const GeneralSettings: React.FC<Props> = () => {
+  const [theme, setTheme] = useRecoilState(themeState);
   const [chapterLanguages, setChapterLanguages] = useRecoilState(chapterLanguagesState);
   const [refreshOnStart, setRefreshOnStart] = useRecoilState(refreshOnStartState);
   const [autoCheckForUpdates, setAutoCheckForUpdates] = useRecoilState(autoCheckForUpdatesState);
@@ -49,6 +54,9 @@ const GeneralSettings: React.FC<Props> = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
     switch (generalSetting) {
+      case GeneralSetting.Theme:
+        setTheme(value);
+        break;
       case GeneralSetting.ChapterLanguages:
         setChapterLanguages(value);
         break;
@@ -114,6 +122,40 @@ const GeneralSettings: React.FC<Props> = () => {
           onChange={(e) =>
             updateGeneralSetting(GeneralSetting.AutoCheckForUpdates, e.target.checked)
           }
+        />
+        <SegmentedControl
+          maw={400}
+          data={[
+            {
+              value: Theme.Light,
+              label: (
+                <Center>
+                  <IconSun size={16} />
+                  <Box ml={10}>Light</Box>
+                </Center>
+              ),
+            },
+            {
+              value: Theme.Dark,
+              label: (
+                <Center>
+                  <IconCloud size={16} />
+                  <Box ml={10}>Dark</Box>
+                </Center>
+              ),
+            },
+            {
+              value: Theme.Black,
+              label: (
+                <Center>
+                  <IconMoon size={16} />
+                  <Box ml={10}>Black</Box>
+                </Center>
+              ),
+            },
+          ]}
+          value={theme}
+          onChange={(value) => updateGeneralSetting(GeneralSetting.Theme, value)}
         />
       </Stack>
 
