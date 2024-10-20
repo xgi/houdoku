@@ -1,31 +1,18 @@
 import React from 'react';
-const { ipcRenderer } = require('electron');
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { BackgroundImage, Box, Button, Group, Menu, Stack } from '@mantine/core';
-import { IconMenu2, IconTrash } from '@tabler/icons';
+import { IconDownload, IconMenu2, IconTrash } from '@tabler/icons';
 import { Series } from '@tiyo/common';
-import { useNavigate } from 'react-router-dom';
-import ipcChannels from '@/common/constants/ipcChannels.json';
 import {
   categoryListState,
   reloadingSeriesListState,
   seriesBannerUrlState,
   seriesListState,
   seriesState,
-  sortedFilteredChapterListState,
 } from '@/renderer/state/libraryStates';
-import { downloadNextX, downloadAll } from '@/renderer/features/library/chapterDownloadUtils';
-import { removeSeries, reloadSeriesList } from '@/renderer/features/library/utils';
+import { reloadSeriesList } from '@/renderer/features/library/utils';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
-import {
-  chapterLanguagesState,
-  confirmRemoveSeriesState,
-  customDownloadsDirState,
-} from '@/renderer/state/settingStates';
-import { queueState } from '@/renderer/state/downloaderStates';
-import routes from '@/common/constants/routes.json';
-
-const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
+import { chapterLanguagesState } from '@/renderer/state/settingStates';
 
 type Props = {
   series: Series;
@@ -36,45 +23,12 @@ type Props = {
 };
 
 const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
-  const navigate = useNavigate();
   const series = useRecoilValue(seriesState);
   const setSeriesList = useSetRecoilState(seriesListState);
   const seriesBannerUrl = useRecoilValue(seriesBannerUrlState);
-  const sortedFilteredChapterList = useRecoilValue(sortedFilteredChapterListState);
-  const customDownloadsDir = useRecoilValue(customDownloadsDirState);
-  const downloadQueue = useRecoilValue(queueState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
-  const confirmRemoveSeries = useRecoilValue(confirmRemoveSeriesState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const categoryList = useRecoilValue(categoryListState);
-
-  const handleDownloadNext1 = () => {
-    downloadNextX(
-      sortedFilteredChapterList,
-      props.series,
-      customDownloadsDir || defaultDownloadsDir,
-      downloadQueue,
-      1,
-    );
-  };
-
-  const removeFunc = () => {
-    removeSeries(props.series, setSeriesList);
-    navigate(`${routes.LIBRARY}`);
-  };
-
-  const handleDownloadUnread = () => {
-    downloadAll(
-      sortedFilteredChapterList,
-      props.series,
-      customDownloadsDir || defaultDownloadsDir,
-      true,
-    );
-  };
-
-  const handleDownloadAll = () => {
-    downloadAll(sortedFilteredChapterList, props.series, customDownloadsDir || defaultDownloadsDir);
-  };
 
   const handleRefresh = () => {
     if (series !== undefined && !reloadingSeriesList)
@@ -115,22 +69,21 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
               <Group mx="sm" my={4} gap="xs">
                 <Menu position="bottom-end" shadow="md" width={200}>
                   <Menu.Target>
-                    <Button size="sm" leftSection={<IconMenu2 size={16} />} variant="default">
+                    <Button size="xs" leftSection={<IconMenu2 size={16} />} variant="default">
                       Options
                     </Button>
                   </Menu.Target>
 
                   <Menu.Dropdown>
-                    <Menu.Item onClick={handleDownloadNext1}>Download next</Menu.Item>
-                    <Menu.Item onClick={() => props.showDownloadModal()}>Download next X</Menu.Item>
-                    <Menu.Item onClick={handleDownloadUnread}>Download unread</Menu.Item>
-                    <Menu.Item onClick={handleDownloadAll}>Download all</Menu.Item>
-
-                    <Menu.Divider />
                     <Menu.Item
-                      color="red"
+                      leftSection={<IconDownload size={16} />}
+                      onClick={() => props.showDownloadModal()}
+                    >
+                      Download
+                    </Menu.Item>
+                    <Menu.Item
                       leftSection={<IconTrash size={16} />}
-                      onClick={() => (confirmRemoveSeries ? props.showRemoveModal() : removeFunc())}
+                      onClick={() => props.showRemoveModal()}
                     >
                       Remove series
                     </Menu.Item>
