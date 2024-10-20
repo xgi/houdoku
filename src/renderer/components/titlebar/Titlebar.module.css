@@ -1,7 +1,4 @@
-/* Custom replacement for the default window titlebar.
-   Adapted from: https://github.com/digimezzo/electron-seamless-titlebar-tutorial */
-
-#titlebar {
+.container {
   display: block;
   position: fixed;
   top: 0;
@@ -10,19 +7,11 @@
   background: #141414;
   padding: 2px;
   z-index: 999;
-}
 
-#titlebar.hidden {
-  display: none;
-}
-
-#titlebar #drag-region {
-  width: 100%;
-  height: 100%;
   -webkit-app-region: drag;
 }
 
-#window-title {
+.title {
   grid-column: 1;
   display: flex;
   align-items: center;
@@ -33,23 +22,26 @@
   overflow-x: hidden;
 }
 
-#window-title span {
+.title span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   line-height: 1.5;
 }
 
-#window-controls {
+.controls {
   display: grid;
   grid-template-columns: repeat(3, 46px);
   position: absolute;
   top: 0;
   right: 0;
   height: 100%;
+
+  -webkit-app-region: no-drag;
 }
 
-#window-controls .button {
+.controls .button {
+  user-select: none;
   grid-row: 1 / span 1;
   display: flex;
   justify-content: center;
@@ -59,22 +51,10 @@
   fill: var(--color-foreground);
 }
 
-#min-button {
-  grid-column: 1;
+.controls .button:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-#max-restore-button {
-  grid-column: 2;
-}
-
-#close-button {
-  grid-column: 3;
-}
-
-#window-controls {
-  -webkit-app-region: no-drag;
-}
-
-#window-controls .button {
-  user-select: none;
+.button.exit:hover {
+  background: var(--color-exit) !important;
 }

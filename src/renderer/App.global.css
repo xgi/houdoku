@@ -4,7 +4,6 @@
  */
 
 @import 'style/colors.css';
-@import 'style/titlebar.css';
 @import 'style/flags.css';
 
 body {
@@ -20,6 +19,10 @@ body {
 
   --titlebar-height: 24px;
   margin-top: var(--titlebar-height);
+}
+
+#titlebar.hidden {
+  display: none;
 }
 
 #titlebar.hidden+#root {

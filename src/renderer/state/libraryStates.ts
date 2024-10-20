@@ -7,6 +7,11 @@ import {
   chapterListVolOrderState,
 } from './settingStates';
 
+export const titlebarTextState = atom<string | undefined>({
+  key: 'titlebarTextState',
+  default: undefined,
+});
+
 export const seriesListState = atom<Series[]>({
   key: 'librarySeriesList',
   default: [] as Series[],
