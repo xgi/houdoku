@@ -12,6 +12,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-      - run: yarn install
-      - run: yarn build
-      - run: yarn lint
+      - run: pnpm install
+      - run: pnpm build
+      - run: pnpm lint

@@ -41,13 +41,13 @@ User guides and documentation are available on
 Install dependencies:
 
 ```
-yarn
+pnpm i
 ```
 
 Start the app in the dev environment:
 
 ```
-yarn dev
+pnpm dev
 ```
 
 ## Stack
