@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import rimraf from 'rimraf';
+import { rimraf } from 'rimraf';
 import { Chapter, Series } from '@tiyo/common';
 
 /**
@@ -147,15 +147,12 @@ export async function deleteDownloadedChapter(
 
   const chapterDownloadPath = getChapterDownloadPath(series, chapter, downloadsDir);
   if (fs.existsSync(chapterDownloadPath)) {
-    return new Promise((resolve) =>
-      rimraf(chapterDownloadPath, () => {
-        const seriesDir = path.dirname(chapterDownloadPath);
-        if (fs.existsSync(seriesDir) && fs.readdirSync(seriesDir).length === 0) {
-          fs.rmdirSync(seriesDir);
-        }
-        resolve();
-      }),
-    );
+    return rimraf(chapterDownloadPath).then(() => {
+      const seriesDir = path.dirname(chapterDownloadPath);
+      if (fs.existsSync(seriesDir) && fs.readdirSync(seriesDir).length === 0) {
+        fs.rmdirSync(seriesDir);
+      }
+    });
   }
   return new Promise((resolve) => resolve());
 }
