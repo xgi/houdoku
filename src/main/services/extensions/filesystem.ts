@@ -1,4 +1,4 @@
-import path from "path";
+import path from 'path';
 import {
   GetSeriesFunc,
   GetChaptersFunc,
@@ -18,14 +18,14 @@ import {
   GetSettingTypesFunc,
   SeriesListResponse,
   GetFilterOptionsFunc,
-} from "@tiyo/common";
-import { extract } from "@/main/util/archives";
-import { walk } from "@/main/util/filesystem";
-import constants from "@/common/constants/constants.json";
-import { FS_METADATA } from "@/common/temp_fs_metadata";
+} from '@tiyo/common';
+import { extract } from '@/main/util/archives';
+import { walk } from '@/main/util/filesystem';
+import constants from '@/common/constants/constants.json';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 
 const isSupportedArchivePath = (str: string) => {
-  return ["zip", "rar", "cbz", "cbr"].some((ext) => {
+  return ['zip', 'rar', 'cbz', 'cbr'].some((ext) => {
     return str.endsWith(`.${ext}`);
   });
 };
@@ -45,8 +45,8 @@ const getPageRequesterDataFromArchive = async (
   const imageFilenames = filterImageFiles(extractedFilenames);
 
   return {
-    server: "",
-    hash: "",
+    server: '',
+    hash: '',
     numPages: imageFilenames.length,
     pageFilenames: imageFilenames,
   };
@@ -58,8 +58,8 @@ const getPageRequesterDataFromDirectory = async (dirPath: string): Promise<PageR
 
   return new Promise((resolve) => {
     resolve({
-      server: "",
-      hash: "",
+      server: '',
+      hash: '',
       numPages: imageFileList.length,
       pageFilenames: imageFileList,
     });
@@ -79,23 +79,23 @@ const parseChapterMetadata = (
   const matchGroup: RegExpMatchArray | null = text.match(/\[.*\]/g);
   const matchAnyNum: RegExpMatchArray | null = text.match(/\d*\.?\d+/g);
 
-  let chapterNum = "";
+  let chapterNum = '';
   if (matchChapterNum === null) {
     if (matchAnyNum !== null && matchVolumeNum === null) {
       chapterNum = parseFloat(matchAnyNum[0]).toString();
     }
   } else {
     const matchNumber = matchChapterNum[0].match(/\d*\.?\d+/g);
-    chapterNum = matchNumber ? parseFloat(matchNumber[0]).toString() : "";
+    chapterNum = matchNumber ? parseFloat(matchNumber[0]).toString() : '';
   }
 
-  let volumeNum = "";
+  let volumeNum = '';
   if (matchVolumeNum !== null) {
     const matchNumber = matchVolumeNum[0].match(/(\d)+/g);
-    volumeNum = matchNumber ? parseFloat(matchNumber[0]).toString() : "";
+    volumeNum = matchNumber ? parseFloat(matchNumber[0]).toString() : '';
   }
 
-  const group: string = matchGroup === null ? "" : matchGroup[0].replace("[", "").replace("]", "");
+  const group: string = matchGroup === null ? '' : matchGroup[0].replace('[', '').replace(']', '');
 
   return {
     title: text.trim(),
@@ -116,14 +116,14 @@ export class FSExtensionClient extends ExtensionClientAbstract {
       sourceId: id,
       title: dirName.trim(),
       altTitles: [],
-      description: "",
+      description: '',
       authors: [],
       artists: [],
       tags: [],
       status: SeriesStatus.COMPLETED,
       originalLanguageKey: LanguageKey.JAPANESE,
       numberUnread: 0,
-      remoteCoverUrl: "",
+      remoteCoverUrl: '',
       trackerKeys: {},
     };
 

@@ -1,7 +1,9 @@
 .button {
   border-radius: 4px;
 
-  &[data-theme=light], &[data-theme=dark], &[data-theme=black] {
+  &[data-theme="light"],
+  &[data-theme="dark"],
+  &[data-theme="black"] {
     color: var(--mantine-color-fg-0);
     background: none;
 
@@ -13,8 +15,8 @@
 }
 
 .icon {
-  &[data-theme=light] {
-    &[data-color=orange] {
+  &[data-theme="light"] {
+    &[data-color="orange"] {
       background-color: var(--mantine-color-orange-2);
 
       svg {
@@ -22,7 +24,7 @@
       }
     }
 
-    &[data-color=teal] {
+    &[data-color="teal"] {
       background-color: var(--mantine-color-teal-2);
 
       svg {
@@ -30,7 +32,7 @@
       }
     }
 
-    &[data-color=grape] {
+    &[data-color="grape"] {
       background-color: var(--mantine-color-grape-2);
 
       svg {
@@ -38,7 +40,7 @@
       }
     }
 
-    &[data-color=red] {
+    &[data-color="red"] {
       background-color: var(--mantine-color-red-2);
 
       svg {
@@ -46,7 +48,7 @@
       }
     }
 
-    &[data-color=blue] {
+    &[data-color="blue"] {
       background-color: var(--mantine-color-blue-2);
 
       svg {
@@ -54,7 +56,7 @@
       }
     }
 
-    &[data-color=yellow] {
+    &[data-color="yellow"] {
       background-color: var(--mantine-color-yellow-2);
 
       svg {
@@ -63,8 +65,9 @@
     }
   }
 
-  &[data-theme=dark], &[data-theme=black] {
-    &[data-color=orange] {
+  &[data-theme="dark"],
+  &[data-theme="black"] {
+    &[data-color="orange"] {
       background-color: var(--mantine-color-orange-light);
 
       svg {
@@ -72,7 +75,7 @@
       }
     }
 
-    &[data-color=teal] {
+    &[data-color="teal"] {
       background-color: var(--mantine-color-teal-light);
 
       svg {
@@ -80,7 +83,7 @@
       }
     }
 
-    &[data-color=grape] {
+    &[data-color="grape"] {
       background-color: var(--mantine-color-grape-light);
 
       svg {
@@ -88,7 +91,7 @@
       }
     }
 
-    &[data-color=red] {
+    &[data-color="red"] {
       background-color: var(--mantine-color-red-light);
 
       svg {
@@ -96,7 +99,7 @@
       }
     }
 
-    &[data-color=blue] {
+    &[data-color="blue"] {
       background-color: var(--mantine-color-blue-light);
 
       svg {
@@ -104,7 +107,7 @@
       }
     }
 
-    &[data-color=yellow] {
+    &[data-color="yellow"] {
       background-color: var(--mantine-color-yellow-light);
 
       svg {

@@ -11,7 +11,7 @@
     margin-left: 0;
   }
 
-  &[data-theme=light] {
+  &[data-theme="light"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-0);
 
@@ -25,7 +25,7 @@
     }
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-0);
 
@@ -39,7 +39,7 @@
     }
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-0);
 

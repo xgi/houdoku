@@ -19,15 +19,15 @@
   z-index: 300;
   user-select: none;
 
-  &[data-theme=light] {
+  &[data-theme="light"] {
     background-color: var(--mantine-color-bg-2);
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     background-color: var(--mantine-color-bg-2);
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     background-color: var(--mantine-color-bg-2);
   }
 }

@@ -3,7 +3,7 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
-@import 'style/flags.css';
+@import "style/flags.css";
 
 body {
   /* height: 100vh; */
@@ -24,7 +24,7 @@ body {
   display: none;
 }
 
-#titlebar.hidden+#root {
+#titlebar.hidden + #root {
   --titlebar-height: 0px;
 }
 
@@ -34,12 +34,12 @@ body {
 
 ::-webkit-scrollbar-track {
   /* dark 6 */
-  background: #25262B;
+  background: #25262b;
 }
 
 ::-webkit-scrollbar-thumb {
   /* gray 6 */
-  background: #868E96;
+  background: #868e96;
 }
 
 ::-webkit-scrollbar-thumb:hover {

@@ -1,5 +1,5 @@
 .root {
-  &[data-theme=light] {
+  &[data-theme="light"] {
     background-color: var(--mantine-color-bg-1);
     border: 1px solid var(--mantine-color-bg-5);
 
@@ -19,7 +19,6 @@
           }
         }
       }
-
 
       &[data-active] {
         .label {
@@ -34,7 +33,7 @@
     }
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     background-color: var(--mantine-color-bg-1);
     border: 1px solid var(--mantine-color-bg-5);
 
@@ -54,7 +53,6 @@
           }
         }
       }
-
 
       &[data-active] {
         .label {
@@ -69,7 +67,7 @@
     }
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     background-color: var(--mantine-color-bg-1);
     border: 1px solid var(--mantine-color-bg-5);
 
@@ -89,7 +87,6 @@
           }
         }
       }
-
 
       &[data-active] {
         .label {

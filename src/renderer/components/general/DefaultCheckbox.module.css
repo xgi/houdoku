@@ -1,5 +1,7 @@
 .root {
-  &[data-theme=light], &[data-theme=dark], &[data-theme=black] {
+  &[data-theme="light"],
+  &[data-theme="dark"],
+  &[data-theme="black"] {
     .label {
       color: var(--mantine-color-fg-0);
     }

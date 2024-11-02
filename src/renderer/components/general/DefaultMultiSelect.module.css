@@ -1,5 +1,5 @@
 .root {
-  &[data-theme=light] {
+  &[data-theme="light"] {
     ::placeholder {
       color: var(--mantine-color-fg-2);
     }
@@ -21,7 +21,7 @@
     }
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     ::placeholder {
       color: var(--mantine-color-fg-2);
     }
@@ -43,7 +43,7 @@
     }
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     ::placeholder {
       color: var(--mantine-color-fg-2);
     }

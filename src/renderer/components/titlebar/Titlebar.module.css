@@ -9,17 +9,17 @@
 
   -webkit-app-region: drag;
 
-  &[data-theme=light] {
+  &[data-theme="light"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-0);
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-0);
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-0);
   }
@@ -31,7 +31,7 @@
   align-items: center;
   margin-left: 8px;
   overflow: hidden;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   font-size: 12px;
   overflow-x: hidden;
 }
@@ -44,7 +44,6 @@
 }
 
 .controls {
-
   display: grid;
   grid-template-columns: repeat(3, 46px);
   position: absolute;
@@ -54,7 +53,7 @@
 
   -webkit-app-region: no-drag;
 
-  >.button {
+  > .button {
     user-select: none;
     grid-row: 1 / span 1;
     display: flex;
@@ -76,5 +75,4 @@
       background: var(--mantine-color-red-5);
     }
   }
-
 }

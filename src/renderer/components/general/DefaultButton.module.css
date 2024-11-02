@@ -1,7 +1,7 @@
 .root {
   border: 1px solid var(--mantine-color-bg-5) !important;
 
-  &[data-theme=light] {
+  &[data-theme="light"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-4);
 
@@ -11,7 +11,7 @@
     }
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-4);
 
@@ -21,7 +21,7 @@
     }
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-4);
 

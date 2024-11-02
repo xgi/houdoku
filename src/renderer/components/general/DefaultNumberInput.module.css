@@ -1,9 +1,9 @@
 .root {
-  &[data-theme=light] {
+  &[data-theme="light"] {
     .wrapper {
       --input-disabled-bg: var(--mantine-color-bg-3);
 
-      >div[data-position] {
+      > div[data-position] {
         --input-bd: var(--mantine-color-bg-5);
 
         button {
@@ -18,11 +18,11 @@
     }
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     .wrapper {
       --input-disabled-bg: var(--mantine-color-bg-3);
 
-      >div[data-position] {
+      > div[data-position] {
         --input-bd: var(--mantine-color-bg-5);
 
         button {
@@ -37,11 +37,11 @@
     }
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     .wrapper {
       --input-disabled-bg: var(--mantine-color-bg-3);
 
-      >div[data-position] {
+      > div[data-position] {
         --input-bd: var(--mantine-color-bg-5);
 
         button {
@@ -58,19 +58,19 @@
 }
 
 .input {
-  &[data-theme=light] {
+  &[data-theme="light"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-1);
     border-color: var(--mantine-color-bg-5);
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-1);
     border-color: var(--mantine-color-bg-5);
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-1);
     border-color: var(--mantine-color-bg-5);

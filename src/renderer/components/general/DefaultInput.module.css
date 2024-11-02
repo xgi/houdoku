@@ -1,17 +1,17 @@
 .input {
-  &[data-theme=light] {
+  &[data-theme="light"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-1);
     border-color: var(--mantine-color-bg-5);
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-1);
     border-color: var(--mantine-color-bg-5);
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-1);
     border-color: var(--mantine-color-bg-5);
@@ -19,15 +19,15 @@
 }
 
 .label {
-  &[data-theme=light] {
+  &[data-theme="light"] {
     color: var(--mantine-color-fg-0);
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     color: var(--mantine-color-fg-0);
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     color: var(--mantine-color-fg-0);
   }
 }

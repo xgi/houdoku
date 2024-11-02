@@ -1,22 +1,22 @@
 .root {
-  &[data-theme=light] {
+  &[data-theme="light"] {
     --tabs-color: var(--mantine-color-bg-9) !important;
     --tab-border-color: var(--mantine-color-bg-5) !important;
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     --tabs-color: var(--mantine-color-bg-9) !important;
     --tab-border-color: var(--mantine-color-bg-5) !important;
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     --tabs-color: var(--mantine-color-bg-9) !important;
     --tab-border-color: var(--mantine-color-bg-5) !important;
   }
 }
 
 .list {
-  &[data-theme=light] {
+  &[data-theme="light"] {
     button {
       &[data-active] {
         color: var(--mantine-color-fg-0);
@@ -33,7 +33,7 @@
     }
   }
 
-  &[data-theme=dark] {
+  &[data-theme="dark"] {
     button {
       &[data-active] {
         color: var(--mantine-color-fg-0);
@@ -50,7 +50,7 @@
     }
   }
 
-  &[data-theme=black] {
+  &[data-theme="black"] {
     button {
       &[data-active] {
         color: var(--mantine-color-fg-0);
