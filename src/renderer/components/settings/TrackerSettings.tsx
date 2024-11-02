@@ -50,7 +50,7 @@ const TrackerSettings: React.FC<Props> = () => {
         onChange={(e) => updateTrackerSetting(TrackerSetting.TrackerAutoUpdate, e.target.checked)}
       />
 
-      <Accordion chevronPosition="left" mx="auto" pt="sm">
+      <Accordion variant="separated" chevronPosition="left" mx="auto" pt="sm">
         {[AniListTrackerMetadata, MALTrackerMetadata].map((trackerMetadata) => (
           <Accordion.Item value={trackerMetadata.id} key={trackerMetadata.id}>
             <TrackerAuthOAuth trackerMetadata={trackerMetadata} />

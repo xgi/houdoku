@@ -19,7 +19,7 @@ function Root() {
   const theme = useRecoilValue(themeState);
 
   return (
-    <MantineProvider forceColorScheme="dark" theme={THEMES[theme]}>
+    <MantineProvider theme={THEMES[theme]} forceColorScheme="dark">
       <ErrorBoundary>
         <header id="titlebar">
           <Titlebar />

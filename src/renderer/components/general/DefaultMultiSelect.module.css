@@ -1,0 +1,67 @@
+.root {
+  &[data-theme=light] {
+    ::placeholder {
+      color: var(--mantine-color-fg-2);
+    }
+
+    .label {
+      color: var(--mantine-color-fg-0);
+    }
+
+    .input {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-1);
+      border-color: var(--mantine-color-bg-5);
+    }
+
+    .pill {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-2);
+      border: 1px solid var(--mantine-color-bg-5);
+    }
+  }
+
+  &[data-theme=dark] {
+    ::placeholder {
+      color: var(--mantine-color-fg-2);
+    }
+
+    .label {
+      color: var(--mantine-color-fg-0);
+    }
+
+    .input {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-1);
+      border-color: var(--mantine-color-bg-5);
+    }
+
+    .pill {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-2);
+      border: 1px solid var(--mantine-color-bg-5);
+    }
+  }
+
+  &[data-theme=black] {
+    ::placeholder {
+      color: var(--mantine-color-fg-2);
+    }
+
+    .label {
+      color: var(--mantine-color-fg-0);
+    }
+
+    .input {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-1);
+      border-color: var(--mantine-color-bg-5);
+    }
+
+    .pill {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-2);
+      border: 1px solid var(--mantine-color-bg-5);
+    }
+  }
+}

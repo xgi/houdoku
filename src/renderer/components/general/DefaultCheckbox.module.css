@@ -1,0 +1,22 @@
+.root {
+  &[data-theme=light], &[data-theme=dark], &[data-theme=black] {
+    .label {
+      color: var(--mantine-color-fg-0);
+    }
+
+    .description {
+      color: var(--mantine-color-fg-2);
+    }
+
+    .inner {
+      svg {
+        color: var(--mantine-color-fg-1);
+      }
+
+      .input {
+        background-color: var(--mantine-color-bg-4);
+        border-color: var(--mantine-color-bg-5);
+      }
+    }
+  }
+}

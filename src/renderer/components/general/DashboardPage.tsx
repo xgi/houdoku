@@ -34,14 +34,18 @@ import {
   autoBackupState,
   chapterLanguagesState,
   refreshOnStartState,
+  themeState,
 } from '@/renderer/state/settingStates';
 import DashboardSidebarLink from './DashboardSidebarLink';
 import { downloadCover } from '@/renderer/util/download';
 import { createAutoBackup } from '@/renderer/util/backup';
+import styles from './DashboardPage.module.css';
+import { themeProps } from '@/renderer/util/themes';
 
 interface Props {}
 
 const DashboardPage: React.FC<Props> = () => {
+  const theme = useRecoilValue(themeState);
   const setSeriesList = useSetRecoilState(seriesListState);
   const activeSeriesList = useRecoilValue(activeSeriesListState);
   const [, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
@@ -91,7 +95,12 @@ const DashboardPage: React.FC<Props> = () => {
 
   return (
     <AppShell navbar={{ width: 200, breakpoint: 400 }} padding="md">
-      <AppShell.Navbar p="xs" pt={28} bg="bg.1">
+      <AppShell.Navbar
+        {...themeProps(theme)}
+        classNames={{ navbar: styles.appshellNavbar }}
+        p="xs"
+        pt={28}
+      >
         <AppShell.Section grow>
           <DashboardSidebarLink
             icon={<IconBooks size={16} />}
@@ -131,7 +140,7 @@ const DashboardPage: React.FC<Props> = () => {
           />
         </AppShell.Section>
       </AppShell.Navbar>
-      <AppShell.Main bg="bg.0" pt={0}>
+      <AppShell.Main {...themeProps(theme)} classNames={{ main: styles.appshellMain }} pt={0}>
         <Routes>
           <Route path={`${routes.SERIES}/:id`} element={<SeriesDetails />} />
           <Route path={`${routes.SETTINGS}/*`} element={<Settings />} />

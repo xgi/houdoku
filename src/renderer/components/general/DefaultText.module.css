@@ -1,0 +1,13 @@
+.root {
+  &[data-theme=light] {
+    color: var(--mantine-color-fg-0);
+  }
+
+  &[data-theme=dark] {
+    color: var(--mantine-color-fg-0);
+  }
+
+  &[data-theme=black] {
+    color: var(--mantine-color-fg-0);
+  }
+}

@@ -1,0 +1,27 @@
+.appshellMain {
+  &[data-theme=light] {
+    background-color: var(--mantine-color-bg-0);
+  }
+
+  &[data-theme=dark] {
+    background-color: var(--mantine-color-bg-0);
+  }
+
+  &[data-theme=black] {
+    background-color: var(--mantine-color-bg-0);
+  }
+}
+
+.appshellNavbar {
+  &[data-theme=light] {
+    background-color: var(--mantine-color-bg-1);
+  }
+
+  &[data-theme=dark] {
+    background-color: var(--mantine-color-bg-1);
+  }
+
+  &[data-theme=black] {
+    background-color: var(--mantine-color-bg-1);
+  }
+}

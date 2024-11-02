@@ -12,3 +12,7 @@ export function useForceUpdate() {
   const [, setValue] = useState(0);
   return () => setValue((value) => value + 1);
 }
+
+export function classNames(...classNames: string[]) {
+  return classNames.join(' ');
+}

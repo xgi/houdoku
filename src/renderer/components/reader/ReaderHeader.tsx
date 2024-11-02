@@ -21,7 +21,7 @@ import {
   IconSpacingVertical,
   IconX,
 } from '@tabler/icons';
-import { Box, Button, Center, Group, Menu, ScrollArea } from '@mantine/core';
+import { Box, Center, Group, Menu, ScrollArea } from '@mantine/core';
 import flags from '@/renderer/img/flags.png';
 import styles from './ReaderHeader.module.css';
 import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types';
@@ -41,12 +41,15 @@ import {
   offsetPagesState,
   pageStyleState,
   readingDirectionState,
+  themeState,
 } from '@/renderer/state/settingStates';
 import {
   nextOffsetPages,
   nextPageStyle,
   nextReadingDirection,
 } from '@/renderer/features/settings/utils';
+import ReaderHeaderButton from './ReaderHeaderButton';
+import { themeProps } from '@/renderer/util/themes';
 
 const TEXT_PAGE_STYLE = {
   [PageStyle.Single]: 'Single Page',
@@ -91,6 +94,7 @@ type Props = {
 };
 
 const ReaderHeader: React.FC<Props> = (props: Props) => {
+  const theme = useRecoilValue(themeState);
   const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
   const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(showingSettingsModalState);
   const lastPageNumber = useRecoilValue(lastPageNumberState);
@@ -104,28 +108,6 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   const [fitStretch, setFitStretch] = useRecoilState(fitStretchState);
   const [readingDirection, setReadingDirection] = useRecoilState(readingDirectionState);
   const [offsetPages, setOffsetPages] = useRecoilState(offsetPagesState);
-
-  // const buttonStyles = (theme: MantineTheme) => ({
-  //   root: {
-  //     height: 24,
-  //     fontSize: 12,
-  //     color: theme.colors.gray[4],
-  //     backgroundColor: theme.colors.dark[9],
-  //     '&:hover': {
-  //       backgroundColor: theme.colors.red[3],
-  //     },
-  //     '&:disabled': {
-  //       color: theme.colors.dark[6],
-  //       backgroundColor: theme.colors.dark[4],
-  //     },
-  //   },
-  //   leftIcon: {
-  //     marginRight: 4,
-  //   },
-  //   rightIcon: {
-  //     marginLeft: 0,
-  //   },
-  // });
 
   const getCurrentPageNumText = () => {
     let text = `${pageNumber}`;
@@ -178,37 +160,27 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
     }
 
     return (
-      <Button
-        size="xs"
-        className={styles.button}
-        radius={0}
-        leftSection={opts.icon}
-        onClick={opts.func}
-      >
+      <ReaderHeaderButton radius={0} leftSection={opts.icon} onClick={opts.func}>
         {opts.text}
-      </Button>
+      </ReaderHeaderButton>
     );
   };
 
   return (
-    <Box className={styles.container} bg="bg.2">
+    <Box {...themeProps(theme)} className={styles.container}>
       <Center>
         <Group gap={4} wrap="nowrap">
-          <Button
-            size="xs"
-            className={styles.button}
+          <ReaderHeaderButton
             radius={0}
             leftSection={<IconArrowLeft size={14} />}
             onClick={props.exitPage}
           >
             Go Back
-          </Button>
+          </ReaderHeaderButton>
 
           <Group gap={0} wrap="nowrap">
-            <Button
+            <ReaderHeaderButton
               px={2}
-              size="xs"
-              className={styles.button}
               radius={0}
               rightSection={<IconChevronLeft size={16} />}
               disabled={
@@ -221,11 +193,11 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             />
             <Menu shadow="md" width={110} trigger="hover">
               <Menu.Target>
-                <Button size="xs" className={styles.button} radius={0} pb={2}>
+                <ReaderHeaderButton radius={0} pb={2}>
                   {chapter && chapter.chapterNumber
                     ? `Chapter ${chapter.chapterNumber}`
                     : 'Unknown Chapter'}
-                </Button>
+                </ReaderHeaderButton>
               </Menu.Target>
 
               <Menu.Dropdown>
@@ -243,10 +215,8 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 </ScrollArea.Autosize>
               </Menu.Dropdown>
             </Menu>
-            <Button
+            <ReaderHeaderButton
               px={2}
-              size="xs"
-              className={styles.button}
               radius={0}
               rightSection={<IconChevronRight size={16} />}
               disabled={
@@ -260,10 +230,8 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           </Group>
 
           <Group gap={0} wrap="nowrap">
-            <Button
+            <ReaderHeaderButton
               px={2}
-              size="xs"
-              className={styles.button}
               radius={0}
               rightSection={<IconChevronsLeft size={16} />}
               disabled={
@@ -272,10 +240,8 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
               }
               onClick={() => props.changePage(true, true)}
             />
-            <Button
+            <ReaderHeaderButton
               px={2}
-              size="xs"
-              className={styles.button}
               radius={0}
               rightSection={<IconChevronLeft size={16} />}
               disabled={
@@ -290,9 +256,9 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             />
             <Menu shadow="md" width={110} trigger="hover">
               <Menu.Target>
-                <Button size="xs" className={styles.button} radius={0} px={4} pb={2}>
+                <ReaderHeaderButton size="xs" radius={0} px={4} pb={2}>
                   {getCurrentPageNumText()}
-                </Button>
+                </ReaderHeaderButton>
               </Menu.Target>
 
               <Menu.Dropdown>
@@ -305,10 +271,8 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 </ScrollArea.Autosize>
               </Menu.Dropdown>
             </Menu>
-            <Button
+            <ReaderHeaderButton
               px={2}
-              size="xs"
-              className={styles.button}
               radius={0}
               rightSection={<IconChevronRight size={16} />}
               disabled={
@@ -321,10 +285,8 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
               }
               onClick={() => props.changePage(false)}
             />
-            <Button
+            <ReaderHeaderButton
               px={2}
-              size="xs"
-              className={styles.button}
               radius={0}
               rightSection={<IconChevronsRight size={16} />}
               disabled={
@@ -336,58 +298,50 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             />
           </Group>
 
-          <Button
+          <ReaderHeaderButton
             px={8}
-            size="xs"
-            className={styles.button}
             radius={0}
             leftSection={ICONS_PAGE_STYLE[pageStyle]}
             onClick={() => setPageStyle(nextPageStyle(pageStyle))}
           >
             {TEXT_PAGE_STYLE[pageStyle]}
-          </Button>
+          </ReaderHeaderButton>
 
           {pageStyle === PageStyle.Double ? (
-            <Button
-              size="xs"
-              className={styles.button}
+            <ReaderHeaderButton
               radius={0}
               leftSection={ICONS_OFFSET_PAGES[offsetPages]}
               onClick={() => setOffsetPages(nextOffsetPages(offsetPages))}
             >
               {TEXT_OFFSET_PAGES[offsetPages]}
-            </Button>
+            </ReaderHeaderButton>
           ) : (
             ''
           )}
 
           {renderFitButton()}
 
-          <Button
-            size="xs"
-            className={styles.button}
+          <ReaderHeaderButton
             radius={0}
             leftSection={fitStretch ? <IconCheck size={14} /> : <IconX size={14} />}
             disabled={!(fitContainToHeight || fitContainToWidth)}
             onClick={() => setFitStretch(!fitStretch)}
           >
             Stretch to Fill
-          </Button>
+          </ReaderHeaderButton>
 
-          <Button
-            size="xs"
-            className={styles.button}
+          <ReaderHeaderButton
             radius={0}
             leftSection={ICONS_READING_DIRECTION[readingDirection]}
             onClick={() => setReadingDirection(nextReadingDirection(readingDirection))}
           >
             {TEXT_READING_DIRECTION[readingDirection]}
-          </Button>
+          </ReaderHeaderButton>
 
           {languageChapterList.length > 1 ? (
             <Menu shadow="md" width={320} trigger="hover">
               <Menu.Target>
-                <Button
+                <ReaderHeaderButton
                   leftSection={
                     chapter && chapter.languageKey ? (
                       <div className="flag-container">
@@ -402,8 +356,6 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                       <></>
                     )
                   }
-                  size="xs"
-                  className={styles.button}
                   radius={0}
                 >
                   <div>
@@ -411,7 +363,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                       ? `${Languages[chapter.languageKey].name}`
                       : 'Unknown Language'}
                   </div>
-                </Button>
+                </ReaderHeaderButton>
               </Menu.Target>
 
               <Menu.Dropdown>
@@ -453,15 +405,13 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
             ''
           )}
 
-          <Button
-            size="xs"
-            className={styles.button}
+          <ReaderHeaderButton
             radius={0}
             leftSection={<IconSettings size={14} />}
             onClick={() => setShowingSettingsModal(!showingSettingsModal)}
           >
             Settings
-          </Button>
+          </ReaderHeaderButton>
         </Group>
       </Center>
     </Box>

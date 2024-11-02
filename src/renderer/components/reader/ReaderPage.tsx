@@ -26,6 +26,7 @@ import {
   nextPageStyle,
   nextReadingDirection,
 } from '@/renderer/features/settings/utils';
+import { themeProps } from '@/renderer/util/themes';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -42,6 +43,7 @@ const ReaderPage: React.FC<Props> = () => {
   const { series_id, chapter_id } = useParams<ParamTypes>();
   const navigate = useNavigate();
   const location = useLocation();
+  const theme = useRecoilValue(settingStates.themeState);
   const setTitlebarText = useSetRecoilState(libraryStates.titlebarTextState);
   const setChapterList = useSetRecoilState(libraryStates.chapterListState);
   const setLibrarySeries = useSetRecoilState(libraryStates.seriesState);
@@ -603,7 +605,7 @@ const ReaderPage: React.FC<Props> = () => {
   }, [location]);
 
   return (
-    <Box className={styles.content} tabIndex={0} bg="bg.0">
+    <Box {...themeProps(theme)} className={styles.content} tabIndex={0}>
       <ReaderSettingsModal />
       {showingHeader ? (
         <ReaderHeader

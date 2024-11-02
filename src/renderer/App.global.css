@@ -3,7 +3,6 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
-@import 'style/colors.css';
 @import 'style/flags.css';
 
 body {

@@ -1,0 +1,106 @@
+.root {
+  &[data-theme=light] {
+    background-color: var(--mantine-color-bg-1);
+    border: 1px solid var(--mantine-color-bg-5);
+
+    .indicator {
+      background: none;
+    }
+
+    .control {
+      --separator-color: var(--mantine-color-bg-5);
+
+      &:not([data-active]) {
+        .label {
+          color: var(--mantine-color-fg-1);
+
+          :hover {
+            color: var(--mantine-color-fg-0);
+          }
+        }
+      }
+
+
+      &[data-active] {
+        .label {
+          color: var(--mantine-color-fg-9);
+          background-color: var(--mantine-color-bg-7);
+
+          :hover {
+            color: var(--mantine-color-fg-9);
+          }
+        }
+      }
+    }
+  }
+
+  &[data-theme=dark] {
+    background-color: var(--mantine-color-bg-1);
+    border: 1px solid var(--mantine-color-bg-5);
+
+    .indicator {
+      background: none;
+    }
+
+    .control {
+      --separator-color: var(--mantine-color-bg-5);
+
+      &:not([data-active]) {
+        .label {
+          color: var(--mantine-color-fg-1);
+
+          :hover {
+            color: var(--mantine-color-fg-0);
+          }
+        }
+      }
+
+
+      &[data-active] {
+        .label {
+          color: var(--mantine-color-fg-9);
+          background-color: var(--mantine-color-bg-7);
+
+          :hover {
+            color: var(--mantine-color-fg-9);
+          }
+        }
+      }
+    }
+  }
+
+  &[data-theme=black] {
+    background-color: var(--mantine-color-bg-1);
+    border: 1px solid var(--mantine-color-bg-5);
+
+    .indicator {
+      background: none;
+    }
+
+    .control {
+      --separator-color: var(--mantine-color-bg-5);
+
+      &:not([data-active]) {
+        .label {
+          color: var(--mantine-color-fg-1);
+
+          :hover {
+            color: var(--mantine-color-fg-0);
+          }
+        }
+      }
+
+
+      &[data-active] {
+        .label {
+          color: var(--mantine-color-fg-9);
+          background-color: var(--mantine-color-bg-7);
+
+          :hover {
+            color: var(--mantine-color-fg-9);
+          }
+        }
+      }
+    }
+  }
+}

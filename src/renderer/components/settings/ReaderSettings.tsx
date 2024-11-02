@@ -3,7 +3,6 @@ import { useRecoilState } from 'recoil';
 import {
   Table,
   Text,
-  SegmentedControl,
   Center,
   Box,
   Checkbox,
@@ -57,6 +56,7 @@ import {
   keyToggleOffsetDoubleSpreadsState,
   keyToggleFullscreenState,
 } from '@/renderer/state/settingStates';
+import DefaultSegmentedControl from '../general/DefaultSegmentedControl';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
@@ -227,7 +227,7 @@ const ReaderSettings: React.FC<Props> = () => {
     <>
       <Text pb="xs">Page Style</Text>
       <Stack gap="xs">
-        <SegmentedControl
+        <DefaultSegmentedControl
           maw={400}
           data={[
             {
@@ -299,7 +299,7 @@ const ReaderSettings: React.FC<Props> = () => {
 
       <Text pb="xs">Reading Direction</Text>
       <Stack>
-        <SegmentedControl
+        <DefaultSegmentedControl
           mb="sm"
           maw={400}
           data={[

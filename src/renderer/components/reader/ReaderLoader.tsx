@@ -16,7 +16,7 @@ const ReaderLoader: React.FC<Props> = (props: Props) => {
   }, [props.extensionId]);
 
   return (
-    <Center className={styles.container} bg="bg.0">
+    <Center className={styles.container}>
       <Loader />
     </Center>
   );

@@ -18,28 +18,16 @@
 
   z-index: 300;
   user-select: none;
-}
 
-.button {
-  height: 24px !important;
-  font-size: 12px !important;
-  color: var(--mantine-color-fg-0) !important;
-  background-color: var(--mantine-color-bg-0) !important;
-}
+  &[data-theme=light] {
+    background-color: var(--mantine-color-bg-2);
+  }
 
-.button:hover {
-  background-color: var(--mantine-color-bg-5) !important;
-}
+  &[data-theme=dark] {
+    background-color: var(--mantine-color-bg-2);
+  }
 
-.button:disabled {
-  color: var(--mantine-color-bg-3) !important;
-  background-color: var(--mantine-color-bg-4) !important;
-}
-
-.button span[data-position="left"] {
-  margin-right: 4px;
-}
-
-.button span[data-position="right"] {
-  margin-left: 0;
+  &[data-theme=black] {
+    background-color: var(--mantine-color-bg-2);
+  }
 }

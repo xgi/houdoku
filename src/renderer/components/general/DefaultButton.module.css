@@ -1,0 +1,33 @@
+.root {
+  border: 1px solid var(--mantine-color-bg-5) !important;
+
+  &[data-theme=light] {
+    color: var(--mantine-color-fg-0);
+    background-color: var(--mantine-color-bg-4);
+
+    &:hover {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-5);
+    }
+  }
+
+  &[data-theme=dark] {
+    color: var(--mantine-color-fg-0);
+    background-color: var(--mantine-color-bg-4);
+
+    &:hover {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-5);
+    }
+  }
+
+  &[data-theme=black] {
+    color: var(--mantine-color-fg-0);
+    background-color: var(--mantine-color-bg-4);
+
+    &:hover {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-5);
+    }
+  }
+}

@@ -1,0 +1,69 @@
+.root {
+  &[data-theme=light] {
+    --tabs-color: var(--mantine-color-bg-9) !important;
+    --tab-border-color: var(--mantine-color-bg-5) !important;
+  }
+
+  &[data-theme=dark] {
+    --tabs-color: var(--mantine-color-bg-9) !important;
+    --tab-border-color: var(--mantine-color-bg-5) !important;
+  }
+
+  &[data-theme=black] {
+    --tabs-color: var(--mantine-color-bg-9) !important;
+    --tab-border-color: var(--mantine-color-bg-5) !important;
+  }
+}
+
+.list {
+  &[data-theme=light] {
+    button {
+      &[data-active] {
+        color: var(--mantine-color-fg-0);
+      }
+
+      &:not([data-active]) {
+        color: var(--mantine-color-fg-2);
+      }
+
+      &:hover {
+        color: var(--mantine-color-fg-0);
+        background-color: var(--mantine-color-bg-3);
+      }
+    }
+  }
+
+  &[data-theme=dark] {
+    button {
+      &[data-active] {
+        color: var(--mantine-color-fg-0);
+      }
+
+      &:not([data-active]) {
+        color: var(--mantine-color-fg-2);
+      }
+
+      &:hover {
+        color: var(--mantine-color-fg-0);
+        background-color: var(--mantine-color-bg-3);
+      }
+    }
+  }
+
+  &[data-theme=black] {
+    button {
+      &[data-active] {
+        color: var(--mantine-color-fg-0);
+      }
+
+      &:not([data-active]) {
+        color: var(--mantine-color-fg-2);
+      }
+
+      &:hover {
+        color: var(--mantine-color-fg-0);
+        background-color: var(--mantine-color-bg-3);
+      }
+    }
+  }
+}
