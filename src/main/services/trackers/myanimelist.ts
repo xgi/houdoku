@@ -122,7 +122,6 @@ type UpdateMangaResponseData = {
   comments: string;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export class MALTrackerClient extends TrackerClientAbstract {
   userId: string;
 

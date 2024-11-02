@@ -4,10 +4,7 @@ import { Modal } from '@mantine/core';
 import ReaderSettings from '../settings/ReaderSettings';
 import { showingSettingsModalState } from '@/renderer/state/readerStates';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const ReaderSettingsModal: React.FC<Props> = () => {
+const ReaderSettingsModal: React.FC = () => {
   const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(showingSettingsModalState);
 
   return (

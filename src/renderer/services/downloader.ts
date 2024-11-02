@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable no-underscore-dangle */
 import React from 'react';
 const fs = require('fs');
 const { ipcRenderer } = require('electron');
@@ -121,7 +119,6 @@ class DownloaderClient {
       this.setCurrentTask(task);
       showDownloadNotification(notificationId, this.currentTask, this.queue.length);
 
-      // eslint-disable-next-line no-await-in-loop
       const chapterPath = await ipcRenderer.invoke(
         ipcChannels.FILESYSTEM.GET_CHAPTER_DOWNLOAD_PATH,
         task.series,
@@ -132,7 +129,6 @@ class DownloaderClient {
         fs.mkdirSync(chapterPath, { recursive: true });
       }
 
-      // eslint-disable-next-line no-await-in-loop
       const pageUrls: string[] = await ipcRenderer
         .invoke(
           ipcChannels.EXTENSION.GET_PAGE_REQUESTER_DATA,
@@ -178,7 +174,6 @@ class DownloaderClient {
           .invoke(ipcChannels.EXTENSION.GET_IMAGE, task.series.extensionId, task.series, pageUrl)
           .then(async (data) => {
             if (typeof data === 'string') {
-              // eslint-disable-next-line promise/no-nesting
               return fetch(pageUrl).then(async (response) => response.arrayBuffer());
             }
             return data;

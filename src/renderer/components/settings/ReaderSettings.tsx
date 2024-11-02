@@ -58,10 +58,7 @@ import {
 } from '@/renderer/state/settingStates';
 import DefaultSegmentedControl from '../general/DefaultSegmentedControl';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const ReaderSettings: React.FC<Props> = () => {
+const ReaderSettings: React.FC = () => {
   const [showingKeybinds, setShowingKeybinds] = useState(false);
   const [fitContainToWidth, setFitContainToWidth] = useRecoilState(fitContainToWidthState);
   const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
@@ -117,7 +114,7 @@ const ReaderSettings: React.FC<Props> = () => {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: arbitrary schema
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
     switch (readerSetting) {
       case ReaderSetting.ReadingDirection:

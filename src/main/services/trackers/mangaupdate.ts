@@ -251,7 +251,6 @@ type UpdateMangaResponseData = {
   };
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export class MUTrackerClient extends TrackerClientAbstract {
   getMetadata: () => TrackerMetadata = () => {
     return MUTrackerMetadata;

@@ -22,7 +22,7 @@ const fetchBannerImageUrl: FetchBannerImageUrlFunc = (series: Series) => {
   });
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: TODO external schema
 const parseBannerImageUrl: ParseBannerImageUrlFunc = (json: any) => {
   const { data } = json;
 

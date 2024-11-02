@@ -30,16 +30,12 @@ import { themeProps } from '@/renderer/util/themes';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
 type ParamTypes = {
   series_id: string;
   chapter_id: string;
 };
 
-const ReaderPage: React.FC<Props> = () => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+const ReaderPage: React.FC = () => {
   const { series_id, chapter_id } = useParams<ParamTypes>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -302,7 +298,6 @@ const ReaderPage: React.FC<Props> = () => {
     setPageUrls([]);
     setLastPageNumber(0);
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     loadChapterData(id, series_id!, desiredPage);
   };
 
@@ -600,7 +595,6 @@ const ReaderPage: React.FC<Props> = () => {
   useEffect(() => {
     addRootStyles();
     addKeybindings();
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     loadChapterData(chapter_id!, series_id!);
   }, [location]);
 

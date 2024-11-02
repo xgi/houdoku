@@ -42,7 +42,6 @@ async function extractRar(archive: string, archiveOutputPath: string): Promise<s
   });
 
   const extractedPaths: string[] = [];
-  // eslint-disable-next-line no-restricted-syntax
   for (const { extraction, fileHeader } of rarFiles) {
     if (!fileHeader.flags.directory) {
       const outputPath = path.join(archiveOutputPath, path.basename(fileHeader.name));
@@ -63,7 +62,6 @@ async function extractRar(archive: string, archiveOutputPath: string): Promise<s
  * @param baseOutputPath temporary location to save extracted files
  * @returns list of extracted file paths
  */
-// eslint-disable-next-line import/prefer-default-export
 export async function extract(archive: string, baseOutputPath: string): Promise<string[]> {
   console.info(`Extracting files from ${archive} to ${baseOutputPath}`);
 

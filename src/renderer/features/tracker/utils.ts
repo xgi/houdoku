@@ -3,7 +3,6 @@ import { Chapter, Series } from '@tiyo/common';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { TrackEntry } from '@/common/models/types';
 
-// eslint-disable-next-line import/prefer-default-export
 export function sendProgressToTrackers(chapter: Chapter, series: Series) {
   const roundChapterNum = Math.floor(parseFloat(chapter.chapterNumber));
 

@@ -67,7 +67,6 @@ export async function loadPlugins(spoofWindow: BrowserWindow) {
 
 function getExtensionClient(extensionId: string) {
   if (extensionId === FS_METADATA.id) return FILESYSTEM_EXTENSION as ExtensionClientInterface;
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return TIYO_CLIENT!.getExtensions()[extensionId].client;
 }
 
@@ -155,7 +154,8 @@ function getPageUrls(extensionId: string, pageRequesterData: PageRequesterData):
     const extension = getExtensionClient(extensionId);
     const pageUrls = extension.getPageUrls(pageRequesterData);
     return pageUrls;
-  } catch (err) {
+  } catch (err: unknown) {
+    console.error(err);
     return [];
   }
 }

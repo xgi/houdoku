@@ -23,7 +23,6 @@ function getActivity(
   };
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export const createDiscordIpcHandlers = (ipcMain: IpcMain) => {
   console.debug('Creating Discord IPC handlers in main...');
 

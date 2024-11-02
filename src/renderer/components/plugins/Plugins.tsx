@@ -8,10 +8,7 @@ import { useListState } from '@mantine/hooks';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import PluginSettingsModal from './PluginSettingsModal';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const Plugins: React.FC<Props> = () => {
+const Plugins: React.FC = () => {
   const [currentTiyoVersion, setCurrentTiyoVersion] = useState<string | undefined>(undefined);
   const [availableTiyoVersion, setAvailableTiyoVersion] = useState<string | undefined>(undefined);
   const [showingSettingsModal, setShowingSettingsModal] = useState(false);
@@ -31,7 +28,7 @@ const Plugins: React.FC<Props> = () => {
 
     await aki
       .search('core', 'tiyo', 1)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
       .then((results: any) => {
         if (results.objects.length > 0) {
           setAvailableTiyoVersion(results.objects[0].package.version);

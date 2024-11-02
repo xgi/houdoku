@@ -6,7 +6,6 @@ import anilist from './mediasource/anilist';
  * @param series
  * @returns promise for the banner URL, if available, else null
  */
-// eslint-disable-next-line import/prefer-default-export
 export function getBannerImageUrl(series: Series) {
   return anilist
     .fetchBannerImageUrl(series)

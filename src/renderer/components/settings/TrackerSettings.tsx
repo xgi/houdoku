@@ -12,13 +12,10 @@ import {
 import TrackerAuthOAuth from './TrackerAuthOAuth';
 import TrackerAuthUserPass from './TrackerAuthUserPass';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const TrackerSettings: React.FC<Props> = () => {
+const TrackerSettings: React.FC = () => {
   const [trackerAutoUpdate, setTrackerAutoUpdate] = useRecoilState(trackerAutoUpdateState);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: arbitrary schema
   const updateTrackerSetting = (trackerSetting: TrackerSetting, value: any) => {
     switch (trackerSetting) {
       case TrackerSetting.TrackerAutoUpdate:

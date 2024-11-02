@@ -32,10 +32,7 @@ const languageOptions = Object.values(Languages)
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const GeneralSettings: React.FC<Props> = () => {
+const GeneralSettings: React.FC = () => {
   const [theme, setTheme] = useRecoilState(themeState);
   const [chapterLanguages, setChapterLanguages] = useRecoilState(chapterLanguagesState);
   const [refreshOnStart, setRefreshOnStart] = useRecoilState(refreshOnStartState);
@@ -46,7 +43,7 @@ const GeneralSettings: React.FC<Props> = () => {
   const [libraryCropCovers, setLibraryCropCovers] = useRecoilState(libraryCropCoversState);
   const [customDownloadsDir, setCustomDownloadsDir] = useRecoilState(customDownloadsDirState);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: arbitrary schema
   const updateGeneralSetting = (generalSetting: GeneralSetting, value: any) => {
     switch (generalSetting) {
       case GeneralSetting.Theme:

@@ -12,7 +12,6 @@ export function walk(directory: string): string[] {
   let fileList: string[] = [];
 
   const files = fs.readdirSync(directory);
-  // eslint-disable-next-line no-restricted-syntax
   for (const file of files) {
     const curPath = path.join(directory, file);
     if (fs.statSync(curPath).isDirectory()) {
@@ -192,7 +191,7 @@ export async function downloadThumbnail(thumbnailPath: string, data: string | Bl
   fetch(url)
     .then((response) => response.arrayBuffer())
     .then((buffer) => {
-      fs.writeFile(thumbnailPath, Buffer.from(buffer), (err: Error | null) => {
+      fs.writeFile(thumbnailPath, new Uint8Array(buffer), (err: Error | null) => {
         if (err) {
           console.error(err);
         }
@@ -211,7 +210,6 @@ export async function deleteThumbnail(series: Series, thumbnailsDir: string) {
   if (!fs.existsSync(thumbnailsDir)) return;
 
   const files = fs.readdirSync(thumbnailsDir);
-  // eslint-disable-next-line no-restricted-syntax
   for (const file of files) {
     if (file.startsWith(`${series.id}.`)) {
       const curPath = path.join(thumbnailsDir, file);

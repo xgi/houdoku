@@ -87,7 +87,6 @@ function getListEntries(trackerId: string): Promise<TrackerListEntry[]> {
   return tracker.getListEntries();
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export const createTrackerIpcHandlers = (ipcMain: IpcMain) => {
   console.debug('Creating tracker IPC handlers in main...');
 

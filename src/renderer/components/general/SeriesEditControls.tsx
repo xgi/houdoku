@@ -72,7 +72,6 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
                       'Select Series Cover',
                     )
                     .then((fileList: string) => {
-                      // eslint-disable-next-line promise/always-return
                       if (fileList.length > 0) {
                         props.setSeries({
                           ...props.series,

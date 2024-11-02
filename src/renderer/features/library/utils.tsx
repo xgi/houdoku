@@ -153,7 +153,6 @@ export function markChapters(
   }
 }
 
-// eslint-disable-next-line consistent-return
 async function reloadSeries(
   series: Series,
   chapterLanguages: LanguageKey[],
@@ -259,7 +258,6 @@ export async function reloadSeriesList(
   let cur = 0;
   const failedToUpdate: Series[] = [];
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const series of filteredSeriesList) {
     updateNotification({
       id: notificationId,
@@ -269,7 +267,6 @@ export async function reloadSeriesList(
       autoClose: false,
     });
 
-    // eslint-disable-next-line no-await-in-loop
     const ret = await reloadSeries(series, chapterLanguages);
     if (ret instanceof Error) {
       console.error(ret);

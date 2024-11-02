@@ -31,7 +31,6 @@ const SCORE_FORMAT_MAP: { [key: string]: TrackScoreFormat } = {
   POINT_3: TrackScoreFormat.POINT_3,
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export class AniListTrackerClient extends TrackerClientAbstract {
   userId: string;
 
@@ -82,12 +81,12 @@ export class AniListTrackerClient extends TrackerClientAbstract {
     return (
       fetch(url, options)
         .then((response: Response) => response.json())
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
         .then((data: any) => {
           if ('errors' in data) {
             console.error(
               `Error getting username from tracker ${AniListTrackerMetadata.id}: ${data.errors
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
                 .map((error: any) => error.message)
                 .join('; ')}`,
             );
@@ -134,18 +133,18 @@ export class AniListTrackerClient extends TrackerClientAbstract {
     return (
       fetch(url, options)
         .then((response: Response) => response.json())
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
         .then((data: any) => {
           if ('errors' in data) {
             console.error(
               `Error searching from tracker ${AniListTrackerMetadata.id}: ${data.errors
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
                 .map((error: any) => error.message)
                 .join('; ')}`,
             );
             return null;
           }
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
           return data.data.Page.media.map((media: any) => ({
             id: media.id,
             title: media.title.romaji,
@@ -203,13 +202,13 @@ export class AniListTrackerClient extends TrackerClientAbstract {
     return (
       fetch(url, options)
         .then((response: Response) => response.json())
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
         .then((data: any) => {
           if ('errors' in data) {
             console.warn(
               `Error getting library entry for series ${seriesId} from tracker from tracker ${
                 AniListTrackerMetadata.id
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
               }: ${data.errors.map((error: any) => error.message).join('; ')}`,
             );
             return null;
@@ -270,13 +269,13 @@ export class AniListTrackerClient extends TrackerClientAbstract {
     return (
       fetch(url, options)
         .then((response: Response) => response.json())
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
         .then((data: any) => {
           if ('errors' in data) {
             console.error(
               `Error adding library entry for series ${trackEntry.seriesId} from tracker ${
                 AniListTrackerMetadata.id
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
               }: ${data.errors.map((error: any) => error.message).join('; ')}`,
             );
             return null;
@@ -348,13 +347,13 @@ export class AniListTrackerClient extends TrackerClientAbstract {
     return (
       fetch(url, options)
         .then((response: Response) => response.json())
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
         .then((data: any) => {
           if ('errors' in data) {
             console.error(
               `Error updating library entry for series ${trackEntry.seriesId} from tracker ${
                 AniListTrackerMetadata.id
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
               }: ${data.errors.map((error: any) => error.message).join('; ')}`,
             );
             return null;

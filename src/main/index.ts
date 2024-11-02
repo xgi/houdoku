@@ -192,9 +192,7 @@ ipcMain.handle(
   ipcChannels.APP.SHOW_OPEN_DIALOG,
   (
     _event,
-    // eslint-disable-next-line @typescript-eslint/default-param-last
     directory = false,
-    // eslint-disable-next-line @typescript-eslint/default-param-last
     filters: { name: string; extensions: string[] }[] = [],
     title: string,
   ) => {

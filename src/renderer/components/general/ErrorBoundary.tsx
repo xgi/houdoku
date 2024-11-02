@@ -14,7 +14,6 @@ interface State {
   error: Error | null;
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);

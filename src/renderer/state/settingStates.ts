@@ -25,7 +25,7 @@ import {
 
 const storedSettings = getAllStoredSettings();
 
-function atomFromSetting<T>(
+function atm<T>(
   setting: GeneralSetting | ReaderSetting | TrackerSetting | IntegrationSetting,
 ): RecoilState<T> {
   const atomKey = `setting${setting}`;
@@ -54,57 +54,59 @@ function atomFromSetting<T>(
   });
 }
 
-/* eslint-disable */
-export const chapterLanguagesState = atomFromSetting<LanguageKey[]>(GeneralSetting.ChapterLanguages);
-export const autoCheckForUpdatesState = atomFromSetting<boolean>(GeneralSetting.AutoCheckForUpdates);
-export const refreshOnStartState = atomFromSetting<boolean>(GeneralSetting.RefreshOnStart);
-export const autoBackupState = atomFromSetting<boolean>(GeneralSetting.autoBackup);
-export const autoBackupCountState = atomFromSetting<number>(GeneralSetting.autoBackupCount);
-export const confirmRemoveSeriesState = atomFromSetting<boolean>(GeneralSetting.ConfirmRemoveSeries);
-export const customDownloadsDirState = atomFromSetting<string>(GeneralSetting.CustomDownloadsDir);
-export const libraryColumnsState = atomFromSetting<number>(GeneralSetting.LibraryColumns);
-export const libraryViewState = atomFromSetting<LibraryView>(GeneralSetting.LibraryView);
-export const librarySortState = atomFromSetting<LibrarySort>(GeneralSetting.LibrarySort);
-export const libraryFilterStatusState = atomFromSetting<SeriesStatus | null>(GeneralSetting.LibraryFilterStatus);
-export const libraryFilterProgressState = atomFromSetting<ProgressFilter>(GeneralSetting.LibraryFilterProgress);
-export const libraryFilterCategoryState = atomFromSetting<string>(GeneralSetting.LibraryFilterCategory);
-export const libraryCropCoversState = atomFromSetting<boolean>(GeneralSetting.LibraryCropCovers);
-export const chapterListVolOrderState = atomFromSetting<TableColumnSortOrder>(GeneralSetting.ChapterListVolOrder);
-export const chapterListChOrderState = atomFromSetting<TableColumnSortOrder>(GeneralSetting.ChapterListChOrder);
-export const chapterListPageSizeState = atomFromSetting<number>(GeneralSetting.ChapterListPageSize);
-export const themeState = atomFromSetting<Theme>(GeneralSetting.Theme);
+export const chapterLanguagesState = atm<LanguageKey[]>(GeneralSetting.ChapterLanguages);
+export const autoCheckForUpdatesState = atm<boolean>(GeneralSetting.AutoCheckForUpdates);
+export const refreshOnStartState = atm<boolean>(GeneralSetting.RefreshOnStart);
+export const autoBackupState = atm<boolean>(GeneralSetting.autoBackup);
+export const autoBackupCountState = atm<number>(GeneralSetting.autoBackupCount);
+export const confirmRemoveSeriesState = atm<boolean>(GeneralSetting.ConfirmRemoveSeries);
+export const customDownloadsDirState = atm<string>(GeneralSetting.CustomDownloadsDir);
+export const libraryColumnsState = atm<number>(GeneralSetting.LibraryColumns);
+export const libraryViewState = atm<LibraryView>(GeneralSetting.LibraryView);
+export const librarySortState = atm<LibrarySort>(GeneralSetting.LibrarySort);
+// biome-ignore format: TODO ignore block
+export const libraryFilterStatusState = atm<SeriesStatus | null>(GeneralSetting.LibraryFilterStatus);
+export const libraryFilterProgressState = atm<ProgressFilter>(GeneralSetting.LibraryFilterProgress);
+export const libraryFilterCategoryState = atm<string>(GeneralSetting.LibraryFilterCategory);
+export const libraryCropCoversState = atm<boolean>(GeneralSetting.LibraryCropCovers);
+// biome-ignore format: TODO ignore block
+export const chapterListVolOrderState = atm<TableColumnSortOrder>(GeneralSetting.ChapterListVolOrder);
+export const chapterListChOrderState = atm<TableColumnSortOrder>(GeneralSetting.ChapterListChOrder);
+export const chapterListPageSizeState = atm<number>(GeneralSetting.ChapterListPageSize);
+export const themeState = atm<Theme>(GeneralSetting.Theme);
 
-export const fitContainToWidthState = atomFromSetting<boolean>(ReaderSetting.FitContainToWidth);
-export const fitContainToHeightState = atomFromSetting<boolean>(ReaderSetting.FitContainToHeight);
-export const fitStretchState = atomFromSetting<boolean>(ReaderSetting.FitStretch);
-export const pageStyleState = atomFromSetting<PageStyle>(ReaderSetting.PageStyle);
-export const readingDirectionState = atomFromSetting<ReadingDirection>(ReaderSetting.ReadingDirection);
-export const preloadAmountState = atomFromSetting<number>(ReaderSetting.PreloadAmount);
-export const overlayPageNumberState = atomFromSetting<boolean>(ReaderSetting.OverlayPageNumber);
-export const hideScrollbarState = atomFromSetting<boolean>(ReaderSetting.HideScrollbar);
-export const keyPageLeftState = atomFromSetting<string>(ReaderSetting.KeyPageLeft);
-export const keyFirstPageState = atomFromSetting<string>(ReaderSetting.KeyFirstPage);
-export const keyPageRightState = atomFromSetting<string>(ReaderSetting.KeyPageRight);
-export const keyLastPageState = atomFromSetting<string>(ReaderSetting.KeyLastPage);
-export const keyChapterLeftState = atomFromSetting<string>(ReaderSetting.KeyChapterLeft);
-export const keyChapterRightState = atomFromSetting<string>(ReaderSetting.KeyChapterRight);
-export const keyToggleReadingDirectionState = atomFromSetting<string>(ReaderSetting.KeyToggleReadingDirection);
-export const keyTogglePageStyleState = atomFromSetting<string>(ReaderSetting.KeyTogglePageStyle);
-export const keyToggleShowingSettingsModalState = atomFromSetting<string>(ReaderSetting.KeyToggleShowingSettingsModal);
-export const keyToggleShowingSidebarState = atomFromSetting<string>(ReaderSetting.KeyToggleShowingSidebar);
-export const keyToggleShowingHeaderState = atomFromSetting<string>(ReaderSetting.KeyToggleShowingHeader);
-export const keyToggleShowingScrollbarState = atomFromSetting<string>(ReaderSetting.KeyToggleShowingScrollbar);
-export const keyToggleFullscreenState = atomFromSetting<string>(ReaderSetting.KeyToggleFullscreen);
-export const keyToggleOffsetDoubleSpreadsState = atomFromSetting<string>(ReaderSetting.KeyToggleOffsetDoubleSpreads);
-export const keyExitState = atomFromSetting<string>(ReaderSetting.KeyExit);
-export const keyCloseOrBackState = atomFromSetting<string>(ReaderSetting.KeyCloseOrBack);
-export const pageGapState = atomFromSetting<boolean>(ReaderSetting.PageGap);
-export const maxPageWidthState = atomFromSetting<number>(ReaderSetting.MaxPageWidth);
-export const pageWidthMetricState = atomFromSetting<string>(ReaderSetting.PageWidthMetric);
-export const offsetPagesState = atomFromSetting<OffsetPages>(ReaderSetting.OffsetPages);
-export const optimizeContrastState = atomFromSetting<boolean>(ReaderSetting.OptimizeContrast);
+export const fitContainToWidthState = atm<boolean>(ReaderSetting.FitContainToWidth);
+export const fitContainToHeightState = atm<boolean>(ReaderSetting.FitContainToHeight);
+export const fitStretchState = atm<boolean>(ReaderSetting.FitStretch);
+export const pageStyleState = atm<PageStyle>(ReaderSetting.PageStyle);
+export const readingDirectionState = atm<ReadingDirection>(ReaderSetting.ReadingDirection);
+export const preloadAmountState = atm<number>(ReaderSetting.PreloadAmount);
+export const overlayPageNumberState = atm<boolean>(ReaderSetting.OverlayPageNumber);
+export const hideScrollbarState = atm<boolean>(ReaderSetting.HideScrollbar);
+export const keyPageLeftState = atm<string>(ReaderSetting.KeyPageLeft);
+export const keyFirstPageState = atm<string>(ReaderSetting.KeyFirstPage);
+export const keyPageRightState = atm<string>(ReaderSetting.KeyPageRight);
+export const keyLastPageState = atm<string>(ReaderSetting.KeyLastPage);
+export const keyChapterLeftState = atm<string>(ReaderSetting.KeyChapterLeft);
+export const keyChapterRightState = atm<string>(ReaderSetting.KeyChapterRight);
+export const keyToggleReadingDirectionState = atm<string>(ReaderSetting.KeyToggleReadingDirection);
+export const keyTogglePageStyleState = atm<string>(ReaderSetting.KeyTogglePageStyle);
+// biome-ignore format: TODO ignore block
+export const keyToggleShowingSettingsModalState = atm<string>(ReaderSetting.KeyToggleShowingSettingsModal);
+export const keyToggleShowingSidebarState = atm<string>(ReaderSetting.KeyToggleShowingSidebar);
+export const keyToggleShowingHeaderState = atm<string>(ReaderSetting.KeyToggleShowingHeader);
+export const keyToggleShowingScrollbarState = atm<string>(ReaderSetting.KeyToggleShowingScrollbar);
+export const keyToggleFullscreenState = atm<string>(ReaderSetting.KeyToggleFullscreen);
+// biome-ignore format: TODO ignore block
+export const keyToggleOffsetDoubleSpreadsState = atm<string>(ReaderSetting.KeyToggleOffsetDoubleSpreads);
+export const keyExitState = atm<string>(ReaderSetting.KeyExit);
+export const keyCloseOrBackState = atm<string>(ReaderSetting.KeyCloseOrBack);
+export const pageGapState = atm<boolean>(ReaderSetting.PageGap);
+export const maxPageWidthState = atm<number>(ReaderSetting.MaxPageWidth);
+export const pageWidthMetricState = atm<string>(ReaderSetting.PageWidthMetric);
+export const offsetPagesState = atm<OffsetPages>(ReaderSetting.OffsetPages);
+export const optimizeContrastState = atm<boolean>(ReaderSetting.OptimizeContrast);
 
-export const trackerAutoUpdateState = atomFromSetting<boolean>(TrackerSetting.TrackerAutoUpdate);
+export const trackerAutoUpdateState = atm<boolean>(TrackerSetting.TrackerAutoUpdate);
 
-export const discordPresenceEnabledState = atomFromSetting<boolean>(IntegrationSetting.DiscordPresenceEnabled);
-/* eslint-enable */
+export const discordPresenceEnabledState = atm<boolean>(IntegrationSetting.DiscordPresenceEnabled);

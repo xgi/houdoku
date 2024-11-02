@@ -22,7 +22,7 @@ type SettingTypes = {
 };
 
 type Settings = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: arbitrary schema
   [key: string]: any;
 };
 
@@ -89,7 +89,7 @@ const PluginSettingsModal: React.FC<Props> = (props: Props) => {
 
   const renderControl = (
     settingType: SettingType,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: arbitrary schema
     curVal: any,
     onChangeFn: (newValue: unknown) => void,
   ) => {

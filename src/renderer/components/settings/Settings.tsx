@@ -9,10 +9,7 @@ import { useRecoilValue } from 'recoil';
 import { themeState } from '@/renderer/state/settingStates';
 import { themeProps } from '@/renderer/util/themes';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props {}
-
-const Settings: React.FC<Props> = () => {
+const Settings: React.FC = () => {
   const theme = useRecoilValue(themeState);
 
   return (

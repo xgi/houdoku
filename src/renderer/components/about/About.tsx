@@ -5,10 +5,7 @@ import packageJson from '../../../../package.json';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { IconGitFork, IconHome, IconNotebook, IconScale } from '@tabler/icons';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const About: React.FC<Props> = () => {
+const About: React.FC = () => {
   const [checkingForUpdate, setCheckingForUpdate] = useState(false);
 
   const handleUpdateCheck = () => {

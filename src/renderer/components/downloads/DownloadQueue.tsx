@@ -15,10 +15,7 @@ import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons';
 import { downloaderClient, DownloadTask } from '@/renderer/services/downloader';
 import { currentTaskState, queueState } from '@/renderer/state/downloaderStates';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const DownloadQueue: React.FC<Props> = () => {
+const DownloadQueue: React.FC = () => {
   const queue = useRecoilValue(queueState);
   const currentTask = useRecoilValue(currentTaskState);
 

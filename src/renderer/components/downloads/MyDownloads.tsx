@@ -12,10 +12,7 @@ import { getFromChapterIds } from '@/renderer/features/library/utils';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const MyDownloads: React.FC<Props> = () => {
+const MyDownloads: React.FC = () => {
   const [seriesList, setSeriesList] = useState<Series[]>([]);
   const [chapterLists, setChapterLists] = useState<{ [key: string]: Chapter[] }>({});
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
@@ -58,7 +55,6 @@ const MyDownloads: React.FC<Props> = () => {
         );
       }),
     )
-      // eslint-disable-next-line promise/always-return
       .then(() => {
         setCheckedChapters([]);
         loadDownloads();
@@ -196,7 +192,6 @@ const MyDownloads: React.FC<Props> = () => {
                     .sort(
                       (a, b) =>
                         parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber) ||
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                         a.id!.localeCompare(b.id!),
                     )
                     .reverse()

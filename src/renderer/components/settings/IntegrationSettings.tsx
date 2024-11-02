@@ -4,15 +4,12 @@ import { Checkbox } from '@mantine/core';
 import { IntegrationSetting } from '@/common/models/types';
 import { discordPresenceEnabledState } from '@/renderer/state/settingStates';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const IntegrationSettings: React.FC<Props> = () => {
+const IntegrationSettings: React.FC = () => {
   const [discordPresenceEnabled, setDiscordPresenceEnabled] = useRecoilState(
     discordPresenceEnabledState,
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: arbitrary schema
   const updateIntegrationSetting = (integrationSetting: IntegrationSetting, value: any) => {
     switch (integrationSetting) {
       case IntegrationSetting.DiscordPresenceEnabled:

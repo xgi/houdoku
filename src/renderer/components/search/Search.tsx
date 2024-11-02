@@ -19,10 +19,7 @@ import SearchGrid from './SearchGrid';
 import SearchControlBar from './SearchControlBar';
 import SearchFilterDrawer from './SearchFilterDrawer';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
-
-const Search: React.FC<Props> = () => {
+const Search: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [extensionList, setExtensionList] = useState<ExtensionMetadata[]>([]);
   const searchText = useRecoilValue(searchTextState);

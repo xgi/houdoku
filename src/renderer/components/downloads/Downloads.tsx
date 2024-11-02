@@ -3,10 +3,7 @@ import React from 'react';
 import DownloadQueue from './DownloadQueue';
 import MyDownloads from './MyDownloads';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props {}
-
-const Downloads: React.FC<Props> = () => {
+const Downloads: React.FC = () => {
   return (
     <>
       <DownloadQueue />

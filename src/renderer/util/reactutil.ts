@@ -7,7 +7,6 @@ import { useState } from 'react';
  * adapted from https://stackoverflow.com/a/53837442
  * @returns a function which forces a React component to update
  */
-// eslint-disable-next-line import/prefer-default-export
 export function useForceUpdate() {
   const [, setValue] = useState(0);
   return () => setValue((value) => value + 1);

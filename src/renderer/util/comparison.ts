@@ -1,4 +1,3 @@
-/* eslint-disable no-lonely-if */
 import { Chapter } from '@tiyo/common';
 
 /**

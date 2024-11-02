@@ -2,8 +2,6 @@
 
 node_modules
 
-.eslintcache
-
 release
 src/main.prod.js
 src/main.prod.js.map

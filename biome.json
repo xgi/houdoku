@@ -1,0 +1,172 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "ignore": []
+  },
+  "formatter": {
+    "enabled": true,
+    "lineWidth": 100,
+    "indentStyle": "space"
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "a11y": {
+        "noNoninteractiveTabindex": "off",
+        "useKeyWithClickEvents": "off",
+        "useValidAnchor": "off"
+      },
+      "complexity": {
+        "noBannedTypes": "error",
+        "noUselessFragments": "off",
+        "noUselessThisAlias": "error",
+        "noUselessTypeConstraint": "error",
+        "useArrowFunction": "off"
+      },
+      "correctness": {
+        "noPrecisionLoss": "error",
+        "noUnusedVariables": "error",
+        "useArrayLiterals": "off"
+      },
+      "style": {
+        "noNamespace": "error",
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useBlockStatements": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "error",
+        "noExtraNonNullAssertion": "error",
+        "noMisleadingInstantiator": "error",
+        "noUnsafeDeclarationMerging": "error"
+      }
+    },
+    "ignore": [
+      "**/logs",
+      "**/*.log",
+      "**/pids",
+      "**/*.pid",
+      "**/*.seed",
+      "**/lib-cov",
+      "**/coverage",
+      "**/.grunt",
+      "**/.lock-wscript",
+      "build/Release",
+      "**/node_modules",
+      "**/.DS_Store",
+      "**/release",
+      "src/*.main.prod.js",
+      "src/main.prod.js",
+      "src/main.prod.js.map",
+      "src/renderer.prod.js",
+      "src/renderer.prod.js.map",
+      "src/style.css",
+      "src/style.css.map",
+      "**/dist",
+      "**/dll",
+      "**/main.js",
+      "**/main.js.map",
+      "**/.idea",
+      "**/npm-debug.log.*",
+      "**/__snapshots__",
+      "**/package.json",
+      "**/.travis.yml",
+      "**/*.css.d.ts",
+      "**/*.sass.d.ts",
+      "**/*.scss.d.ts"
+    ]
+  },
+  "overrides": [
+    {
+      "include": [
+        "*.ts",
+        "*.tsx",
+        "*.mts",
+        "*.cts"
+      ],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noConstAssign": "off",
+            "noGlobalObjectCalls": "off",
+            "noInvalidBuiltinInstantiation": "off",
+            "noInvalidConstructorSuper": "off",
+            "noNewSymbol": "off",
+            "noSetterReturn": "off",
+            "noUndeclaredVariables": "off",
+            "noUnreachable": "off",
+            "noUnreachableSuper": "off"
+          },
+          "style": {
+            "noArguments": "error",
+            "noVar": "error",
+            "useConst": "error"
+          },
+          "suspicious": {
+            "noDuplicateClassMembers": "off",
+            "noDuplicateObjectKeys": "off",
+            "noDuplicateParameters": "off",
+            "noFunctionAssign": "off",
+            "noImportAssign": "off",
+            "noRedeclare": "off",
+            "noUnsafeNegation": "off",
+            "useGetterReturn": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": [
+        "*.ts",
+        "*.tsx",
+        "*.mts",
+        "*.cts"
+      ],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noConstAssign": "off",
+            "noGlobalObjectCalls": "off",
+            "noInvalidBuiltinInstantiation": "off",
+            "noInvalidConstructorSuper": "off",
+            "noNewSymbol": "off",
+            "noSetterReturn": "off",
+            "noUndeclaredVariables": "off",
+            "noUnreachable": "off",
+            "noUnreachableSuper": "off"
+          },
+          "style": {
+            "noArguments": "error",
+            "noVar": "error",
+            "useConst": "error"
+          },
+          "suspicious": {
+            "noDuplicateClassMembers": "off",
+            "noDuplicateObjectKeys": "off",
+            "noDuplicateParameters": "off",
+            "noFunctionAssign": "off",
+            "noImportAssign": "off",
+            "noRedeclare": "off",
+            "noUnsafeNegation": "off",
+            "useGetterReturn": "off"
+          }
+        }
+      }
+    }
+  ],
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  }
+}
