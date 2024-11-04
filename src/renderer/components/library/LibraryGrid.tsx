@@ -127,6 +127,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
               <div>
                 <div
                   className={styles.coverContainer}
+                  data-multiselected={multiSelectEnabled && isMultiSelected}
                   onClick={() => {
                     if (multiSelectEnabled) {
                       if (isMultiSelected) {
@@ -149,20 +150,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                     height: libraryCropCovers ? `calc(105vw / ${libraryColumns})` : 'calc(100%)',
                   }}
                 >
-                  <ExtensionImage
-                    url={coverSource}
-                    series={series}
-                    alt={series.title}
-                    style={{
-                      objectFit: 'cover',
-                      width: '100%',
-                      height: '100%',
-                      border:
-                        multiSelectEnabled && isMultiSelected
-                          ? '3px solid var(--mantine-color-teal-1)'
-                          : undefined,
-                    }}
-                  />
+                  <ExtensionImage url={coverSource} series={series} alt={series.title} />
                   {renderUnreadBadge(series)}
                   {libraryView === LibraryView.GridCompact ? (
                     <>

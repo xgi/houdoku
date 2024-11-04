@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Button, Group, Text } from '@mantine/core';
-import { IconChecks, IconTag } from '@tabler/icons';
+import { Group } from '@mantine/core';
+import { IconChecks } from '@tabler/icons';
 import { markChapters, reloadSeriesList } from '@/renderer/features/library/utils';
 import {
   categoryListState,
@@ -15,6 +15,8 @@ import {
 } from '@/renderer/state/libraryStates';
 import { chapterLanguagesState } from '@/renderer/state/settingStates';
 import library from '@/renderer/services/library';
+import DefaultButton from '../general/DefaultButton';
+import DefaultText from '../general/DefaultText';
 
 type Props = {
   showAssignCategoriesModal: () => void;
@@ -59,30 +61,31 @@ const LibraryControlBarMultiSelect: React.FC<Props> = () => {
   return (
     <Group justify="space-between" align="center" pt="sm" mb="md" wrap="nowrap">
       <Group align="left" gap="xs" wrap="nowrap">
-        <Button
+        <DefaultButton
+          oc="blue"
           onClick={refreshHandler}
           loading={reloadingSeriesList}
           onMouseEnter={() => setShowingContextMenu(false)}
         >
           {reloadingSeriesList ? 'Refreshing...' : 'Refresh selected'}{' '}
-        </Button>
-        <Button variant="default" leftSection={<IconTag size={14} />}>
+        </DefaultButton>
+        {/* <Button variant="default" leftSection={<IconTag size={14} />}>
           Assign categories
-        </Button>
-        <Button
+        </Button> */}
+        <DefaultButton
           onClick={markAllReadHandler}
           variant="default"
           leftSection={<IconChecks size={14} />}
         >
           Mark all read
-        </Button>
+        </DefaultButton>
       </Group>
 
       <Group justify="flex-end" align="center" wrap="nowrap">
-        <Text>{multiSelectSeriesList.length} series selected</Text>
-        <Button variant="default" onClick={() => setMultiSelectEnabled(false)}>
+        <DefaultText>{multiSelectSeriesList.length} series selected</DefaultText>
+        <DefaultButton variant="default" onClick={() => setMultiSelectEnabled(false)}>
           Exit multi-select
-        </Button>
+        </DefaultButton>
       </Group>
     </Group>
   );

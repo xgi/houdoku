@@ -3,6 +3,18 @@
   opacity: 0.8;
   background-size: cover;
   cursor: pointer;
+
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+
+  &[data-multiselected="true"] {
+    img {
+      border: 4px solid var(--mantine-color-blue-8);
+    }
+  }
 }
 
 .coverContainer:hover {
