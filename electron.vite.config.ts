@@ -1,10 +1,10 @@
 import path from 'path';
-import { defineConfig, externalizeDepsPlugin, bytecodePlugin } from 'electron-vite';
+import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin(), bytecodePlugin()],
+    plugins: [externalizeDepsPlugin()],
     resolve: {
       alias: {
         '@/': path.join(__dirname, 'src/'),

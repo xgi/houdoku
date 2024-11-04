@@ -1,6 +1,7 @@
 .vscode/settings.json
 
 node_modules
+.pnpm-store
 
 release
 src/main.prod.js

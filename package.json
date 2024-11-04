@@ -151,7 +151,6 @@
     "vite-plugin-node-polyfills": "^0.22.0"
   },
   "devDependencies": {
-    "@electron/rebuild": "^3.7.0",
     "electron": "^32.1.2",
     "electron-builder": "^25.1.8"
   },
