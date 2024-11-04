@@ -12,12 +12,18 @@ import {
   seriesState,
 } from '@/renderer/state/libraryStates';
 import { goToSeries, markChapters, removeSeries } from '@/renderer/features/library/utils';
-import { chapterLanguagesState, confirmRemoveSeriesState } from '@/renderer/state/settingStates';
+import {
+  chapterLanguagesState,
+  confirmRemoveSeriesState,
+  themeState,
+} from '@/renderer/state/settingStates';
 import library from '@/renderer/services/library';
+import DefaultMenu from '../general/DefaultMenu';
+import { themeProps } from '@/renderer/util/themes';
 
 const ELEMENT_ID = 'LibraryGridContextMenu';
 const WIDTH = 200;
-const ESTIMATED_HEIGHT = 150; // TODO: update
+const ESTIMATED_HEIGHT = 150;
 
 type Props = {
   visible: boolean;
@@ -29,6 +35,7 @@ type Props = {
 
 const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
+  const theme = useRecoilValue(themeState);
   const confirmRemoveSeries = useRecoilValue(confirmRemoveSeriesState);
   const setSeriesList = useSetRecoilState(seriesListState);
   const setSeries = useSetRecoilState(seriesState);
@@ -114,8 +121,8 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
   if (!props.visible) return <></>;
   return (
     <Portal>
-      <Menu shadow="md" width={WIDTH} opened>
-        <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }}>
+      <DefaultMenu shadow="md" width={WIDTH} opened>
+        <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }} {...themeProps(theme)}>
           <Menu.Item leftSection={<IconPlayerPlay size={14} />} onClick={viewFunc}>
             View series
           </Menu.Item>
@@ -129,7 +136,7 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
             Remove series
           </Menu.Item>
         </Menu.Dropdown>
-      </Menu>
+      </DefaultMenu>
     </Portal>
   );
 };

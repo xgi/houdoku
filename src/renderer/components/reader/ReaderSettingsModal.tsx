@@ -1,14 +1,14 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { Modal } from '@mantine/core';
 import ReaderSettings from '../settings/ReaderSettings';
 import { showingSettingsModalState } from '@/renderer/state/readerStates';
+import DefaultModal from '../general/DefaultModal';
 
 const ReaderSettingsModal: React.FC = () => {
   const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(showingSettingsModalState);
 
   return (
-    <Modal
+    <DefaultModal
       opened={showingSettingsModal}
       // centered
       size="md"
@@ -16,7 +16,7 @@ const ReaderSettingsModal: React.FC = () => {
       onClose={() => setShowingSettingsModal(!showingSettingsModal)}
     >
       <ReaderSettings />
-    </Modal>
+    </DefaultModal>
   );
 };
 

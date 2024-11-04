@@ -2,7 +2,7 @@ const fs = require('fs');
 import React from 'react';
 const { ipcRenderer } = require('electron');
 import { useRecoilValue } from 'recoil';
-import { Grid, Group, Text, Image, Title, ScrollArea } from '@mantine/core';
+import { Grid, Group, Image, ScrollArea } from '@mantine/core';
 import path from 'path';
 import { Series } from '@tiyo/common';
 import blankCover from '@/renderer/img/blank_cover.png';
@@ -10,6 +10,8 @@ import ipcChannels from '@/common/constants/ipcChannels.json';
 import { currentExtensionMetadataState } from '@/renderer/state/libraryStates';
 import constants from '@/common/constants/constants.json';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
+import DefaultText from '../../general/DefaultText';
+import DefaultTitle from '../../general/DefaultTitle';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -43,13 +45,13 @@ const SeriesDetailsIntro: React.FC<Props> = (props: Props) => {
       </Grid.Col>
       <Grid.Col span={19}>
         <Group justify="space-between" mt="xs" mb="xs" align="center" wrap="nowrap">
-          <Title order={4} lineClamp={1}>
+          <DefaultTitle order={4} lineClamp={1}>
             {props.series.title}
-          </Title>
-          <Text>{currentExtensionMetadata?.name}</Text>
+          </DefaultTitle>
+          <DefaultText>{currentExtensionMetadata?.name}</DefaultText>
         </Group>
         <ScrollArea h={100} style={{ whiteSpace: 'pre-wrap' }}>
-          {props.series.description}
+          <DefaultText>{props.series.description}</DefaultText>
         </ScrollArea>
       </Grid.Col>
     </Grid>

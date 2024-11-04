@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@mantine/core';
+import DefaultButton from '../../general/DefaultButton';
 
 type Props = {
   label: string;
@@ -17,9 +17,9 @@ const SearchFilterCycle: React.FC<Props> = (props: Props) => {
   const currentLabel = props.options.find((option) => option.value === props.value)?.label;
 
   return (
-    <Button variant="default" onClick={toggleValue}>
+    <DefaultButton onClick={toggleValue}>
       {props.label}: {currentLabel}
-    </Button>
+    </DefaultButton>
   );
 };
 

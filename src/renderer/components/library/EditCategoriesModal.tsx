@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
-import { ActionIcon, Group, Modal, Stack, TextInput, Tooltip } from '@mantine/core';
+import { Group, Stack, Tooltip } from '@mantine/core';
 import { IconAlertCircle, IconPlus, IconRefresh, IconRefreshOff, IconTrash } from '@tabler/icons';
 import { categoryListState } from '@/renderer/state/libraryStates';
 import library from '@/renderer/services/library';
 import { Category } from '@/common/models/types';
 import { libraryFilterCategoryState } from '@/renderer/state/settingStates';
+import DefaultModal from '../general/DefaultModal';
+import DefaultInput from '../general/DefaultInput';
+import DefaultActionIcon from '../general/DefaultActionIcon';
 
 type Props = {
   showing: boolean;
@@ -68,12 +71,13 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Modal opened={props.showing} title="Edit Categories" onClose={handleClose} size="xs">
+    // <DefaultModal opened={true} title="Edit Categories" onClose={handleClose} size="xs">
+    <DefaultModal opened={props.showing} title="Edit Categories" onClose={handleClose} size="xs">
       <Stack gap={4} pr="sm">
         {tempCategoryList.map((category) => {
           return (
             <Group wrap="nowrap" key={category.id} gap={0}>
-              <TextInput
+              <DefaultInput
                 value={category.label}
                 placeholder="Category name..."
                 radius={0}
@@ -86,37 +90,37 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
 
               <Tooltip.Floating label="Allow Refreshing" ml="xs">
                 {category.refreshEnabled || category.refreshEnabled === undefined ? (
-                  <ActionIcon mx={4}>
+                  <DefaultActionIcon oc="blue" mx={4}>
                     <IconRefresh
                       size={18}
                       onClick={() => updateCategory(category.id, { refreshEnabled: false })}
                     />
-                  </ActionIcon>
+                  </DefaultActionIcon>
                 ) : (
-                  <ActionIcon mx={4} bg="gray.8">
+                  <DefaultActionIcon oc="gray" mx={4}>
                     <IconRefreshOff
                       size={18}
                       onClick={() => updateCategory(category.id, { refreshEnabled: true })}
                     />
-                  </ActionIcon>
+                  </DefaultActionIcon>
                 )}
               </Tooltip.Floating>
 
               <Tooltip.Floating label="Delete Category" ml="xs">
-                <ActionIcon color="red">
+                <DefaultActionIcon oc="red">
                   {promptRemoveCategoryIds.includes(category.id) ? (
                     <IconAlertCircle size={18} onClick={() => removeCategory(category.id)} />
                   ) : (
                     <IconTrash size={18} onClick={() => promptRemoveCategory(category.id)} />
                   )}
-                </ActionIcon>
+                </DefaultActionIcon>
               </Tooltip.Floating>
             </Group>
           );
         })}
 
         <Group wrap="nowrap" gap="xs">
-          <TextInput
+          <DefaultInput
             ref={newCategoryInputRef}
             data-autofocus
             value={newCategoryLabel}
@@ -131,13 +135,13 @@ const EditCategoriesModal: React.FC<Props> = (props: Props) => {
             }}
           />
           <Tooltip.Floating label="Create Category" ml="xs">
-            <ActionIcon color="teal" mx={0} px={0}>
+            <DefaultActionIcon oc="teal" mx={0} px={0}>
               <IconPlus size={18} onClick={() => addCategory()} />
-            </ActionIcon>
+            </DefaultActionIcon>
           </Tooltip.Floating>
         </Group>
       </Stack>
-    </Modal>
+    </DefaultModal>
   );
 };
 

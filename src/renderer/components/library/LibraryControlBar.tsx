@@ -1,7 +1,7 @@
 import React from 'react';
 import { SeriesStatus } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Button, Group, Menu, ScrollArea, TextInput } from '@mantine/core';
+import { Group, Menu, ScrollArea } from '@mantine/core';
 import {
   IconArrowDown,
   IconArrowUp,
@@ -34,7 +34,12 @@ import {
   librarySortState,
   chapterLanguagesState,
   libraryFilterCategoryState,
+  themeState,
 } from '@/renderer/state/settingStates';
+import DefaultButton from '../general/DefaultButton';
+import DefaultInput from '../general/DefaultInput';
+import DefaultMenu from '../general/DefaultMenu';
+import { themeProps } from '@/renderer/util/themes';
 
 type Props = {
   showEditCategoriesModal: () => void;
@@ -48,6 +53,7 @@ const SORT_ICONS = {
 };
 
 const LibraryControlBar: React.FC<Props> = (props: Props) => {
+  const theme = useRecoilValue(themeState);
   const setSeriesList = useSetRecoilState(seriesListState);
   const activeSeriesList = useRecoilValue(activeSeriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
@@ -82,21 +88,22 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   return (
     <Group justify="space-between" pt="sm" mb="md" wrap="nowrap">
       <Group align="left" gap="xs" wrap="nowrap">
-        <Button
+        <DefaultButton
+          oc="blue"
           onClick={refreshHandler}
           loading={reloadingSeriesList}
           onMouseEnter={() => setShowingContextMenu(false)}
         >
           {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}{' '}
-        </Button>
-        <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={200}>
+        </DefaultButton>
+        <DefaultMenu shadow="md" trigger="hover" closeOnItemClick={false} width={200}>
           <Menu.Target>
-            <Button variant="default" onMouseEnter={() => setShowingContextMenu(false)}>
+            <DefaultButton variant="default" onMouseEnter={() => setShowingContextMenu(false)}>
               Layout
-            </Button>
+            </DefaultButton>
           </Menu.Target>
 
-          <Menu.Dropdown>
+          <Menu.Dropdown {...themeProps(theme)}>
             <Menu.Label>View</Menu.Label>
             <Menu.Item
               leftSection={<IconLayoutGrid size={14} />}
@@ -185,16 +192,16 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               Columns
             </Menu.Item>
           </Menu.Dropdown>
-        </Menu>
+        </DefaultMenu>
 
-        <Menu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
+        <DefaultMenu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
           <Menu.Target>
-            <Button variant="default" onMouseEnter={() => setShowingContextMenu(false)}>
+            <DefaultButton variant="default" onMouseEnter={() => setShowingContextMenu(false)}>
               Filters
-            </Button>
+            </DefaultButton>
           </Menu.Target>
 
-          <Menu.Dropdown>
+          <Menu.Dropdown {...themeProps(theme)}>
             <Menu.Label>Progress</Menu.Label>
             {Object.values(ProgressFilter).map((value) => (
               <Menu.Item
@@ -224,20 +231,20 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               </Menu.Item>
             ))}
           </Menu.Dropdown>
-        </Menu>
+        </DefaultMenu>
 
-        <Menu shadow="md" trigger="hover" closeOnItemClick={true} width={200}>
+        <DefaultMenu shadow="md" trigger="hover" closeOnItemClick={true} width={200}>
           <Menu.Target>
-            <Button
+            <DefaultButton
               variant="default"
               onContextMenu={() => setLibraryFilterCategory('')}
               onMouseEnter={() => setShowingContextMenu(false)}
             >
               Category
-            </Button>
+            </DefaultButton>
           </Menu.Target>
 
-          <Menu.Dropdown>
+          <Menu.Dropdown {...themeProps(theme)}>
             <ScrollArea.Autosize mah={320}>
               {availableCategories.map((availableCategory) => {
                 return (
@@ -272,10 +279,10 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
               </Menu.Item>
             </ScrollArea.Autosize>
           </Menu.Dropdown>
-        </Menu>
+        </DefaultMenu>
       </Group>
       <Group justify="flex-end" align="right" wrap="nowrap">
-        <TextInput
+        <DefaultInput
           placeholder="Search library..."
           leftSection={<IconSearch size={16} />}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}

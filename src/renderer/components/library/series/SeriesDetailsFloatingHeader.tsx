@@ -8,6 +8,7 @@ import { downloadCover } from '@/renderer/util/download';
 import library from '@/renderer/services/library';
 import { seriesListState } from '@/renderer/state/libraryStates';
 import routes from '@/common/constants/routes.json';
+import DefaultButton from '../../general/DefaultButton';
 
 type Props = {
   series: Series;
@@ -21,20 +22,19 @@ const SeriesDetailsFloatingHeader: React.FC<Props> = (props: Props) => {
       <Affix position={{ top: 29, left: 205 }} zIndex={0}>
         {props.series.preview ? (
           <Link to={routes.SEARCH}>
-            <Button size="sm" leftSection={<IconArrowLeft size={16} />} variant="default">
+            <DefaultButton size="sm" leftSection={<IconArrowLeft size={16} />}>
               Back to search
-            </Button>
+            </DefaultButton>
           </Link>
         ) : (
           <Link to={routes.LIBRARY}>
-            <Button
+            <DefaultButton
               size="sm"
               leftSection={<IconArrowLeft size={16} />}
-              variant="default"
               onClick={() => setSeriesList(library.fetchSeriesList())}
             >
               Back to library
-            </Button>
+            </DefaultButton>
           </Link>
         )}
       </Affix>

@@ -1,9 +1,14 @@
 const fs = require('fs');
 import React from 'react';
 const { ipcRenderer } = require('electron');
-import { Box, Grid, Group, Text, Badge } from '@mantine/core';
+import { Box, Grid, Group, Badge } from '@mantine/core';
 import { Languages, Series } from '@tiyo/common';
 import ipcChannels from '@/common/constants/ipcChannels.json';
+import DefaultText from '../../general/DefaultText';
+import styles from './SeriesDetailsInfoGrid.module.css';
+import { useRecoilValue } from 'recoil';
+import { themeState } from '@/renderer/state/settingStates';
+import { themeProps } from '@/renderer/util/themes';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -15,18 +20,19 @@ type Props = {
 };
 
 const SeriesDetailsInfoGrid: React.FC<Props> = (props: Props) => {
+  const theme = useRecoilValue(themeState);
   const language = Languages[props.series.originalLanguageKey];
   const languageStr = language !== undefined && 'name' in language ? language.name : '';
 
   const getCol = (heading: string, content: string) => (
     <Grid.Col span={3}>
-      <Text ml={4} c="dimmed" size="sm" fw={700}>
+      <DefaultText ml={4} size="sm" fw={700}>
         {heading}
-      </Text>
-      <Box bg={'dark.6'} py={6} px={12}>
-        <Text size="sm" lineClamp={1} title={content}>
+      </DefaultText>
+      <Box {...themeProps(theme)} className={styles.item} py={6} px={12}>
+        <DefaultText size="sm" lineClamp={1} title={content}>
           {content}
-        </Text>
+        </DefaultText>
       </Box>
     </Grid.Col>
   );

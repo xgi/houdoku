@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 const { ipcRenderer } = require('electron');
-import { Title, Text, Button, Group } from '@mantine/core';
+import { Title, Group } from '@mantine/core';
 import packageJson from '../../../../package.json';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { IconGitFork, IconHome, IconNotebook, IconScale } from '@tabler/icons';
+import DefaultText from '../general/DefaultText';
+import DefaultButton from '../general/DefaultButton';
+import DefaultTitle from '../general/DefaultTitle';
 
 const About: React.FC = () => {
   const [checkingForUpdate, setCheckingForUpdate] = useState(false);
@@ -19,32 +22,32 @@ const About: React.FC = () => {
   return (
     <>
       <Group pt="sm" justify="space-between">
-        <Title order={2} pb="xs">
+        <DefaultTitle order={2} pb="xs">
           {packageJson.productName} v{packageJson.version}
-        </Title>
-        <Button size="xs" onClick={handleUpdateCheck} loading={checkingForUpdate}>
+        </DefaultTitle>
+        <DefaultButton size="xs" onClick={handleUpdateCheck} loading={checkingForUpdate}>
           Check for Updates
-        </Button>
+        </DefaultButton>
       </Group>
 
-      <Text pb="xs" pt="md">
+      <DefaultText pb="xs" pt="md">
         Houdoku is a desktop manga reader. To add a series to your library, click the{' '}
-        <Text component="span" c="teal" fw={700}>
+        <DefaultText component="span" c="teal" fw={700}>
           Add Series
-        </Text>{' '}
+        </DefaultText>{' '}
         tab on the left panel and search for the series from a supported content source. To add more
         content sources, install a{' '}
-        <Text component="span" c="violet" fw={700}>
+        <DefaultText component="span" c="violet" fw={700}>
           Plugin
-        </Text>
+        </DefaultText>
         .
-      </Text>
-      <Text pb="xs">
+      </DefaultText>
+      <DefaultText pb="xs">
         Houdoku is open source. Please report issues or request features on GitHub.
-      </Text>
+      </DefaultText>
       <Group gap="xs" pt="md">
-        <Button
-          color="teal"
+        <DefaultButton
+          oc="teal"
           leftSection={<IconHome size={18} />}
           component="a"
           href={packageJson.homepage}
@@ -52,9 +55,9 @@ const About: React.FC = () => {
           rel="noreferrer"
         >
           Official Website
-        </Button>
-        <Button
-          color="blue"
+        </DefaultButton>
+        <DefaultButton
+          oc="blue"
           leftSection={<IconNotebook size={18} />}
           component="a"
           href={`${packageJson.homepage}/docs`}
@@ -62,9 +65,9 @@ const About: React.FC = () => {
           rel="noreferrer"
         >
           Documentation
-        </Button>
-        <Button
-          color="grape"
+        </DefaultButton>
+        <DefaultButton
+          oc="grape"
           leftSection={<IconGitFork size={18} />}
           component="a"
           href={packageJson.repository.url}
@@ -72,9 +75,9 @@ const About: React.FC = () => {
           rel="noreferrer"
         >
           Repository
-        </Button>
-        <Button
-          color="gray"
+        </DefaultButton>
+        <DefaultButton
+          oc="gray"
           leftSection={<IconScale size={18} />}
           component="a"
           href={`${packageJson.repository.url}/blob/master/LICENSE.txt`}
@@ -82,7 +85,7 @@ const About: React.FC = () => {
           rel="noreferrer"
         >
           License
-        </Button>
+        </DefaultButton>
       </Group>
     </>
   );

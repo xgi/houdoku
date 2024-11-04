@@ -1,0 +1,24 @@
+.dropdown {
+  &[data-theme="light"],
+  &[data-theme="dark"],
+  &[data-theme="black"] {
+    background-color: var(--mantine-color-bg-2);
+    border-color: var(--mantine-color-bg-5);
+
+    .item {
+      color: var(--mantine-color-fg-0);
+
+      &:hover {
+        background-color: var(--mantine-color-bg-4);
+      }
+    }
+
+    .label {
+      color: var(--mantine-color-fg-0);
+    }
+
+    .divider {
+      border-color: var(--mantine-color-bg-5);
+    }
+  }
+}

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 const { ipcRenderer, shell } = require('electron');
-import { Accordion, Text, Button, Group, Code, Loader, Timeline, TextInput } from '@mantine/core';
+import { Accordion, Group, Code, Loader, Timeline } from '@mantine/core';
 import { IconExternalLink } from '@tabler/icons';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import storeKeys from '@/common/constants/storeKeys.json';
 import persistantStore from '@/renderer/util/persistantStore';
 import { TrackerMetadata } from '@/common/models/types';
+import DefaultButton from '../general/DefaultButton';
+import DefaultInput from '../general/DefaultInput';
+import DefaultTimeline from '../general/DefaultTimeline';
+import DefaultText from '../general/DefaultText';
 
 type Props = {
   trackerMetadata: TrackerMetadata;
@@ -63,7 +67,7 @@ const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
     return (
       <Group justify="center">
         <Loader />
-        <Text>Reloading tracker details...</Text>
+        <DefaultText>Reloading tracker details...</DefaultText>
       </Group>
     );
   }
@@ -72,60 +76,60 @@ const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
     <>
       <Accordion.Control>
         <Group justify="space-between">
-          <Text>{props.trackerMetadata.name}</Text>
+          <DefaultText>{props.trackerMetadata.name}</DefaultText>
           {username ? (
             <Group justify="flex-end">
-              <Text>
+              <DefaultText>
                 Logged in as <Code>{username}</Code>
-              </Text>
+              </DefaultText>
               {username ? (
-                <Button
+                <DefaultButton
                   ml="xs"
                   size="xs"
-                  color="red"
+                  oc="red"
                   radius={0}
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
                     e.stopPropagation();
                     saveAccessToken('');
                   }}
                 >
                   Unlink
-                </Button>
+                </DefaultButton>
               ) : undefined}
             </Group>
           ) : (
-            <Text>Not logged in.</Text>
+            <DefaultText>Not logged in.</DefaultText>
           )}
         </Group>
       </Accordion.Control>
 
       <Accordion.Panel>
-        <Timeline active={-1} bulletSize={36} lineWidth={2} mt="sm">
+        <DefaultTimeline active={-1} bulletSize={36} lineWidth={2} mt="sm">
           <Timeline.Item bullet={1}>
-            <Button
+            <DefaultButton
               ml="sm"
               variant="default"
               leftSection={<IconExternalLink />}
               onClick={() => shell.openExternal(authUrls[props.trackerMetadata.id])}
             >
               Authenticate on {props.trackerMetadata.name}
-            </Button>
+            </DefaultButton>
           </Timeline.Item>
           <Timeline.Item bullet={2}>
-            <TextInput
+            <DefaultInput
               ml="sm"
               style={{ maxWidth: 280 }}
               placeholder="Paste access code..."
               value={accessCode || ''}
-              onChange={(e) => setAccessCode(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAccessCode(e.target.value)}
             />
           </Timeline.Item>
           <Timeline.Item bullet={3}>
-            <Button ml="sm" onClick={() => submitAccessCode()}>
+            <DefaultButton variant={'default'} ml="sm" onClick={() => submitAccessCode()}>
               Submit
-            </Button>
+            </DefaultButton>
           </Timeline.Item>
-        </Timeline>
+        </DefaultTimeline>
       </Accordion.Panel>
     </>
   );

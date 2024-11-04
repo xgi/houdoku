@@ -29,20 +29,23 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 14px;
+  width: 12px;
 }
 
-::-webkit-scrollbar-track {
-  /* dark 6 */
-  background: #25262b;
+[data-theme="light"]::-webkit-scrollbar-track,
+[data-theme="dark"]::-webkit-scrollbar-track,
+[data-theme="black"]::-webkit-scrollbar-track {
+  background: var(--mantine-color-bg-2);
 }
 
-::-webkit-scrollbar-thumb {
-  /* gray 6 */
-  background: #868e96;
+[data-theme="light"]::-webkit-scrollbar-thumb,
+[data-theme="dark"]::-webkit-scrollbar-thumb,
+[data-theme="black"]::-webkit-scrollbar-thumb {
+  background: var(--mantine-color-bg-4);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  /* gray 7 */
-  background: #495057;
+[data-theme="light"]::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"]::-webkit-scrollbar-thumb:hover,
+[data-theme="black"]::-webkit-scrollbar-thumb:hover {
+  background: var(--mantine-color-bg-5);
 }

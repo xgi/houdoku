@@ -4,7 +4,7 @@ import { themeState } from '@/renderer/state/settingStates';
 import { useRecoilValue } from 'recoil';
 import { themeProps } from '@/renderer/util/themes';
 
-type Props = { label?: string } & typeof Input.defaultProps;
+type Props = { label?: string; flexWrapper?: boolean | undefined } & typeof Input.defaultProps;
 
 const DefaultInput: React.FC<Props> = (props: Props) => {
   const theme = useRecoilValue(themeState);
@@ -12,7 +12,7 @@ const DefaultInput: React.FC<Props> = (props: Props) => {
   return (
     <Input.Wrapper
       labelProps={{ ...themeProps(theme) }}
-      classNames={{ label: styles.label }}
+      classNames={{ root: props.flexWrapper ? styles.flexRoot : undefined, label: styles.label }}
       label={props.label}
     >
       <Input {...themeProps(theme)} classNames={{ input: styles.input }} {...props}></Input>

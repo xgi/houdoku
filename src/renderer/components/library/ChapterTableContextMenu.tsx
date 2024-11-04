@@ -17,7 +17,13 @@ import { markChapters } from '@/renderer/features/library/utils';
 import routes from '@/common/constants/routes.json';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { chapterListState, seriesState } from '@/renderer/state/libraryStates';
-import { chapterLanguagesState, customDownloadsDirState } from '@/renderer/state/settingStates';
+import {
+  chapterLanguagesState,
+  customDownloadsDirState,
+  themeState,
+} from '@/renderer/state/settingStates';
+import { themeProps } from '@/renderer/util/themes';
+import DefaultMenu from '../general/DefaultMenu';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -36,6 +42,7 @@ type Props = {
 
 const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
+  const theme = useRecoilValue(themeState);
   const setChapterList = useSetRecoilState(chapterListState);
   const setSeries = useSetRecoilState(seriesState);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
@@ -134,8 +141,8 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
   if (!props.visible || !props.chapter) return <></>;
   return (
     <Portal>
-      <Menu shadow="md" width={WIDTH} opened>
-        <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }}>
+      <DefaultMenu shadow="md" width={WIDTH} opened>
+        <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }} {...themeProps(theme)}>
           <Menu.Item leftSection={<IconPlayerPlay size={14} />} onClick={handleRead}>
             Read chapter
           </Menu.Item>
@@ -167,7 +174,7 @@ const ChapterTableContextMenu: React.FC<Props> = (props: Props) => {
             Download
           </Menu.Item>
         </Menu.Dropdown>
-      </Menu>
+      </DefaultMenu>
     </Portal>
   );
 };

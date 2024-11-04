@@ -7,6 +7,8 @@ import { gt } from 'semver';
 import { useListState } from '@mantine/hooks';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import PluginSettingsModal from './PluginSettingsModal';
+import DefaultText from '../general/DefaultText';
+import DefaultButton from '../general/DefaultButton';
 
 const Plugins: React.FC = () => {
   const [currentTiyoVersion, setCurrentTiyoVersion] = useState<string | undefined>(undefined);
@@ -83,26 +85,32 @@ const Plugins: React.FC = () => {
       />
 
       <Group align="left" pt="sm" mb="md" gap="sm" wrap="nowrap">
-        <Button loading={refreshing} onClick={() => refreshMetadata()}>
+        <DefaultButton oc="blue" loading={refreshing} onClick={() => refreshMetadata()}>
           Check for Updates
-        </Button>
-        <Button
+        </DefaultButton>
+        <DefaultButton
           variant="default"
           loading={reloading}
           onClick={() => reloadPlugins()}
           disabled={currentTiyoVersion === undefined}
         >
           Reload Installed Plugins
-        </Button>
+        </DefaultButton>
       </Group>
 
       <Table>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>Name</Table.Th>
-            <Table.Th>Description</Table.Th>
             <Table.Th>
-              <Text ta="center">Version</Text>
+              <DefaultText fw="bold">Name</DefaultText>
+            </Table.Th>
+            <Table.Th>
+              <DefaultText fw="bold">Description</DefaultText>
+            </Table.Th>
+            <Table.Th>
+              <Text ta="center">
+                <DefaultText fw="bold">Version</DefaultText>
+              </Text>
             </Table.Th>
             <Table.Th> </Table.Th>
           </Table.Tr>
@@ -110,15 +118,15 @@ const Plugins: React.FC = () => {
         <Table.Tbody>
           <Table.Tr>
             <Table.Td>
-              <Text size="md">Tiyo Extension Manager</Text>
+              <DefaultText>Tiyo Extension Manager</DefaultText>
             </Table.Td>
             <Table.Td>
-              <Text size="md">
+              <DefaultText>
                 Adds support for importing content from other sources, including 3rd-party websites.
-              </Text>
+              </DefaultText>
             </Table.Td>
             <Table.Td>
-              <Text size="md" ta="center">
+              <DefaultText ta="center">
                 {availableTiyoVersion === currentTiyoVersion || !currentTiyoVersion ? (
                   availableTiyoVersion
                 ) : (
@@ -126,14 +134,14 @@ const Plugins: React.FC = () => {
                     {currentTiyoVersion}→<Mark color="teal">{availableTiyoVersion}</Mark>
                   </>
                 )}
-              </Text>
+              </DefaultText>
             </Table.Td>
             <Table.Td>
               <Group gap="xs" wrap="nowrap">
                 {currentTiyoVersion !== undefined ? (
-                  <Button variant="default" onClick={() => setShowingSettingsModal(true)}>
+                  <DefaultButton variant="default" onClick={() => setShowingSettingsModal(true)}>
                     Settings
-                  </Button>
+                  </DefaultButton>
                 ) : undefined}
 
                 {tiyoCanUpdate ? (
@@ -142,13 +150,13 @@ const Plugins: React.FC = () => {
                   </Button>
                 ) : undefined}
                 {currentTiyoVersion === undefined && availableTiyoVersion !== undefined ? (
-                  <Button
+                  <DefaultButton
                     loading={installingPlugins.includes('@tiyo/core')}
                     variant="default"
                     onClick={() => handleInstall('@tiyo/core', availableTiyoVersion)}
                   >
                     {installingPlugins.includes('@tiyo/core') ? 'Installing...' : 'Install'}
-                  </Button>
+                  </DefaultButton>
                 ) : (
                   <Button variant="filled" color="red" onClick={() => handleRemove('@tiyo/core')}>
                     Uninstall

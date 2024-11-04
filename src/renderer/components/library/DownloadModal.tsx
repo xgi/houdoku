@@ -2,12 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
 import { useRecoilValue } from 'recoil';
 const { ipcRenderer } = require('electron');
-import { Button, Group, Modal, NumberInput, Radio, Text } from '@mantine/core';
+import { Group } from '@mantine/core';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { customDownloadsDirState } from '@/renderer/state/settingStates';
 import { sortedFilteredChapterListState } from '@/renderer/state/libraryStates';
 import { downloadAll, downloadNextX } from '@/renderer/features/library/chapterDownloadUtils';
 import { queueState } from '@/renderer/state/downloaderStates';
+import DefaultModal from '../general/DefaultModal';
+import DefaultButton from '../general/DefaultButton';
+import DefaultText from '../general/DefaultText';
+import DefaultRadio from '../general/DefaultRadio';
+import DefaultNumberInput from '../general/DefaultNumberInput';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -88,17 +93,17 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
   const renderDownloadNextX = () => {
     const active = downloadAction === DownloadAction.NextX;
     return (
-      <Radio
+      <DefaultRadio
         checked={active}
         onChange={() => setDownloadAction(DownloadAction.NextX)}
         styles={{ inner: { alignSelf: 'center' } }}
         mb={4}
         label={
           <Group gap={5}>
-            <Text size="sm" mr={4}>
+            <DefaultText size="sm" mr={4}>
               Download next
-            </Text>
-            <NumberInput
+            </DefaultText>
+            <DefaultNumberInput
               disabled={!active}
               value={downloadNextAmount}
               min={0}
@@ -108,9 +113,9 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
               size="xs"
               styles={{ input: { width: 54, textAlign: 'center' } }}
             />
-            <Text size="sm" ml={4}>
+            <DefaultText size="sm" ml={4}>
               chapters
-            </Text>
+            </DefaultText>
           </Group>
         }
       />
@@ -120,17 +125,17 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
   const renderDownloadRange = () => {
     const active = downloadAction === DownloadAction.Range;
     return (
-      <Radio
+      <DefaultRadio
         checked={active}
         onChange={() => setDownloadAction(DownloadAction.Range)}
         styles={{ inner: { alignSelf: 'center' } }}
         mb={4}
         label={
           <Group gap={5}>
-            <Text size="sm" mr={4}>
+            <DefaultText size="sm" mr={4}>
               Download chapters
-            </Text>
-            <NumberInput
+            </DefaultText>
+            <DefaultNumberInput
               disabled={!active}
               value={downloadRangeStart}
               min={0}
@@ -140,10 +145,10 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
               size="xs"
               styles={{ input: { width: 54, textAlign: 'center' } }}
             />
-            <Text size="sm" ml={4} mr={4}>
+            <DefaultText size="sm" ml={4} mr={4}>
               through
-            </Text>
-            <NumberInput
+            </DefaultText>
+            <DefaultNumberInput
               disabled={!active}
               value={downloadRangeEnd}
               min={0}
@@ -162,7 +167,7 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
   const renderDownloadUnread = () => {
     const active = downloadAction === DownloadAction.Unread;
     return (
-      <Radio
+      <DefaultRadio
         checked={active}
         onChange={() => setDownloadAction(DownloadAction.Unread)}
         mb={4}
@@ -174,7 +179,7 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
   const renderDownloadAll = () => {
     const active = downloadAction === DownloadAction.All;
     return (
-      <Radio
+      <DefaultRadio
         checked={active}
         onChange={() => setDownloadAction(DownloadAction.All)}
         label={'Download all chapters'}
@@ -183,19 +188,19 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Modal opened={props.visible} centered title="Download chapters" onClose={props.close}>
+    <DefaultModal opened={props.visible} centered title="Download chapters" onClose={props.close}>
       {renderDownloadNextX()}
       {renderDownloadRange()}
       {renderDownloadUnread()}
       {renderDownloadAll()}
 
       <Group justify="flex-end" mt="md">
-        <Button variant="default" onClick={props.close}>
-          Cancel
-        </Button>
-        <Button onClick={downloadFunc}>Download</Button>
+        <DefaultButton onClick={props.close}>Cancel</DefaultButton>
+        <DefaultButton oc="blue" onClick={downloadFunc}>
+          Download
+        </DefaultButton>
       </Group>
-    </Modal>
+    </DefaultModal>
   );
 };
 

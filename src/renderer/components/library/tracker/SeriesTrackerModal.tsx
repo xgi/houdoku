@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
-import { Modal, Tabs } from '@mantine/core';
+import { Tabs } from '@mantine/core';
 import {
   MUTrackerMetadata,
   AniListTrackerMetadata,
@@ -8,6 +8,11 @@ import {
 } from '@/common/temp_tracker_metadata';
 import SeriesTrackerModalTab from './SeriesTrackerModalTab';
 import { updateSeriesTrackerKeys } from '@/renderer/features/library/utils';
+import DefaultModal from '../../general/DefaultModal';
+import DefaultTabs from '../../general/DefaultTabs';
+import { themeProps } from '@/renderer/util/themes';
+import { useRecoilValue } from 'recoil';
+import { themeState } from '@/renderer/state/settingStates';
 
 const TRACKER_METADATAS = [AniListTrackerMetadata, MALTrackerMetadata, MUTrackerMetadata];
 
@@ -18,6 +23,7 @@ type Props = {
 };
 
 const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
+  const theme = useRecoilValue(themeState);
   const [seriesTrackerKeys, setSeriesTrackerKeys] = useState<{
     [trackerId: string]: string;
   }>();
@@ -37,9 +43,9 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
   }, [props.series]);
 
   return (
-    <Modal title="Trackers" opened={props.visible} onClose={props.toggleVisible}>
-      <Tabs defaultValue={TRACKER_METADATAS[0].id}>
-        <Tabs.List>
+    <DefaultModal title="Trackers" opened={props.visible} onClose={props.toggleVisible}>
+      <DefaultTabs {...themeProps(theme)} defaultValue={TRACKER_METADATAS[0].id}>
+        <Tabs.List {...themeProps(theme)}>
           {TRACKER_METADATAS.map((trackerMetadata) => (
             <Tabs.Tab value={trackerMetadata.id} key={trackerMetadata.id}>
               {trackerMetadata.name}
@@ -65,8 +71,8 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
             />
           </Tabs.Panel>
         ))}
-      </Tabs>
-    </Modal>
+      </DefaultTabs>
+    </DefaultModal>
   );
 };
 

@@ -7,6 +7,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import { importingState, importQueueState, seriesListState } from '@/renderer/state/libraryStates';
 import { goToSeries } from '@/renderer/features/library/utils';
+import DefaultMenu from '../general/DefaultMenu';
+import { themeProps } from '@/renderer/util/themes';
+import { themeState } from '@/renderer/state/settingStates';
 
 const ELEMENT_ID = 'SearchGridContextMenu';
 const WIDTH = 200;
@@ -22,6 +25,7 @@ type Props = {
 
 const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
+  const theme = useRecoilValue(themeState);
   const [importQueue, setImportQueue] = useRecoilState(importQueueState);
   const [sanitizedPos, setSanitizedPos] = useState<{ x: number; y: number }>(props.position);
   const [loadingPreview, setLoadingPreview] = useState(false);
@@ -101,8 +105,8 @@ const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
   if (!props.visible) return <></>;
   return (
     <Portal>
-      <Menu shadow="md" width={WIDTH} opened>
-        <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }}>
+      <DefaultMenu shadow="md" width={WIDTH} opened>
+        <Menu.Dropdown id={ELEMENT_ID} style={{ display: 'none' }} {...themeProps(theme)}>
           <Menu.Item leftSection={<IconEye size={14} />} onClick={viewDetailsFunc}>
             View details
           </Menu.Item>
@@ -113,7 +117,7 @@ const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
             Preview
           </Menu.Item>
         </Menu.Dropdown>
-      </Menu>
+      </DefaultMenu>
     </Portal>
   );
 };

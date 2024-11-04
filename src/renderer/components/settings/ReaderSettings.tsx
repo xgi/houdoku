@@ -1,20 +1,6 @@
 import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
-import {
-  Table,
-  Text,
-  Center,
-  Box,
-  Checkbox,
-  Button,
-  Collapse,
-  Group,
-  Radio,
-  Slider,
-  Menu,
-  MantineTheme,
-  Stack,
-} from '@mantine/core';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { Table, Center, Box, Collapse, Group, Radio, Slider, Menu, Stack } from '@mantine/core';
 import {
   IconArrowBigLeft,
   IconArrowBigRight,
@@ -55,10 +41,18 @@ import {
   optimizeContrastState,
   keyToggleOffsetDoubleSpreadsState,
   keyToggleFullscreenState,
+  themeState,
 } from '@/renderer/state/settingStates';
 import DefaultSegmentedControl from '../general/DefaultSegmentedControl';
+import DefaultText from '../general/DefaultText';
+import DefaultCheckbox from '../general/DefaultCheckbox';
+import DefaultButton from '../general/DefaultButton';
+import DefaultRadio from '../general/DefaultRadio';
+import DefaultMenu from '../general/DefaultMenu';
+import { themeProps } from '@/renderer/util/themes';
 
 const ReaderSettings: React.FC = () => {
+  const theme = useRecoilValue(themeState);
   const [showingKeybinds, setShowingKeybinds] = useState(false);
   const [fitContainToWidth, setFitContainToWidth] = useRecoilState(fitContainToWidthState);
   const [fitContainToHeight, setFitContainToHeight] = useRecoilState(fitContainToHeightState);
@@ -95,24 +89,6 @@ const ReaderSettings: React.FC = () => {
   const [maxPageWidth, setMaxPageWidth] = useRecoilState(maxPageWidthState);
   const [pageWidthMetric, setPageWidthMetric] = useRecoilState(pageWidthMetricState);
   const [optimizeContrast, setOptimizeContrast] = useRecoilState(optimizeContrastState);
-
-  const buttonStyles = (theme: MantineTheme) => ({
-    root: {
-      height: 24,
-      fontSize: 12,
-      color: theme.colors.gray[4],
-      backgroundColor: theme.colors.dark[7],
-      '&:hover': {
-        backgroundColor: theme.colors.dark[4],
-      },
-    },
-    leftIcon: {
-      marginRight: 4,
-    },
-    rightIcon: {
-      marginLeft: 0,
-    },
-  });
 
   // biome-ignore lint/suspicious/noExplicitAny: arbitrary schema
   const updateReaderSetting = (readerSetting: ReaderSetting, value: any) => {
@@ -222,7 +198,7 @@ const ReaderSettings: React.FC = () => {
 
   return (
     <>
-      <Text pb="xs">Page Style</Text>
+      <DefaultText pb="xs">Page Style</DefaultText>
       <Stack gap="xs">
         <DefaultSegmentedControl
           maw={400}
@@ -259,7 +235,7 @@ const ReaderSettings: React.FC = () => {
           onChange={(value) => updateReaderSetting(ReaderSetting.PageStyle, value)}
         />
 
-        <Checkbox
+        <DefaultCheckbox
           label="Spacing between pages"
           ml="sm"
           disabled={pageStyle === PageStyle.Single}
@@ -273,19 +249,19 @@ const ReaderSettings: React.FC = () => {
           onChange={(value: string) => setOffsetPages(value as OffsetPages)}
         >
           <Group>
-            <Radio
+            <DefaultRadio
               pb={4}
               value={OffsetPages.First}
               label="Offset first page"
               disabled={pageStyle !== PageStyle.Double}
             />
-            <Radio
+            <DefaultRadio
               pb={4}
               value={OffsetPages.All}
               label="Offset all"
               disabled={pageStyle !== PageStyle.Double}
             />
-            <Radio
+            <DefaultRadio
               value={OffsetPages.None}
               label="No offset"
               disabled={pageStyle !== PageStyle.Double}
@@ -294,7 +270,7 @@ const ReaderSettings: React.FC = () => {
         </Radio.Group>
       </Stack>
 
-      <Text pb="xs">Reading Direction</Text>
+      <DefaultText pb="xs">Reading Direction</DefaultText>
       <Stack>
         <DefaultSegmentedControl
           mb="sm"
@@ -324,25 +300,20 @@ const ReaderSettings: React.FC = () => {
         />
       </Stack>
 
-      <Text pb="xs">Image Sizing</Text>
+      <DefaultText pb="xs">Image Sizing</DefaultText>
       <Stack gap={4} ml="sm" mb="xs">
-        <Checkbox
+        <DefaultCheckbox
           label="Contain to width"
-          // ml="sm"
-          // pb="xs"
           value={fitContainToWidth ? 'on' : 'off'}
           onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToWidth, e.target.checked)}
         />
-        <Checkbox
+        <DefaultCheckbox
           label="Contain to height"
-          // ml="sm"
-          // pb="xs"
           checked={fitContainToHeight}
           onChange={(e) => updateReaderSetting(ReaderSetting.FitContainToHeight, e.target.checked)}
         />
-        <Checkbox
+        <DefaultCheckbox
           label="Stretch small pages"
-          // ml="sm"
           disabled={!(fitContainToHeight || fitContainToWidth)}
           checked={fitStretch}
           onChange={(e) => updateReaderSetting(ReaderSetting.FitStretch, e.target.checked)}
@@ -350,16 +321,16 @@ const ReaderSettings: React.FC = () => {
       </Stack>
 
       <Group align="left" gap="xs" wrap="nowrap">
-        <Text size="sm" ml="sm">
+        <DefaultText size="sm" ml="sm">
           Max page width
-        </Text>
-        <Menu shadow="md" width={50} trigger="hover">
+        </DefaultText>
+        <DefaultMenu shadow="md" width={50} trigger="hover">
           <Menu.Target>
-            <Button size="xs" styles={buttonStyles} radius={0} px={4} pb={2}>
+            <DefaultButton size="xs" h={24} radius={0} px={4} pb={2}>
               {pageWidthMetric}
-            </Button>
+            </DefaultButton>
           </Menu.Target>
-          <Menu.Dropdown>
+          <Menu.Dropdown {...themeProps(theme)}>
             <Menu.Item
               onClick={() => {
                 updateReaderSetting(ReaderSetting.PageWidthMetric, '%');
@@ -375,7 +346,7 @@ const ReaderSettings: React.FC = () => {
               px
             </Menu.Item>
           </Menu.Dropdown>
-        </Menu>
+        </DefaultMenu>
       </Group>
 
       <Slider
@@ -398,8 +369,8 @@ const ReaderSettings: React.FC = () => {
         onChange={(value) => updateReaderSetting(ReaderSetting.MaxPageWidth, value)}
       />
 
-      <Text py="xs">Rendering</Text>
-      <Checkbox
+      <DefaultText py="xs">Rendering</DefaultText>
+      <DefaultCheckbox
         label="Optimize image contrast"
         ml="sm"
         pb="sm"
@@ -407,11 +378,11 @@ const ReaderSettings: React.FC = () => {
         onChange={(e) => updateReaderSetting(ReaderSetting.OptimizeContrast, e.target.checked)}
       />
 
-      <Text pb="xs">Key Bindings</Text>
+      <DefaultText pb="xs">Key Bindings</DefaultText>
       <Group ml="sm">
-        <Button variant="default" onClick={() => setShowingKeybinds(!showingKeybinds)}>
+        <DefaultButton variant="default" onClick={() => setShowingKeybinds(!showingKeybinds)}>
           {showingKeybinds ? 'Hide' : 'Show'} keybinds
-        </Button>
+        </DefaultButton>
       </Group>
       <Collapse in={showingKeybinds} ml="sm" pb="md">
         <Table verticalSpacing="xs" style={{ maxWidth: 400 }}>
@@ -494,20 +465,24 @@ const ReaderSettings: React.FC = () => {
               },
             ].map((entry) => (
               <tr key={entry.setting}>
-                <td>{entry.name}</td>
                 <td>
-                  <Button
+                  <DefaultText>{entry.name}</DefaultText>
+                </td>
+                <td>
+                  <DefaultButton
                     variant="default"
                     size="xs"
                     fullWidth
-                    onKeyDownCapture={(e) => updateKeySetting(e, entry.setting)}
+                    onKeyDownCapture={(e: React.KeyboardEvent) =>
+                      updateKeySetting(e, entry.setting)
+                    }
                   >
                     {entry.value}
-                  </Button>
+                  </DefaultButton>
                 </td>
                 <td>
                   {entry.value !== DefaultSettings[entry.setting] ? (
-                    <Button
+                    <DefaultButton
                       variant="default"
                       size="xs"
                       fullWidth
@@ -516,7 +491,7 @@ const ReaderSettings: React.FC = () => {
                       }
                     >
                       Reset
-                    </Button>
+                    </DefaultButton>
                   ) : (
                     <></>
                   )}

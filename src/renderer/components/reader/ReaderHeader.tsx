@@ -50,6 +50,7 @@ import {
 } from '@/renderer/features/settings/utils';
 import ReaderHeaderButton from './ReaderHeaderButton';
 import { themeProps } from '@/renderer/util/themes';
+import DefaultMenu from '../general/DefaultMenu';
 
 const TEXT_PAGE_STYLE = {
   [PageStyle.Single]: 'Single Page',
@@ -191,7 +192,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
               }
               onClick={() => props.changeChapter('left')}
             />
-            <Menu shadow="md" width={110} trigger="hover">
+            <DefaultMenu shadow="md" width={110} trigger="hover">
               <Menu.Target>
                 <ReaderHeaderButton radius={0} pb={2}>
                   {chapter && chapter.chapterNumber
@@ -200,7 +201,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 </ReaderHeaderButton>
               </Menu.Target>
 
-              <Menu.Dropdown>
+              <Menu.Dropdown {...themeProps(theme)}>
                 <ScrollArea.Autosize mah={220} style={{ width: 100 }}>
                   {relevantChapterList.map((relevantChapter: Chapter) => (
                     <Menu.Item
@@ -214,7 +215,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                   ))}
                 </ScrollArea.Autosize>
               </Menu.Dropdown>
-            </Menu>
+            </DefaultMenu>
             <ReaderHeaderButton
               px={2}
               radius={0}
@@ -254,14 +255,14 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
               }
               onClick={() => props.changePage(true)}
             />
-            <Menu shadow="md" width={110} trigger="hover">
+            <DefaultMenu shadow="md" width={110} trigger="hover">
               <Menu.Target>
                 <ReaderHeaderButton size="xs" radius={0} px={4} pb={2}>
                   {getCurrentPageNumText()}
                 </ReaderHeaderButton>
               </Menu.Target>
 
-              <Menu.Dropdown>
+              <Menu.Dropdown {...themeProps(theme)}>
                 <ScrollArea.Autosize mah={220} style={{ width: 100 }}>
                   {Array.from({ length: lastPageNumber }, (_v, k) => k + 1).map((i: number) => (
                     <Menu.Item key={i} onClick={() => setPageNumber(i)}>
@@ -270,7 +271,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                   ))}
                 </ScrollArea.Autosize>
               </Menu.Dropdown>
-            </Menu>
+            </DefaultMenu>
             <ReaderHeaderButton
               px={2}
               radius={0}
@@ -339,7 +340,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
           </ReaderHeaderButton>
 
           {languageChapterList.length > 1 ? (
-            <Menu shadow="md" width={320} trigger="hover">
+            <DefaultMenu shadow="md" width={320} trigger="hover">
               <Menu.Target>
                 <ReaderHeaderButton
                   leftSection={
@@ -366,7 +367,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 </ReaderHeaderButton>
               </Menu.Target>
 
-              <Menu.Dropdown>
+              <Menu.Dropdown {...themeProps(theme)}>
                 <ScrollArea.Autosize mah={220} style={{ width: 310 }}>
                   {languageChapterList.map((languageChapter: Chapter) => (
                     <Menu.Item
@@ -400,7 +401,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                   ))}
                 </ScrollArea.Autosize>
               </Menu.Dropdown>
-            </Menu>
+            </DefaultMenu>
           ) : (
             ''
           )}

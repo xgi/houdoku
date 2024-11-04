@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  Checkbox,
-  Divider,
-  Drawer,
-  ScrollArea,
-  Select,
-  Stack,
-  TextInput,
-  Title,
-  TitleOrder,
-} from '@mantine/core';
+import { Divider, Drawer, ScrollArea, Stack, TitleOrder } from '@mantine/core';
 import {
   FilterCheckbox,
   FilterCycle,
@@ -36,6 +26,11 @@ import SearchFilterMultiToggle from './filter/SearchFilterMultiToggle';
 import SearchFilterSort from './filter/SearchFilterSort';
 import SearchFilterTriCheckbox from './filter/SearchFilterTriCheckbox';
 import SearchFilterCycle from './filter/SearchFilterCycle';
+import DefaultDrawerRoot from '../general/DefaultDrawerRoot';
+import DefaultTitle from '../general/DefaultTitle';
+import DefaultSelect from '../general/DefaultSelect';
+import DefaultInput from '../general/DefaultInput';
+import DefaultCheckbox from '../general/DefaultCheckbox';
 
 interface Props {
   filterOptions: FilterOption[];
@@ -64,7 +59,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
 
   const renderCheckbox = (option: FilterCheckbox) => {
     return (
-      <Checkbox
+      <DefaultCheckbox
         key={option.id}
         label={option.label}
         checked={getOptionValue(option) as boolean}
@@ -86,7 +81,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
 
   const renderInput = (option: FilterInput) => {
     return (
-      <TextInput
+      <DefaultInput
         key={option.id}
         label={option.label}
         value={getOptionValue(option) as string}
@@ -100,7 +95,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
 
   const renderSelect = (option: FilterSelect) => {
     return (
-      <Select
+      <DefaultSelect
         key={option.id}
         label={option.label}
         value={getOptionValue(option) as string}
@@ -150,9 +145,9 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
 
   const renderHeader = (option: FilterHeader) => {
     return (
-      <Title key={option.id} order={(option.order as TitleOrder) || 4}>
+      <DefaultTitle key={option.id} order={(option.order as TitleOrder) || 4}>
         {option.label}
-      </Title>
+      </DefaultTitle>
     );
   };
 
@@ -192,7 +187,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
   }, [showingFilterDrawer]);
 
   return (
-    <Drawer.Root
+    <DefaultDrawerRoot
       opened={showingFilterDrawer}
       onClose={() => {
         setShowingFilterDrawer(false);
@@ -216,7 +211,7 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
           </ScrollArea>
         </Drawer.Body>
       </Drawer.Content>
-    </Drawer.Root>
+    </DefaultDrawerRoot>
   );
 };
 

@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { Button, Checkbox, Group, Modal, Text } from '@mantine/core';
+import { Group } from '@mantine/core';
 import routes from '@/common/constants/routes.json';
 import { removeSeries } from '@/renderer/features/library/utils';
 import { seriesListState } from '@/renderer/state/libraryStates';
 import { confirmRemoveSeriesState } from '@/renderer/state/settingStates';
+import DefaultModal from '../general/DefaultModal';
+import DefaultText from '../general/DefaultText';
+import DefaultCheckbox from '../general/DefaultCheckbox';
+import DefaultButton from '../general/DefaultButton';
 
 type Props = {
   series: Series | null;
@@ -35,34 +39,31 @@ const RemoveSeriesModal: React.FC<Props> = (props: Props) => {
   }, [props.showing]);
 
   return (
-    <Modal
+    <DefaultModal
       opened={props.showing && props.series !== null}
-      centered
       title="Remove series"
       onClose={props.close}
     >
-      <Text size="sm" mb="sm">
+      <DefaultText size="sm" mb="sm">
         Are you sure you want to remove{' '}
-        <Text c="teal" inherit component="span" fs="italic">
+        <DefaultText c="teal" inherit component="span" fs="italic">
           {props.series?.title}
-        </Text>{' '}
+        </DefaultText>{' '}
         from your library?
-      </Text>
-      <Checkbox
+      </DefaultText>
+      <DefaultCheckbox
         mt="xs"
         label="Don't ask again"
         checked={dontAskAgain}
         onChange={(e) => setDontAskAgain(e.target.checked)}
       />
       <Group justify="flex-end" mt="sm">
-        <Button variant="default" onClick={props.close}>
-          Cancel
-        </Button>
-        <Button color="red" onClick={removeFunc}>
+        <DefaultButton onClick={props.close}>Cancel</DefaultButton>
+        <DefaultButton oc="red" onClick={removeFunc}>
           Remove from library
-        </Button>
+        </DefaultButton>
       </Group>
-    </Modal>
+    </DefaultModal>
   );
 };
 

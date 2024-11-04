@@ -1,10 +1,11 @@
 import React from 'react';
-import { Group, Text, ThemeIcon, UnstyledButton } from '@mantine/core';
+import { Group, ThemeIcon, UnstyledButton } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import styles from './DashboardSidebarLink.module.css';
 import { useRecoilValue } from 'recoil';
 import { themeState } from '@/renderer/state/settingStates';
 import { themeProps } from '@/renderer/util/themes';
+import DefaultText from './DefaultText';
 
 interface Props {
   icon: React.ReactNode;
@@ -35,7 +36,7 @@ const DashboardSidebarLink: React.FC<Props> = (props: Props) => {
         >
           {props.icon}
         </ThemeIcon>
-        <Text size="sm">{props.label}</Text>
+        <DefaultText size="sm">{props.label}</DefaultText>
       </Group>
     </UnstyledButton>
   );

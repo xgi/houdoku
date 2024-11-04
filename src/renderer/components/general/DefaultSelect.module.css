@@ -1,0 +1,39 @@
+.root {
+  &[data-theme="light"],
+  &[data-theme="dark"],
+  &[data-theme="black"] {
+    ::placeholder {
+      color: var(--mantine-color-fg-2);
+    }
+
+    .label {
+      color: var(--mantine-color-fg-0);
+    }
+
+    .input {
+      color: var(--mantine-color-fg-0);
+      background-color: var(--mantine-color-bg-1);
+      border-color: var(--mantine-color-bg-5);
+
+      &[data-disabled] {
+        color: var(--mantine-color-fg-2);
+        background-color: var(--mantine-color-bg-3);
+      }
+    }
+  }
+}
+
+.dropdownLight,
+.dropdownDark,
+.dropdownBlack {
+  background-color: var(--mantine-color-bg-2) !important;
+  border-color: var(--mantine-color-bg-5) !important;
+
+  .option {
+    color: var(--mantine-color-fg-0);
+
+    &:hover {
+      background-color: var(--mantine-color-bg-4);
+    }
+  }
+}

@@ -9,7 +9,7 @@ import Titlebar from './components/titlebar/Titlebar';
 import { MantineProvider } from '@mantine/core';
 import { ErrorBoundary } from './components/general/ErrorBoundary';
 import { themeState } from './state/settingStates';
-import { THEMES } from './util/themes';
+import { themeProps, THEMES } from './util/themes';
 
 const main = document.createElement('main');
 document.body.appendChild(main);
@@ -20,14 +20,14 @@ function Root() {
 
   return (
     <MantineProvider theme={THEMES[theme]} forceColorScheme="dark">
-      <ErrorBoundary>
-        <header id="titlebar">
-          <Titlebar />
-        </header>
-        <div id="root">
+      <header id="titlebar">
+        <Titlebar />
+      </header>
+      <div id="root" {...themeProps(theme)}>
+        <ErrorBoundary>
           <App />
-        </div>
-      </ErrorBoundary>
+        </ErrorBoundary>
+      </div>
     </MantineProvider>
   );
 }

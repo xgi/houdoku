@@ -26,6 +26,7 @@ import ExtensionImage from '../general/ExtensionImage';
 import { LibraryView } from '@/common/models/types';
 import LibraryGridContextMenu from './LibraryGridContextMenu';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
+import DefaultTitle from '../general/DefaultTitle';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -194,9 +195,9 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                   )}
                 </div>
                 {libraryView === LibraryView.GridComfortable ? (
-                  <Title order={5} lineClamp={3} p={4}>
+                  <DefaultTitle order={5} lineClamp={3} p={4}>
                     {series.title}
-                  </Title>
+                  </DefaultTitle>
                 ) : (
                   ''
                 )}

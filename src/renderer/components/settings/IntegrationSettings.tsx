@@ -1,8 +1,8 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { Checkbox } from '@mantine/core';
 import { IntegrationSetting } from '@/common/models/types';
 import { discordPresenceEnabledState } from '@/renderer/state/settingStates';
+import DefaultCheckbox from '../general/DefaultCheckbox';
 
 const IntegrationSettings: React.FC = () => {
   const [discordPresenceEnabled, setDiscordPresenceEnabled] = useRecoilState(
@@ -22,7 +22,7 @@ const IntegrationSettings: React.FC = () => {
 
   return (
     <>
-      <Checkbox
+      <DefaultCheckbox
         label="Use Discord Rich Presence"
         size="md"
         checked={discordPresenceEnabled}

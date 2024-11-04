@@ -4,17 +4,17 @@ import TrackerSettings from './TrackerSettings';
 import IntegrationSettings from './IntegrationSettings';
 import ReaderSettings from './ReaderSettings';
 import GeneralSettings from './GeneralSettings';
-import styles from './Settings.module.css';
 import { useRecoilValue } from 'recoil';
 import { themeState } from '@/renderer/state/settingStates';
 import { themeProps } from '@/renderer/util/themes';
+import DefaultTabs from '../general/DefaultTabs';
 
 const Settings: React.FC = () => {
   const theme = useRecoilValue(themeState);
 
   return (
-    <Tabs {...themeProps(theme)} classNames={{ root: styles.root }} defaultValue="general">
-      <Tabs.List {...themeProps(theme)} classNames={{ list: styles.list }}>
+    <DefaultTabs {...themeProps(theme)} defaultValue="general">
+      <Tabs.List {...themeProps(theme)}>
         <Tabs.Tab value="general">General</Tabs.Tab>
         <Tabs.Tab value="reader">Reader</Tabs.Tab>
         <Tabs.Tab value="trackers">Trackers</Tabs.Tab>
@@ -33,7 +33,7 @@ const Settings: React.FC = () => {
       <Tabs.Panel value="integrations" pt="md">
         <IntegrationSettings />
       </Tabs.Panel>
-    </Tabs>
+    </DefaultTabs>
   );
 };
 

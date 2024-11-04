@@ -1,33 +1,30 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import {
-  Box,
-  ScrollArea,
-  Stack,
-  Text,
-  Title,
-  Progress,
-  Group,
-  Button,
-  Center,
-} from '@mantine/core';
+import { Box, ScrollArea, Stack, Progress, Group, Button, Center } from '@mantine/core';
 import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons';
 import { downloaderClient, DownloadTask } from '@/renderer/services/downloader';
 import { currentTaskState, queueState } from '@/renderer/state/downloaderStates';
+import DefaultText from '../general/DefaultText';
+import DefaultButton from '../general/DefaultButton';
+import styles from './DownloadQueue.module.css';
+import { themeState } from '@/renderer/state/settingStates';
+import { themeProps } from '@/renderer/util/themes';
+import DefaultTitle from '../general/DefaultTitle';
 
 const DownloadQueue: React.FC = () => {
+  const theme = useRecoilValue(themeState);
   const queue = useRecoilValue(queueState);
   const currentTask = useRecoilValue(currentTaskState);
 
   const renderHeader = () => {
     return (
       <Group pt="sm" mb="xs" justify={'space-between'}>
-        <Title order={3}>Download Queue</Title>
+        <DefaultTitle order={3}>Download Queue</DefaultTitle>
         {currentTask || queue.length > 0 ? (
           <Group gap="xs">
-            <Button variant="default" size="xs" onClick={() => downloaderClient.clear()}>
+            <DefaultButton variant="default" size="xs" onClick={() => downloaderClient.clear()}>
               Clear Queue
-            </Button>
+            </DefaultButton>
             {currentTask === null && queue.length > 0 ? (
               <Button
                 size="xs"
@@ -57,10 +54,16 @@ const DownloadQueue: React.FC = () => {
 
   const renderTask = (task: DownloadTask) => {
     return (
-      <Box key={`${task.series.id}-${task.chapter.id}`} mr="sm" p="xs" bg={'dark.8'}>
+      <Box
+        {...themeProps(theme)}
+        key={`${task.series.id}-${task.chapter.id}`}
+        mr="sm"
+        p="xs"
+        className={styles.task}
+      >
         <Group wrap="nowrap" justify="space-between">
-          <Text>{task.series.title}</Text>
-          <Text>Chapter {task.chapter.chapterNumber}</Text>
+          <DefaultText>{task.series.title}</DefaultText>
+          <DefaultText>Chapter {task.chapter.chapterNumber}</DefaultText>
         </Group>
         {task.page && task.totalPages ? (
           <Progress.Root size="xl">
@@ -89,7 +92,7 @@ const DownloadQueue: React.FC = () => {
           {queue.map((task: DownloadTask) => renderTask(task))}
           {currentTask === null && queue.length === 0 ? (
             <Center style={{ height: '36vh', minHeight: 225 }}>
-              <Text>There are no downloads queued.</Text>
+              <DefaultText>There are no downloads queued.</DefaultText>
             </Center>
           ) : (
             ''

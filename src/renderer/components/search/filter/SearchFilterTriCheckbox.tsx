@@ -1,7 +1,9 @@
 import React from 'react';
-import { Text, ActionIcon, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import { IconCheck, IconX } from '@tabler/icons';
 import { TriState } from '@tiyo/common';
+import DefaultText from '../../general/DefaultText';
+import DefaultActionIcon from '../../general/DefaultActionIcon';
 
 type Props = {
   label: string;
@@ -22,7 +24,7 @@ const SearchFilterTriCheckbox: React.FC<Props> = (props: Props) => {
 
   return (
     <Group gap="sm" onClick={toggleValue}>
-      <ActionIcon
+      <DefaultActionIcon
         variant={props.value === TriState.IGNORE ? 'default' : 'filled'}
         color="blue"
         size="sm"
@@ -34,10 +36,10 @@ const SearchFilterTriCheckbox: React.FC<Props> = (props: Props) => {
             [TriState.EXCLUDE]: <IconX size={16} />,
           }[props.value]
         }
-      </ActionIcon>
-      <Text size="sm" style={{ cursor: 'default' }}>
+      </DefaultActionIcon>
+      <DefaultText size="sm" style={{ cursor: 'default' }}>
         {props.label}
-      </Text>
+      </DefaultText>
     </Group>
   );
 };

@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Button, Center, Group, Loader, Modal, ScrollArea, Stack, Text } from '@mantine/core';
+import { Center, Group, Loader, ScrollArea, Stack } from '@mantine/core';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import SeriesEditControls from '../general/SeriesEditControls';
 import { importingState, importQueueState, seriesListState } from '@/renderer/state/libraryStates';
 import { goToSeries } from '@/renderer/features/library/utils';
+import DefaultModal from '../general/DefaultModal';
+import DefaultButton from '../general/DefaultButton';
+import DefaultText from '../general/DefaultText';
 
 type Props = {
   series: Series | undefined;
@@ -82,7 +85,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
         <Center>
           <Stack align="center">
             <Loader />
-            <Text>Loading series details...</Text>
+            <DefaultText>Loading series details...</DefaultText>
           </Stack>
         </Center>
       );
@@ -97,33 +100,27 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
         />
 
         <Group justify="flex-end" mt="sm">
-          <Button variant="default" onClick={props.close}>
-            Cancel
-          </Button>
-          <Button variant="default" onClick={handlePreview} loading={loadingPreview}>
+          <DefaultButton onClick={props.close}>Cancel</DefaultButton>
+          <DefaultButton onClick={handlePreview} loading={loadingPreview}>
             Preview
-          </Button>
-          <Button onClick={handleAdd}>Add Series</Button>
+          </DefaultButton>
+          <DefaultButton oc="blue" onClick={handleAdd}>
+            Add Series
+          </DefaultButton>
         </Group>
       </>
     );
   };
 
   return (
-    <Modal.Root
+    <DefaultModal
       opened={props.visible}
+      title="Add Series"
       onClose={props.close}
       scrollAreaComponent={ScrollArea.Autosize}
     >
-      <Modal.Overlay />
-      <Modal.Content style={{ overflow: 'hidden' }}>
-        <Modal.Header>
-          <Modal.Title>Add Series</Modal.Title>
-          <Modal.CloseButton />
-        </Modal.Header>
-        <Modal.Body>{renderContent()}</Modal.Body>
-      </Modal.Content>
-    </Modal.Root>
+      {renderContent()}
+    </DefaultModal>
   );
 };
 

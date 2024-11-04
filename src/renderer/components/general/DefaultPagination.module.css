@@ -1,0 +1,44 @@
+.root {
+  &[data-theme="light"] {
+    --btn-active-bg: var(--mantine-color-blue-6);
+  }
+  &[data-theme="dark"],
+  &[data-theme="black"] {
+    --btn-active-bg: var(--mantine-color-blue-8);
+  }
+
+  &[data-theme="light"],
+  &[data-theme="dark"],
+  &[data-theme="black"] {
+    .control {
+      background-color: var(--mantine-color-bg-3) !important;
+
+      &:not([data-disabled]) {
+        color: var(--mantine-color-fg-0) !important;
+
+        border: 1px solid var(--mantine-color-bg-5) !important;
+
+        &:hover {
+          color: var(--mantine-color-fg-0) !important;
+          background-color: var(--mantine-color-bg-4) !important;
+        }
+      }
+
+      &[data-disabled] {
+        color: var(--mantine-color-fg-2) !important;
+        border: none;
+      }
+
+      &[data-active],
+      &[data-active]:hover {
+        border: none !important;
+        color: white !important;
+        background-color: var(--btn-active-bg) !important;
+      }
+    }
+
+    .dots {
+      color: var(--mantine-color-fg-0);
+    }
+  }
+}

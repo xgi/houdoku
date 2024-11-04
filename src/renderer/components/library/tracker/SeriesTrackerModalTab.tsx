@@ -1,21 +1,7 @@
 import React, { useEffect, useState } from 'react';
 const { ipcRenderer, shell } = require('electron');
 import { Series } from '@tiyo/common';
-import {
-  Button,
-  Group,
-  Loader,
-  Stack,
-  Text,
-  Image,
-  Grid,
-  Select,
-  NumberInput,
-  ActionIcon,
-  Skeleton,
-  Tooltip,
-  TextInput,
-} from '@mantine/core';
+import { Group, Loader, Stack, Image, Grid, Select, Skeleton, Tooltip } from '@mantine/core';
 import { IconCopy, IconExternalLink, IconSearch } from '@tabler/icons';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ipcChannels from '@/common/constants/ipcChannels.json';
@@ -30,6 +16,11 @@ import {
 import { markChapters } from '@/renderer/features/library/utils';
 import { chapterListState, seriesState } from '@/renderer/state/libraryStates';
 import { chapterLanguagesState } from '@/renderer/state/settingStates';
+import DefaultText from '../../general/DefaultText';
+import DefaultButton from '../../general/DefaultButton';
+import DefaultInput from '../../general/DefaultInput';
+import DefaultNumberInput from '../../general/DefaultNumberInput';
+import DefaultActionIcon from '../../general/DefaultActionIcon';
 
 const SCORE_FORMAT_OPTIONS: {
   [key in TrackScoreFormat]: number[];
@@ -136,24 +127,24 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
                   />
                 </Grid.Col>
                 <Grid.Col span={8}>
-                  <Text fw={700} lineClamp={2}>
+                  <DefaultText fw={700} lineClamp={2}>
                     {trackerSeries.title}
-                  </Text>
-                  <Text lineClamp={2}>{trackerSeries.description}</Text>
+                  </DefaultText>
+                  <DefaultText lineClamp={2}>{trackerSeries.description}</DefaultText>
                 </Grid.Col>
                 <Grid.Col span={2}>
-                  <Button
+                  <DefaultButton
                     variant="default"
                     onClick={() => props.applySeriesTrackerKey(trackerSeries.id)}
                   >
                     Link
-                  </Button>
+                  </DefaultButton>
                 </Grid.Col>
               </Grid>
             ))}
           </Stack>
         ) : (
-          <Text>No series found.</Text>
+          <DefaultText>No series found.</DefaultText>
         )}
       </>
     );
@@ -162,7 +153,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
   const renderTrackerSearch = () => {
     return (
       <>
-        <TextInput
+        <DefaultInput
           autoFocus
           placeholder="Search for series..."
           defaultValue={searchText}
@@ -188,13 +179,13 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
   };
 
   const renderTrackEntry = (trackerMetadata: TrackerMetadata) => {
-    if (!trackEntry) return <Text>Failed to define tracker entry.</Text>;
+    if (!trackEntry) return <DefaultText>Failed to define tracker entry.</DefaultText>;
 
     return (
       <>
         <Grid gutter="xs" mt="xs" align="center">
           <Grid.Col span={3}>
-            <Text>Status</Text>
+            <DefaultText>Status</DefaultText>
           </Grid.Col>
           <Grid.Col span={9}>
             {trackerMetadata.hasCustomLists ? (
@@ -240,11 +231,11 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
           </Grid.Col>
 
           <Grid.Col span={3}>
-            <Text>Progress</Text>
+            <DefaultText>Progress</DefaultText>
           </Grid.Col>
           <Grid.Col span={9}>
             <Group wrap="nowrap" gap="xs">
-              <NumberInput
+              <DefaultNumberInput
                 min={0}
                 value={trackEntry.progress}
                 onChange={(value) =>
@@ -257,15 +248,15 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
                 }
               />
               <Tooltip.Floating label="Copy progress to chapter list">
-                <ActionIcon mx={4}>
+                <DefaultActionIcon oc="gray" mx={4}>
                   <IconCopy size={18} onClick={() => markChaptersAsRead(trackEntry)} />
-                </ActionIcon>
+                </DefaultActionIcon>
               </Tooltip.Floating>
             </Group>
           </Grid.Col>
 
           <Grid.Col span={3}>
-            <Text>Score</Text>
+            <DefaultText>Score</DefaultText>
           </Grid.Col>
           <Grid.Col span={9}>
             <Select
@@ -285,15 +276,15 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
           </Grid.Col>
         </Grid>
         <Group justify="flex-end" mt="md" mb={0} gap="xs">
-          <Button
+          <DefaultButton
             variant="default"
             onClick={() => {
               props.applySeriesTrackerKey('');
             }}
           >
             Unlink
-          </Button>
-          <Button
+          </DefaultButton>
+          <DefaultButton
             variant="default"
             leftSection={<IconExternalLink />}
             onClick={() =>
@@ -303,7 +294,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
             }
           >
             View on {trackerMetadata.name}
-          </Button>
+          </DefaultButton>
         </Group>
       </>
     );
@@ -312,13 +303,13 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
   const renderTrackerContent = (trackerMetadata: TrackerMetadata) => {
     if (!username) {
       return (
-        <Text mt="xs">
+        <DefaultText mt="xs">
           In order to track this series, please link your {trackerMetadata.name} account through the{' '}
-          <Text component="span" c="blue" fw={700}>
+          <DefaultText component="span" c="blue" fw={700}>
             Settings
-          </Text>{' '}
+          </DefaultText>{' '}
           tab.
-        </Text>
+        </DefaultText>
       );
     }
 
@@ -343,7 +334,7 @@ const SeriesTrackerModalTab: React.FC<Props> = (props: Props) => {
       {loading ? (
         <Group mt="sm" justify="center">
           <Loader />
-          <Text>Loading from {props.trackerMetadata.name}...</Text>
+          <DefaultText>Loading from {props.trackerMetadata.name}...</DefaultText>
         </Group>
       ) : (
         renderTrackerContent(props.trackerMetadata)

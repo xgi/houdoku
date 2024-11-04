@@ -5,14 +5,22 @@ import { themeState } from '@/renderer/state/settingStates';
 import { themeProps } from '@/renderer/util/themes';
 import { forwardRef, RefObject } from 'react';
 
-type Props = unknown & typeof Button.defaultProps;
+type Props = {
+  oc: 'orange' | 'teal' | 'grape' | 'red' | 'blue' | 'yellow' | 'gray';
+} & typeof Button.defaultProps;
 
 const DefaultButton = forwardRef<RefObject<React.ComponentPropsWithoutRef<'div'>>, Props>(
   (props, ref) => {
     const theme = useRecoilValue(themeState);
 
     return (
-      <Button {...themeProps(theme)} classNames={{ root: styles.root }} ref={ref} {...props} />
+      <Button
+        {...themeProps(theme)}
+        classNames={{ root: styles.root }}
+        data-oc={props.oc}
+        ref={ref}
+        {...props}
+      />
     );
   },
 );

@@ -1,21 +1,15 @@
 import React, { useEffect, useState } from 'react';
 const { ipcRenderer } = require('electron');
-import {
-  Accordion,
-  Button,
-  Center,
-  Group,
-  Input,
-  Loader,
-  Modal,
-  Stack,
-  Switch,
-  Text,
-} from '@mantine/core';
+import { Accordion, Center, Group, Loader, Stack, Switch } from '@mantine/core';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import storeKeys from '@/common/constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
 import { ExtensionMetadata, SettingType } from '@tiyo/common';
+import DefaultModal from '../general/DefaultModal';
+import DefaultButton from '../general/DefaultButton';
+import DefaultAccordion from '../general/DefaultAccordion';
+import DefaultInput from '../general/DefaultInput';
+import DefaultText from '../general/DefaultText';
 
 type SettingTypes = {
   [key: string]: SettingType;
@@ -98,7 +92,7 @@ const PluginSettingsModal: React.FC<Props> = (props: Props) => {
         return <Switch defaultChecked={curVal} onChange={(e) => onChangeFn(e.target.checked)} />;
       case SettingType.STRING:
         return (
-          <Input
+          <DefaultInput
             value={curVal}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeFn(e.target.value)}
           />
@@ -119,7 +113,7 @@ const PluginSettingsModal: React.FC<Props> = (props: Props) => {
           <Accordion.Panel>
             {settingKeys.map((key) => (
               <Group justify="space-between" mb="xs" key={key}>
-                <Text>{key}</Text>
+                <DefaultText>{key}</DefaultText>
                 {renderControl(
                   settingTypes[key],
                   settingsMap[extensionId][key],
@@ -143,7 +137,7 @@ const PluginSettingsModal: React.FC<Props> = (props: Props) => {
   }, [props.visible]);
 
   return (
-    <Modal
+    <DefaultModal
       title="Tiyo Settings"
       opened={props.visible}
       onClose={props.toggleVisible}
@@ -157,18 +151,19 @@ const PluginSettingsModal: React.FC<Props> = (props: Props) => {
         </Center>
       ) : (
         <>
-          <Accordion>{renderRows()}</Accordion>
+          <DefaultAccordion>{renderRows()}</DefaultAccordion>
           <Group justify="flex-end" mt="sm">
-            <Button variant="default" onClick={props.toggleVisible}>
-              Cancel
-            </Button>
-            <Button onClick={() => saveExtensionSettings().then(() => props.toggleVisible())}>
+            <DefaultButton onClick={props.toggleVisible}>Cancel</DefaultButton>
+            <DefaultButton
+              oc="blue"
+              onClick={() => saveExtensionSettings().then(() => props.toggleVisible())}
+            >
               Save Settings
-            </Button>
+            </DefaultButton>
           </Group>
         </>
       )}
-    </Modal>
+    </DefaultModal>
   );
 };
 

@@ -1,8 +1,12 @@
 const { ipcRenderer } = require('electron');
 import { ReactNode, Component, ErrorInfo } from 'react';
-import { Accordion, Box, Center, Code, Container, Kbd, Text, Title } from '@mantine/core';
+import { Accordion, Box, Center, Kbd } from '@mantine/core';
 import packageJson from '../../../../package.json';
 import ipcChannels from '@/common/constants/ipcChannels.json';
+import DefaultText from './DefaultText';
+import styles from './ErrorBoundary.module.css';
+import DefaultTitle from './DefaultTitle';
+import DefaultAccordion from './DefaultAccordion';
 
 const LOGS_DIR = await ipcRenderer.invoke(ipcChannels.GET_PATH.LOGS_DIR);
 
@@ -35,70 +39,70 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.error) {
       return (
-        <Container>
+        <Box className={styles.root}>
           <Center>
-            <Box style={{ maxWidth: 500 }} mt={80}>
-              <Title order={3}>Sorry, something went wrong.</Title>
-              <Text>
+            <Box className={styles.content} mt={80}>
+              <DefaultTitle order={3}>Sorry, something went wrong.</DefaultTitle>
+              <DefaultText>
                 An error occurred while loading the page. Normally we would show more specific
                 information, but the error caused the renderer to break, so we can only show you
                 this page instead.
-              </Text>
-              <Title order={4} mt="xs">
+              </DefaultText>
+              <DefaultTitle order={4} mt="xs">
                 What to do
-              </Title>
+              </DefaultTitle>
               <Box ml="lg">
-                <Text>
+                <DefaultText>
                   - Press <Kbd>Ctrl</Kbd>+<Kbd>R</Kbd> to reload the client.
-                </Text>
-                <Text>
+                </DefaultText>
+                <DefaultText>
                   - You can open the console by pressing <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+
                   <Kbd>I</Kbd>, which may contain additional information about the error.
-                </Text>
-                <Text>
+                </DefaultText>
+                <DefaultText>
                   -{' '}
-                  <Text
-                    c="blue"
+                  <DefaultText
+                    style={{ textDecorationLine: 'underline' }}
                     component="a"
                     href={`${packageJson.repository.url}/issues`}
                     target="_blank"
                     rel="noreferrer"
                   >
                     Report an issue on GitHub
-                  </Text>
+                  </DefaultText>
                   . Please copy the expanded error information below, as well as the steps you took
                   before seeing this page.
-                </Text>
+                </DefaultText>
               </Box>
-              <Title order={4} mt="xs">
+              <DefaultTitle order={4} mt="xs">
                 Error details
-              </Title>
-              <Text>
+              </DefaultTitle>
+              <DefaultText>
                 Additional logs in{' '}
-                <Code>
-                  <Text
-                    c="blue"
-                    component="a"
-                    href={`file:///${LOGS_DIR}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {LOGS_DIR}
-                  </Text>
-                </Code>
-              </Text>
+                <DefaultText
+                  style={{ textDecorationLine: 'underline' }}
+                  component="a"
+                  href={`file:///${LOGS_DIR}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {LOGS_DIR}
+                </DefaultText>
+              </DefaultText>
 
-              <Accordion mt="xs">
+              <DefaultAccordion mt="xs">
                 <Accordion.Item value="details">
                   <Accordion.Control>
                     {this.state.error.name}: {this.state.error.message}
                   </Accordion.Control>
-                  <Accordion.Panel>{this.state.error.stack}</Accordion.Panel>
+                  <Accordion.Panel>
+                    <DefaultText>{this.state.error.stack}</DefaultText>
+                  </Accordion.Panel>
                 </Accordion.Item>
-              </Accordion>
+              </DefaultAccordion>
             </Box>
           </Center>
-        </Container>
+        </Box>
       );
     }
     return this.props.children;

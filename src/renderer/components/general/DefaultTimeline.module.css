@@ -1,0 +1,17 @@
+.root {
+  &[data-theme="light"],
+  &[data-theme="dark"],
+  &[data-theme="black"] {
+    .bullet {
+      color: var(--mantine-color-fg-1);
+      background-color: var(--mantine-color-bg-4);
+      border: 1px solid var(--mantine-color-bg-5);
+    }
+
+    .item {
+      &::before {
+        border-color: var(--mantine-color-bg-5);
+      }
+    }
+  }
+}

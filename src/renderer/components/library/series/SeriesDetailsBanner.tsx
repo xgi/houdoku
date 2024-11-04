@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { BackgroundImage, Box, Button, Group, Menu, Stack } from '@mantine/core';
+import { BackgroundImage, Box, Group, Menu, Stack } from '@mantine/core';
 import { IconDownload, IconMenu2, IconTrash } from '@tabler/icons';
 import { Series } from '@tiyo/common';
 import {
@@ -12,7 +12,10 @@ import {
 } from '@/renderer/state/libraryStates';
 import { reloadSeriesList } from '@/renderer/features/library/utils';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
-import { chapterLanguagesState } from '@/renderer/state/settingStates';
+import { chapterLanguagesState, themeState } from '@/renderer/state/settingStates';
+import DefaultButton from '../../general/DefaultButton';
+import DefaultMenu from '../../general/DefaultMenu';
+import { themeProps } from '@/renderer/util/themes';
 
 type Props = {
   series: Series;
@@ -23,6 +26,7 @@ type Props = {
 };
 
 const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
+  const theme = useRecoilValue(themeState);
   const series = useRecoilValue(seriesState);
   const setSeriesList = useSetRecoilState(seriesListState);
   const seriesBannerUrl = useRecoilValue(seriesBannerUrlState);
@@ -67,14 +71,14 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
               ''
             ) : (
               <Group mx="sm" my={4} gap="xs">
-                <Menu position="bottom-end" shadow="md" width={200}>
+                <DefaultMenu position="bottom-end" shadow="md" width={200}>
                   <Menu.Target>
-                    <Button size="xs" leftSection={<IconMenu2 size={16} />} variant="default">
+                    <DefaultButton size="xs" leftSection={<IconMenu2 size={16} />}>
                       Options
-                    </Button>
+                    </DefaultButton>
                   </Menu.Target>
 
-                  <Menu.Dropdown>
+                  <Menu.Dropdown {...themeProps(theme)}>
                     <Menu.Item
                       leftSection={<IconDownload size={16} />}
                       onClick={() => props.showDownloadModal()}
@@ -88,7 +92,7 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
                       Remove series
                     </Menu.Item>
                   </Menu.Dropdown>
-                </Menu>
+                </DefaultMenu>
               </Group>
             )}
             <Group mx="sm" my={4} gap="xs">
@@ -96,19 +100,24 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
                 ''
               ) : (
                 <>
-                  <Button size="sm" variant="default" onClick={() => props.showTrackerModal()}>
+                  <DefaultButton size="xs" onClick={() => props.showTrackerModal()}>
                     Trackers
-                  </Button>
+                  </DefaultButton>
                   {props.series.extensionId === FS_METADATA.id ? (
-                    <Button size="sm" variant="default" onClick={() => props.showEditModal()}>
+                    <DefaultButton size="xs" onClick={() => props.showEditModal()}>
                       Edit
-                    </Button>
+                    </DefaultButton>
                   ) : (
                     ''
                   )}
-                  <Button size="sm" loading={reloadingSeriesList} onClick={handleRefresh}>
+                  <DefaultButton
+                    oc="blue"
+                    size="xs"
+                    loading={reloadingSeriesList}
+                    onClick={handleRefresh}
+                  >
                     {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}
-                  </Button>
+                  </DefaultButton>
                 </>
               )}
             </Group>

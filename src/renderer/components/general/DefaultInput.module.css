@@ -1,32 +1,26 @@
+.flexRoot {
+  width: 100%;
+  flex: 1 1 0%;
+}
+
 .input {
-  &[data-theme="light"] {
-    color: var(--mantine-color-fg-0);
-    background-color: var(--mantine-color-bg-1);
-    border-color: var(--mantine-color-bg-5);
-  }
-
-  &[data-theme="dark"] {
-    color: var(--mantine-color-fg-0);
-    background-color: var(--mantine-color-bg-1);
-    border-color: var(--mantine-color-bg-5);
-  }
-
+  &[data-theme="light"],
+  &[data-theme="dark"],
   &[data-theme="black"] {
     color: var(--mantine-color-fg-0);
     background-color: var(--mantine-color-bg-1);
     border-color: var(--mantine-color-bg-5);
+
+    &[data-disabled] {
+      color: var(--mantine-color-fg-2);
+      background-color: var(--mantine-color-bg-3);
+    }
   }
 }
 
 .label {
-  &[data-theme="light"] {
-    color: var(--mantine-color-fg-0);
-  }
-
-  &[data-theme="dark"] {
-    color: var(--mantine-color-fg-0);
-  }
-
+  &[data-theme="light"],
+  &[data-theme="dark"],
   &[data-theme="black"] {
     color: var(--mantine-color-fg-0);
   }

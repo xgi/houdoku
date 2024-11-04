@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Chapter, Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { ActionIcon, Button, CloseButton, Group, Table, Text, TextInput } from '@mantine/core';
+import { CloseButton, Group, Table } from '@mantine/core';
 import { IconArrowsSort, IconSearch, IconSortAscending, IconSortDescending } from '@tabler/icons';
 import routes from '@/common/constants/routes.json';
 import {
@@ -12,6 +12,10 @@ import {
 } from '@/renderer/state/libraryStates';
 import { chapterListVolOrderState, chapterListChOrderState } from '@/renderer/state/settingStates';
 import { TableColumnSortOrder } from '@/common/models/types';
+import DefaultInput from '../general/DefaultInput';
+import DefaultText from '../general/DefaultText';
+import DefaultButton from '../general/DefaultButton';
+import DefaultActionIcon from '../general/DefaultActionIcon';
 
 const columnOrderMap = {
   [TableColumnSortOrder.Ascending]: <IconSortAscending size={16} />,
@@ -44,10 +48,11 @@ const ChapterTableHeading: React.FC<Props> = (props: Props) => {
       <Table.Th w={30}> </Table.Th>
       {currentTextFilter ? (
         <Table.Th colSpan={2}>
-          <TextInput
+          <DefaultInput
             autoFocus
             placeholder={`Filter ${currentTextFilter}...`}
             size="xs"
+            rightSectionPointerEvents="all"
             rightSection={
               <CloseButton
                 onClick={() => {
@@ -67,44 +72,42 @@ const ChapterTableHeading: React.FC<Props> = (props: Props) => {
         <>
           <Table.Th>
             <Group gap={5} wrap="nowrap">
-              <Text size="sm" fw={700}>
+              <DefaultText size="sm" fw={700}>
                 Title
-              </Text>
-              <ActionIcon
-                c="gray.3"
-                variant="transparent"
+              </DefaultText>
+              <DefaultActionIcon
+                transparent
                 size={16}
                 onClick={() => setCurrentTextFilter('title')}
               >
                 <IconSearch />
-              </ActionIcon>
+              </DefaultActionIcon>
             </Group>
           </Table.Th>
           <Table.Th>
             <Group gap={5} wrap="nowrap">
-              <Text size="sm" fw={700}>
+              <DefaultText size="sm" fw={700}>
                 Group
-              </Text>
-              <ActionIcon
-                c="gray.3"
-                variant="transparent"
+              </DefaultText>
+              <DefaultActionIcon
+                transparent
                 size={16}
                 onClick={() => setCurrentTextFilter('group')}
               >
                 <IconSearch />
-              </ActionIcon>
+              </DefaultActionIcon>
             </Group>
           </Table.Th>
         </>
       )}
       <Table.Th w={60}>
         <Group justify="center" gap={0} wrap="nowrap">
-          <Text size="sm" fw={700}>
+          <DefaultText size="sm" fw={700}>
             Vol
-          </Text>
-          <ActionIcon
-            c={chapterListVolOrder === TableColumnSortOrder.None ? 'gray.3' : 'blue'}
-            variant="transparent"
+          </DefaultText>
+          <DefaultActionIcon
+            oc={chapterListVolOrder === TableColumnSortOrder.None ? undefined : 'blue'}
+            transparent
             onClick={() => {
               switch (chapterListVolOrder) {
                 case TableColumnSortOrder.Descending:
@@ -119,17 +122,17 @@ const ChapterTableHeading: React.FC<Props> = (props: Props) => {
             }}
           >
             {columnOrderMap[chapterListVolOrder]}
-          </ActionIcon>
+          </DefaultActionIcon>
         </Group>
       </Table.Th>
       <Table.Th w={60}>
         <Group justify="center" gap={0} wrap="nowrap">
-          <Text size="sm" fw={700}>
+          <DefaultText size="sm" fw={700}>
             Ch
-          </Text>
-          <ActionIcon
-            c={chapterListChOrder === TableColumnSortOrder.None ? 'gray.3' : 'blue'}
-            variant="transparent"
+          </DefaultText>
+          <DefaultActionIcon
+            oc={chapterListChOrder === TableColumnSortOrder.None ? undefined : 'blue'}
+            transparent
             onClick={() => {
               switch (chapterListChOrder) {
                 case TableColumnSortOrder.Descending:
@@ -144,16 +147,16 @@ const ChapterTableHeading: React.FC<Props> = (props: Props) => {
             }}
           >
             {columnOrderMap[chapterListChOrder]}
-          </ActionIcon>
+          </DefaultActionIcon>
         </Group>
       </Table.Th>
       <Table.Th w={100}>
         <Group justify="flex-end">
           {getNextUnreadChapter() ? (
             <Link to={`${routes.READER}/${props.series.id}/${getNextUnreadChapter()?.id}`}>
-              <Button size="xs" fw={700}>
+              <DefaultButton oc="blue" size="xs" fw={700}>
                 Continue
-              </Button>
+              </DefaultButton>
             </Link>
           ) : (
             ''

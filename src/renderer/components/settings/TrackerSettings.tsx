@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import { Accordion, Alert, Checkbox } from '@mantine/core';
+import { Accordion, Alert } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons';
 import { TrackerSetting } from '@/common/models/types';
 import { trackerAutoUpdateState } from '@/renderer/state/settingStates';
@@ -11,6 +11,9 @@ import {
 } from '@/common/temp_tracker_metadata';
 import TrackerAuthOAuth from './TrackerAuthOAuth';
 import TrackerAuthUserPass from './TrackerAuthUserPass';
+import DefaultCheckbox from '../general/DefaultCheckbox';
+import DefaultAccordion from '../general/DefaultAccordion';
+import DefaultAlert from '../general/DefaultAlert';
 
 const TrackerSettings: React.FC = () => {
   const [trackerAutoUpdate, setTrackerAutoUpdate] = useRecoilState(trackerAutoUpdateState);
@@ -28,7 +31,7 @@ const TrackerSettings: React.FC = () => {
 
   return (
     <>
-      <Alert
+      <DefaultAlert
         icon={<IconInfoCircle size={16} />}
         title="Syncing progress with trackers"
         color="indigo"
@@ -36,9 +39,9 @@ const TrackerSettings: React.FC = () => {
         Houdoku allows you to sync your account on list-tracking websites and automatically upload
         your progress as you read. After authenticating, click the &quot;Trackers&quot; button on a
         series page to link it with an entry on your list.
-      </Alert>
+      </DefaultAlert>
 
-      <Checkbox
+      <DefaultCheckbox
         pt="sm"
         ml="xs"
         label="Update progress automatically"
@@ -47,7 +50,7 @@ const TrackerSettings: React.FC = () => {
         onChange={(e) => updateTrackerSetting(TrackerSetting.TrackerAutoUpdate, e.target.checked)}
       />
 
-      <Accordion variant="separated" chevronPosition="left" mx="auto" pt="sm">
+      <DefaultAccordion variant="separated" chevronPosition="left" mx="auto" pt="sm">
         {[AniListTrackerMetadata, MALTrackerMetadata].map((trackerMetadata) => (
           <Accordion.Item value={trackerMetadata.id} key={trackerMetadata.id}>
             <TrackerAuthOAuth trackerMetadata={trackerMetadata} />
@@ -59,7 +62,7 @@ const TrackerSettings: React.FC = () => {
             <TrackerAuthUserPass trackerMetadata={trackerMetadata} />
           </Accordion.Item>
         ))}
-      </Accordion>
+      </DefaultAccordion>
     </>
   );
 };

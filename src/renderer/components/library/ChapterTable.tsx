@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Chapter, Series } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Divider, Group, Pagination, Select, Table } from '@mantine/core';
+import { Divider, Group, Table } from '@mantine/core';
 import ChapterTableContextMenu from './ChapterTableContextMenu';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import {
@@ -16,10 +16,15 @@ import {
   chapterLanguagesState,
   customDownloadsDirState,
   chapterListPageSizeState,
+  themeState,
 } from '@/renderer/state/settingStates';
 import { currentTaskState } from '@/renderer/state/downloaderStates';
 import ChapterTableHeading from './ChapterTableHeading';
 import ChapterTableBody from './ChapterTableBody';
+import DefaultTable from '../general/DefaultTable';
+import { themeProps } from '@/renderer/util/themes';
+import DefaultSelect from '../general/DefaultSelect';
+import DefaultPagination from '../general/DefaultPagination';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -28,6 +33,7 @@ type Props = {
 };
 
 const ChapterTable: React.FC<Props> = (props: Props) => {
+  const theme = useRecoilValue(themeState);
   const chapterFilterTitle = useRecoilValue(chapterFilterTitleState);
   const chapterFilterGroup = useRecoilValue(chapterFilterGroupState);
   const [chapterListPageSize, setChapterListPageSize] = useRecoilState(chapterListPageSizeState);
@@ -81,15 +87,11 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
         close={() => setShowingContextMenu(false)}
       />
 
-      <Table
-        highlightOnHover
-        style={{ cursor: 'pointer', tableLayout: 'fixed' }}
-        verticalSpacing={4}
-      >
+      <DefaultTable style={{ cursor: 'pointer', tableLayout: 'fixed' }} verticalSpacing={4}>
         <Table.Thead>
           <ChapterTableHeading series={props.series} />
         </Table.Thead>
-        <Table.Tbody>
+        <Table.Tbody {...themeProps(theme)}>
           <ChapterTableBody
             series={props.series}
             page={currentPage}
@@ -100,18 +102,18 @@ const ChapterTable: React.FC<Props> = (props: Props) => {
             }}
           />
         </Table.Tbody>
-      </Table>
+      </DefaultTable>
 
       <Divider mb="sm" />
 
       <Group justify="flex-end" gap="md" mb="xl">
-        <Pagination
+        <DefaultPagination
           size="sm"
           value={currentPage}
           onChange={setCurrentPage}
           total={Math.ceil(sortedFilteredChapterList.length / chapterListPageSize)}
         />
-        <Select
+        <DefaultSelect
           w={100}
           size="xs"
           value={`${chapterListPageSize}`}

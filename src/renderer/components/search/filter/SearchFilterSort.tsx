@@ -1,7 +1,12 @@
 import React from 'react';
-import { Menu, ScrollArea, Button } from '@mantine/core';
+import { Menu, ScrollArea } from '@mantine/core';
 import { IconArrowDown, IconArrowUp } from '@tabler/icons';
 import { FilterSortValue, SortDirection } from '@tiyo/common';
+import DefaultMenu from '../../general/DefaultMenu';
+import { themeProps } from '@/renderer/util/themes';
+import { useRecoilValue } from 'recoil';
+import { themeState } from '@/renderer/state/settingStates';
+import DefaultButton from '../../general/DefaultButton';
 
 const ICON_MAP = {
   [SortDirection.ASCENDING]: <IconArrowUp size={13} />,
@@ -16,6 +21,8 @@ type Props = {
   onChange: (value: FilterSortValue) => void;
 };
 const SearchFilterSort: React.FC<Props> = (props: Props) => {
+  const theme = useRecoilValue(themeState);
+
   const toggleValue = (key: string) => {
     if (props.value.key === key && props.supportsBothDirections) {
       props.onChange({
@@ -33,16 +40,16 @@ const SearchFilterSort: React.FC<Props> = (props: Props) => {
   const currentLabel = props.fields.find((field) => field.key === props.value.key)?.label;
 
   return (
-    <Menu shadow="md" closeOnItemClick={false}>
+    <DefaultMenu shadow="md" closeOnItemClick={false}>
       <Menu.Target>
-        <Button variant="default">
+        <DefaultButton variant="default">
           {props.label}: {currentLabel}
           {'  '}
           {ICON_MAP[props.value.direction]}
-        </Button>
+        </DefaultButton>
       </Menu.Target>
 
-      <Menu.Dropdown>
+      <Menu.Dropdown {...themeProps(theme)}>
         <ScrollArea.Autosize mah={260} style={{ width: 262 }}>
           {props.fields.map((field) => {
             const icon =
@@ -61,7 +68,7 @@ const SearchFilterSort: React.FC<Props> = (props: Props) => {
           })}
         </ScrollArea.Autosize>
       </Menu.Dropdown>
-    </Menu>
+    </DefaultMenu>
   );
 };
 

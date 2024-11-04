@@ -185,6 +185,7 @@ const GeneralSettings: React.FC = () => {
         <DefaultInput
           label={'Custom download location'}
           component="button"
+          rightSectionPointerEvents="all"
           rightSection={
             <IconArrowBack
               size={20}

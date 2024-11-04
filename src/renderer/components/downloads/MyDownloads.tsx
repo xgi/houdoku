@@ -2,13 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { Chapter, Series } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
 import { useRecoilValue } from 'recoil';
-import { Accordion, Badge, Button, Checkbox, Group, Stack, Text, Title } from '@mantine/core';
+import { Accordion, Badge, Group, Stack } from '@mantine/core';
 import { IconTrash } from '@tabler/icons';
 import { openConfirmModal } from '@mantine/modals';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import library from '@/renderer/services/library';
 import { customDownloadsDirState } from '@/renderer/state/settingStates';
 import { getFromChapterIds } from '@/renderer/features/library/utils';
+import DefaultAccordion from '../general/DefaultAccordion';
+import DefaultCheckbox from '../general/DefaultCheckbox';
+import DefaultText from '../general/DefaultText';
+import DefaultButton from '../general/DefaultButton';
+import DefaultTitle from '../general/DefaultTitle';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -69,13 +74,13 @@ const MyDownloads: React.FC = () => {
       openConfirmModal({
         title: 'Deleting downloaded chapters',
         children: (
-          <Text size="sm">
+          <DefaultText size="sm">
             Are you sure you want to delete{' '}
-            <Text c="teal" component="span" fw={700}>
+            <DefaultText c="teal" component="span" fw={700}>
               {count}
-            </Text>{' '}
+            </DefaultText>{' '}
             downloaded chapters?
-          </Text>
+          </DefaultText>
         ),
         labels: { confirm: 'Delete', cancel: 'Cancel' },
         confirmProps: { color: 'red' },
@@ -89,20 +94,20 @@ const MyDownloads: React.FC = () => {
   const renderHeader = () => {
     return (
       <Group mb="xs" justify={'space-between'}>
-        <Title order={3}>My Downloads</Title>
+        <DefaultTitle order={3}>My Downloads</DefaultTitle>
         <Group gap="xs">
-          <Button
+          <DefaultButton
             size="xs"
-            color="red"
+            oc="red"
             disabled={checkedChapters.length === 0}
             leftSection={<IconTrash size={16} />}
             onClick={promptDeleteChecked}
           >
             Delete Selected
-          </Button>
-          <Button size="xs" onClick={loadDownloads}>
+          </DefaultButton>
+          <DefaultButton oc="blue" size="xs" onClick={loadDownloads}>
             Refresh
-          </Button>
+          </DefaultButton>
         </Group>
       </Group>
     );
@@ -143,18 +148,18 @@ const MyDownloads: React.FC = () => {
     <>
       {renderHeader()}
       {seriesList.length === 0 || Object.keys(chapterLists).length === 0 ? (
-        <Text>
+        <DefaultText>
           You don&apos;t have any downloaded chapters. You can download chapters from the series
           page in your{' '}
-          <Text component="span" c="orange" fw={700}>
+          <DefaultText component="span" c="orange" fw={700}>
             Library
-          </Text>
+          </DefaultText>
           .
-        </Text>
+        </DefaultText>
       ) : (
         ''
       )}
-      <Accordion radius="xs" chevronPosition="left" multiple>
+      <DefaultAccordion radius="xs" chevronPosition="left" multiple={undefined}>
         {seriesList.map((series) => {
           if (!series.id || !chapterLists[series.id]) return '';
 
@@ -172,14 +177,14 @@ const MyDownloads: React.FC = () => {
               <Accordion.Control>
                 <Group justify={'space-between'}>
                   <Group>
-                    <Checkbox
+                    <DefaultCheckbox
                       checked={numSelected === numChapters}
                       onClick={(e) => {
                         e.stopPropagation();
                       }}
                       onChange={() => handleChangeSeriesCheckbox(series.id)}
                     />
-                    <Text>{series.title}</Text>
+                    <DefaultText>{series.title}</DefaultText>
                   </Group>
                   <Badge radius={0} color={badgeColor}>
                     {numSelected}/{numChapters} selected
@@ -198,7 +203,7 @@ const MyDownloads: React.FC = () => {
                     .map((chapter) => {
                       if (!chapter.id) return '';
                       return (
-                        <Checkbox
+                        <DefaultCheckbox
                           key={chapter.id}
                           ml={40}
                           label={`Chapter ${chapter.chapterNumber} [id:${chapter.id}]`}
@@ -214,7 +219,7 @@ const MyDownloads: React.FC = () => {
             </Accordion.Item>
           );
         })}
-      </Accordion>
+      </DefaultAccordion>
     </>
   );
 };

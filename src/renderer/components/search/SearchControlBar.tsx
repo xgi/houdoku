@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ExtensionMetadata } from '@tiyo/common';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { Button, Checkbox, Flex, Group, Select, Text, TextInput, Tooltip } from '@mantine/core';
+import { Flex, Group, Text, Tooltip } from '@mantine/core';
 const { ipcRenderer } = require('electron');
 import {
   searchExtensionState,
@@ -11,6 +11,10 @@ import {
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { IconHelp } from '@tabler/icons';
+import DefaultInput from '../general/DefaultInput';
+import DefaultButton from '../general/DefaultButton';
+import DefaultCheckbox from '../general/DefaultCheckbox';
+import DefaultSelect from '../general/DefaultSelect';
 
 interface Props {
   extensionList: ExtensionMetadata[];
@@ -46,7 +50,9 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
   const renderFilesystemControls = () => {
     return (
       <Group>
-        <Button onClick={handleSelectDirectory}>Select Directory</Button>
+        <DefaultButton oc="blue" onClick={handleSelectDirectory}>
+          Select Directory
+        </DefaultButton>
         <Tooltip
           position="bottom"
           label={
@@ -57,7 +63,7 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
           }
         >
           <Group gap={6} justify="center" align="center">
-            <Checkbox
+            <DefaultCheckbox
               label="Multi-series mode"
               checked={multiSeriesEnabled}
               onChange={() => setMultiSeriesEnabled(!multiSeriesEnabled)}
@@ -72,19 +78,19 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
   const renderStandardControls = () => {
     return (
       <>
-        <TextInput
-          flex={1}
+        <DefaultInput
+          flexWrapper
           placeholder="Search for a series..."
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
           onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
             if (e.key === 'Enter') props.handleSearch(true);
           }}
         />
-        <Button onClick={() => props.handleSearch(true)}>Search</Button>
+        <DefaultButton oc="blue" onClick={() => props.handleSearch(true)}>
+          Search
+        </DefaultButton>
         {props.hasFilterOptions ? (
-          <Button variant="default" onClick={() => setShowingFilterDrawer(true)}>
-            Options
-          </Button>
+          <DefaultButton onClick={() => setShowingFilterDrawer(true)}>Options</DefaultButton>
         ) : undefined}
       </>
     );
@@ -92,7 +98,7 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
 
   return (
     <Flex align="left" gap="xs" pt="sm" mb="md" wrap="nowrap">
-      <Select
+      <DefaultSelect
         value={searchExtension}
         data={props.extensionList.map((metadata: ExtensionMetadata) => ({
           value: metadata.id,

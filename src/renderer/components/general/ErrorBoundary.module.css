@@ -1,0 +1,10 @@
+.root {
+  width: 100%;
+  min-height: 100%;
+
+  background-color: var(--mantine-color-bg-0);
+
+  .content {
+    max-width: 500px;
+  }
+}

@@ -1,17 +1,7 @@
 import React from 'react';
 import { Language, Series, SeriesStatus, Languages, LanguageKey } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
-import {
-  ActionIcon,
-  Grid,
-  Group,
-  Select,
-  Stack,
-  TagsInput,
-  Text,
-  TextInput,
-  Textarea,
-} from '@mantine/core';
+import { Grid, Group, Stack } from '@mantine/core';
 import { IconUpload } from '@tabler/icons';
 import styles from './SeriesEditControls.module.css';
 import ipcChannels from '@/common/constants/ipcChannels.json';
@@ -19,6 +9,11 @@ import constants from '@/common/constants/constants.json';
 import ExtensionImage from './ExtensionImage';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import blankCover from '@/renderer/img/blank_cover.png';
+import DefaultActionIcon from './DefaultActionIcon';
+import DefaultInput from './DefaultInput';
+import DefaultTagsInput from './DefaultTagsInput';
+import DefaultText from './DefaultText';
+import DefaultSelect from './DefaultSelect';
 
 type Props = {
   series: Series;
@@ -48,15 +43,14 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         <Grid.Col span={8}>
           <Stack justify="end" style={{ height: '100%' }}>
             <Group wrap="nowrap">
-              <TextInput
+              <DefaultInput
                 value={props.series.remoteCoverUrl}
                 title={props.series.remoteCoverUrl}
                 placeholder="Cover URL..."
                 disabled
               />
-              <ActionIcon
+              <DefaultActionIcon
                 size="lg"
-                variant="default"
                 disabled={!props.editable}
                 onClick={() =>
                   ipcRenderer
@@ -82,16 +76,16 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
                 }
               >
                 <IconUpload size={16} />
-              </ActionIcon>
+              </DefaultActionIcon>
             </Group>
           </Stack>
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text ta="right">Title</Text>
+          <DefaultText ta="right">Title</DefaultText>
         </Grid.Col>
         <Grid.Col span={8}>
-          <TextInput
+          <DefaultInput
             value={props.series.title}
             title={props.series.title}
             placeholder="Title..."
@@ -106,10 +100,10 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text ta="right">Description</Text>
+          <DefaultText ta="right">Description</DefaultText>
         </Grid.Col>
         <Grid.Col span={8}>
-          <Textarea
+          <DefaultInput
             disabled={!props.editable}
             value={props.series.description}
             title={props.series.description}
@@ -125,10 +119,11 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text ta="right">Author(s)</Text>
+          <DefaultText ta="right">Author(s)</DefaultText>
         </Grid.Col>
         <Grid.Col span={8}>
-          <TagsInput
+          <DefaultTagsInput
+            disabled={!props.editable}
             placeholder="Authors..."
             value={props.series.authors}
             onChange={(value) => {
@@ -141,10 +136,11 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text ta="right">Artist(s)</Text>
+          <DefaultText ta="right">Artist(s)</DefaultText>
         </Grid.Col>
         <Grid.Col span={8}>
-          <TagsInput
+          <DefaultTagsInput
+            disabled={!props.editable}
             placeholder="Artists..."
             value={props.series.artists}
             onChange={(value) => {
@@ -157,10 +153,11 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text ta="right">Tags</Text>
+          <DefaultText ta="right">Tags</DefaultText>
         </Grid.Col>
         <Grid.Col span={8}>
-          <TagsInput
+          <DefaultTagsInput
+            disabled={!props.editable}
             placeholder="Tags..."
             value={props.series.tags}
             onChange={(value) => {
@@ -173,10 +170,10 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text ta="right">Language</Text>
+          <DefaultText ta="right">Language</DefaultText>
         </Grid.Col>
         <Grid.Col span={8}>
-          <Select
+          <DefaultSelect
             disabled={!props.editable}
             value={props.series.originalLanguageKey}
             data={Object.values(Languages).map((language: Language) => ({
@@ -193,10 +190,10 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
         </Grid.Col>
 
         <Grid.Col span={4} mt={5}>
-          <Text ta="right">Release Status</Text>
+          <DefaultText ta="right">Release Status</DefaultText>
         </Grid.Col>
         <Grid.Col span={8}>
-          <Select
+          <DefaultSelect
             disabled={!props.editable}
             value={props.series.status}
             data={[

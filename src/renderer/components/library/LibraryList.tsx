@@ -1,12 +1,12 @@
 import React from 'react';
 import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { ActionIcon, Badge, Button, Group, Table, Text } from '@mantine/core';
-import { IconTrash } from '@tabler/icons';
-import { goToSeries, removeSeries } from '@/renderer/features/library/utils';
+import { useSetRecoilState } from 'recoil';
+import { Badge, Group, Table } from '@mantine/core';
+import { goToSeries } from '@/renderer/features/library/utils';
 import { seriesListState } from '@/renderer/state/libraryStates';
-import { confirmRemoveSeriesState } from '@/renderer/state/settingStates';
+import DefaultText from '../general/DefaultText';
+import DefaultButton from '../general/DefaultButton';
 
 type Props = {
   getFilteredList: () => Series[];
@@ -16,20 +16,9 @@ type Props = {
 const LibraryList: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
   const setSeriesList = useSetRecoilState(seriesListState);
-  const confirmRemoveSeries = useRecoilValue(confirmRemoveSeriesState);
 
   const viewFunc = (series: Series) => {
     goToSeries(series, setSeriesList, navigate);
-  };
-
-  const removeFunc = (series: Series) => {
-    if (series) {
-      if (confirmRemoveSeries) {
-        props.showRemoveModal(series);
-      } else {
-        removeSeries(series, setSeriesList);
-      }
-    }
   };
 
   const renderRows = () => {
@@ -37,21 +26,26 @@ const LibraryList: React.FC<Props> = (props: Props) => {
       return (
         <tr key={`${series.id}-${series.title}`}>
           <td>
-            {series.numberUnread > 0 ? <Badge color="violet">{series.numberUnread}</Badge> : ''}{' '}
-            {series.title}
+            <DefaultText size="sm">
+              {series.numberUnread > 0 ? <Badge color="violet">{series.numberUnread}</Badge> : ''}{' '}
+              {series.title}
+            </DefaultText>
           </td>
-          <td>{series.status}</td>
+          <td>
+            <DefaultText size="sm">{series.status}</DefaultText>
+          </td>
           <td>
             {series.authors.slice(0, 3).map((author) => (
-              <Text key={author}>{author}</Text>
+              <DefaultText key={author} size="sm">
+                {author}
+              </DefaultText>
             ))}
           </td>
           <td>
             <Group gap="xs" justify="flex-end" wrap="nowrap">
-              <Button onClick={() => viewFunc(series)}>View</Button>
-              <ActionIcon variant="filled" color="red" size="lg" onClick={() => removeFunc(series)}>
-                <IconTrash size={20} />
-              </ActionIcon>
+              <DefaultButton oc="blue" size={'xs'} onClick={() => viewFunc(series)}>
+                View
+              </DefaultButton>
             </Group>
           </td>
         </tr>
@@ -63,9 +57,21 @@ const LibraryList: React.FC<Props> = (props: Props) => {
     <Table>
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Status</th>
-          <th>Author</th>
+          <th>
+            <DefaultText fw={'bold'} size="sm">
+              Title
+            </DefaultText>
+          </th>
+          <th>
+            <DefaultText fw={'bold'} size="sm">
+              Status
+            </DefaultText>
+          </th>
+          <th>
+            <DefaultText fw={'bold'} size="sm">
+              Author
+            </DefaultText>
+          </th>
           <th> </th>
         </tr>
       </thead>
