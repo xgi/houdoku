@@ -4,7 +4,47 @@ on:
     branches:
       - master
 jobs:
-  build:
+  publish-win:
+    strategy:
+      matrix:
+        node: ['22']
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: pnpm i
+      - run: pnpm build
+      - run: pnpm electron-builder --publish onTagOrDraft --win
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  publish-linux:
+    strategy:
+      matrix:
+        node: ['22']
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: pnpm i
+      - run: pnpm build
+      - run: pnpm electron-builder --publish onTagOrDraft --linux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  publish-mac:
     strategy:
       matrix:
         node: ['22']
@@ -20,7 +60,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: pnpm i
-      - run: pnpm package
+      - run: pnpm build
+      - run: pnpm electron-builder --publish onTagOrDraft --mac
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # APPLE_ID: ${{ secrets.APPLE_ID }}
