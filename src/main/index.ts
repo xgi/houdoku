@@ -23,10 +23,6 @@ import { createUpdaterIpcHandlers } from './services/updater';
 import { DEFAULT_DOWNLOADS_DIR, LOGS_DIR, PLUGINS_DIR, THUMBNAILS_DIR } from './util/appdata';
 import { createFilesystemIpcHandlers } from './services/filesystem';
 
-if (process.platform === 'win32') {
-  app.setPath('userData', path.join(path.dirname(app.getPath('exe')), 'data'));
-}
-
 log.transports.file.resolvePath = () => path.join(LOGS_DIR, 'main.log');
 
 console.info(`Starting Houdoku main process (client version ${packageJson.version})`);
