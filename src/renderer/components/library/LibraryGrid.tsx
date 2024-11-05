@@ -69,11 +69,13 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     const fileExtensions = constants.IMAGE_EXTENSIONS;
     for (let i = 0; i < fileExtensions.length; i += 1) {
       const thumbnailPath = path.join(thumbnailsDir, `${series.id}.${fileExtensions[i]}`);
-      if (fs.existsSync(thumbnailPath)) return `atom://${thumbnailPath}`;
+      if (fs.existsSync(thumbnailPath)) return `atom://${encodeURIComponent(thumbnailPath)}`;
     }
 
     if (series.extensionId === FS_METADATA.id) {
-      return series.remoteCoverUrl ? `atom://${series.remoteCoverUrl}` : blankCover;
+      return series.remoteCoverUrl
+        ? `atom://${encodeURIComponent(series.remoteCoverUrl)}`
+        : blankCover;
     }
     return series.remoteCoverUrl || blankCover;
   };

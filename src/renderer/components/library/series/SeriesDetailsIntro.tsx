@@ -29,11 +29,13 @@ const SeriesDetailsIntro: React.FC<Props> = (props: Props) => {
     const fileExtensions = constants.IMAGE_EXTENSIONS;
     for (let i = 0; i < fileExtensions.length; i += 1) {
       const thumbnailPath = path.join(thumbnailsDir, `${props.series.id}.${fileExtensions[i]}`);
-      if (fs.existsSync(thumbnailPath)) return `atom://${thumbnailPath}`;
+      if (fs.existsSync(thumbnailPath)) return `atom://${encodeURIComponent(thumbnailPath)}`;
     }
 
     if (props.series.extensionId === FS_METADATA.id) {
-      return props.series.remoteCoverUrl ? `atom://${props.series.remoteCoverUrl}` : blankCover;
+      return props.series.remoteCoverUrl
+        ? `atom://${encodeURIComponent(props.series.remoteCoverUrl)}`
+        : blankCover;
     }
     return props.series.remoteCoverUrl || blankCover;
   };

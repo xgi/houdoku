@@ -24,7 +24,9 @@ type Props = {
 const SeriesEditControls: React.FC<Props> = (props: Props) => {
   const getCoverSrcUrl = () => {
     if (props.series.extensionId === FS_METADATA.id) {
-      return props.series.remoteCoverUrl ? `atom://${props.series.remoteCoverUrl}` : blankCover;
+      return props.series.remoteCoverUrl
+        ? `atom://${encodeURIComponent(props.series.remoteCoverUrl)}`
+        : blankCover;
     }
     return props.series.remoteCoverUrl;
   };

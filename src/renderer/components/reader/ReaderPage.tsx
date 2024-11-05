@@ -191,7 +191,7 @@ const ReaderPage: React.FC = () => {
       .then((pageRequesterData: PageRequesterData) =>
         ipcRenderer.invoke(ipcChannels.EXTENSION.GET_PAGE_URLS, FS_METADATA.id, pageRequesterData),
       );
-    newPageUrls = newPageUrls.map((pageUrl) => `atom://${pageUrl}`);
+    newPageUrls = newPageUrls.map((pageUrl) => `atom://${encodeURIComponent(pageUrl)}`);
 
     setPageUrls(newPageUrls);
     setLastPageNumber(newPageUrls.length);
@@ -255,7 +255,7 @@ const ReaderPage: React.FC = () => {
       );
 
     if (series.extensionId === FS_METADATA.id) {
-      newPageUrls = newPageUrls.map((pageUrl) => `atom://${pageUrl}`);
+      newPageUrls = newPageUrls.map((pageUrl) => `atom://${encodeURIComponent(pageUrl)}`);
     }
 
     setPageUrls(newPageUrls);

@@ -39,6 +39,15 @@ if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true')
   require('electron-debug')();
 }
 
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'atom',
+    privileges: {
+      supportFetchAPI: true,
+    },
+  },
+]);
+
 const createWindows = async () => {
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'resources')
@@ -126,8 +135,8 @@ app
     loadPlugins(spoofWindow!);
 
     protocol.handle('atom', (req) => {
-      const { pathname } = new URL(req.url);
-      return net.fetch(`file://${pathname}`, {
+      const newPath = decodeURIComponent(req.url.slice('atom://'.length));
+      return net.fetch(`file://${newPath}`, {
         method: req.method,
         headers: req.headers,
         body: req.body,
