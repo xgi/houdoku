@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { ScrollArea, Text } from '@mantine/core';
+import { ScrollArea } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
 import { LibrarySort, LibraryView, ProgressFilter } from '@/common/models/types';
 import {
@@ -25,6 +25,7 @@ import LibraryList from './LibraryList';
 import library from '@/renderer/services/library';
 import EditCategoriesModal from './EditCategoriesModal';
 import LibraryControlBarMultiSelect from './LibraryControlBarMultiSelect';
+import DefaultText from '../general/DefaultText';
 
 type Props = unknown;
 
@@ -128,19 +129,19 @@ const Library: React.FC<Props> = () => {
 
   const renderEmptyMessage = () => {
     return (
-      <Text ta="center" style={{ paddingTop: '30vh' }}>
+      <DefaultText ta="center" style={{ paddingTop: '30vh' }}>
         Your library is empty. Install{' '}
-        <Text component="span" c="violet" fw={700}>
+        <DefaultText component="span" c="violet" fw={700}>
           Plugins
-        </Text>{' '}
+        </DefaultText>{' '}
         from the tab on the left,
         <br />
         and then go to{' '}
-        <Text component="span" c="teal" fw={700}>
+        <DefaultText component="span" c="teal" fw={700}>
           Add Series
-        </Text>{' '}
+        </DefaultText>{' '}
         to start building your library.
-      </Text>
+      </DefaultText>
     );
   };
 

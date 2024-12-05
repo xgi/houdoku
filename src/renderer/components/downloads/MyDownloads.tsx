@@ -4,7 +4,6 @@ const { ipcRenderer } = require('electron');
 import { useRecoilValue } from 'recoil';
 import { Accordion, Badge, Group, Stack } from '@mantine/core';
 import { IconTrash } from '@tabler/icons';
-import { openConfirmModal } from '@mantine/modals';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import library from '@/renderer/services/library';
 import { customDownloadsDirState } from '@/renderer/state/settingStates';
@@ -14,6 +13,7 @@ import DefaultCheckbox from '../general/DefaultCheckbox';
 import DefaultText from '../general/DefaultText';
 import DefaultButton from '../general/DefaultButton';
 import DefaultTitle from '../general/DefaultTitle';
+import DeleteDownloadsModal from './DeleteDownloadsModal';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -21,6 +21,7 @@ const MyDownloads: React.FC = () => {
   const [seriesList, setSeriesList] = useState<Series[]>([]);
   const [chapterLists, setChapterLists] = useState<{ [key: string]: Chapter[] }>({});
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
+  const [showingDeleteModal, setShowingDeleteModal] = useState(false);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadDownloads = async () => {
@@ -71,21 +72,7 @@ const MyDownloads: React.FC = () => {
     const count = new Set(checkedChapters).size;
 
     if (count > 1) {
-      openConfirmModal({
-        title: 'Deleting downloaded chapters',
-        children: (
-          <DefaultText size="sm">
-            Are you sure you want to delete{' '}
-            <DefaultText c="teal" component="span" fw={700}>
-              {count}
-            </DefaultText>{' '}
-            downloaded chapters?
-          </DefaultText>
-        ),
-        labels: { confirm: 'Delete', cancel: 'Cancel' },
-        confirmProps: { color: 'red' },
-        onConfirm: deleteChecked,
-      });
+      setShowingDeleteModal(true);
     } else {
       deleteChecked();
     }
@@ -146,6 +133,12 @@ const MyDownloads: React.FC = () => {
 
   return (
     <>
+      <DeleteDownloadsModal
+        count={checkedChapters.length}
+        deleteFunc={deleteChecked}
+        showing={showingDeleteModal}
+        close={() => setShowingDeleteModal(false)}
+      />
       {renderHeader()}
       {seriesList.length === 0 || Object.keys(chapterLists).length === 0 ? (
         <DefaultText>

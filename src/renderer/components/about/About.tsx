@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 const { ipcRenderer } = require('electron');
-import { Title, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import packageJson from '../../../../package.json';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { IconGitFork, IconHome, IconNotebook, IconScale } from '@tabler/icons';

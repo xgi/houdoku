@@ -99,7 +99,7 @@ export const createRendererIpcHandlers = () => {
             Houdoku v{updateInfo.version} was released on{' '}
             {new Date(updateInfo.releaseDate).toLocaleDateString()}.
           </Text>
-          <Box bg={'dark.8'} p="xs">
+          <Box p="xs">
             <Text size="sm">
               {parse(updateInfo.releaseNotes as string, {
                 transform(reactNode) {
