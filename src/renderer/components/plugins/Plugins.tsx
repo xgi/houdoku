@@ -29,7 +29,8 @@ const Plugins: React.FC = () => {
     setCurrentTiyoVersion(currentVersion);
 
     await aki
-      .search('core', 'tiyo', 1)
+      // TODO hack
+      .search('author:xgi @tiyo/core', '', 1)
       // biome-ignore lint/suspicious/noExplicitAny: TODO external schema
       .then((results: any) => {
         if (results.objects.length > 0) {
