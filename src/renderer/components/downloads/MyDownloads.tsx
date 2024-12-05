@@ -157,69 +157,68 @@ const MyDownloads: React.FC = () => {
           .
         </DefaultText>
       ) : (
-        ''
-      )}
-      <DefaultAccordion radius="xs" chevronPosition="left" multiple={undefined}>
-        {seriesList.map((series) => {
-          if (!series.id || !chapterLists[series.id]) return '';
+        <DefaultAccordion radius="xs" chevronPosition="left" multiple={undefined}>
+          {seriesList.map((series) => {
+            if (!series.id || !chapterLists[series.id]) return '';
 
-          const numChapters = chapterLists[series.id].length;
-          const numSelected = chapterLists[series.id].filter(
-            (chapter) => chapter.id && checkedChapters.includes(chapter.id),
-          ).length;
+            const numChapters = chapterLists[series.id].length;
+            const numSelected = chapterLists[series.id].filter(
+              (chapter) => chapter.id && checkedChapters.includes(chapter.id),
+            ).length;
 
-          let badgeColor: string | undefined;
-          if (numSelected > 0) badgeColor = 'yellow';
-          if (numSelected === numChapters) badgeColor = 'teal';
+            let badgeColor: string | undefined;
+            if (numSelected > 0) badgeColor = 'yellow';
+            if (numSelected === numChapters) badgeColor = 'teal';
 
-          return (
-            <Accordion.Item value={series.id} key={series.id}>
-              <Accordion.Control>
-                <Group justify={'space-between'}>
-                  <Group>
-                    <DefaultCheckbox
-                      checked={numSelected === numChapters}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                      onChange={() => handleChangeSeriesCheckbox(series.id)}
-                    />
-                    <DefaultText>{series.title}</DefaultText>
+            return (
+              <Accordion.Item value={series.id} key={series.id}>
+                <Accordion.Control>
+                  <Group justify={'space-between'}>
+                    <Group>
+                      <DefaultCheckbox
+                        checked={numSelected === numChapters}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        onChange={() => handleChangeSeriesCheckbox(series.id)}
+                      />
+                      <DefaultText>{series.title}</DefaultText>
+                    </Group>
+                    <Badge radius={0} color={badgeColor}>
+                      {numSelected}/{numChapters} selected
+                    </Badge>
                   </Group>
-                  <Badge radius={0} color={badgeColor}>
-                    {numSelected}/{numChapters} selected
-                  </Badge>
-                </Group>
-              </Accordion.Control>
-              <Accordion.Panel>
-                <Stack gap={'xs'}>
-                  {chapterLists[series.id]
-                    .sort(
-                      (a, b) =>
-                        parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber) ||
-                        a.id!.localeCompare(b.id!),
-                    )
-                    .reverse()
-                    .map((chapter) => {
-                      if (!chapter.id) return '';
-                      return (
-                        <DefaultCheckbox
-                          key={chapter.id}
-                          ml={40}
-                          label={`Chapter ${chapter.chapterNumber} [id:${chapter.id}]`}
-                          checked={checkedChapters.includes(chapter.id)}
-                          onChange={(e) =>
-                            handleChangeChapterCheckbox(chapter.id, e.target.checked)
-                          }
-                        />
-                      );
-                    })}
-                </Stack>
-              </Accordion.Panel>
-            </Accordion.Item>
-          );
-        })}
-      </DefaultAccordion>
+                </Accordion.Control>
+                <Accordion.Panel>
+                  <Stack gap={'xs'}>
+                    {chapterLists[series.id]
+                      .sort(
+                        (a, b) =>
+                          parseFloat(a.chapterNumber) - parseFloat(b.chapterNumber) ||
+                          a.id!.localeCompare(b.id!),
+                      )
+                      .reverse()
+                      .map((chapter) => {
+                        if (!chapter.id) return '';
+                        return (
+                          <DefaultCheckbox
+                            key={chapter.id}
+                            ml={40}
+                            label={`Chapter ${chapter.chapterNumber} [id:${chapter.id}]`}
+                            checked={checkedChapters.includes(chapter.id)}
+                            onChange={(e) =>
+                              handleChangeChapterCheckbox(chapter.id, e.target.checked)
+                            }
+                          />
+                        );
+                      })}
+                  </Stack>
+                </Accordion.Panel>
+              </Accordion.Item>
+            );
+          })}
+        </DefaultAccordion>
+      )}
     </>
   );
 };
