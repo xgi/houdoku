@@ -77,24 +77,14 @@ export const chapterDownloadStatusesState = atom<{ [key: string]: boolean }>({
   default: {},
 });
 
-export const chapterFilterTitleState = atom({
-  key: 'chapterFilterTitleState',
-  default: '',
-});
-
-export const chapterFilterGroupState = atom({
-  key: 'chapterFilterGroupState',
-  default: '',
+export const chapterFilterGroupNamesState = atom({
+  key: 'chapterFilterGroupNamesState',
+  default: [] as string[],
 });
 
 export const categoryListState = atom<Category[]>({
   key: 'libraryCategoryListState',
   default: [],
-});
-
-export const showingLibraryCtxMenuState = atom({
-  key: 'libraryShowingCtxMenuState',
-  default: false,
 });
 
 export const activeSeriesListState = selector({
@@ -110,8 +100,7 @@ export const sortedFilteredChapterListState = selector<Chapter[]>({
   get: ({ get }) => {
     const chapterList = get(chapterListState);
     const chapterLanguages = get(chapterLanguagesState);
-    const chapterFilterTitle = get(chapterFilterTitleState);
-    const chapterFilterGroup = get(chapterFilterGroupState);
+    const chapterFilterGroupNames = get(chapterFilterGroupNamesState);
     const chapterListVolOrder = get(chapterListVolOrderState);
     const chapterListChOrder = get(chapterListChOrderState);
 
@@ -129,17 +118,20 @@ export const sortedFilteredChapterListState = selector<Chapter[]>({
     }
 
     return chapterList
-      .filter(
-        (chapter: Chapter) =>
-          (chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0) &&
-          chapter.title !== null &&
-          chapter.title.toLowerCase().includes(chapterFilterTitle.toLowerCase()) &&
-          chapter.groupName !== null &&
-          chapter.groupName.toLowerCase().includes(chapterFilterGroup.toLowerCase()) &&
-          ((uniqueChapters.has(chapter.chapterNumber) &&
+      .filter((chapter: Chapter) => {
+        const matchesLanguage =
+          chapterLanguages.includes(chapter.languageKey) || chapterLanguages.length === 0;
+        const matchesGroup =
+          chapterFilterGroupNames.length > 0
+            ? chapterFilterGroupNames.includes(chapter.groupName || '')
+            : true;
+        const unique =
+          (uniqueChapters.has(chapter.chapterNumber) &&
             uniqueChapters.get(chapter.chapterNumber) === chapter) ||
-            chapterLanguages.length === 0),
-      )
+          chapterLanguages.length === 0;
+
+        return matchesLanguage && matchesGroup && unique;
+      })
       .sort((a, b) => {
         const volumeComp = {
           [TableColumnSortOrder.Ascending]: parseFloat(a.volumeNumber) - parseFloat(b.volumeNumber),

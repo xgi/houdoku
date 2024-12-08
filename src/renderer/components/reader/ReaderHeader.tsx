@@ -22,7 +22,6 @@ import {
   IconX,
 } from '@tabler/icons';
 import { Box, Center, Group, Menu, ScrollArea } from '@mantine/core';
-import flags from '@/renderer/img/flags.png';
 import styles from './ReaderHeader.module.css';
 import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types';
 import {
@@ -344,17 +343,12 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
               <Menu.Target>
                 <ReaderHeaderButton
                   leftSection={
-                    chapter && chapter.languageKey ? (
-                      <div className="flag-container">
-                        <img
-                          src={flags}
-                          title={Languages[chapter.languageKey].name}
-                          alt={Languages[chapter.languageKey].name}
-                          className={`flag flag-${Languages[chapter.languageKey].flagCode}`}
-                        />
-                      </div>
-                    ) : (
-                      <></>
+                    chapter &&
+                    chapter.languageKey && (
+                      <div
+                        className={`inline-flex flag:${Languages[chapter.languageKey]?.flagCode} w-[1.125rem] h-[0.75rem]`}
+                        title={Languages[chapter.languageKey]?.name}
+                      />
                     )
                   }
                   radius={0}
@@ -376,20 +370,12 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                         if (languageChapter.id) props.setChapter(languageChapter.id, pageNumber);
                       }}
                     >
-                      {Languages[languageChapter.languageKey] === undefined ? (
-                        <></>
-                      ) : (
-                        <div style={{ display: 'flex' }}>
-                          <div style={{ marginRight: '5px' }} className="flag-container">
-                            <img
-                              src={flags}
-                              title={Languages[languageChapter.languageKey].name}
-                              alt={Languages[languageChapter.languageKey].name}
-                              className={`flag flag-${
-                                Languages[languageChapter.languageKey].flagCode
-                              }`}
-                            />
-                          </div>
+                      {Languages[languageChapter.languageKey] !== undefined && (
+                        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                          <div
+                            className={`flag:${Languages[languageChapter.languageKey]?.flagCode} w-[1.125rem] h-[0.75rem]`}
+                            title={Languages[languageChapter.languageKey]?.name}
+                          />
                           {`${Languages[languageChapter.languageKey].name} ${
                             languageChapter.volumeNumber
                               ? `Vol. ${languageChapter.volumeNumber}`
