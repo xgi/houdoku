@@ -11,6 +11,7 @@ import { ErrorBoundary } from './components/general/ErrorBoundary';
 import { themeState } from './state/settingStates';
 import { themeProps, THEMES } from './util/themes';
 import { Theme } from '@/common/models/types';
+import { useEffect } from 'react';
 
 const main = document.createElement('main');
 document.body.appendChild(main);
@@ -21,6 +22,12 @@ function Root() {
 
   // TODO hack to ignore some remaning theme changes
   const forceColorScheme = theme === Theme.Light ? 'light' : 'dark';
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme === Theme.Light ? 'light' : 'dark');
+  }, [theme]);
 
   return (
     <MantineProvider theme={THEMES[theme]} forceColorScheme={forceColorScheme}>
