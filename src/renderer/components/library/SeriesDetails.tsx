@@ -4,7 +4,6 @@ const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Center, Loader } from '@mantine/core';
-import ChapterTable from './ChapterTable';
 import { getBannerImageUrl } from '@/renderer/services/mediasource';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import SeriesTrackerModal from './tracker/SeriesTrackerModal';
@@ -12,8 +11,7 @@ import EditSeriesModal from './EditSeriesModal';
 import { downloadCover } from '@/renderer/util/download';
 import library from '@/renderer/services/library';
 import {
-  chapterFilterGroupState,
-  chapterFilterTitleState,
+  chapterFilterGroupNamesState,
   chapterListState,
   currentExtensionMetadataState,
   seriesBannerUrlState,
@@ -26,6 +24,7 @@ import SeriesDetailsFloatingHeader from './series/SeriesDetailsFloatingHeader';
 import SeriesDetailsBanner from './series/SeriesDetailsBanner';
 import SeriesDetailsIntro from './series/SeriesDetailsIntro';
 import SeriesDetailsInfoGrid from './series/SeriesDetailsInfoGrid';
+import { ChapterTable } from './series/chapter-table/ChapterTable';
 
 type Props = unknown;
 
@@ -42,9 +41,9 @@ const SeriesDetails: React.FC<Props> = () => {
   const setSeries = useSetRecoilState(seriesState);
   const seriesList = useRecoilValue(seriesListState);
   const setChapterList = useSetRecoilState(chapterListState);
+  const setChapterFilterGroupNames = useSetRecoilState(chapterFilterGroupNamesState);
   const setSeriesBannerUrl = useSetRecoilState(seriesBannerUrlState);
-  const setChapterFilterTitle = useSetRecoilState(chapterFilterTitleState);
-  const setChapterFilterGroup = useSetRecoilState(chapterFilterGroupState);
+
   const loadContent = async () => {
     console.info(`Series page is loading details from database for series ${id}`);
 
@@ -71,9 +70,8 @@ const SeriesDetails: React.FC<Props> = () => {
   }, [id, seriesList]);
 
   useEffect(() => {
-    setChapterFilterTitle('');
-    setChapterFilterGroup('');
-  }, [location, setChapterFilterGroup, setChapterFilterTitle]);
+    setChapterFilterGroupNames([]);
+  }, [location, setChapterFilterGroupNames]);
 
   return (
     <>

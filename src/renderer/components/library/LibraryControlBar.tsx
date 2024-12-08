@@ -24,7 +24,6 @@ import {
   filterState,
   reloadingSeriesListState,
   seriesListState,
-  showingLibraryCtxMenuState,
 } from '@/renderer/state/libraryStates';
 import {
   libraryFilterStatusState,
@@ -71,7 +70,6 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const [librarySort, setLibrarySort] = useRecoilState(librarySortState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const categoryList = useRecoilValue(categoryListState);
-  const setShowingContextMenu = useSetRecoilState(showingLibraryCtxMenuState);
 
   const refreshHandler = () => {
     if (!reloadingSeriesList) {
@@ -88,19 +86,12 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   return (
     <Group justify="space-between" pt="sm" mb="md" wrap="nowrap">
       <Group align="left" gap="xs" wrap="nowrap">
-        <DefaultButton
-          oc="blue"
-          onClick={refreshHandler}
-          loading={reloadingSeriesList}
-          onMouseEnter={() => setShowingContextMenu(false)}
-        >
+        <DefaultButton oc="blue" onClick={refreshHandler} loading={reloadingSeriesList}>
           {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}{' '}
         </DefaultButton>
         <DefaultMenu shadow="md" trigger="hover" closeOnItemClick={false} width={200}>
           <Menu.Target>
-            <DefaultButton variant="default" onMouseEnter={() => setShowingContextMenu(false)}>
-              Layout
-            </DefaultButton>
+            <DefaultButton variant="default">Layout</DefaultButton>
           </Menu.Target>
 
           <Menu.Dropdown {...themeProps(theme)}>
@@ -196,9 +187,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
 
         <DefaultMenu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
           <Menu.Target>
-            <DefaultButton variant="default" onMouseEnter={() => setShowingContextMenu(false)}>
-              Filters
-            </DefaultButton>
+            <DefaultButton variant="default">Filters</DefaultButton>
           </Menu.Target>
 
           <Menu.Dropdown {...themeProps(theme)}>
@@ -235,11 +224,7 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
 
         <DefaultMenu shadow="md" trigger="hover" closeOnItemClick={true} width={200}>
           <Menu.Target>
-            <DefaultButton
-              variant="default"
-              onContextMenu={() => setLibraryFilterCategory('')}
-              onMouseEnter={() => setShowingContextMenu(false)}
-            >
+            <DefaultButton variant="default" onContextMenu={() => setLibraryFilterCategory('')}>
               Category
             </DefaultButton>
           </Menu.Target>

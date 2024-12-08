@@ -11,7 +11,6 @@ import {
   reloadingSeriesListState,
   seriesListState,
   seriesState,
-  showingLibraryCtxMenuState,
 } from '@/renderer/state/libraryStates';
 import { chapterLanguagesState } from '@/renderer/state/settingStates';
 import library from '@/renderer/services/library';
@@ -29,7 +28,6 @@ const LibraryControlBarMultiSelect: React.FC<Props> = () => {
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const categoryList = useRecoilValue(categoryListState);
-  const setShowingContextMenu = useSetRecoilState(showingLibraryCtxMenuState);
   const setMultiSelectEnabled = useSetRecoilState(multiSelectEnabledState);
   const multiSelectSeriesList = useRecoilValue(multiSelectSeriesListState);
 
@@ -61,12 +59,7 @@ const LibraryControlBarMultiSelect: React.FC<Props> = () => {
   return (
     <Group justify="space-between" align="center" pt="sm" mb="md" wrap="nowrap">
       <Group align="left" gap="xs" wrap="nowrap">
-        <DefaultButton
-          oc="blue"
-          onClick={refreshHandler}
-          loading={reloadingSeriesList}
-          onMouseEnter={() => setShowingContextMenu(false)}
-        >
+        <DefaultButton oc="blue" onClick={refreshHandler} loading={reloadingSeriesList}>
           {reloadingSeriesList ? 'Refreshing...' : 'Refresh selected'}{' '}
         </DefaultButton>
         {/* <Button variant="default" leftSection={<IconTag size={14} />}>

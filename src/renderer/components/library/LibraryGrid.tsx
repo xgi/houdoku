@@ -1,6 +1,6 @@
 const fs = require('fs');
 import path from 'path';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { Overlay, SimpleGrid, Title } from '@mantine/core';
@@ -14,7 +14,6 @@ import {
   multiSelectEnabledState,
   multiSelectSeriesListState,
   seriesListState,
-  showingLibraryCtxMenuState,
 } from '@/renderer/state/libraryStates';
 import {
   libraryColumnsState,
@@ -27,6 +26,7 @@ import { LibraryView } from '@/common/models/types';
 import LibraryGridContextMenu from './LibraryGridContextMenu';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import DefaultTitle from '../general/DefaultTitle';
+import { ContextMenu, ContextMenuTrigger } from '@/ui/components/ContextMenu';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -48,11 +48,6 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
   const [multiSelectSeriesList, setMultiSelectSeriesList] = useRecoilState(
     multiSelectSeriesListState,
   );
-  const [showingLibraryCtxMenu, setShowingLibraryCtxMenu] = useRecoilState(
-    showingLibraryCtxMenuState,
-  );
-  const [contextMenuSeries, setContextMenuSeries] = useState<Series | null>(null);
-  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
   const viewFunc = (series: Series) => {
     goToSeries(series, setSeriesList, navigate);
@@ -112,13 +107,6 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
 
   return (
     <>
-      <LibraryGridContextMenu
-        position={contextMenuPosition}
-        series={contextMenuSeries}
-        visible={showingLibraryCtxMenu}
-        close={() => setShowingLibraryCtxMenu(false)}
-        showRemoveModal={props.showRemoveModal}
-      />
       <SimpleGrid cols={libraryColumns} spacing="xs">
         {props.getFilteredList().map((series: Series) => {
           const coverSource = getImageSource(series).replaceAll('\\', '/');
@@ -127,63 +115,66 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
           return (
             <span key={`${series.id}-${series.title}`}>
               <div>
-                <div
-                  className={styles.coverContainer}
-                  data-multiselected={multiSelectEnabled && isMultiSelected}
-                  onClick={() => {
-                    if (multiSelectEnabled) {
-                      if (isMultiSelected) {
-                        setMultiSelectSeriesList(multiSelectSeriesList.filter((s) => s !== series));
-                      } else {
-                        setMultiSelectSeriesList([...multiSelectSeriesList, series]);
-                      }
-                    } else {
-                      viewFunc(series);
-                    }
-                  }}
-                  onContextMenu={(e) => {
-                    if (!multiSelectEnabled) {
-                      setContextMenuPosition({ x: e.clientX, y: e.clientY });
-                      setContextMenuSeries(series);
-                      setShowingLibraryCtxMenu(true);
-                    }
-                  }}
-                  style={{
-                    height: libraryCropCovers ? `calc(105vw / ${libraryColumns})` : 'calc(100%)',
-                  }}
-                >
-                  <ExtensionImage url={coverSource} series={series} alt={series.title} />
-                  {renderUnreadBadge(series)}
-                  {libraryView === LibraryView.GridCompact ? (
-                    <>
-                      <Title
-                        className={styles.seriesTitle}
-                        order={5}
-                        lineClamp={3}
-                        p={4}
-                        pb={8}
-                        style={{ zIndex: 10 }}
-                      >
-                        {series.title}
-                      </Title>
-                      {/* TODO: hack to disable overlay during multi-select since the gradient
-                          affects the border. Should come up with a better way that preserves both */}
-                      {multiSelectEnabled ? undefined : (
-                        <Overlay
-                          h={
-                            libraryCropCovers
-                              ? `calc(105vw / ${libraryColumns})`
-                              : 'calc(100% - 7px)'
+                <ContextMenu>
+                  <ContextMenuTrigger>
+                    <div
+                      className={styles.coverContainer}
+                      data-multiselected={multiSelectEnabled && isMultiSelected}
+                      onClick={() => {
+                        if (multiSelectEnabled) {
+                          if (isMultiSelected) {
+                            setMultiSelectSeriesList(
+                              multiSelectSeriesList.filter((s) => s !== series),
+                            );
+                          } else {
+                            setMultiSelectSeriesList([...multiSelectSeriesList, series]);
                           }
-                          gradient="linear-gradient(0deg, #000000cc, #00000000 40%, #00000000)"
-                          zIndex={5}
-                        />
+                        } else {
+                          viewFunc(series);
+                        }
+                      }}
+                      style={{
+                        height: libraryCropCovers
+                          ? `calc(105vw / ${libraryColumns})`
+                          : 'calc(100%)',
+                      }}
+                    >
+                      <ExtensionImage url={coverSource} series={series} alt={series.title} />
+                      {renderUnreadBadge(series)}
+                      {libraryView === LibraryView.GridCompact ? (
+                        <>
+                          <Title
+                            className={styles.seriesTitle}
+                            order={5}
+                            lineClamp={3}
+                            p={4}
+                            pb={8}
+                            style={{ zIndex: 10 }}
+                          >
+                            {series.title}
+                          </Title>
+                          {/* TODO: hack to disable overlay during multi-select since the gradient
+                          affects the border. Should come up with a better way that preserves both */}
+                          {multiSelectEnabled ? undefined : (
+                            <Overlay
+                              h={
+                                libraryCropCovers
+                                  ? `calc(105vw / ${libraryColumns})`
+                                  : 'calc(100% - 7px)'
+                              }
+                              gradient="linear-gradient(0deg, #000000cc, #00000000 40%, #00000000)"
+                              zIndex={5}
+                            />
+                          )}
+                        </>
+                      ) : (
+                        ''
                       )}
-                    </>
-                  ) : (
-                    ''
-                  )}
-                </div>
+                    </div>
+                  </ContextMenuTrigger>
+                  <LibraryGridContextMenu series={series} showRemoveModal={props.showRemoveModal} />
+                </ContextMenu>
+
                 {libraryView === LibraryView.GridComfortable ? (
                   <DefaultTitle order={5} lineClamp={3} p={4}>
                     {series.title}
