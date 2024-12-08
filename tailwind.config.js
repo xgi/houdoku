@@ -2,6 +2,10 @@
 module.exports = {
   content: ["./src/renderer/index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
+    fontFamily: {
+      'sans': ['Inter', 'Times New Roman'],
+      // 'sans': ['Inter', 'sans-serif', 'system-ui'],
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -37,12 +41,27 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-background))',
+          foreground: 'hsl(var(--sidebar-foreground))',
+          primary: 'hsl(var(--sidebar-primary))',
+          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+          accent: 'hsl(var(--sidebar-accent))',
+          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          border: 'hsl(var(--sidebar-border))',
+          ring: 'hsl(var(--sidebar-ring))',
+        },
       },
       borderRadius: {
         lg: `var(--radius)`,
         md: `calc(var(--radius) - 2px)`,
         sm: "calc(var(--radius) - 4px)",
       },
+      utilities: {
+        '.drag': {
+          '-webkit-app-region': 'drag',
+        },
+      }
     },
   },
   plugins: [],
