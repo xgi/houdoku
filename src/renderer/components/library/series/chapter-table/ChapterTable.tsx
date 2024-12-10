@@ -178,7 +178,7 @@ export function ChapterTable(props: ChapterTableProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="-ml-3 h-8 data-[state=open]:bg-accent w-[4px]"
+          className="-ml-3 h-8 data-[state=open]:bg-accent w-16"
           onClick={() => {
             switch (chapterListVolOrder) {
               case TableColumnSortOrder.Descending:
@@ -198,7 +198,7 @@ export function ChapterTable(props: ChapterTableProps) {
       ),
       cell: ({ row }) => (
         <div className="flex space-x-0">
-          <span className="w-4 truncate">{row.getValue('volumeNumber')}</span>
+          <span className="w-12 truncate">{row.getValue('volumeNumber')}</span>
         </div>
       ),
       enableHiding: false,
@@ -209,7 +209,7 @@ export function ChapterTable(props: ChapterTableProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="-ml-3 h-8 data-[state=open]:bg-accent w-[4px]"
+          className="-ml-3 h-8 data-[state=open]:bg-accent w-12"
           onClick={() => {
             switch (chapterListChOrder) {
               case TableColumnSortOrder.Descending:
@@ -229,7 +229,7 @@ export function ChapterTable(props: ChapterTableProps) {
       ),
       cell: ({ row }) => (
         <div className="flex space-x-2">
-          <span className="w-11 truncate">{row.getValue('chapterNumber')}</span>
+          <span className="w-12 truncate">{row.getValue('chapterNumber')}</span>
         </div>
       ),
       enableHiding: false,

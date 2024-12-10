@@ -3,7 +3,6 @@ import { useParams, useLocation } from 'react-router-dom';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { Center, Loader } from '@mantine/core';
 import { getBannerImageUrl } from '@/renderer/services/mediasource';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import SeriesTrackerModal from './tracker/SeriesTrackerModal';
@@ -25,6 +24,7 @@ import SeriesDetailsBanner from './series/SeriesDetailsBanner';
 import SeriesDetailsIntro from './series/SeriesDetailsIntro';
 import SeriesDetailsInfoGrid from './series/SeriesDetailsInfoGrid';
 import { ChapterTable } from './series/chapter-table/ChapterTable';
+import { Loader2 } from 'lucide-react';
 
 type Props = unknown;
 
@@ -73,63 +73,64 @@ const SeriesDetails: React.FC<Props> = () => {
     setChapterFilterGroupNames([]);
   }, [location, setChapterFilterGroupNames]);
 
+  if (!series) {
+    return (
+      <div className="flex w-full h-[calc(100vh-64px)] justify-center items-center align-middle">
+        <Loader2 className="animate-spin w-8 h-8" />
+      </div>
+    );
+  }
   return (
-    <>
-      {series ? (
-        <>
-          <SeriesTrackerModal
-            series={series}
-            visible={showingTrackerModal}
-            toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
-          />
-          <EditSeriesModal
-            series={series}
-            visible={showingEditModal}
-            close={() => setShowingEditModal(false)}
-            saveCallback={(newSeries) => {
-              if (newSeries.remoteCoverUrl !== series?.remoteCoverUrl) {
-                console.debug(`Updating cover for series ${series?.id}`);
-                ipcRenderer
-                  .invoke(ipcChannels.FILESYSTEM.DELETE_THUMBNAIL, newSeries)
-                  .then(() => downloadCover(newSeries))
-                  .catch(console.error);
-              }
-              setSeries(newSeries);
-            }}
-          />
-          <DownloadModal
-            series={series}
-            visible={showingDownloadModal}
-            close={() => setShowingDownloadModal(false)}
-          />
-          <RemoveSeriesModal
-            series={series}
-            showing={showingRemoveModal}
-            close={() => setShowingRemoveModal(false)}
-          />
+    <div className="pb-4">
+      <>
+        <SeriesTrackerModal
+          series={series}
+          visible={showingTrackerModal}
+          toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
+        />
+        <EditSeriesModal
+          series={series}
+          visible={showingEditModal}
+          close={() => setShowingEditModal(false)}
+          saveCallback={(newSeries) => {
+            if (newSeries.remoteCoverUrl !== series?.remoteCoverUrl) {
+              console.debug(`Updating cover for series ${series?.id}`);
+              ipcRenderer
+                .invoke(ipcChannels.FILESYSTEM.DELETE_THUMBNAIL, newSeries)
+                .then(() => downloadCover(newSeries))
+                .catch(console.error);
+            }
+            setSeries(newSeries);
+          }}
+        />
+        <DownloadModal
+          series={series}
+          visible={showingDownloadModal}
+          close={() => setShowingDownloadModal(false)}
+        />
+        <RemoveSeriesModal
+          series={series}
+          showing={showingRemoveModal}
+          close={() => setShowingRemoveModal(false)}
+        />
 
-          <SeriesDetailsFloatingHeader series={series} />
+        <SeriesDetailsFloatingHeader series={series} />
 
-          <SeriesDetailsBanner
-            series={series}
-            showDownloadModal={() => setShowingDownloadModal(true)}
-            showEditModal={() => setShowingEditModal(true)}
-            showTrackerModal={() => setShowingTrackerModal(true)}
-            showRemoveModal={() => setShowingRemoveModal(true)}
-          />
+        <SeriesDetailsBanner
+          series={series}
+          showDownloadModal={() => setShowingDownloadModal(true)}
+          showEditModal={() => setShowingEditModal(true)}
+          showTrackerModal={() => setShowingTrackerModal(true)}
+          showRemoveModal={() => setShowingRemoveModal(true)}
+        />
 
-          <SeriesDetailsIntro series={series} />
+        <SeriesDetailsIntro series={series} />
 
-          <SeriesDetailsInfoGrid series={series} />
+        <SeriesDetailsInfoGrid series={series} />
 
-          <ChapterTable series={series} />
-        </>
-      ) : (
-        <Center h="calc(100vh - 16px)" mx="auto">
-          <Loader />
-        </Center>
-      )}
-    </>
+        <ChapterTable series={series} />
+      </>
+    </div>
   );
 };
 

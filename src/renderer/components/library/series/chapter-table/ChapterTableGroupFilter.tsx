@@ -41,11 +41,11 @@ export function ChapterTableGroupFilter(props: Props) {
           {filterGroupNames.length > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
+              <Badge variant="default" className="rounded-sm px-1 font-normal lg:hidden">
                 {filterGroupNames.length}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
-                <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+                <Badge variant="default" className="rounded-sm px-1 font-normal">
                   {filterGroupNames.length} selected
                 </Badge>
               </div>

@@ -41,12 +41,12 @@ export function ChapterTableLanguageFilter() {
           {chapterLanguages.length > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
-              <Badge variant="secondary" className="rounded-sm px-1 font-normal lg:hidden">
+              <Badge variant="default" className="rounded-sm px-1 font-normal lg:hidden">
                 {chapterLanguages.length}
               </Badge>
               <div className="hidden space-x-1 lg:flex">
                 {chapterLanguages.length > 1 ? (
-                  <Badge variant="secondary" className="rounded-sm px-1 font-normal">
+                  <Badge variant="default" className="rounded-sm px-1 font-normal">
                     {chapterLanguages.length} selected
                   </Badge>
                 ) : (
@@ -54,7 +54,7 @@ export function ChapterTableLanguageFilter() {
                     .filter((option) => chapterLanguages.includes(option.value))
                     .map((option) => (
                       <Badge
-                        variant="secondary"
+                        variant="default"
                         key={option.value}
                         className="rounded-sm px-1 font-normal"
                       >

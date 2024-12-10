@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ExtensionMetadata } from '@tiyo/common';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { Flex, Group, Text, Tooltip } from '@mantine/core';
 const { ipcRenderer } = require('electron');
 import {
   searchExtensionState,
@@ -10,11 +9,20 @@ import {
 } from '@/renderer/state/searchStates';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import ipcChannels from '@/common/constants/ipcChannels.json';
-import { IconHelp } from '@tabler/icons';
-import DefaultInput from '../general/DefaultInput';
-import DefaultButton from '../general/DefaultButton';
-import DefaultCheckbox from '../general/DefaultCheckbox';
-import DefaultSelect from '../general/DefaultSelect';
+import { Button } from '@/ui/components/Button';
+import { HelpCircle, Search } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/ui/components/Select';
+import { Checkbox } from '@/ui/components/Checkbox';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/ui/components/Tooltip';
+import { Input } from '@/ui/components/Input';
+import { Label } from '@/ui/components/Label';
 
 interface Props {
   extensionList: ExtensionMetadata[];
@@ -49,65 +57,94 @@ const SearchControlBar: React.FC<Props> = (props: Props) => {
 
   const renderFilesystemControls = () => {
     return (
-      <Group>
-        <DefaultButton oc="blue" onClick={handleSelectDirectory}>
-          Select Directory
-        </DefaultButton>
-        <Tooltip
-          position="bottom"
-          label={
-            <>
-              <Text size="sm">When multi-series mode is enabled, each item in the selected</Text>
-              <Text size="sm">directory is treated as a separate series.</Text>
-            </>
-          }
-        >
-          <Group gap={6} justify="center" align="center">
-            <DefaultCheckbox
-              label="Multi-series mode"
-              checked={multiSeriesEnabled}
-              onChange={() => setMultiSeriesEnabled(!multiSeriesEnabled)}
-            />
-            <IconHelp color={'var(--mantine-color-dark-2)'} size={16} />
-          </Group>
-        </Tooltip>
-      </Group>
+      <div className="flex space-x-4">
+        <Button onClick={handleSelectDirectory}>Select Directory</Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex space-x-2 items-center">
+                <Checkbox
+                  id="checkboxMultiSeriesMode"
+                  checked={multiSeriesEnabled}
+                  onCheckedChange={() => setMultiSeriesEnabled(!multiSeriesEnabled)}
+                />
+                <Label
+                  htmlFor="checkboxMultiSeriesMode"
+                  className="flex text-sm font-medium items-center space-x-2"
+                >
+                  <span>Multi-series mode</span>
+                  <HelpCircle className="w-4 h-4" />
+                </Label>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p>
+                When multi-series mode is enabled, each item in the selected
+                <br />
+                directory is treated as a separate series.
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     );
   };
 
   const renderStandardControls = () => {
     return (
       <>
-        <DefaultInput
-          flexWrapper
-          placeholder="Search for a series..."
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
-          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === 'Enter') props.handleSearch(true);
+        <form
+          className="flex flex-1 space-x-2"
+          onSubmit={() => {
+            props.handleSearch(true);
+            return false;
           }}
-        />
-        <DefaultButton oc="blue" onClick={() => props.handleSearch(true)}>
-          Search
-        </DefaultButton>
+        >
+          <div className="relative flex-1">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              className="pl-8 w-full"
+              placeholder="Search for a series..."
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchText(e.target.value)}
+            />
+          </div>
+          <Button type="submit">Search</Button>
+        </form>
         {props.hasFilterOptions ? (
-          <DefaultButton onClick={() => setShowingFilterDrawer(true)}>Options</DefaultButton>
+          <Button variant="secondary" onClick={() => setShowingFilterDrawer(true)}>
+            Options
+          </Button>
         ) : undefined}
       </>
     );
   };
 
   return (
-    <Flex align="left" gap="xs" pt="sm" mb="md" wrap="nowrap">
-      <DefaultSelect
-        value={searchExtension}
-        data={props.extensionList.map((metadata: ExtensionMetadata) => ({
-          value: metadata.id,
-          label: metadata.name,
-        }))}
-        onChange={(value) => setSearchExtension(value || searchExtension)}
-      />
+    <div className="flex space-x-2 py-3">
+      <Select
+        defaultValue={searchExtension}
+        onValueChange={(value) => setSearchExtension(value || searchExtension)}
+      >
+        <SelectTrigger className="max-w-52">
+          <SelectValue placeholder="Select extension" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {props.extensionList
+              .map((metadata: ExtensionMetadata) => ({
+                value: metadata.id,
+                label: metadata.name,
+              }))
+              .map((metadata) => (
+                <SelectItem key={metadata.value} value={metadata.value}>
+                  {metadata.label}
+                </SelectItem>
+              ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
       {searchExtension === FS_METADATA.id ? renderFilesystemControls() : renderStandardControls()}
-    </Flex>
+    </div>
   );
 };
 

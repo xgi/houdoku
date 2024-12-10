@@ -1,21 +1,6 @@
 import React from 'react';
 import { SeriesStatus } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Group, Menu, ScrollArea } from '@mantine/core';
-import {
-  IconArrowDown,
-  IconArrowUp,
-  IconCheck,
-  IconColumns,
-  IconEdit,
-  IconHash,
-  IconLayoutBottombar,
-  IconLayoutGrid,
-  IconLayoutList,
-  IconLetterA,
-  IconPhoto,
-  IconSearch,
-} from '@tabler/icons';
 import { reloadSeriesList } from '@/renderer/features/library/utils';
 import { LibrarySort, LibraryView, ProgressFilter } from '@/common/models/types';
 import {
@@ -32,35 +17,48 @@ import {
   libraryViewState,
   librarySortState,
   chapterLanguagesState,
-  libraryFilterCategoryState,
-  themeState,
 } from '@/renderer/state/settingStates';
-import DefaultButton from '../general/DefaultButton';
-import DefaultInput from '../general/DefaultInput';
-import DefaultMenu from '../general/DefaultMenu';
-import { themeProps } from '@/renderer/util/themes';
-
-type Props = {
-  showEditCategoriesModal: () => void;
-};
+import { Button } from '@/ui/components/Button';
+import {
+  ArrowDown,
+  ArrowUp,
+  CaseUpper,
+  Check,
+  Columns2,
+  Hash,
+  ImageIcon,
+  LayoutGrid,
+  Loader2,
+  PanelBottom,
+  Rows2,
+  Search,
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@/ui/components/DropdownMenu';
+import { Input } from '@/ui/components/Input';
 
 const SORT_ICONS = {
-  [LibrarySort.TitleAsc]: <IconArrowUp size={14} />,
-  [LibrarySort.TitleDesc]: <IconArrowDown size={14} />,
-  [LibrarySort.UnreadAsc]: <IconArrowUp size={14} />,
-  [LibrarySort.UnreadDesc]: <IconArrowDown size={14} />,
+  [LibrarySort.TitleAsc]: <ArrowUp size={14} />,
+  [LibrarySort.TitleDesc]: <ArrowDown size={14} />,
+  [LibrarySort.UnreadAsc]: <ArrowUp size={14} />,
+  [LibrarySort.UnreadDesc]: <ArrowDown size={14} />,
 };
 
-const LibraryControlBar: React.FC<Props> = (props: Props) => {
-  const theme = useRecoilValue(themeState);
+const LibraryControlBar: React.FC = () => {
   const setSeriesList = useSetRecoilState(seriesListState);
   const activeSeriesList = useRecoilValue(activeSeriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
-  const availableCategories = useRecoilValue(categoryListState);
   const setFilter = useSetRecoilState(filterState);
-  const [libraryFilterCategory, setLibraryFilterCategory] = useRecoilState(
-    libraryFilterCategoryState,
-  );
   const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(libraryFilterStatusState);
   const [libraryFilterProgress, setLibraryFilterProgress] = useRecoilState(
     libraryFilterProgressState,
@@ -84,92 +82,117 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Group justify="space-between" pt="sm" mb="md" wrap="nowrap">
-      <Group align="left" gap="xs" wrap="nowrap">
-        <DefaultButton oc="blue" onClick={refreshHandler} loading={reloadingSeriesList}>
+    <div className="flex justify-between flex-nowrap py-3">
+      <div className="flex gap-3 flex-nowrap">
+        <Button disabled={reloadingSeriesList} onClick={refreshHandler}>
+          {reloadingSeriesList && <Loader2 className="animate-spin" />}
           {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}{' '}
-        </DefaultButton>
-        <DefaultMenu shadow="md" trigger="hover" closeOnItemClick={false} width={200}>
-          <Menu.Target>
-            <DefaultButton variant="default">Layout</DefaultButton>
-          </Menu.Target>
+        </Button>
 
-          <Menu.Dropdown {...themeProps(theme)}>
-            <Menu.Label>View</Menu.Label>
-            <Menu.Item
-              leftSection={<IconLayoutGrid size={14} />}
-              rightSection={libraryView === LibraryView.GridCompact ? <IconCheck size={14} /> : ''}
-              onClick={() => setLibraryView(LibraryView.GridCompact)}
-            >
-              Compact Grid
-            </Menu.Item>
-            <Menu.Item
-              leftSection={<IconLayoutBottombar size={14} />}
-              rightSection={
-                libraryView === LibraryView.GridComfortable ? <IconCheck size={14} /> : ''
-              }
-              onClick={() => setLibraryView(LibraryView.GridComfortable)}
-            >
-              Comfortable Grid
-            </Menu.Item>
-            <Menu.Item
-              leftSection={<IconPhoto size={14} />}
-              rightSection={
-                libraryView === LibraryView.GridCoversOnly ? <IconCheck size={14} /> : ''
-              }
-              onClick={() => setLibraryView(LibraryView.GridCoversOnly)}
-            >
-              Cover Grid
-            </Menu.Item>
-            <Menu.Item
-              leftSection={<IconLayoutList size={14} />}
-              rightSection={libraryView === LibraryView.List ? <IconCheck size={14} /> : ''}
-              onClick={() => setLibraryView(LibraryView.List)}
-            >
-              List
-            </Menu.Item>
-            <Menu.Divider />
-            <Menu.Label>Sort</Menu.Label>
-            <Menu.Item
-              leftSection={<IconLetterA size={14} />}
-              rightSection={
-                [LibrarySort.TitleAsc, LibrarySort.TitleDesc].includes(librarySort)
-                  ? SORT_ICONS[librarySort]
-                  : ''
-              }
-              onClick={() =>
-                setLibrarySort(
-                  librarySort === LibrarySort.TitleAsc
-                    ? LibrarySort.TitleDesc
-                    : LibrarySort.TitleAsc,
-                )
-              }
-            >
-              Title
-            </Menu.Item>
-            <Menu.Item
-              leftSection={<IconHash size={14} />}
-              rightSection={
-                [LibrarySort.UnreadAsc, LibrarySort.UnreadDesc].includes(librarySort)
-                  ? SORT_ICONS[librarySort]
-                  : ''
-              }
-              onClick={() =>
-                setLibrarySort(
-                  librarySort === LibrarySort.UnreadDesc
-                    ? LibrarySort.UnreadAsc
-                    : LibrarySort.UnreadDesc,
-                )
-              }
-            >
-              Unread
-            </Menu.Item>
-            <Menu.Divider />
-            <Menu.Item
-              disabled={libraryView === LibraryView.List}
-              leftSection={<IconColumns size={14} />}
-              rightSection={libraryColumns}
-              onClick={() =>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">Layout</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>View</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setLibraryView(LibraryView.GridCompact);
+                }}
+              >
+                <LayoutGrid />
+                Compact grid
+                {libraryView === LibraryView.GridCompact && (
+                  <DropdownMenuShortcut>
+                    <Check className="w-4 h-4" />
+                  </DropdownMenuShortcut>
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setLibraryView(LibraryView.GridComfortable);
+                }}
+              >
+                <PanelBottom />
+                Comfortable grid
+                {libraryView === LibraryView.GridComfortable && (
+                  <DropdownMenuShortcut>
+                    <Check className="w-4 h-4" />
+                  </DropdownMenuShortcut>
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setLibraryView(LibraryView.GridCoversOnly);
+                }}
+              >
+                <ImageIcon />
+                Cover grid
+                {libraryView === LibraryView.GridCoversOnly && (
+                  <DropdownMenuShortcut>
+                    <Check className="w-4 h-4" />
+                  </DropdownMenuShortcut>
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setLibraryView(LibraryView.List);
+                }}
+              >
+                <Rows2 />
+                List
+                {libraryView === LibraryView.List && (
+                  <DropdownMenuShortcut>
+                    <Check className="w-4 h-4" />
+                  </DropdownMenuShortcut>
+                )}
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Sort</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setLibrarySort(
+                    librarySort === LibrarySort.TitleAsc
+                      ? LibrarySort.TitleDesc
+                      : LibrarySort.TitleAsc,
+                  );
+                }}
+              >
+                <CaseUpper />
+                Title
+                {[LibrarySort.TitleAsc, LibrarySort.TitleDesc].includes(librarySort) && (
+                  <DropdownMenuShortcut>{SORT_ICONS[librarySort]}</DropdownMenuShortcut>
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault();
+                  setLibrarySort(
+                    librarySort === LibrarySort.UnreadAsc
+                      ? LibrarySort.UnreadDesc
+                      : LibrarySort.UnreadAsc,
+                  );
+                }}
+              >
+                <Hash />
+                Unread
+                {[LibrarySort.UnreadAsc, LibrarySort.UnreadDesc].includes(librarySort) && (
+                  <DropdownMenuShortcut>{SORT_ICONS[librarySort]}</DropdownMenuShortcut>
+                )}
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault();
                 setLibraryColumns(
                   {
                     2: 4,
@@ -177,103 +200,70 @@ const LibraryControlBar: React.FC<Props> = (props: Props) => {
                     6: 8,
                     8: 2,
                   }[libraryColumns as 2 | 4 | 6 | 8],
-                )
+                );
+              }}
+            >
+              <Columns2 />
+              Columns
+              <DropdownMenuShortcut>{libraryColumns}</DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">Filters</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Progress</DropdownMenuLabel>
+            <DropdownMenuRadioGroup
+              value={libraryFilterProgress}
+              onValueChange={(value) => setLibraryFilterProgress(value as ProgressFilter)}
+            >
+              {Object.values(ProgressFilter).map((value) => (
+                <DropdownMenuRadioItem
+                  key={value}
+                  value={value}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  {value}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Status</DropdownMenuLabel>
+            <DropdownMenuRadioGroup
+              value={libraryFilterStatus || 'Any'}
+              onValueChange={(value) =>
+                setLibraryFilterStatus((value === 'Any' ? null : value) as SeriesStatus)
               }
             >
-              Columns
-            </Menu.Item>
-          </Menu.Dropdown>
-        </DefaultMenu>
-
-        <DefaultMenu shadow="md" trigger="hover" closeOnItemClick={false} width={160}>
-          <Menu.Target>
-            <DefaultButton variant="default">Filters</DefaultButton>
-          </Menu.Target>
-
-          <Menu.Dropdown {...themeProps(theme)}>
-            <Menu.Label>Progress</Menu.Label>
-            {Object.values(ProgressFilter).map((value) => (
-              <Menu.Item
-                key={value}
-                onClick={() => setLibraryFilterProgress(value)}
-                rightSection={libraryFilterProgress === value ? <IconCheck size={14} /> : ''}
-              >
-                {value}
-              </Menu.Item>
-            ))}
-            <Menu.Divider />
-            <Menu.Label>Status</Menu.Label>
-            {[[null, 'Any'], ...Object.entries(SeriesStatus)].map(([seriesStatus, text]) => (
-              <Menu.Item
-                key={text}
-                onClick={() => setLibraryFilterStatus(seriesStatus ? (text as SeriesStatus) : null)}
-                rightSection={
-                  libraryFilterStatus === text ||
-                  (libraryFilterStatus === null && seriesStatus === null) ? (
-                    <IconCheck size={14} />
-                  ) : (
-                    ''
-                  )
-                }
-              >
-                {text}
-              </Menu.Item>
-            ))}
-          </Menu.Dropdown>
-        </DefaultMenu>
-
-        <DefaultMenu shadow="md" trigger="hover" closeOnItemClick={true} width={200}>
-          <Menu.Target>
-            <DefaultButton variant="default" onContextMenu={() => setLibraryFilterCategory('')}>
-              Category
-            </DefaultButton>
-          </Menu.Target>
-
-          <Menu.Dropdown {...themeProps(theme)}>
-            <ScrollArea.Autosize mah={320}>
-              {availableCategories.map((availableCategory) => {
-                return (
-                  <Menu.Item
-                    pr="lg"
-                    key={availableCategory.id}
-                    onClick={() => {
-                      if (availableCategory.id === libraryFilterCategory)
-                        setLibraryFilterCategory('');
-                      else setLibraryFilterCategory(availableCategory.id);
-                    }}
-                    rightSection={
-                      availableCategory.id === libraryFilterCategory ? (
-                        <IconCheck size={14} />
-                      ) : undefined
-                    }
-                  >
-                    {availableCategory.label}
-                  </Menu.Item>
-                );
-              })}
-
-              {availableCategories.length > 0 ? (
-                <Menu.Divider style={{ width: '100%' }} />
-              ) : undefined}
-
-              <Menu.Item
-                leftSection={<IconEdit size={14} />}
-                onClick={() => props.showEditCategoriesModal()}
-              >
-                Edit categories
-              </Menu.Item>
-            </ScrollArea.Autosize>
-          </Menu.Dropdown>
-        </DefaultMenu>
-      </Group>
-      <Group justify="flex-end" align="right" wrap="nowrap">
-        <DefaultInput
-          placeholder="Search library..."
-          leftSection={<IconSearch size={16} />}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}
-        />
-      </Group>
-    </Group>
+              {['Any', ...Object.values(SeriesStatus)].map((status) => (
+                <DropdownMenuRadioItem
+                  key={status}
+                  value={status}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  {status}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="flex gap-3 flex-nowrap justify-end">
+        <form onSubmit={() => false}>
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search"
+              className="pl-8"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}
+            />
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

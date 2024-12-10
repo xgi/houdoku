@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from 'react';
 const aki = require('aki-plugin-manager');
 import { useLocation } from 'react-router-dom';
-import { Button, Group, Mark, Table, Text } from '@mantine/core';
 const { ipcRenderer } = require('electron');
 import { gt } from 'semver';
-import { useListState } from '@mantine/hooks';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import PluginSettingsModal from './PluginSettingsModal';
-import DefaultText from '../general/DefaultText';
-import DefaultButton from '../general/DefaultButton';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/ui/components/Table';
+import { Button } from '@/ui/components/Button';
+import { Loader2 } from 'lucide-react';
 
 const Plugins: React.FC = () => {
   const [currentTiyoVersion, setCurrentTiyoVersion] = useState<string | undefined>(undefined);
   const [availableTiyoVersion, setAvailableTiyoVersion] = useState<string | undefined>(undefined);
   const [showingSettingsModal, setShowingSettingsModal] = useState(false);
 
-  const [installingPlugins, installingPluginsHandlers] = useListState<string>([]);
+  const [installingPlugins, setInstallingPlugins] = useState<string[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [reloading, setReloading] = useState(false);
   const location = useLocation();
@@ -43,14 +49,14 @@ const Plugins: React.FC = () => {
 
   const handleInstall = (pkgName: string, version: string) => {
     console.info(`Installing plugin ${pkgName}@${version}`);
-    installingPluginsHandlers.append(pkgName);
+    setInstallingPlugins([...installingPlugins, pkgName]);
 
     ipcRenderer
       .invoke(ipcChannels.EXTENSION_MANAGER.INSTALL, pkgName, version)
       .then(() => ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.RELOAD))
       .then(() => refreshMetadata())
       .catch((e) => console.error(e))
-      .finally(() => installingPluginsHandlers.filter((item) => item !== pkgName))
+      .finally(() => setInstallingPlugins(installingPlugins.filter((item) => item !== pkgName)))
       .catch((e) => console.error(e));
   };
 
@@ -71,6 +77,29 @@ const Plugins: React.FC = () => {
     refreshMetadata();
   };
 
+  const renderInstallOrUninstallButton = () => {
+    const isNotInstalled = currentTiyoVersion === undefined && availableTiyoVersion !== undefined;
+    const loading = installingPlugins.includes('@tiyo/core');
+
+    if (isNotInstalled) {
+      return (
+        <Button
+          disabled={loading}
+          onClick={() => handleInstall('@tiyo/core', availableTiyoVersion)}
+        >
+          {loading && <Loader2 className="animate-spin" />}
+          {installingPlugins.includes('@tiyo/core') ? 'Installing...' : 'Install'}
+        </Button>
+      );
+    }
+
+    return (
+      <Button variant="destructive" onClick={() => handleRemove('@tiyo/core')}>
+        Uninstall
+      </Button>
+    );
+  };
+
   useEffect(() => {
     refreshMetadata();
   }, [location]);
@@ -85,64 +114,51 @@ const Plugins: React.FC = () => {
         toggleVisible={() => setShowingSettingsModal(!showingSettingsModal)}
       />
 
-      <Group align="left" pt="sm" mb="md" gap="sm" wrap="nowrap">
-        <DefaultButton oc="blue" loading={refreshing} onClick={() => refreshMetadata()}>
+      <div className="flex justify-start py-2 space-x-2">
+        <Button disabled={refreshing} onClick={() => refreshMetadata()}>
+          {refreshing && <Loader2 className="animate-spin" />}
           Check for Updates
-        </DefaultButton>
-        <DefaultButton
-          variant="default"
-          loading={reloading}
+        </Button>
+        <Button
+          variant="outline"
+          disabled={reloading || currentTiyoVersion === undefined}
           onClick={() => reloadPlugins()}
-          disabled={currentTiyoVersion === undefined}
         >
+          {reloading && <Loader2 className="animate-spin" />}
           Reload Installed Plugins
-        </DefaultButton>
-      </Group>
+        </Button>
+      </div>
 
       <Table>
-        <Table.Thead>
-          <Table.Tr>
-            <Table.Th>
-              <DefaultText fw="bold">Name</DefaultText>
-            </Table.Th>
-            <Table.Th>
-              <DefaultText fw="bold">Description</DefaultText>
-            </Table.Th>
-            <Table.Th>
-              <Text ta="center">
-                <DefaultText fw="bold">Version</DefaultText>
-              </Text>
-            </Table.Th>
-            <Table.Th> </Table.Th>
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>
-          <Table.Tr>
-            <Table.Td>
-              <DefaultText>Tiyo Extension Manager</DefaultText>
-            </Table.Td>
-            <Table.Td>
-              <DefaultText>
-                Adds support for importing content from other sources, including 3rd-party websites.
-              </DefaultText>
-            </Table.Td>
-            <Table.Td>
-              <DefaultText ta="center">
-                {availableTiyoVersion === currentTiyoVersion || !currentTiyoVersion ? (
-                  availableTiyoVersion
-                ) : (
-                  <>
-                    {currentTiyoVersion}→<Mark color="teal">{availableTiyoVersion}</Mark>
-                  </>
-                )}
-              </DefaultText>
-            </Table.Td>
-            <Table.Td>
-              <Group gap="xs" wrap="nowrap">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Version</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell>Tiyo Extension Manager</TableCell>
+            <TableCell>
+              Adds support for importing content from other sources, including 3rd-party websites.
+            </TableCell>
+            <TableCell className="text-center">
+              {availableTiyoVersion === currentTiyoVersion || !currentTiyoVersion ? (
+                availableTiyoVersion
+              ) : (
+                <>
+                  {currentTiyoVersion}→
+                  <span className="font-bold underline">{availableTiyoVersion}</span>
+                </>
+              )}
+            </TableCell>
+            <TableCell>
+              <div className="flex space-x-2">
                 {currentTiyoVersion !== undefined ? (
-                  <DefaultButton variant="default" onClick={() => setShowingSettingsModal(true)}>
+                  <Button variant={'outline'} onClick={() => setShowingSettingsModal(true)}>
                     Settings
-                  </DefaultButton>
+                  </Button>
                 ) : undefined}
 
                 {tiyoCanUpdate ? (
@@ -150,23 +166,11 @@ const Plugins: React.FC = () => {
                     Update
                   </Button>
                 ) : undefined}
-                {currentTiyoVersion === undefined && availableTiyoVersion !== undefined ? (
-                  <DefaultButton
-                    loading={installingPlugins.includes('@tiyo/core')}
-                    variant="default"
-                    onClick={() => handleInstall('@tiyo/core', availableTiyoVersion)}
-                  >
-                    {installingPlugins.includes('@tiyo/core') ? 'Installing...' : 'Install'}
-                  </DefaultButton>
-                ) : (
-                  <Button variant="filled" color="red" onClick={() => handleRemove('@tiyo/core')}>
-                    Uninstall
-                  </Button>
-                )}
-              </Group>
-            </Table.Td>
-          </Table.Tr>
-        </Table.Tbody>
+                {renderInstallOrUninstallButton()}
+              </div>
+            </TableCell>
+          </TableRow>
+        </TableBody>
       </Table>
     </>
   );

@@ -1,7 +1,5 @@
 import React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Group } from '@mantine/core';
-import { IconChecks } from '@tabler/icons';
 import { markChapters, reloadSeriesList } from '@/renderer/features/library/utils';
 import {
   categoryListState,
@@ -14,8 +12,8 @@ import {
 } from '@/renderer/state/libraryStates';
 import { chapterLanguagesState } from '@/renderer/state/settingStates';
 import library from '@/renderer/services/library';
-import DefaultButton from '../general/DefaultButton';
-import DefaultText from '../general/DefaultText';
+import { Button } from '@/ui/components/Button';
+import { CheckCheck, Loader2 } from 'lucide-react';
 
 type Props = {
   showAssignCategoriesModal: () => void;
@@ -57,30 +55,26 @@ const LibraryControlBarMultiSelect: React.FC<Props> = () => {
   };
 
   return (
-    <Group justify="space-between" align="center" pt="sm" mb="md" wrap="nowrap">
-      <Group align="left" gap="xs" wrap="nowrap">
-        <DefaultButton oc="blue" onClick={refreshHandler} loading={reloadingSeriesList}>
-          {reloadingSeriesList ? 'Refreshing...' : 'Refresh selected'}{' '}
-        </DefaultButton>
+    <div className="flex justify-between flex-nowrap py-3">
+      <div className="flex gap-3 flex-nowrap">
+        <Button disabled={reloadingSeriesList} onClick={refreshHandler}>
+          {reloadingSeriesList && <Loader2 className="animate-spin" />}
+          {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}{' '}
+        </Button>
         {/* <Button variant="default" leftSection={<IconTag size={14} />}>
           Assign categories
         </Button> */}
-        <DefaultButton
-          onClick={markAllReadHandler}
-          variant="default"
-          leftSection={<IconChecks size={14} />}
-        >
-          Mark all read
-        </DefaultButton>
-      </Group>
+        <Button onClick={markAllReadHandler} variant="outline">
+          <CheckCheck />
+          Mark selected read
+        </Button>
+      </div>
 
-      <Group justify="flex-end" align="center" wrap="nowrap">
-        <DefaultText>{multiSelectSeriesList.length} series selected</DefaultText>
-        <DefaultButton variant="default" onClick={() => setMultiSelectEnabled(false)}>
-          Exit multi-select
-        </DefaultButton>
-      </Group>
-    </Group>
+      <div className="flex gap-3 flex-nowrap justify-end">
+        <span className="self-center">{multiSelectSeriesList.length} series selected</span>
+        <Button onClick={() => setMultiSelectEnabled(false)}>Exit multi-select</Button>
+      </div>
+    </div>
   );
 };
 

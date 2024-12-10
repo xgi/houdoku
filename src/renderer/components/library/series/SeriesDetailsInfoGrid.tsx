@@ -1,14 +1,10 @@
 const fs = require('fs');
 import React from 'react';
 const { ipcRenderer } = require('electron');
-import { Box, Grid, Group, Badge } from '@mantine/core';
 import { Languages, Series } from '@tiyo/common';
 import ipcChannels from '@/common/constants/ipcChannels.json';
-import DefaultText from '../../general/DefaultText';
-import styles from './SeriesDetailsInfoGrid.module.css';
-import { useRecoilValue } from 'recoil';
-import { themeState } from '@/renderer/state/settingStates';
-import { themeProps } from '@/renderer/util/themes';
+import { Badge } from '@/ui/components/Badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/ui/components/Card';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -20,39 +16,50 @@ type Props = {
 };
 
 const SeriesDetailsInfoGrid: React.FC<Props> = (props: Props) => {
-  const theme = useRecoilValue(themeState);
   const language = Languages[props.series.originalLanguageKey];
-  const languageStr = language !== undefined && 'name' in language ? language.name : '';
+  const languageStr = language !== undefined && 'name' in language ? language.name : 'Unknown';
 
-  const getCol = (heading: string, content: string) => (
-    <Grid.Col span={3}>
-      <DefaultText ml={4} size="sm" fw={700}>
-        {heading}
-      </DefaultText>
-      <Box {...themeProps(theme)} className={styles.item} py={6} px={12}>
-        <DefaultText size="sm" lineClamp={1} title={content}>
-          {content}
-        </DefaultText>
-      </Box>
-    </Grid.Col>
-  );
+  const getCreatorsText = () => {
+    const creators = Array.from(new Set([...props.series.authors, ...props.series.artists]));
+    return creators.length > 0 ? creators.join('; ') : 'Unknown';
+  };
 
   return (
-    <Grid my="xs" gutter="xs">
-      {getCol('Author', props.series.authors.join('; ') || 'Unknown')}
-      {getCol('Artist', props.series.artists.join('; ') || 'Unknown')}
-      {getCol('Status', props.series.status || 'Unknown')}
-      {getCol('Language', languageStr)}
-      <Grid.Col span={12}>
-        <Group gap="xs">
-          {props.series.tags.map((tag: string) => (
-            <Badge key={tag} color="indigo">
-              {tag}
-            </Badge>
-          ))}
-        </Group>
-      </Grid.Col>
-    </Grid>
+    <div className="grid grid-cols-4 gap-2 py-3">
+      <Card className="col-span-2">
+        <CardHeader className="px-3 pb-0.5 pt-2">
+          <CardTitle className="text-xs font-medium">Creator(s)</CardTitle>
+        </CardHeader>
+        <CardContent className="px-3 pb-2">
+          <span className="font-bold text-sm line-clamp-1" title={getCreatorsText()}>
+            {getCreatorsText()}
+          </span>
+        </CardContent>
+      </Card>
+      <Card className="col-span-1">
+        <CardHeader className="px-3 pb-0.5 pt-2">
+          <CardTitle className="text-xs font-medium">Status</CardTitle>
+        </CardHeader>
+        <CardContent className="px-3 pb-2">
+          <span className="font-bold text-sm line-clamp-1">{props.series.status || 'Unknown'}</span>
+        </CardContent>
+      </Card>
+      <Card className="col-span-1">
+        <CardHeader className="px-3 pb-0.5 pt-2">
+          <CardTitle className="text-xs font-medium">Original Language</CardTitle>
+        </CardHeader>
+        <CardContent className="px-3 pb-2">
+          <span className="font-bold text-sm line-clamp-1">{languageStr}</span>
+        </CardContent>
+      </Card>
+      <div className="col-span-full space-x-1">
+        {props.series.tags.map((tag: string) => (
+          <Badge key={tag} className="capitalize" variant="secondary">
+            {tag}
+          </Badge>
+        ))}
+      </div>
+    </div>
   );
 };
 

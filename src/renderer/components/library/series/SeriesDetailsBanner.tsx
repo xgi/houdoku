@@ -1,23 +1,19 @@
 import React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { BackgroundImage, Box, Group, Menu, Stack } from '@mantine/core';
-import { IconDownload, IconMenu2, IconTrash } from '@tabler/icons';
 import { Series } from '@tiyo/common';
 import {
   categoryListState,
   reloadingSeriesListState,
-  seriesBannerUrlState,
   seriesListState,
   seriesState,
 } from '@/renderer/state/libraryStates';
 import { reloadSeriesList } from '@/renderer/features/library/utils';
-import { FS_METADATA } from '@/common/temp_fs_metadata';
-import { chapterLanguagesState, themeState } from '@/renderer/state/settingStates';
-import DefaultButton from '../../general/DefaultButton';
-import DefaultMenu from '../../general/DefaultMenu';
-import { themeProps } from '@/renderer/util/themes';
+import { chapterLanguagesState } from '@/renderer/state/settingStates';
+import { Button } from '@/ui/components/Button';
+import { SeriesDetailsBannerBackground } from './SeriesDetailsBannerBackground';
+import { Loader2 } from 'lucide-react';
 
-type Props = {
+type SeriesDetailsBannerProps = {
   series: Series;
   showDownloadModal: () => void;
   showEditModal: () => void;
@@ -25,11 +21,11 @@ type Props = {
   showRemoveModal: () => void;
 };
 
-const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
-  const theme = useRecoilValue(themeState);
+const SeriesDetailsBanner: React.FC<SeriesDetailsBannerProps> = (
+  props: SeriesDetailsBannerProps,
+) => {
   const series = useRecoilValue(seriesState);
   const setSeriesList = useSetRecoilState(seriesListState);
-  const seriesBannerUrl = useRecoilValue(seriesBannerUrlState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const categoryList = useRecoilValue(categoryListState);
@@ -46,27 +42,31 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Box
-      ta={'center'}
-      ml={'calc(-1 * var(--mantine-spacing-md))'}
-      mr={'calc(-1 * var(--mantine-spacing-md))'}
-      style={{ overflow: 'hidden' }}
-    >
-      <Box
-        h={180}
-        bg={
-          `linear-gradient(135deg, var(--mantine-color-dark-8) 25%, transparent 25%) -50px 0,` +
-          `linear-gradient(225deg, var(--mantine-color-dark-8) 25%, transparent 25%) -50px 0,` +
-          `linear-gradient(315deg, var(--mantine-color-dark-8) 25%, transparent 25%),` +
-          `linear-gradient(045deg, var(--mantine-color-dark-8) 25%, transparent 25%)`
-        }
-        bgsz={'100px 100px'}
-      >
-        <BackgroundImage
-          src={seriesBannerUrl || ''}
-          style={{ objectFit: 'cover', height: '100%', width: '100%' }}
-        >
-          <Stack align="flex-end" justify="space-between" style={{ height: '100%' }}>
+    <div className="-mx-2 h-[180px]" style={{ overflow: 'hidden' }}>
+      <SeriesDetailsBannerBackground>
+        <div className="flex justify-end h-full">
+          <div className="flex flex-col justify-end">
+            <div className="flex m-2 space-x-2">
+              <Button
+                className="!bg-neutral-50 !text-neutral-950 hover:!bg-neutral-200"
+                onClick={() => props.showTrackerModal()}
+              >
+                Trackers
+              </Button>
+              <Button
+                disabled={reloadingSeriesList}
+                className="!bg-neutral-50 !text-neutral-950 hover:!bg-neutral-200 disabled:!bg-neutral-500 disabled:!opacity-100"
+                onClick={() => handleRefresh()}
+              >
+                {reloadingSeriesList && <Loader2 className="animate-spin" />}
+                {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}{' '}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </SeriesDetailsBannerBackground>
+
+      {/* <Stack align="flex-end" justify="space-between" style={{ height: '100%' }}>
             {props.series.preview ? (
               ''
             ) : (
@@ -121,10 +121,8 @@ const SeriesDetailsBanner: React.FC<Props> = (props: Props) => {
                 </>
               )}
             </Group>
-          </Stack>
-        </BackgroundImage>
-      </Box>
-    </Box>
+          </Stack> */}
+    </div>
   );
 };
 

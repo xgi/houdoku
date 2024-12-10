@@ -3,13 +3,11 @@ import path from 'path';
 import React, { useEffect } from 'react';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
-import { Overlay, SimpleGrid, Title } from '@mantine/core';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import blankCover from '@/renderer/img/blank_cover.png';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import constants from '@/common/constants/constants.json';
-import styles from './LibraryGrid.module.css';
 import {
   multiSelectEnabledState,
   multiSelectSeriesListState,
@@ -25,8 +23,8 @@ import ExtensionImage from '../general/ExtensionImage';
 import { LibraryView } from '@/common/models/types';
 import LibraryGridContextMenu from './LibraryGridContextMenu';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
-import DefaultTitle from '../general/DefaultTitle';
 import { ContextMenu, ContextMenuTrigger } from '@/ui/components/ContextMenu';
+import { cn } from '@/ui/util';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -75,119 +73,86 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
     return series.remoteCoverUrl || blankCover;
   };
 
-  /**
-   * Render the "Unread" badge on a series.
-   * This is a number in a red box at the top-left of the cover, showing the number of unread
-   * chapters. This is based on series.numberUnread, which is a fairly naive value obtained by
-   * subtracting the highest available chapter number by the latest read chapter number (rounded).
-   * See comparison.getNumberUnreadChapters for more details.
-   * @param series the series to generate the badge for
-   * @returns an element to include in the cover container div
-   */
-  const renderUnreadBadge = (series: Series) => {
-    if (series.numberUnread > 0) {
-      return (
-        <Title
-          order={5}
-          className={styles.seriesUnreadBadge}
-          bg="red.7"
-          px={4}
-          style={{ zIndex: 10 }}
-        >
-          {series.numberUnread}
-        </Title>
-      );
-    }
-    return <></>;
-  };
-
   useEffect(() => {
     if (multiSelectSeriesList.length === 0) setMultiSelectEnabled(false);
   }, [multiSelectSeriesList]);
 
   return (
-    <>
-      <SimpleGrid cols={libraryColumns} spacing="xs">
-        {props.getFilteredList().map((series: Series) => {
-          const coverSource = getImageSource(series).replaceAll('\\', '/');
-          const isMultiSelected = multiSelectSeriesList.includes(series);
+    <div
+      className={cn(
+        libraryColumns === 2 && 'grid-cols-2',
+        libraryColumns === 4 && 'grid-cols-4',
+        libraryColumns === 6 && 'grid-cols-6',
+        libraryColumns === 8 && 'grid-cols-8',
+        `grid gap-2`,
+      )}
+    >
+      {props.getFilteredList().map((series: Series) => {
+        const coverSource = getImageSource(series).replaceAll('\\', '/');
+        const isMultiSelected = multiSelectSeriesList.includes(series);
 
-          return (
-            <span key={`${series.id}-${series.title}`}>
-              <div>
-                <ContextMenu>
-                  <ContextMenuTrigger>
+        return (
+          <div key={`${series.id}-${series.title}`} className="space-y-2">
+            <ContextMenu>
+              <ContextMenuTrigger>
+                <div
+                  className="relative overflow-hidden cursor-pointer"
+                  onClick={() => {
+                    if (multiSelectEnabled) {
+                      if (isMultiSelected) {
+                        setMultiSelectSeriesList(multiSelectSeriesList.filter((s) => s !== series));
+                      } else {
+                        setMultiSelectSeriesList([...multiSelectSeriesList, series]);
+                      }
+                    } else {
+                      viewFunc(series);
+                    }
+                  }}
+                >
+                  <ExtensionImage
+                    url={coverSource}
+                    series={series}
+                    alt={series.title}
+                    className={cn(
+                      !multiSelectEnabled && 'hover:scale-105',
+                      multiSelectEnabled && isMultiSelected && 'border-4 border-sky-500',
+                      libraryCropCovers && 'aspect-[70/100]',
+                      'h-auto w-auto object-cover rounded-md transition-transform',
+                    )}
+                  />
+
+                  {series.numberUnread > 0 && (
+                    <div className="absolute top-0 right-0 bg-sky-500 px-1 mr-1 mt-1 min-w-5 rounded-md font-semibold text-white text-center">
+                      {series.numberUnread}
+                    </div>
+                  )}
+
+                  {libraryView === LibraryView.GridCompact && (
                     <div
-                      className={styles.coverContainer}
-                      data-multiselected={multiSelectEnabled && isMultiSelected}
-                      onClick={() => {
-                        if (multiSelectEnabled) {
-                          if (isMultiSelected) {
-                            setMultiSelectSeriesList(
-                              multiSelectSeriesList.filter((s) => s !== series),
-                            );
-                          } else {
-                            setMultiSelectSeriesList([...multiSelectSeriesList, series]);
-                          }
-                        } else {
-                          viewFunc(series);
-                        }
-                      }}
+                      className="absolute bottom-0 left-0 right-0 p-2 flex items-end"
                       style={{
-                        height: libraryCropCovers
-                          ? `calc(105vw / ${libraryColumns})`
-                          : 'calc(100%)',
+                        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px rgba(0, 0, 0, 0.5)',
                       }}
                     >
-                      <ExtensionImage url={coverSource} series={series} alt={series.title} />
-                      {renderUnreadBadge(series)}
-                      {libraryView === LibraryView.GridCompact ? (
-                        <>
-                          <Title
-                            className={styles.seriesTitle}
-                            order={5}
-                            lineClamp={3}
-                            p={4}
-                            pb={8}
-                            style={{ zIndex: 10 }}
-                          >
-                            {series.title}
-                          </Title>
-                          {/* TODO: hack to disable overlay during multi-select since the gradient
-                          affects the border. Should come up with a better way that preserves both */}
-                          {multiSelectEnabled ? undefined : (
-                            <Overlay
-                              h={
-                                libraryCropCovers
-                                  ? `calc(105vw / ${libraryColumns})`
-                                  : 'calc(100% - 7px)'
-                              }
-                              gradient="linear-gradient(0deg, #000000cc, #00000000 40%, #00000000)"
-                              zIndex={5}
-                            />
-                          )}
-                        </>
-                      ) : (
-                        ''
-                      )}
+                      <span className="line-clamp-3 text-white text-xs font-bold">
+                        {series.title}
+                      </span>
                     </div>
-                  </ContextMenuTrigger>
-                  <LibraryGridContextMenu series={series} showRemoveModal={props.showRemoveModal} />
-                </ContextMenu>
+                  )}
+                </div>
+              </ContextMenuTrigger>
+              <LibraryGridContextMenu series={series} showRemoveModal={props.showRemoveModal} />
+            </ContextMenu>
 
-                {libraryView === LibraryView.GridComfortable ? (
-                  <DefaultTitle order={5} lineClamp={3} p={4}>
-                    {series.title}
-                  </DefaultTitle>
-                ) : (
-                  ''
-                )}
+            {libraryView === LibraryView.GridComfortable && (
+              <div className="space-y-1 text-sm pb-3">
+                <h3 className="font-medium leading-none line-clamp-3">{series.title}</h3>
               </div>
-            </span>
-          );
-        })}
-      </SimpleGrid>
-    </>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 };
 

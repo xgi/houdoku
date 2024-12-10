@@ -2,7 +2,6 @@ const fs = require('fs');
 import React from 'react';
 const { ipcRenderer } = require('electron');
 import { useRecoilValue } from 'recoil';
-import { Grid, Group, Image, ScrollArea } from '@mantine/core';
 import path from 'path';
 import { Series } from '@tiyo/common';
 import blankCover from '@/renderer/img/blank_cover.png';
@@ -10,8 +9,8 @@ import ipcChannels from '@/common/constants/ipcChannels.json';
 import { currentExtensionMetadataState } from '@/renderer/state/libraryStates';
 import constants from '@/common/constants/constants.json';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
-import DefaultText from '../../general/DefaultText';
-import DefaultTitle from '../../general/DefaultTitle';
+import { ScrollArea } from '@/ui/components/ScrollArea';
+import { Badge } from '@/ui/components/Badge';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -41,22 +40,24 @@ const SeriesDetailsIntro: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Grid columns={24} gutter="xs">
-      <Grid.Col span={5}>
-        <Image src={getThumbnailPath()} alt={props.series.title} width="100%" mt="-50%" />
-      </Grid.Col>
-      <Grid.Col span={19}>
-        <Group justify="space-between" mt="xs" mb="xs" align="center" wrap="nowrap">
-          <DefaultTitle order={4} lineClamp={1}>
-            {props.series.title}
-          </DefaultTitle>
-          <DefaultText>{currentExtensionMetadata?.name}</DefaultText>
-        </Group>
-        <ScrollArea h={100} style={{ whiteSpace: 'pre-wrap' }}>
-          <DefaultText>{props.series.description}</DefaultText>
-        </ScrollArea>
-      </Grid.Col>
-    </Grid>
+    <div className="flex">
+      <div className="max-w-[140px] md:max-w-[180px]">
+        <img
+          src={getThumbnailPath()}
+          alt={props.series.title}
+          className="w-auto h-auto -mt-[70%] aspect-[70/100] object-cover rounded-sm"
+        />
+      </div>
+      <div className="w-full py-2 px-2">
+        <div className="flex justify-between">
+          <h2 className="text-lg font-bold line-clamp-1">{props.series.title}</h2>
+          <Badge variant={'secondary'} className="cursor-default text-xs">
+            {currentExtensionMetadata?.name}
+          </Badge>
+        </div>
+        <ScrollArea className="h-[60px] md:h-[90px]">{props.series.description}</ScrollArea>
+      </div>
+    </div>
   );
 };
 

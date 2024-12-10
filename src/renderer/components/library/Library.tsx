@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { ScrollArea } from '@mantine/core';
 import LibraryControlBar from './LibraryControlBar';
 import { LibrarySort, LibraryView, ProgressFilter } from '@/common/models/types';
 import {
@@ -26,6 +25,7 @@ import library from '@/renderer/services/library';
 import EditCategoriesModal from './EditCategoriesModal';
 import LibraryControlBarMultiSelect from './LibraryControlBarMultiSelect';
 import DefaultText from '../general/DefaultText';
+import { ScrollArea } from '@/ui/components/ScrollArea';
 
 type Props = unknown;
 
@@ -148,18 +148,18 @@ const Library: React.FC<Props> = () => {
   useEffect(() => setSeriesList(library.fetchSeriesList()), [setSeriesList]);
 
   return (
-    <>
+    <div>
       {multiSelectEnabled ? (
         <LibraryControlBarMultiSelect
           showAssignCategoriesModal={() => console.log('TODO placeholder')}
         />
       ) : (
-        <LibraryControlBar showEditCategoriesModal={() => setEditCategoriesModalShowing(true)} />
+        <LibraryControlBar />
       )}
-      <ScrollArea style={{ height: 'calc(100vh - 24px - 72px)' }} pr="xl" mr={-16}>
+      <ScrollArea className="h-[calc(100vh-20px-64px)] w-full pr-4 -mr-2">
         {activeSeriesList.length > 0 ? renderLibrary() : renderEmptyMessage()}
       </ScrollArea>
-    </>
+    </div>
   );
 };
 
