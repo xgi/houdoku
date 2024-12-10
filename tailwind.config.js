@@ -3,8 +3,7 @@ module.exports = {
   content: ["./src/renderer/index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
     fontFamily: {
-      'sans': ['Inter', 'Times New Roman'],
-      // 'sans': ['Inter', 'sans-serif', 'system-ui'],
+      'sans': ['Inter', 'sans-serif', 'system-ui'],
     },
     extend: {
       colors: {

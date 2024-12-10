@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
-const { ipcRenderer } = require("electron");
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { ModalsProvider } from "@mantine/modals";
-import { Notifications } from "@mantine/notifications";
-import routes from "@/common/constants/routes.json";
-import DashboardPage from "./components/general/DashboardPage";
-import ReaderPage from "./components/reader/ReaderPage";
-import ipcChannels from "@/common/constants/ipcChannels.json";
-import { migrateSeriesTags } from "./features/library/utils";
-import AppLoading from "./components/general/AppLoading";
-import { categoryListState, seriesListState } from "./state/libraryStates";
-import { downloaderClient } from "./services/downloader";
+import { useEffect, useState } from 'react';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+const { ipcRenderer } = require('electron');
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
+import routes from '@/common/constants/routes.json';
+import DashboardPage from './components/general/DashboardPage';
+import ReaderPage from './components/reader/ReaderPage';
+import ipcChannels from '@/common/constants/ipcChannels.json';
+import { migrateSeriesTags } from './features/library/utils';
+import AppLoading from './components/general/AppLoading';
+import { categoryListState, seriesListState } from './state/libraryStates';
+import { downloaderClient } from './services/downloader';
 import {
   currentTaskState,
   downloadErrorsState,
   queueState,
   runningState,
-} from "./state/downloaderStates";
-import { autoCheckForUpdatesState } from "./state/settingStates";
-import library from "./services/library";
+} from './state/downloaderStates';
+import { autoCheckForUpdatesState } from './state/settingStates';
+import library from './services/library';
 import {
   createRendererIpcHandlers,
   loadStoredExtensionSettings,
   loadStoredTrackerTokens,
-} from "./services/ipc";
+} from './services/ipc';
 
 loadStoredExtensionSettings();
 loadStoredTrackerTokens();
@@ -42,7 +42,7 @@ export default function App() {
 
   useEffect(() => {
     if (loading) {
-      console.debug("Performing initial app load steps");
+      console.debug('Performing initial app load steps');
 
       /**
        * Add any additional preload steps here (e.g. data migration, verifications, etc)
@@ -50,6 +50,8 @@ export default function App() {
 
       // Give the downloader client access to the state modifiers
       downloaderClient.setStateFunctions(setRunning, setQueue, setCurrentTask, setDownloadErrors);
+
+      // TODO add reloader client
 
       // Previously the series object had separate tag fields (themes, formats, genres,
       // demographic, content warnings). These have now been consolidated into the
@@ -66,7 +68,7 @@ export default function App() {
       if (autoCheckForUpdates) {
         ipcRenderer.invoke(ipcChannels.APP.CHECK_FOR_UPDATES);
       } else {
-        console.debug("Skipping update check, autoCheckForUpdates is disabled");
+        console.debug('Skipping update check, autoCheckForUpdates is disabled');
       }
 
       setSeriesList(library.fetchSeriesList());

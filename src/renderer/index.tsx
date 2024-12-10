@@ -5,11 +5,11 @@ import App from './App';
 
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import Titlebar from './components/titlebar/Titlebar';
+import { Titlebar } from './components/general/Titlebar';
 import { MantineProvider } from '@mantine/core';
 import { ErrorBoundary } from './components/general/ErrorBoundary';
 import { themeState } from './state/settingStates';
-import { themeProps, THEMES } from './util/themes';
+import { themeProps } from './util/themes';
 import { Theme } from '@/common/models/types';
 import { useEffect } from 'react';
 
@@ -20,9 +20,6 @@ const root = createRoot(main);
 function Root() {
   const theme = useRecoilValue(themeState);
 
-  // TODO hack to ignore some remaning theme changes
-  const forceColorScheme = theme === Theme.Light ? 'light' : 'dark';
-
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
@@ -30,7 +27,7 @@ function Root() {
   }, [theme]);
 
   return (
-    <MantineProvider theme={THEMES[theme]} forceColorScheme={forceColorScheme}>
+    <MantineProvider>
       <header id="titlebar">
         <Titlebar />
       </header>
