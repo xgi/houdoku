@@ -14,7 +14,7 @@ img {
 }
 
 .page.containHeight {
-  height: calc(100vh - var(--reader-header-height) - var(--titlebar-height));
+  height: calc(100vh - var(--titlebar-height));
 }
 
 .page.grow:not(.containHeight) {

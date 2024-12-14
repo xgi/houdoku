@@ -23,6 +23,7 @@ import {
   pageWidthMetricState,
 } from '@/renderer/state/settingStates';
 import ExtensionImage from '../general/ExtensionImage';
+import { cn } from '@/ui/util';
 
 const ROOT_ID = 'root';
 
@@ -94,20 +95,18 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
         loadingDisplay="spinner"
         allowRetry
         onLoad={props.updatePageGroupList}
-        className={`
-      ${styles.pageImage}
-      ${optimizeContrast ? styles.optimizeContrast : ''}
-      ${isLeft ? styles.left : ''}
-      ${isRight ? styles.right : ''}
-      ${fitContainToWidth ? styles.containWidth : ''}
-      ${fitContainToHeight ? styles.containHeight : ''}
-      ${fitStretch && (fitContainToWidth || fitContainToHeight) ? styles.grow : ''}
-      ${
-        (pageStyle === PageStyle.Double || pageStyle === PageStyle.LongStrip) && pageGap
-          ? styles.gap
-          : ''
-      }
-    `}
+        className={cn(
+          styles.pageImage,
+          optimizeContrast && styles.optimizeContrast,
+          isLeft && styles.left,
+          isRight && styles.right,
+          fitContainToWidth && styles.containWidth,
+          fitContainToHeight && styles.containHeight,
+          fitStretch && (fitContainToWidth || fitContainToHeight) && styles.grow,
+          (pageStyle === PageStyle.Double || pageStyle === PageStyle.LongStrip) &&
+            pageGap &&
+            styles.gap,
+        )}
       />
     );
   };
@@ -139,12 +138,12 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
 
     return (
       <div
-        className={`
-            ${styles.page}
-            ${fitContainToWidth ? styles.containWidth : ''}
-            ${fitContainToHeight ? styles.containHeight : ''}
-            ${fitStretch && (fitContainToWidth || fitContainToHeight) ? styles.grow : ''}
-          `}
+        className={cn(
+          styles.page,
+          fitContainToWidth && styles.containWidth,
+          fitContainToHeight && styles.containHeight,
+          fitStretch && (fitContainToWidth || fitContainToHeight) && styles.grow,
+        )}
       >
         {pageImages}
       </div>
@@ -166,12 +165,12 @@ const ReaderViewer: React.FC<Props> = (props: Props) => {
       pageContainers.push(
         <div
           key={i}
-          className={`
-            ${styles.page}
-            ${fitContainToWidth ? styles.containWidth : ''}
-            ${fitContainToHeight ? styles.containHeight : ''}
-            ${fitStretch && (fitContainToWidth || fitContainToHeight) ? styles.grow : ''}
-          `}
+          className={cn(
+            styles.page,
+            fitContainToWidth && styles.containWidth,
+            fitContainToHeight && styles.containHeight,
+            fitStretch && (fitContainToWidth || fitContainToHeight) && styles.grow,
+          )}
         >
           {getPageImage(i, true)}
         </div>,

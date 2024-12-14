@@ -1,8 +1,7 @@
 const { ipcRenderer } = require('electron');
 import React, { useEffect } from 'react';
-import { Center, Loader } from '@mantine/core';
-import styles from './ReaderLoader.module.css';
 import ipcChannels from '@/common/constants/ipcChannels.json';
+import { Loader2 } from 'lucide-react';
 
 type Props = {
   extensionId: string | undefined;
@@ -16,9 +15,9 @@ const ReaderLoader: React.FC<Props> = (props: Props) => {
   }, [props.extensionId]);
 
   return (
-    <Center className={styles.container}>
-      <Loader />
-    </Center>
+    <div className="flex w-full h-[calc(100vh-64px)] justify-center items-center align-middle">
+      <Loader2 className="animate-spin w-8 h-8" />
+    </div>
   );
 };
 

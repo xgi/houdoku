@@ -40,7 +40,6 @@ import {
   offsetPagesState,
   pageStyleState,
   readingDirectionState,
-  themeState,
 } from '@/renderer/state/settingStates';
 import {
   nextOffsetPages,

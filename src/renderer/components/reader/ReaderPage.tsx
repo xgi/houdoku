@@ -4,8 +4,6 @@ import Mousetrap from 'mousetrap';
 const { ipcRenderer } = require('electron');
 import { PageRequesterData, Chapter, Series } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Box, Text } from '@mantine/core';
-import styles from './ReaderPage.module.css';
 import routes from '@/common/constants/routes.json';
 import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types';
 import { selectMostSimilarChapter } from '@/renderer/util/comparison';
@@ -27,6 +25,8 @@ import {
 } from '@/renderer/features/settings/utils';
 import { Dialog } from '@/ui/components/Dialog';
 import { SettingsDialogContent, SettingsPage } from '../settings/SettingsDialogContent';
+import { SidebarProvider } from '@/ui/components/Sidebar';
+import { ReaderSidebar } from './ReaderSidebar';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -326,25 +326,6 @@ const ReaderPage: React.FC = () => {
     return true;
   };
 
-  const removeRootStyles = () => {
-    document
-      .getElementById('root')
-      ?.classList.remove(styles.root, styles.headerless, styles.scrollbarless);
-  };
-
-  const addRootStyles = () => {
-    removeRootStyles();
-
-    const stylesToAdd = [styles.root];
-    if (!showingHeader) {
-      stylesToAdd.push(styles.headerless);
-    }
-    if (!showingScrollbar) {
-      stylesToAdd.push(styles.scrollbarless);
-    }
-    document.getElementById('root')?.classList.add(...stylesToAdd);
-  };
-
   /**
    * Remove all keybindings from the window.
    */
@@ -380,7 +361,6 @@ const ReaderPage: React.FC = () => {
     setRelevantChapterList([]);
     setLanguageChapterList([]);
     setShowingNoNextChapter(false);
-    removeRootStyles();
     removeKeybindings();
 
     setTitlebarText(undefined);
@@ -530,10 +510,6 @@ const ReaderPage: React.FC = () => {
   };
 
   useEffect(() => {
-    addRootStyles();
-  }, [showingHeader, showingScrollbar]);
-
-  useEffect(() => {
     updatePageGroupList();
   }, [offsetPages]);
 
@@ -592,43 +568,51 @@ const ReaderPage: React.FC = () => {
   ]);
 
   useEffect(() => {
-    addRootStyles();
     addKeybindings();
     loadChapterData(chapter_id!, series_id!);
   }, [location]);
 
   return (
-    <Box className={styles.content} tabIndex={0}>
-      <Dialog open={showingSettingsModal} onOpenChange={setShowingSettingsModal}>
-        <SettingsDialogContent defaultPage={SettingsPage.Reader} />
-      </Dialog>
+    <SidebarProvider
+      style={
+        {
+          '--sidebar-width': '260px',
+        } as React.CSSProperties
+      }
+    >
+      <ReaderSidebar />
+      <div className="w-full outline-none" tabIndex={0}>
+        <Dialog open={showingSettingsModal} onOpenChange={setShowingSettingsModal}>
+          <SettingsDialogContent defaultPage={SettingsPage.Reader} />
+        </Dialog>
 
-      {showingHeader ? (
-        <ReaderHeader
-          changePage={changePage}
-          setChapter={setChapter}
-          changeChapter={changeChapter}
-          getAdjacentChapterId={getAdjacentChapterId}
-          exitPage={exitPage}
-        />
-      ) : (
-        <></>
-      )}
+        {showingHeader ? (
+          <ReaderHeader
+            changePage={changePage}
+            setChapter={setChapter}
+            changeChapter={changeChapter}
+            getAdjacentChapterId={getAdjacentChapterId}
+            exitPage={exitPage}
+          />
+        ) : (
+          <></>
+        )}
 
-      {showingNoNextChapter ? (
-        <div className={styles.finalChapterContainer}>
-          <Text>There&apos;s no next chapter.</Text>
-        </div>
-      ) : (
-        <>
-          {pageUrls.length === 0 ? (
-            <ReaderLoader extensionId={readerSeries?.extensionId} />
-          ) : (
-            <ReaderViewer changePage={changePage} updatePageGroupList={updatePageGroupList} />
-          )}
-        </>
-      )}
-    </Box>
+        {showingNoNextChapter ? (
+          <div className="h-[100vh] flex justify-center items-center select-none">
+            <span className="font-medium">There&apos;s no next chapter.</span>
+          </div>
+        ) : (
+          <>
+            {pageUrls.length === 0 ? (
+              <ReaderLoader extensionId={readerSeries?.extensionId} />
+            ) : (
+              <ReaderViewer changePage={changePage} updatePageGroupList={updatePageGroupList} />
+            )}
+          </>
+        )}
+      </div>
+    </SidebarProvider>
   );
 };
 
