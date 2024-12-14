@@ -36,7 +36,7 @@ import { SettingsKeybinds } from './SettingsKeybinds';
 import { SettingsIntegrations } from './SettingsIntegrations';
 import { SettingsTrackers } from './SettingsTrackers';
 
-enum SettingsPage {
+export enum SettingsPage {
   General = 'General',
   Library = 'Library',
   Reader = 'Reader',
@@ -76,7 +76,7 @@ type SettingsDialogContentProps = {
 
 export function SettingsDialogContent(props: SettingsDialogContentProps) {
   const [activePage, setActivePage] = useState<SettingsPage>(
-    props.defaultPage ?? SettingsPage.Trackers,
+    props.defaultPage ?? SettingsPage.General,
   );
 
   return (

@@ -9,7 +9,6 @@ import styles from './ReaderPage.module.css';
 import routes from '@/common/constants/routes.json';
 import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types';
 import { selectMostSimilarChapter } from '@/renderer/util/comparison';
-import ReaderSettingsModal from './ReaderSettingsModal';
 import { markChapters } from '@/renderer/features/library/utils';
 import ReaderViewer from './ReaderViewer';
 import ReaderHeader from './ReaderHeader';
@@ -26,6 +25,8 @@ import {
   nextPageStyle,
   nextReadingDirection,
 } from '@/renderer/features/settings/utils';
+import { Dialog } from '@/ui/components/Dialog';
+import { SettingsDialogContent, SettingsPage } from '../settings/SettingsDialogContent';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -598,7 +599,10 @@ const ReaderPage: React.FC = () => {
 
   return (
     <Box className={styles.content} tabIndex={0}>
-      <ReaderSettingsModal />
+      <Dialog open={showingSettingsModal} onOpenChange={setShowingSettingsModal}>
+        <SettingsDialogContent defaultPage={SettingsPage.Reader} />
+      </Dialog>
+
       {showingHeader ? (
         <ReaderHeader
           changePage={changePage}

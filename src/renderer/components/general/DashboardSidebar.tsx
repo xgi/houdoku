@@ -111,7 +111,7 @@ export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sideb
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <Dialog defaultOpen>
+              <Dialog>
                 <DialogTrigger asChild>
                   <SidebarMenuButton>
                     <Settings />
