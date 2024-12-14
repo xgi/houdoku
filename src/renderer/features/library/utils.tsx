@@ -14,7 +14,6 @@ import ipcChannels from '@/common/constants/ipcChannels.json';
 import library from '@/renderer/services/library';
 import { getNumberUnreadChapters } from '@/renderer/util/comparison';
 import routes from '@/common/constants/routes.json';
-import { Category } from '@/common/models/types';
 
 const updateSeriesNumberUnread = (series: Series, chapterLanguages: LanguageKey[]) => {
   if (series.id !== undefined) {
@@ -231,7 +230,6 @@ export async function reloadSeriesList(
   setSeriesList: (seriesList: Series[]) => void,
   setReloadingSeriesList: (reloadingSeriesList: boolean) => void,
   chapterLanguages: LanguageKey[],
-  categoryList: Category[],
 ) {
   console.debug(`Reloading series list...`);
   setReloadingSeriesList(true);
@@ -243,26 +241,14 @@ export async function reloadSeriesList(
     a.title.localeCompare(b.title),
   );
 
-  const categoryIdsToSkip = categoryList
-    .filter((category) => category.refreshEnabled === false)
-    .map((category) => category.id);
-  const filteredSeriesList =
-    sortedSeriesList.length <= 1
-      ? sortedSeriesList
-      : sortedSeriesList.filter(
-          (series) =>
-            !series.categories ||
-            !series.categories.some((category) => categoryIdsToSkip.includes(category)),
-        );
-
   let cur = 0;
   const failedToUpdate: Series[] = [];
 
-  for (const series of filteredSeriesList) {
+  for (const series of sortedSeriesList) {
     updateNotification({
       id: notificationId,
       title: `Refreshing library...`,
-      message: `Reloading series ${cur}/${filteredSeriesList.length}`,
+      message: `Reloading series ${cur}/${sortedSeriesList.length}`,
       loading: true,
       autoClose: false,
     });

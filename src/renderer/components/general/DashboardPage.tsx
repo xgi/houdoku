@@ -10,7 +10,6 @@ import Plugins from '../plugins/Plugins';
 import Downloads from '../downloads/Downloads';
 import {
   activeSeriesListState,
-  categoryListState,
   completedStartReloadState,
   importingState,
   importQueueState,
@@ -42,7 +41,6 @@ const DashboardPage: React.FC<Props> = () => {
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
   const [importQueue, setImportQueue] = useRecoilState(importQueueState);
   const [importing, setImporting] = useRecoilState(importingState);
-  const categoryList = useRecoilValue(categoryListState);
 
   useEffect(() => {
     if (autoBackup) {
@@ -55,7 +53,6 @@ const DashboardPage: React.FC<Props> = () => {
         setSeriesList,
         setReloadingSeriesList,
         chapterLanguages,
-        categoryList,
       ).catch((e) => console.error(e));
     }
   }, [activeSeriesList]);
@@ -83,7 +80,7 @@ const DashboardPage: React.FC<Props> = () => {
     <SidebarProvider
       style={
         {
-          '--sidebar-width': '180px',
+          '--sidebar-width': '200px',
         } as React.CSSProperties
       }
     >

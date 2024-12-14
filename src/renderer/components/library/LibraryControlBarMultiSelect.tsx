@@ -13,7 +13,16 @@ import {
 import { chapterLanguagesState } from '@/renderer/state/settingStates';
 import library from '@/renderer/services/library';
 import { Button } from '@/ui/components/Button';
-import { CheckCheck, Loader2 } from 'lucide-react';
+import { CheckCheck, Loader2, TagsIcon } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/ui/components/DropdownMenu';
+import { Category } from '@/common/models/types';
 
 type Props = {
   showAssignCategoriesModal: () => void;
@@ -25,9 +34,9 @@ const LibraryControlBarMultiSelect: React.FC<Props> = () => {
   const setChapterList = useSetRecoilState(chapterListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
-  const categoryList = useRecoilValue(categoryListState);
   const setMultiSelectEnabled = useSetRecoilState(multiSelectEnabledState);
   const multiSelectSeriesList = useRecoilValue(multiSelectSeriesListState);
+  const categories = useRecoilValue(categoryListState);
 
   const refreshHandler = () => {
     setMultiSelectEnabled(false);
@@ -37,7 +46,6 @@ const LibraryControlBarMultiSelect: React.FC<Props> = () => {
         setSeriesList,
         setReloadingSeriesList,
         chapterLanguages,
-        categoryList,
       );
     }
   };
@@ -45,13 +53,23 @@ const LibraryControlBarMultiSelect: React.FC<Props> = () => {
   const markAllReadHandler = () => {
     setMultiSelectEnabled(false);
     multiSelectSeriesList.forEach((series) => {
-      console.log(series);
       if (series.id) {
         const chapters = library.fetchChapters(series.id!);
         markChapters(chapters, series, true, setChapterList, setSeries, chapterLanguages);
         setSeriesList(library.fetchSeriesList());
       }
     });
+  };
+
+  const assignCategory = (category: Category) => {
+    setMultiSelectEnabled(false);
+    multiSelectSeriesList.forEach((series) => {
+      const newCategories = series.categories
+        ? Array.from(new Set([...series.categories, category.id]))
+        : [category.id];
+      library.upsertSeries({ ...series, categories: newCategories });
+    });
+    setSeriesList(library.fetchSeriesList());
   };
 
   return (
@@ -61,13 +79,30 @@ const LibraryControlBarMultiSelect: React.FC<Props> = () => {
           {reloadingSeriesList && <Loader2 className="animate-spin" />}
           {reloadingSeriesList ? 'Refreshing...' : 'Refresh'}{' '}
         </Button>
-        {/* <Button variant="default" leftSection={<IconTag size={14} />}>
-          Assign categories
-        </Button> */}
+
         <Button onClick={markAllReadHandler} variant="outline">
           <CheckCheck />
           Mark selected read
         </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <TagsIcon className="w-4 h-4" />
+              Assign category
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-44">
+            <DropdownMenuLabel>Categories</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              {categories.map((category) => (
+                <DropdownMenuItem key={category.id} onSelect={() => assignCategory(category)}>
+                  {category.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="flex gap-3 flex-nowrap justify-end">

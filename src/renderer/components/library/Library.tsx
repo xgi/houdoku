@@ -22,7 +22,6 @@ import LibraryGrid from './LibraryGrid';
 import RemoveSeriesModal from './RemoveSeriesModal';
 import LibraryList from './LibraryList';
 import library from '@/renderer/services/library';
-import EditCategoriesModal from './EditCategoriesModal';
 import LibraryControlBarMultiSelect from './LibraryControlBarMultiSelect';
 import DefaultText from '../general/DefaultText';
 import { ScrollArea } from '@/ui/components/ScrollArea';
@@ -32,7 +31,6 @@ type Props = unknown;
 const Library: React.FC<Props> = () => {
   const [removeModalShowing, setRemoveModalShowing] = useState(false);
   const [removeModalSeries, setRemoveModalSeries] = useState<Series | null>(null);
-  const [editCategoriesModalShowing, setEditCategoriesModalShowing] = useState(false);
   const activeSeriesList = useRecoilValue(activeSeriesListState);
   const [multiSelectEnabled, setMultiSelectEnabled] = useRecoilState(multiSelectEnabledState);
   const filter = useRecoilValue(filterState);
@@ -60,6 +58,8 @@ const Library: React.FC<Props> = () => {
   const getFilteredList = (): Series[] => {
     const filteredList = activeSeriesList.filter((series: Series) => {
       if (!series) return false;
+
+      if (series.preview) return false;
 
       if (!series.title.toLowerCase().includes(filter.toLowerCase())) return false;
       if (libraryFilterStatus !== null && series.status !== libraryFilterStatus) {
@@ -100,10 +100,6 @@ const Library: React.FC<Props> = () => {
           series={removeModalSeries}
           showing={removeModalShowing}
           close={() => setRemoveModalShowing(false)}
-        />
-        <EditCategoriesModal
-          showing={editCategoriesModalShowing}
-          close={() => setEditCategoriesModalShowing(false)}
         />
 
         {libraryView === LibraryView.List ? (
@@ -154,7 +150,7 @@ const Library: React.FC<Props> = () => {
           showAssignCategoriesModal={() => console.log('TODO placeholder')}
         />
       ) : (
-        <LibraryControlBar />
+        <LibraryControlBar getFilteredList={getFilteredList} />
       )}
       <ScrollArea className="h-[calc(100vh-20px-64px)] w-full pr-4 -mr-2">
         {activeSeriesList.length > 0 ? renderLibrary() : renderEmptyMessage()}

@@ -2,7 +2,6 @@ import React from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Series } from '@tiyo/common';
 import {
-  categoryListState,
   reloadingSeriesListState,
   seriesListState,
   seriesState,
@@ -28,17 +27,12 @@ const SeriesDetailsBanner: React.FC<SeriesDetailsBannerProps> = (
   const setSeriesList = useSetRecoilState(seriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
-  const categoryList = useRecoilValue(categoryListState);
 
   const handleRefresh = () => {
     if (series !== undefined && !reloadingSeriesList)
-      reloadSeriesList(
-        [series],
-        setSeriesList,
-        setReloadingSeriesList,
-        chapterLanguages,
-        categoryList,
-      ).catch((e) => console.error(e));
+      reloadSeriesList([series], setSeriesList, setReloadingSeriesList, chapterLanguages).catch(
+        (e) => console.error(e),
+      );
   };
 
   return (

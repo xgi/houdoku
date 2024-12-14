@@ -77,7 +77,6 @@ export type ImportTask = {
 export type Category = {
   id: string;
   label: string;
-  refreshEnabled?: boolean;
 };
 
 export enum GeneralSetting {

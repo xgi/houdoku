@@ -1,11 +1,9 @@
 import React from 'react';
-import { SeriesStatus } from '@tiyo/common';
+import { Series, SeriesStatus } from '@tiyo/common';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { reloadSeriesList } from '@/renderer/features/library/utils';
 import { LibrarySort, LibraryView, ProgressFilter } from '@/common/models/types';
 import {
-  activeSeriesListState,
-  categoryListState,
   filterState,
   reloadingSeriesListState,
   seriesListState,
@@ -54,9 +52,12 @@ const SORT_ICONS = {
   [LibrarySort.UnreadDesc]: <ArrowDown size={14} />,
 };
 
-const LibraryControlBar: React.FC = () => {
+type Props = {
+  getFilteredList: () => Series[];
+};
+
+const LibraryControlBar: React.FC<Props> = (props: Props) => {
   const setSeriesList = useSetRecoilState(seriesListState);
-  const activeSeriesList = useRecoilValue(activeSeriesListState);
   const [reloadingSeriesList, setReloadingSeriesList] = useRecoilState(reloadingSeriesListState);
   const setFilter = useSetRecoilState(filterState);
   const [libraryFilterStatus, setLibraryFilterStatus] = useRecoilState(libraryFilterStatusState);
@@ -67,16 +68,14 @@ const LibraryControlBar: React.FC = () => {
   const [libraryView, setLibraryView] = useRecoilState(libraryViewState);
   const [librarySort, setLibrarySort] = useRecoilState(librarySortState);
   const chapterLanguages = useRecoilValue(chapterLanguagesState);
-  const categoryList = useRecoilValue(categoryListState);
 
   const refreshHandler = () => {
     if (!reloadingSeriesList) {
       reloadSeriesList(
-        activeSeriesList,
+        props.getFilteredList(),
         setSeriesList,
         setReloadingSeriesList,
         chapterLanguages,
-        categoryList,
       );
     }
   };

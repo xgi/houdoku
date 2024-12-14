@@ -1,5 +1,6 @@
 import * as React from 'react';
-
+const { ipcRenderer } = require('electron');
+import ipcChannels from '@/common/constants/ipcChannels.json';
 import {
   Sidebar,
   SidebarContent,
@@ -24,8 +25,10 @@ import {
   Home,
   Info,
   LibraryBig,
+  PencilIcon,
   Settings,
   SquarePlus,
+  Trash2Icon,
 } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/ui/components/Collapsible';
 import {
@@ -47,22 +50,64 @@ import {
 import { Button } from '@/ui/components/Button';
 import packageJson from '../../../../package.json';
 import { SettingsDialogContent } from '../settings/SettingsDialogContent';
+import { categoryListState } from '@/renderer/state/libraryStates';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useState } from 'react';
+import { libraryFilterCategoryState } from '@/renderer/state/settingStates';
+import { NewCategoryDialog } from './NewCategoryDialog';
+import { Category } from '@/common/models/types';
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/ui/components/ContextMenu';
+import { EditCategoryDialog } from './EditCategoryDialog';
+import { RemoveCategoryDialog } from './RemoveCategoryDialog';
 
 export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
+  const [checkingForUpdate, setCheckingForUpdate] = useState(false);
+  const [showingNewCategoryDialog, setShowingNewCategoryDialog] = useState(false);
+  const [showingEditCategoryDialog, setShowingEditCategoryDialog] = useState(false);
+  const [showingRemoveCategoryDialog, setShowingRemoveCategoryDialog] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Category | undefined>(undefined);
+  const categories = useRecoilValue(categoryListState);
+  const setLibraryFilterCategory = useSetRecoilState(libraryFilterCategoryState);
 
-  // const handleUpdateCheck = () => {
-  //   setCheckingForUpdate(true);
-  //   ipcRenderer
-  //     .invoke(ipcChannels.APP.CHECK_FOR_UPDATES)
-  //     .finally(() => setCheckingForUpdate(false))
-  //     .catch(console.error);
-  // };
+  const handleUpdateCheck = () => {
+    if (!checkingForUpdate) {
+      setCheckingForUpdate(true);
+      ipcRenderer
+        .invoke(ipcChannels.APP.CHECK_FOR_UPDATES)
+        .finally(() => setCheckingForUpdate(false))
+        .catch(console.error);
+    }
+  };
 
   return (
     <Sidebar {...props}>
       <SidebarHeader className="pt-4" />
       <SidebarContent>
+        <NewCategoryDialog
+          open={showingNewCategoryDialog}
+          onOpenChange={setShowingNewCategoryDialog}
+        />
+        {selectedCategory && (
+          <EditCategoryDialog
+            open={showingEditCategoryDialog}
+            onOpenChange={setShowingEditCategoryDialog}
+            category={selectedCategory!}
+          />
+        )}
+        {selectedCategory && (
+          <RemoveCategoryDialog
+            open={showingRemoveCategoryDialog}
+            onOpenChange={setShowingRemoveCategoryDialog}
+            category={selectedCategory!}
+          />
+        )}
+
         <SidebarGroup>
           {/* <SidebarGroupLabel>Platform</SidebarGroupLabel> */}
           <SidebarMenu>
@@ -77,16 +122,62 @@ export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sideb
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {['first', 'second', 'third'].map((item) => (
-                      <SidebarMenuSubItem key={item}>
-                        <SidebarMenuSubButton
-                          className="cursor-pointer"
-                          onClick={() => navigate(routes.LIBRARY)}
-                        >
-                          <span>{item}</span>
-                        </SidebarMenuSubButton>
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        className="cursor-pointer"
+                        onClick={() => {
+                          setLibraryFilterCategory('');
+                          navigate(routes.LIBRARY);
+                        }}
+                      >
+                        <span>All Series</span>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                    {categories.map((category) => (
+                      <SidebarMenuSubItem key={category.id}>
+                        <ContextMenu>
+                          <ContextMenuTrigger>
+                            <SidebarMenuSubButton
+                              className="cursor-pointer"
+                              onClick={() => {
+                                setLibraryFilterCategory(category.id);
+                                navigate(routes.LIBRARY);
+                              }}
+                            >
+                              <span>{category.label}</span>
+                            </SidebarMenuSubButton>
+                          </ContextMenuTrigger>
+                          <ContextMenuContent className="w-40">
+                            <ContextMenuItem
+                              onClick={() => {
+                                setSelectedCategory(category);
+                                setShowingEditCategoryDialog(true);
+                              }}
+                            >
+                              <PencilIcon className="h-4 w-4 mr-2" />
+                              Edit category
+                            </ContextMenuItem>
+                            <ContextMenuItem
+                              onClick={() => {
+                                setSelectedCategory(category);
+                                setShowingRemoveCategoryDialog(true);
+                              }}
+                            >
+                              <Trash2Icon className="h-4 w-4 mr-2" />
+                              Delete category
+                            </ContextMenuItem>
+                          </ContextMenuContent>
+                        </ContextMenu>
                       </SidebarMenuSubItem>
                     ))}
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton
+                        className="cursor-pointer"
+                        onClick={() => setShowingNewCategoryDialog(true)}
+                      >
+                        <span className="text-muted-foreground">New category...</span>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
@@ -147,7 +238,9 @@ export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sideb
                   sideOffset={4}
                 >
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>Check for updates</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleUpdateCheck()}>
+                      Check for updates
+                    </DropdownMenuItem>
                     <DialogTrigger asChild>
                       <DropdownMenuItem>About Houdoku</DropdownMenuItem>
                     </DialogTrigger>
