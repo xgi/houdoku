@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from 'react';
-const { ipcRenderer, shell } = require('electron');
-import { Accordion, Group, Code, Loader, Timeline } from '@mantine/core';
-import { IconExternalLink } from '@tabler/icons';
+const { ipcRenderer } = require('electron');
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import storeKeys from '@/common/constants/storeKeys.json';
 import persistantStore from '@/renderer/util/persistantStore';
 import { TrackerMetadata } from '@/common/models/types';
-import DefaultButton from '../general/DefaultButton';
-import DefaultInput from '../general/DefaultInput';
-import DefaultTimeline from '../general/DefaultTimeline';
-import DefaultText from '../general/DefaultText';
+import { AccordionContent, AccordionTrigger } from '@/ui/components/Accordion';
+import { Button } from '@/ui/components/Button';
+import { ExternalLinkIcon, Loader2Icon } from 'lucide-react';
+import { Input } from '@/ui/components/Input';
 
 type Props = {
   trackerMetadata: TrackerMetadata;
 };
 
-const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
+export const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(true);
   const [accessCode, setAccessCode] = useState('');
   const [authUrls, setAuthUrls] = useState<{ [trackerId: string]: string }>({});
@@ -65,74 +63,84 @@ const TrackerAuthOAuth: React.FC<Props> = (props: Props) => {
 
   if (loading) {
     return (
-      <Group justify="center">
-        <Loader />
-        <DefaultText>Reloading tracker details...</DefaultText>
-      </Group>
+      <AccordionTrigger className="hover:no-underline" disabled>
+        <div className="flex items-center space-x-2">
+          <Loader2Icon className="animate-spin w-4 h-4" />
+          <span>Loading {props.trackerMetadata.name} details...</span>
+        </div>
+      </AccordionTrigger>
     );
   }
 
   return (
     <>
-      <Accordion.Control>
-        <Group justify="space-between">
-          <DefaultText>{props.trackerMetadata.name}</DefaultText>
+      <AccordionTrigger className="hover:no-underline">
+        <div className="flex justify-between items-center w-full pr-2">
+          <span>{props.trackerMetadata.name}</span>
           {username ? (
-            <Group justify="flex-end">
-              <DefaultText>
-                Logged in as <Code>{username}</Code>
-              </DefaultText>
-              {username ? (
-                <DefaultButton
-                  ml="xs"
-                  size="xs"
-                  oc="red"
-                  radius={0}
-                  onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-                    e.stopPropagation();
-                    saveAccessToken('');
-                  }}
-                >
-                  Unlink
-                </DefaultButton>
-              ) : undefined}
-            </Group>
+            <div className="flex space-x-2">
+              <span>
+                Logged in as{' '}
+                <code className="relative bg-muted px-[0.3rem] py-[0.2rem] text-sm font-semibold">
+                  {username}
+                </code>
+              </span>
+              <Button
+                size="sm"
+                variant={'destructive'}
+                className="!h-6"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  saveAccessToken('');
+                }}
+              >
+                Unlink
+              </Button>
+            </div>
           ) : (
-            <DefaultText>Not logged in.</DefaultText>
+            <span>Not logged in.</span>
           )}
-        </Group>
-      </Accordion.Control>
+        </div>
+      </AccordionTrigger>
 
-      <Accordion.Panel>
-        <DefaultTimeline active={-1} bulletSize={36} lineWidth={2} mt="sm">
-          <Timeline.Item bullet={1}>
-            <DefaultButton
-              ml="sm"
-              variant="default"
-              leftSection={<IconExternalLink />}
-              onClick={() => shell.openExternal(authUrls[props.trackerMetadata.id])}
-            >
-              Authenticate on {props.trackerMetadata.name}
-            </DefaultButton>
-          </Timeline.Item>
-          <Timeline.Item bullet={2}>
-            <DefaultInput
-              ml="sm"
-              style={{ maxWidth: 280 }}
-              placeholder="Paste access code..."
-              value={accessCode || ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAccessCode(e.target.value)}
-            />
-          </Timeline.Item>
-          <Timeline.Item bullet={3}>
-            <DefaultButton variant={'default'} ml="sm" onClick={() => submitAccessCode()}>
-              Submit
-            </DefaultButton>
-          </Timeline.Item>
-        </DefaultTimeline>
-      </Accordion.Panel>
+      <AccordionContent>
+        <div className="flex flex-col space-y-2">
+          <div className="flex space-x-4 items-center">
+            <div className="bg-foreground text-background w-8 h-8 rounded-full flex items-center justify-center">
+              <span className="font-bold">1</span>
+            </div>
+            <Button variant="link" asChild>
+              <a href={authUrls[props.trackerMetadata.id]} target="_blank">
+                Authenticate on {props.trackerMetadata.name}
+                <ExternalLinkIcon />
+              </a>
+            </Button>
+          </div>
+
+          <div className="flex space-x-4 items-center">
+            <div className="bg-foreground text-background w-8 h-8 rounded-full flex items-center justify-center">
+              <span className="font-bold">2</span>
+            </div>
+            <div>
+              <Input
+                className="w-full ml-3"
+                value={accessCode || ''}
+                placeholder="Paste access code..."
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAccessCode(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="flex space-x-4 items-center">
+            <div className="bg-foreground text-background w-8 h-8 rounded-full flex items-center justify-center">
+              <span className="font-bold">3</span>
+            </div>
+            <div className="!ml-7">
+              <Button onClick={() => submitAccessCode()}>Submit</Button>
+            </div>
+          </div>
+        </div>
+      </AccordionContent>
     </>
   );
 };
-
-export default TrackerAuthOAuth;

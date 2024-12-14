@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 const { ipcRenderer } = require('electron');
-import { Accordion, Group, Code, Loader, Timeline } from '@mantine/core';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import storeKeys from '@/common/constants/storeKeys.json';
 import persistantStore from '@/renderer/util/persistantStore';
 import { TrackerMetadata } from '@/common/models/types';
-import DefaultInput from '../general/DefaultInput';
-import DefaultButton from '../general/DefaultButton';
-import DefaultTimeline from '../general/DefaultTimeline';
-import DefaultText from '../general/DefaultText';
+import { Button } from '@/ui/components/Button';
+import { AccordionContent, AccordionTrigger } from '@/ui/components/Accordion';
+import { Label } from '@/ui/components/Label';
+import { Input } from '@/ui/components/Input';
+import { Loader2Icon } from 'lucide-react';
 
 type Props = {
   trackerMetadata: TrackerMetadata;
 };
 
-const TrackerAuthUserPass: React.FC<Props> = (props: Props) => {
+export const TrackerAuthUserPass: React.FC<Props> = (props: Props) => {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string | null>(null);
   const [tempUsername, setTempUsername] = useState('');
@@ -66,70 +66,84 @@ const TrackerAuthUserPass: React.FC<Props> = (props: Props) => {
 
   if (loading) {
     return (
-      <Group justify="center">
-        <Loader />
-        <DefaultText>Reloading tracker details...</DefaultText>
-      </Group>
+      <AccordionTrigger className="hover:no-underline" disabled>
+        <div className="flex items-center space-x-2">
+          <Loader2Icon className="animate-spin w-4 h-4" />
+          <span>Loading {props.trackerMetadata.name} details...</span>
+        </div>
+      </AccordionTrigger>
     );
   }
 
   return (
     <>
-      <Accordion.Control>
-        <Group justify="space-between">
-          <DefaultText>{props.trackerMetadata.name}</DefaultText>
+      <AccordionTrigger className="hover:no-underline">
+        <div className="flex justify-between items-center w-full pr-2">
+          <span>{props.trackerMetadata.name}</span>
           {username ? (
-            <Group justify="flex-end">
-              <DefaultText>
-                Logged in as <Code>{username}</Code>
-              </DefaultText>
-              {username ? (
-                <DefaultButton
-                  ml="xs"
-                  size="xs"
-                  oc="red"
-                  radius={0}
-                  onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-                    e.stopPropagation();
-                    saveAccessToken('');
-                  }}
-                >
-                  Unlink
-                </DefaultButton>
-              ) : undefined}
-            </Group>
+            <div className="flex space-x-2">
+              <span>
+                Logged in as{' '}
+                <code className="relative bg-muted px-[0.3rem] py-[0.2rem] text-sm font-semibold">
+                  {username}
+                </code>
+              </span>
+              <Button
+                size="sm"
+                variant={'destructive'}
+                className="!h-6"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  saveAccessToken('');
+                }}
+              >
+                Unlink
+              </Button>
+            </div>
           ) : (
-            <DefaultText>Not logged in.</DefaultText>
+            <span>Not logged in.</span>
           )}
-        </Group>
-      </Accordion.Control>
+        </div>
+      </AccordionTrigger>
 
-      <Accordion.Panel>
-        <DefaultTimeline active={-1} bulletSize={36} lineWidth={2} mt="sm">
-          <Timeline.Item bullet={1}>
-            <DefaultInput
-              label="Username"
-              style={{ maxWidth: 280 }}
-              placeholder="Username"
-              value={tempUsername}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTempUsername(e.target.value)}
-            />
-            <DefaultInput
-              label="Password"
-              style={{ maxWidth: 280 }}
-              type="password"
-              placeholder="Password"
-              value={tempPassword}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTempPassword(e.target.value)}
-            />
-          </Timeline.Item>
-          <Timeline.Item bullet={2}>
-            <DefaultButton onClick={() => submitUserPass()}>Submit</DefaultButton>
-          </Timeline.Item>
-        </DefaultTimeline>
-      </Accordion.Panel>
+      <AccordionContent>
+        <div className="flex flex-col space-y-2">
+          <div className="flex space-x-4 items-center">
+            <div className="bg-foreground text-background w-8 h-8 rounded-full flex items-center justify-center">
+              <span className="font-bold">1</span>
+            </div>
+            <div className="flex flex-col space-y-2 !ml-7">
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="trackerUsername">Username</Label>
+                <Input
+                  type="text"
+                  id="trackerUsername"
+                  placeholder="Username"
+                  onChange={(e) => setTempUsername(e.target.value)}
+                />
+              </div>
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="trackerPassword">Password</Label>
+                <Input
+                  type="password"
+                  id="trackerPassword"
+                  placeholder="Password"
+                  onChange={(e) => setTempPassword(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex space-x-4 items-center">
+            <div className="bg-foreground text-background w-8 h-8 rounded-full flex items-center justify-center">
+              <span className="font-bold">2</span>
+            </div>
+            <div className="!ml-7">
+              <Button onClick={() => submitUserPass()}>Submit</Button>
+            </div>
+          </div>
+        </div>
+      </AccordionContent>
     </>
   );
 };
-
-export default TrackerAuthUserPass;

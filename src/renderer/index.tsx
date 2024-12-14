@@ -9,8 +9,7 @@ import { Titlebar } from './components/general/Titlebar';
 import { MantineProvider } from '@mantine/core';
 import { ErrorBoundary } from './components/general/ErrorBoundary';
 import { themeState } from './state/settingStates';
-import { themeProps } from './util/themes';
-import { Theme } from '@/common/models/types';
+import { ApplicationTheme } from '@/common/models/types';
 import { useEffect } from 'react';
 
 const main = document.createElement('main');
@@ -23,7 +22,7 @@ function Root() {
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
-    root.classList.add(theme === Theme.Light ? 'light' : 'dark');
+    root.classList.add(theme === ApplicationTheme.Light ? 'light' : 'dark');
   }, [theme]);
 
   return (
@@ -31,7 +30,7 @@ function Root() {
       <header id="titlebar">
         <Titlebar />
       </header>
-      <div id="root" {...themeProps(theme)}>
+      <div id="root">
         <ErrorBoundary>
           <App />
         </ErrorBoundary>

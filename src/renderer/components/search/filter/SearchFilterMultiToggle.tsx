@@ -5,9 +5,6 @@ import { MultiToggleValues, TriState } from '@tiyo/common';
 import DefaultMenu from '../../general/DefaultMenu';
 import DefaultButton from '../../general/DefaultButton';
 import DefaultText from '../../general/DefaultText';
-import { themeProps } from '@/renderer/util/themes';
-import { themeState } from '@/renderer/state/settingStates';
-import { useRecoilValue } from 'recoil';
 
 type Props = {
   label: string;
@@ -18,8 +15,6 @@ type Props = {
 };
 
 const SearchFilterMultiToggle: React.FC<Props> = (props: Props) => {
-  const theme = useRecoilValue(themeState);
-
   const setValue = (key: string, value: TriState) => {
     props.onChange({ ...props.values, [key]: value });
   };
@@ -70,7 +65,7 @@ const SearchFilterMultiToggle: React.FC<Props> = (props: Props) => {
         </DefaultButton>
       </Menu.Target>
 
-      <Menu.Dropdown {...themeProps(theme)}>
+      <Menu.Dropdown>
         <ScrollArea.Autosize mah={260} style={{ width: 262 }}>
           {props.fields.map((field) => {
             const value = Object.keys(props.values).includes(field.key)

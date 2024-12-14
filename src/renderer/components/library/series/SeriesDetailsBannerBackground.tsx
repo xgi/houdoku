@@ -30,7 +30,7 @@ export const SeriesDetailsBannerBackground: React.FC<Props> = (props: Props) => 
       >
         <div
           style={{
-            background: 'linear-gradient(67.81deg,rgba(0,0,0,.64) 35.51%,transparent)',
+            background: 'rgba(0,0,0,.2)',
           }}
           className="w-full h-full"
         >

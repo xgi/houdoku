@@ -10,9 +10,6 @@ import SeriesTrackerModalTab from './SeriesTrackerModalTab';
 import { updateSeriesTrackerKeys } from '@/renderer/features/library/utils';
 import DefaultModal from '../../general/DefaultModal';
 import DefaultTabs from '../../general/DefaultTabs';
-import { themeProps } from '@/renderer/util/themes';
-import { useRecoilValue } from 'recoil';
-import { themeState } from '@/renderer/state/settingStates';
 
 const TRACKER_METADATAS = [AniListTrackerMetadata, MALTrackerMetadata, MUTrackerMetadata];
 
@@ -23,7 +20,6 @@ type Props = {
 };
 
 const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
-  const theme = useRecoilValue(themeState);
   const [seriesTrackerKeys, setSeriesTrackerKeys] = useState<{
     [trackerId: string]: string;
   }>();
@@ -44,8 +40,8 @@ const SeriesTrackerModal: React.FC<Props> = (props: Props) => {
 
   return (
     <DefaultModal title="Trackers" opened={props.visible} onClose={props.toggleVisible}>
-      <DefaultTabs {...themeProps(theme)} defaultValue={TRACKER_METADATAS[0].id}>
-        <Tabs.List {...themeProps(theme)}>
+      <DefaultTabs defaultValue={TRACKER_METADATAS[0].id}>
+        <Tabs.List>
           {TRACKER_METADATAS.map((trackerMetadata) => (
             <Tabs.Tab value={trackerMetadata.id} key={trackerMetadata.id}>
               {trackerMetadata.name}

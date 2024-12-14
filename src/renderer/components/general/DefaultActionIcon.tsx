@@ -2,7 +2,6 @@ import { ActionIcon } from '@mantine/core';
 import styles from './DefaultActionIcon.module.css';
 import { useRecoilValue } from 'recoil';
 import { themeState } from '@/renderer/state/settingStates';
-import { themeProps } from '@/renderer/util/themes';
 import { forwardRef, RefObject } from 'react';
 
 type Props = {
@@ -16,7 +15,6 @@ const DefaultActionIcon = forwardRef<RefObject<React.ComponentPropsWithoutRef<'d
 
     return (
       <ActionIcon
-        {...themeProps(theme)}
         classNames={{ root: styles.root }}
         data-oc={props.oc}
         data-transparent={props.transparent}

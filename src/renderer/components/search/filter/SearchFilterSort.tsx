@@ -3,9 +3,6 @@ import { Menu, ScrollArea } from '@mantine/core';
 import { IconArrowDown, IconArrowUp } from '@tabler/icons';
 import { FilterSortValue, SortDirection } from '@tiyo/common';
 import DefaultMenu from '../../general/DefaultMenu';
-import { themeProps } from '@/renderer/util/themes';
-import { useRecoilValue } from 'recoil';
-import { themeState } from '@/renderer/state/settingStates';
 import DefaultButton from '../../general/DefaultButton';
 
 const ICON_MAP = {
@@ -21,8 +18,6 @@ type Props = {
   onChange: (value: FilterSortValue) => void;
 };
 const SearchFilterSort: React.FC<Props> = (props: Props) => {
-  const theme = useRecoilValue(themeState);
-
   const toggleValue = (key: string) => {
     if (props.value.key === key && props.supportsBothDirections) {
       props.onChange({
@@ -49,7 +44,7 @@ const SearchFilterSort: React.FC<Props> = (props: Props) => {
         </DefaultButton>
       </Menu.Target>
 
-      <Menu.Dropdown {...themeProps(theme)}>
+      <Menu.Dropdown>
         <ScrollArea.Autosize mah={260} style={{ width: 262 }}>
           {props.fields.map((field) => {
             const icon =

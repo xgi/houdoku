@@ -5,6 +5,5 @@
   "LIBRARY": "/",
   "READER": "/reader",
   "SEARCH": "/search",
-  "SERIES": "/series",
-  "SETTINGS": "/settings"
+  "SERIES": "/series"
 }

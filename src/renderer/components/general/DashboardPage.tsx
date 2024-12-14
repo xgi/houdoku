@@ -5,7 +5,6 @@ import SeriesDetails from '../library/SeriesDetails';
 import Search from '../search/Search';
 import routes from '@/common/constants/routes.json';
 import { importSeries, reloadSeriesList } from '@/renderer/features/library/utils';
-import Settings from '../settings/Settings';
 import Library from '../library/Library';
 import Plugins from '../plugins/Plugins';
 import Downloads from '../downloads/Downloads';
@@ -84,7 +83,7 @@ const DashboardPage: React.FC<Props> = () => {
     <SidebarProvider
       style={
         {
-          '--sidebar-width': '200px',
+          '--sidebar-width': '180px',
         } as React.CSSProperties
       }
     >
@@ -92,7 +91,6 @@ const DashboardPage: React.FC<Props> = () => {
       <div className="px-2 w-full">
         <Routes>
           <Route path={`${routes.SERIES}/:id`} element={<SeriesDetails />} />
-          <Route path={`${routes.SETTINGS}/*`} element={<Settings />} />
           <Route path={`${routes.SEARCH}/*`} element={<Search />} />
           <Route path={`${routes.PLUGINS}/*`} element={<Plugins />} />
           <Route path={`${routes.DOWNLOADS}/*`} element={<Downloads />} />

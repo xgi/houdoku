@@ -46,6 +46,7 @@ import {
 } from '@/ui/components/Dialog';
 import { Button } from '@/ui/components/Button';
 import packageJson from '../../../../package.json';
+import { SettingsDialogContent } from '../settings/SettingsDialogContent';
 
 export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navigate = useNavigate();
@@ -110,10 +111,15 @@ export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sideb
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => navigate(routes.SETTINGS)}>
-                <Settings />
-                <span>Settings</span>
-              </SidebarMenuButton>
+              <Dialog defaultOpen>
+                <DialogTrigger asChild>
+                  <SidebarMenuButton>
+                    <Settings />
+                    <span>Settings</span>
+                  </SidebarMenuButton>
+                </DialogTrigger>
+                <SettingsDialogContent />
+              </Dialog>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
-import ReaderSettings from '../settings/ReaderSettings';
 import { showingSettingsModalState } from '@/renderer/state/readerStates';
 import DefaultModal from '../general/DefaultModal';
 
@@ -15,7 +14,7 @@ const ReaderSettingsModal: React.FC = () => {
       title="Reader Settings"
       onClose={() => setShowingSettingsModal(!showingSettingsModal)}
     >
-      <ReaderSettings />
+      {/* <ReaderSettings /> */}
     </DefaultModal>
   );
 };

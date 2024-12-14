@@ -315,70 +315,71 @@ export function ChapterTable(props: ChapterTableProps) {
     <div className="space-y-2 pb-4">
       <div className="flex items-center justify-between">
         {table.getIsSomeRowsSelected() || table.getIsAllRowsSelected() ? (
-          <div className="flex space-x-2">
-            <Button variant="outline" className="ml-auto" onClick={() => setSelectedRead(true)}>
+          <div className="flex space-x-2 items-end">
+            <Button className="ml-auto" onClick={() => setSelectedRead(true)}>
               <Eye className="w-4 h-4" />
               Mark selected read
             </Button>
-            <Button variant="outline" className="ml-auto" onClick={() => setSelectedRead(false)}>
+            <Button className="ml-auto" onClick={() => setSelectedRead(false)}>
               <EyeOff className="w-4 h-4" />
               Mark selected unread
             </Button>
             {/* TODO add confirmation prompt */}
-            <Button variant="outline" className="ml-auto" onClick={() => downloadSelected()}>
+            <Button className="ml-auto" onClick={() => downloadSelected()}>
               <Download className="w-4 h-4" />
               Download selected
             </Button>
           </div>
         ) : (
-          <div className="flex space-x-2">
-            <ChapterTableLanguageFilter />
-            <ChapterTableGroupFilter
-              uniqueGroupNames={Array.from(
-                new Set(chapterList.map((chapter) => chapter.groupName)),
+          <>
+            <div className="flex space-x-2">
+              <ChapterTableLanguageFilter />
+              <ChapterTableGroupFilter
+                uniqueGroupNames={Array.from(
+                  new Set(chapterList.map((chapter) => chapter.groupName)),
+                )}
+              />
+            </div>
+            <div className="flex space-x-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="ml-auto">
+                    <Settings2 className="w-4 h-4" />
+                    View
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Columns</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {table
+                    .getAllColumns()
+                    .filter((column) => column.getCanHide())
+                    .map((column) => {
+                      return (
+                        <DropdownMenuCheckboxItem
+                          key={column.id}
+                          className="capitalize"
+                          checked={column.getIsVisible()}
+                          onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                          onSelect={(event) => event.preventDefault()}
+                        >
+                          {column.id}
+                        </DropdownMenuCheckboxItem>
+                      );
+                    })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {getNextUnreadChapter() && (
+                <Link to={`${routes.READER}/${props.series.id}/${getNextUnreadChapter()?.id}`}>
+                  <Button variant="outline">
+                    <Play className="w-4 h-4" />
+                    Continue
+                  </Button>
+                </Link>
               )}
-            />
-          </div>
+            </div>
+          </>
         )}
-
-        <div className="flex space-x-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto">
-                <Settings2 className="w-4 h-4" />
-                View
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Columns</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                      onSelect={(event) => event.preventDefault()}
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          {getNextUnreadChapter() && (
-            <Link to={`${routes.READER}/${props.series.id}/${getNextUnreadChapter()?.id}`}>
-              <Button variant="outline">
-                <Play className="w-4 h-4" />
-                Continue
-              </Button>
-            </Link>
-          )}
-        </div>
       </div>
       <div className="rounded-md border">
         <Table>

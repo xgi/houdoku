@@ -82,8 +82,9 @@
 
   body,
   #root,
-  #titlebar
-  [role="dialog"] {
+  #titlebar,
+  [role="dialog"],
+  [role="alertdialog"] {
     @apply font-sans antialiased bg-background text-foreground;
   }
 

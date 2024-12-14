@@ -48,7 +48,6 @@ import {
   nextReadingDirection,
 } from '@/renderer/features/settings/utils';
 import ReaderHeaderButton from './ReaderHeaderButton';
-import { themeProps } from '@/renderer/util/themes';
 import DefaultMenu from '../general/DefaultMenu';
 
 const TEXT_PAGE_STYLE = {
@@ -94,7 +93,6 @@ type Props = {
 };
 
 const ReaderHeader: React.FC<Props> = (props: Props) => {
-  const theme = useRecoilValue(themeState);
   const [pageNumber, setPageNumber] = useRecoilState(pageNumberState);
   const [showingSettingsModal, setShowingSettingsModal] = useRecoilState(showingSettingsModalState);
   const lastPageNumber = useRecoilValue(lastPageNumberState);
@@ -167,7 +165,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Box {...themeProps(theme)} className={styles.container}>
+    <Box className={styles.container}>
       <Center>
         <Group gap={4} wrap="nowrap">
           <ReaderHeaderButton
@@ -200,7 +198,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 </ReaderHeaderButton>
               </Menu.Target>
 
-              <Menu.Dropdown {...themeProps(theme)}>
+              <Menu.Dropdown>
                 <ScrollArea.Autosize mah={220} style={{ width: 100 }}>
                   {relevantChapterList.map((relevantChapter: Chapter) => (
                     <Menu.Item
@@ -261,7 +259,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 </ReaderHeaderButton>
               </Menu.Target>
 
-              <Menu.Dropdown {...themeProps(theme)}>
+              <Menu.Dropdown>
                 <ScrollArea.Autosize mah={220} style={{ width: 100 }}>
                   {Array.from({ length: lastPageNumber }, (_v, k) => k + 1).map((i: number) => (
                     <Menu.Item key={i} onClick={() => setPageNumber(i)}>
@@ -361,7 +359,7 @@ const ReaderHeader: React.FC<Props> = (props: Props) => {
                 </ReaderHeaderButton>
               </Menu.Target>
 
-              <Menu.Dropdown {...themeProps(theme)}>
+              <Menu.Dropdown>
                 <ScrollArea.Autosize mah={220} style={{ width: 310 }}>
                   {languageChapterList.map((languageChapter: Chapter) => (
                     <Menu.Item

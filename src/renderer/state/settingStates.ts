@@ -19,7 +19,7 @@ import {
   ReaderSetting,
   ReadingDirection,
   TableColumnSortOrder,
-  Theme,
+  ApplicationTheme,
   TrackerSetting,
 } from '@/common/models/types';
 
@@ -73,7 +73,7 @@ export const libraryCropCoversState = atm<boolean>(GeneralSetting.LibraryCropCov
 export const chapterListVolOrderState = atm<TableColumnSortOrder>(GeneralSetting.ChapterListVolOrder);
 export const chapterListChOrderState = atm<TableColumnSortOrder>(GeneralSetting.ChapterListChOrder);
 export const chapterListPageSizeState = atm<number>(GeneralSetting.ChapterListPageSize);
-export const themeState = atm<Theme>(GeneralSetting.Theme);
+export const themeState = atm<ApplicationTheme>(GeneralSetting.ApplicationTheme);
 
 export const fitContainToWidthState = atm<boolean>(ReaderSetting.FitContainToWidth);
 export const fitContainToHeightState = atm<boolean>(ReaderSetting.FitContainToHeight);

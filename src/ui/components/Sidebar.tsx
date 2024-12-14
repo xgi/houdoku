@@ -5,7 +5,6 @@ import { Slot } from '@radix-ui/react-slot';
 import { VariantProps, cva } from 'class-variance-authority';
 import { PanelLeft } from 'lucide-react';
 
-import { useIsMobile } from '@/ui/hooks/use-mobile';
 import { cn } from '@/ui/util';
 import { Button } from '@/ui/components/Button';
 import { Input } from '@/ui/components/Input';
@@ -13,6 +12,9 @@ import { Separator } from '@/ui/components/Separator';
 import { Sheet, SheetContent } from '@/ui/components/Sheet';
 import { Skeleton } from '@/ui/components/Skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/ui/components/Tooltip';
+
+// TODO hack
+const useIsMobile = () => false;
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
