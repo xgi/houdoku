@@ -1,5 +1,0 @@
-.task {
-  &[data-theme="light"], &[data-theme="dark"], &[data-theme="black"] {
-    background-color: var(--mantine-color-bg-2);
-  }
-}

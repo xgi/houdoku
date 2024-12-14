@@ -1,103 +1,93 @@
 import React from 'react';
 import { useRecoilValue } from 'recoil';
-import { Box, ScrollArea, Stack, Progress, Group, Button, Center } from '@mantine/core';
-import { IconPlayerPause, IconPlayerPlay } from '@tabler/icons';
 import { downloaderClient, DownloadTask } from '@/renderer/services/downloader';
 import { currentTaskState, queueState } from '@/renderer/state/downloaderStates';
-import DefaultText from '../general/DefaultText';
-import DefaultButton from '../general/DefaultButton';
-import styles from './DownloadQueue.module.css';
-import { themeState } from '@/renderer/state/settingStates';
-import { themeProps } from '@/renderer/util/themes';
-import DefaultTitle from '../general/DefaultTitle';
+import { Languages } from '@tiyo/common';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/ui/components/Card';
+import { Progress } from '@/ui/components/Progress';
+import { ScrollArea } from '@/ui/components/ScrollArea';
+import { Button } from '@/ui/components/Button';
+import { PauseIcon, PlayIcon } from 'lucide-react';
 
 const DownloadQueue: React.FC = () => {
-  const theme = useRecoilValue(themeState);
   const queue = useRecoilValue(queueState);
   const currentTask = useRecoilValue(currentTaskState);
 
   const renderHeader = () => {
     return (
-      <Group pt="sm" mb="xs" justify={'space-between'}>
-        <DefaultTitle order={3}>Download Queue</DefaultTitle>
-        {currentTask || queue.length > 0 ? (
-          <Group gap="xs">
-            <DefaultButton variant="default" size="xs" onClick={() => downloaderClient.clear()}>
+      <div className="flex justify-between pt-4 pb-2">
+        <h2 className="text-xl font-bold">Download Queue</h2>
+        {(currentTask || queue.length > 0) && (
+          <div className="flex space-x-2">
+            <Button variant="secondary" size="sm">
               Clear Queue
-            </DefaultButton>
+            </Button>
             {currentTask === null && queue.length > 0 ? (
               <Button
-                size="xs"
+                className="text-white bg-green-600 hover:bg-green-700"
+                size="sm"
                 color="teal"
-                leftSection={<IconPlayerPlay size={16} />}
                 onClick={() => downloaderClient.start()}
               >
+                <PlayIcon className="h-4 w-4" />
                 Resume
               </Button>
             ) : (
               <Button
-                size="xs"
-                color="orange"
-                leftSection={<IconPlayerPause size={16} />}
+                className="text-white bg-orange-600 hover:bg-orange-700"
+                size="sm"
                 onClick={() => downloaderClient.pause()}
               >
+                <PauseIcon className="h-4 w-4" />
                 Pause
               </Button>
             )}
-          </Group>
-        ) : (
-          ''
+          </div>
         )}
-      </Group>
+      </div>
     );
   };
 
   const renderTask = (task: DownloadTask) => {
+    const descriptionFields: string[] = [];
+    if (task.chapter.languageKey && Languages[task.chapter.languageKey]) {
+      descriptionFields.push(Languages[task.chapter.languageKey].name);
+    }
+    if (task.chapter.groupName) {
+      descriptionFields.push(task.chapter.groupName);
+    }
+
+    const value = task.page && task.totalPages ? (task.page / task.totalPages) * 100 : 0;
     return (
-      <Box
-        {...themeProps(theme)}
-        key={`${task.series.id}-${task.chapter.id}`}
-        mr="sm"
-        p="xs"
-        className={styles.task}
-      >
-        <Group wrap="nowrap" justify="space-between">
-          <DefaultText>{task.series.title}</DefaultText>
-          <DefaultText>Chapter {task.chapter.chapterNumber}</DefaultText>
-        </Group>
-        {task.page && task.totalPages ? (
-          <Progress.Root size="xl">
-            <Progress.Section
-              value={(task.page / task.totalPages) * 100}
-              animated={task === currentTask}
-            >
-              <Progress.Label>
-                {task.page} / {task.totalPages}
-              </Progress.Label>
-            </Progress.Section>
-          </Progress.Root>
-        ) : (
-          ''
-        )}
-      </Box>
+      <Card className="w-full">
+        <CardHeader className="px-4 pt-3 pb-2">
+          <CardTitle>
+            {task.series.title} - Chapter {task.chapter.chapterNumber}
+          </CardTitle>
+          <CardDescription>{descriptionFields.join(', ')}</CardDescription>
+        </CardHeader>
+        <CardContent className="pb-3">
+          <Progress value={value} title={`${task.page || 0}/${task.totalPages || 0}`} />
+        </CardContent>
+      </Card>
     );
   };
 
   return (
     <>
       {renderHeader()}
-      <ScrollArea type="always" style={{ height: '40vh', minHeight: 250 }}>
-        <Stack gap="sm" p="xs">
+      <ScrollArea type="always" className="h-[40vh] min-h-64">
+        <div className="flex flex-col space-y-2 pr-4">
           {currentTask ? renderTask(currentTask) : ''}
           {queue.map((task: DownloadTask) => renderTask(task))}
           {currentTask === null && queue.length === 0 ? (
-            <Center style={{ height: '36vh', minHeight: 225 }}>
-              <DefaultText>There are no downloads queued.</DefaultText>
-            </Center>
+            <div className="h-[36vh] min-h-60 flex items-center justify-center">
+              <span>There are no downloads queued.</span>
+            </div>
           ) : (
             ''
           )}
-        </Stack>
+        </div>
       </ScrollArea>
     </>
   );

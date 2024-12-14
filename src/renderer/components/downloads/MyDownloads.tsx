@@ -2,18 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { Chapter, Series } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
 import { useRecoilValue } from 'recoil';
-import { Accordion, Badge, Group, Stack } from '@mantine/core';
-import { IconTrash } from '@tabler/icons';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import library from '@/renderer/services/library';
 import { customDownloadsDirState } from '@/renderer/state/settingStates';
 import { getFromChapterIds } from '@/renderer/features/library/utils';
-import DefaultAccordion from '../general/DefaultAccordion';
-import DefaultCheckbox from '../general/DefaultCheckbox';
-import DefaultText from '../general/DefaultText';
-import DefaultButton from '../general/DefaultButton';
-import DefaultTitle from '../general/DefaultTitle';
-import DeleteDownloadsModal from './DeleteDownloadsModal';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/ui/components/Accordion';
+import { Checkbox } from '@/ui/components/Checkbox';
+import { Badge } from '@/ui/components/Badge';
+import { Label } from '@/ui/components/Label';
+import { Button } from '@/ui/components/Button';
+import { Trash2Icon } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/ui/components/AlertDialog';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
@@ -21,7 +35,6 @@ const MyDownloads: React.FC = () => {
   const [seriesList, setSeriesList] = useState<Series[]>([]);
   const [chapterLists, setChapterLists] = useState<{ [key: string]: Chapter[] }>({});
   const [checkedChapters, setCheckedChapters] = useState<string[]>([]);
-  const [showingDeleteModal, setShowingDeleteModal] = useState(false);
   const customDownloadsDir = useRecoilValue(customDownloadsDirState);
 
   const loadDownloads = async () => {
@@ -68,35 +81,36 @@ const MyDownloads: React.FC = () => {
       .catch((err) => console.error(err));
   };
 
-  const promptDeleteChecked = async () => {
-    const count = new Set(checkedChapters).size;
-
-    if (count > 1) {
-      setShowingDeleteModal(true);
-    } else {
-      deleteChecked();
-    }
-  };
-
   const renderHeader = () => {
     return (
-      <Group mb="xs" justify={'space-between'}>
-        <DefaultTitle order={3}>My Downloads</DefaultTitle>
-        <Group gap="xs">
-          <DefaultButton
-            size="xs"
-            oc="red"
-            disabled={checkedChapters.length === 0}
-            leftSection={<IconTrash size={16} />}
-            onClick={promptDeleteChecked}
-          >
-            Delete Selected
-          </DefaultButton>
-          <DefaultButton oc="blue" size="xs" onClick={loadDownloads}>
+      <div className="flex justify-between pb-2">
+        <h2 className="text-xl font-bold">My Downloads</h2>
+        <div className="flex space-x-2">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button size="sm" variant={'destructive'} disabled={checkedChapters.length === 0}>
+                <Trash2Icon className="h-4 w-4" />
+                Delete Selected
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="sm:max-w-[425px]">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete downloaded chapters</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete {checkedChapters.length} downloaded chapters?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => deleteChecked()}>Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Button size="sm" onClick={loadDownloads}>
             Refresh
-          </DefaultButton>
-        </Group>
-      </Group>
+          </Button>
+        </div>
+      </div>
     );
   };
 
@@ -133,24 +147,14 @@ const MyDownloads: React.FC = () => {
 
   return (
     <>
-      <DeleteDownloadsModal
-        count={checkedChapters.length}
-        deleteFunc={deleteChecked}
-        showing={showingDeleteModal}
-        close={() => setShowingDeleteModal(false)}
-      />
       {renderHeader()}
       {seriesList.length === 0 || Object.keys(chapterLists).length === 0 ? (
-        <DefaultText>
+        <span>
           You don&apos;t have any downloaded chapters. You can download chapters from the series
-          page in your{' '}
-          <DefaultText component="span" c="orange" fw={700}>
-            Library
-          </DefaultText>
-          .
-        </DefaultText>
+          page in your Library.
+        </span>
       ) : (
-        <DefaultAccordion radius="xs" chevronPosition="left" multiple={undefined}>
+        <Accordion type="single" collapsible className="w-full">
           {seriesList.map((series) => {
             if (!series.id || !chapterLists[series.id]) return '';
 
@@ -159,31 +163,30 @@ const MyDownloads: React.FC = () => {
               (chapter) => chapter.id && checkedChapters.includes(chapter.id),
             ).length;
 
-            let badgeColor: string | undefined;
-            if (numSelected > 0) badgeColor = 'yellow';
-            if (numSelected === numChapters) badgeColor = 'teal';
-
             return (
-              <Accordion.Item value={series.id} key={series.id}>
-                <Accordion.Control>
-                  <Group justify={'space-between'}>
-                    <Group>
-                      <DefaultCheckbox
+              <AccordionItem value={series.id} key={series.id}>
+                <AccordionTrigger className="hover:no-underline">
+                  <div className="flex justify-between w-full pr-2">
+                    <div className="flex space-x-2">
+                      <Checkbox
                         checked={numSelected === numChapters}
+                        className="w-5 h-5"
                         onClick={(e) => {
                           e.stopPropagation();
+                          handleChangeSeriesCheckbox(series.id);
                         }}
-                        onChange={() => handleChangeSeriesCheckbox(series.id)}
                       />
-                      <DefaultText>{series.title}</DefaultText>
-                    </Group>
-                    <Badge radius={0} color={badgeColor}>
-                      {numSelected}/{numChapters} selected
-                    </Badge>
-                  </Group>
-                </Accordion.Control>
-                <Accordion.Panel>
-                  <Stack gap={'xs'}>
+                      <span>{series.title}</span>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Badge>
+                        {numSelected}/{numChapters} selected
+                      </Badge>
+                    </div>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col space-y-2">
                     {chapterLists[series.id]
                       .sort(
                         (a, b) =>
@@ -194,23 +197,33 @@ const MyDownloads: React.FC = () => {
                       .map((chapter) => {
                         if (!chapter.id) return '';
                         return (
-                          <DefaultCheckbox
-                            key={chapter.id}
-                            ml={40}
-                            label={`Chapter ${chapter.chapterNumber} [id:${chapter.id}]`}
-                            checked={checkedChapters.includes(chapter.id)}
-                            onChange={(e) =>
-                              handleChangeChapterCheckbox(chapter.id, e.target.checked)
+                          <div
+                            className="flex ml-4 space-x-2 items-center"
+                            onClick={() =>
+                              handleChangeChapterCheckbox(
+                                chapter.id,
+                                chapter.id === undefined
+                                  ? false
+                                  : !checkedChapters.includes(chapter.id),
+                              )
                             }
-                          />
+                          >
+                            <Checkbox
+                              key={chapter.id}
+                              checked={checkedChapters.includes(chapter.id)}
+                            />
+                            <Label className="cursor-pointer">
+                              Chapter {chapter.chapterNumber} [id:{chapter.id}]
+                            </Label>
+                          </div>
                         );
                       })}
-                  </Stack>
-                </Accordion.Panel>
-              </Accordion.Item>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
             );
           })}
-        </DefaultAccordion>
+        </Accordion>
       )}
     </>
   );
