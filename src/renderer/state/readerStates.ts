@@ -51,16 +51,6 @@ export const showingSidebarState = atom({
   default: true,
 });
 
-export const showingHeaderState = atom({
-  key: 'readerShowingHeaderState',
-  default: true,
-});
-
-export const showingScrollbarState = atom({
-  key: 'readerShowingScrollbarState',
-  default: true,
-});
-
 export const showingNoNextChapterState = atom({
   key: 'readerShowingNoNextChapterState',
   default: false,

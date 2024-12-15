@@ -14,9 +14,8 @@ import {
   keyToggleOffsetDoubleSpreadsState,
   keyTogglePageStyleState,
   keyToggleReadingDirectionState,
-  keyToggleShowingHeaderState,
-  keyToggleShowingScrollbarState,
   keyToggleShowingSettingsModalState,
+  keyToggleShowingSidebarState,
 } from '@/renderer/state/settingStates';
 import { Button } from '@/ui/components/Button';
 
@@ -31,8 +30,7 @@ export const SettingsKeybinds: React.FC = () => {
   const keyTogglePageStyleTuple = useRecoilState(keyTogglePageStyleState);
   const keyToggleOffsetDoubleSpreadsTuple = useRecoilState(keyToggleOffsetDoubleSpreadsState);
   const keyToggleShowingSettingsModalTuple = useRecoilState(keyToggleShowingSettingsModalState);
-  const keyToggleShowingScrollbarTuple = useRecoilState(keyToggleShowingScrollbarState);
-  const keyToggleShowingHeaderTuple = useRecoilState(keyToggleShowingHeaderState);
+  const keyToggleShowingSidebarTuple = useRecoilState(keyToggleShowingSidebarState);
   const keyToggleFullscreenTuple = useRecoilState(keyToggleFullscreenState);
   const keyExitTuple = useRecoilState(keyExitState);
   const keyCloseOrBackTuple = useRecoilState(keyCloseOrBackState);
@@ -130,14 +128,9 @@ export const SettingsKeybinds: React.FC = () => {
             setting: ReaderSetting.KeyToggleShowingSettingsModal,
           },
           {
-            name: 'Toggle scrollbar',
-            stateTuple: keyToggleShowingScrollbarTuple,
-            setting: ReaderSetting.KeyToggleShowingScrollbar,
-          },
-          {
-            name: 'Toggle menu bar',
-            stateTuple: keyToggleShowingHeaderTuple,
-            setting: ReaderSetting.KeyToggleShowingHeader,
+            name: 'Toggle sidebar',
+            stateTuple: keyToggleShowingSidebarTuple,
+            setting: ReaderSetting.KeyToggleShowingSidebar,
           },
         ].map((entry) => (
           <div className="flex space-x-2 items-center">

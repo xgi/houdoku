@@ -94,8 +94,6 @@ export const keyTogglePageStyleState = atm<string>(ReaderSetting.KeyTogglePageSt
 // biome-ignore format: TODO ignore block
 export const keyToggleShowingSettingsModalState = atm<string>(ReaderSetting.KeyToggleShowingSettingsModal);
 export const keyToggleShowingSidebarState = atm<string>(ReaderSetting.KeyToggleShowingSidebar);
-export const keyToggleShowingHeaderState = atm<string>(ReaderSetting.KeyToggleShowingHeader);
-export const keyToggleShowingScrollbarState = atm<string>(ReaderSetting.KeyToggleShowingScrollbar);
 export const keyToggleFullscreenState = atm<string>(ReaderSetting.KeyToggleFullscreen);
 // biome-ignore format: TODO ignore block
 export const keyToggleOffsetDoubleSpreadsState = atm<string>(ReaderSetting.KeyToggleOffsetDoubleSpreads);

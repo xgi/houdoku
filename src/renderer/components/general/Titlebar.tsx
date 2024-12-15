@@ -12,7 +12,7 @@ export const Titlebar: React.FC = () => {
 
   return (
     <div className="bg-background text-foreground select-none flex justify-between items-center fixed top-0 h-[24px] w-full p-0.5 z-50 overflow-hidden">
-      <div className="ml-2 overflow-hidden text-xs font-sans font-bold tracking-tighter text-muted-foreground">
+      <div className="ml-2 overflow-hidden text-xs font-sans font-bold tracking-tighter text-muted-foreground line-clamp-1">
         <span>{formattedText}</span>
       </div>
       <div className="flex justify-end">

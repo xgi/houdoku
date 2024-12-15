@@ -9,7 +9,6 @@ import { ReadingDirection, PageStyle, OffsetPages } from '@/common/models/types'
 import { selectMostSimilarChapter } from '@/renderer/util/comparison';
 import { markChapters } from '@/renderer/features/library/utils';
 import ReaderViewer from './ReaderViewer';
-import ReaderHeader from './ReaderHeader';
 import ReaderLoader from './ReaderLoader';
 import { sendProgressToTrackers } from '@/renderer/features/tracker/utils';
 import ipcChannels from '@/common/constants/ipcChannels.json';
@@ -59,10 +58,6 @@ const ReaderPage: React.FC = () => {
     readerStates.showingSettingsModalState,
   );
   const [showingSidebar, setShowingSidebar] = useRecoilState(readerStates.showingSidebarState);
-  const [showingHeader, setShowingHeader] = useRecoilState(readerStates.showingHeaderState);
-  const [showingScrollbar, setShowingScrollbar] = useRecoilState(
-    readerStates.showingScrollbarState,
-  );
   const [showingNoNextChapter, setShowingNoNextChapter] = useRecoilState(
     readerStates.showingNoNextChapterState,
   );
@@ -90,8 +85,6 @@ const ReaderPage: React.FC = () => {
     settingStates.keyToggleShowingSettingsModalState,
   );
   const keyToggleShowingSidebar = useRecoilValue(settingStates.keyToggleShowingSidebarState);
-  const keyToggleShowingHeader = useRecoilValue(settingStates.keyToggleShowingHeaderState);
-  const keyToggleShowingScrollbar = useRecoilValue(settingStates.keyToggleShowingScrollbarState);
   const keyToggleFullscreen = useRecoilValue(settingStates.keyToggleFullscreenState);
   const keyExit = useRecoilValue(settingStates.keyExitState);
   const keyCloseOrBack = useRecoilValue(settingStates.keyCloseOrBackState);
@@ -499,9 +492,7 @@ const ReaderPage: React.FC = () => {
     Mousetrap.bind(keyToggleShowingSettingsModal, () =>
       setShowingSettingsModal(!showingSettingsModal),
     );
-    Mousetrap.bind(keyToggleShowingSidebar, () => setShowingSidebar(showingSidebar));
-    Mousetrap.bind(keyToggleShowingHeader, () => setShowingHeader(!showingHeader));
-    Mousetrap.bind(keyToggleShowingScrollbar, () => setShowingScrollbar(!showingScrollbar));
+    Mousetrap.bind(keyToggleShowingSidebar, () => setShowingSidebar(!showingSidebar));
     Mousetrap.bind(keyToggleFullscreen, () =>
       ipcRenderer.invoke(ipcChannels.WINDOW.TOGGLE_FULLSCREEN),
     );
@@ -556,8 +547,7 @@ const ReaderPage: React.FC = () => {
   }, [
     showingNoNextChapter,
     showingSettingsModal,
-    showingHeader,
-    showingScrollbar,
+    showingSidebar,
     readingDirection,
     pageStyle,
     readerChapter,
@@ -574,29 +564,26 @@ const ReaderPage: React.FC = () => {
 
   return (
     <SidebarProvider
+      open={showingSidebar}
+      onOpenChange={setShowingSidebar}
       style={
         {
           '--sidebar-width': '260px',
         } as React.CSSProperties
       }
     >
-      <ReaderSidebar />
+      <ReaderSidebar
+        changePage={changePage}
+        setChapter={setChapter}
+        changeChapter={changeChapter}
+        getAdjacentChapterId={getAdjacentChapterId}
+        exitPage={exitPage}
+      />
+
       <div className="w-full outline-none" tabIndex={0}>
         <Dialog open={showingSettingsModal} onOpenChange={setShowingSettingsModal}>
           <SettingsDialogContent defaultPage={SettingsPage.Reader} />
         </Dialog>
-
-        {showingHeader ? (
-          <ReaderHeader
-            changePage={changePage}
-            setChapter={setChapter}
-            changeChapter={changeChapter}
-            getAdjacentChapterId={getAdjacentChapterId}
-            exitPage={exitPage}
-          />
-        ) : (
-          <></>
-        )}
 
         {showingNoNextChapter ? (
           <div className="h-[100vh] flex justify-center items-center select-none">
