@@ -4,7 +4,6 @@ import { RecoilRoot, useRecoilValue } from 'recoil';
 import App from './App';
 
 import '@mantine/core/styles.css';
-import '@mantine/notifications/styles.css';
 import { Titlebar } from './components/general/Titlebar';
 import { MantineProvider } from '@mantine/core';
 import { ErrorBoundary } from './components/general/ErrorBoundary';

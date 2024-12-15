@@ -1,11 +1,8 @@
-import React from 'react';
 const fs = require('fs');
 const { ipcRenderer } = require('electron');
 import { Chapter, PageRequesterData, Series } from '@tiyo/common';
 import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import { showNotification, updateNotification } from '@mantine/notifications';
-import { IconCheck, IconPlayerPause } from '@tabler/icons';
+import { toast } from '@/ui/hooks/use-toast';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 
 export type DownloadTask = {
@@ -23,19 +20,17 @@ export type DownloadError = {
 };
 
 const showDownloadNotification = (
-  notificationId: string,
+  update: ReturnType<typeof toast>['update'],
   task: DownloadTask | null,
   queueSize?: number,
 ) => {
   if (!task) return;
 
   const queueStr = queueSize && queueSize > 0 ? ` (${queueSize} downloads queued)` : '';
-  updateNotification({
-    id: notificationId,
+  update({
     title: `Downloading ${task.series.title} chapter ${task.chapter.chapterNumber}`,
-    message: `Page ${task.page || 0}/${task.totalPages || '??'}${queueStr}`,
-    loading: true,
-    autoClose: false,
+    description: `Page ${task.page || 0}/${task.totalPages || '??'}${queueStr}`,
+    duration: 900000,
   });
 };
 
@@ -104,8 +99,7 @@ class DownloaderClient {
     }
 
     const startingQueueSize = this.queue.length;
-    const notificationId = uuidv4();
-    showNotification({ id: notificationId, message: 'Starting download...', loading: true });
+    const { update } = toast({ title: 'Starting download...', duration: 900000 });
 
     this.setRunning(true);
     let tasksCompleted = 0;
@@ -117,7 +111,7 @@ class DownloaderClient {
       }
 
       this.setCurrentTask(task);
-      showDownloadNotification(notificationId, this.currentTask, this.queue.length);
+      showDownloadNotification(update, this.currentTask, this.queue.length);
 
       const chapterPath = await ipcRenderer.invoke(
         ipcChannels.FILESYSTEM.GET_CHAPTER_DOWNLOAD_PATH,
@@ -174,7 +168,20 @@ class DownloaderClient {
           .invoke(ipcChannels.EXTENSION.GET_IMAGE, task.series.extensionId, task.series, pageUrl)
           .then(async (data) => {
             if (typeof data === 'string') {
-              return fetch(pageUrl).then(async (response) => response.arrayBuffer());
+              return fetch(pageUrl)
+                .then(async (response) => response.arrayBuffer())
+                .catch((err) => {
+                  update({
+                    title: `Failed to download ${task.series.title} chapter ${task.chapter.chapterNumber}`,
+                    description: `Error: ${err.message}`,
+                    duration: 5000,
+                  });
+                  this._handleDownloadError({
+                    chapter: task.chapter,
+                    series: task.series,
+                    errorStr: `fetch failed: ${err.message}`,
+                  });
+                });
             }
             return data;
           });
@@ -187,7 +194,7 @@ class DownloaderClient {
           page: i,
           totalPages: pageUrls.length,
         });
-        showDownloadNotification(notificationId, this.currentTask, this.queue.length);
+        showDownloadNotification(update, this.currentTask, this.queue.length);
       }
 
       if (!this.running) {
@@ -199,24 +206,16 @@ class DownloaderClient {
     }
 
     if (this.running) {
-      updateNotification({
-        id: notificationId,
+      update({
         title: `Downloaded ${this.currentTask?.series.title} chapter ${this.currentTask?.chapter.chapterNumber}`,
-        message: startingQueueSize > 1 ? `Downloaded ${tasksCompleted} chapters` : '',
-        color: 'teal',
-        icon: React.createElement(IconCheck, { size: 16 }),
-        loading: false,
-        autoClose: true,
+        description: startingQueueSize > 1 ? `Downloaded ${tasksCompleted} chapters` : '',
+        duration: 5000,
       });
     } else {
-      updateNotification({
-        id: notificationId,
-        title: `Download paused`,
-        message: startingQueueSize > 1 ? `Finished ${tasksCompleted} downloads` : '',
-        color: 'yellow',
-        icon: React.createElement(IconPlayerPause, { size: 16 }),
-        loading: false,
-        autoClose: true,
+      update({
+        title: 'Download paused',
+        description: startingQueueSize > 1 ? `Finished ${tasksCompleted} downloads` : '',
+        duration: 5000,
       });
     }
 

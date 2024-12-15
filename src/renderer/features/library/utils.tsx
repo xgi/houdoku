@@ -1,13 +1,10 @@
 const fs = require('fs');
 const { ipcRenderer } = require('electron');
 import { Chapter, LanguageKey, Series } from '@tiyo/common';
-import React from 'react';
 import { SetterOrUpdater } from 'recoil';
-import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
-import { Button, Group, List, Text } from '@mantine/core';
-import { v4 as uuidv4 } from 'uuid';
-import { showNotification, updateNotification } from '@mantine/notifications';
-import { IconAlertTriangle, IconCheck, IconX } from '@tabler/icons';
+import { openConfirmModal } from '@mantine/modals';
+import { Text } from '@mantine/core';
+import { toast } from '@/ui/hooks/use-toast';
 import { downloadCover } from '@/renderer/util/download';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import ipcChannels from '@/common/constants/ipcChannels.json';
@@ -60,22 +57,14 @@ export async function importSeries(
 ): Promise<Series> {
   console.debug(`Importing series ${series.sourceId} from extension ${series.extensionId}`);
 
-  const notificationId = uuidv4();
+  let update: ReturnType<typeof toast>['update'] = () => false;
   if (!series.preview) {
-    showNotification({
-      id: notificationId,
-      title: 'Adding series...',
-      message: (
-        <Text>
-          Adding{' '}
-          <Text c="teal" component="span" fs="italic">
-            {series.title}
-          </Text>
-        </Text>
-      ),
-      loading: true,
-      autoClose: false,
+    const toastResp = toast({
+      title: 'Adding series to your library...',
+      description: `Adding ${series.title}`,
+      duration: 900000,
     });
+    update = toastResp.update;
   }
 
   let seriesToAdd = series;
@@ -94,15 +83,11 @@ export async function importSeries(
       seriesToAdd.sourceId,
     );
   } catch (error) {
-    updateNotification({
-      id: notificationId,
-      title: `Failed to add series`,
-      message: <Text>An error occurred while adding the series to your library.</Text>,
-      color: 'red',
-      icon: React.createElement(IconX, { size: 16 }),
-      autoClose: true,
-      loading: false,
+    update({
+      title: 'Failed to add series',
+      description: 'An error occurred while adding the series to your library.',
     });
+
     throw error;
   }
 
@@ -115,22 +100,7 @@ export async function importSeries(
 
   console.debug(`Imported series ${addedSeries.sourceId} with database ID ${addedSeries.id}`);
   if (!series.preview) {
-    updateNotification({
-      id: notificationId,
-      title: 'Added series',
-      message: (
-        <Text>
-          Added{' '}
-          <Text c="teal" component="span" fs="italic">
-            {addedSeries.title}
-          </Text>
-        </Text>
-      ),
-      color: 'teal',
-      icon: React.createElement(IconCheck, { size: 16 }),
-      autoClose: true,
-      loading: false,
-    });
+    update({ title: 'Added series', description: `Added ${addedSeries.title}`, duration: 5000 });
   }
   return addedSeries;
 }
@@ -234,8 +204,10 @@ export async function reloadSeriesList(
   console.debug(`Reloading series list...`);
   setReloadingSeriesList(true);
 
-  const notificationId = uuidv4();
-  showNotification({ id: notificationId, message: 'Refreshing library...', loading: true });
+  const { update } = toast!({
+    title: 'Refreshing library...',
+    duration: 900000,
+  });
 
   const sortedSeriesList = [...seriesList].sort((a: Series, b: Series) =>
     a.title.localeCompare(b.title),
@@ -245,13 +217,7 @@ export async function reloadSeriesList(
   const failedToUpdate: Series[] = [];
 
   for (const series of sortedSeriesList) {
-    updateNotification({
-      id: notificationId,
-      title: `Refreshing library...`,
-      message: `Reloading series ${cur}/${sortedSeriesList.length}`,
-      loading: true,
-      autoClose: false,
-    });
+    update({ description: `Reloading series ${cur}/${sortedSeriesList.length}` });
 
     const ret = await reloadSeries(series, chapterLanguages);
     if (ret instanceof Error) {
@@ -263,66 +229,18 @@ export async function reloadSeriesList(
 
   setSeriesList(library.fetchSeriesList());
   if (cur === 1 && failedToUpdate.length > 0) {
-    updateNotification({
-      id: notificationId,
-      title: `Library refresh failed`,
-      message: `Error while reloading series "${seriesList[0].title}"`,
-      color: 'red',
-      icon: React.createElement(IconX, { size: 16 }),
-      loading: false,
-      autoClose: true,
+    update({
+      title: 'Library refresh failed',
+      description: `Error while reloading series "${seriesList[0].title}"`,
+      duration: 5000,
     });
   } else if (failedToUpdate.length > 0) {
-    updateNotification({
-      id: notificationId,
-      title: `Library refreshed with errors`,
-      message: (
-        <Text>
-          Reloaded {cur} series (
-          <Text
-            component="a"
-            variant="link"
-            onClick={() =>
-              openModal({
-                title: 'Library Update Failed',
-                children: (
-                  <>
-                    <Text>Failed to reload the following series:</Text>
-                    <List pb="sm">
-                      {failedToUpdate.map((series) => (
-                        <List.Item key={series?.id}>{series.title}</List.Item>
-                      ))}
-                    </List>
-                    <Group justify="flex-end">
-                      <Button variant="default" onClick={() => closeAllModals()} mt="md">
-                        Okay
-                      </Button>
-                    </Group>
-                  </>
-                ),
-              })
-            }
-          >
-            {failedToUpdate.length} errors
-          </Text>
-          )
-        </Text>
-      ),
-      color: 'yellow',
-      icon: React.createElement(IconAlertTriangle, { size: 16 }),
-      loading: false,
-      autoClose: false,
+    update({
+      title: 'Library refreshed with errors',
+      description: `Failed to update ${failedToUpdate.length} series`,
     });
   } else {
-    updateNotification({
-      id: notificationId,
-      title: `Library refreshed`,
-      message: `Reloaded ${cur} series`,
-      color: 'teal',
-      icon: React.createElement(IconCheck, { size: 16 }),
-      loading: false,
-      autoClose: true,
-    });
+    update({ title: 'Library refreshed', description: `Reloaded ${cur} series`, duration: 5000 });
   }
 
   setReloadingSeriesList(false);

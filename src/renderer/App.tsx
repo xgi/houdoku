@@ -3,13 +3,13 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 const { ipcRenderer } = require('electron');
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { ModalsProvider } from '@mantine/modals';
-import { Notifications } from '@mantine/notifications';
 import routes from '@/common/constants/routes.json';
 import DashboardPage from './components/general/DashboardPage';
 import ReaderPage from './components/reader/ReaderPage';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { migrateSeriesTags } from './features/library/utils';
 import AppLoading from './components/general/AppLoading';
+import { Toaster } from '@/ui/components/Toaster';
 import { categoryListState, seriesListState } from './state/libraryStates';
 import { downloaderClient } from './services/downloader';
 import {
@@ -25,13 +25,26 @@ import {
   loadStoredExtensionSettings,
   loadStoredTrackerTokens,
 } from './services/ipc';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/ui/components/AlertDialog';
+import { UpdateInfo } from 'electron-updater';
 
 loadStoredExtensionSettings();
 loadStoredTrackerTokens();
-createRendererIpcHandlers();
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [updateInfo, setUpdateInfo] = useState<UpdateInfo | undefined>(undefined);
+  const [showUpdateAvailableDialog, setShowUpdateAvailableDialog] = useState(false);
+  const [showUpdateDownloadedDialog, setShowUpdateDownloadedDialog] = useState(false);
   const setSeriesList = useSetRecoilState(seriesListState);
   const setCategoryList = useSetRecoilState(categoryListState);
   const setRunning = useSetRecoilState(runningState);
@@ -47,6 +60,14 @@ export default function App() {
       /**
        * Add any additional preload steps here (e.g. data migration, verifications, etc)
        */
+
+      createRendererIpcHandlers(
+        (updateInfo) => {
+          setUpdateInfo(updateInfo);
+          setShowUpdateAvailableDialog(true);
+        },
+        () => setShowUpdateDownloadedDialog(true),
+      );
 
       // Give the downloader client access to the state modifiers
       downloaderClient.setStateFunctions(setRunning, setQueue, setCurrentTask, setDownloadErrors);
@@ -79,7 +100,49 @@ export default function App() {
 
   return (
     <>
-      <Notifications />
+      <Toaster />
+
+      <AlertDialog open={showUpdateAvailableDialog} onOpenChange={setShowUpdateAvailableDialog}>
+        <AlertDialogContent className="sm:max-w-[425px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Update available</AlertDialogTitle>
+            {updateInfo && (
+              <AlertDialogDescription>
+                Houdoku v{updateInfo?.version} was released on{' '}
+                {new Date(updateInfo.releaseDate).toLocaleDateString()}.
+              </AlertDialogDescription>
+            )}
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Not now</AlertDialogCancel>
+            <AlertDialogAction onClick={() => ipcRenderer.invoke(ipcChannels.APP.PERFORM_UPDATE)}>
+              Download update
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={showUpdateDownloadedDialog} onOpenChange={setShowUpdateDownloadedDialog}>
+        <AlertDialogContent className="sm:max-w-[425px]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Restart required</AlertDialogTitle>
+            {updateInfo && (
+              <AlertDialogDescription>
+                Houdoku needs to restart to finish installing updates.
+              </AlertDialogDescription>
+            )}
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Not now</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => ipcRenderer.invoke(ipcChannels.APP.UPDATE_AND_RESTART)}
+            >
+              Restart
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <ModalsProvider>
         {loading ? (
           <AppLoading />

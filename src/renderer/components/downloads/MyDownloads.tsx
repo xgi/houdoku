@@ -149,12 +149,12 @@ const MyDownloads: React.FC = () => {
     <>
       {renderHeader()}
       {seriesList.length === 0 || Object.keys(chapterLists).length === 0 ? (
-        <span>
-          You don&apos;t have any downloaded chapters. You can download chapters from the series
-          page in your Library.
-        </span>
+        <p>
+          There are no downloaded chapters. You can download a chapter from the series page in your
+          library.
+        </p>
       ) : (
-        <Accordion type="single" collapsible className="w-full">
+        <Accordion type="single" collapsible className="w-full pb-8">
           {seriesList.map((series) => {
             if (!series.id || !chapterLists[series.id]) return '';
 
@@ -198,6 +198,7 @@ const MyDownloads: React.FC = () => {
                         if (!chapter.id) return '';
                         return (
                           <div
+                            key={chapter.id}
                             className="flex ml-4 space-x-2 items-center"
                             onClick={() =>
                               handleChangeChapterCheckbox(
