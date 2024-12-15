@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
-import { importingState, importQueueState, seriesListState } from '@/renderer/state/libraryStates';
+import { importingState, importQueueState } from '@/renderer/state/libraryStates';
 import { goToSeries } from '@/renderer/features/library/utils';
 import { ContextMenuContent, ContextMenuItem } from '@/ui/components/ContextMenu';
 import { BookPlus, Eye, Play } from 'lucide-react';
@@ -19,7 +19,6 @@ const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
   const [loadingPreview, setLoadingPreview] = useState(false);
   const [previewSeries, setPreviewSeries] = useState<Series>();
   const importing = useRecoilValue(importingState);
-  const setSeriesList = useSetRecoilState(seriesListState);
 
   const importHandler = () => {
     setImportQueue([...importQueue, { series: props.series, getFirst: true }]);
@@ -35,7 +34,7 @@ const SearchGridContextMenu: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     if (loadingPreview && previewSeries && !importing) {
       setLoadingPreview(false);
-      goToSeries(previewSeries, setSeriesList, navigate);
+      goToSeries(previewSeries, navigate);
     }
   }, [importQueue, loadingPreview]);
 

@@ -1,13 +1,19 @@
 import React from 'react';
-import { Menu, ScrollArea } from '@mantine/core';
-import { IconArrowDown, IconArrowUp } from '@tabler/icons';
 import { FilterSortValue, SortDirection } from '@tiyo/common';
-import DefaultMenu from '../../general/DefaultMenu';
-import DefaultButton from '../../general/DefaultButton';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from '@/ui/components/DropdownMenu';
+import { Button } from '@/ui/components/Button';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 
 const ICON_MAP = {
-  [SortDirection.ASCENDING]: <IconArrowUp size={13} />,
-  [SortDirection.DESCENDING]: <IconArrowDown size={13} />,
+  [SortDirection.ASCENDING]: <ArrowUp className="w-4 h-4" />,
+  [SortDirection.DESCENDING]: <ArrowDown className="w-4 h-4" />,
 };
 
 type Props = {
@@ -35,35 +41,37 @@ const SearchFilterSort: React.FC<Props> = (props: Props) => {
   const currentLabel = props.fields.find((field) => field.key === props.value.key)?.label;
 
   return (
-    <DefaultMenu shadow="md" closeOnItemClick={false}>
-      <Menu.Target>
-        <DefaultButton variant="default">
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">
           {props.label}: {currentLabel}
           {'  '}
           {ICON_MAP[props.value.direction]}
-        </DefaultButton>
-      </Menu.Target>
-
-      <Menu.Dropdown>
-        <ScrollArea.Autosize mah={260} style={{ width: 262 }}>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuGroup>
           {props.fields.map((field) => {
             const icon =
               field.key === props.value.key ? ICON_MAP[props.value.direction] : undefined;
 
             return (
-              <Menu.Item
+              <DropdownMenuItem
                 key={field.key}
-                onClick={() => toggleValue(field.key)}
-                rightSection={icon}
-                pr="md"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleValue(field.key);
+                }}
+                // rightSection={icon}
               >
                 {field.label}
-              </Menu.Item>
+                <DropdownMenuShortcut>{icon !== undefined && icon}</DropdownMenuShortcut>
+              </DropdownMenuItem>
             );
           })}
-        </ScrollArea.Autosize>
-      </Menu.Dropdown>
-    </DefaultMenu>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

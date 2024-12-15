@@ -1,9 +1,6 @@
 const fs = require('fs');
 const { ipcRenderer } = require('electron');
 import { Chapter, LanguageKey, Series } from '@tiyo/common';
-import { SetterOrUpdater } from 'recoil';
-import { openConfirmModal } from '@mantine/modals';
-import { Text } from '@mantine/core';
 import { toast } from '@/ui/hooks/use-toast';
 import { downloadCover } from '@/renderer/util/download';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
@@ -315,33 +312,17 @@ export function migrateSeriesTags() {
   });
 }
 
-export async function goToSeries(
-  series: Series,
-  setSeriesList: SetterOrUpdater<Series[]>,
-  navigate: (location: string) => void,
-) {
+export async function goToSeries(series: Series, navigate: (location: string) => void) {
   if (series.id !== undefined) {
     if (
       (await ipcRenderer.invoke(ipcChannels.EXTENSION_MANAGER.GET, series.extensionId)) ===
       undefined
     ) {
-      openConfirmModal({
+      toast({
         title: 'Content source not found',
-        centered: true,
-        children: (
-          <>
-            <Text>
-              The content source for this series was not found. To view the series, please install
-              or update the Tiyo plugin. Or, you may remove the series from your library.
-            </Text>
-            <Text color="dimmed" mt="xs">
-              (id: {series.extensionId})
-            </Text>
-          </>
-        ),
-        labels: { confirm: 'Remove from library', cancel: 'Cancel' },
-        confirmProps: { color: 'red' },
-        onConfirm: () => removeSeries(series, setSeriesList),
+        description:
+          'The content source for this series was not found. Please update your plugins.',
+        duration: 5000,
       });
     } else {
       navigate(`${routes.SERIES}/${series.id}`);

@@ -1,5 +1,5 @@
+import { Button } from '@/ui/components/Button';
 import React from 'react';
-import DefaultButton from '../../general/DefaultButton';
 
 type Props = {
   label: string;
@@ -17,9 +17,11 @@ const SearchFilterCycle: React.FC<Props> = (props: Props) => {
   const currentLabel = props.options.find((option) => option.value === props.value)?.label;
 
   return (
-    <DefaultButton onClick={toggleValue}>
-      {props.label}: {currentLabel}
-    </DefaultButton>
+    <Button className="w-full" variant="outline" onClick={() => toggleValue()}>
+      <span>
+        {props.label}: {currentLabel}
+      </span>
+    </Button>
   );
 };
 

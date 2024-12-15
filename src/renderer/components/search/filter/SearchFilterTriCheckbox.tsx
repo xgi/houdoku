@@ -1,9 +1,8 @@
 import React from 'react';
-import { Group } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons';
 import { TriState } from '@tiyo/common';
-import DefaultText from '../../general/DefaultText';
-import DefaultActionIcon from '../../general/DefaultActionIcon';
+import { Check, XIcon } from 'lucide-react';
+import { Checkbox } from '@/ui/components/Checkbox';
+import { Label } from '@/ui/components/Label';
 
 type Props = {
   label: string;
@@ -23,24 +22,21 @@ const SearchFilterTriCheckbox: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <Group gap="sm" onClick={toggleValue}>
-      <DefaultActionIcon
-        variant={props.value === TriState.IGNORE ? 'default' : 'filled'}
-        color="blue"
-        size="sm"
-      >
-        {
+    <div className="flex items-center space-x-2" onClick={() => toggleValue()}>
+      <Checkbox
+        id={`checkbox${props.label}`}
+        checked={props.value !== TriState.IGNORE}
+        className="w-5 h-5"
+        icon={
           {
             [TriState.IGNORE]: undefined,
-            [TriState.INCLUDE]: <IconCheck size={16} />,
-            [TriState.EXCLUDE]: <IconX size={16} />,
+            [TriState.INCLUDE]: <Check className="h-4 w-4" />,
+            [TriState.EXCLUDE]: <XIcon className="h-4 w-4" />,
           }[props.value]
         }
-      </DefaultActionIcon>
-      <DefaultText size="sm" style={{ cursor: 'default' }}>
-        {props.label}
-      </DefaultText>
-    </Group>
+      />
+      <Label htmlFor={`checkbox${props.label}`}>{props.label}</Label>
+    </div>
   );
 };
 

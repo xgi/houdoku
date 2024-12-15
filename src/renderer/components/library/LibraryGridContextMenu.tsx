@@ -41,7 +41,7 @@ const LibraryGridContextMenu: React.FC<Props> = (props: Props) => {
 
   const viewFunc = () => {
     if (props.series) {
-      goToSeries(props.series, setSeriesList, navigate);
+      goToSeries(props.series, navigate);
     }
   };
 

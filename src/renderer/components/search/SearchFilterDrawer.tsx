@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Divider, Drawer, ScrollArea, Stack, TitleOrder } from '@mantine/core';
 import {
   FilterCheckbox,
   FilterCycle,
@@ -26,11 +25,19 @@ import SearchFilterMultiToggle from './filter/SearchFilterMultiToggle';
 import SearchFilterSort from './filter/SearchFilterSort';
 import SearchFilterTriCheckbox from './filter/SearchFilterTriCheckbox';
 import SearchFilterCycle from './filter/SearchFilterCycle';
-import DefaultDrawerRoot from '../general/DefaultDrawerRoot';
-import DefaultTitle from '../general/DefaultTitle';
-import DefaultSelect from '../general/DefaultSelect';
-import DefaultInput from '../general/DefaultInput';
-import DefaultCheckbox from '../general/DefaultCheckbox';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/ui/components/Sheet';
+import { Label } from '@/ui/components/Label';
+import { Input } from '@/ui/components/Input';
+import { Checkbox } from '@/ui/components/Checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/ui/components/Select';
+import { Separator } from '@/ui/components/Separator';
 
 interface Props {
   filterOptions: FilterOption[];
@@ -59,12 +66,15 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
 
   const renderCheckbox = (option: FilterCheckbox) => {
     return (
-      <DefaultCheckbox
-        key={option.id}
-        label={option.label}
-        checked={getOptionValue(option) as boolean}
-        onChange={(e) => setOptionValue(option.id, e.target.checked)}
-      />
+      <div key={option.id} className="flex items-center space-x-2">
+        <Checkbox
+          id={`checkbox${option.id}`}
+          checked={getOptionValue(option) as boolean}
+          onCheckedChange={(checked) => setOptionValue(option.id, checked)}
+          className="w-5 h-5"
+        />
+        <Label htmlFor={`checkbox${option.id}`}>{option.label}</Label>
+      </div>
     );
   };
 
@@ -81,27 +91,39 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
 
   const renderInput = (option: FilterInput) => {
     return (
-      <DefaultInput
-        key={option.id}
-        label={option.label}
-        value={getOptionValue(option) as string}
-        placeholder={option.placeholder}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setOptionValue(option.id, e.target.value)
-        }
-      />
+      <div key={option.id}>
+        <Label>{option.label}</Label>
+        <Input
+          value={getOptionValue(option) as string}
+          placeholder={option.placeholder}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setOptionValue(option.id, e.target.value)
+          }
+        />
+      </div>
     );
   };
 
   const renderSelect = (option: FilterSelect) => {
     return (
-      <DefaultSelect
-        key={option.id}
-        label={option.label}
+      <Select
         value={getOptionValue(option) as string}
-        data={option.options}
-        onChange={(value) => setOptionValue(option.id, value || '')}
-      />
+        defaultValue={(option.defaultValue as string) || undefined}
+        onValueChange={(value) => setOptionValue(option.id, value || '')}
+      >
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {option.options.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
     );
   };
 
@@ -144,15 +166,11 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
   };
 
   const renderHeader = (option: FilterHeader) => {
-    return (
-      <DefaultTitle key={option.id} order={(option.order as TitleOrder) || 4}>
-        {option.label}
-      </DefaultTitle>
-    );
+    return <h3 key={option.id}>{option.label}</h3>;
   };
 
   const renderSeparator = (option: FilterSeparator) => {
-    return <Divider key={option.id} my="xs" />;
+    return <Separator key={option.id} className="my-2" />;
   };
 
   const renderControls = () => {
@@ -187,31 +205,24 @@ const SearchFilterDrawer: React.FC<Props> = (props: Props) => {
   }, [showingFilterDrawer]);
 
   return (
-    <DefaultDrawerRoot
-      opened={showingFilterDrawer}
-      onClose={() => {
-        setShowingFilterDrawer(false);
-        if (props.onClose !== undefined) props.onClose(wasChanged);
+    <Sheet
+      open={showingFilterDrawer}
+      onOpenChange={(open) => {
+        if (!open && props.onClose !== undefined) {
+          props.onClose(wasChanged);
+        }
+        setShowingFilterDrawer(open);
       }}
-      position="right"
-      padding="xl"
-      size={'xs'}
     >
-      <Drawer.Overlay />
-      <Drawer.Content style={{ overflow: 'hidden' }}>
-        <Drawer.Header>
-          <Drawer.Title>Search Options</Drawer.Title>
-          <Drawer.CloseButton />
-        </Drawer.Header>
-        <Drawer.Body>
-          <ScrollArea style={{ height: 'calc(100vh - 96px)' }} type="hover" offsetScrollbars>
-            <Stack gap="xs" style={{ width: 244 }}>
-              {renderControls()}
-            </Stack>
-          </ScrollArea>
-        </Drawer.Body>
-      </Drawer.Content>
-    </DefaultDrawerRoot>
+      <SheetContent className="flex flex-col">
+        <SheetHeader>
+          <SheetTitle>Search options</SheetTitle>
+        </SheetHeader>
+        <div className="overflow-y-auto overflow-x-hidden pr-3 pl-1">
+          <div className="flex flex-col space-y-2">{renderControls()}</div>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 

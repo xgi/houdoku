@@ -1,10 +1,8 @@
 import React from 'react';
 import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 import { Badge, Group, Table } from '@mantine/core';
 import { goToSeries } from '@/renderer/features/library/utils';
-import { seriesListState } from '@/renderer/state/libraryStates';
 import DefaultText from '../general/DefaultText';
 import DefaultButton from '../general/DefaultButton';
 
@@ -15,10 +13,9 @@ type Props = {
 
 const LibraryList: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
-  const setSeriesList = useSetRecoilState(seriesListState);
 
   const viewFunc = (series: Series) => {
-    goToSeries(series, setSeriesList, navigate);
+    goToSeries(series, navigate);
   };
 
   const renderRows = () => {

@@ -1,10 +1,21 @@
 import React from 'react';
-import { Menu, ScrollArea, Grid } from '@mantine/core';
-import { IconCheck, IconX } from '@tabler/icons';
 import { MultiToggleValues, TriState } from '@tiyo/common';
-import DefaultMenu from '../../general/DefaultMenu';
-import DefaultButton from '../../general/DefaultButton';
-import DefaultText from '../../general/DefaultText';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/ui/components/Select';
+import { CheckIcon, XIcon } from 'lucide-react';
+import { Badge } from '@/ui/components/Badge';
+
+const TRISTATE_VALUE_MAP = {
+  [TriState.IGNORE]: 'ignore',
+  [TriState.INCLUDE]: 'include',
+  [TriState.EXCLUDE]: 'exclude',
+};
 
 type Props = {
   label: string;
@@ -34,65 +45,48 @@ const SearchFilterMultiToggle: React.FC<Props> = (props: Props) => {
   );
 
   return (
-    <DefaultMenu
-      shadow="md"
-      closeOnItemClick={false}
-      styles={(theme) => ({
-        item: {
-          borderRadius: 0,
-          '&[data-value="1"]': {
-            backgroundColor: theme.colors.teal[9],
-            color: theme.colors.gray[0],
-          },
-          '&[data-value="2"]': {
-            backgroundColor: theme.colors.red[9],
-            color: theme.colors.gray[0],
-          },
-        },
-      })}
-    >
-      <Menu.Target>
-        <DefaultButton onContextMenu={() => props.onChange({})}>
-          <Grid style={{ width: 500 }}>
-            <Grid.Col span={2} />
-            <Grid.Col span={8}>
-              <DefaultText ta="center">{props.label}</DefaultText>
-            </Grid.Col>
-            <Grid.Col span={2}>
-              <DefaultText ta="right">{numNonIgnored || undefined}</DefaultText>
-            </Grid.Col>
-          </Grid>
-        </DefaultButton>
-      </Menu.Target>
-
-      <Menu.Dropdown>
-        <ScrollArea.Autosize mah={260} style={{ width: 262 }}>
+    <Select value="placeholder">
+      <SelectTrigger>
+        <SelectValue onContextMenu={() => props.onChange({})}>
+          <div className="flex space-x-2">
+            {numNonIgnored > 0 && <Badge>{numNonIgnored}</Badge>}
+            <span>{props.label}</span>
+          </div>
+        </SelectValue>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
           {props.fields.map((field) => {
             const value = Object.keys(props.values).includes(field.key)
               ? props.values[field.key]
               : TriState.IGNORE;
             const icon = {
-              [TriState.IGNORE]: undefined,
-              [TriState.INCLUDE]: <IconCheck size={13} />,
-              [TriState.EXCLUDE]: <IconX size={13} />,
+              [TriState.IGNORE]: <div className="w-4 h-4" />,
+              [TriState.INCLUDE]: <CheckIcon className="w-4 h-4" />,
+              [TriState.EXCLUDE]: <XIcon className="w-4 h-4" />,
             }[value];
 
             return (
-              <Menu.Item
+              <SelectItem
                 key={field.key}
+                value={TRISTATE_VALUE_MAP[value]}
                 data-value={value}
-                onClick={() => toggleValue(field.key, value)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleValue(field.key, value);
+                }}
                 onContextMenu={() => setValue(field.key, TriState.IGNORE)}
-                rightSection={icon}
-                pr="md"
               >
-                {field.label}
-              </Menu.Item>
+                <div className="flex space-x-2 items-center">
+                  {icon}
+                  <span>{field.label}</span>
+                </div>
+              </SelectItem>
             );
           })}
-        </ScrollArea.Autosize>
-      </Menu.Dropdown>
-    </DefaultMenu>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   );
 };
 

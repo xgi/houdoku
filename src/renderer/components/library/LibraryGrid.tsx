@@ -3,7 +3,7 @@ import path from 'path';
 import React, { useEffect } from 'react';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import blankCover from '@/renderer/img/blank_cover.png';
 import ipcChannels from '@/common/constants/ipcChannels.json';
@@ -11,7 +11,6 @@ import constants from '@/common/constants/constants.json';
 import {
   multiSelectEnabledState,
   multiSelectSeriesListState,
-  seriesListState,
 } from '@/renderer/state/libraryStates';
 import {
   libraryColumnsState,
@@ -38,7 +37,6 @@ type Props = {
 
 const LibraryGrid: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
-  const setSeriesList = useSetRecoilState(seriesListState);
   const libraryView = useRecoilValue(libraryViewState);
   const libraryColumns = useRecoilValue(libraryColumnsState);
   const libraryCropCovers = useRecoilValue(libraryCropCoversState);
@@ -48,7 +46,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
   );
 
   const viewFunc = (series: Series) => {
-    goToSeries(series, setSeriesList, navigate);
+    goToSeries(series, navigate);
   };
 
   /**

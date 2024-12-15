@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 const { ipcRenderer } = require('electron');
 import { Series } from '@tiyo/common';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Center, Group, Loader, ScrollArea, Stack } from '@mantine/core';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import SeriesEditControls from '../general/SeriesEditControls';
-import { importingState, importQueueState, seriesListState } from '@/renderer/state/libraryStates';
+import { importingState, importQueueState } from '@/renderer/state/libraryStates';
 import { goToSeries } from '@/renderer/features/library/utils';
 import DefaultModal from '../general/DefaultModal';
 import DefaultButton from '../general/DefaultButton';
@@ -28,7 +28,6 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
   const [previewSeries, setPreviewSeries] = useState<Series>();
   const [importQueue, setImportQueue] = useRecoilState(importQueueState);
   const importing = useRecoilValue(importingState);
-  const setSeriesList = useSetRecoilState(seriesListState);
 
   useEffect(() => {
     setLoadingDetails(true);
@@ -58,7 +57,7 @@ const AddSeriesModal: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     if (loadingPreview && previewSeries && !importing) {
       setLoadingPreview(false);
-      goToSeries(previewSeries, setSeriesList, navigate);
+      goToSeries(previewSeries, navigate);
       props.close();
     }
   }, [importQueue, loadingPreview]);
