@@ -54,7 +54,7 @@ pnpm dev
 
 **Application**: This is an Electron application. The majority of the functionality is performed in the renderer thread. Exceptions are for cases like accessing the window class (i.e. to support minimizing the window), locating application directories, and for working with extensions. The renderer can invoke these functions through ipc.
 
-**UI**: The interface uses React components. Most base components (text, buttons, links, etc.) come from [Mantine](https://mantine.dev/).
+**UI**: The interface uses React components. Most base components (text, buttons, links, etc.) use [Radix primitives](https://www.radix-ui.com/primitives) and were designed by [shadcn](https://ui.shadcn.com).
 
 **State**: [Recoil](https://recoiljs.org) is used for state management. Hooks are used for small
 non-shared behavior.

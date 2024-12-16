@@ -3,9 +3,7 @@ import './App.global.css';
 import { RecoilRoot, useRecoilValue } from 'recoil';
 import App from './App';
 
-import '@mantine/core/styles.css';
 import { Titlebar } from './components/general/Titlebar';
-import { MantineProvider } from '@mantine/core';
 import { ErrorBoundary } from './components/general/ErrorBoundary';
 import { themeState } from './state/settingStates';
 import { ApplicationTheme } from '@/common/models/types';
@@ -25,7 +23,7 @@ function Root() {
   }, [theme]);
 
   return (
-    <MantineProvider>
+    <>
       <header id="titlebar">
         <Titlebar />
       </header>
@@ -34,7 +32,7 @@ function Root() {
           <App />
         </ErrorBoundary>
       </div>
-    </MantineProvider>
+    </>
   );
 }
 

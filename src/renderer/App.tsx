@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 const { ipcRenderer } = require('electron');
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { ModalsProvider } from '@mantine/modals';
 import routes from '@/common/constants/routes.json';
 import DashboardPage from './components/general/DashboardPage';
 import ReaderPage from './components/reader/ReaderPage';
@@ -143,18 +142,16 @@ export default function App() {
         </AlertDialogContent>
       </AlertDialog>
 
-      <ModalsProvider>
-        {loading ? (
-          <AppLoading />
-        ) : (
-          <Router>
-            <Routes>
-              <Route path={`${routes.READER}/:series_id/:chapter_id`} element={<ReaderPage />} />
-              <Route path="*" element={<DashboardPage />} />
-            </Routes>
-          </Router>
-        )}
-      </ModalsProvider>
+      {loading ? (
+        <AppLoading />
+      ) : (
+        <Router>
+          <Routes>
+            <Route path={`${routes.READER}/:series_id/:chapter_id`} element={<ReaderPage />} />
+            <Route path="*" element={<DashboardPage />} />
+          </Routes>
+        </Router>
+      )}
     </>
   );
 }

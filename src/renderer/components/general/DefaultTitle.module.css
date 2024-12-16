@@ -1,7 +1,0 @@
-.root {
-  &[data-theme="light"],
-  &[data-theme="dark"],
-  &[data-theme="black"] {
-    color: var(--mantine-color-fg-0);
-  }
-}
