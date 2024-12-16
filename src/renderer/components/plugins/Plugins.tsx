@@ -109,10 +109,7 @@ const Plugins: React.FC = () => {
 
   return (
     <>
-      <PluginSettingsModal
-        visible={showingSettingsModal}
-        toggleVisible={() => setShowingSettingsModal(!showingSettingsModal)}
-      />
+      <PluginSettingsModal showing={showingSettingsModal} setShowing={setShowingSettingsModal} />
 
       <div className="flex justify-start py-2 space-x-2">
         <Button disabled={refreshing} onClick={() => refreshMetadata()}>

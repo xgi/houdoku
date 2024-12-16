@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
 const { ipcRenderer } = require('electron');
-import { Accordion, Center, Group, Loader, Stack, Switch } from '@mantine/core';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import storeKeys from '@/common/constants/storeKeys.json';
 import persistantStore from '../../util/persistantStore';
 import { ExtensionMetadata, SettingType } from '@tiyo/common';
-import DefaultModal from '../general/DefaultModal';
-import DefaultButton from '../general/DefaultButton';
-import DefaultAccordion from '../general/DefaultAccordion';
-import DefaultInput from '../general/DefaultInput';
-import DefaultText from '../general/DefaultText';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/ui/components/Dialog';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/ui/components/Accordion';
+import { Loader2 } from 'lucide-react';
+import { Switch } from '@/ui/components/Switch';
+import { Input } from '@/ui/components/Input';
+import { Button } from '@/ui/components/Button';
 
 type SettingTypes = {
   [key: string]: SettingType;
@@ -24,8 +35,8 @@ type SettingTypesMap = { [extensionId: string]: SettingTypes };
 type SettingsMap = { [extensionId: string]: Settings };
 
 type Props = {
-  visible: boolean;
-  toggleVisible: () => void;
+  showing: boolean;
+  setShowing: (showing: boolean) => void;
 };
 
 const PluginSettingsModal: React.FC<Props> = (props: Props) => {
@@ -89,10 +100,11 @@ const PluginSettingsModal: React.FC<Props> = (props: Props) => {
   ) => {
     switch (settingType) {
       case SettingType.BOOLEAN:
-        return <Switch defaultChecked={curVal} onChange={(e) => onChangeFn(e.target.checked)} />;
+        return <Switch checked={curVal} onCheckedChange={(checked) => onChangeFn(checked)} />;
       case SettingType.STRING:
         return (
-          <DefaultInput
+          <Input
+            className="max-w-52"
             value={curVal}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChangeFn(e.target.value)}
           />
@@ -108,62 +120,62 @@ const PluginSettingsModal: React.FC<Props> = (props: Props) => {
       const settingKeys = Object.keys(settingTypes);
 
       return (
-        <Accordion.Item key={extensionId} value={extensionId}>
-          <Accordion.Control>{extensionName}</Accordion.Control>
-          <Accordion.Panel>
+        <AccordionItem key={extensionId} value={extensionId}>
+          <AccordionTrigger className="hover:no-underline">{extensionName}</AccordionTrigger>
+          <AccordionContent>
             {settingKeys.map((key) => (
-              <Group justify="space-between" mb="xs" key={key}>
-                <DefaultText>{key}</DefaultText>
+              <div className="w-full flex justify-between items-center mb-2 space-x-2" key={key}>
+                <span className="font-medium">{key}</span>
                 {renderControl(
                   settingTypes[key],
                   settingsMap[extensionId][key],
                   (newValue: unknown) => updateSetting(extensionId, key, newValue),
                 )}
-              </Group>
+              </div>
             ))}
-          </Accordion.Panel>
-        </Accordion.Item>
+          </AccordionContent>
+        </AccordionItem>
       );
     });
   };
 
   useEffect(() => {
-    if (props.visible) {
+    if (props.showing) {
       setLoading(true);
       loadExtensionSettings()
         .finally(() => setLoading(false))
         .catch(console.error);
     }
-  }, [props.visible]);
+  }, [props.showing]);
 
   return (
-    <DefaultModal
-      title="Tiyo Settings"
-      opened={props.visible}
-      onClose={props.toggleVisible}
-      closeOnClickOutside={false}
-    >
-      {loading ? (
-        <Center h="100%" mx="auto">
-          <Stack align="center">
-            <Loader />
-          </Stack>
-        </Center>
-      ) : (
-        <>
-          <DefaultAccordion>{renderRows()}</DefaultAccordion>
-          <Group justify="flex-end" mt="sm">
-            <DefaultButton onClick={props.toggleVisible}>Cancel</DefaultButton>
-            <DefaultButton
-              oc="blue"
-              onClick={() => saveExtensionSettings().then(() => props.toggleVisible())}
-            >
-              Save Settings
-            </DefaultButton>
-          </Group>
-        </>
-      )}
-    </DefaultModal>
+    <Dialog open={props.showing} onOpenChange={props.setShowing} defaultOpen={false}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Tiyo settings</DialogTitle>
+        </DialogHeader>
+        {loading ? (
+          <div className="w-full flex justify-center">
+            <Loader2 className="animate-spin" />
+          </div>
+        ) : (
+          <Accordion type="single" collapsible>
+            {renderRows()}
+          </Accordion>
+        )}
+        <DialogFooter>
+          <Button variant={'secondary'} onClick={() => props.setShowing(false)}>
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            onClick={() => saveExtensionSettings().then(() => props.setShowing(false))}
+          >
+            Save settings
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
