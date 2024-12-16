@@ -19,12 +19,12 @@ import {
   libraryFilterCategoryState,
 } from '@/renderer/state/settingStates';
 import LibraryGrid from './LibraryGrid';
-import RemoveSeriesModal from './RemoveSeriesModal';
 import LibraryList from './LibraryList';
 import library from '@/renderer/services/library';
 import LibraryControlBarMultiSelect from './LibraryControlBarMultiSelect';
 import DefaultText from '../general/DefaultText';
 import { ScrollArea } from '@/ui/components/ScrollArea';
+import { RemoveSeriesDialog } from './RemoveSeriesDialog';
 
 type Props = unknown;
 
@@ -96,10 +96,10 @@ const Library: React.FC<Props> = () => {
   const renderLibrary = () => {
     return (
       <>
-        <RemoveSeriesModal
+        <RemoveSeriesDialog
           series={removeModalSeries}
           showing={removeModalShowing}
-          close={() => setRemoveModalShowing(false)}
+          setShowing={setRemoveModalShowing}
         />
 
         {libraryView === LibraryView.List ? (
