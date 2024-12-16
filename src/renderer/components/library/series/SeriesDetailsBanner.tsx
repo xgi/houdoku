@@ -11,6 +11,7 @@ import { chapterLanguagesState } from '@/renderer/state/settingStates';
 import { Button } from '@/ui/components/Button';
 import { SeriesDetailsBannerBackground } from './SeriesDetailsBannerBackground';
 import { Loader2 } from 'lucide-react';
+import { FS_METADATA } from '@/common/temp_fs_metadata';
 
 type SeriesDetailsBannerProps = {
   series: Series;
@@ -41,6 +42,14 @@ const SeriesDetailsBanner: React.FC<SeriesDetailsBannerProps> = (
         <div className="flex justify-end h-full">
           <div className="flex flex-col justify-end">
             <div className="flex m-2 space-x-2">
+              {props.series.extensionId === FS_METADATA.id && (
+                <Button
+                  className="!bg-neutral-50 !text-neutral-950 hover:!bg-neutral-200"
+                  onClick={() => props.showEditModal()}
+                >
+                  Edit
+                </Button>
+              )}
               <Button
                 className="!bg-neutral-50 !text-neutral-950 hover:!bg-neutral-200"
                 onClick={() => props.showTrackerModal()}

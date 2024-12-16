@@ -1,9 +1,10 @@
 const { ipcRenderer } = require('electron');
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
-import { Button, Loader } from '@mantine/core';
 import blankCover from '@/renderer/img/blank_cover.png';
 import ipcChannels from '@/common/constants/ipcChannels.json';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/ui/components/Button';
 
 type Props = {
   series: Series;
@@ -59,7 +60,7 @@ const ExtensionImage: React.FC<Props> = (props: Props) => {
         className={props.className}
         style={{ ...props.style, width: props.width, height: props.height }}
       >
-        <Loader />
+        <Loader2 />
       </div>
     );
   }

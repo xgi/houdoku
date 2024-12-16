@@ -114,13 +114,13 @@ const Search: React.FC = () => {
   return (
     <>
       <AddSeriesModal
-        visible={showingAddModal}
-        series={addModalSeries}
-        editable={addModalEditable}
-        close={() => {
-          setShowingAddModal(false);
+        showing={showingAddModal}
+        setShowing={(showing) => {
+          setShowingAddModal(showing);
           setAddModalEditable(false);
         }}
+        series={addModalSeries}
+        editable={addModalEditable}
       />
       <SearchFilterDrawer
         filterOptions={filterOptions}

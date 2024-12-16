@@ -90,9 +90,9 @@ const SeriesDetails: React.FC<Props> = () => {
         />
         <EditSeriesModal
           series={series}
-          visible={showingEditModal}
-          close={() => setShowingEditModal(false)}
-          saveCallback={(newSeries) => {
+          showing={showingEditModal}
+          setShowing={setShowingEditModal}
+          save={(newSeries) => {
             if (newSeries.remoteCoverUrl !== series?.remoteCoverUrl) {
               console.debug(`Updating cover for series ${series?.id}`);
               ipcRenderer

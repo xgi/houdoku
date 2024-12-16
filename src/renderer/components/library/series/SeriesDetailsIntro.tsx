@@ -11,6 +11,7 @@ import constants from '@/common/constants/constants.json';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import { ScrollArea } from '@/ui/components/ScrollArea';
 import { Badge } from '@/ui/components/Badge';
+import ExtensionImage from '../../general/ExtensionImage';
 
 const thumbnailsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.THUMBNAILS_DIR);
 if (!fs.existsSync(thumbnailsDir)) {
@@ -42,8 +43,9 @@ const SeriesDetailsIntro: React.FC<Props> = (props: Props) => {
   return (
     <div className="flex">
       <div className="max-w-[140px] md:max-w-[180px]">
-        <img
-          src={getThumbnailPath()}
+        <ExtensionImage
+          url={getThumbnailPath().replaceAll('\\', '/')}
+          series={props.series}
           alt={props.series.title}
           className="w-auto h-auto -mt-[70%] aspect-[70/100] object-cover rounded-sm"
         />

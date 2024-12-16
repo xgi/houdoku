@@ -181,7 +181,7 @@ export const SeriesTrackerDialog: React.FC<Props> = (props: Props) => {
       }}
     >
       <DialogContent className="overflow-hidden !p-0 md:max-h-[400px] md:max-w-[700px] lg:max-w-[800px] text-foreground">
-        <DialogTitle className="sr-only">Settings</DialogTitle>
+        <DialogTitle className="sr-only">Trackers</DialogTitle>
         <SidebarProvider className="items-start">
           <Sidebar collapsible="none">
             <SidebarContent>

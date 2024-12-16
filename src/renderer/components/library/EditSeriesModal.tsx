@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
-import { Group, ScrollArea } from '@mantine/core';
 import { updateSeries } from '@/renderer/features/library/utils';
-import SeriesEditControls from '../general/SeriesEditControls';
-import DefaultModal from '../general/DefaultModal';
-import DefaultButton from '../general/DefaultButton';
+import { SeriesEditControls } from '../general/SeriesEditControls';
+import { Button } from '@/ui/components/Button';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/ui/components/AlertDialog';
 
 type Props = {
   series: Series | undefined;
-  visible: boolean;
-  saveCallback: (series: Series) => void;
-  close: () => void;
+  showing: boolean;
+  setShowing: (showing: boolean) => void;
+  save: (series: Series) => void;
 };
 
 const EditSeriesModal: React.FC<Props> = (props: Props) => {
@@ -23,43 +28,35 @@ const EditSeriesModal: React.FC<Props> = (props: Props) => {
   const handleSave = () => {
     if (customSeries !== undefined) {
       updateSeries(customSeries)
-        .then(() => props.saveCallback(customSeries))
+        .then(() => props.save(customSeries))
         .catch((err) => console.error(err));
     }
-    props.close();
+    props.setShowing(false);
   };
 
-  const renderContent = () => {
-    if (customSeries !== undefined) {
-      return (
-        <>
+  return (
+    <AlertDialog open={props.showing} onOpenChange={props.setShowing}>
+      <AlertDialogContent className="overflow-y-scroll max-h-screen [@media(min-height:500px)]:max-h-[500px] md:max-w-[700px] lg:max-w-[800px]">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Edit series</AlertDialogTitle>
+        </AlertDialogHeader>
+        {customSeries !== undefined && (
           <SeriesEditControls
             series={customSeries}
             setSeries={(series: Series) => setCustomSeries(series)}
             editable
           />
-
-          <Group justify="flex-end" mt="sm">
-            <DefaultButton onClick={props.close}>Cancel</DefaultButton>
-            <DefaultButton oc="blue" onClick={handleSave}>
-              Save Details
-            </DefaultButton>
-          </Group>
-        </>
-      );
-    }
-    return <></>;
-  };
-
-  return (
-    <DefaultModal
-      opened={props.visible}
-      title="Edit Series"
-      onClose={props.close}
-      scrollAreaComponent={ScrollArea.Autosize}
-    >
-      {renderContent()}
-    </DefaultModal>
+        )}
+        <AlertDialogFooter>
+          <Button variant={'secondary'} onClick={() => props.setShowing(false)}>
+            Cancel
+          </Button>
+          <Button type="submit" onClick={handleSave}>
+            Save details
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

@@ -1,19 +1,23 @@
 import React from 'react';
 import { Language, Series, SeriesStatus, Languages, LanguageKey } from '@tiyo/common';
 const { ipcRenderer } = require('electron');
-import { Grid, Group, Stack } from '@mantine/core';
-import { IconUpload } from '@tabler/icons';
-import styles from './SeriesEditControls.module.css';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import constants from '@/common/constants/constants.json';
 import ExtensionImage from './ExtensionImage';
 import { FS_METADATA } from '@/common/temp_fs_metadata';
 import blankCover from '@/renderer/img/blank_cover.png';
-import DefaultActionIcon from './DefaultActionIcon';
-import DefaultInput from './DefaultInput';
-import DefaultTagsInput from './DefaultTagsInput';
-import DefaultText from './DefaultText';
-import DefaultSelect from './DefaultSelect';
+import { Label } from '@/ui/components/Label';
+import { Input } from '@/ui/components/Input';
+import { InputTags } from '@/ui/components/InputTags';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/ui/components/Select';
+import { ImageIcon } from 'lucide-react';
+import { Button } from '@/ui/components/Button';
 
 type Props = {
   series: Series;
@@ -21,7 +25,7 @@ type Props = {
   editable: boolean;
 };
 
-const SeriesEditControls: React.FC<Props> = (props: Props) => {
+export const SeriesEditControls: React.FC<Props> = (props: Props) => {
   const getCoverSrcUrl = () => {
     if (props.series.extensionId === FS_METADATA.id) {
       return props.series.remoteCoverUrl
@@ -32,66 +36,57 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <>
-      <Grid gutter="xs">
-        <Grid.Col span={4}>
-          <ExtensionImage
-            className={styles.coverImage}
-            url={getCoverSrcUrl()}
-            series={props.series}
-            alt={props.series.title}
-          />
-        </Grid.Col>
-        <Grid.Col span={8}>
-          <Stack justify="end" style={{ height: '100%' }}>
-            <Group wrap="nowrap">
-              <DefaultInput
-                value={props.series.remoteCoverUrl}
-                title={props.series.remoteCoverUrl}
-                placeholder="Cover URL..."
-                disabled
-              />
-              <DefaultActionIcon
-                size="lg"
-                disabled={!props.editable}
-                onClick={() =>
-                  ipcRenderer
-                    .invoke(
-                      ipcChannels.APP.SHOW_OPEN_DIALOG,
-                      false,
-                      [
-                        {
-                          name: 'Image',
-                          extensions: constants.IMAGE_EXTENSIONS,
-                        },
-                      ],
-                      'Select Series Cover',
-                    )
-                    .then((fileList: string) => {
-                      if (fileList.length > 0) {
-                        props.setSeries({
-                          ...props.series,
-                          remoteCoverUrl: fileList[0],
-                        });
-                      }
-                    })
-                }
-              >
-                <IconUpload size={16} />
-              </DefaultActionIcon>
-            </Group>
-          </Stack>
-        </Grid.Col>
-
-        <Grid.Col span={4} mt={5}>
-          <DefaultText ta="right">Title</DefaultText>
-        </Grid.Col>
-        <Grid.Col span={8}>
-          <DefaultInput
-            value={props.series.title}
+    <div className="flex space-x-4">
+      <div className="max-w-40 md:max-w-44 lg:max-w-48 flex flex-col space-y-2">
+        <ExtensionImage
+          className="w-auto h-auto aspect-[70/100] object-cover rounded-sm"
+          url={getCoverSrcUrl()}
+          series={props.series}
+          alt={props.series.title}
+        />
+        <div className="relative mt-1 mb-2">
+          <ImageIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Button
+            className="cursor-pointer pl-8 w-full truncate"
+            variant="outline"
+            title={props.series.remoteCoverUrl}
+            disabled={!props.editable}
+            onClick={() =>
+              ipcRenderer
+                .invoke(
+                  ipcChannels.APP.SHOW_OPEN_DIALOG,
+                  false,
+                  [
+                    {
+                      name: 'Image',
+                      extensions: constants.IMAGE_EXTENSIONS,
+                    },
+                  ],
+                  'Select Series Cover',
+                )
+                .then((fileList: string) => {
+                  if (fileList.length > 0) {
+                    props.setSeries({
+                      ...props.series,
+                      remoteCoverUrl: fileList[0],
+                    });
+                  }
+                })
+            }
+          >
+            {props.series.remoteCoverUrl || 'Select cover'}
+          </Button>
+        </div>
+      </div>
+      <div className="flex flex-col space-y-3 w-full">
+        <div className="flex space-x-2 items-center">
+          <Label className="min-w-20 text-right">Title</Label>
+          <Input
+            className="w-full"
             title={props.series.title}
-            placeholder="Title..."
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            value={props.series.title}
+            placeholder={'Title'}
+            onChange={(e) =>
               props.setSeries({
                 ...props.series,
                 title: e.target.value,
@@ -99,127 +94,93 @@ const SeriesEditControls: React.FC<Props> = (props: Props) => {
             }
             disabled={!props.editable}
           />
-        </Grid.Col>
-
-        <Grid.Col span={4} mt={5}>
-          <DefaultText ta="right">Description</DefaultText>
-        </Grid.Col>
-        <Grid.Col span={8}>
-          <DefaultInput
-            disabled={!props.editable}
-            value={props.series.description}
+        </div>
+        <div className="flex space-x-2 items-center">
+          <Label className="min-w-20 text-right">Description</Label>
+          <Input
+            className="w-full"
+            placeholder={'Description'}
             title={props.series.description}
-            placeholder="Description..."
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            value={props.series.description}
+            onChange={(e) =>
               props.setSeries({
                 ...props.series,
                 description: e.target.value,
               })
             }
-            autosize
-          />
-        </Grid.Col>
-
-        <Grid.Col span={4} mt={5}>
-          <DefaultText ta="right">Author(s)</DefaultText>
-        </Grid.Col>
-        <Grid.Col span={8}>
-          <DefaultTagsInput
             disabled={!props.editable}
-            placeholder="Authors..."
+          />
+        </div>
+        <div className="flex space-x-2 items-center">
+          <Label className="min-w-20 text-right">Author(s)</Label>
+          <InputTags
+            placeholder="Authors"
             value={props.series.authors}
-            onChange={(value) => {
-              props.setSeries({
-                ...props.series,
-                authors: value,
-              });
-            }}
-          />
-        </Grid.Col>
-
-        <Grid.Col span={4} mt={5}>
-          <DefaultText ta="right">Artist(s)</DefaultText>
-        </Grid.Col>
-        <Grid.Col span={8}>
-          <DefaultTagsInput
+            onChange={(values) => props.setSeries({ ...props.series, authors: [...values] })}
             disabled={!props.editable}
-            placeholder="Artists..."
+          />
+        </div>
+        <div className="flex space-x-2 items-center">
+          <Label className="min-w-20 text-right">Artist(s)</Label>
+          <InputTags
+            placeholder="Artists"
             value={props.series.artists}
-            onChange={(value) => {
-              props.setSeries({
-                ...props.series,
-                artists: value,
-              });
-            }}
-          />
-        </Grid.Col>
-
-        <Grid.Col span={4} mt={5}>
-          <DefaultText ta="right">Tags</DefaultText>
-        </Grid.Col>
-        <Grid.Col span={8}>
-          <DefaultTagsInput
+            onChange={(values) => props.setSeries({ ...props.series, artists: [...values] })}
             disabled={!props.editable}
-            placeholder="Tags..."
+          />
+        </div>
+        <div className="flex space-x-2 items-center">
+          <Label className="min-w-20 text-right">Tags</Label>
+          <InputTags
+            placeholder="Tags"
             value={props.series.tags}
-            onChange={(value) => {
-              props.setSeries({
-                ...props.series,
-                tags: value,
-              });
-            }}
-          />
-        </Grid.Col>
-
-        <Grid.Col span={4} mt={5}>
-          <DefaultText ta="right">Language</DefaultText>
-        </Grid.Col>
-        <Grid.Col span={8}>
-          <DefaultSelect
+            onChange={(values) => props.setSeries({ ...props.series, tags: [...values] })}
             disabled={!props.editable}
+          />
+        </div>
+        <div className="flex space-x-2 items-center">
+          <Label className="min-w-20 text-right">Language</Label>
+          <Select
             value={props.series.originalLanguageKey}
-            data={Object.values(Languages).map((language: Language) => ({
-              value: language.key,
-              label: language.name,
-            }))}
-            onChange={(value) =>
-              props.setSeries({
-                ...props.series,
-                originalLanguageKey: value as LanguageKey,
-              })
+            onValueChange={(value) =>
+              props.setSeries({ ...props.series, originalLanguageKey: value as LanguageKey })
             }
-          />
-        </Grid.Col>
-
-        <Grid.Col span={4} mt={5}>
-          <DefaultText ta="right">Release Status</DefaultText>
-        </Grid.Col>
-        <Grid.Col span={8}>
-          <DefaultSelect
             disabled={!props.editable}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Language" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.values(Languages).map((language: Language) => (
+                <SelectItem key={language.key} value={language.key}>
+                  {language.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex space-x-2 items-center">
+          <Label className="min-w-20 text-right">Status</Label>
+          <Select
             value={props.series.status}
-            data={[
-              {
-                value: SeriesStatus.ONGOING,
-                label: SeriesStatus.ONGOING,
-              },
-              {
-                value: SeriesStatus.COMPLETED,
-                label: SeriesStatus.COMPLETED,
-              },
-              { value: SeriesStatus.CANCELLED, label: SeriesStatus.CANCELLED },
-            ]}
-            onChange={(value) =>
-              props.setSeries({
-                ...props.series,
-                status: value as SeriesStatus,
-              })
+            onValueChange={(value) =>
+              props.setSeries({ ...props.series, status: value as SeriesStatus })
             }
-          />
-        </Grid.Col>
-      </Grid>
-    </>
+            disabled={!props.editable}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.values(SeriesStatus).map((status) => (
+                <SelectItem key={status} value={status}>
+                  {status}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </div>
   );
 };
-
-export default SeriesEditControls;
