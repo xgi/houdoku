@@ -105,13 +105,13 @@ export default function App() {
         <AlertDialogContent className="sm:max-w-[425px]">
           <AlertDialogHeader>
             <AlertDialogTitle>Update available</AlertDialogTitle>
-            {updateInfo && (
-              <AlertDialogDescription>
-                Houdoku v{updateInfo?.version} was released on{' '}
-                {new Date(updateInfo.releaseDate).toLocaleDateString()}.
-              </AlertDialogDescription>
-            )}
           </AlertDialogHeader>
+          {updateInfo && (
+            <p>
+              Houdoku v{updateInfo?.version} was released on{' '}
+              {new Date(updateInfo.releaseDate).toLocaleDateString()}.
+            </p>
+          )}
           <AlertDialogFooter>
             <AlertDialogCancel>Not now</AlertDialogCancel>
             <AlertDialogAction onClick={() => ipcRenderer.invoke(ipcChannels.APP.PERFORM_UPDATE)}>
