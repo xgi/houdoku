@@ -105,8 +105,8 @@ const SeriesDetails: React.FC<Props> = () => {
         />
         <DownloadModal
           series={series}
-          visible={showingDownloadModal}
-          close={() => setShowingDownloadModal(false)}
+          showing={showingDownloadModal}
+          setShowing={setShowingDownloadModal}
         />
         <RemoveSeriesDialog
           series={series}

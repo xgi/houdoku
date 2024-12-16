@@ -2,31 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { Series } from '@tiyo/common';
 import { useRecoilValue } from 'recoil';
 const { ipcRenderer } = require('electron');
-import { Group } from '@mantine/core';
 import ipcChannels from '@/common/constants/ipcChannels.json';
 import { customDownloadsDirState } from '@/renderer/state/settingStates';
 import { sortedFilteredChapterListState } from '@/renderer/state/libraryStates';
 import { downloadAll, downloadNextX } from '@/renderer/features/library/chapterDownloadUtils';
 import { queueState } from '@/renderer/state/downloaderStates';
-import DefaultModal from '../general/DefaultModal';
-import DefaultButton from '../general/DefaultButton';
-import DefaultText from '../general/DefaultText';
-import DefaultRadio from '../general/DefaultRadio';
-import DefaultNumberInput from '../general/DefaultNumberInput';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/ui/components/Dialog';
+import { Button } from '@/ui/components/Button';
+import { RadioGroup, RadioGroupItem } from '@/ui/components/RadioGroup';
+import { Label } from '@/ui/components/Label';
+import { Input } from '@/ui/components/Input';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
 
 enum DownloadAction {
-  NextX,
-  Range,
-  Unread,
-  All,
+  NextX = 'NextX',
+  Range = 'Range',
+  Unread = 'Unread',
+  All = 'All',
 }
 
 type Props = {
   series: Series;
-  visible: boolean;
-  close: () => void;
+  showing: boolean;
+  setShowing: (showing: boolean) => void;
 };
 
 const DownloadModal: React.FC<Props> = (props: Props) => {
@@ -40,7 +45,7 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
 
   useEffect(() => {
     if (sortedFilteredChapterList.length === 0) {
-      props.close();
+      props.setShowing(false);
       return;
     }
 
@@ -87,120 +92,117 @@ const DownloadModal: React.FC<Props> = (props: Props) => {
       downloadAll(chaptersInRange, props.series, customDownloadsDir || defaultDownloadsDir);
     }
 
-    props.close();
+    props.setShowing(false);
   };
 
   const renderDownloadNextX = () => {
-    const active = downloadAction === DownloadAction.NextX;
     return (
-      <DefaultRadio
-        checked={active}
-        onChange={() => setDownloadAction(DownloadAction.NextX)}
-        styles={{ inner: { alignSelf: 'center' } }}
-        mb={4}
-        label={
-          <Group gap={5}>
-            <DefaultText size="sm" mr={4}>
-              Download next
-            </DefaultText>
-            <DefaultNumberInput
-              disabled={!active}
-              value={downloadNextAmount}
-              min={0}
-              onChange={(value) =>
-                typeof value === 'number' ? setDownloadNextAmount(value) : setDownloadNextAmount(0)
-              }
-              size="xs"
-              styles={{ input: { width: 54, textAlign: 'center' } }}
-            />
-            <DefaultText size="sm" ml={4}>
-              chapters
-            </DefaultText>
-          </Group>
-        }
-      />
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value={DownloadAction.NextX} id="radioDownloadNextX" />
+        <Label htmlFor="radioDownloadNextX">Download next</Label>
+        <Input
+          className="max-w-20 w-20"
+          type="number"
+          value={downloadNextAmount}
+          min={0}
+          onChange={(e) => {
+            const value = parseInt(e.target.value, 10);
+            if (!Number.isNaN(value)) {
+              setDownloadNextAmount(value);
+            } else {
+              setDownloadNextAmount(0);
+            }
+          }}
+          disabled={downloadAction !== DownloadAction.NextX}
+        />
+        <Label htmlFor="radioDownloadNextX">chapters</Label>
+      </div>
     );
   };
 
   const renderDownloadRange = () => {
-    const active = downloadAction === DownloadAction.Range;
     return (
-      <DefaultRadio
-        checked={active}
-        onChange={() => setDownloadAction(DownloadAction.Range)}
-        styles={{ inner: { alignSelf: 'center' } }}
-        mb={4}
-        label={
-          <Group gap={5}>
-            <DefaultText size="sm" mr={4}>
-              Download chapters
-            </DefaultText>
-            <DefaultNumberInput
-              disabled={!active}
-              value={downloadRangeStart}
-              min={0}
-              onChange={(value) =>
-                typeof value === 'number' ? setDownloadRangeStart(value) : setDownloadRangeStart(0)
-              }
-              size="xs"
-              styles={{ input: { width: 54, textAlign: 'center' } }}
-            />
-            <DefaultText size="sm" ml={4} mr={4}>
-              through
-            </DefaultText>
-            <DefaultNumberInput
-              disabled={!active}
-              value={downloadRangeEnd}
-              min={0}
-              onChange={(value) =>
-                typeof value === 'number' ? setDownloadRangeEnd(value) : setDownloadRangeEnd(0)
-              }
-              size="xs"
-              styles={{ input: { width: 54, textAlign: 'center' } }}
-            />
-          </Group>
-        }
-      />
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value={DownloadAction.Range} id="radioDownloadRange" />
+        <Label htmlFor="radioDownloadRange">Download chapters</Label>
+        <Input
+          className="max-w-20 w-20"
+          type="number"
+          value={downloadRangeStart}
+          min={0}
+          onChange={(e) => {
+            const value = parseInt(e.target.value, 10);
+            if (!Number.isNaN(value)) {
+              setDownloadRangeStart(value);
+            } else {
+              setDownloadRangeStart(0);
+            }
+          }}
+          disabled={downloadAction !== DownloadAction.Range}
+        />
+        <Label htmlFor="radioDownloadRange">through</Label>
+        <Input
+          className="max-w-20 w-20"
+          type="number"
+          value={downloadRangeEnd}
+          min={0}
+          onChange={(e) => {
+            const value = parseInt(e.target.value, 10);
+            if (!Number.isNaN(value)) {
+              setDownloadRangeEnd(value);
+            } else {
+              setDownloadRangeEnd(0);
+            }
+          }}
+          disabled={downloadAction !== DownloadAction.Range}
+        />
+      </div>
     );
   };
 
   const renderDownloadUnread = () => {
-    const active = downloadAction === DownloadAction.Unread;
     return (
-      <DefaultRadio
-        checked={active}
-        onChange={() => setDownloadAction(DownloadAction.Unread)}
-        mb={4}
-        label={'Download unread chapters'}
-      />
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value={DownloadAction.Unread} id="radioDownloadUnread" />
+        <Label htmlFor="radioDownloadUnread">Download unread chapters</Label>
+      </div>
     );
   };
 
   const renderDownloadAll = () => {
-    const active = downloadAction === DownloadAction.All;
     return (
-      <DefaultRadio
-        checked={active}
-        onChange={() => setDownloadAction(DownloadAction.All)}
-        label={'Download all chapters'}
-      />
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value={DownloadAction.All} id="radioDownloadAll" />
+        <Label htmlFor="radioDownloadAll">Download all chapters</Label>
+      </div>
     );
   };
 
   return (
-    <DefaultModal opened={props.visible} centered title="Download chapters" onClose={props.close}>
-      {renderDownloadNextX()}
-      {renderDownloadRange()}
-      {renderDownloadUnread()}
-      {renderDownloadAll()}
-
-      <Group justify="flex-end" mt="md">
-        <DefaultButton onClick={props.close}>Cancel</DefaultButton>
-        <DefaultButton oc="blue" onClick={downloadFunc}>
-          Download
-        </DefaultButton>
-      </Group>
-    </DefaultModal>
+    <Dialog open={props.showing} onOpenChange={props.setShowing}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Download chapters</DialogTitle>
+        </DialogHeader>
+        <RadioGroup
+          value={downloadAction}
+          onValueChange={(value) => setDownloadAction(value as DownloadAction)}
+        >
+          {renderDownloadNextX()}
+          {renderDownloadRange()}
+          {renderDownloadUnread()}
+          {renderDownloadAll()}
+        </RadioGroup>
+        <DialogFooter>
+          <Button variant={'secondary'} onClick={() => props.setShowing(false)}>
+            Cancel
+          </Button>
+          <Button type="submit" onClick={downloadFunc}>
+            Download
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
 
