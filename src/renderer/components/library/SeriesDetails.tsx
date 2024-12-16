@@ -5,7 +5,7 @@ import { Series } from '@tiyo/common';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { getBannerImageUrl } from '@/renderer/services/mediasource';
 import ipcChannels from '@/common/constants/ipcChannels.json';
-import SeriesTrackerModal from './tracker/SeriesTrackerModal';
+import { SeriesTrackerDialog } from './tracker/SeriesTrackerDialog';
 import EditSeriesModal from './EditSeriesModal';
 import { downloadCover } from '@/renderer/util/download';
 import library from '@/renderer/services/library';
@@ -17,7 +17,6 @@ import {
   seriesListState,
   seriesState,
 } from '@/renderer/state/libraryStates';
-import RemoveSeriesModal from './RemoveSeriesModal';
 import DownloadModal from './DownloadModal';
 import SeriesDetailsFloatingHeader from './series/SeriesDetailsFloatingHeader';
 import SeriesDetailsBanner from './series/SeriesDetailsBanner';
@@ -25,6 +24,7 @@ import SeriesDetailsIntro from './series/SeriesDetailsIntro';
 import SeriesDetailsInfoGrid from './series/SeriesDetailsInfoGrid';
 import { ChapterTable } from './series/chapter-table/ChapterTable';
 import { Loader2 } from 'lucide-react';
+import { RemoveSeriesDialog } from './RemoveSeriesDialog';
 
 type Props = unknown;
 
@@ -83,10 +83,10 @@ const SeriesDetails: React.FC<Props> = () => {
   return (
     <div className="pb-4">
       <>
-        <SeriesTrackerModal
+        <SeriesTrackerDialog
           series={series}
-          visible={showingTrackerModal}
-          toggleVisible={() => setShowingTrackerModal(!showingTrackerModal)}
+          showing={showingTrackerModal}
+          setShowing={setShowingTrackerModal}
         />
         <EditSeriesModal
           series={series}
@@ -108,10 +108,10 @@ const SeriesDetails: React.FC<Props> = () => {
           visible={showingDownloadModal}
           close={() => setShowingDownloadModal(false)}
         />
-        <RemoveSeriesModal
+        <RemoveSeriesDialog
           series={series}
           showing={showingRemoveModal}
-          close={() => setShowingRemoveModal(false)}
+          setShowing={setShowingRemoveModal}
         />
 
         <SeriesDetailsFloatingHeader series={series} />
