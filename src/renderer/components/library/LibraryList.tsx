@@ -1,10 +1,11 @@
 import React from 'react';
 import { Series } from '@tiyo/common';
 import { useNavigate } from 'react-router-dom';
-import { Badge, Group, Table } from '@mantine/core';
 import { goToSeries } from '@/renderer/features/library/utils';
-import DefaultText from '../general/DefaultText';
-import DefaultButton from '../general/DefaultButton';
+import { Table, TableBody, TableCell, TableRow } from '@/ui/components/Table';
+import { Badge } from '@/ui/components/Badge';
+import { ContextMenu, ContextMenuTrigger } from '@/ui/components/ContextMenu';
+import LibraryGridContextMenu from './LibraryGridContextMenu';
 
 type Props = {
   getFilteredList: () => Series[];
@@ -14,65 +15,44 @@ type Props = {
 const LibraryList: React.FC<Props> = (props: Props) => {
   const navigate = useNavigate();
 
+  const getCreatorsText = (series: Series) => {
+    const creators = Array.from(new Set([...series.authors, ...series.artists]));
+    return creators.length > 0 ? creators.join('; ') : 'Unknown';
+  };
+
   const viewFunc = (series: Series) => {
     goToSeries(series, navigate);
   };
 
-  const renderRows = () => {
-    return props.getFilteredList().map((series) => {
-      return (
-        <tr key={`${series.id}-${series.title}`}>
-          <td>
-            <DefaultText size="sm">
-              {series.numberUnread > 0 ? <Badge color="violet">{series.numberUnread}</Badge> : ''}{' '}
-              {series.title}
-            </DefaultText>
-          </td>
-          <td>
-            <DefaultText size="sm">{series.status}</DefaultText>
-          </td>
-          <td>
-            {series.authors.slice(0, 3).map((author) => (
-              <DefaultText key={author} size="sm">
-                {author}
-              </DefaultText>
-            ))}
-          </td>
-          <td>
-            <Group gap="xs" justify="flex-end" wrap="nowrap">
-              <DefaultButton oc="blue" size={'xs'} onClick={() => viewFunc(series)}>
-                View
-              </DefaultButton>
-            </Group>
-          </td>
-        </tr>
-      );
-    });
-  };
-
   return (
     <Table>
-      <thead>
-        <tr>
-          <th>
-            <DefaultText fw={'bold'} size="sm">
-              Title
-            </DefaultText>
-          </th>
-          <th>
-            <DefaultText fw={'bold'} size="sm">
-              Status
-            </DefaultText>
-          </th>
-          <th>
-            <DefaultText fw={'bold'} size="sm">
-              Author
-            </DefaultText>
-          </th>
-          <th> </th>
-        </tr>
-      </thead>
-      <tbody>{renderRows()}</tbody>
+      <TableBody>
+        {props.getFilteredList().map((series) => (
+          <>
+            <ContextMenu>
+              <ContextMenuTrigger asChild>
+                <TableRow
+                  key={`${series.id}-${series.title}`}
+                  className="cursor-pointer"
+                  onClick={() => viewFunc(series)}
+                >
+                  <TableCell className="truncate flex space-x-2">
+                    {series.numberUnread > 0 && <Badge>{series.numberUnread}</Badge>}
+                    <span>{series.title}</span>
+                  </TableCell>
+                  <TableCell className="truncate max-w-40">
+                    <span>{getCreatorsText(series)}</span>
+                  </TableCell>
+                  <TableCell>
+                    <span>{series.status}</span>
+                  </TableCell>
+                </TableRow>
+              </ContextMenuTrigger>
+              <LibraryGridContextMenu series={series} showRemoveModal={props.showRemoveModal} />
+            </ContextMenu>
+          </>
+        ))}
+      </TableBody>
     </Table>
   );
 };

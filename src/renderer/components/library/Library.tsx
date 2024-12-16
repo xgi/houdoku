@@ -22,7 +22,6 @@ import LibraryGrid from './LibraryGrid';
 import LibraryList from './LibraryList';
 import library from '@/renderer/services/library';
 import LibraryControlBarMultiSelect from './LibraryControlBarMultiSelect';
-import DefaultText from '../general/DefaultText';
 import { ScrollArea } from '@/ui/components/ScrollArea';
 import { RemoveSeriesDialog } from './RemoveSeriesDialog';
 
@@ -125,19 +124,33 @@ const Library: React.FC<Props> = () => {
 
   const renderEmptyMessage = () => {
     return (
-      <DefaultText ta="center" style={{ paddingTop: '30vh' }}>
-        Your library is empty. Install{' '}
-        <DefaultText component="span" c="violet" fw={700}>
-          Plugins
-        </DefaultText>{' '}
-        from the tab on the left,
-        <br />
-        and then go to{' '}
-        <DefaultText component="span" c="teal" fw={700}>
-          Add Series
-        </DefaultText>{' '}
-        to start building your library.
-      </DefaultText>
+      <div className="flex items-center justify-center pt-[30vh]">
+        <div className="max-w-[460px]">
+          <p className="text-center">
+            Your library is empty. Install{' '}
+            <code className="relative bg-muted px-[0.3rem] py-[0.2rem] text-sm font-semibold">
+              Plugins
+            </code>{' '}
+            from the tab on the left, and then go to{' '}
+            <code className="relative bg-muted px-[0.3rem] py-[0.2rem] text-sm font-semibold">
+              Add Series
+            </code>{' '}
+            to start building your library.
+          </p>
+        </div>
+      </div>
+    );
+  };
+
+  const renderNoneMatchMessage = () => {
+    return (
+      <div className="flex items-center justify-center pt-[30vh]">
+        <div className="max-w-[500px]">
+          <p className="text-center">
+            There are no series in your library which match the current filters.
+          </p>
+        </div>
+      </div>
     );
   };
 
@@ -153,7 +166,9 @@ const Library: React.FC<Props> = () => {
         <LibraryControlBar getFilteredList={getFilteredList} />
       )}
       <ScrollArea className="h-[calc(100vh-20px-64px)] w-full pr-4 -mr-2">
-        {activeSeriesList.length > 0 ? renderLibrary() : renderEmptyMessage()}
+        {activeSeriesList.length === 0 && renderEmptyMessage()}
+        {activeSeriesList.length > 0 && getFilteredList().length === 0 && renderNoneMatchMessage()}
+        {activeSeriesList.length > 0 && getFilteredList().length > 0 && renderLibrary()}
       </ScrollArea>
     </div>
   );
