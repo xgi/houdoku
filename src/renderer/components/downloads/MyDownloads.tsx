@@ -154,7 +154,7 @@ const MyDownloads: React.FC = () => {
           library.
         </p>
       ) : (
-        <Accordion type="single" collapsible className="w-full pb-8">
+        <Accordion type="multiple" className="w-full pb-8">
           {seriesList.map((series) => {
             if (!series.id || !chapterLists[series.id]) return '';
 
