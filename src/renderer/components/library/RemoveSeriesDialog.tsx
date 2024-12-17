@@ -36,6 +36,7 @@ export const RemoveSeriesDialog: React.FC<Props> = (props: Props) => {
       if (dontAskAgain) setConfirmRemoveSeries(false);
       navigate(routes.LIBRARY);
     }
+    props.setShowing(false);
   };
 
   useEffect(() => {
