@@ -109,57 +109,63 @@ export class FSExtensionClient extends ExtensionClientAbstract {
   extractPath?: string = undefined;
 
   override getSeries: GetSeriesFunc = (id: string) => {
-    const dirName = path.basename(id);
-    const series: Series = {
-      id: undefined,
-      extensionId: FS_METADATA.id,
-      sourceId: id,
-      title: dirName.trim(),
-      altTitles: [],
-      description: '',
-      authors: [],
-      artists: [],
-      tags: [],
-      status: SeriesStatus.COMPLETED,
-      originalLanguageKey: LanguageKey.JAPANESE,
-      numberUnread: 0,
-      remoteCoverUrl: '',
-      trackerKeys: {},
-    };
-
-    return new Promise((resolve) => {
-      resolve(series);
+    return new Promise((resolve, reject) => {
+      try {
+        const dirName = path.basename(id);
+        const series: Series = {
+          id: undefined,
+          extensionId: FS_METADATA.id,
+          sourceId: id,
+          title: dirName.trim(),
+          altTitles: [],
+          description: '',
+          authors: [],
+          artists: [],
+          tags: [],
+          status: SeriesStatus.COMPLETED,
+          originalLanguageKey: LanguageKey.JAPANESE,
+          numberUnread: 0,
+          remoteCoverUrl: '',
+          trackerKeys: {},
+        };
+        resolve(series);
+      } catch (err) {
+        reject(err);
+      }
     });
   };
 
   override getChapters: GetChaptersFunc = (id: string) => {
-    const fileList = walk(id);
-    const chapterPaths: Set<string> = new Set();
-    fileList.forEach((file: string) => {
-      chapterPaths.add(path.dirname(file));
+    return new Promise((resolve, reject) => {
+      try {
+        const fileList = walk(id);
+        const chapterPaths: Set<string> = new Set();
+        fileList.forEach((file: string) => {
+          chapterPaths.add(path.dirname(file));
 
-      if (isSupportedArchivePath(file)) {
-        chapterPaths.add(file);
-        chapterPaths.delete(path.dirname(file));
+          if (isSupportedArchivePath(file)) {
+            chapterPaths.add(file);
+            chapterPaths.delete(path.dirname(file));
+          }
+        });
+
+        const chapters: Chapter[] = Array.from(chapterPaths).map((chapterPath: string) => {
+          const metadata = parseChapterMetadata(path.basename(chapterPath));
+          return {
+            sourceId: chapterPath,
+            title: metadata.title,
+            chapterNumber: metadata.chapterNum,
+            volumeNumber: metadata.volumeNum,
+            languageKey: LanguageKey.ENGLISH,
+            groupName: metadata.group,
+            time: new Date().getTime(),
+            read: false,
+          };
+        });
+        resolve(chapters);
+      } catch (err) {
+        reject(err);
       }
-    });
-
-    const chapters: Chapter[] = Array.from(chapterPaths).map((chapterPath: string) => {
-      const metadata = parseChapterMetadata(path.basename(chapterPath));
-      return {
-        sourceId: chapterPath,
-        title: metadata.title,
-        chapterNumber: metadata.chapterNum,
-        volumeNumber: metadata.volumeNum,
-        languageKey: LanguageKey.ENGLISH,
-        groupName: metadata.group,
-        time: new Date().getTime(),
-        read: false,
-      };
-    });
-
-    return new Promise((resolve) => {
-      resolve(chapters);
     });
   };
 
