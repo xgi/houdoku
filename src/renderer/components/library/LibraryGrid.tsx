@@ -115,7 +115,7 @@ const LibraryGrid: React.FC<Props> = (props: Props) => {
                       !multiSelectEnabled && 'hover:scale-105',
                       multiSelectEnabled && isMultiSelected && 'border-4 border-sky-500',
                       libraryCropCovers && 'aspect-[70/100]',
-                      'h-auto w-auto object-cover rounded-md transition-transform',
+                      'h-auto w-full object-cover rounded-md transition-transform',
                     )}
                   />
 

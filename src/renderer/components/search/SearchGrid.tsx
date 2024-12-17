@@ -63,7 +63,7 @@ const SearchGrid: React.FC<Props> = (props: Props) => {
                   className={cn(
                     'hover:scale-105',
                     libraryCropCovers && 'aspect-[70/100]',
-                    'h-auto w-auto object-cover rounded-md transition-transform',
+                    'h-auto w-full object-cover rounded-md transition-transform',
                   )}
                 />
                 <div
