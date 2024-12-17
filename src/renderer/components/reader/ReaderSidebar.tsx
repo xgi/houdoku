@@ -136,7 +136,7 @@ export const ReaderSidebar: React.FC<Props> = (props: Props) => {
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
-                <Select value="placeholder">
+                <Select value={chapter.id} onValueChange={(value) => props.setChapter(value)}>
                   <SelectTrigger>
                     <SelectValue>
                       {chapter && chapter.chapterNumber
@@ -149,11 +149,7 @@ export const ReaderSidebar: React.FC<Props> = (props: Props) => {
                       {relevantChapterList
                         .filter((c) => c.id !== undefined)
                         .map((relevantChapter: Chapter) => (
-                          <SelectItem
-                            key={relevantChapter.id}
-                            value={relevantChapter.id!}
-                            onClick={() => props.setChapter(relevantChapter.id!)}
-                          >
+                          <SelectItem key={relevantChapter.id} value={relevantChapter.id!}>
                             Chapter {relevantChapter.chapterNumber}
                           </SelectItem>
                         ))}
@@ -204,14 +200,14 @@ export const ReaderSidebar: React.FC<Props> = (props: Props) => {
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </Button>
-                <Select value="placeholder">
+                <Select value={`${pageNumber}`} onValueChange={(value) => setPageNumber(+value)}>
                   <SelectTrigger>
                     <SelectValue>{getCurrentPageNumText()}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
                       {Array.from({ length: lastPageNumber }, (_v, k) => k + 1).map((i: number) => (
-                        <SelectItem key={i} value={`${i}`} onClick={() => setPageNumber(i)}>
+                        <SelectItem key={i} value={`${i}`}>
                           Page {i}
                         </SelectItem>
                       ))}
