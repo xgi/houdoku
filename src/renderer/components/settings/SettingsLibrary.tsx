@@ -10,7 +10,6 @@ import {
 } from '@/renderer/state/settingStates';
 import { Checkbox } from '@/ui/components/Checkbox';
 import { Label } from '@/ui/components/Label';
-import { Input } from '@/ui/components/Input';
 import { Button } from '@/ui/components/Button';
 
 const defaultDownloadsDir = await ipcRenderer.invoke(ipcChannels.GET_PATH.DEFAULT_DOWNLOADS_DIR);
@@ -59,9 +58,10 @@ export const SettingsLibrary: React.FC = () => {
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="picture">Custom download location</Label>
         <div className="flex w-full items-center space-x-2">
-          <Input
-            className="cursor-pointer"
-            value={customDownloadsDir || defaultDownloadsDir}
+          <Button
+            className="w-full truncate"
+            variant="outline"
+            title={customDownloadsDir || defaultDownloadsDir}
             onClick={() =>
               ipcRenderer
                 .invoke(ipcChannels.APP.SHOW_OPEN_DIALOG, true, [], 'Select Downloads Directory')
@@ -71,7 +71,9 @@ export const SettingsLibrary: React.FC = () => {
                   }
                 })
             }
-          />
+          >
+            {customDownloadsDir || defaultDownloadsDir}
+          </Button>
           {customDownloadsDir && <Button onClick={() => setCustomDownloadsDir('')}>Reset</Button>}
         </div>
       </div>

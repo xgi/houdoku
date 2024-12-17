@@ -133,7 +133,7 @@ export const SettingsKeybinds: React.FC = () => {
             setting: ReaderSetting.KeyToggleShowingSidebar,
           },
         ].map((entry) => (
-          <div className="flex space-x-2 items-center">
+          <div key={entry.setting} className="flex space-x-2 items-center">
             <Button
               size="sm"
               className="w-28 justify-center font-semibold"

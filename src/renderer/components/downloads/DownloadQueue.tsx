@@ -59,7 +59,7 @@ const DownloadQueue: React.FC = () => {
 
     const value = task.page && task.totalPages ? (task.page / task.totalPages) * 100 : 0;
     return (
-      <Card className="w-full">
+      <Card key={`${task.series.id}-${task.chapter.id}`} className="w-full">
         <CardHeader className="px-4 pt-3 pb-2">
           <CardTitle>
             {task.series.title} - Chapter {task.chapter.chapterNumber}
