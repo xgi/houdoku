@@ -1,12 +1,10 @@
-[![Houdoku Header](res/houdoku_header.png)](https://houdoku.org)
+[![houdoku screenshot](res/houdoku_screenshot.webp)](https://houdoku.org)
 
 [![houdoku.org](https://img.shields.io/badge/website-houdoku.org-7048E8?style=flat-square)](https://houdoku.org)
 [![GitHub release](https://img.shields.io/github/v/release/xgi/houdoku?style=flat-square)](https://github.com/xgi/houdoku/releases)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/xgi/houdoku/publish.yml?branch=master&style=flat-square)
 
 Houdoku is a free and open source manga reader for the desktop.
-
----
 
 ## Features
 
@@ -16,13 +14,6 @@ Houdoku is a free and open source manga reader for the desktop.
 - Customizable reader interface with multiple layouts and settings.
 - Tagging and filtering support to easily browse and manage large libraries.
 - Cross-platform!
-
----
-
-![Screenshots1](res/screenshots1.png)
-![Screenshots2](res/screenshots2.png)
-
----
 
 ## Download
 
