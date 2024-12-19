@@ -1,22 +1,41 @@
-.vscode/settings.json
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Dependencies
 node_modules
-.pnpm-store
+.pnp
+.pnp.js
 
-release
-src/main.prod.js
-src/main.prod.js.map
-src/main.prod.js.LICENSE.txt
-src/renderer.prod.js
-src/renderer.prod.js.map
-src/style.css
-src/style.css.map
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage
+
+# Turbo
+.turbo
+
+# Vercel
+.vercel
+
+# Build Outputs
+.next/
+out/
+build
 dist
-out
-dll
-main.js
-main.js.map
 
-*.css.d.ts
-*.sass.d.ts
-*.scss.d.ts
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.DS_Store
+*.pem
+
+.vscode/settings.json
+.pnpm-store
