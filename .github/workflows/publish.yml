@@ -15,13 +15,12 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 9.0.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - run: pnpm i
-      - run: pnpm build
-      - run: pnpm electron-builder --publish onTagOrDraft --win
+      - run: pnpm dist:win
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish-linux:
@@ -35,13 +34,12 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 9.0.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - run: pnpm i
-      - run: pnpm build
-      - run: pnpm electron-builder --publish onTagOrDraft --linux
+      - run: pnpm dist:linux
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish-mac:
@@ -55,13 +53,12 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: 9.0.0
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
       - run: pnpm i
-      - run: pnpm build
-      - run: pnpm electron-builder --publish onTagOrDraft --mac
+      - run: pnpm dist:mac
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # APPLE_ID: ${{ secrets.APPLE_ID }}

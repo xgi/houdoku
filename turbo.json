@@ -12,7 +12,8 @@
       ],
       "outputs": [
         ".next/**",
-        "!.next/cache/**"
+        "!.next/cache/**",
+        "out"
       ]
     },
     "lint": {
@@ -32,6 +33,30 @@
     "preview": {
       "cache": false,
       "persistent": true
+    },
+    "dist:win": {
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "release/**"
+      ]
+    },
+    "dist:mac": {
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "release/**"
+      ]
+    },
+    "dist:linux": {
+      "dependsOn": [
+        "build"
+      ],
+      "outputs": [
+        "release/**"
+      ]
     }
   }
 }

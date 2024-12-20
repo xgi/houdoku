@@ -10,7 +10,9 @@
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "lint": "biome lint src",
-    "package": "pnpm build && pnpm electron-builder --publish onTagOrDraft --win --mac --linux"
+    "dist:win": "pnpm electron-builder --publish onTagOrDraft --win",
+    "dist:mac": "pnpm electron-builder --publish onTagOrDraft --mac",
+    "dist:linux": "pnpm electron-builder --publish onTagOrDraft --linux"
   },
   "build": {
     "productName": "Houdoku",

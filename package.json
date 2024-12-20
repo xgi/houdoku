@@ -5,7 +5,10 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "preview": "turbo preview"
+    "preview": "turbo preview",
+    "dist:win": "turbo dist:win",
+    "dist:mac": "turbo dist:mac",
+    "dist:linux": "turbo dist:linux"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
