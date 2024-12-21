@@ -40,6 +40,9 @@
       ],
       "outputs": [
         "release/**"
+      ],
+      "passThroughEnv": [
+        "GH_TOKEN"
       ]
     },
     "dist:mac": {
@@ -48,6 +51,9 @@
       ],
       "outputs": [
         "release/**"
+      ],
+      "passThroughEnv": [
+        "GH_TOKEN"
       ]
     },
     "dist:linux": {
@@ -56,6 +62,9 @@
       ],
       "outputs": [
         "release/**"
+      ],
+      "passThroughEnv": [
+        "GH_TOKEN"
       ]
     }
   }
