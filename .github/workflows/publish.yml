@@ -22,7 +22,7 @@ jobs:
       - run: pnpm i
       - run: pnpm dist:win
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish-linux:
     strategy:
       matrix:
@@ -41,7 +41,7 @@ jobs:
       - run: pnpm i
       - run: pnpm dist:linux
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   publish-mac:
     strategy:
       matrix:
@@ -60,7 +60,7 @@ jobs:
       - run: pnpm i
       - run: pnpm dist:mac
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # APPLE_ID: ${{ secrets.APPLE_ID }}
           # APPLE_ID_PASS: ${{ secrets.APPLE_ID_PASS }}
           # CSC_LINK: ${{ secrets.CSC_LINK }}
