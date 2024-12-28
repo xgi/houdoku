@@ -1,0 +1,15 @@
+{
+  "name": "@houdoku/docs",
+  "private": true,
+  "version": "1.0.0",
+  "devDependencies": {
+    "vitepress": "^1.5.0",
+    "vitepress-plugin-tabs": "^0.5.0",
+    "vue": "^3.5.13"
+  },
+  "scripts": {
+    "dev": "vitepress dev src",
+    "build": "vitepress build src",
+    "preview": "vitepress preview src"
+  }
+}
