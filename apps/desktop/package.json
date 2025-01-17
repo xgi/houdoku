@@ -24,13 +24,15 @@
       "target": [
         "dmg"
       ],
-      "type": "distribution",
-      "hardenedRuntime": true,
-      "entitlements": "assets/entitlements.mac.plist",
-      "entitlementsInherit": "assets/entitlements.mac.plist",
+      "type": "development",
+      "hardenedRuntime": false,
+      "identity": null,
+      "entitlements": null,
+      "entitlementsInherit": null,
       "gatekeeperAssess": false
     },
     "dmg": {
+      "sign": false,
       "contents": [
         {
           "x": 130,
